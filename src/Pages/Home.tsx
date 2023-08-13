@@ -1,13 +1,8 @@
-import logo from "./logo.svg";
+import logo from "../logo.svg";
 import React from "react";
-import {useAuth} from "./AppContext";
+import Menu from '../Components/Menu';
 
 export default function Home() {
-    const {logout} = useAuth();
-    function handleLogout() {
-        logout();
-    }
-
     return (
         <header className="App-header">
             <img src={logo} className="App-logo" alt="logo"/>
@@ -22,7 +17,7 @@ export default function Home() {
             >
                 Learn React
             </a>
-            <button onClick={handleLogout}>Logout</button>
+            <Menu />
         </header>
     )
 }

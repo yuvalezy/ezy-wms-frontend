@@ -1,11 +1,12 @@
 import React from 'react';
 import './App.css';
 import {Routes, Route, BrowserRouter} from "react-router-dom";
-import LoginPage from "./Login";
-import HomePage from "./Home";
-import {AuthProvider} from "./AppContext";
-import GoodsReceipt from "./GoodsReceipt";
-import ProtectedRoute from "./ProtectedRoute";
+import LoginPage from "./Pages/Login";
+import HomePage from "./Pages/Home";
+import {Authorization, AuthProvider} from "./Components/AppContext";
+import GoodsReceipt from "./Pages/GoodsReceipt";
+import ProtectedRoute from "./Components/ProtectedRoute";
+import Unauthorized from "./Unauthorized";
 
 export default function App() {
     return (
@@ -13,7 +14,8 @@ export default function App() {
             <BrowserRouter>
                 <Routes>
                     <Route path="/login" element={<LoginPage/>}/>
-                    <Route path="/goodsReceipt" element={<ProtectedRoute element={<GoodsReceipt/>} />} />
+                    <Route path="/unauthorized" element={<Unauthorized />}/>
+                    <Route path="/goodsReceipt" element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT} element={<GoodsReceipt/>} />} />
                     <Route path="/" element={<ProtectedRoute element={<HomePage/>} />} />
                 </Routes>
             </BrowserRouter>

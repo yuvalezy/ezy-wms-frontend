@@ -1,7 +1,13 @@
-import logo from "./logo.svg";
+import logo from "../logo.svg";
 import React from "react";
+import Menu from "../Components/Menu";
 
 export default function GoodsReceipt() {
+    /*
+    if (user.authorizations.includes(Authorization.WRITE)) {
+    // User has write authorization
+}
+     */
     return (
         <header className="App-header">
             <img src={logo} className="App-logo" alt="logo"/>
@@ -16,6 +22,7 @@ export default function GoodsReceipt() {
             >
                 Learn React
             </a>
+            <Menu />
         </header>
     )
 }
