@@ -3,14 +3,14 @@ import React from "react";
 import MenuAppBar from "../Components/MenuAppBar";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import {TextValue} from "../assets/TextValue";
 
-export default function GoodsReceipt() {
+export default function GoodsReceiptSupervisor() {
     const theme = createTheme();
     return (
         <ThemeProvider theme={theme}>
-            <MenuAppBar title={TextValue.GoodsReceipt} icon={<AssignmentTurnedInIcon />}></MenuAppBar>
+            <MenuAppBar title={TextValue.GoodsReceiptSupervisor} icon={<SupervisedUserCircleIcon />}></MenuAppBar>
             <Box sx={{paddingTop: theme.spacing(8)}}>
                 <img src={logo} className="App-logo" alt="logo"/>
                 <p>

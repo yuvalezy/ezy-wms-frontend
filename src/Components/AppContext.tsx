@@ -1,11 +1,14 @@
 // AuthContext.tsx
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, {createContext, useContext, useState, ReactNode, useEffect} from 'react';
+import axios from "axios";
+import config from "../config";
+import {Authorization} from "../assets/Authorization";
 
 // Define the shape of the context
 interface AuthContextType {
     isAuthenticated: boolean;
     user: User | null;
-    login: (user: User) => void;
+    login: (username: string, password: string) => Promise<void>;
     logout: () => void;
 }
 
@@ -15,15 +18,12 @@ interface User {
     authorizations: Authorization[];
 }
 
-export enum Authorization {
-    GOODS_RECEIPT = 'GOODS_RECEIPT',
-    GOODS_RECEIPT_SUPERVISOR = 'GOODS_RECEIPT_SUPERVISOR'
-}
-
 const AuthContextDefaultValues: AuthContextType = {
     isAuthenticated: false,
     user: null,
-    login: () => {},
+    login: async (username: string, password: string) => {
+        console.warn('Login method not implemented yet!');
+    },
     logout: () => {},
 }
 
@@ -36,17 +36,56 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
 
-    const login = (userDetails: User) => {
-        // In a real-world scenario, you'd make API calls, handle tokens, etc.
-        setUser(userDetails);
+    useEffect(() => {
+        const expiry = localStorage.getItem('token_expiry');
+        if (expiry && new Date().getTime() > Number(expiry)) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('token_expiry');
+            setUser(null);
+        }
+    }, []);
+
+    const login = async (username: string, password: string) => {
+        try {
+            const response = await axios.post(`${config.baseURL}/token`, {
+                username,
+                password,
+                grant_type: 'password'
+            }, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            });
+
+            if (response.data && response.data.access_token) {
+                const {access_token, expires_in } = response.data;
+                localStorage.setItem('token', access_token);
+                const expiryTime = new Date().getTime() + expires_in * 1000;
+                localStorage.setItem('token_expiry', expiryTime.toString());
+
+                //todo load id, user actual first and last name and authorizations from rest api
+                setUser({
+                    id: 1,
+                    name: username,
+                    authorizations: [Authorization.GOODS_RECEIPT, Authorization.GOODS_RECEIPT_SUPERVISOR]
+                });
+            }
+
+        } catch(error) {
+            alert(`Failed to login: ${error}`);
+        }
     }
 
     const logout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('token_expiry');
         setUser(null);
     }
 
+    const isAuthenticated = Boolean(localStorage.getItem('token') && user !== null);
+
     const value = {
-        isAuthenticated: user !== null,
+        isAuthenticated,
         user,
         login,
         logout,

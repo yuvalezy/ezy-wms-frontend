@@ -1,23 +1,56 @@
-import logo from "../logo.svg";
 import React from "react";
-import Menu from '../Components/Menu';
+import MenuAppBar from "../Components/MenuAppBar";
+import {createTheme, ThemeProvider} from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import {Grid, Paper} from "@mui/material";
+import {Link} from "react-router-dom";
+import {useAuth} from "../Components/AppContext";
+import {Menus} from "../assets/Menus";
+import HomeIcon from '@mui/icons-material/Home';
+import {TextValue} from "../assets/TextValue";
 
 export default function Home() {
+    const {user} = useAuth();
+    const theme = createTheme();
+    const menus = Menus.GetMenus(user?.authorizations);
     return (
-        <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo"/>
-            <p>
-                Edit <code>src/App.tsx</code> and save to reload.
-            </p>
-            <a
-                className="App-link"
-                href="https://reactjs.org"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                Learn React
-            </a>
-            <Menu />
-        </header>
+        <ThemeProvider theme={theme}>
+            <MenuAppBar title={TextValue.Home} icon={<HomeIcon/>}></MenuAppBar>
+            <Box sx={{paddingTop: theme.spacing(8), paddingLeft: theme.spacing(1), paddingRight: theme.spacing(1)}}>
+                <Grid container spacing={3}>
+                    {menus.map(menu =>
+                        (
+
+                            <Grid item xs={6} style={{height: '100%'}}>
+                                <Link to={menu.Link} style={{textDecoration: 'none', display: 'block', height: '100%'}}>
+                                    <Paper elevation={4} style={{
+                                        height: '100%',
+                                        padding: theme.spacing(2),
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        color: theme.palette.text.secondary
+                                    }}>
+                                        <Box component="div" style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            alignItems: 'center',
+                                            textAlign: 'center',
+                                            overflow: 'hidden',
+                                            whiteSpace: 'nowrap',
+                                            textOverflow: 'ellipsis',
+                                            maxHeight: '6em', // This assumes a line-height of about 1.5, adjust as necessary
+                                        }}>
+                                            <menu.Icon style={{marginBottom: theme.spacing(1)}}/>
+                                            {menu.Text}
+                                        </Box>
+                                    </Paper>
+                                </Link>
+                            </Grid>
+                        ))}
+                </Grid>
+            </Box>
+        </ThemeProvider>
     )
 }

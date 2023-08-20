@@ -8,7 +8,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
-import {useAuth, Authorization} from "../Components/AppContext";
+import {useAuth} from "../Components/AppContext";
 import {useState} from "react";
 import {Navigate} from "react-router-dom";
 
@@ -21,15 +21,9 @@ export default function Login() {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            password: data.get('password'),
-        });
-        login({
-            id: 1,
-            name: "Test user",
-            authorizations: [Authorization.GOODS_RECEIPT, Authorization.GOODS_RECEIPT_SUPERVISOR]
-        });
-        setRedirectToHome(true);
+        let username = data.get('username') as string;
+        login(username, "")
+            .then(() => setRedirectToHome(true));
     };
 
     if (redirectToHome) {
@@ -52,18 +46,19 @@ export default function Login() {
                         <LockOutlinedIcon/>
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Sign in
+                        WMS
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
                         <TextField
                             margin="normal"
                             required
                             fullWidth
-                            name="password"
-                            label="Password"
+                            name="username"
+                            label="Code"
                             type="password"
-                            id="password"
+                            id="username"
                             autoComplete="current-password"
+                            value="981496230b-a8a4-4713"
                         />
                         <Button
                             type="submit"
@@ -71,7 +66,7 @@ export default function Login() {
                             variant="contained"
                             sx={{mt: 3, mb: 2}}
                         >
-                            Sign In
+                            Entrar
                         </Button>
                     </Box>
                 </Box>
