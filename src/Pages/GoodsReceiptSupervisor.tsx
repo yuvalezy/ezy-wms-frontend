@@ -23,6 +23,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import DescriptionIcon from '@mui/icons-material/Description';
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import ContentTheme from "../Components/ContentTheme";
+import {Functions} from "../assets/Functions";
 
 interface Document {
     id: number;
@@ -87,7 +88,7 @@ export default function GoodsReceiptSupervisor() {
                     //todo send status to back-end
                     return {
                         ...doc,
-                        status: actionType === 'approve' ? TextValue.Approve : TextValue.Cancel
+                        status: actionType === 'approve' ? TextValue.Finish : TextValue.Cancel
                     };
                 }
                 return doc;
@@ -104,7 +105,11 @@ export default function GoodsReceiptSupervisor() {
             {documents.map(DocumentCard)}
             <ConfirmationDialog
                 title={TextValue.ConfirmAction}
-                text={(actionType === 'approve' ? TextValue.ConfirmApproveDocument : TextValue.ConfirmCancelDocument)}
+                text={
+                    Functions.StringFormat((actionType === 'approve' ?
+                        TextValue.ConfirmFinishDocument :
+                        TextValue.ConfirmCancelDocument), selectedDocumentId)
+                }
                 open={dialogOpen}
                 reverse={true}
                 onClose={() => setDialogOpen(false)}
@@ -158,14 +163,15 @@ export default function GoodsReceiptSupervisor() {
                 <QrCodeIcon/>
             </Button>
             <CardContent>
-                <Typography variant="h6">{doc.documentName}</Typography>
+                <Typography variant="h6">{TextValue.ID}: {doc.documentName}</Typography>
+                <Typography color="textSecondary">{TextValue.Number}: {doc.id}</Typography>
                 <Typography color="textSecondary">{TextValue.DocDate}: {doc.documentDate}</Typography>
                 <Typography color="textSecondary">{TextValue.CreatedBy}: {doc.createdBy}</Typography>
                 <Typography color="textSecondary">{TextValue.Status}: {doc.status}</Typography>
                 <Box sx={{marginTop: theme.spacing(2), display: 'flex', gap: theme.spacing(1)}}>
                     <Button variant="contained" color="primary" onClick={() => handleAction(doc.id, 'approve')}>
                         <DoneIcon/>
-                        {TextValue.Approve}
+                        {TextValue.Finish}
                     </Button>
                     <Button variant="contained" color="secondary" onClick={() => handleAction(doc.id, 'cancel')}>
                         <CancelIcon/>

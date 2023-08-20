@@ -12,6 +12,7 @@ export const TextValue = {
     Open: "Abierto",
     Approve: "Aprobar",
     Cancel: "Cancelar",
+    Finish: "Finalizar",
     Create: "Crear",
     Accept: "Aceptar",
     QRCode: "Codigo QR",
@@ -21,6 +22,7 @@ export const TextValue = {
     Unknown: "Desconocido",
 
     //Fields
+    Number: "Numero",
     DocDate: "Fecha",
     CreatedBy: "Creador Por",
     Status: "Estado",
@@ -31,8 +33,9 @@ export const TextValue = {
     ScanCodeRequired:  "Debe escanear un codigo",
     BarcodeRequired: "Debe escanear un codigo de barra",
     ConfirmAction: "Confirmar Accion",
-    ConfirmApproveDocument: "¿Está seguro de aprobar este documento?",
-    ConfirmCancelDocument: "¿Está seguro de cancelar este documento?",
+    ConfirmApproveDocument: "¿Está seguro que desea aprobar el documento #{0}?",
+    ConfirmCancelDocument: "¿Está seguro que desea cancelar el documento #{0}?",
+    ConfirmFinishDocument: "¿Está seguro que desea finalizar el documento #{0}?",
     ActionCannotReverse: "Esta acción no se puede revertir",
     InvalidScanCode: "Codigo Erroneo",
     ScanConfirmStoreInWarehouse: "Guardar en Bodega",
