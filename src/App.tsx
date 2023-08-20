@@ -21,7 +21,7 @@ export default function App() {
                     <Route path="/unauthorized" element={<Unauthorized/>}/>
                     <Route path="/goodsReceipt" element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT}
                                                                          element={<GoodsReceipt/>}/>}/>
-                    <Route path="/goodsReceipt/:scanCodeInput"
+                    <Route path="/goodsReceipt/:scanCode"
                            element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT}
                                                     element={<GoodsReceiptProcess/>}/>}/>
                     <Route path="/goodsReceiptSupervisor"

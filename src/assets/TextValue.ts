@@ -17,6 +17,8 @@ export const TextValue = {
     QRCode: "Codigo QR",
     ID: "Identificacion",
     Code: "Codigo",
+    Barcode: "Codigo de Barra",
+    Unknown: "Desconocido",
 
     //Fields
     DocDate: "Fecha",
@@ -25,9 +27,16 @@ export const TextValue = {
 
     //Dialog
     IDRequired: "Debe introducir una identificacion",
+    InvalidID: "Identificacion Invalida",
     ScanCodeRequired:  "Debe escanear un codigo",
+    BarcodeRequired: "Debe escanear un codigo de barra",
     ConfirmAction: "Confirmar Accion",
     ConfirmApproveDocument: "¿Está seguro de aprobar este documento?",
     ConfirmCancelDocument: "¿Está seguro de cancelar este documento?",
     ActionCannotReverse: "Esta acción no se puede revertir",
+    InvalidScanCode: "Codigo Erroneo",
+    ScanConfirmStoreInWarehouse: "Guardar en Bodega",
+    ScanConfirmFulfillment: "Separar para Entrega a Cliente",
+    ScanConfirmShowroom: "Enviar a Showroom",
+    ScanConfirmSupervisor: "Separar para Supervisor",
 }

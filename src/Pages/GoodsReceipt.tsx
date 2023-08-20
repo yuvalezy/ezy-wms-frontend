@@ -1,39 +1,45 @@
-import React from "react";
+import React, {ReactEventHandler} from "react";
 import MenuAppBar from "../Components/MenuAppBar";
-import {createTheme, ThemeProvider} from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import {TextValue} from "../assets/TextValue";
 import {Button, TextField} from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
-import { useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+import ContentTheme from "../Components/ContentTheme";
+import {Functions} from "../assets/Functions";
 
 export default function GoodsReceipt() {
-    const theme = createTheme();
     const [scanCodeInput, setScanCodeInput] = React.useState('GRPO_1');
+    //todo remove default state:
+
     const navigate = useNavigate();
 
-    function handleAcceptScan() {
+    function handleSubmit(e: React.FormEvent) {
+        e.preventDefault();
         if (scanCodeInput.length === 0) {
             alert(TextValue.ScanCodeRequired);
             return;
         }
+        let checkScan = scanCodeInput.split('_');
+        if (checkScan.length !== 2 || checkScan[0] !== 'GRPO' || !Functions.IsNumeric(checkScan[1])) {
+            alert(TextValue.InvalidScanCode);
+            return;
+        }
         //todo validate in back-end valid GRPO
-        //change route to /goodsReceipt/1
-        navigate(`/goodsReceipt/${scanCodeInput}`);
+        navigate(`/goodsReceipt/${scanCodeInput.split('_')[1]}`);
     }
+
     return (
-        <ThemeProvider theme={theme}>
-            <MenuAppBar title={TextValue.GoodsReceipt} icon={<AssignmentTurnedInIcon />}></MenuAppBar>
-            <Box sx={{paddingTop: theme.spacing(10), paddingLeft: theme.spacing(2), paddingRight: theme.spacing(2)}}>
-                {ScanForm()}
-            </Box>
-        </ThemeProvider>
+        <ContentTheme title={TextValue.GoodsReceipt} icon={<AssignmentTurnedInIcon/>}>
+            {ScanForm()}
+        </ContentTheme>
     )
 
     function ScanForm() {
         return (
-            <Box mb={1} style={{textAlign: 'center'}}>
+            <form onSubmit={handleSubmit}>
+                <Box mb={1} style={{textAlign: 'center'}}>
                 <TextField
                     fullWidth
                     required
@@ -45,12 +51,12 @@ export default function GoodsReceipt() {
                     autoFocus={true}
                 />
                 <Box mt={1}>
-                    <Button variant="contained" color="primary" onClick={handleAcceptScan}>
-                        <DoneIcon />
+                    <Button type="submit" variant="contained" color="primary">
+                        <DoneIcon/>
                         {TextValue.Accept}
                     </Button>
                 </Box>
-            </Box>
+            </Box></form>
         )
     }
 }

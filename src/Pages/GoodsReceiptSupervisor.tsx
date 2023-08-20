@@ -21,6 +21,8 @@ import QrCodeIcon from '@mui/icons-material/QrCode';
 import DoneIcon from '@mui/icons-material/Done';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DescriptionIcon from '@mui/icons-material/Description';
+import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+import ContentTheme from "../Components/ContentTheme";
 
 interface Document {
     id: number;
@@ -47,15 +49,17 @@ export default function GoodsReceiptSupervisor() {
     const [docNameInput, setDocNameInput] = useState<string | ''>('');  // For new document input
     const [qrOpen, setQrOpen] = useState(false);
 
-    const handleNewDocument = () => {
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
         const today = new Date().toISOString().split('T')[0];
         if (docNameInput === null || docNameInput === '') {
             alert(TextValue.IDRequired);
             return;
         }
+        //todo validate no duplicate document name
         const newDocument: Document = {
             id: documents[0].id + 1,
-            documentName: `Document ${docNameInput}`,
+            documentName: docNameInput,
             documentDate: today,
             createdBy: "",  // Assuming user contains the username
             status: TextValue.Open
@@ -95,27 +99,24 @@ export default function GoodsReceiptSupervisor() {
     const handleQrClose = () => setQrOpen(false);
 
     return (
-        <ThemeProvider theme={theme}>
-            <MenuAppBar title={TextValue.GoodsReceiptSupervisor} icon={<SupervisedUserCircleIcon/>}></MenuAppBar>
-            <Box sx={{paddingTop: theme.spacing(10), paddingLeft: theme.spacing(2), paddingRight: theme.spacing(2)}}>
-                {DocumentForm()}
-                {documents.map(DocumentCard)}
-                <ConfirmationDialog
-                    title={TextValue.ConfirmAction}
-                    text={(actionType === 'approve' ? TextValue.ConfirmApproveDocument : TextValue.ConfirmCancelDocument)}
-                    open={dialogOpen}
-                    reverse={true}
-                    onClose={() => setDialogOpen(false)}
-                    onConfirm={handleConfirmAction}
-                />
-                {QRCodeDialog()}
-            </Box>
-        </ThemeProvider>
+        <ContentTheme title={TextValue.GoodsReceiptSupervisor} icon={<SupervisedUserCircleIcon/>}>
+            {DocumentForm()}
+            {documents.map(DocumentCard)}
+            <ConfirmationDialog
+                title={TextValue.ConfirmAction}
+                text={(actionType === 'approve' ? TextValue.ConfirmApproveDocument : TextValue.ConfirmCancelDocument)}
+                open={dialogOpen}
+                reverse={true}
+                onClose={() => setDialogOpen(false)}
+                onConfirm={handleConfirmAction}
+            />
+            {QRCodeDialog()}
+        </ContentTheme>
     )
 
     function DocumentForm() {
         return (
-            <Box mb={1} style={{textAlign: 'center'}}>
+            <form onSubmit={handleSubmit}><Box mb={1} style={{textAlign: 'center'}}>
                 <TextField
                     fullWidth
                     required
@@ -125,12 +126,12 @@ export default function GoodsReceiptSupervisor() {
                     onChange={e => setDocNameInput(e.target.value)}
                 />
                 <Box mt={1}>
-                    <Button variant="contained" color="primary" onClick={handleNewDocument}>
+                    <Button variant="contained" color="primary" type="submit">
                         <DescriptionIcon/>
                         {TextValue.Create}
                     </Button>
                 </Box>
-            </Box>
+            </Box></form>
         )
     }
 
