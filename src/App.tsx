@@ -10,6 +10,7 @@ import Unauthorized from "./Components/Unauthorized";
 import GoodsReceiptSupervisor from "./Pages/GoodsReceiptSupervisor";
 import NotFound from "./Components/NotFound";
 import {Authorization} from "./assets/Authorization";
+import GoodsReceiptProcess from "./Pages/GoodsReceiptProcess";
 
 export default function App() {
     return (
@@ -20,6 +21,9 @@ export default function App() {
                     <Route path="/unauthorized" element={<Unauthorized/>}/>
                     <Route path="/goodsReceipt" element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT}
                                                                          element={<GoodsReceipt/>}/>}/>
+                    <Route path="/goodsReceipt/:scanCodeInput"
+                           element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT}
+                                                    element={<GoodsReceiptProcess/>}/>}/>
                     <Route path="/goodsReceiptSupervisor"
                            element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT_SUPERVISOR}
                                                     element={<GoodsReceiptSupervisor/>}/>}/>

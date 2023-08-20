@@ -12,9 +12,20 @@ export const TextValue = {
     Open: "Abierto",
     Approve: "Aprobar",
     Cancel: "Cancelar",
+    Create: "Crear",
+    Accept: "Aceptar",
     QRCode: "Codigo QR",
+    ID: "Identificacion",
+    Code: "Codigo",
+
+    //Fields
+    DocDate: "Fecha",
+    CreatedBy: "Creador Por",
+    Status: "Estado",
 
     //Dialog
+    IDRequired: "Debe introducir una identificacion",
+    ScanCodeRequired:  "Debe escanear un codigo",
     ConfirmAction: "Confirmar Accion",
     ConfirmApproveDocument: "¿Está seguro de aprobar este documento?",
     ConfirmCancelDocument: "¿Está seguro de cancelar este documento?",

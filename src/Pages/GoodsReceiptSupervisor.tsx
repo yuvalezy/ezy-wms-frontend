@@ -18,6 +18,9 @@ import {useAuth} from "../Components/AppContext";
 import QRCode from "qrcode.react";
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import QrCodeIcon from '@mui/icons-material/QrCode';
+import DoneIcon from '@mui/icons-material/Done';
+import CancelIcon from '@mui/icons-material/Cancel';
+import DescriptionIcon from '@mui/icons-material/Description';
 
 interface Document {
     id: number;
@@ -34,8 +37,8 @@ export default function GoodsReceiptSupervisor() {
     const {user} = useAuth();
 
     const [documents, setDocuments] = useState<Document[]>([
-        {id: 2, documentName: "Document 2", documentDate: "2023-08-10", createdBy: "User2", status: TextValue.Open},
-        {id: 1, documentName: "Document 1", documentDate: "2023-08-09", createdBy: "User1", status: TextValue.Open},
+        {id: 2, documentName: "E33JJDD", documentDate: "2023-08-10", createdBy: "User2", status: TextValue.Open},
+        {id: 1, documentName: "923DJFH", documentDate: "2023-08-09", createdBy: "User1", status: TextValue.Open},
     ]);
 
     const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(null);
@@ -46,6 +49,10 @@ export default function GoodsReceiptSupervisor() {
 
     const handleNewDocument = () => {
         const today = new Date().toISOString().split('T')[0];
+        if (docNameInput === null || docNameInput === '') {
+            alert(TextValue.IDRequired);
+            return;
+        }
         const newDocument: Document = {
             id: documents[0].id + 1,
             documentName: `Document ${docNameInput}`,
@@ -90,7 +97,7 @@ export default function GoodsReceiptSupervisor() {
     return (
         <ThemeProvider theme={theme}>
             <MenuAppBar title={TextValue.GoodsReceiptSupervisor} icon={<SupervisedUserCircleIcon/>}></MenuAppBar>
-            <Box sx={{paddingTop: theme.spacing(8), paddingLeft: theme.spacing(2), paddingRight: theme.spacing(2)}}>
+            <Box sx={{paddingTop: theme.spacing(10), paddingLeft: theme.spacing(2), paddingRight: theme.spacing(2)}}>
                 {DocumentForm()}
                 {documents.map(DocumentCard)}
                 <ConfirmationDialog
@@ -108,18 +115,19 @@ export default function GoodsReceiptSupervisor() {
 
     function DocumentForm() {
         return (
-            <Box mb={1}>
+            <Box mb={1} style={{textAlign: 'center'}}>
                 <TextField
                     fullWidth
                     required
-                    label="Document Name"
+                    label={TextValue.ID}
                     variant="outlined"
                     value={docNameInput}
                     onChange={e => setDocNameInput(e.target.value)}
                 />
                 <Box mt={1}>
                     <Button variant="contained" color="primary" onClick={handleNewDocument}>
-                        Create
+                        <DescriptionIcon/>
+                        {TextValue.Create}
                     </Button>
                 </Box>
             </Box>
@@ -141,21 +149,25 @@ export default function GoodsReceiptSupervisor() {
     }
 
     function DocumentCard(doc: Document) {
-        return <Card key={doc.id} variant="outlined" sx={{marginBottom: theme.spacing(2)}}>
+        return <Card key={doc.id} variant="outlined" sx={{marginBottom: theme.spacing(2), position: 'relative'}}>
+            <Button
+                style={{position: 'absolute', top: '8px', right: '0px', zIndex: 1}}
+                onClick={() => handleAction(doc.id, 'qrcode')}
+            >
+                <QrCodeIcon/>
+            </Button>
             <CardContent>
                 <Typography variant="h6">{doc.documentName}</Typography>
-                <Typography color="textSecondary">Document Date: {doc.documentDate}</Typography>
-                <Typography color="textSecondary">Created By: {doc.createdBy}</Typography>
-                <Typography color="textSecondary">Status: {doc.status}</Typography>
+                <Typography color="textSecondary">{TextValue.DocDate}: {doc.documentDate}</Typography>
+                <Typography color="textSecondary">{TextValue.CreatedBy}: {doc.createdBy}</Typography>
+                <Typography color="textSecondary">{TextValue.Status}: {doc.status}</Typography>
                 <Box sx={{marginTop: theme.spacing(2), display: 'flex', gap: theme.spacing(1)}}>
-                    <Button variant="contained" color="warning" onClick={() => handleAction(doc.id, 'qrcode')}>
-                        <QrCodeIcon />
-                        {TextValue.QRCode}
-                    </Button>
                     <Button variant="contained" color="primary" onClick={() => handleAction(doc.id, 'approve')}>
+                        <DoneIcon/>
                         {TextValue.Approve}
                     </Button>
                     <Button variant="contained" color="secondary" onClick={() => handleAction(doc.id, 'cancel')}>
+                        <CancelIcon/>
                         {TextValue.Cancel}
                     </Button>
                 </Box>
