@@ -21,7 +21,8 @@ export const TextValue = {
     Code: "Codigo",
     Barcode: "Codigo de Barra",
     Unknown: "Desconocido",
-
+    Approved: "El documento ha sido aprobado con exito.",
+    Cancelled: "El documento ha sido cancelado con exito.",
     //Fields
     Number: "Numero",
     DocDate: "Fecha",
@@ -42,5 +43,6 @@ export const TextValue = {
     ScanConfirmStoreInWarehouse: "Guardar en Bodega",
     ScanConfirmFulfillment: "Separar para Entrega a Cliente",
     ScanConfirmShowroom: "Enviar a Showroom",
-    ScanConfirmSupervisor: "Separar para Supervisor",
+    ScanConfirmSupervisor: "Separar para Supervisor"
+
 }

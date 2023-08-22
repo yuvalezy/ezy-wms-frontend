@@ -3,6 +3,7 @@ import React, {createContext, useContext, useState, ReactNode, useEffect} from '
 import axios from "axios";
 import config from "../config";
 import {Authorization} from "../assets/Authorization";
+import {User} from "../assets/Common";
 
 // Define the shape of the context
 interface AuthContextType {
@@ -10,12 +11,6 @@ interface AuthContextType {
     user: User | null;
     login: (username: string, password: string) => Promise<void>;
     logout: () => void;
-}
-
-interface User {
-    id: number;
-    name: string;
-    authorizations: Authorization[];
 }
 
 const AuthContextDefaultValues: AuthContextType = {
@@ -75,7 +70,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                     setUser({
                         id: ID,
                         name: Name,
-                        authorizations: Roles.map((role:number) => (role as Authorization))
+                        authorizations: Roles.map((role:string) => (role as Authorization))
                     });
                 }
             }
