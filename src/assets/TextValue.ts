@@ -10,6 +10,7 @@ export const TextValue = {
     No: "No",
     Yes: "Si",
     Open: "Abierto",
+    InProgress: "En Proceso",
     Approve: "Aprobar",
     Cancel: "Cancelar",
     Finish: "Finalizar",

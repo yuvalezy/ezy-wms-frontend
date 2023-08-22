@@ -63,13 +63,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 const expiryTime = new Date().getTime() + expires_in * 1000;
                 localStorage.setItem('token_expiry', expiryTime.toString());
 
-                // //todo load id, user actual first and last name and authorizations from rest api
-                // setUser({
-                //     id: 1,
-                //     name: username,
-                //     authorizations: [Authorization.GOODS_RECEIPT, Authorization.GOODS_RECEIPT_SUPERVISOR]
-                // });
-                // Fetch user information from the API
                 const userInfoResponse = await axios.get(`${config.baseURL}/api/General/UserInfo`, {
                     headers: {
                         'Authorization': `Bearer ${access_token}`
@@ -82,17 +75,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                     setUser({
                         id: ID,
                         name: Name,
-                        authorizations: Roles.map((role:number) => {
-                            switch (role) {
-                                case 1:
-                                    return Authorization.GOODS_RECEIPT;
-                                case 2:
-                                    return Authorization.GOODS_RECEIPT_SUPERVISOR;
-                                default:
-                                    console.error(`Unknown role: ${role}`);
-                                    break;
-                            }
-                        })
+                        authorizations: Roles.map((role:number) => (role as Authorization))
                     });
                 }
             }

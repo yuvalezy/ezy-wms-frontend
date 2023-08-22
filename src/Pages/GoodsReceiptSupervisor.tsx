@@ -1,8 +1,6 @@
-import React, {useState} from "react";
-import MenuAppBar from "../Components/MenuAppBar";
+import React, {useEffect, useState} from "react";
 import {
     createTheme,
-    ThemeProvider,
     Card,
     CardContent,
     Typography,
@@ -21,16 +19,32 @@ import QrCodeIcon from '@mui/icons-material/QrCode';
 import DoneIcon from '@mui/icons-material/Done';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DescriptionIcon from '@mui/icons-material/Description';
-import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import ContentTheme from "../Components/ContentTheme";
 import {Functions} from "../assets/Functions";
+import axios from "axios";
+import config from "../config";
 
 interface Document {
     id: number;
-    documentName: string;
-    documentDate: string;
-    createdBy: string;
-    status: string;
+    name: string;
+    date: string;
+    employee: Employee;
+    status: number;
+    statusDate?: string;
+    statusEmployee?: Employee;
+}
+
+interface Employee {
+    id: number;
+    name: string;
+}
+
+enum DocumentStatus {
+    Open       = 'O'.charCodeAt(0),
+    Processing = 'P'.charCodeAt(0),
+    Finished   = 'F'.charCodeAt(0),
+    Cancelled  = 'C'.charCodeAt(0),
+    InProgress = 'I'.charCodeAt(0)
 }
 
 type Action = 'approve' | 'cancel' | 'qrcode';
@@ -39,16 +53,41 @@ export default function GoodsReceiptSupervisor() {
     const theme = createTheme();
     const {user} = useAuth();
 
-    const [documents, setDocuments] = useState<Document[]>([
-        {id: 2, documentName: "E33JJDD", documentDate: "2023-08-10", createdBy: "User2", status: TextValue.Open},
-        {id: 1, documentName: "923DJFH", documentDate: "2023-08-09", createdBy: "User1", status: TextValue.Open},
-    ]);
-
+    const [documents, setDocuments] = useState<Document[]>([]);
     const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(null);
     const [actionType, setActionType] = useState<Action | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [docNameInput, setDocNameInput] = useState<string | ''>('');  // For new document input
     const [qrOpen, setQrOpen] = useState(false);
+
+    useEffect(() => {
+        const access_token = localStorage.getItem('token');
+        axios.get<Document[]>(`${config.baseURL}/api/GoodsReceipt/Documents?statuses=Open, InProgress&OrderBy=ID&Desc=true`, {
+            headers: {
+                'Authorization': `Bearer ${access_token}`
+            }
+        })
+            .then(response => {
+                setDocuments(response.data.map((v: any) => ({
+                    id: v.ID,
+                    name: v.Name,
+                    date: v.Date,
+                    employee: {
+                        id: v.Employee.ID,
+                        name: v.Employee.Name
+                    },
+                    status: v.Status,
+                    statusDate: v.StatusDate,
+                    statusEmployee: {
+                        id: v.StatusEmployee?.ID,
+                        name: v.StatusEmployee?.Name
+                    }
+                })));
+            })
+            .catch(error => {
+                console.error(`Error fetching documents: ${error}`);
+            })
+    }, []);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -60,13 +99,14 @@ export default function GoodsReceiptSupervisor() {
         //todo validate no duplicate document name
         const newDocument: Document = {
             id: documents[0].id + 1,
-            documentName: docNameInput,
-            documentDate: today,
-            createdBy: "",  // Assuming user contains the username
-            status: TextValue.Open
+            name: docNameInput,
+            date: today,
+            employee: {
+                id: user!.id,
+                name: user!.name,
+            },
+            status: 1
         };
-        if (user !== null)
-            newDocument.createdBy = user.name;
         setDocuments(prevDocs => [newDocument, ...prevDocs]);
         setDocNameInput('');  // Reset the input
     };
@@ -88,7 +128,7 @@ export default function GoodsReceiptSupervisor() {
                     //todo send status to back-end
                     return {
                         ...doc,
-                        status: actionType === 'approve' ? TextValue.Finish : TextValue.Cancel
+                        status: actionType === 'approve' ? 1 : 2
                     };
                 }
                 return doc;
@@ -129,6 +169,7 @@ export default function GoodsReceiptSupervisor() {
                     variant="outlined"
                     value={docNameInput}
                     onChange={e => setDocNameInput(e.target.value)}
+                    inputProps={{maxLength: 50}}
                 />
                 <Box mt={1}>
                     <Button variant="contained" color="primary" type="submit">
@@ -163,11 +204,11 @@ export default function GoodsReceiptSupervisor() {
                 <QrCodeIcon/>
             </Button>
             <CardContent>
-                <Typography variant="h6">{TextValue.ID}: {doc.documentName}</Typography>
+                <Typography variant="h6">{TextValue.ID}: {doc.name}</Typography>
                 <Typography color="textSecondary">{TextValue.Number}: {doc.id}</Typography>
-                <Typography color="textSecondary">{TextValue.DocDate}: {doc.documentDate}</Typography>
-                <Typography color="textSecondary">{TextValue.CreatedBy}: {doc.createdBy}</Typography>
-                <Typography color="textSecondary">{TextValue.Status}: {doc.status}</Typography>
+                <Typography color="textSecondary">{TextValue.DocDate}: {new Date(doc.date).toLocaleDateString()}</Typography>
+                <Typography color="textSecondary">{TextValue.CreatedBy}: {doc.employee.name}</Typography>
+                <Typography color="textSecondary">{TextValue.Status}: {doc.status === DocumentStatus.Open ? TextValue.Open : TextValue.InProgress}</Typography>
                 <Box sx={{marginTop: theme.spacing(2), display: 'flex', gap: theme.spacing(1)}}>
                     <Button variant="contained" color="primary" onClick={() => handleAction(doc.id, 'approve')}>
                         <DoneIcon/>
