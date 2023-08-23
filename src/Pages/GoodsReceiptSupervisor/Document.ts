@@ -27,6 +27,12 @@ export enum DocumentStatus {
     InProgress = 'InProgress',
 }
 
+export enum OrderBy {
+    ID = 'ID',
+    Name = 'Name',
+    Date = 'Date',
+}
+
 export const createDocument = async (name: string, user: User): Promise<Document> => {
     try {
         const access_token = localStorage.getItem('token');
@@ -71,14 +77,22 @@ export const documentAction = async (id: number, action: Action, user: User): Pr
         throw error;  // Re-throwing so that the calling function can decide what to do with the error
     }
 }
-export const fetchDocuments = async (): Promise<Document[]> => {
+export const fetchDocuments = async (
+    id? :number,
+    statuses: DocumentStatus[] = [DocumentStatus.Open, DocumentStatus.InProgress],
+    orderBy: OrderBy = OrderBy.ID,
+    desc: boolean = true
+): Promise<Document[]> => {
     try {
         const access_token = localStorage.getItem('token');
-        const response = await axios.get<Document[]>(`${config.baseURL}/api/GoodsReceipt/Documents?statuses=Open,InProgress&OrderBy=ID&Desc=true`, {
-            headers: {
-                'Authorization': `Bearer ${access_token}`
-            }
-        });
+        const statusesString = statuses.join(',');
+        const url = `${config.baseURL}/api/GoodsReceipt/Documents?statuses=${statusesString}&ID=${id}&OrderBy=${orderBy}&Desc=${desc}`;
+        const response = await axios.get<Document[]>(url,
+            {
+                headers: {
+                    'Authorization': `Bearer ${access_token}`
+                }
+            });
 
         return response.data.map((v: any) => ({
             id: v.ID,
