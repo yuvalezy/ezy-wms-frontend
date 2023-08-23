@@ -78,7 +78,7 @@ export const documentAction = async (id: number, action: Action, user: User): Pr
     }
 }
 export const fetchDocuments = async (
-    id? :number,
+    id?: number,
     statuses: DocumentStatus[] = [DocumentStatus.Open, DocumentStatus.InProgress],
     orderBy: OrderBy = OrderBy.ID,
     desc: boolean = true
