@@ -7,7 +7,7 @@ import {
     Button,
     Box,
 } from "@mui/material";
-import {Document, DocumentStatus} from "./Document";
+import {Document, DocumentStatus, documentStatusToString} from "./Document";
 import QrCodeIcon from '@mui/icons-material/QrCode';
 import DoneIcon from '@mui/icons-material/Done';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -37,7 +37,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, handleAction}) => {
                     color="textSecondary">{TextValue.DocDate}: {new Date(doc.date).toLocaleDateString()}</Typography>
                 <Typography color="textSecondary">{TextValue.CreatedBy}: {doc.employee.name}</Typography>
                 <Typography
-                    color="textSecondary">{TextValue.Status}: {doc.status === DocumentStatus.Open ? TextValue.Open : TextValue.InProgress}</Typography>
+                    color="textSecondary">{TextValue.Status}: {documentStatusToString(doc.status)}</Typography>
                 <Box sx={{marginTop: theme.spacing(2), display: 'flex', gap: theme.spacing(1)}}>
                     {doc.status === DocumentStatus.InProgress && (
                         <Button variant="contained" color="primary" onClick={() => handleAction(doc.id, 'approve')}>

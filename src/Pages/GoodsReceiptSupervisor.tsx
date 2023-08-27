@@ -4,7 +4,7 @@ import ConfirmationDialog from "../Components/ConfirmationDialog";
 import {useAuth} from "../Components/AppContext";
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import ContentTheme from "../Components/ContentTheme";
-import {Functions} from "../assets/Functions";
+import {StringFormat} from "../assets/Functions";
 import DocumentForm from "./GoodsReceiptSupervisor/DocumentForm";
 import {Document, fetchDocuments, createDocument, Action, documentAction} from "./GoodsReceiptSupervisor/Document";
 import DocumentCard from "./GoodsReceiptSupervisor/DocumentCard";
@@ -22,11 +22,7 @@ export default function GoodsReceiptSupervisor() {
     const [cardCodeInput, setCardCodeInput] = useState<string | ''>('');
     const [docNameInput, setDocNameInput] = useState<string | ''>('');
     const [qrOpen, setQrOpen] = useState(false);
-    const [snackbar, setSnackbar] = React.useState<SnackbarState>({
-        open: false,
-        message: '',
-        color: ''
-    });
+    const [snackbar, setSnackbar] = React.useState<SnackbarState>({open: false});
 
     const errorAlert = (message: string) => {
         setSnackbar({open: true, message: message, color: 'red'});
@@ -103,7 +99,7 @@ export default function GoodsReceiptSupervisor() {
                 <ConfirmationDialog
                     title={TextValue.ConfirmAction}
                     text={
-                        Functions.StringFormat((actionType === 'approve' ?
+                        StringFormat((actionType === 'approve' ?
                             TextValue.ConfirmFinishDocument :
                             TextValue.ConfirmCancelDocument), selectedDocumentId)
                     }

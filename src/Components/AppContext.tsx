@@ -42,7 +42,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     const login = async (username: string, password: string) => {
         try {
-            await new Promise(res => setTimeout(res, 2000));
+            await new Promise(res => setTimeout(res, 500));
             //todo remove
 
             const response = await axios.post(`${config.baseURL}/token`, {

@@ -4,7 +4,7 @@ import {TextValue} from "../assets/TextValue";
 import {useParams} from "react-router-dom";
 import React from "react";
 import ErrorMessage from "../Components/ErrorMessagex";
-import {Functions} from "../assets/Functions";
+import { IsNumeric} from "../assets/Functions";
 import Box from "@mui/material/Box";
 import {Button, TextField} from "@mui/material";
 import SnackbarAlert, {SnackbarState} from "../Components/SnackbarAlert";
@@ -25,7 +25,7 @@ export default function GoodsReceiptProcess() {
     function isValid() {
         if (scanCode === null || scanCode === undefined)
             return false;
-        return Functions.IsNumeric(scanCode);
+        return IsNumeric(scanCode);
     }
 
 

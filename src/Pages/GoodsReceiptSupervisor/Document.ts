@@ -2,6 +2,7 @@ import axios from "axios";
 import config from "../../config";
 import {User} from "../../assets/Common";
 import {BusinessPartner, Employee} from "../../assets/Data";
+import { TextValue } from "../../assets/TextValue";
 
 export type Action = 'approve' | 'cancel' | 'qrcode';
 
@@ -25,6 +26,21 @@ export enum DocumentStatus {
     InProgress = 'InProgress',
 }
 
+export const documentStatusToString = (status: DocumentStatus): string => {
+    switch (status) {
+        case DocumentStatus.Open:
+            return TextValue.OpenStatus;
+        case DocumentStatus.Processing:
+            return TextValue.ProcessingStatus;
+        case DocumentStatus.Finished:
+            return TextValue.FinishedStatus;
+        case DocumentStatus.Cancelled:
+            return TextValue.CancelledStatus;
+        case DocumentStatus.InProgress:
+            return TextValue.InProgressStatus;
+    }
+};
+
 export enum OrderBy {
     ID = 'ID',
     Name = 'Name',
@@ -33,7 +49,7 @@ export enum OrderBy {
 
 export const createDocument = async (cardCode: string, name: string, user: User): Promise<Document> => {
     try {
-        await delay(2000);
+        await delay(500);
         //todo remove
 
         const access_token = localStorage.getItem('token');
@@ -54,7 +70,7 @@ export const createDocument = async (cardCode: string, name: string, user: User)
 }
 export const documentAction = async (id: number, action: Action, user: User): Promise<boolean> => {
     try {
-        await delay(2000);
+        await delay(500);
         //todo remove
 
         const access_token = localStorage.getItem('token');
@@ -78,12 +94,26 @@ export const fetchDocuments = async (
     desc: boolean = true
 ): Promise<Document[]> => {
     try {
-        await delay(2000);
+        await delay(500);
         //todo remove
 
         const access_token = localStorage.getItem('token');
-        const statusesString = statuses.join(',');
-        const url = `${config.baseURL}/api/GoodsReceipt/Documents?statuses=${statusesString}&ID=${id}&OrderBy=${orderBy}&Desc=${desc}`;
+
+        const queryParams = [
+            `OrderBy=${orderBy}`,
+            `Desc=${desc}`
+        ];
+
+        if (statuses && statuses.length > 0) {
+            queryParams.push(`statuses=${statuses.join(',')}`);
+        }
+
+        if (id !== null && id !== undefined) {
+            queryParams.push(`ID=${id}`);
+        }
+
+        const url = `${config.baseURL}/api/GoodsReceipt/Documents?${queryParams.join('&')}`;
+
         const response = await axios.get<Document[]>(url,
             {
                 headers: {

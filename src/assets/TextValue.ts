@@ -9,8 +9,6 @@ export const TextValue = {
     //Buttons / Status
     No: "No",
     Yes: "Sí",
-    Open: "Abierto",
-    InProgress: "En Proceso",
     Approve: "Aprobar",
     Cancel: "Cancelar",
     Finish: "Finalizar",
@@ -24,6 +22,13 @@ export const TextValue = {
     Approved: "El documento ha sido aprobado con éxito.",
     Cancelled: "El documento ha sido cancelado con éxito.",
 
+    //Statues
+    OpenStatus: "Abierto",
+    InProgressStatus: "En Proceso",
+    FinishedStatus: "Finalizado",
+    CancelledStatus: "Cancelado",
+    ProcessingStatus: "Procesando",
+
     //Fields
     Vendor: "Proveedor",
     Number: "Número",
@@ -34,11 +39,15 @@ export const TextValue = {
     //Field Description
     SelectVendor: "Seleccione el Proveedor",
 
-    //Dialog
+    //Validations
+    GoodsReceiptNotFound: "La entrada #{0} no es valida",
+    GoodsReceiptStatusError: "El estado de la entrada #{0} es {1}.\nNo se puede continuar.",
     IDRequired: "Debe introducir una identificación",
     InvalidID: "Identificación Inválida",
     ScanCodeRequired: "Debe escanear un código",
     BarcodeRequired: "Debe escanear un código de barra",
+
+    //Dialog
     ConfirmAction: "Confirmar Acción",
     ConfirmApproveDocument: "¿Está seguro que desea aprobar el documento #{0}?",
     ConfirmCancelDocument: "¿Está seguro que desea cancelar el documento #{0}?",
