@@ -57,5 +57,6 @@ export const TextValue = {
     ScanConfirmStoreInWarehouse: "Guardar en Bodega",
     ScanConfirmFulfillment: "Separar para Entrega a Cliente",
     ScanConfirmShowroom: "Enviar a Showroom",
-    ScanConfirmSupervisor: "Separar para Supervisor"
+    ScanConfirmSupervisor: "Separar para Supervisor",
+    ScanConfirmBoxNumber: "Confirmar numero de caja"
 }

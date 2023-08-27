@@ -72,8 +72,15 @@ export default function GoodsReceiptProcess() {
             case 4:
                 setSnackbar({
                     open: true,
-                    message: TextValue.ScanConfirmSupervisor,
+                    message: TextValue.ScanConfirmBoxNumber,
                     color: 'Purple'
+                });
+                break;
+            case 5:
+                setSnackbar({
+                    open: true,
+                    message: TextValue.ScanConfirmSupervisor,
+                    color: 'DarkRed'
                 });
                 break;
             default:

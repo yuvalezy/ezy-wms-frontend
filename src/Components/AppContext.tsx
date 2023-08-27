@@ -1,6 +1,6 @@
 // AuthContext.tsx
 import React, {createContext, useContext, useState, ReactNode, useEffect} from 'react';
-import axios from "axios";
+import axios, {AxiosError} from "axios";
 import config from "../config";
 import {Authorization} from "../assets/Authorization";
 import {User} from "../assets/Common";
@@ -27,6 +27,12 @@ export const AuthContext = createContext<AuthContextType>(AuthContextDefaultValu
 interface AuthProviderProps {
     children: ReactNode;
 }
+
+interface ErrorResponse {
+    error: string;
+    error_description: string;
+}
+
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
@@ -71,9 +77,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                     setUser(userInfoResponse.data);
                 }
             }
-
         } catch(error) {
-            alert(`Failed to login: ${error}`);
+            const axiosError = error as AxiosError;
+            const data = axiosError.response?.data as ErrorResponse;
+            const error_description = data?.error_description;
+            console.error(error);
+            alert(`Failed to login: ${error_description || axiosError.message}`);
         }
     }
 

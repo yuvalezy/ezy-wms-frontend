@@ -2,7 +2,7 @@ import React from "react";
 import MenuAppBar from "../Components/MenuAppBar";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import {Grid, Paper} from "@mui/material";
+import {Grid, Paper, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
 import {useAuth} from "../Components/AppContext";
 import {Menus} from "../assets/Menus";
@@ -17,6 +17,9 @@ export default function Home() {
         <ThemeProvider theme={theme}>
             <MenuAppBar title={TextValue.Home} icon={<HomeIcon/>}></MenuAppBar>
             <Box sx={{paddingTop: theme.spacing(8), paddingLeft: theme.spacing(1), paddingRight: theme.spacing(1)}}>
+                <Typography variant="h2" style={{textAlign: 'center'}}>
+                    {user?.branch}
+                </Typography>
                 <Grid container spacing={3}>
                     {menus.map(menu =>
                         (
