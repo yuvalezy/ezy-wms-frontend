@@ -1,8 +1,8 @@
 import axios from "axios";
 import config from "../../config";
-import {User} from "../../assets/Common";
+import {Item, User} from "../../assets/Common";
 import {BusinessPartner, Employee} from "../../assets/Data";
-import { TextValue } from "../../assets/TextValue";
+import {TextValue} from "../../assets/TextValue";
 
 export type Action = 'approve' | 'cancel' | 'qrcode';
 
@@ -24,6 +24,12 @@ export enum DocumentStatus {
     Finished = 'Finished',
     Cancelled = 'Cancelled',
     InProgress = 'InProgress',
+}
+
+export enum AddItemReturnValue {
+    StoreInWarehouse = 'StoreInWarehouse',
+    Fulfillment = 'Fulfillment',
+    Showroom = 'Showroom'
 }
 
 export const documentStatusToString = (status: DocumentStatus): string => {
@@ -127,5 +133,54 @@ export const fetchDocuments = async (
         throw error;
     }
 };
+
+export const scanBarcode = async (scanCode: string): Promise<Item[]> => {
+    try {
+        await delay(500);
+        //todo remove
+
+        const access_token = localStorage.getItem('token');
+
+        const url = `${config.baseURL}/api/General/ItemByBarCode?scanCode=${scanCode}`;
+
+        const response = await axios.get<Item[]>(url,
+            {
+                headers: {
+                    'Authorization': `Bearer ${access_token}`
+                }
+            });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error canning barcode:", error);
+        throw error;
+    }
+}
+
+export const addItem = async(id: number, itemCode: string, barcode: string): Promise<AddItemReturnValue> => {
+    try {
+        await delay(500);
+        //todo remove
+
+        const access_token = localStorage.getItem('token');
+
+        const url = `${config.baseURL}/api/GoodsReceipt/AddItem`;
+
+        const response = await axios.post<AddItemReturnValue>(url, {
+            id: id,
+            itemCode: itemCode,
+            barcode: barcode
+        }, {
+            headers: {
+                'Authorization': `Bearer ${access_token}`
+            }
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error adding item:", error);
+        throw error;
+    }
+}
 
 const delay = (ms: number) => new Promise(res => setTimeout(res, ms));

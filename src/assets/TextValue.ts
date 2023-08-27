@@ -30,14 +30,19 @@ export const TextValue = {
     ProcessingStatus: "Procesando",
 
     //Fields
+    Item: "Articulo",
     Vendor: "Proveedor",
     Number: "Número",
     DocDate: "Fecha",
     CreatedBy: "Creado Por",
     Status: "Estado",
+    Box: "Caja",
+    Boxes: "Cajas",
+    Of: "de",
 
     //Field Description
     SelectVendor: "Seleccione el Proveedor",
+    SelectBox: "Seleccione la Caja",
 
     //Validations
     GoodsReceiptNotFound: "La entrada #{0} no es valida",
@@ -46,6 +51,8 @@ export const TextValue = {
     InvalidID: "Identificación Inválida",
     ScanCodeRequired: "Debe escanear un código",
     BarcodeRequired: "Debe escanear un código de barra",
+    BarcodeNotFound: 'No se encontro el codigo de barra "{0}"',
+    MultipleItemsError: "Codigo retorno multiples codigos de articulos:\n{0}.\nSolicite la correcion en el sistema e intente de nuevo.",
 
     //Dialog
     ConfirmAction: "Confirmar Acción",

@@ -2,36 +2,52 @@ import ContentTheme from "../Components/ContentTheme";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import {TextValue} from "../assets/TextValue";
 import {useParams} from "react-router-dom";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import ErrorMessage from "../Components/ErrorMessagex";
-import { IsNumeric} from "../assets/Functions";
+import {IsNumeric, StringFormat} from "../assets/Functions";
 import Box from "@mui/material/Box";
 import {Button, TextField} from "@mui/material";
 import SnackbarAlert, {SnackbarState} from "../Components/SnackbarAlert";
+import BoxConfirmationDialog from '../Components/BoxConfirmationDialog'
 import DoneIcon from "@mui/icons-material/Done";
+import {addItem, AddItemReturnValue, scanBarcode} from "./GoodsReceiptSupervisor/Document";
+import {distinctItems, Item} from "../assets/Common";
+
 
 export default function GoodsReceiptProcess() {
     const {scanCode} = useParams();
-    const [barcodeInput, setBarcodeInput] = React.useState('1234');
-    //todo remove default state
-    const [snackbar, setSnackbar] = React.useState<SnackbarState>({
-        open: false,
-        message: '',
-        color: ''
-    });
+    const [id, setID] = useState<number | null>();
+    const [loading, setLoading] = useState(false);
+    const [barcodeInput, setBarcodeInput] = React.useState('');
+    const [snackbar, setSnackbar] = React.useState<SnackbarState>({open: false});
+    const [openBoxDialog, setOpenBoxDialog] = useState(false);
+    const [boxItem, setBoxItem] = useState('');
+    const [boxItems, setBoxItems] = useState<Item[]>();
 
     const title = `${TextValue.GoodsReceipt} #${scanCode}`;
 
-    function isValid() {
-        if (scanCode === null || scanCode === undefined)
-            return false;
-        return IsNumeric(scanCode);
-    }
+    useEffect(() => {
+        if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
+            setID(null);
+            return;
+        }
+        setID(parseInt(scanCode));
+    }, []);
+
+    const alert = (message: string, color: string) => {
+        setSnackbar({open: true, message: message, color: color});
+        setTimeout(() => setSnackbar({open: false}), 5000);
+    };
+
+    const errorAlert = (message: string) => {
+        setSnackbar({open: true, message: message, color: 'red'});
+        setTimeout(() => setSnackbar({open: false}), 5000);
+    };
 
 
     return (
-        <ContentTheme title={title} icon={<AssignmentTurnedInIcon/>}>
-            {isValid() ? (
+        <ContentTheme loading={loading} title={title} icon={<AssignmentTurnedInIcon/>}>
+            {id ? (
                 BarCodeForm()
             ) : <ErrorMessage text={TextValue.InvalidScanCode}/>
             }
@@ -41,58 +57,76 @@ export default function GoodsReceiptProcess() {
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         if (barcodeInput.length === 0) {
-            alert(TextValue.BarcodeRequired);
+            alert(TextValue.BarcodeRequired, 'DarkRed');
             return;
         }
-        //show mock where to put stuff
 
-        let status = 1;
-        switch (status) {
-            case 1:
-                setSnackbar({
-                    open: true,
-                    message: TextValue.ScanConfirmStoreInWarehouse,
-                    color: 'Green'
-                });
-                break;
-            case 2:
-                setSnackbar({
-                    open: true,
-                    message: TextValue.ScanConfirmFulfillment,
-                    color: 'Amber'
-                });
-                break;
-            case 3:
-                setSnackbar({
-                    open: true,
-                    message: TextValue.ScanConfirmShowroom,
-                    color: 'Blue'
-                });
-                break;
-            case 4:
-                setSnackbar({
-                    open: true,
-                    message: TextValue.ScanConfirmBoxNumber,
-                    color: 'Purple'
-                });
-                break;
-            case 5:
-                setSnackbar({
-                    open: true,
-                    message: TextValue.ScanConfirmSupervisor,
-                    color: 'DarkRed'
-                });
-                break;
-            default:
-                setSnackbar({
-                    open: true,
-                    message: TextValue.Unknown,
-                    color: 'DarkRed'
-                });
-                break;
-        }
+        setLoading(true);
+        scanBarcode(barcodeInput)
+            .then(items => handleItems(items))
+            .catch(error => errorAlert(`Scan Bar Code Error: ${error}`))
+            .finally(() => setLoading(false));
+
 
         setTimeout(() => setSnackbar({open: false}), 5000);
+    }
+
+    function handleItems(items: Item[]) {
+        if (items.length === 0) {
+            alert(StringFormat(TextValue.BarcodeNotFound, barcodeInput), 'DarkRed');
+            setBarcodeInput('');
+            return;
+        }
+        if (items.length === 1) {
+            addItemToDocument(items[0].code);
+            return;
+        }
+        handleMultipleItems(items);
+    }
+
+    function handleMultipleItems(items: Item[]) {
+        const distinctCodes = distinctItems(items);
+        if (distinctCodes.length !== 1) {
+            let codes = distinctCodes.map(v => `"${v}"`).join('\n');
+            alert(StringFormat(TextValue.MultipleItemsError, codes), 'DarkRed');
+            return;
+        }
+        setBoxItem(distinctCodes[0]);
+        setBoxItems(items);
+        setOpenBoxDialog(true);
+    }
+
+    function addItemToDocument(itemCode: string) {
+        setOpenBoxDialog(false);
+        const barcode = barcodeInput;
+        console.log(barcode);
+        setBarcodeInput('');
+        addItem(id??0, itemCode, barcode)
+            .then(v => {
+                let message: string;
+                let color: string;
+                switch (v) {
+                    case AddItemReturnValue.StoreInWarehouse:
+                        message = TextValue.ScanConfirmStoreInWarehouse;
+                        color = 'Green';
+                        break;
+                    case AddItemReturnValue.Fulfillment:
+                        message = TextValue.ScanConfirmFulfillment;
+                        color = 'Amber';
+                        break;
+                    case AddItemReturnValue.Showroom:
+                        message = TextValue.ScanConfirmShowroom;
+                        color = 'Blue';
+                        break;
+                    default:
+                        message = `Unkowon return value: ${v}`;
+                        color = 'Red';
+                        break;
+                }
+                setSnackbar({open: true, message: message, color: color});
+            })
+            .catch(error => errorAlert(`Add Item Error: ${error}`))
+            .finally(() => setLoading(false))
     }
 
     function BarCodeForm(): React.ReactNode {
@@ -116,6 +150,13 @@ export default function GoodsReceiptProcess() {
                     </Box>
                     <SnackbarAlert state={snackbar} onClose={() => setSnackbar({open: false})}/>
                 </Box>
+                <BoxConfirmationDialog
+                    open={openBoxDialog}
+                    onClose={() => setOpenBoxDialog(false)}
+                    onSelected={(v: string) => addItemToDocument(v)}
+                    itemCode={boxItem}
+                    items={boxItems}
+                />
             </form>
         )
     }

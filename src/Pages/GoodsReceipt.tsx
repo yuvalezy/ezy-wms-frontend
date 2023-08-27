@@ -54,9 +54,8 @@ export default function GoodsReceipt() {
                 }
                 navigate(`/goodsReceipt/${id}`);
             })
-            .catch(error => errorAlert(`Validate Goods Receipt Error: ${error}`)).finally(() => {
-            setLoading(false);
-        });
+            .catch(error => errorAlert(`Validate Goods Receipt Error: ${error}`))
+            .finally(() => setLoading(false));
     }
 
     return (
