@@ -8,7 +8,7 @@ export const TextValue = {
 
     //Buttons / Status
     No: "No",
-    Yes: "Si",
+    Yes: "Sí",
     Open: "Abierto",
     InProgress: "En Proceso",
     Approve: "Aprobar",
@@ -16,33 +16,37 @@ export const TextValue = {
     Finish: "Finalizar",
     Create: "Crear",
     Accept: "Aceptar",
-    QRCode: "Codigo QR",
-    ID: "Identificacion",
-    Code: "Codigo",
-    Barcode: "Codigo de Barra",
+    QRCode: "Código QR",
+    ID: "Identificación",
+    Code: "Código",
+    Barcode: "Código de Barra",
     Unknown: "Desconocido",
-    Approved: "El documento ha sido aprobado con exito.",
-    Cancelled: "El documento ha sido cancelado con exito.",
+    Approved: "El documento ha sido aprobado con éxito.",
+    Cancelled: "El documento ha sido cancelado con éxito.",
+
     //Fields
-    Number: "Numero",
+    Vendor: "Proveedor",
+    Number: "Número",
     DocDate: "Fecha",
-    CreatedBy: "Creador Por",
+    CreatedBy: "Creado Por",
     Status: "Estado",
 
+    //Field Description
+    SelectVendor: "Seleccione el Proveedor",
+
     //Dialog
-    IDRequired: "Debe introducir una identificacion",
-    InvalidID: "Identificacion Invalida",
-    ScanCodeRequired:  "Debe escanear un codigo",
-    BarcodeRequired: "Debe escanear un codigo de barra",
-    ConfirmAction: "Confirmar Accion",
+    IDRequired: "Debe introducir una identificación",
+    InvalidID: "Identificación Inválida",
+    ScanCodeRequired: "Debe escanear un código",
+    BarcodeRequired: "Debe escanear un código de barra",
+    ConfirmAction: "Confirmar Acción",
     ConfirmApproveDocument: "¿Está seguro que desea aprobar el documento #{0}?",
     ConfirmCancelDocument: "¿Está seguro que desea cancelar el documento #{0}?",
     ConfirmFinishDocument: "¿Está seguro que desea finalizar el documento #{0}?",
     ActionCannotReverse: "Esta acción no se puede revertir",
-    InvalidScanCode: "Codigo Erroneo",
+    InvalidScanCode: "Código Erróneo",
     ScanConfirmStoreInWarehouse: "Guardar en Bodega",
     ScanConfirmFulfillment: "Separar para Entrega a Cliente",
     ScanConfirmShowroom: "Enviar a Showroom",
     ScanConfirmSupervisor: "Separar para Supervisor"
-
 }

@@ -4,23 +4,27 @@ import CloseIcon from "@mui/icons-material/Close";
 import React from "react";
 
 interface SnackbarProps {
-    open: boolean;
-    message?: string;
-    color?: string;
+    state: SnackbarState,
     onClose?: () => void;
 }
 
-const ConfirmationSnackbar: React.FC<SnackbarProps> = ({open, message, color, onClose}) => {
+export type SnackbarState = {
+    open: boolean;
+    message?: string;
+    color?: string;
+};
+
+const SnackbarAlert: React.FC<SnackbarProps> = ({state, onClose}) => {
     return (
         <Snackbar
-            open={open}
+            open={state.open}
             TransitionComponent={(props) => <Slide {...props} direction="up"/>}
         >
             <SnackbarContent
                 message={
                     <span style={{display: 'flex', alignItems: 'center'}}>
                         <CheckCircleIcon style={{marginRight: '8px'}}/>
-                        {message}
+                        {state.message}
                     </span>
                 }
                 action={
@@ -33,9 +37,9 @@ const ConfirmationSnackbar: React.FC<SnackbarProps> = ({open, message, color, on
                         <CloseIcon fontSize="small"/>
                     </IconButton>
                 }
-                sx={{ bgcolor: color }}
+                sx={{ bgcolor: state.color }}
             />
         </Snackbar>
     );
 }
-export default ConfirmationSnackbar;
+export default SnackbarAlert;

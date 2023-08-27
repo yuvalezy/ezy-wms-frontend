@@ -6,17 +6,19 @@ import React from "react";
 import ErrorMessage from "../Components/ErrorMessagex";
 import {Functions} from "../assets/Functions";
 import Box from "@mui/material/Box";
-import {Button, TextField, Snackbar, Slide, IconButton, SnackbarProps} from "@mui/material";
+import {Button, TextField} from "@mui/material";
+import SnackbarAlert, {SnackbarState} from "../Components/SnackbarAlert";
 import DoneIcon from "@mui/icons-material/Done";
-import ConfirmationSnackbar from "../Components/ConfirmationSnackbar";
 
 export default function GoodsReceiptProcess() {
     const {scanCode} = useParams();
     const [barcodeInput, setBarcodeInput] = React.useState('1234');
     //todo remove default state
-    const [snackbarOpen, setSnackbarOpen] = React.useState(false);
-    const [snackbarMessage, setSnackbarMessage] = React.useState('');
-    const [snackbarColor, setSnackbarColor] = React.useState('');
+    const [snackbar, setSnackbar] = React.useState<SnackbarState>({
+        open: false,
+        message: '',
+        color: ''
+    });
 
     const title = `${TextValue.GoodsReceipt} #${scanCode}`;
 
@@ -47,29 +49,43 @@ export default function GoodsReceiptProcess() {
         let status = 1;
         switch (status) {
             case 1:
-                setSnackbarColor('Green');
-                setSnackbarMessage(TextValue.ScanConfirmStoreInWarehouse);
+                setSnackbar({
+                    open: true,
+                    message: TextValue.ScanConfirmStoreInWarehouse,
+                    color: 'Green'
+                });
                 break;
             case 2:
-                setSnackbarColor('Amber');
-                setSnackbarMessage(TextValue.ScanConfirmFulfillment);
+                setSnackbar({
+                    open: true,
+                    message: TextValue.ScanConfirmFulfillment,
+                    color: 'Amber'
+                });
                 break;
             case 3:
-                setSnackbarColor('Blue');
-                setSnackbarMessage(TextValue.ScanConfirmShowroom);
+                setSnackbar({
+                    open: true,
+                    message: TextValue.ScanConfirmShowroom,
+                    color: 'Blue'
+                });
                 break;
             case 4:
-                setSnackbarColor('Purple');
-                setSnackbarMessage(TextValue.ScanConfirmSupervisor);
+                setSnackbar({
+                    open: true,
+                    message: TextValue.ScanConfirmSupervisor,
+                    color: 'Purple'
+                });
                 break;
             default:
-                setSnackbarColor('DarkRed');
-                setSnackbarMessage(TextValue.Unknown);
+                setSnackbar({
+                    open: true,
+                    message: TextValue.Unknown,
+                    color: 'DarkRed'
+                });
                 break;
         }
 
-        setSnackbarOpen(true);
-        setTimeout(() => setSnackbarOpen(false), 5000);
+        setTimeout(() => setSnackbar({open: false}), 5000);
     }
 
     function BarCodeForm(): React.ReactNode {
@@ -91,8 +107,7 @@ export default function GoodsReceiptProcess() {
                             {TextValue.Accept}
                         </Button>
                     </Box>
-                    <ConfirmationSnackbar open={snackbarOpen} message={snackbarMessage} color={snackbarColor}
-                                          onClose={() => setSnackbarOpen(false)}/>
+                    <SnackbarAlert state={snackbar} onClose={() => setSnackbar({open: false})}/>
                 </Box>
             </form>
         )

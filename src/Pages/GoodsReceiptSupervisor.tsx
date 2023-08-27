@@ -9,7 +9,7 @@ import DocumentForm from "./GoodsReceiptSupervisor/DocumentForm";
 import {Document, fetchDocuments, createDocument, Action, documentAction} from "./GoodsReceiptSupervisor/Document";
 import DocumentCard from "./GoodsReceiptSupervisor/DocumentCard";
 import DocumentQRCodeDialog from "./GoodsReceiptSupervisor/DocumentQRCodeDialog";
-import CircularProgressOverlay from "../Components/CircularProgressOverlay";
+import SnackbarAlert, {SnackbarState} from "../Components/SnackbarAlert";
 
 
 export default function GoodsReceiptSupervisor() {
@@ -19,23 +19,31 @@ export default function GoodsReceiptSupervisor() {
     const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(null);
     const [actionType, setActionType] = useState<Action | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
-    const [docNameInput, setDocNameInput] = useState<string | ''>('');  // For new document input
+    const [cardCodeInput, setCardCodeInput] = useState<string | ''>('');
+    const [docNameInput, setDocNameInput] = useState<string | ''>('');
     const [qrOpen, setQrOpen] = useState(false);
+    const [snackbar, setSnackbar] = React.useState<SnackbarState>({
+        open: false,
+        message: '',
+        color: ''
+    });
+
+    const errorAlert = (message: string) => {
+        setSnackbar({open: true, message: message, color: 'red'});
+        setTimeout(() => setSnackbar({open: false}), 5000);
+    };
 
     useEffect(() => {
         setLoading(true);
-        setTimeout(() => {
-            fetchDocuments()
-                .then(data => {
-                    setDocuments(data);
-                })
-                .catch(error => {
-                    console.error(`Error fetching documents: ${error}`);
-                    alert(`Error fetching documents: ${error}`);
-                })
-                .finally(() => setLoading(false));
-        }, 2000);
-        //todo remove timeout
+        fetchDocuments()
+            .then(data => {
+                setDocuments(data);
+            })
+            .catch(error => {
+                console.error(`Error fetching documents: ${error}`);
+                errorAlert(`Error fetching documents: ${error}`);
+            })
+            .finally(() => setLoading(false));
     }, []);
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -45,19 +53,16 @@ export default function GoodsReceiptSupervisor() {
             return;
         }
         setLoading(true);
-        setTimeout(() => {
-            createDocument(docNameInput, user!)
-                .then(newDocument => {
-                    setDocuments(prevDocs => [newDocument, ...prevDocs]);
-                    setDocNameInput('');  // Reset the input
-                })
-                .catch(error => {
-                    console.error(`Error creating document: ${error}`);
-                    alert(`Error creating document: ${error.message}`);
-                })
-                .finally(() => setLoading(false));
-        }, 2000);
-        //todo remove timeout
+        createDocument(cardCodeInput, docNameInput, user!)
+            .then(newDocument => {
+                setDocuments(prevDocs => [newDocument, ...prevDocs]);
+                setDocNameInput('');  // Reset the input
+            })
+            .catch(error => {
+                console.error(`Error creating document: ${error}`);
+                errorAlert(`Error creating document: ${error.message}`);
+            })
+            .finally(() => setLoading(false));
     };
 
     const handleAction = (docId: number, action: Action) => {
@@ -73,26 +78,27 @@ export default function GoodsReceiptSupervisor() {
     const handleConfirmAction = () => {
         setLoading(true);
         setDialogOpen(false);
-        setTimeout(() => {
-            documentAction(selectedDocumentId!, actionType!, user!)
-                .then(() => {
-                    setDocuments(prevDocs => prevDocs.filter(doc => doc.id !== selectedDocumentId));
-                    alert(actionType === 'approve' ? TextValue.Approved : TextValue.Cancelled);
-                })
-                .catch(error => {
-                    console.error(`Error performing action: ${error}`);
-                    alert(`Error performing action: ${error}`);
-                })
-                .finally(() => setLoading(false));
-        }, 2000);
+        documentAction(selectedDocumentId!, actionType!, user!)
+            .then(() => {
+                setDocuments(prevDocs => prevDocs.filter(doc => doc.id !== selectedDocumentId));
+                alert(actionType === 'approve' ? TextValue.Approved : TextValue.Cancelled);
+            })
+            .catch(error => {
+                console.error(`Error performing action: ${error}`);
+                errorAlert(`Error performing action: ${error}`);
+            })
+            .finally(() => setLoading(false));
     };
 
     return (
         <>
-            {loading && <CircularProgressOverlay/>}
-            <ContentTheme title={TextValue.GoodsReceiptSupervisor} icon={<SupervisedUserCircleIcon/>}>
-                {<DocumentForm docNameInput={docNameInput} setDocNameInput={setDocNameInput}
-                               handleSubmit={handleSubmit}/>}
+            <ContentTheme loading={loading} title={TextValue.GoodsReceiptSupervisor} icon={<SupervisedUserCircleIcon/>}>
+                <DocumentForm
+                    cardCodeInput={cardCodeInput}
+                    setCardCodeInput={setCardCodeInput}
+                    docNameInput={docNameInput}
+                    setDocNameInput={setDocNameInput}
+                    handleSubmit={handleSubmit}/>
                 {documents.map(doc => <DocumentCard key={doc.id} doc={doc} handleAction={handleAction}/>)}
                 <ConfirmationDialog
                     title={TextValue.ConfirmAction}
@@ -108,6 +114,7 @@ export default function GoodsReceiptSupervisor() {
                 />
                 <DocumentQRCodeDialog open={qrOpen} onClose={() => setQrOpen(false)}
                                       selectedDocumentId={selectedDocumentId}/>
+                <SnackbarAlert state={snackbar} onClose={() => setSnackbar({open: false})}/>
             </ContentTheme>
         </>
     )

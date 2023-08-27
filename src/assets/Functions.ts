@@ -8,6 +8,5 @@ export const Functions = {
                 ? args[index]
                 : match;
         });
-    }
-
+    },
 }

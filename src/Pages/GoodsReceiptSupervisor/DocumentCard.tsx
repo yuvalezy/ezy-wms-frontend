@@ -32,6 +32,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, handleAction}) => {
             <CardContent>
                 <Typography variant="h6">{TextValue.ID}: {doc.name}</Typography>
                 <Typography color="textSecondary">{TextValue.Number}: {doc.id}</Typography>
+                <Typography color="textSecondary">{TextValue.Vendor}: {doc.businessPartner?.name??doc.businessPartner?.code}</Typography>
                 <Typography
                     color="textSecondary">{TextValue.DocDate}: {new Date(doc.date).toLocaleDateString()}</Typography>
                 <Typography color="textSecondary">{TextValue.CreatedBy}: {doc.employee.name}</Typography>

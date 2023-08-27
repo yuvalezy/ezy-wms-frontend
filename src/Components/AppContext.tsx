@@ -42,6 +42,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     const login = async (username: string, password: string) => {
         try {
+            await new Promise(res => setTimeout(res, 2000));
+            //todo remove
+
             const response = await axios.post(`${config.baseURL}/token`, {
                 username,
                 password,
@@ -58,20 +61,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 const expiryTime = new Date().getTime() + expires_in * 1000;
                 localStorage.setItem('token_expiry', expiryTime.toString());
 
-                const userInfoResponse = await axios.get(`${config.baseURL}/api/General/UserInfo`, {
+                const userInfoResponse = await axios.get<User>(`${config.baseURL}/api/General/UserInfo`, {
                     headers: {
                         'Authorization': `Bearer ${access_token}`
                     }
                 });
 
                 if (userInfoResponse.data) {
-                    const { ID, Name, Roles } = userInfoResponse.data;
-
-                    setUser({
-                        id: ID,
-                        name: Name,
-                        authorizations: Roles.map((role:string) => (role as Authorization))
-                    });
+                    setUser(userInfoResponse.data);
                 }
             }
 

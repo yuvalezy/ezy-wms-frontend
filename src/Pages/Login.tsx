@@ -17,15 +17,12 @@ export default function Login() {
 
         setLoading(true);
 
-        setTimeout(() => {
-            login(username, "")
-                .then(() => setRedirectToHome(true))
-                .catch((error) => {
-                    alert(`Error fetching documents: ${error}`);
-                })
-                .finally(() => setLoading(false));
-        }, 2000);
-        //todo remove setTimeout
+        login(username, "")
+            .then(() => setRedirectToHome(true))
+            .catch((error) => {
+                alert(`Error fetching documents: ${error}`);
+            })
+            .finally(() => setLoading(false));
     };
 
     if (redirectToHome) {
