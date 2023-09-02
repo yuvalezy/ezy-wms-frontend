@@ -24,7 +24,7 @@ export default function Home() {
                     {menus.map(menu =>
                         (
 
-                            <Grid item xs={6} style={{height: '100%'}}>
+                            <Grid key={menu.Text} item xs={6} style={{height: '100%'}}>
                                 <Link to={menu.Link} style={{textDecoration: 'none', display: 'block', height: '100%'}}>
                                     <Paper elevation={4} style={{
                                         height: '100%',

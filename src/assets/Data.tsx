@@ -20,7 +20,6 @@ export const fetchVendors = async (): Promise<BusinessPartner[]> => {
                 'Authorization': `Bearer ${access_token}`
             }
         });
-        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error("Error loading vendors:", error);

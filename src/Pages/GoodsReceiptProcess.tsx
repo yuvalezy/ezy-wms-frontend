@@ -6,7 +6,7 @@ import React, {useEffect, useState} from "react";
 import ErrorMessage from "../Components/ErrorMessagex";
 import {IsNumeric, StringFormat} from "../assets/Functions";
 import Box from "@mui/material/Box";
-import {Button, TextField} from "@mui/material";
+import {Alert, AlertColor, Button, makeStyles, TextField} from "@mui/material";
 import SnackbarAlert, {SnackbarState} from "../Components/SnackbarAlert";
 import BoxConfirmationDialog from '../Components/BoxConfirmationDialog'
 import DoneIcon from "@mui/icons-material/Done";
@@ -20,6 +20,8 @@ export default function GoodsReceiptProcess() {
     const [loading, setLoading] = useState(false);
     const [barcodeInput, setBarcodeInput] = React.useState('');
     const [snackbar, setSnackbar] = React.useState<SnackbarState>({open: false});
+    const [alertMessage, setAlertMessage] = React.useState('');
+    const [alertColor, setAlertColor] = React.useState<AlertColor>();
     const [openBoxDialog, setOpenBoxDialog] = useState(false);
     const [boxItem, setBoxItem] = useState('');
     const [boxItems, setBoxItems] = useState<Item[]>();
@@ -99,31 +101,32 @@ export default function GoodsReceiptProcess() {
     function addItemToDocument(itemCode: string) {
         setOpenBoxDialog(false);
         const barcode = barcodeInput;
-        console.log(barcode);
         setBarcodeInput('');
-        addItem(id??0, itemCode, barcode)
+        addItem(id ?? 0, itemCode, barcode)
             .then(v => {
                 let message: string;
-                let color: string;
+                let color: AlertColor;
                 switch (v) {
                     case AddItemReturnValue.StoreInWarehouse:
                         message = TextValue.ScanConfirmStoreInWarehouse;
-                        color = 'Green';
+                        color = 'success';
                         break;
                     case AddItemReturnValue.Fulfillment:
                         message = TextValue.ScanConfirmFulfillment;
-                        color = 'Amber';
+                        color = 'warning';
                         break;
                     case AddItemReturnValue.Showroom:
                         message = TextValue.ScanConfirmShowroom;
-                        color = 'Blue';
+                        color = 'info';
                         break;
                     default:
                         message = `Unkowon return value: ${v}`;
-                        color = 'Red';
+                        color = 'error';
                         break;
                 }
-                setSnackbar({open: true, message: message, color: color});
+                setAlertMessage(message);
+                setAlertColor(color);
+                setTimeout(() => setAlertMessage(''), 5000);
             })
             .catch(error => errorAlert(`Add Item Error: ${error}`))
             .finally(() => setLoading(false))
@@ -148,8 +151,14 @@ export default function GoodsReceiptProcess() {
                             {TextValue.Accept}
                         </Button>
                     </Box>
-                    <SnackbarAlert state={snackbar} onClose={() => setSnackbar({open: false})}/>
                 </Box>
+                {alertMessage &&
+                    <Box mt={1}>
+                        <Alert variant="filled" severity={alertColor}>
+                            {alertMessage}
+                        </Alert>
+                    </Box>
+                }
                 <BoxConfirmationDialog
                     open={openBoxDialog}
                     onClose={() => setOpenBoxDialog(false)}
@@ -157,6 +166,7 @@ export default function GoodsReceiptProcess() {
                     itemCode={boxItem}
                     items={boxItems}
                 />
+                <SnackbarAlert state={snackbar} onClose={() => setSnackbar({open: false})}/>
             </form>
         )
     }

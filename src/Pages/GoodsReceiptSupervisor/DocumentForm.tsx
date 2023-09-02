@@ -22,7 +22,6 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
     const [vendors, setVendors] = useState<BusinessPartner[]>([]);
 
     useEffect(() => {
-        // Fetch vendors on component mount
         fetchVendors()
             .then(data => {
                 setVendors(data);
@@ -30,7 +29,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
             .catch(error => {
                 console.error("Error fetching vendors:", error);
             });
-    }, []);  // The empty dependency array ensures this runs once on component mount
+    }, []);
 
     return (
         <form onSubmit={handleSubmit}>
@@ -38,13 +37,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
                 <Autocomplete
                     options={vendors}
                     getOptionLabel={(option) => option.name}
-                    onChange={(_, newValue) => {
-                        if (newValue) {
-                            setCardCodeInput(newValue.code);
-                        } else {
-                            setCardCodeInput("");
-                        }
-                    }}
+                    onChange={(_, newValue) => setCardCodeInput(newValue?.code ?? "")}
                     renderInput={(params) =>
                         <TextField {...params} label={TextValue.SelectVendor} variant="outlined" />
                     }
