@@ -2,11 +2,11 @@ import ContentTheme from "../Components/ContentTheme";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import {TextValue} from "../assets/TextValue";
 import {useParams} from "react-router-dom";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import ErrorMessage from "../Components/ErrorMessagex";
 import {IsNumeric, StringFormat} from "../assets/Functions";
 import Box from "@mui/material/Box";
-import {Alert, AlertColor, Button, makeStyles, TextField} from "@mui/material";
+import {Alert, AlertColor, Button, TextField} from "@mui/material";
 import SnackbarAlert, {SnackbarState} from "../Components/SnackbarAlert";
 import BoxConfirmationDialog from '../Components/BoxConfirmationDialog'
 import DoneIcon from "@mui/icons-material/Done";
@@ -16,7 +16,9 @@ import {distinctItems, Item} from "../assets/Common";
 
 export default function GoodsReceiptProcess() {
     const {scanCode} = useParams();
+    const barcodeRef = useRef<HTMLInputElement>();
     const [id, setID] = useState<number | null>();
+    const [enable, setEnable] = useState(true);
     const [loading, setLoading] = useState(false);
     const [barcodeInput, setBarcodeInput] = React.useState('');
     const [snackbar, setSnackbar] = React.useState<SnackbarState>({open: false});
@@ -66,8 +68,10 @@ export default function GoodsReceiptProcess() {
         setLoading(true);
         scanBarcode(barcodeInput)
             .then(items => handleItems(items))
-            .catch(error => errorAlert(`Scan Bar Code Error: ${error}`))
-            .finally(() => setLoading(false));
+            .catch(error => {
+                errorAlert(`Scan Bar Code Error: ${error}`);
+                setLoading(false);
+            })
 
 
         setTimeout(() => setSnackbar({open: false}), 5000);
@@ -77,6 +81,7 @@ export default function GoodsReceiptProcess() {
         if (items.length === 0) {
             alert(StringFormat(TextValue.BarcodeNotFound, barcodeInput), 'DarkRed');
             setBarcodeInput('');
+            setLoading(false);
             return;
         }
         if (items.length === 1) {
@@ -84,6 +89,7 @@ export default function GoodsReceiptProcess() {
             return;
         }
         handleMultipleItems(items);
+
     }
 
     function handleMultipleItems(items: Item[]) {
@@ -96,12 +102,14 @@ export default function GoodsReceiptProcess() {
         setBoxItem(distinctCodes[0]);
         setBoxItems(items);
         setOpenBoxDialog(true);
+        setLoading(false);
     }
 
     function addItemToDocument(itemCode: string) {
         setOpenBoxDialog(false);
         const barcode = barcodeInput;
         setBarcodeInput('');
+        setLoading(true);
         addItem(id ?? 0, itemCode, barcode)
             .then(v => {
                 let message: string;
@@ -119,6 +127,10 @@ export default function GoodsReceiptProcess() {
                         message = TextValue.ScanConfirmShowroom;
                         color = 'info';
                         break;
+                    case AddItemReturnValue.ClosedDocument:
+                        message = StringFormat(TextValue.GoodsReceiptIsClosed, id);
+                        color = 'error';
+                        break;
                     default:
                         message = `Unkowon return value: ${v}`;
                         color = 'error';
@@ -126,32 +138,45 @@ export default function GoodsReceiptProcess() {
                 }
                 setAlertMessage(message);
                 setAlertColor(color);
-                setTimeout(() => setAlertMessage(''), 5000);
+                if (v !== AddItemReturnValue.ClosedDocument) {
+                    setTimeout(() => setAlertMessage(''), 5000);
+                } else {
+                    setEnable(false);
+                }
             })
             .catch(error => errorAlert(`Add Item Error: ${error}`))
-            .finally(() => setLoading(false))
+            .finally(function () {
+                setLoading(false);
+                setTimeout(() => barcodeRef.current?.focus(), 100);
+            })
     }
 
     function BarCodeForm(): React.ReactNode {
         return (
             <form onSubmit={handleSubmit}>
-                <Box mb={1} style={{textAlign: 'center'}}>
-                    <TextField
-                        fullWidth
-                        required
-                        label={TextValue.Barcode}
-                        variant="outlined"
-                        value={barcodeInput}
-                        onChange={e => setBarcodeInput(e.target.value)}
-                        autoFocus={true}
-                    />
-                    <Box mt={1}>
-                        <Button type="submit" variant="contained" color="primary">
-                            <DoneIcon/>
-                            {TextValue.Accept}
-                        </Button>
-                    </Box>
-                </Box>
+                {enable && (
+                    <>
+                        <Box mb={1} style={{textAlign: 'center'}}>
+                            <TextField
+                                fullWidth
+                                required
+                                label={TextValue.Barcode}
+                                variant="outlined"
+                                value={barcodeInput}
+                                onChange={e => setBarcodeInput(e.target.value)}
+                                autoFocus={true}
+                                inputRef={barcodeRef}
+                                disabled={!enable}
+                            />
+                            <Box mt={1}>
+                                <Button type="submit" variant="contained" color="primary" disabled={!enable}>
+                                    <DoneIcon/>
+                                    {TextValue.Accept}
+                                </Button>
+                            </Box>
+                        </Box>
+                    </>
+                )}
                 {alertMessage &&
                     <Box mt={1}>
                         <Alert variant="filled" severity={alertColor}>

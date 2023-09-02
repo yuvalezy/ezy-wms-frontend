@@ -29,7 +29,8 @@ export enum DocumentStatus {
 export enum AddItemReturnValue {
     StoreInWarehouse = 'StoreInWarehouse',
     Fulfillment = 'Fulfillment',
-    Showroom = 'Showroom'
+    Showroom = 'Showroom',
+    ClosedDocument = 'ClosedDocument'
 }
 
 export const documentStatusToString = (status: DocumentStatus): string => {
@@ -157,7 +158,7 @@ export const scanBarcode = async (scanCode: string): Promise<Item[]> => {
     }
 }
 
-export const addItem = async(id: number, itemCode: string, barcode: string): Promise<AddItemReturnValue> => {
+export const addItem = async (id: number, itemCode: string, barcode: string): Promise<AddItemReturnValue> => {
     try {
         await delay(500);
         //todo remove

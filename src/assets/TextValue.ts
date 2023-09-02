@@ -45,6 +45,7 @@ export const TextValue = {
     //Validations
     GoodsReceiptNotFound: "La entrada #{0} no es valida",
     GoodsReceiptStatusError: "El estado de la entrada #{0} es {1}.\nNo se puede continuar.",
+    GoodsReceiptIsClosed: "Entrada #{0} esta cerrada",
     IDRequired: "Debe introducir una identificación",
     InvalidID: "Identificación Inválida",
     ScanCodeRequired: "Debe escanear un código",
@@ -63,5 +64,6 @@ export const TextValue = {
     ScanConfirmFulfillment: "Separar para Entrega a Cliente",
     ScanConfirmShowroom: "Enviar a Showroom",
     ScanConfirmSupervisor: "Separar para Supervisor",
-    ScanConfirmBoxNumber: "Confirmar numero de caja"
+    ScanConfirmBoxNumber: "Confirmar numero de caja",
+
 }
