@@ -1,8 +1,8 @@
 import axios from "axios";
-import config from "../../config";
 import {Item, User} from "../../assets/Common";
 import {BusinessPartner, Employee} from "../../assets/Data";
 import {TextValue} from "../../assets/TextValue";
+import {globalConfig} from "../../assets/GlobalConfig";
 
 export type Action = 'approve' | 'cancel' | 'qrcode';
 
@@ -56,11 +56,14 @@ export enum OrderBy {
 
 export const createDocument = async (cardCode: string, name: string, user: User): Promise<Document> => {
     try {
-        await delay(500);
-        //todo remove
+        if (!globalConfig)
+            throw new Error('Config has not been initialized!');
+
+        if (globalConfig.debug)
+            await delay(500);
 
         const access_token = localStorage.getItem('token');
-        const response = await axios.post<Document>(`${config.baseURL}/api/GoodsReceipt/Create`, {
+        const response = await axios.post<Document>(`${globalConfig.baseURL}/api/GoodsReceipt/Create`, {
             CardCode: cardCode,
             Name: name
         }, {
@@ -77,11 +80,14 @@ export const createDocument = async (cardCode: string, name: string, user: User)
 }
 export const documentAction = async (id: number, action: Action, user: User): Promise<boolean> => {
     try {
-        await delay(500);
-        //todo remove
+        if (!globalConfig)
+            throw new Error('Config has not been initialized!');
+
+        if (globalConfig.debug)
+            await delay(500);
 
         const access_token = localStorage.getItem('token');
-        const response = await axios.post<boolean>(`${config.baseURL}/api/GoodsReceipt/${(action === 'approve' ? 'Process' : 'Cancel')}`, {
+        const response = await axios.post<boolean>(`${globalConfig.baseURL}/api/GoodsReceipt/${(action === 'approve' ? 'Process' : 'Cancel')}`, {
             ID: id
         }, {
             headers: {
@@ -101,8 +107,11 @@ export const fetchDocuments = async (
     desc: boolean = true
 ): Promise<Document[]> => {
     try {
-        await delay(500);
-        //todo remove
+        if (!globalConfig)
+            throw new Error('Config has not been initialized!');
+
+        if (globalConfig.debug)
+            await delay(500);
 
         const access_token = localStorage.getItem('token');
 
@@ -119,7 +128,7 @@ export const fetchDocuments = async (
             queryParams.push(`ID=${id}`);
         }
 
-        const url = `${config.baseURL}/api/GoodsReceipt/Documents?${queryParams.join('&')}`;
+        const url = `${globalConfig.baseURL}/api/GoodsReceipt/Documents?${queryParams.join('&')}`;
 
         const response = await axios.get<Document[]>(url,
             {
@@ -137,12 +146,15 @@ export const fetchDocuments = async (
 
 export const scanBarcode = async (scanCode: string): Promise<Item[]> => {
     try {
-        await delay(500);
-        //todo remove
+        if (!globalConfig)
+            throw new Error('Config has not been initialized!');
+
+        if (globalConfig.debug)
+            await delay(500);
 
         const access_token = localStorage.getItem('token');
 
-        const url = `${config.baseURL}/api/General/ItemByBarCode?scanCode=${scanCode}`;
+        const url = `${globalConfig.baseURL}/api/General/ItemByBarCode?scanCode=${scanCode}`;
 
         const response = await axios.get<Item[]>(url,
             {
@@ -160,12 +172,15 @@ export const scanBarcode = async (scanCode: string): Promise<Item[]> => {
 
 export const addItem = async (id: number, itemCode: string, barcode: string): Promise<AddItemReturnValue> => {
     try {
-        await delay(500);
-        //todo remove
+        if (!globalConfig)
+            throw new Error('Config has not been initialized!');
+
+        if (globalConfig.debug)
+            await delay(500);
 
         const access_token = localStorage.getItem('token');
 
-        const url = `${config.baseURL}/api/GoodsReceipt/AddItem`;
+        const url = `${globalConfig.baseURL}/api/GoodsReceipt/AddItem`;
 
         const response = await axios.post<AddItemReturnValue>(url, {
             id: id,

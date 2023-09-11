@@ -12,9 +12,8 @@ import {DocumentStatus, documentStatusToString, fetchDocuments} from "./GoodsRec
 
 export default function GoodsReceipt() {
     const [loading, setLoading] = useState(false);
-    const [scanCodeInput, setScanCodeInput] = React.useState('GRPO_1');
+    const [scanCodeInput, setScanCodeInput] = React.useState('');
     const [snackbar, setSnackbar] = React.useState<SnackbarState>({open: false});
-    //todo remove default state:
 
     const navigate = useNavigate();
     const alert = (message: string) => {

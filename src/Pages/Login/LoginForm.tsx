@@ -8,7 +8,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import LoginThemeProvider from './LoginThemeProvider';
-import CircularProgressOverlay from "../../Components/CircularProgressOverlay";  // Adjust the path based on your directory structure
+import CircularProgressOverlay from "../../Components/CircularProgressOverlay";
+import {useEffect} from "react";
+import {globalConfig} from "../../assets/GlobalConfig";  // Adjust the path based on your directory structure
 
 type LoginFormProps = {
     onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
@@ -46,7 +48,6 @@ export default function LoginForm({onSubmit, loading}: LoginFormProps) {
                                 type="password"
                                 id="username"
                                 autoComplete="current-password"
-                                value="981496230b-a8a4-4713"
                             />
                             <Button
                                 type="submit"

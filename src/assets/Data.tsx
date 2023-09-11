@@ -1,5 +1,5 @@
-import config from "../config";
 import axios from "axios";
+import {globalConfig} from "./GlobalConfig";
 
 export type Employee = {
     id: number;
@@ -13,9 +13,11 @@ export type BusinessPartner = {
 
 export const fetchVendors = async (): Promise<BusinessPartner[]> => {
     try {
+        if (!globalConfig)
+            throw new Error('Config has not been initialized!');
 
         const access_token = localStorage.getItem('token');
-        const response = await axios.get<BusinessPartner[]>(`${config.baseURL}/api/General/Vendors`, {
+        const response = await axios.get<BusinessPartner[]>(`${globalConfig.baseURL}/api/General/Vendors`, {
             headers: {
                 'Authorization': `Bearer ${access_token}`
             }

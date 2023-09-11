@@ -1,14 +1,20 @@
 // AuthContext.tsx
 import React, {createContext, useContext, useState, ReactNode, useEffect} from 'react';
 import axios, {AxiosError} from "axios";
-import config from "../config";
-import {Authorization} from "../assets/Authorization";
 import {User} from "../assets/Common";
+import {setGlobalConfig} from "../assets/GlobalConfig";
 
 // Define the shape of the context
+export interface Config {
+    testUser: string | null;
+    baseURL: string;
+    debug: boolean;
+}
+
 interface AuthContextType {
     isAuthenticated: boolean;
     user: User | null;
+    config: Config | null;
     login: (username: string, password: string) => Promise<void>;
     logout: () => void;
 }
@@ -16,10 +22,12 @@ interface AuthContextType {
 const AuthContextDefaultValues: AuthContextType = {
     isAuthenticated: false,
     user: null,
+    config: null,
     login: async (username: string, password: string) => {
         console.warn('Login method not implemented yet!');
     },
-    logout: () => {},
+    logout: () => {
+    },
 }
 
 export const AuthContext = createContext<AuthContextType>(AuthContextDefaultValues);
@@ -34,10 +42,23 @@ interface ErrorResponse {
 }
 
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     const [user, setUser] = useState<User | null>(null);
+    const [config, setConfig] = useState<Config | null>(null);
 
     useEffect(() => {
+        const fetchConfig = async () => {
+            try {
+                const response = await axios.get<Config>('/config.json');
+                setConfig(response.data);
+                setGlobalConfig(response.data);
+            } catch (error) {
+                console.error('Failed to load config:', error);
+            }
+        };
+
+        fetchConfig();
+
         const expiry = localStorage.getItem('token_expiry');
         if (expiry && new Date().getTime() > Number(expiry)) {
             localStorage.removeItem('token');
@@ -48,8 +69,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     const login = async (username: string, password: string) => {
         try {
-            await new Promise(res => setTimeout(res, 500));
-            //todo remove
+            if (!config)
+                return;
+            if (config.debug)
+                await new Promise(res => setTimeout(res, 500));
 
             const response = await axios.post(`${config.baseURL}/token`, {
                 username,
@@ -62,7 +85,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             });
 
             if (response.data && response.data.access_token) {
-                const {access_token, expires_in } = response.data;
+                const {access_token, expires_in} = response.data;
                 localStorage.setItem('token', access_token);
                 const expiryTime = new Date().getTime() + expires_in * 1000;
                 localStorage.setItem('token_expiry', expiryTime.toString());
@@ -77,7 +100,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                     setUser(userInfoResponse.data);
                 }
             }
-        } catch(error) {
+        } catch (error) {
             const axiosError = error as AxiosError;
             const data = axiosError.response?.data as ErrorResponse;
             const error_description = data?.error_description;
@@ -97,6 +120,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const value = {
         isAuthenticated,
         user,
+        config,
         login,
         logout,
     };
