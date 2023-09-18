@@ -97,6 +97,7 @@ export default function GoodsReceiptProcess() {
         if (distinctCodes.length !== 1) {
             let codes = distinctCodes.map(v => `"${v}"`).join('\n');
             alert(StringFormat(TextValue.MultipleItemsError, codes), 'DarkRed');
+            setLoading(false);
             return;
         }
         setBoxItem(distinctCodes[0]);

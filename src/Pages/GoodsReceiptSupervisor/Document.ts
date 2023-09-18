@@ -96,7 +96,7 @@ export const documentAction = async (id: number, action: Action, user: User): Pr
         });
         return response.data;
     } catch (error) {
-        console.error("Error creating document:", error);
+        console.error("Error creating document: ", error);
         throw error;  // Re-throwing so that the calling function can decide what to do with the error
     }
 }
@@ -115,20 +115,19 @@ export const fetchDocuments = async (
 
         const access_token = localStorage.getItem('token');
 
-        const queryParams = [
-            `OrderBy=${orderBy}`,
-            `Desc=${desc}`
-        ];
+        const queryParams = new URLSearchParams();
+        queryParams.append('OrderBy', orderBy.toString());
+        queryParams.append('Desc', desc.toString());
 
         if (statuses && statuses.length > 0) {
-            queryParams.push(`statuses=${statuses.join(',')}`);
+            statuses.forEach(status => queryParams.append('Status', status.toString()))
         }
 
         if (id !== null && id !== undefined) {
-            queryParams.push(`ID=${id}`);
+            queryParams.append('ID', id.toString());
         }
 
-        const url = `${globalConfig.baseURL}/api/GoodsReceipt/Documents?${queryParams.join('&')}`;
+        const url = `${globalConfig.baseURL}/api/GoodsReceipt/Documents?${queryParams.toString()}`;
 
         const response = await axios.get<Document[]>(url,
             {
