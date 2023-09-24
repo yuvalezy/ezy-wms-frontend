@@ -17,7 +17,7 @@ export const TextValue = {
     Code: "Código",
     Barcode: "Código de Barra",
     Unknown: "Desconocido",
-    Approved: "El documento ha sido aprobado con éxito.",
+    Approved: "El documento ha sido finalizado con éxito.",
     Cancelled: "El documento ha sido cancelado con éxito.",
 
     //Statues
