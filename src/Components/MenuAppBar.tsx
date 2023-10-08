@@ -87,7 +87,7 @@ const MenuAppBar: React.FC<MenuAppBarProps> = ({title, icon}) => {
                                 <HomeIcon/> {TextValue.Home}
                             </MenuItem>
                             {menus.map(menu => (
-                                <MenuItem onClick={() => navigate(menu.Link)}
+                                <MenuItem key={menu.Text} onClick={() => navigate(menu.Link)}
                                           disabled={location.pathname === menu.Link}>
                                     <menu.Icon/>
                                     {menu.Text}

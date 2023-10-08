@@ -33,7 +33,7 @@ export default function GoodsReceipt() {
             return;
         }
         let checkScan = scanCodeInput.split('_');
-        if (checkScan.length !== 2 || checkScan[0] !== 'GRPO' || !IsNumeric(checkScan[1])) {
+        if (checkScan.length !== 2 || (checkScan[0] !== 'GRPO' &&  checkScan[0] !== '$GRPO') || !IsNumeric(checkScan[1])) {
             alert(TextValue.InvalidScanCode);
             return;
         }

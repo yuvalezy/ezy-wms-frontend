@@ -1,5 +1,5 @@
 {
   "baseURL": "http://localhost:10000",
   "debug": true,
-  "testUser": "981496230b-a8a4-4713"
+  "test": true
 }
