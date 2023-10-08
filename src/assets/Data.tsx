@@ -1,5 +1,7 @@
 import axios from "axios";
+import { DocumentStatus } from "../Pages/GoodsReceiptSupervisor/Document";
 import {globalConfig} from "./GlobalConfig";
+import {TextValue} from "./TextValue";
 
 export type Employee = {
     id: number;
@@ -10,6 +12,20 @@ export type BusinessPartner = {
     code: string;
     name: string;
 }
+
+export type DocumentStatusOption = {
+    code: string;
+    name: string;
+    status: DocumentStatus;
+};
+
+export const DocumentStatusOptions: DocumentStatusOption[] = [
+    { code: 'Open', name: TextValue.OpenStatus, status: DocumentStatus.Open },
+    { code: 'Processing', name: TextValue.ProcessingStatus, status: DocumentStatus.Processing },
+    { code: 'Finished', name: TextValue.FinishedStatus, status: DocumentStatus.Finished },
+    { code: 'Cancelled', name: TextValue.CancelledStatus, status: DocumentStatus.Cancelled},
+    { code: 'InProgress', name: TextValue.InProgressStatus, status: DocumentStatus.InProgress },
+];
 
 export const fetchVendors = async (): Promise<BusinessPartner[]> => {
     try {

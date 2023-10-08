@@ -3,6 +3,7 @@ export const TextValue = {
     Home: "Inicio",
     GoodsReceipt: "Entrada",
     GoodsReceiptSupervisor: "Supervisor de Entrada",
+    GoodsReceiptReport: "Reporte de Entradas",
 
     //Buttons / Status
     No: "No",
@@ -17,6 +18,7 @@ export const TextValue = {
     Code: "Código",
     Barcode: "Código de Barra",
     Unknown: "Desconocido",
+    Clear: "Borrar",
     Approved: "El documento ha sido finalizado con éxito.",
     Cancelled: "El documento ha sido cancelado con éxito.",
 
@@ -37,6 +39,8 @@ export const TextValue = {
     Box: "Caja",
     Boxes: "Cajas",
     Of: "de",
+    Date: "Fecha",
+    Transaction: "Transacción",
 
     //Field Description
     SelectVendor: "Seleccione el Proveedor",
@@ -64,6 +68,7 @@ export const TextValue = {
     ScanConfirmFulfillment: "Separar para Entrega a Cliente",
     ScanConfirmShowroom: "Enviar a Showroom",
     ScanConfirmSupervisor: "Separar para Supervisor",
-    ScanConfirmBoxNumber: "Confirmar numero de caja",
+    ScanConfirmBoxNumber: "Confirmar numero de caja"
+
 
 }

@@ -87,31 +87,29 @@ export default function GoodsReceiptSupervisor() {
     };
 
     return (
-        <>
-            <ContentTheme loading={loading} title={TextValue.GoodsReceiptSupervisor} icon={<SupervisedUserCircleIcon/>}>
-                <DocumentForm
-                    cardCodeInput={cardCodeInput}
-                    setCardCodeInput={setCardCodeInput}
-                    docNameInput={docNameInput}
-                    setDocNameInput={setDocNameInput}
-                    handleSubmit={handleSubmit}/>
-                {documents.map(doc => <DocumentCard key={doc.id} doc={doc} handleAction={handleAction}/>)}
-                <ConfirmationDialog
-                    title={TextValue.ConfirmAction}
-                    text={
-                        StringFormat((actionType === 'approve' ?
-                            TextValue.ConfirmFinishDocument :
-                            TextValue.ConfirmCancelDocument), selectedDocumentId)
-                    }
-                    open={dialogOpen}
-                    reverse={true}
-                    onClose={() => setDialogOpen(false)}
-                    onConfirm={handleConfirmAction}
-                />
-                <DocumentQRCodeDialog open={qrOpen} onClose={() => setQrOpen(false)}
-                                      selectedDocumentId={selectedDocumentId}/>
-                <SnackbarAlert state={snackbar} onClose={() => setSnackbar({open: false})}/>
-            </ContentTheme>
-        </>
+        <ContentTheme loading={loading} title={TextValue.GoodsReceiptSupervisor} icon={<SupervisedUserCircleIcon/>}>
+            <DocumentForm
+                cardCodeInput={cardCodeInput}
+                setCardCodeInput={setCardCodeInput}
+                docNameInput={docNameInput}
+                setDocNameInput={setDocNameInput}
+                handleSubmit={handleSubmit}/>
+            {documents.map(doc => <DocumentCard key={doc.id} doc={doc} handleAction={handleAction}/>)}
+            <ConfirmationDialog
+                title={TextValue.ConfirmAction}
+                text={
+                    StringFormat((actionType === 'approve' ?
+                        TextValue.ConfirmFinishDocument :
+                        TextValue.ConfirmCancelDocument), selectedDocumentId)
+                }
+                open={dialogOpen}
+                reverse={true}
+                onClose={() => setDialogOpen(false)}
+                onConfirm={handleConfirmAction}
+            />
+            <DocumentQRCodeDialog open={qrOpen} onClose={() => setQrOpen(false)}
+                                  selectedDocumentId={selectedDocumentId}/>
+            <SnackbarAlert state={snackbar} onClose={() => setSnackbar({open: false})}/>
+        </ContentTheme>
     )
 }

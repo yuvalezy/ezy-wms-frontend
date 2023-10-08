@@ -2,6 +2,7 @@ import {TextValue} from "./TextValue";
 import {Authorization} from "./Authorization";
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
+import SummarizeIcon from '@mui/icons-material/Summarize';
 
 
 export const Menus = {
@@ -17,6 +18,12 @@ export const Menus = {
             Text: TextValue.GoodsReceiptSupervisor,
             Authorization: Authorization.GOODS_RECEIPT_SUPERVISOR,
             Icon: SupervisedUserCircleIcon
+        },
+        {
+            Link: "/goodsReceiptReport",
+            Text: TextValue.GoodsReceiptReport,
+            Authorization: Authorization.GOODS_RECEIPT_SUPERVISOR,
+            Icon: SummarizeIcon
         },
     ],
     GetMenus(authorizations: Authorization[] | undefined) {
