@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import ContentTheme from "../Components/ContentTheme";
 import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import {TextValue} from "../assets/TextValue";
-import {Typography} from "@mui/material";
+import {Alert, Typography} from "@mui/material";
 import {IsNumeric, ObjectName} from "../assets/Functions";
 import {useParams} from "react-router-dom";
 import {fetchGoodsReceiptVSExitReport, GoodsReceiptVSExitReportData} from "./GoodsReceiptSupervisor/Report";
@@ -61,6 +61,10 @@ export default function GoodsReceiptVSExitReport() {
                     </Accordion>
                 ))}
             </div>
+            {
+                (data == null || data.length === 0) &&
+                <Alert severity="warning">{TextValue.NoExitData}</Alert>
+            }
             <SnackbarAlert state={snackbar} onClose={() => setSnackbar({open: false})}/>
         </ContentTheme>
     )

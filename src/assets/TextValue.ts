@@ -67,6 +67,7 @@ export const TextValue = {
     BarcodeRequired: "Debe escanear un código de barra",
     BarcodeNotFound: 'No se encontro el codigo de barra "{0}"',
     MultipleItemsError: "Codigo retorno multiples codigos de articulos:\n{0}.\nSolicite la correcion en el sistema e intente de nuevo.",
+    NoExitData: "No tiene salidas o transferencias pendientes.",
 
     //Dialog
     ConfirmAction: "Confirmar Acción",
@@ -79,5 +80,6 @@ export const TextValue = {
     ScanConfirmFulfillment: "Separar para Entrega a Cliente",
     ScanConfirmShowroom: "Enviar a Showroom",
     ScanConfirmSupervisor: "Separar para Supervisor",
-    ScanConfirmBoxNumber: "Confirmar numero de caja",
+    ScanConfirmBoxNumber: "Confirmar numero de caja"
+
 }

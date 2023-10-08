@@ -1,6 +1,6 @@
 import React from "react";
 import {Card, CardContent, createTheme, Typography,} from "@mui/material";
-import {Document, documentStatusToString} from "./Document";
+import {Document, DocumentStatus, documentStatusToString} from "./Document";
 import {TextValue} from "../../assets/TextValue";
 import {useNavigate} from "react-router-dom";
 
@@ -28,10 +28,12 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc}) => {
                 <Typography color="textSecondary">{TextValue.CreatedBy}: {doc.employee.name}</Typography>
                 <Typography
                     color="textSecondary">{TextValue.Status}: {documentStatusToString(doc.status)}</Typography>
+                {doc.status === DocumentStatus.Finished &&
                 <a href="#" onClick={e => {
                     e.preventDefault();
                     handleOpen(doc.id)
                 }}>{TextValue.GoodsReceiptVSExit}</a>
+                }
             </CardContent>
         </Card>
     );
