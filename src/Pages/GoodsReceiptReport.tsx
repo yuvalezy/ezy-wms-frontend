@@ -5,6 +5,7 @@ import ContentTheme from "../Components/ContentTheme";
 import ReportFilterForm from "./GoodsReceiptSupervisor/ReportFilterForm";
 import SnackbarAlert, {SnackbarState} from "../Components/SnackbarAlert";
 import {BusinessPartner, DocumentStatusOption} from "../assets/Data";
+import {Document, fetchDocuments} from "./GoodsReceiptSupervisor/Document";
 
 export default function GoodsReceiptReport() {
     const [loading, setLoading] = useState(false);
@@ -15,42 +16,28 @@ export default function GoodsReceiptReport() {
     const [statusInput, setStatusInput] = useState<DocumentStatusOption | null>(null);
     const [dateInput, setDateInput] = useState<Date | null>(null);
     const [snackbar, setSnackbar] = React.useState<SnackbarState>({open: false});
+    const [documents, setDocuments] = useState<Document[]>([]);
 
     const errorAlert = (message: string) => {
         setSnackbar({open: true, message: message, color: 'red'});
         setTimeout(() => setSnackbar({open: false}), 5000);
     };
 
-    useEffect(() => {
-        // setLoading(true);
-        // fetchDocuments()
-        //     .then(data => {
-        //         setDocuments(data);
-        //     })
-        //     .catch(error => {
-        //         console.error(`Error fetching documents: ${error}`);
-        //         errorAlert(`Error fetching documents: ${error}`);
-        //     })
-        //     .finally(() => setLoading(false));
-    }, []);
-
     const handleSubmit = (e: React.FormEvent) => {
-        // e.preventDefault();
-        // if (docNameInput === null || docNameInput === '') {
-        //     alert(TextValue.IDRequired);
-        //     return;
-        // }
-        // setLoading(true);
-        // createDocument(cardCodeInput, docNameInput, user!)
-        //     .then(newDocument => {
-        //         setDocuments(prevDocs => [newDocument, ...prevDocs]);
-        //         setDocNameInput('');  // Reset the input
-        //     })
-        //     .catch(error => {
-        //         console.error(`Error creating document: ${error}`);
-        //         errorAlert(`Error creating document: ${error.message}`);
-        //     })
-        //     .finally(() => setLoading(false));
+        e.preventDefault();
+        setLoading(true);
+        let id = idInput.length > 0 ? parseInt(idInput) : undefined;
+        let statuses = statusInput != null ? [statusInput.status] : [];
+        let grpo = grpoInput.length > 0 ? parseInt(grpoInput) : undefined;
+        fetchDocuments(id, statuses, cardCodeInput, dateInput, docNameInput, grpo)
+            .then(data => {
+                setDocuments(data);
+            })
+            .catch(error => {
+                console.error(`Error fetching documents: ${error}`);
+                errorAlert(`Error fetching documents: ${error}`);
+            })
+            .finally(() => setLoading(false));
     };
 
     return (
@@ -69,6 +56,7 @@ export default function GoodsReceiptReport() {
                 dateInput={dateInput}
                 setDateInput={setDateInput}
                 handleSubmit={handleSubmit}/>
+            {documents.map(doc => <span>{doc.id}</span>)}
             <SnackbarAlert state={snackbar} onClose={() => setSnackbar({open: false})}/>
         </ContentTheme>
     )

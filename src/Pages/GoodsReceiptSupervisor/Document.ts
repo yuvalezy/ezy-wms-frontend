@@ -103,6 +103,10 @@ export const documentAction = async (id: number, action: Action, user: User): Pr
 export const fetchDocuments = async (
     id?: number,
     statuses: DocumentStatus[] = [DocumentStatus.Open, DocumentStatus.InProgress],
+    businessPartner?: BusinessPartner | null,
+    date?: Date | null,
+    docName?: string,
+    grpo?: number,
     orderBy: OrderBy = OrderBy.ID,
     desc: boolean = true
 ): Promise<Document[]> => {
@@ -125,6 +129,22 @@ export const fetchDocuments = async (
 
         if (id !== null && id !== undefined) {
             queryParams.append('ID', id.toString());
+        }
+
+        if (grpo !== null && grpo !== undefined) {
+            queryParams.append('GRPO', grpo.toString());
+        }
+
+        if (docName !== null && docName !== undefined) {
+            queryParams.append('Name', docName);
+        }
+
+        if (businessPartner !== null && businessPartner !== undefined) {
+            queryParams.append('BusinessPartner', businessPartner.code);
+        }
+
+        if (date !== null && date !== undefined) {
+            queryParams.append('Date', date.toISOString());
         }
 
         const url = `${globalConfig.baseURL}/api/GoodsReceipt/Documents?${queryParams.toString()}`;

@@ -41,6 +41,8 @@ export const TextValue = {
     Of: "de",
     Date: "Fecha",
     Transaction: "Transacción",
+    Filters: "Filtros",
+    Execute: "Ejecutar",
 
     //Field Description
     SelectVendor: "Seleccione el Proveedor",
