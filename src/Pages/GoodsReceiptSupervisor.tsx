@@ -81,7 +81,11 @@ export default function GoodsReceiptSupervisor() {
             })
             .catch(error => {
                 console.error(`Error performing action: ${error}`);
-                errorAlert(`Error performing action: ${error}`);
+                let errorMessage = error.response?.data['exceptionMessage'];
+                if (errorMessage)
+                    errorAlert(`SAP Error: ${errorMessage}`);
+                else
+                    errorAlert(`Error performing action: ${error}`);
             })
             .finally(() => setLoading(false));
     };
