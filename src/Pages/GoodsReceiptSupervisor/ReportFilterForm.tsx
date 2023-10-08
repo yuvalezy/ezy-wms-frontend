@@ -26,7 +26,8 @@ interface ReportFilterFormProps {
     setStatusInput: (value: DocumentStatusOption | null) => void;
     dateInput: Date | null;
     setDateInput: (value: Date | null) => void;
-    handleSubmit: (e: React.FormEvent) => void;
+    onSubmit: () => void;
+    onClear: () => void;
 }
 
 const ReportFilterForm: React.FC<ReportFilterFormProps> = ({
@@ -42,10 +43,11 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({
                                                                setStatusInput,
                                                                dateInput,
                                                                setDateInput,
-                                                               handleSubmit
+                                                               onSubmit,
+                                                               onClear
                                                            }) => {
     const [vendors, setVendors] = useState<BusinessPartner[]>([]);
-    const [expanded, setExpanded] = React.useState<string | false>('panel1');
+    const [expanded, setExpanded] = React.useState<boolean>(true);
 
     useEffect(() => {
         fetchVendors()
@@ -64,16 +66,17 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({
         setGRPOInput('');
         setStatusInput(null);
         setDateInput(null);
+        onClear();
     }
 
-    const handleChange =
-        (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
-            setExpanded(newExpanded ? panel : false);
-        };
-
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        setExpanded(false);
+        onSubmit();
+    }
 
     return (
-        <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
+        <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
             <AccordionSummary
                 expandIcon={<ExpandMoreIcon/>}
                 aria-controls="panel1a-content"
@@ -149,14 +152,14 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({
                             }
                         />
                     </Box>
-                    <Box mb={1} style={{ display: 'flex', justifyContent: 'space-between', textAlign: 'center' }}>
+                    <Box mb={1} style={{display: 'flex', justifyContent: 'space-between', textAlign: 'center'}}>
                         <Button variant="contained" color="primary" type="submit">
-                            <AssessmentIcon />
+                            <AssessmentIcon/>
                             {TextValue.Execute}
                         </Button>
                         <Box mx={2}></Box> {/* Add separation between the buttons */}
                         <Button variant="contained" color="secondary" onClick={() => clearForm()}>
-                            <ClearAllIcon />
+                            <ClearAllIcon/>
                             {TextValue.Clear}
                         </Button>
                     </Box>

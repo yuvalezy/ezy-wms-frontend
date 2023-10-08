@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {TextValue} from "../assets/TextValue";
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import ContentTheme from "../Components/ContentTheme";
@@ -6,6 +6,7 @@ import ReportFilterForm from "./GoodsReceiptSupervisor/ReportFilterForm";
 import SnackbarAlert, {SnackbarState} from "../Components/SnackbarAlert";
 import {BusinessPartner, DocumentStatusOption} from "../assets/Data";
 import {Document, fetchDocuments} from "./GoodsReceiptSupervisor/Document";
+import DocumentReportCard from "./GoodsReceiptSupervisor/DocumentReportCard";
 
 export default function GoodsReceiptReport() {
     const [loading, setLoading] = useState(false);
@@ -23,8 +24,7 @@ export default function GoodsReceiptReport() {
         setTimeout(() => setSnackbar({open: false}), 5000);
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
+    const onSubmit = () => {
         setLoading(true);
         let id = idInput.length > 0 ? parseInt(idInput) : undefined;
         let statuses = statusInput != null ? [statusInput.status] : [];
@@ -41,7 +41,7 @@ export default function GoodsReceiptReport() {
     };
 
     return (
-        <ContentTheme loading={loading} title={TextValue.GoodsReceiptSupervisor} icon={<SummarizeIcon/>}>
+        <ContentTheme loading={loading} title={TextValue.GoodsReceiptReport} icon={<SummarizeIcon/>}>
             <ReportFilterForm
                 idInput={idInput}
                 setIDInput={setIDInput}
@@ -55,8 +55,12 @@ export default function GoodsReceiptReport() {
                 setStatusInput={setStatusInput}
                 dateInput={dateInput}
                 setDateInput={setDateInput}
-                handleSubmit={handleSubmit}/>
-            {documents.map(doc => <span>{doc.id}</span>)}
+                onSubmit={onSubmit}
+                onClear={() => setDocuments([])}
+            />
+            <div style={{margin: '5px'}}>
+                {documents.map(doc => <DocumentReportCard key={doc.id} doc={doc}/>)}
+            </div>
             <SnackbarAlert state={snackbar} onClose={() => setSnackbar({open: false})}/>
         </ContentTheme>
     )

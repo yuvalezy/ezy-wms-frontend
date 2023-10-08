@@ -4,6 +4,7 @@ export const TextValue = {
     GoodsReceipt: "Entrada",
     GoodsReceiptSupervisor: "Supervisor de Entrada",
     GoodsReceiptReport: "Reporte de Entradas",
+    GoodsReceiptVSExit: "Reporte de Entradas vs Salida",
 
     //Buttons / Status
     No: "No",
