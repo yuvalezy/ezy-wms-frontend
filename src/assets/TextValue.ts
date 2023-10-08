@@ -17,6 +17,7 @@ export const TextValue = {
     QRCode: "Código QR",
     ID: "Identificación",
     Code: "Código",
+    Description: "Descripcion",
     Barcode: "Código de Barra",
     Unknown: "Desconocido",
     Clear: "Borrar",
@@ -44,6 +45,13 @@ export const TextValue = {
     Transaction: "Transacción",
     Filters: "Filtros",
     Execute: "Ejecutar",
+    TransferRequest: "Solicitud de Transferencia",
+    SalesOrder: "Orden de Venta",
+    ReservedInvoice: "Factura Reservada",
+    Address: "Direccion",
+    Customer: "Cliente",
+    OpenQuantity: "Cantidad Abierta",
+    Quantity: "Cantidad",
 
     //Field Description
     SelectVendor: "Seleccione el Proveedor",
@@ -71,7 +79,5 @@ export const TextValue = {
     ScanConfirmFulfillment: "Separar para Entrega a Cliente",
     ScanConfirmShowroom: "Enviar a Showroom",
     ScanConfirmSupervisor: "Separar para Supervisor",
-    ScanConfirmBoxNumber: "Confirmar numero de caja"
-
-
+    ScanConfirmBoxNumber: "Confirmar numero de caja",
 }

@@ -2,18 +2,18 @@ import {globalConfig} from "../../assets/GlobalConfig";
 import axios from "axios";
 
 export type GoodsReceiptVSExitReportData = {
-    ObjectType: number;
-    Number: number;
-    CardName: string;
-    Address: string;
-    Lines: GoodsReceiptVSExitReportDataLine[];
+    objectType: number;
+    number: number;
+    cardName: string;
+    address: string;
+    lines: GoodsReceiptVSExitReportDataLine[];
 }
 
 export type GoodsReceiptVSExitReportDataLine = {
-    ItemCode: string;
-    ItemName: string;
-    OpenQuantity: number;
-    Quantity: number;
+    itemCode: string;
+    itemName: string;
+    openQuantity: number;
+    quantity: number;
 }
 export const fetchGoodsReceiptVSExitReport = async (
     id: number,

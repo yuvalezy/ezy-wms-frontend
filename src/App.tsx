@@ -12,7 +12,7 @@ import NotFound from "./Components/NotFound";
 import {Authorization} from "./assets/Authorization";
 import GoodsReceiptProcess from "./Pages/GoodsReceiptProcess";
 import GoodsReceiptReport from "./Pages/GoodsReceiptReport";
-import GoodsReceiptVSExitReport from "./Pages/goodsReceiptVSExitReport";
+import GoodsReceiptVSExitReport from "./Pages/GoodsReceiptVSExitReport";
 
 export default function App() {
     return (

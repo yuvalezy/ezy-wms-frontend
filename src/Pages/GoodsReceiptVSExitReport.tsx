@@ -3,10 +3,15 @@ import ContentTheme from "../Components/ContentTheme";
 import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import {TextValue} from "../assets/TextValue";
 import {Typography} from "@mui/material";
-import {IsNumeric} from "../assets/Functions";
+import {IsNumeric, ObjectName} from "../assets/Functions";
 import {useParams} from "react-router-dom";
 import {fetchGoodsReceiptVSExitReport, GoodsReceiptVSExitReportData} from "./GoodsReceiptSupervisor/Report";
 import SnackbarAlert, {SnackbarState} from "../Components/SnackbarAlert";
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import GoodsReceiptVSExitReportTable from "./GoodsReceiptSupervisor/GoodsReceiptVSExitReportTable";
 
 export default function GoodsReceiptVSExitReport() {
     const [id, setID] = useState<number | null>();
@@ -35,7 +40,27 @@ export default function GoodsReceiptVSExitReport() {
     }, []);
     return (
         <ContentTheme loading={loading} title={title} icon={<SupervisedUserCircleIcon/>}>
-            <Typography variant="h6">{TextValue.GoodsReceipt} #{id}</Typography>
+            <Typography variant="h4">{TextValue.GoodsReceipt} #{id}</Typography>
+            <div>
+                {data?.map(value => (
+                    <Accordion>
+                        <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+                            <Typography variant="h5"><strong>{ObjectName(value.objectType)}: </strong> {value.number}</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Typography>
+                                <strong>{TextValue.Customer}: </strong>
+                                {value.cardName}
+                            </Typography>
+                            <Typography>
+                                <strong>{TextValue.Address}: </strong>
+                                {value.address}
+                            </Typography>
+                            <GoodsReceiptVSExitReportTable data={value.lines}/>
+                        </AccordionDetails>
+                    </Accordion>
+                ))}
+            </div>
             <SnackbarAlert state={snackbar} onClose={() => setSnackbar({open: false})}/>
         </ContentTheme>
     )
