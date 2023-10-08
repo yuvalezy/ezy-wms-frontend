@@ -58,7 +58,7 @@ export const TextValue = {
     SelectBox: "Seleccione la Caja",
 
     //Validations
-    GoodsReceiptNotFound: "La entrada #{0} no es valida",
+    GoodsReceiptNotFound: "La entrada #{0} no es válida",
     GoodsReceiptStatusError: "El estado de la entrada #{0} es {1}.\nNo se puede continuar.",
     GoodsReceiptIsClosed: "Entrada #{0} esta cerrada",
     IDRequired: "Debe introducir una identificación",

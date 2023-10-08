@@ -17,7 +17,7 @@ interface GoodsReceiptVSExitReportTableProps {
 const GoodsReceiptVSExitReportTable: React.FC<GoodsReceiptVSExitReportTableProps> = ({data}) => {
     const StyledTableCell = styled(TableCell)(({theme}) => ({
         [`&.${tableCellClasses.head}`]: {
-            backgroundColor: theme.palette.common.black,
+            backgroundColor: '#0e4a8f',
             color: theme.palette.common.white,
         },
         [`&.${tableCellClasses.body}`]: {
@@ -27,7 +27,7 @@ const GoodsReceiptVSExitReportTable: React.FC<GoodsReceiptVSExitReportTableProps
 
     const StyledTableRow = styled(TableRow)(({theme}) => ({
         '&:nth-of-type(odd)': {
-            backgroundColor: theme.palette.action.hover,
+            backgroundColor: '#e3f2fd',
         },
         // hide last border
         '&:last-child td, &:last-child th': {
@@ -47,19 +47,47 @@ const GoodsReceiptVSExitReportTable: React.FC<GoodsReceiptVSExitReportTableProps
                     </StyledTableRow>
                 </TableHead>
                 <TableBody>
-                    {data.map((row) => (
-                        <StyledTableRow
-                            key={row.itemCode}
-                            sx={{'&:last-child td, &:last-child th': {border: 0}}}
-                        >
-                            <StyledTableCell component="th" scope="row">
-                                {row.itemCode}
-                            </StyledTableCell>
-                            <StyledTableCell>{row.itemName}</StyledTableCell>
-                            <StyledTableCell align="right">{row.openQuantity}</StyledTableCell>
-                            <StyledTableCell align="right">{row.quantity}</StyledTableCell>
-                        </StyledTableRow>
-                    ))}
+                    <>
+                        {data.map((row) => (
+                            <StyledTableRow
+                                key={row.itemCode}
+                                sx={{'&:last-child td, &:last-child th': {border: 0}}}
+                            >
+                                <StyledTableCell component="th" scope="row">
+                                    {row.itemCode}
+                                </StyledTableCell>
+                                <StyledTableCell>{row.itemName}</StyledTableCell>
+                                <StyledTableCell align="right">{row.openQuantity}</StyledTableCell>
+                                <StyledTableCell align="right">{row.quantity}</StyledTableCell>
+                            </StyledTableRow>
+                        ))}
+                        {data.map((row) => (
+                            <StyledTableRow
+                                key={row.itemCode}
+                                sx={{'&:last-child td, &:last-child th': {border: 0}}}
+                            >
+                                <StyledTableCell component="th" scope="row">
+                                    {row.itemCode}
+                                </StyledTableCell>
+                                <StyledTableCell>{row.itemName}</StyledTableCell>
+                                <StyledTableCell align="right">{row.openQuantity}</StyledTableCell>
+                                <StyledTableCell align="right">{row.quantity}</StyledTableCell>
+                            </StyledTableRow>
+                        ))}
+                        {data.map((row) => (
+                            <StyledTableRow
+                                key={row.itemCode}
+                                sx={{'&:last-child td, &:last-child th': {border: 0}}}
+                            >
+                                <StyledTableCell component="th" scope="row">
+                                    {row.itemCode}
+                                </StyledTableCell>
+                                <StyledTableCell>{row.itemName}</StyledTableCell>
+                                <StyledTableCell align="right">{row.openQuantity}</StyledTableCell>
+                                <StyledTableCell align="right">{row.quantity}</StyledTableCell>
+                            </StyledTableRow>
+                        ))}
+                    </>
                 </TableBody>
             </Table>
         </TableContainer>
