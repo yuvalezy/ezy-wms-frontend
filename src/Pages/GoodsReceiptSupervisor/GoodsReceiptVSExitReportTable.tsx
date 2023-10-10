@@ -61,32 +61,6 @@ const GoodsReceiptVSExitReportTable: React.FC<GoodsReceiptVSExitReportTableProps
                                 <StyledTableCell align="right">{row.quantity}</StyledTableCell>
                             </StyledTableRow>
                         ))}
-                        {data.map((row) => (
-                            <StyledTableRow
-                                key={row.itemCode}
-                                sx={{'&:last-child td, &:last-child th': {border: 0}}}
-                            >
-                                <StyledTableCell component="th" scope="row">
-                                    {row.itemCode}
-                                </StyledTableCell>
-                                <StyledTableCell>{row.itemName}</StyledTableCell>
-                                <StyledTableCell align="right">{row.openQuantity}</StyledTableCell>
-                                <StyledTableCell align="right">{row.quantity}</StyledTableCell>
-                            </StyledTableRow>
-                        ))}
-                        {data.map((row) => (
-                            <StyledTableRow
-                                key={row.itemCode}
-                                sx={{'&:last-child td, &:last-child th': {border: 0}}}
-                            >
-                                <StyledTableCell component="th" scope="row">
-                                    {row.itemCode}
-                                </StyledTableCell>
-                                <StyledTableCell>{row.itemName}</StyledTableCell>
-                                <StyledTableCell align="right">{row.openQuantity}</StyledTableCell>
-                                <StyledTableCell align="right">{row.quantity}</StyledTableCell>
-                            </StyledTableRow>
-                        ))}
                     </>
                 </TableBody>
             </Table>
