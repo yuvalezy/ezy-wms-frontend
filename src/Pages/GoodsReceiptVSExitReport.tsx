@@ -62,7 +62,7 @@ export default function GoodsReceiptVSExitReport() {
                 ))}
             </div>
             {
-                (data == null || data.length === 0) &&
+                (!loading && (data == null || data.length === 0)) &&
                 <Alert severity="warning">{TextValue.NoExitData}</Alert>
             }
             <SnackbarAlert state={snackbar} onClose={() => setSnackbar({open: false})}/>

@@ -133,7 +133,7 @@ export default function GoodsReceiptProcess() {
                         color = 'error';
                         break;
                     default:
-                        message = `Unkowon return value: ${v}`;
+                        message = `Unknown return value: ${v}`;
                         color = 'error';
                         break;
                 }
@@ -145,7 +145,14 @@ export default function GoodsReceiptProcess() {
                     setEnable(false);
                 }
             })
-            .catch(error => errorAlert(`Add Item Error: ${error}`))
+            .catch(error => {
+                console.error(`Error performing action: ${error}`);
+                let errorMessage = error.response?.data['exceptionMessage'];
+                if (errorMessage)
+                    errorAlert(errorMessage);
+                else
+                    errorAlert(`Add Item Error: ${error}`);
+            })
             .finally(function () {
                 setLoading(false);
                 setTimeout(() => barcodeRef.current?.focus(), 100);
