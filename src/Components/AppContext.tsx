@@ -5,8 +5,7 @@ import {User} from "../assets/Common";
 import {setGlobalConfig} from "../assets/GlobalConfig";
 
 // Define the shape of the context
-export interface Config {
-    testUser: string | null;
+export type Config = {
     baseURL: string;
     debug: boolean;
 }
@@ -53,7 +52,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
                 setConfig(response.data);
                 setGlobalConfig(response.data);
             } catch (error) {
-                console.error('Failed to load config:', error);
+                const urlObject = new URL(window.location.href);
+                const baseUrl = `${urlObject.protocol}//${urlObject.host}`;
+                const config: Config = {
+                    baseURL: baseUrl,
+                    debug: true,
+                };
+                setConfig(config);
+                setGlobalConfig(config);
+                console.log('Failed to load config.json file, using default URL');
             }
         };
 
@@ -86,9 +93,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
 
             if (response.data && response.data.access_token) {
                 const {access_token, expires_in} = response.data;
+
                 localStorage.setItem('token', access_token);
                 const expiryTime = new Date().getTime() + expires_in * 1000;
                 localStorage.setItem('token_expiry', expiryTime.toString());
+
+                setTimeout(logout, expires_in * 1000);
 
                 const userInfoResponse = await axios.get<User>(`${config.baseURL}/api/General/UserInfo`, {
                     headers: {
