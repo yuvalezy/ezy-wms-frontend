@@ -13,6 +13,7 @@ import {Authorization} from "./assets/Authorization";
 import GoodsReceiptProcess from "./Pages/GoodsReceiptProcess";
 import GoodsReceiptReport from "./Pages/GoodsReceiptReport";
 import GoodsReceiptVSExitReport from "./Pages/GoodsReceiptVSExitReport";
+import GoodsReceiptAll from './Pages/GoodsReceiptAll';
 
 export default function App() {
     return (
@@ -35,6 +36,9 @@ export default function App() {
                     <Route path="/goodsReceiptVSExitReport/:scanCode"
                            element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT_SUPERVISOR}
                                                     element={<GoodsReceiptVSExitReport/>}/>}/>
+                    <Route path="/goodsReceiptReportAll/:scanCode"
+                           element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT_SUPERVISOR}
+                                                    element={<GoodsReceiptAll/>}/>}/>
                     <Route path="/" element={<ProtectedRoute element={<HomePage/>}/>}/>
                     <Route path="*" element={<NotFound/>}/>
                 </Routes>

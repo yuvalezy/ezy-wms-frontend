@@ -54,6 +54,9 @@ export const TextValue = {
     Quantity: "Cantidad",
     Message: 'Mensaje',
     Time: 'Tiempo',
+    Delivery: "Entrega",
+    Showroom: "Showroom",
+    Stock: "Inventario",
 
     //Field Description
     SelectVendor: "Seleccione el Proveedor",

@@ -1,6 +1,15 @@
 import {globalConfig} from "../../assets/GlobalConfig";
 import axios from "axios";
 
+export type GoodsReceiptAll = {
+    itemCode: string,
+    itemName: string,
+    quantity: number;
+    delivery: number;
+    showroom: number;
+    stock: number;
+}
+
 export type GoodsReceiptVSExitReportData = {
     objectType: number;
     number: number;
@@ -15,6 +24,33 @@ export type GoodsReceiptVSExitReportDataLine = {
     openQuantity: number;
     quantity: number;
 }
+export const fetchGoodsReceiptReportAll = async (
+    id: number,
+): Promise<GoodsReceiptAll[]> => {
+    try {
+        if (!globalConfig)
+            throw new Error('Config has not been initialized!');
+
+        if (globalConfig.debug)
+            await delay(500);
+
+        const access_token = localStorage.getItem('token');
+
+        const url = `${globalConfig.baseURL}/api/GoodsReceipt/GoodsReceiptAll/${id}`;
+
+        const response = await axios.get<GoodsReceiptAll[]>(url,
+            {
+                headers: {
+                    'Authorization': `Bearer ${access_token}`
+                }
+            });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching documents:", error);
+        throw error;
+    }
+};
 export const fetchGoodsReceiptVSExitReport = async (
     id: number,
 ): Promise<GoodsReceiptVSExitReportData[]> => {

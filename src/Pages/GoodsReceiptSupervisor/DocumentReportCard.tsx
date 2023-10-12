@@ -13,8 +13,15 @@ type DocumentReportCardProps = {
 const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc}) => {
     const navigate = useNavigate();
 
-    function handleOpen(id: number) {
-        navigate(`/goodsReceiptVSExitReport/${id}`);
+    function handleOpen(type: string, id: number) {
+        switch (type) {
+            case 'all':
+                navigate(`/goodsReceiptReportAll/${id}`);
+                break;
+            case 'vs':
+                navigate(`/goodsReceiptVSExitReport/${id}`);
+                break;
+        }
     }
 
     return (
@@ -28,11 +35,16 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc}) => {
                 <Typography color="textSecondary">{TextValue.CreatedBy}: {doc.employee.name}</Typography>
                 <Typography
                     color="textSecondary">{TextValue.Status}: {documentStatusToString(doc.status)}</Typography>
-                {doc.status === DocumentStatus.Finished &&
                 <a href="#" onClick={e => {
                     e.preventDefault();
-                    handleOpen(doc.id)
-                }}>{TextValue.GoodsReceiptVSExit}</a>
+                    handleOpen('all', doc.id)
+                }}>{TextValue.GoodsReceiptReport}</a>
+                <br/>
+                {doc.status === DocumentStatus.Finished &&
+                    <a href="#" onClick={e => {
+                        e.preventDefault();
+                        handleOpen('vs', doc.id)
+                    }}>{TextValue.GoodsReceiptVSExit}</a>
                 }
             </CardContent>
         </Card>
