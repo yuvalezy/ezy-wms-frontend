@@ -52,6 +52,8 @@ export const TextValue = {
     Customer: "Cliente",
     OpenQuantity: "Cantidad Abierta",
     Quantity: "Cantidad",
+    Message: 'Mensaje',
+    Time: 'Tiempo',
 
     //Field Description
     SelectVendor: "Seleccione el Proveedor",
@@ -81,5 +83,4 @@ export const TextValue = {
     ScanConfirmShowroom: "Enviar a Showroom",
     ScanConfirmSupervisor: "Separar para Supervisor",
     ScanConfirmBoxNumber: "Confirmar numero de caja"
-
 }

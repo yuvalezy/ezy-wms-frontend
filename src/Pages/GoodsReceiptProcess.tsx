@@ -6,13 +6,19 @@ import React, {useEffect, useRef, useState} from "react";
 import ErrorMessage from "../Components/ErrorMessagex";
 import {IsNumeric, StringFormat} from "../assets/Functions";
 import Box from "@mui/material/Box";
-import {Alert, AlertColor, Button, TextField} from "@mui/material";
-import SnackbarAlert, {SnackbarState} from "../Components/SnackbarAlert";
+import {Alert, AlertColor, AlertTitle, Button, TextField} from "@mui/material";
 import BoxConfirmationDialog from '../Components/BoxConfirmationDialog'
 import DoneIcon from "@mui/icons-material/Done";
 import {addItem, AddItemReturnValue, scanBarcode} from "./GoodsReceiptSupervisor/Document";
 import {distinctItems, Item} from "../assets/Common";
 
+interface AcceptValue {
+    barcode?: string | null
+    itemCode?: string | null
+    timeStamp?: string;
+    message?: string
+    severity: AlertColor
+}
 
 export default function GoodsReceiptProcess() {
     const {scanCode} = useParams();
@@ -21,12 +27,10 @@ export default function GoodsReceiptProcess() {
     const [enable, setEnable] = useState(true);
     const [loading, setLoading] = useState(false);
     const [barcodeInput, setBarcodeInput] = React.useState('');
-    const [snackbar, setSnackbar] = React.useState<SnackbarState>({open: false});
-    const [alertMessage, setAlertMessage] = React.useState('');
-    const [alertColor, setAlertColor] = React.useState<AlertColor>();
     const [openBoxDialog, setOpenBoxDialog] = useState(false);
     const [boxItem, setBoxItem] = useState('');
     const [boxItems, setBoxItems] = useState<Item[]>();
+    const [acceptValues, setAcceptValues] = useState<AcceptValue[]>([]);
 
     const title = `${TextValue.GoodsReceipt} #${scanCode}`;
 
@@ -38,14 +42,10 @@ export default function GoodsReceiptProcess() {
         setID(parseInt(scanCode));
     }, []);
 
-    const alert = (message: string, color: string) => {
-        setSnackbar({open: true, message: message, color: color});
-        setTimeout(() => setSnackbar({open: false}), 5000);
-    };
-
-    const errorAlert = (message: string) => {
-        setSnackbar({open: true, message: message, color: 'red'});
-        setTimeout(() => setSnackbar({open: false}), 5000);
+    const alert = (alert: AcceptValue) => {
+        let date = new Date(Date.now());
+        alert.timeStamp = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        setAcceptValues([alert, ...acceptValues]);
     };
 
 
@@ -61,7 +61,7 @@ export default function GoodsReceiptProcess() {
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         if (barcodeInput.length === 0) {
-            alert(TextValue.BarcodeRequired, 'DarkRed');
+            window.alert(TextValue.BarcodeRequired);
             return;
         }
 
@@ -69,17 +69,14 @@ export default function GoodsReceiptProcess() {
         scanBarcode(barcodeInput)
             .then(items => handleItems(items))
             .catch(error => {
-                errorAlert(`Scan Bar Code Error: ${error}`);
+                alert({message: `Scan Bar Code Error: ${error}`, severity: 'error'});
                 setLoading(false);
             })
-
-
-        setTimeout(() => setSnackbar({open: false}), 5000);
     }
 
     function handleItems(items: Item[]) {
         if (items.length === 0) {
-            alert(StringFormat(TextValue.BarcodeNotFound, barcodeInput), 'DarkRed');
+            alert({barcode: barcodeInput, message: StringFormat(TextValue.BarcodeNotFound, barcodeInput), severity: 'error'});
             setBarcodeInput('');
             setLoading(false);
             return;
@@ -96,7 +93,7 @@ export default function GoodsReceiptProcess() {
         const distinctCodes = distinctItems(items);
         if (distinctCodes.length !== 1) {
             let codes = distinctCodes.map(v => `"${v}"`).join('\n');
-            alert(StringFormat(TextValue.MultipleItemsError, codes), 'DarkRed');
+            alert({ message: StringFormat(TextValue.MultipleItemsError, codes), severity: 'error' });
             setLoading(false);
             return;
         }
@@ -137,11 +134,8 @@ export default function GoodsReceiptProcess() {
                         color = 'error';
                         break;
                 }
-                setAlertMessage(message);
-                setAlertColor(color);
-                if (v !== AddItemReturnValue.ClosedDocument) {
-                    setTimeout(() => setAlertMessage(''), 5000);
-                } else {
+                alert({barcode: barcode, itemCode: itemCode, message: message, severity: color });
+                if (v === AddItemReturnValue.ClosedDocument) {
                     setEnable(false);
                 }
             })
@@ -149,9 +143,9 @@ export default function GoodsReceiptProcess() {
                 console.error(`Error performing action: ${error}`);
                 let errorMessage = error.response?.data['exceptionMessage'];
                 if (errorMessage)
-                    errorAlert(errorMessage);
+                    alert({barcode: barcode, itemCode: itemCode, message: errorMessage, severity: 'error'});
                 else
-                    errorAlert(`Add Item Error: ${error}`);
+                    alert({barcode: barcode, itemCode: itemCode, message: `Add Item Error: ${error}`, severity: 'error'});
             })
             .finally(function () {
                 setLoading(false);
@@ -185,13 +179,18 @@ export default function GoodsReceiptProcess() {
                         </Box>
                     </>
                 )}
-                {alertMessage &&
+                <>
+                {acceptValues.map(alert => (
                     <Box mt={1}>
-                        <Alert variant="filled" severity={alertColor}>
-                            {alertMessage}
+                        <Alert variant="filled" severity={alert.severity}>
+                        {alert.barcode && <AlertTitle><strong>{TextValue.Barcode}: </strong>{alert.barcode}</AlertTitle>}
+                        <strong>{TextValue.Time}: </strong>{alert.timeStamp} <br />
+                        {alert.itemCode && <><span><strong>{TextValue.Item}: </strong>{alert.itemCode}</span><br/></>}
+                        <strong>{TextValue.Message}: </strong>{alert.message}
                         </Alert>
                     </Box>
-                }
+                ))}
+                </>
                 <BoxConfirmationDialog
                     open={openBoxDialog}
                     onClose={() => setOpenBoxDialog(false)}
@@ -199,7 +198,6 @@ export default function GoodsReceiptProcess() {
                     itemCode={boxItem}
                     items={boxItems}
                 />
-                <SnackbarAlert state={snackbar} onClose={() => setSnackbar({open: false})}/>
             </form>
         )
     }
