@@ -6,7 +6,7 @@ import React, {useEffect, useRef, useState} from "react";
 import ErrorMessage from "../Components/ErrorMessagex";
 import {IsNumeric, StringFormat} from "../assets/Functions";
 import Box from "@mui/material/Box";
-import {Alert, AlertColor, AlertTitle, Button, TextField} from "@mui/material";
+import {Button, TextField} from "@mui/material";
 import BoxConfirmationDialog from '../Components/BoxConfirmationDialog'
 import DoneIcon from "@mui/icons-material/Done";
 import {addItem, AddItemReturnValue, scanBarcode} from "./GoodsReceiptSupervisor/Document";
@@ -46,7 +46,12 @@ export default function GoodsReceiptProcess() {
     return (
         <ContentTheme loading={loading} title={title} icon={<AssignmentTurnedInIcon/>}>
             {id ? (
-                BarCodeForm()
+                <>
+                    BarCodeForm()
+                    <>
+                        {acceptValues.map(alert => <ProcessAlert alert={alert}/>)}
+                    </>
+                </>
             ) : <ErrorMessage text={TextValue.InvalidScanCode}/>
             }
         </ContentTheme>
@@ -149,9 +154,6 @@ export default function GoodsReceiptProcess() {
                         </Box>
                     </>
                 )}
-                <>
-                    {acceptValues.map(alert => <ProcessAlert alert={alert}/>)}
-                </>
                 <BoxConfirmationDialog
                     open={openBoxDialog}
                     onClose={() => setOpenBoxDialog(false)}

@@ -57,6 +57,7 @@ export const TextValue = {
     Delivery: "Entrega",
     Showroom: "Showroom",
     Stock: "Inventario",
+    Comment: 'Comentario',
 
     //Field Description
     SelectVendor: "Seleccione el Proveedor",
