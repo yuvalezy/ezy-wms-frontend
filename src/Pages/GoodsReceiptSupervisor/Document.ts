@@ -3,6 +3,8 @@ import {Item, User} from "../../assets/Common";
 import {BusinessPartner, Employee} from "../../assets/Data";
 import {TextValue} from "../../assets/TextValue";
 import {globalConfig} from "../../assets/GlobalConfig";
+import {AlertColor} from "@mui/material";
+import {StringFormat} from "../../assets/Functions";
 
 export type Action = 'approve' | 'cancel' | 'qrcode';
 
@@ -31,6 +33,12 @@ export enum AddItemReturnValue {
     Fulfillment = 'Fulfillment',
     Showroom = 'Showroom',
     ClosedDocument = 'ClosedDocument'
+}
+
+export type AddItemResponse = {
+    message: string;
+    color: AlertColor;
+    value: AddItemReturnValue;
 }
 
 export const documentStatusToString = (status: DocumentStatus): string => {
@@ -189,7 +197,7 @@ export const scanBarcode = async (scanCode: string): Promise<Item[]> => {
     }
 }
 
-export const addItem = async (id: number, itemCode: string, barcode: string): Promise<AddItemReturnValue> => {
+export const addItem = async (id: number, itemCode: string, barcode: string): Promise<AddItemResponse> => {
     try {
         if (!globalConfig)
             throw new Error('Config has not been initialized!');
@@ -211,7 +219,37 @@ export const addItem = async (id: number, itemCode: string, barcode: string): Pr
             }
         });
 
-        return response.data;
+        let message: string;
+        let color: AlertColor;
+        let value = response.data;
+        switch (value) {
+            case AddItemReturnValue.StoreInWarehouse:
+                message = TextValue.ScanConfirmStoreInWarehouse;
+                color = 'success';
+                break;
+            case AddItemReturnValue.Fulfillment:
+                message = TextValue.ScanConfirmFulfillment;
+                color = 'warning';
+                break;
+            case AddItemReturnValue.Showroom:
+                message = TextValue.ScanConfirmShowroom;
+                color = 'info';
+                break;
+            case AddItemReturnValue.ClosedDocument:
+                message = StringFormat(TextValue.GoodsReceiptIsClosed, id);
+                color = 'error';
+                break;
+            default:
+                message = `Unknown return value: ${value}`;
+                color = 'error';
+                break;
+        }
+
+        return {
+            message: message,
+            color: color,
+            value: value,
+        };
     } catch (error) {
         console.error("Error adding item:", error);
         throw error;

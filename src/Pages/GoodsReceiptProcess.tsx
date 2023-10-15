@@ -11,14 +11,8 @@ import BoxConfirmationDialog from '../Components/BoxConfirmationDialog'
 import DoneIcon from "@mui/icons-material/Done";
 import {addItem, AddItemReturnValue, scanBarcode} from "./GoodsReceiptSupervisor/Document";
 import {distinctItems, Item} from "../assets/Common";
+import ProcessAlert, {ProcessAlertValue} from "./GoodsReceiptProcess/ProcessAlert";
 
-interface AcceptValue {
-    barcode?: string | null
-    itemCode?: string | null
-    timeStamp?: string;
-    message?: string
-    severity: AlertColor
-}
 
 export default function GoodsReceiptProcess() {
     const {scanCode} = useParams();
@@ -30,7 +24,7 @@ export default function GoodsReceiptProcess() {
     const [openBoxDialog, setOpenBoxDialog] = useState(false);
     const [boxItem, setBoxItem] = useState('');
     const [boxItems, setBoxItems] = useState<Item[]>();
-    const [acceptValues, setAcceptValues] = useState<AcceptValue[]>([]);
+    const [acceptValues, setAcceptValues] = useState<ProcessAlertValue[]>([]);
 
     const title = `${TextValue.GoodsReceipt} #${scanCode}`;
 
@@ -42,7 +36,7 @@ export default function GoodsReceiptProcess() {
         setID(parseInt(scanCode));
     }, []);
 
-    const alert = (alert: AcceptValue) => {
+    const alert = (alert: ProcessAlertValue) => {
         let date = new Date(Date.now());
         alert.timeStamp = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
         setAcceptValues([alert, ...acceptValues]);
@@ -93,7 +87,7 @@ export default function GoodsReceiptProcess() {
         const distinctCodes = distinctItems(items);
         if (distinctCodes.length !== 1) {
             let codes = distinctCodes.map(v => `"${v}"`).join('\n');
-            alert({ message: StringFormat(TextValue.MultipleItemsError, codes), severity: 'error' });
+            alert({message: StringFormat(TextValue.MultipleItemsError, codes), severity: 'error'});
             setLoading(false);
             return;
         }
@@ -110,32 +104,8 @@ export default function GoodsReceiptProcess() {
         setLoading(true);
         addItem(id ?? 0, itemCode, barcode)
             .then(v => {
-                let message: string;
-                let color: AlertColor;
-                switch (v) {
-                    case AddItemReturnValue.StoreInWarehouse:
-                        message = TextValue.ScanConfirmStoreInWarehouse;
-                        color = 'success';
-                        break;
-                    case AddItemReturnValue.Fulfillment:
-                        message = TextValue.ScanConfirmFulfillment;
-                        color = 'warning';
-                        break;
-                    case AddItemReturnValue.Showroom:
-                        message = TextValue.ScanConfirmShowroom;
-                        color = 'info';
-                        break;
-                    case AddItemReturnValue.ClosedDocument:
-                        message = StringFormat(TextValue.GoodsReceiptIsClosed, id);
-                        color = 'error';
-                        break;
-                    default:
-                        message = `Unknown return value: ${v}`;
-                        color = 'error';
-                        break;
-                }
-                alert({barcode: barcode, itemCode: itemCode, message: message, severity: color });
-                if (v === AddItemReturnValue.ClosedDocument) {
+                alert({barcode: barcode, itemCode: itemCode, message: v.message, severity: v.color});
+                if (v.value === AddItemReturnValue.ClosedDocument) {
                     setEnable(false);
                 }
             })
@@ -180,16 +150,7 @@ export default function GoodsReceiptProcess() {
                     </>
                 )}
                 <>
-                {acceptValues.map(alert => (
-                    <Box mt={1}>
-                        <Alert variant="filled" severity={alert.severity}>
-                        {alert.barcode && <AlertTitle><strong>{TextValue.Barcode}: </strong>{alert.barcode}</AlertTitle>}
-                        <strong>{TextValue.Time}: </strong>{alert.timeStamp} <br />
-                        {alert.itemCode && <><span><strong>{TextValue.Item}: </strong>{alert.itemCode}</span><br/></>}
-                        <strong>{TextValue.Message}: </strong>{alert.message}
-                        </Alert>
-                    </Box>
-                ))}
+                    {acceptValues.map(alert => <ProcessAlert alert={alert}/>)}
                 </>
                 <BoxConfirmationDialog
                     open={openBoxDialog}
