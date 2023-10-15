@@ -9,7 +9,7 @@ import Box from "@mui/material/Box";
 import {Button, TextField} from "@mui/material";
 import BoxConfirmationDialog from '../Components/BoxConfirmationDialog'
 import DoneIcon from "@mui/icons-material/Done";
-import {addItem, AddItemReturnValue, scanBarcode} from "./GoodsReceiptSupervisor/Document";
+import {addItem, AddItemReturnValue, scanBarcode, updateLine} from "./GoodsReceiptSupervisor/Document";
 import {distinctItems, Item} from "../assets/Common";
 import ProcessAlert, {ProcessAlertValue} from "./GoodsReceiptProcess/ProcessAlert";
 
@@ -95,7 +95,7 @@ export default function GoodsReceiptProcess() {
         setLoading(true);
         addItem(id ?? 0, itemCode, barcode)
             .then(v => {
-                alert({barcode: barcode, itemCode: itemCode, message: v.message, severity: v.color});
+                alert({lineID: v.lineID, barcode: barcode, itemCode: itemCode, message: v.message, severity: v.color});
                 if (v.value === AddItemReturnValue.ClosedDocument) {
                     setEnable(false);
                 }
@@ -115,7 +115,22 @@ export default function GoodsReceiptProcess() {
     }
 
     function updateAlertComment(alert: ProcessAlertValue, comment: string): void {
-        alert.comment = comment;
+        setLoading(true);
+        updateLine({id: id??-1, lineID: alert.lineID??-1, comment: comment})
+            .then((_) => {
+                alert.comment = comment;
+            })
+            .catch(error => {
+                console.error(`Error performing update: ${error}`);
+                let errorMessage = error.response?.data['exceptionMessage'];
+                if (errorMessage)
+                    window.alert(errorMessage);
+                else
+                    window.alert(`Update Line Error: ${error}`);
+            })
+            .finally(function () {
+                setLoading(false);
+            })
     }
 
     return (

@@ -5,6 +5,7 @@ import {TextValue} from "../../assets/TextValue";
 import React, {useState} from "react";
 
 export interface ProcessAlertValue {
+    lineID?: number,
     barcode?: string | null;
     itemCode?: string | null;
     timeStamp?: string;

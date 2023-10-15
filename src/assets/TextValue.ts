@@ -74,6 +74,16 @@ export const TextValue = {
     BarcodeNotFound: 'No se encontro el codigo de barra "{0}"',
     MultipleItemsError: "Codigo retorno multiples codigos de articulos:\n{0}.\nSolicite la correcion en el sistema e intente de nuevo.",
     NoExitData: "No tiene salidas o transferencias pendientes.",
+    InvalidScanCode: "Código Erróneo",
+    ScanConfirmStoreInWarehouse: "Guardar en Bodega",
+    ScanConfirmFulfillment: "Separar para Entrega a Cliente",
+    ScanConfirmShowroom: "Enviar a Showroom",
+    ScanConfirmSupervisor: "Separar para Supervisor",
+    ScanConfirmBoxNumber: "Confirmar numero de caja",
+    UpdateLineStatusError: "Transaccion {0} no esta en proceso",
+    UpdateLineLineStatusError: "Transaccion {0}, Linea {1} no esta en abierta",
+    UpdateLineSupervisorError: "Se requiere autorizacion de supervisor",
+    UpdateLineNotSupervisorError: "El codigo introducido no es de un supervisor",
 
     //Dialog
     ConfirmAction: "Confirmar Acción",
@@ -81,10 +91,4 @@ export const TextValue = {
     ConfirmCancelDocument: "¿Está seguro que desea cancelar el documento #{0}?",
     ConfirmFinishDocument: "¿Está seguro que desea finalizar el documento #{0}?",
     ActionCannotReverse: "Esta acción no se puede revertir",
-    InvalidScanCode: "Código Erróneo",
-    ScanConfirmStoreInWarehouse: "Guardar en Bodega",
-    ScanConfirmFulfillment: "Separar para Entrega a Cliente",
-    ScanConfirmShowroom: "Enviar a Showroom",
-    ScanConfirmSupervisor: "Separar para Supervisor",
-    ScanConfirmBoxNumber: "Confirmar numero de caja"
 }

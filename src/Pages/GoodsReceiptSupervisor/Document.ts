@@ -5,6 +5,8 @@ import {TextValue} from "../../assets/TextValue";
 import {globalConfig} from "../../assets/GlobalConfig";
 import {AlertColor} from "@mui/material";
 import {StringFormat} from "../../assets/Functions";
+import {Simulate} from "react-dom/test-utils";
+import error = Simulate.error;
 
 export type Action = 'approve' | 'cancel' | 'qrcode';
 
@@ -39,11 +41,20 @@ interface AddItemResponse {
     lineID: number;
     value: AddItemReturnValue;
 }
+
 export type AddItemResponseValue = {
     lineID: number;
     message: string;
     color: AlertColor;
     value: AddItemReturnValue;
+}
+
+export enum UpdateLineReturnValue {
+    Status = 'Status',
+    LineStatus = 'LineStatus',
+    Ok = 'Ok',
+    SupervisorPassword = 'SupervisorPassword',
+    NotSupervisor = 'NotSupervisor'
 }
 
 export const documentStatusToString = (status: DocumentStatus): string => {
@@ -258,6 +269,46 @@ export const addItem = async (id: number, itemCode: string, barcode: string): Pr
         };
     } catch (error) {
         console.error("Error adding item:", error);
+        throw error;
+    }
+}
+export const updateLine = async ({id, lineID, comment}: { id: number, lineID: number, comment: string }): Promise<boolean> => {
+    try {
+        if (!globalConfig)
+            throw new Error('Config has not been initialized!');
+
+        if (globalConfig.debug)
+            await delay(500);
+
+        const access_token = localStorage.getItem('token');
+
+        const url = `${globalConfig.baseURL}/api/GoodsReceipt/UpdateLine`;
+
+        const response = await axios.post<UpdateLineReturnValue>(url, {
+            id: id,
+            lineID: lineID,
+            comment: comment
+        }, {
+            headers: {
+                'Authorization': `Bearer ${access_token}`
+            }
+        });
+
+        let responseData = response.data;
+        switch (responseData) {
+            case UpdateLineReturnValue.Status:
+                throw new Error(TextValue.UpdateLineStatusError);
+            case UpdateLineReturnValue.LineStatus:
+                throw new Error(TextValue.UpdateLineLineStatusError);
+            case UpdateLineReturnValue.SupervisorPassword:
+                throw new Error(TextValue.UpdateLineSupervisorError);
+            case UpdateLineReturnValue.NotSupervisor:
+                window.alert(TextValue.UpdateLineNotSupervisorError);
+                return false;
+        }
+        return true;
+    } catch (error) {
+        console.error("Error updating line:", error);
         throw error;
     }
 }
