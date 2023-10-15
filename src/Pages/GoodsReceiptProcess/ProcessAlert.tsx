@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import {Alert, AlertColor, AlertTitle, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextareaAutosize} from "@mui/material";
 import InsertCommentIcon from '@mui/icons-material/InsertComment';
+import CancelIcon from '@mui/icons-material/Cancel';
 import {TextValue} from "../../assets/TextValue";
 import React, {useState} from "react";
 
@@ -19,21 +20,34 @@ export interface ProcessAlertProps {
     onEditComment: (comment: string) => void;
 }
 
+enum DialogType {
+    Comments,
+    Cancel
+}
+
 const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onEditComment}) => {
     const [open, setOpen] = useState(false);
+    const [dialogType, setDialogType] = useState<DialogType | null>(null);
     const [comment, setComment] = useState(alert.comment || "");
 
-    const handleClickOpen = () => {
+    const handleClickOpen = (type: DialogType) => {
+        setDialogType(type);
         setOpen(true);
-        setComment(alert.comment || "");
+        switch (type) {
+            case DialogType.Comments:
+                setComment(alert.comment || "");
+                break;
+        }
     };
 
-    const handleClose = () => {
-        setOpen(false);
-    };
+    const handleClose = () => setOpen(false);
 
-    const handleSaveComment = () => {
-        onEditComment(comment);
+    const handleSave = () => {
+        switch (dialogType) {
+            case DialogType.Comments:
+                onEditComment(comment);
+                break;
+        }
         handleClose();
     };
 
@@ -45,7 +59,12 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onEditComment}) => {
                 {alert.itemCode && <><span><strong>{TextValue.Item}: </strong>{alert.itemCode}</span><br/></>}
                 <strong>{TextValue.Message}: </strong>{alert.message}
                 <div style={{position: 'absolute', top: '10px', right: '10px'}}>
-                    <InsertCommentIcon onClick={handleClickOpen}/>
+                    <Box mt={0.5}>
+                        <InsertCommentIcon onClick={() => handleClickOpen(DialogType.Comments)}/>
+                    </Box>
+                    <Box mt={0.5}>
+                        <CancelIcon onClick={() => handleClickOpen(DialogType.Cancel)}/>
+                    </Box>
                 </div>
             </Alert>
             <Dialog open={open} onClose={handleClose}>
@@ -65,7 +84,7 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onEditComment}) => {
                     <Button onClick={handleClose} color="primary">
                         Cancel
                     </Button>
-                    <Button onClick={handleSaveComment} color="primary">
+                    <Button onClick={handleSave} color="primary">
                         Save
                     </Button>
                 </DialogActions>
