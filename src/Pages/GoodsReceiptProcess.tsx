@@ -9,7 +9,7 @@ import Box from "@mui/material/Box";
 import {Button, TextField} from "@mui/material";
 import BoxConfirmationDialog from '../Components/BoxConfirmationDialog'
 import DoneIcon from "@mui/icons-material/Done";
-import {addItem, AddItemReturnValue, scanBarcode, updateLine} from "./GoodsReceiptSupervisor/Document";
+import {addItem, AddItemReturnValue, scanBarcode} from "./GoodsReceiptSupervisor/Document";
 import {distinctItems, Item} from "../assets/Common";
 import ProcessAlert, {AlertActionType, ProcessAlertValue} from "./GoodsReceiptProcess/ProcessAlert";
 import ProcessComment from "./GoodsReceiptProcess/ProcessComment";
@@ -118,40 +118,22 @@ export default function GoodsReceiptProcess() {
             })
     }
 
-    function updateAlertComment(comment: string): void {
-        if (currentAlert == null) {
-            return;
-        }
-        setLoading(true);
-        updateLine({id: id??-1, lineID: currentAlert.lineID??-1, comment: comment})
-            .then((_) => {
-                let newAlert : ProcessAlertValue = {
-                    ...currentAlert,
-                    comment: comment
-                }
-                let index = acceptValues.findIndex(v => v.lineID === currentAlert.lineID);
-                let newAcceptValues = acceptValues.filter(v => v.lineID !== currentAlert.lineID);
-                newAcceptValues.splice(index, 0, newAlert);
-                setAcceptValues(newAcceptValues);
-                setCurrentAlert(null);
-                setCurrentAlertAction(AlertActionType.None);
-            })
-            .catch(error => {
-                console.error(`Error performing update: ${error}`);
-                let errorMessage = error.response?.data['exceptionMessage'];
-                if (errorMessage)
-                    window.alert(errorMessage);
-                else
-                    window.alert(`Update Line Error: ${error}`);
-            })
-            .finally(function () {
-                setLoading(false);
-            })
-    }
 
     function alertAction(alert: ProcessAlertValue, type: AlertActionType) {
         setCurrentAlert(alert);
         setCurrentAlertAction(type);
+    }
+
+    function handleAccept(newAlert: ProcessAlertValue): void {
+        if (currentAlert == null) {
+            return;
+        }
+        let index = acceptValues.findIndex(v => v.lineID === currentAlert.lineID);
+        let newAcceptValues = acceptValues.filter(v => v.lineID !== currentAlert.lineID);
+        newAcceptValues.splice(index, 0, newAlert);
+        setAcceptValues(newAcceptValues);
+        setCurrentAlert(null);
+        setCurrentAlertAction(AlertActionType.None);
     }
 
     return (
@@ -193,7 +175,7 @@ export default function GoodsReceiptProcess() {
                     <>
                         {acceptValues.map(alert => <ProcessAlert alert={alert} onAction={(type) => alertAction(alert, type)}/>)}
                     </>
-                    {currentAlert && currentAlertAction === AlertActionType.Comments && <ProcessComment alert={currentAlert} onAccept={updateAlertComment}/>}
+                    {currentAlert && currentAlertAction === AlertActionType.Comments && <ProcessComment id={id} alert={currentAlert} onAccept={handleAccept}/>}
                 </>
             ) : <ErrorMessage text={TextValue.InvalidScanCode}/>
             }
