@@ -10,7 +10,8 @@ import Container from '@mui/material/Container';
 import LoginThemeProvider from './LoginThemeProvider';
 import CircularProgressOverlay from "../../Components/CircularProgressOverlay";
 import {useEffect} from "react";
-import {globalConfig} from "../../assets/GlobalConfig";  // Adjust the path based on your directory structure
+import {globalConfig} from "../../assets/GlobalConfig";
+import {TextValue} from "../../assets/TextValue";  // Adjust the path based on your directory structure
 
 type LoginFormProps = {
     onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
@@ -44,7 +45,7 @@ export default function LoginForm({onSubmit, loading}: LoginFormProps) {
                                 required
                                 fullWidth
                                 name="username"
-                                label="Code"
+                                label={TextValue.Code}
                                 type="password"
                                 id="username"
                                 autoComplete="current-password"

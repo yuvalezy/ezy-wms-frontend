@@ -58,6 +58,7 @@ export const TextValue = {
     Showroom: "Showroom",
     Stock: "Inventario",
     Comment: 'Comentario',
+    SupervisorCode: 'Codigo de Supervisor',
 
     //Field Description
     SelectVendor: "Seleccione el Proveedor",
@@ -90,5 +91,6 @@ export const TextValue = {
     ConfirmApproveDocument: "¿Está seguro que desea aprobar el documento #{0}?",
     ConfirmCancelDocument: "¿Está seguro que desea cancelar el documento #{0}?",
     ConfirmFinishDocument: "¿Está seguro que desea finalizar el documento #{0}?",
-    ActionCannotReverse: "Esta acción no se puede revertir",
+    ActionCannotReverse: "Esta acción no se puede revertir"
+
 }

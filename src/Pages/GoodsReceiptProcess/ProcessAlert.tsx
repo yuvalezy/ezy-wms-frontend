@@ -4,6 +4,7 @@ import InsertCommentIcon from '@mui/icons-material/InsertComment';
 import CancelIcon from '@mui/icons-material/Cancel';
 import {TextValue} from "../../assets/TextValue";
 import React, {useState} from "react";
+import TextField from "@mui/material/TextField";
 
 export interface ProcessAlertValue {
     lineID?: number,
@@ -28,16 +29,16 @@ enum DialogType {
 const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onEditComment}) => {
     const [open, setOpen] = useState(false);
     const [dialogType, setDialogType] = useState<DialogType | null>(null);
-    const [comment, setComment] = useState(alert.comment || "");
+    const [comment, setComment] = useState(alert.comment || '');
+    const [password, setPassword] = useState('');
+    const [reason, setReason] = useState(-1);
 
     const handleClickOpen = (type: DialogType) => {
         setDialogType(type);
         setOpen(true);
-        switch (type) {
-            case DialogType.Comments:
-                setComment(alert.comment || "");
-                break;
-        }
+        setComment(alert.comment || '');
+        setPassword('');
+        setReason(-1);
     };
 
     const handleClose = () => setOpen(false);
@@ -73,12 +74,35 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onEditComment}) => {
                     <DialogContentText>
                         <strong>{TextValue.Barcode}: </strong>{alert.barcode}
                     </DialogContentText>
-                    <TextareaAutosize style={{minHeight: '100px', width: '100%'}}
-                                      minRows={3}
-                                      maxRows={5}
-                                      value={comment}
-                                      onChange={(e) => setComment(e.target.value)}
-                    />
+                    {dialogType === DialogType.Cancel && <div>
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="username"
+                            label={TextValue.SupervisorCode}
+                            type="password"
+                            id="username"
+                            autoComplete="current-password"
+                        />
+                        {TextValue.Comment}
+                        <TextareaAutosize style={{minHeight: '50px', width: '100%'}}
+                                          minRows={3}
+                                          maxRows={5}
+                                          value={comment}
+                                          onChange={(e) => setComment(e.target.value)}
+                        />
+                    </div>}
+                    {dialogType === DialogType.Comments &&
+                        <div>
+                            <TextareaAutosize style={{minHeight: '100px', width: '100%'}}
+                                              minRows={3}
+                                              maxRows={5}
+                                              value={comment}
+                                              onChange={(e) => setComment(e.target.value)}
+                            />
+                        </div>
+                    }
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
