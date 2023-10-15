@@ -11,7 +11,8 @@ import BoxConfirmationDialog from '../Components/BoxConfirmationDialog'
 import DoneIcon from "@mui/icons-material/Done";
 import {addItem, AddItemReturnValue, scanBarcode, updateLine} from "./GoodsReceiptSupervisor/Document";
 import {distinctItems, Item} from "../assets/Common";
-import ProcessAlert, {ProcessAlertValue} from "./GoodsReceiptProcess/ProcessAlert";
+import ProcessAlert, {AlertActionType, ProcessAlertValue} from "./GoodsReceiptProcess/ProcessAlert";
+import ProcessComment from "./GoodsReceiptProcess/ProcessComment";
 
 
 export default function GoodsReceiptProcess() {
@@ -25,6 +26,8 @@ export default function GoodsReceiptProcess() {
     const [boxItem, setBoxItem] = useState('');
     const [boxItems, setBoxItems] = useState<Item[]>();
     const [acceptValues, setAcceptValues] = useState<ProcessAlertValue[]>([]);
+    const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
+    const [currentAlertAction, setCurrentAlertAction] = useState<AlertActionType>(AlertActionType.None);
 
     const title = `${TextValue.GoodsReceipt} #${scanCode}`;
 
@@ -114,11 +117,23 @@ export default function GoodsReceiptProcess() {
             })
     }
 
-    function updateAlertComment(alert: ProcessAlertValue, comment: string): void {
+    function updateAlertComment(comment: string): void {
+        if (currentAlert == null) {
+            return;
+        }
         setLoading(true);
-        updateLine({id: id??-1, lineID: alert.lineID??-1, comment: comment})
+        updateLine({id: id??-1, lineID: currentAlert.lineID??-1, comment: comment})
             .then((_) => {
-                alert.comment = comment;
+                let newAlert : ProcessAlertValue = {
+                    ...currentAlert,
+                    comment: comment
+                }
+                let index = acceptValues.findIndex(v => v.lineID === currentAlert.lineID);
+                let newAcceptValues = acceptValues.filter(v => v.lineID !== currentAlert.lineID);
+                newAcceptValues.splice(index, 0, newAlert);
+                setAcceptValues(newAcceptValues);
+                setCurrentAlert(null);
+                setCurrentAlertAction(AlertActionType.None);
             })
             .catch(error => {
                 console.error(`Error performing update: ${error}`);
@@ -131,6 +146,11 @@ export default function GoodsReceiptProcess() {
             .finally(function () {
                 setLoading(false);
             })
+    }
+
+    function alertAction(alert: ProcessAlertValue, type: AlertActionType) {
+        setCurrentAlert(alert);
+        setCurrentAlertAction(type);
     }
 
     return (
@@ -170,8 +190,9 @@ export default function GoodsReceiptProcess() {
                         </form>
                     )}
                     <>
-                        {acceptValues.map(alert => <ProcessAlert alert={alert} onEditComment={comment => updateAlertComment(alert, comment)}/>)}
+                        {acceptValues.map(alert => <ProcessAlert alert={alert} onAction={(type) => alertAction(alert, type)}/>)}
                     </>
+                    {currentAlert && currentAlertAction === AlertActionType.Comments && <ProcessComment alert={currentAlert} onAccept={updateAlertComment}/>}
                 </>
             ) : <ErrorMessage text={TextValue.InvalidScanCode}/>
             }
