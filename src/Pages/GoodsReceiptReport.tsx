@@ -7,9 +7,10 @@ import SnackbarAlert, {SnackbarState} from "../Components/SnackbarAlert";
 import {BusinessPartner, DocumentStatusOption} from "../assets/Data";
 import {Document, fetchDocuments} from "./GoodsReceiptSupervisor/Document";
 import DocumentReportCard from "./GoodsReceiptSupervisor/DocumentReportCard";
+import {useLoading} from "../Components/LoadingContext";
 
 export default function GoodsReceiptReport() {
-    const [loading, setLoading] = useState(false);
+    const {setLoading} = useLoading();
     const [idInput, setIDInput] = useState<string | ''>('');
     const [cardCodeInput, setCardCodeInput] = useState<BusinessPartner | null>(null);
     const [docNameInput, setDocNameInput] = useState<string | ''>('');
@@ -41,7 +42,7 @@ export default function GoodsReceiptReport() {
     };
 
     return (
-        <ContentTheme loading={loading} title={TextValue.GoodsReceiptReport} icon={<SummarizeIcon/>}>
+        <ContentTheme title={TextValue.GoodsReceiptReport} icon={<SummarizeIcon/>}>
             <ReportFilterForm
                 idInput={idInput}
                 setIDInput={setIDInput}

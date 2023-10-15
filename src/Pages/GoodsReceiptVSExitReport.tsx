@@ -12,11 +12,12 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import GoodsReceiptVSExitReportTable from "./GoodsReceiptSupervisor/GoodsReceiptVSExitReportTable";
+import {useLoading} from "../Components/LoadingContext";
 
 export default function GoodsReceiptVSExitReport() {
     const [id, setID] = useState<number | null>();
     const {scanCode} = useParams();
-    const [loading, setLoading] = useState(true);
+    const {loading, setLoading} = useLoading();
     const [data, setData] = useState<GoodsReceiptVSExitReportData[]>([]);
     const [snackbar, setSnackbar] = React.useState<SnackbarState>({open: false});
     const title = `${TextValue.GoodsReceiptVSExit} #${scanCode}`;
@@ -39,7 +40,7 @@ export default function GoodsReceiptVSExitReport() {
             .finally(() => setLoading(false));
     }, []);
     return (
-        <ContentTheme loading={loading} title={title} icon={<SupervisedUserCircleIcon/>}>
+        <ContentTheme title={title} icon={<SupervisedUserCircleIcon/>}>
             <Typography variant="h4">{TextValue.GoodsReceipt} #{id}</Typography>
             <div>
                 {data?.map(value => (

@@ -13,6 +13,7 @@ import {addItem, AddItemReturnValue, scanBarcode, updateLine} from "./GoodsRecei
 import {distinctItems, Item} from "../assets/Common";
 import ProcessAlert, {AlertActionType, ProcessAlertValue} from "./GoodsReceiptProcess/ProcessAlert";
 import ProcessComment from "./GoodsReceiptProcess/ProcessComment";
+import {useLoading} from "../Components/LoadingContext";
 
 
 export default function GoodsReceiptProcess() {
@@ -20,7 +21,7 @@ export default function GoodsReceiptProcess() {
     const barcodeRef = useRef<HTMLInputElement>();
     const [id, setID] = useState<number | null>();
     const [enable, setEnable] = useState(true);
-    const [loading, setLoading] = useState(false);
+    const {setLoading} = useLoading();
     const [barcodeInput, setBarcodeInput] = React.useState('');
     const [openBoxDialog, setOpenBoxDialog] = useState(false);
     const [boxItem, setBoxItem] = useState('');
@@ -154,7 +155,7 @@ export default function GoodsReceiptProcess() {
     }
 
     return (
-        <ContentTheme loading={loading} title={title} icon={<AssignmentTurnedInIcon/>}>
+        <ContentTheme title={title} icon={<AssignmentTurnedInIcon/>}>
             {id ? (
                 <>
                     {enable && (

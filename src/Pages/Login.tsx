@@ -3,11 +3,12 @@ import {useAuth} from "../Components/AppContext";
 import {useState} from "react";
 import {Navigate} from "react-router-dom";
 import LoginForm from "./Login/LoginForm";
+import {useLoading} from "../Components/LoadingContext";
 
 
 export default function Login() {
     const [redirectToHome, setRedirectToHome] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const { setLoading} = useLoading();
 
     const {login} = useAuth();
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -29,6 +30,6 @@ export default function Login() {
         return <Navigate to="/"/>;
     }
 
-    return (<LoginForm onSubmit={handleSubmit} loading={loading}/>)
+    return (<LoginForm onSubmit={handleSubmit}/>)
 
 }

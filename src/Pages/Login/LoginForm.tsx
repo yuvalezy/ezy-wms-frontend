@@ -11,14 +11,15 @@ import LoginThemeProvider from './LoginThemeProvider';
 import CircularProgressOverlay from "../../Components/CircularProgressOverlay";
 import {useEffect} from "react";
 import {globalConfig} from "../../assets/GlobalConfig";
-import {TextValue} from "../../assets/TextValue";  // Adjust the path based on your directory structure
+import {TextValue} from "../../assets/TextValue";
+import {useLoading} from "../../Components/LoadingContext";  // Adjust the path based on your directory structure
 
 type LoginFormProps = {
     onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-    loading: boolean;
 };
 
-export default function LoginForm({onSubmit, loading}: LoginFormProps) {
+export default function LoginForm({onSubmit}: LoginFormProps) {
+    const {loading} = useLoading();
     return (
         <>
             {loading && <CircularProgressOverlay/>}

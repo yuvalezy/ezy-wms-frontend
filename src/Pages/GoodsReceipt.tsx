@@ -58,7 +58,7 @@ export default function GoodsReceipt() {
     }
 
     return (
-        <ContentTheme loading={loading} title={TextValue.GoodsReceipt} icon={<AssignmentTurnedInIcon/>}>
+        <ContentTheme title={TextValue.GoodsReceipt} icon={<AssignmentTurnedInIcon/>}>
             {ScanForm()}
             <SnackbarAlert state={snackbar} onClose={() => setSnackbar({open: false})}/>
         </ContentTheme>

@@ -2,16 +2,17 @@ import {Box, createTheme, ThemeProvider} from "@mui/material";
 import MenuAppBar from "./MenuAppBar";
 import React from "react";
 import CircularProgressOverlay from "./CircularProgressOverlay";
+import {useLoading} from "./LoadingContext";
 
 interface ContentThemeProps {
     title: string;
     icon?: React.ReactElement;
     children?: React.ReactNode;
-    loading?: boolean;
 }
 
-const ContentTheme : React.FC<ContentThemeProps> = ({title, icon, children, loading}) => {
+const ContentTheme : React.FC<ContentThemeProps> = ({title, icon, children}) => {
     const theme = createTheme();
+    const { loading } = useLoading();
     return (
         <ThemeProvider theme={theme}>
             <MenuAppBar title={title} icon={icon}></MenuAppBar>

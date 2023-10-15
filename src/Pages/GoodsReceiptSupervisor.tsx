@@ -10,11 +10,12 @@ import {Document, fetchDocuments, createDocument, Action, documentAction} from "
 import DocumentCard from "./GoodsReceiptSupervisor/DocumentCard";
 import DocumentQRCodeDialog from "./GoodsReceiptSupervisor/DocumentQRCodeDialog";
 import SnackbarAlert, {SnackbarState} from "../Components/SnackbarAlert";
+import {useLoading} from "../Components/LoadingContext";
 
 
 export default function GoodsReceiptSupervisor() {
     const {user} = useAuth();
-    const [loading, setLoading] = useState(false);
+    const {setLoading} = useLoading();
     const [documents, setDocuments] = useState<Document[]>([]);
     const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(null);
     const [actionType, setActionType] = useState<Action | null>(null);
@@ -91,7 +92,7 @@ export default function GoodsReceiptSupervisor() {
     };
 
     return (
-        <ContentTheme loading={loading} title={TextValue.GoodsReceiptSupervisor} icon={<SupervisedUserCircleIcon/>}>
+        <ContentTheme title={TextValue.GoodsReceiptSupervisor} icon={<SupervisedUserCircleIcon/>}>
             <DocumentForm
                 cardCodeInput={cardCodeInput}
                 setCardCodeInput={setCardCodeInput}

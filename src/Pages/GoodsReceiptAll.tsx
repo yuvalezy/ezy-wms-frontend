@@ -8,11 +8,12 @@ import {useParams} from "react-router-dom";
 import {fetchGoodsReceiptReportAll, GoodsReceiptAll} from "./GoodsReceiptSupervisor/Report";
 import SnackbarAlert, {SnackbarState} from "../Components/SnackbarAlert";
 import GoodsReceiptAllReportTable from "./GoodsReceiptSupervisor/GoodsReceiptAllTable";
+import {useLoading} from "../Components/LoadingContext";
 
 export default function GoodsReceiptReportAll() {
     const [id, setID] = useState<number | null>();
     const {scanCode} = useParams();
-    const [loading, setLoading] = useState(true);
+    const {loading, setLoading} = useLoading();
     const [data, setData] = useState<GoodsReceiptAll[]>([]);
     const [snackbar, setSnackbar] = React.useState<SnackbarState>({open: false});
     const title = `${TextValue.GoodsReceiptVSExit} #${scanCode}`;
@@ -35,7 +36,7 @@ export default function GoodsReceiptReportAll() {
             .finally(() => setLoading(false));
     }, []);
     return (
-        <ContentTheme loading={loading} title={title} icon={<SupervisedUserCircleIcon/>}>
+        <ContentTheme title={title} icon={<SupervisedUserCircleIcon/>}>
             <Typography variant="h4">{TextValue.GoodsReceipt} #{id}</Typography>
             <GoodsReceiptAllReportTable data={data}></GoodsReceiptAllReportTable>
             {
