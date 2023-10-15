@@ -52,6 +52,7 @@ export type AddItemResponseValue = {
 export enum UpdateLineReturnValue {
     Status = 'Status',
     LineStatus = 'LineStatus',
+    CloseReason = 'CloseReason',
     Ok = 'Ok',
     SupervisorPassword = 'SupervisorPassword',
     NotSupervisor = 'NotSupervisor'
@@ -123,6 +124,28 @@ export const documentAction = async (id: number, action: Action, user: User): Pr
         console.error("Error creating document: ", error);
         throw error;  // Re-throwing so that the calling function can decide what to do with the error
     }
+}
+
+export type ReasonValue = {
+    value: number;
+    description: string;
+}
+export const fetchReasons = async() : Promise<ReasonValue[]> => {
+    if (!globalConfig)
+        throw new Error('Config has not been initialized!');
+
+    if (globalConfig.debug)
+        await delay(500);
+
+    const access_token = localStorage.getItem('token');
+
+    const response = await axios.get<ReasonValue[]>(`${globalConfig.baseURL}/api/GoodsReceipt/CancelReasons`,  {
+        headers: {
+            'Authorization': `Bearer ${access_token}`
+        }
+    });
+
+    return response.data;
 }
 export const fetchDocuments = async (
     id?: number,
@@ -272,7 +295,7 @@ export const addItem = async (id: number, itemCode: string, barcode: string): Pr
         throw error;
     }
 }
-export const updateLine = async ({id, lineID, comment}: { id: number, lineID: number, comment: string }): Promise<boolean> => {
+export const updateLine = async ({id, lineID, comment, userName, reason}: { id: number, lineID: number, comment: string, userName?: string, reason?: number }): Promise<UpdateLineReturnValue> => {
     try {
         if (!globalConfig)
             throw new Error('Config has not been initialized!');
@@ -287,26 +310,16 @@ export const updateLine = async ({id, lineID, comment}: { id: number, lineID: nu
         const response = await axios.post<UpdateLineReturnValue>(url, {
             id: id,
             lineID: lineID,
-            comment: comment
+            comment: comment,
+            userName: userName,
+            closeReason: reason
         }, {
             headers: {
                 'Authorization': `Bearer ${access_token}`
             }
         });
 
-        let responseData = response.data;
-        switch (responseData) {
-            case UpdateLineReturnValue.Status:
-                throw new Error(TextValue.UpdateLineStatusError);
-            case UpdateLineReturnValue.LineStatus:
-                throw new Error(TextValue.UpdateLineLineStatusError);
-            case UpdateLineReturnValue.SupervisorPassword:
-                throw new Error(TextValue.UpdateLineSupervisorError);
-            case UpdateLineReturnValue.NotSupervisor:
-                window.alert(TextValue.UpdateLineNotSupervisorError);
-                return false;
-        }
-        return true;
+        return response.data;
     } catch (error) {
         console.error("Error updating line:", error);
         throw error;

@@ -13,6 +13,7 @@ export interface ProcessAlertValue {
     message?: string;
     severity: AlertColor;
     comment?: string;
+    canceled?: boolean;
 }
 
 export interface ProcessAlertProps {
@@ -29,20 +30,22 @@ export enum AlertActionType {
 const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction}) => {
 
     return (
-        <Box mt={1}>
-            <Alert variant="filled" style={{position: 'relative'}} severity={alert.severity}>
+        <Box mt={1} style={{position: 'relative'}}>
+            <Alert variant="filled" severity={alert.severity} style={(alert.canceled ?? false) ? {textDecoration: 'line-through', backgroundColor: 'rgba(0, 0, 0, 0.4)'} : {}}>
                 {alert.barcode && <AlertTitle><strong>{TextValue.Barcode}: </strong>{alert.barcode}</AlertTitle>}
                 <strong>{TextValue.Time}: </strong>{alert.timeStamp} <br/>
                 {alert.itemCode && <><span><strong>{TextValue.Item}: </strong>{alert.itemCode}</span><br/></>}
                 <strong>{TextValue.Message}: </strong>{alert.message}
-                <div style={{position: 'absolute', top: '10px', right: '10px'}}>
-                    <Box mt={0.5}>
-                        <InsertCommentIcon onClick={() => onAction(AlertActionType.Comments)}/>
-                    </Box>
-                    <Box mt={0.5}>
-                        <CancelIcon onClick={() => onAction(AlertActionType.Cancel)}/>
-                    </Box>
-                </div>
+                {!(alert.canceled ?? false) &&
+                    <div style={{position: 'absolute', top: '10px', right: '10px'}}>
+                        <Box mt={0.5}>
+                            <InsertCommentIcon onClick={() => onAction(AlertActionType.Comments)}/>
+                        </Box>
+                        <Box mt={0.5}>
+                            <CancelIcon onClick={() => onAction(AlertActionType.Cancel)}/>
+                        </Box>
+                    </div>
+                }
             </Alert>
         </Box>
     );

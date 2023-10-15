@@ -59,6 +59,7 @@ export const TextValue = {
     Stock: "Inventario",
     Comment: 'Comentario',
     SupervisorCode: 'Codigo de Supervisor',
+    Reason: "Razon",
 
     //Field Description
     SelectVendor: "Seleccione el Proveedor",
@@ -83,7 +84,8 @@ export const TextValue = {
     ScanConfirmBoxNumber: "Confirmar numero de caja",
     UpdateLineStatusError: "Transaccion {0} no esta en proceso",
     UpdateLineLineStatusError: "Transaccion {0}, Linea {1} no esta en abierta",
-    UpdateLineSupervisorError: "Se requiere autorizacion de supervisor",
+    UpdateLineReason: "Estado de cancelacion invalido",
+    UpdateLineWrongSupervisorPassword: "Contraseña de supervision erroneo",
     UpdateLineNotSupervisorError: "El codigo introducido no es de un supervisor",
 
     //Dialog

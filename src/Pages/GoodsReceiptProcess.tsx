@@ -14,6 +14,7 @@ import {distinctItems, Item} from "../assets/Common";
 import ProcessAlert, {AlertActionType, ProcessAlertValue} from "./GoodsReceiptProcess/ProcessAlert";
 import ProcessComment from "./GoodsReceiptProcess/ProcessComment";
 import {useLoading} from "../Components/LoadingContext";
+import ProcessCancel from "./GoodsReceiptProcess/ProcessCancel";
 
 
 export default function GoodsReceiptProcess() {
@@ -124,7 +125,7 @@ export default function GoodsReceiptProcess() {
         setCurrentAlertAction(type);
     }
 
-    function handleAccept(newAlert: ProcessAlertValue): void {
+    function handleAlertActionAccept(newAlert: ProcessAlertValue): void {
         if (currentAlert == null) {
             return;
         }
@@ -136,6 +137,10 @@ export default function GoodsReceiptProcess() {
         setCurrentAlertAction(AlertActionType.None);
     }
 
+    function handleAlertCancelAction() {
+        setCurrentAlert(null);
+        setCurrentAlertAction(AlertActionType.None);
+    }
     return (
         <ContentTheme title={title} icon={<AssignmentTurnedInIcon/>}>
             {id ? (
@@ -175,7 +180,8 @@ export default function GoodsReceiptProcess() {
                     <>
                         {acceptValues.map(alert => <ProcessAlert alert={alert} onAction={(type) => alertAction(alert, type)}/>)}
                     </>
-                    {currentAlert && currentAlertAction === AlertActionType.Comments && <ProcessComment id={id} alert={currentAlert} onAccept={handleAccept}/>}
+                    {currentAlert && currentAlertAction === AlertActionType.Comments && <ProcessComment id={id} alert={currentAlert} onAccept={handleAlertActionAccept} onClose={handleAlertCancelAction}/>}
+                    {currentAlert && currentAlertAction === AlertActionType.Cancel && <ProcessCancel id={id} alert={currentAlert} onAccept={handleAlertActionAccept}  onClose={handleAlertCancelAction}/>}
                 </>
             ) : <ErrorMessage text={TextValue.InvalidScanCode}/>
             }

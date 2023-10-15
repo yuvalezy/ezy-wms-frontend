@@ -1,8 +1,7 @@
 import React, {useState} from "react";
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextareaAutosize} from "@mui/material";
 import {TextValue} from "../../assets/TextValue";
-import TextField from "@mui/material/TextField";
-import {AlertActionType, ProcessAlertValue} from "./ProcessAlert";
+import {ProcessAlertValue} from "./ProcessAlert";
 import {updateLine} from "../GoodsReceiptSupervisor/Document";
 import {useLoading} from "../../Components/LoadingContext";
 
@@ -10,14 +9,18 @@ export interface ProcessCommentProps {
     id: number;
     alert: ProcessAlertValue;
     onAccept: (alert: ProcessAlertValue) => void;
+    onClose: () => void;
 }
 
-const ProcessComment: React.FC<ProcessCommentProps> = ({id, alert, onAccept}) => {
+const ProcessComment: React.FC<ProcessCommentProps> = ({id, alert, onAccept, onClose}) => {
     const {setLoading} = useLoading();
     const [open, setOpen] = useState(true);
     const [comment, setComment] = useState(alert.comment || '');
 
-    const handleClose = () => setOpen(false);
+    function handleClose() {
+        setOpen(false);
+        onClose();
+    }
 
     const handleSave = () => {
         setLoading(true);
