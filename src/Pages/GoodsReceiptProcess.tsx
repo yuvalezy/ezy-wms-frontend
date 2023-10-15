@@ -43,20 +43,6 @@ export default function GoodsReceiptProcess() {
     };
 
 
-    return (
-        <ContentTheme loading={loading} title={title} icon={<AssignmentTurnedInIcon/>}>
-            {id ? (
-                <>
-                    BarCodeForm()
-                    <>
-                        {acceptValues.map(alert => <ProcessAlert alert={alert}/>)}
-                    </>
-                </>
-            ) : <ErrorMessage text={TextValue.InvalidScanCode}/>
-            }
-        </ContentTheme>
-    )
-
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         if (barcodeInput.length === 0) {
@@ -128,41 +114,54 @@ export default function GoodsReceiptProcess() {
             })
     }
 
-    function BarCodeForm(): React.ReactNode {
-        return (
-            <form onSubmit={handleSubmit}>
-                {enable && (
-                    <>
-                        <Box mb={1} style={{textAlign: 'center'}}>
-                            <TextField
-                                fullWidth
-                                required
-                                label={TextValue.Barcode}
-                                variant="outlined"
-                                value={barcodeInput}
-                                onChange={e => setBarcodeInput(e.target.value)}
-                                autoFocus={true}
-                                inputRef={barcodeRef}
-                                disabled={!enable}
-                            />
-                            <Box mt={1}>
-                                <Button type="submit" variant="contained" color="primary" disabled={!enable}>
-                                    <DoneIcon/>
-                                    {TextValue.Accept}
-                                </Button>
-                            </Box>
-                        </Box>
-                    </>
-                )}
-                <BoxConfirmationDialog
-                    open={openBoxDialog}
-                    onClose={() => setOpenBoxDialog(false)}
-                    onSelected={(v: string) => addItemToDocument(v)}
-                    itemCode={boxItem}
-                    items={boxItems}
-                />
-            </form>
-        )
+    function updateAlertComment(alert: ProcessAlertValue, comment: string): void {
+        alert.comment = comment;
     }
+
+    return (
+        <ContentTheme loading={loading} title={title} icon={<AssignmentTurnedInIcon/>}>
+            {id ? (
+                <>
+                    {enable && (
+                        <form onSubmit={handleSubmit}>
+                            <>
+                                <Box mb={1} style={{textAlign: 'center'}}>
+                                    <TextField
+                                        fullWidth
+                                        required
+                                        label={TextValue.Barcode}
+                                        variant="outlined"
+                                        value={barcodeInput}
+                                        onChange={e => setBarcodeInput(e.target.value)}
+                                        autoFocus={true}
+                                        inputRef={barcodeRef}
+                                        disabled={!enable}
+                                    />
+                                    <Box mt={1}>
+                                        <Button type="submit" variant="contained" color="primary" disabled={!enable}>
+                                            <DoneIcon/>
+                                            {TextValue.Accept}
+                                        </Button>
+                                    </Box>
+                                </Box>
+                            </>
+                            <BoxConfirmationDialog
+                                open={openBoxDialog}
+                                onClose={() => setOpenBoxDialog(false)}
+                                onSelected={(v: string) => addItemToDocument(v)}
+                                itemCode={boxItem}
+                                items={boxItems}
+                            />
+                        </form>
+                    )}
+                    <>
+                        {acceptValues.map(alert => <ProcessAlert alert={alert} onEditComment={comment => updateAlertComment(alert, comment)}/>)}
+                    </>
+                </>
+            ) : <ErrorMessage text={TextValue.InvalidScanCode}/>
+            }
+        </ContentTheme>
+    )
+
 }
 

@@ -35,7 +35,12 @@ export enum AddItemReturnValue {
     ClosedDocument = 'ClosedDocument'
 }
 
-export type AddItemResponse = {
+interface AddItemResponse {
+    lineID: number;
+    value: AddItemReturnValue;
+}
+export type AddItemResponseValue = {
+    lineID: number;
     message: string;
     color: AlertColor;
     value: AddItemReturnValue;
@@ -197,7 +202,7 @@ export const scanBarcode = async (scanCode: string): Promise<Item[]> => {
     }
 }
 
-export const addItem = async (id: number, itemCode: string, barcode: string): Promise<AddItemResponse> => {
+export const addItem = async (id: number, itemCode: string, barcode: string): Promise<AddItemResponseValue> => {
     try {
         if (!globalConfig)
             throw new Error('Config has not been initialized!');
@@ -209,7 +214,7 @@ export const addItem = async (id: number, itemCode: string, barcode: string): Pr
 
         const url = `${globalConfig.baseURL}/api/GoodsReceipt/AddItem`;
 
-        const response = await axios.post<AddItemReturnValue>(url, {
+        const response = await axios.post<AddItemResponse>(url, {
             id: id,
             itemCode: itemCode,
             barcode: barcode
@@ -221,8 +226,8 @@ export const addItem = async (id: number, itemCode: string, barcode: string): Pr
 
         let message: string;
         let color: AlertColor;
-        let value = response.data;
-        switch (value) {
+        let responseData = response.data;
+        switch (responseData.value) {
             case AddItemReturnValue.StoreInWarehouse:
                 message = TextValue.ScanConfirmStoreInWarehouse;
                 color = 'success';
@@ -240,15 +245,16 @@ export const addItem = async (id: number, itemCode: string, barcode: string): Pr
                 color = 'error';
                 break;
             default:
-                message = `Unknown return value: ${value}`;
+                message = `Unknown return value: ${responseData}`;
                 color = 'error';
                 break;
         }
 
         return {
+            lineID: responseData.lineID,
             message: message,
             color: color,
-            value: value,
+            value: responseData.value,
         };
     } catch (error) {
         console.error("Error adding item:", error);
