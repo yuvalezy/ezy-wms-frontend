@@ -35,8 +35,9 @@ const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data})
         },
     }));
 
+
     return (
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} style={{position: 'relative'}}>
             <Table sx={{minWidth: 650}} size="small">
                 <TableHead>
                     <StyledTableRow>

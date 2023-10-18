@@ -18,7 +18,7 @@ export default function GoodsReceiptVSExitReport() {
     const [id, setID] = useState<number | null>();
     const {scanCode} = useParams();
     const {loading, setLoading} = useLoading();
-    const [data, setData] = useState<GoodsReceiptVSExitReportData[]>([]);
+    const [data, setData] = useState<GoodsReceiptVSExitReportData[] | null>(null);
     const [snackbar, setSnackbar] = React.useState<SnackbarState>({open: false});
     const title = `${TextValue.GoodsReceiptVSExit} #${scanCode}`;
 
@@ -34,6 +34,7 @@ export default function GoodsReceiptVSExitReport() {
         }
         setID(parseInt(scanCode));
 
+        setLoading(true);
         fetchGoodsReceiptVSExitReport(parseInt(scanCode))
             .then(result => setData(result))
             .catch(error => errorAlert(`Loading Error: ${error}`))
@@ -62,10 +63,7 @@ export default function GoodsReceiptVSExitReport() {
                     </Accordion>
                 ))}
             </div>
-            {
-                (!loading && (data == null || data.length === 0)) &&
-                <Alert severity="warning">{TextValue.NoExitData}</Alert>
-            }
+            {data && data.length === 0 && <Alert severity="warning">{TextValue.NoExitData}</Alert>}
             <SnackbarAlert state={snackbar} onClose={() => setSnackbar({open: false})}/>
         </ContentTheme>
     )

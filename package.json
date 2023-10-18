@@ -18,6 +18,7 @@
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.4.0",
     "dayjs": "^1.11.10",
+    "file-saver": "^2.0.5",
     "latest": "^0.2.0",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
@@ -28,7 +29,8 @@
     "react-scripts": "5.0.1",
     "sort-by": "^1.2.0",
     "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "xlsx": "^0.18.5"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -53,5 +55,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/file-saver": "^2.0.5"
   }
 }
