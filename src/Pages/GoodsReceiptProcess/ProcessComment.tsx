@@ -2,8 +2,8 @@ import React, {useState} from "react";
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextareaAutosize} from "@mui/material";
 import {TextValue} from "../../assets/TextValue";
 import {ProcessAlertValue} from "./ProcessAlert";
-import {updateLine} from "../GoodsReceiptSupervisor/Document";
 import {useLoading} from "../../Components/LoadingContext";
+import {updateLine} from "./Process";
 
 export interface ProcessCommentProps {
     id: number;

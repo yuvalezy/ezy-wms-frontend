@@ -4,7 +4,8 @@ import {TextValue} from "../../assets/TextValue";
 import TextField from "@mui/material/TextField";
 import {ProcessAlertValue} from "./ProcessAlert";
 import {useLoading} from "../../Components/LoadingContext";
-import {fetchReasons, ReasonValue, updateLine, UpdateLineReturnValue} from "../GoodsReceiptSupervisor/Document";
+import {fetchReasons, ReasonValue, UpdateLineReturnValue} from "../GoodsReceiptSupervisor/Document";
+import {updateLine} from "./Process";
 
 export interface ProcessCancelProps {
     id: number;

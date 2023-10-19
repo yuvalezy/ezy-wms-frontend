@@ -64,7 +64,7 @@ export default function GoodsReceiptReportAll() {
         <ContentTheme title={title} icon={<SupervisedUserCircleIcon/>}>
             <div style={{position: 'relative'}}>
                 <Typography variant="h4">{TextValue.GoodsReceipt} #{id}</Typography>
-                <img src="/images/excel.jpg" alt="" onClick={() => exportToExcel()} style={{height: '32px', position: 'absolute', right: '10px', top: '10px', cursor: 'pointer', zIndex: '1000'}}/>
+                <img src="/images/excel.jpg" alt="" onClick={() => exportToExcel()} style={{height: '32px', position: 'absolute', right: '10px', top: '8px', cursor: 'pointer', zIndex: '1000'}}/>
             </div>
             {data && <GoodsReceiptAllReportTable data={data}></GoodsReceiptAllReportTable>}
             {data && data.length === 0 && <Alert severity="warning">{TextValue.NoExitData}</Alert>}

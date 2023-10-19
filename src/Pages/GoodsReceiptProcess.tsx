@@ -9,12 +9,13 @@ import Box from "@mui/material/Box";
 import {Button, TextField} from "@mui/material";
 import BoxConfirmationDialog from '../Components/BoxConfirmationDialog'
 import DoneIcon from "@mui/icons-material/Done";
-import {addItem, AddItemReturnValue, scanBarcode} from "./GoodsReceiptSupervisor/Document";
+import {scanBarcode} from "./GoodsReceiptSupervisor/Document";
 import {distinctItems, Item} from "../assets/Common";
 import ProcessAlert, {AlertActionType, ProcessAlertValue} from "./GoodsReceiptProcess/ProcessAlert";
 import ProcessComment from "./GoodsReceiptProcess/ProcessComment";
 import {useLoading} from "../Components/LoadingContext";
 import ProcessCancel from "./GoodsReceiptProcess/ProcessCancel";
+import {addItem} from "./GoodsReceiptProcess/Process";
 
 
 export default function GoodsReceiptProcess() {
@@ -100,8 +101,8 @@ export default function GoodsReceiptProcess() {
         setLoading(true);
         addItem(id ?? 0, itemCode, barcode)
             .then(v => {
-                alert({lineID: v.lineID, barcode: barcode, itemCode: itemCode, message: v.message, severity: v.color});
-                if (v.value === AddItemReturnValue.ClosedDocument) {
+                alert({lineID: v.response.lineID, barcode: barcode, itemCode: itemCode, message: v.message, severity: v.color, multiple: v.multiple});
+                if (v.response.closedDocument) {
                     setEnable(false);
                 }
             })

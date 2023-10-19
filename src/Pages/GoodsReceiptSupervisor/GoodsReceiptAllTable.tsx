@@ -46,6 +46,7 @@ const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data})
                         <StyledTableCell align="right">{TextValue.Quantity}</StyledTableCell>
                         <StyledTableCell align="right">{TextValue.Delivery}</StyledTableCell>
                         <StyledTableCell align="right">{TextValue.Showroom}</StyledTableCell>
+                        <StyledTableCell align="right">{TextValue.InWarehouse}</StyledTableCell>
                         <StyledTableCell align="right">{TextValue.Stock}</StyledTableCell>
                     </StyledTableRow>
                 </TableHead>
@@ -58,6 +59,7 @@ const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data})
                                 <StyledTableCell align="right">{row.quantity}</StyledTableCell>
                                 <StyledTableCell align="right">{row.delivery}</StyledTableCell>
                                 <StyledTableCell align="right">{row.showroom}</StyledTableCell>
+                                <StyledTableCell align="right">{row.quantity - row.delivery - row.showroom}</StyledTableCell>
                                 <StyledTableCell align="right">{row.stock}</StyledTableCell>
                             </StyledTableRow>
                         ))}

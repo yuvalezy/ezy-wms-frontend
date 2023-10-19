@@ -3,10 +3,6 @@ import {Item, User} from "../../assets/Common";
 import {BusinessPartner, Employee} from "../../assets/Data";
 import {TextValue} from "../../assets/TextValue";
 import {globalConfig} from "../../assets/GlobalConfig";
-import {AlertColor} from "@mui/material";
-import {StringFormat} from "../../assets/Functions";
-import {Simulate} from "react-dom/test-utils";
-import error = Simulate.error;
 
 export type Action = 'approve' | 'cancel' | 'qrcode';
 
@@ -30,24 +26,6 @@ export enum DocumentStatus {
     InProgress = 'InProgress',
 }
 
-export enum AddItemReturnValue {
-    StoreInWarehouse = 'StoreInWarehouse',
-    Fulfillment = 'Fulfillment',
-    Showroom = 'Showroom',
-    ClosedDocument = 'ClosedDocument'
-}
-
-interface AddItemResponse {
-    lineID: number;
-    value: AddItemReturnValue;
-}
-
-export type AddItemResponseValue = {
-    lineID: number;
-    message: string;
-    color: AlertColor;
-    value: AddItemReturnValue;
-}
 
 export enum UpdateLineReturnValue {
     Status = 'Status',
@@ -236,94 +214,5 @@ export const scanBarcode = async (scanCode: string): Promise<Item[]> => {
     }
 }
 
-export const addItem = async (id: number, itemCode: string, barcode: string): Promise<AddItemResponseValue> => {
-    try {
-        if (!globalConfig)
-            throw new Error('Config has not been initialized!');
-
-        if (globalConfig.debug)
-            await delay(500);
-
-        const access_token = localStorage.getItem('token');
-
-        const url = `${globalConfig.baseURL}/api/GoodsReceipt/AddItem`;
-
-        const response = await axios.post<AddItemResponse>(url, {
-            id: id,
-            itemCode: itemCode,
-            barcode: barcode
-        }, {
-            headers: {
-                'Authorization': `Bearer ${access_token}`
-            }
-        });
-
-        let message: string;
-        let color: AlertColor;
-        let responseData = response.data;
-        switch (responseData.value) {
-            case AddItemReturnValue.StoreInWarehouse:
-                message = TextValue.ScanConfirmStoreInWarehouse;
-                color = 'success';
-                break;
-            case AddItemReturnValue.Fulfillment:
-                message = TextValue.ScanConfirmFulfillment;
-                color = 'warning';
-                break;
-            case AddItemReturnValue.Showroom:
-                message = TextValue.ScanConfirmShowroom;
-                color = 'info';
-                break;
-            case AddItemReturnValue.ClosedDocument:
-                message = StringFormat(TextValue.GoodsReceiptIsClosed, id);
-                color = 'error';
-                break;
-            default:
-                message = `Unknown return value: ${responseData}`;
-                color = 'error';
-                break;
-        }
-
-        return {
-            lineID: responseData.lineID,
-            message: message,
-            color: color,
-            value: responseData.value,
-        };
-    } catch (error) {
-        console.error("Error adding item:", error);
-        throw error;
-    }
-}
-export const updateLine = async ({id, lineID, comment, userName, reason}: { id: number, lineID: number, comment: string, userName?: string, reason?: number }): Promise<UpdateLineReturnValue> => {
-    try {
-        if (!globalConfig)
-            throw new Error('Config has not been initialized!');
-
-        if (globalConfig.debug)
-            await delay(500);
-
-        const access_token = localStorage.getItem('token');
-
-        const url = `${globalConfig.baseURL}/api/GoodsReceipt/UpdateLine`;
-
-        const response = await axios.post<UpdateLineReturnValue>(url, {
-            id: id,
-            lineID: lineID,
-            comment: comment,
-            userName: userName,
-            closeReason: reason
-        }, {
-            headers: {
-                'Authorization': `Bearer ${access_token}`
-            }
-        });
-
-        return response.data;
-    } catch (error) {
-        console.error("Error updating line:", error);
-        throw error;
-    }
-}
 
 const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
