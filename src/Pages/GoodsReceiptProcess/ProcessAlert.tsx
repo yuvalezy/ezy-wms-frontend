@@ -60,7 +60,7 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction}) => {
                         }
                     </>
                 }</>)}
-                {!(alert.canceled ?? false) &&
+                {!(alert.canceled ?? false) && alert.severity !== 'error' &&
                     <div style={{position: 'absolute', top: '10px', right: '10px'}}>
                         <Box mt={0.5}>
                             <InsertCommentIcon onClick={() => onAction(AlertActionType.Comments)}/>

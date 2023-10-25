@@ -1,6 +1,5 @@
 import {Alert, Box, Typography} from "@mui/material";
 import ErrorIcon from "@mui/icons-material/Error";
-import {TextValue} from "../assets/TextValue";
 import React from "react";
 
 interface ErrorMessageProps {

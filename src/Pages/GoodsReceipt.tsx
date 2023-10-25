@@ -11,7 +11,7 @@ import SnackbarAlert, {SnackbarState} from "../Components/SnackbarAlert";
 import {DocumentStatus, documentStatusToString, fetchDocuments} from "./GoodsReceiptSupervisor/Document";
 
 export default function GoodsReceipt() {
-    const [loading, setLoading] = useState(false);
+    const [, setLoading] = useState(false);
     const [scanCodeInput, setScanCodeInput] = React.useState('');
     const [snackbar, setSnackbar] = React.useState<SnackbarState>({open: false});
 

@@ -17,7 +17,7 @@ import {useLoading} from "../Components/LoadingContext";
 export default function GoodsReceiptVSExitReport() {
     const [id, setID] = useState<number | null>();
     const {scanCode} = useParams();
-    const {loading, setLoading} = useLoading();
+    const {setLoading} = useLoading();
     const [data, setData] = useState<GoodsReceiptVSExitReportData[] | null>(null);
     const [snackbar, setSnackbar] = React.useState<SnackbarState>({open: false});
     const title = `${TextValue.GoodsReceiptVSExit} #${scanCode}`;
