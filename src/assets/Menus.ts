@@ -3,10 +3,16 @@ import {Authorization} from "./Authorization";
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import SummarizeIcon from '@mui/icons-material/Summarize';
-
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
 export const Menus = {
     MenuItems: [
+        {
+            Link: "/itemCheck",
+            Text: TextValue.ItemCheck,
+            Authorization: Authorization.GOODS_RECEIPT_SUPERVISOR,
+            Icon: CheckBoxIcon
+        },
         {
             Link: "/goodsReceipt",
             Text: TextValue.GoodsReceipt,

@@ -1,6 +1,7 @@
 export const TextValue = {
     //Sections
     Home: "Inicio",
+    ItemCheck: "Revision de Articulo",
     GoodsReceipt: "Entrada",
     GoodsReceiptSupervisor: "Supervisor de Entrada",
     GoodsReceiptReport: "Reporte de Entradas",
@@ -11,6 +12,8 @@ export const TextValue = {
     Yes: "Sí",
     Approve: "Aprobar",
     Cancel: "Cancelar",
+    Delete: "Eliminar",
+    Update: "Actualizar",
     Finish: "Finalizar",
     Create: "Crear",
     Accept: "Aceptar",
@@ -19,6 +22,7 @@ export const TextValue = {
     Code: "Código",
     Description: "Descripcion",
     Barcode: "Código de Barra",
+    Barcodes: "Códigos de Barra",
     Unknown: "Desconocido",
     Clear: "Borrar",
     Approved: "El documento ha sido finalizado con éxito.",
@@ -76,6 +80,7 @@ export const TextValue = {
     InvalidID: "Identificación Inválida",
     ScanCodeRequired: "Debe escanear un código",
     BarcodeRequired: "Debe escanear un código de barra",
+    BarcodeOrItemRequired: "Debe escanear un código de barra or articulo",
     BarcodeNotFound: 'No se encontro el codigo de barra "{0}"',
     MultipleItemsError: "Codigo retorno multiples codigos de articulos:\n{0}.\nSolicite la correcion en el sistema e intente de nuevo.",
     NoExitData: "No tiene salidas o transferencias pendientes.",
@@ -90,12 +95,13 @@ export const TextValue = {
     UpdateLineReason: "Estado de cancelacion invalido",
     UpdateLineWrongSupervisorPassword: "Contraseña de supervision erroneo",
     UpdateLineNotSupervisorError: "El codigo introducido no es de un supervisor",
+    NoDataFound: "No se encontro datos",
 
     //Dialog
     ConfirmAction: "Confirmar Acción",
     ConfirmApproveDocument: "¿Está seguro que desea aprobar el documento #{0}?",
     ConfirmCancelDocument: "¿Está seguro que desea cancelar el documento #{0}?",
     ConfirmFinishDocument: "¿Está seguro que desea finalizar el documento #{0}?",
-    ActionCannotReverse: "Esta acción no se puede revertir"
+    ActionCannotReverse: "Esta acción no se puede revertir",
 
 }

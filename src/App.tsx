@@ -14,6 +14,7 @@ import GoodsReceiptProcess from "./Pages/GoodsReceiptProcess";
 import GoodsReceiptReport from "./Pages/GoodsReceiptReport";
 import GoodsReceiptVSExitReport from "./Pages/GoodsReceiptVSExitReport";
 import GoodsReceiptAll from './Pages/GoodsReceiptAll';
+import ItemCheck from "./Pages/ItemCheck";
 
 export default function App() {
     return (
@@ -27,6 +28,9 @@ export default function App() {
                     <Route path="/goodsReceipt/:scanCode"
                            element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT}
                                                     element={<GoodsReceiptProcess/>}/>}/>
+                    <Route path="/itemCheck"
+                           element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT_SUPERVISOR}
+                                                    element={<ItemCheck/>}/>}/>
                     <Route path="/goodsReceiptSupervisor"
                            element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT_SUPERVISOR}
                                                     element={<GoodsReceiptSupervisor/>}/>}/>

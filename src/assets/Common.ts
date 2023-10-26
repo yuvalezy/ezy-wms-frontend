@@ -13,6 +13,10 @@ export interface Item {
     father: string;
     boxNumber?: number;
 }
+export enum ResponseStatus {
+    Error = 'Error',
+    Ok = 'Ok'
+}
 
 export function distinctItems(items: Item[]): string[] {
     return items

@@ -84,7 +84,7 @@ export default function GoodsReceiptProcess() {
     function handleMultipleItems(items: Item[]) {
         const distinctCodes = distinctItems(items);
         if (distinctCodes.length !== 1) {
-            let codes = distinctCodes.map(v => `"${v}"`).join('\n');
+            let codes = distinctCodes.map(v => `"${v}"`).join(', ');
             alert({message: StringFormat(TextValue.MultipleItemsError, codes), severity: 'error'});
             setLoading(false);
             return;
