@@ -62,11 +62,11 @@ const ProcessComment: React.FC<ProcessCommentProps> = ({id, alert, onAccept, onC
                 </div>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose} color="primary">
-                    Cancel
+                <Button onClick={handleClose} color="secondary">
+                    {TextValue.Cancel}
                 </Button>
                 <Button onClick={handleSave} color="primary">
-                    Save
+                    {TextValue.Accept}
                 </Button>
             </DialogActions>
         </Dialog>

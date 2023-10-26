@@ -16,6 +16,7 @@ import ProcessComment from "./GoodsReceiptProcess/ProcessComment";
 import {useLoading} from "../Components/LoadingContext";
 import ProcessCancel from "./GoodsReceiptProcess/ProcessCancel";
 import {addItem} from "./GoodsReceiptProcess/Process";
+import ProcessNumInBuy from "./GoodsReceiptProcess/ProcessNumInBuy";
 
 
 export default function GoodsReceiptProcess() {
@@ -101,7 +102,15 @@ export default function GoodsReceiptProcess() {
         setLoading(true);
         addItem(id ?? 0, itemCode, barcode)
             .then(v => {
-                alert({lineID: v.response.lineID, barcode: barcode, itemCode: itemCode, message: v.message, severity: v.color, multiple: v.multiple});
+                alert({
+                    lineID: v.response.lineID,
+                    barcode: barcode,
+                    itemCode: itemCode,
+                    message: v.message,
+                    severity: v.color,
+                    multiple: v.multiple,
+                    numInBuy: v.response.numInBuy
+                });
                 if (v.response.closedDocument) {
                     setEnable(false);
                 }
@@ -142,6 +151,7 @@ export default function GoodsReceiptProcess() {
         setCurrentAlert(null);
         setCurrentAlertAction(AlertActionType.None);
     }
+
     return (
         <ContentTheme title={title} icon={<AssignmentTurnedInIcon/>}>
             {id ? (
@@ -180,9 +190,37 @@ export default function GoodsReceiptProcess() {
                     )}
                     <>
                         {acceptValues.map(alert => <ProcessAlert alert={alert} onAction={(type) => alertAction(alert, type)}/>)}
+                        {currentAlert && (
+                            <>
+                                {currentAlertAction === AlertActionType.Comments && (
+                                    <ProcessComment
+                                        id={id}
+                                        alert={currentAlert}
+                                        onAccept={handleAlertActionAccept}
+                                        onClose={handleAlertCancelAction}
+                                    />
+                                )}
+                                {currentAlertAction === AlertActionType.Cancel && (
+                                    <ProcessCancel
+                                        id={id}
+                                        alert={currentAlert}
+                                        onAccept={handleAlertActionAccept}
+                                        onClose={handleAlertCancelAction}
+                                    />
+                                )}
+                                {currentAlertAction}
+                                {currentAlertAction === AlertActionType.NumInBuy && (
+                                    <ProcessNumInBuy
+                                        id={id}
+                                        alert={currentAlert}
+                                        onAccept={handleAlertActionAccept}
+                                        onClose={handleAlertCancelAction}
+                                    />
+                                )}
+                            </>
+                        )}
+
                     </>
-                    {currentAlert && currentAlertAction === AlertActionType.Comments && <ProcessComment id={id} alert={currentAlert} onAccept={handleAlertActionAccept} onClose={handleAlertCancelAction}/>}
-                    {currentAlert && currentAlertAction === AlertActionType.Cancel && <ProcessCancel id={id} alert={currentAlert} onAccept={handleAlertActionAccept}  onClose={handleAlertCancelAction}/>}
                 </>
             ) : <ErrorMessage text={TextValue.InvalidScanCode}/>
             }

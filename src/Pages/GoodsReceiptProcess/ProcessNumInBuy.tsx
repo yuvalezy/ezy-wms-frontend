@@ -7,7 +7,7 @@ import {useLoading} from "../../Components/LoadingContext";
 import {fetchReasons, ReasonValue, UpdateLineReturnValue} from "../GoodsReceiptSupervisor/Document";
 import {updateLine} from "./Process";
 
-export interface ProcessCancelProps {
+export interface ProcessNumInBuyProps {
     id: number;
     alert: ProcessAlertValue;
     onAccept: (alert: ProcessAlertValue) => void;
@@ -15,32 +15,12 @@ export interface ProcessCancelProps {
 }
 
 
-const ProcessCancel: React.FC<ProcessCancelProps> = ({id, alert, onAccept, onClose}) => {
+const ProcessNumInBuy: React.FC<ProcessNumInBuyProps> = ({id, alert, onAccept, onClose}) => {
     const {setLoading} = useLoading();
-    const [open, setOpen] = useState(false);
-    const [comment, setComment] = useState(alert.comment || '');
+    const [open, setOpen] = useState(true);
     const [userName, setUserName] = useState('');
-    const [reason, setReason] = useState<ReasonValue | null>(null);
-    const [reasons, setReasons] = useState<ReasonValue[]>([]);
-    const usernameRef = useRef<HTMLInputElement>();
-
-    useEffect(() => {
-        setLoading(true);
-        fetchReasons()
-            .then(reasons => {
-                setReasons(reasons);
-                setOpen(true);
-            })
-            .catch((error) => {
-                console.error(`Error loading reasons: ${error}`);
-                let errorMessage = error.response?.data['exceptionMessage'];
-                if (errorMessage)
-                    window.alert(errorMessage);
-                else
-                    window.alert(`Error loading reasons: ${error}`);
-            })
-            .finally(() => setLoading(false));
-    }, []);
+    const [numInBuy, setNumInBuy] = useState<number>(alert.numInBuy??1);
+    const numInBuyRef = useRef<HTMLInputElement>();
 
     function handleClose() {
         setOpen(false);
@@ -50,7 +30,7 @@ const ProcessCancel: React.FC<ProcessCancelProps> = ({id, alert, onAccept, onClo
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         setLoading(true);
-        updateLine({id: id, lineID: alert.lineID ?? -1, comment: comment, userName: userName, reason: reason?.value ?? -1})
+        updateLine({id: id, lineID: alert.lineID ?? -1, numInBuy: numInBuy, userName: userName})
             .then((value) => {
                 let message: string | null = null;
                 switch (value) {
@@ -74,14 +54,13 @@ const ProcessCancel: React.FC<ProcessCancelProps> = ({id, alert, onAccept, onClo
                     window.alert(message);
                     setUserName('');
                     setLoading(false);
-                    setTimeout(() => usernameRef.current?.focus(), 100);
+                    setTimeout(() => numInBuyRef.current?.focus(), 100);
                     return;
                 }
 
                 onAccept({
                     ...alert,
-                    comment: comment,
-                    canceled: true
+                    numInBuy: numInBuy
                 });
                 handleClose();
                 setLoading(false);
@@ -100,7 +79,7 @@ const ProcessCancel: React.FC<ProcessCancelProps> = ({id, alert, onAccept, onClo
     return (
         <Dialog open={open} onClose={handleClose}>
             <form onSubmit={handleSubmit}>
-                <DialogTitle>{TextValue.Cancel}</DialogTitle>
+                <DialogTitle>{TextValue.NumInBuy}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         <strong>{TextValue.Barcode}: </strong>{alert.barcode}
@@ -110,34 +89,31 @@ const ProcessCancel: React.FC<ProcessCancelProps> = ({id, alert, onAccept, onClo
                             margin="normal"
                             required
                             fullWidth
-                            name="username"
-                            inputRef={usernameRef}
+                            name="numInBuy"
+                            inputRef={numInBuyRef}
                             label={TextValue.SupervisorCode}
                             type="password"
-                            id="username"
+                            id="numInBuy"
                             autoComplete="current-password"
                             value={userName}
                             onChange={(e) => setUserName(e.target.value)}
                         />
                     </Box>
                     <Box mb={1} style={{textAlign: 'center'}}>
-                        <Autocomplete
-                            value={reason}
-                            options={reasons}
-                            getOptionLabel={(option) => option.description}
-                            onChange={(_, newValue) => setReason(newValue)}
-                            renderInput={(params) =>
-                                <TextField {...params} label={TextValue.Reason} required variant="outlined"/>
-                            }
-                        />
-                    </Box>
-                    <Box mb={1} style={{textAlign: 'center'}}>
-                        {TextValue.Comment}
-                        <TextareaAutosize style={{minHeight: '50px', width: '100%'}}
-                                          minRows={3}
-                                          maxRows={5}
-                                          value={comment}
-                                          onChange={(e) => setComment(e.target.value)}
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="numInBuy"
+                            inputRef={numInBuyRef}
+                            label={TextValue.NumInBuy}
+                            type="number"
+                            id="numInBuy"
+                            value={numInBuy}
+                            onChange={function (e) {
+                                let value = e.target.value;
+                                return setNumInBuy(value.length > 0 ? parseInt(value) : 1);
+                            }}
                         />
                     </Box>
                 </DialogContent>
@@ -153,4 +129,4 @@ const ProcessCancel: React.FC<ProcessCancelProps> = ({id, alert, onAccept, onClo
         </Dialog>
     )
 }
-export default ProcessCancel;
+export default ProcessNumInBuy;

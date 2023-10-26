@@ -95,11 +95,12 @@ export const addItem = async (id: number, itemCode: string, barcode: string): Pr
         throw error;
     }
 }
-export const updateLine = async ({id, lineID, comment, userName, reason}: {
+export const updateLine = async ({id, lineID, comment, userName, reason, numInBuy}: {
     id: number,
     lineID: number,
-    comment: string,
+    comment?: string,
     userName?: string,
+    numInBuy?: number,
     reason?: number
 }): Promise<UpdateLineReturnValue> => {
     try {
@@ -118,7 +119,8 @@ export const updateLine = async ({id, lineID, comment, userName, reason}: {
             lineID: lineID,
             comment: comment,
             userName: userName,
-            closeReason: reason
+            closeReason: reason,
+            quantityInUnit: numInBuy
         }, {
             headers: {
                 'Authorization': `Bearer ${access_token}`

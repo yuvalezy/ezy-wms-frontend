@@ -62,6 +62,7 @@ export const TextValue = {
     Comment: 'Comentario',
     SupervisorCode: 'Codigo de Supervisor',
     Reason: "Razon",
+    NumInBuy: 'Cantidad en Unidad',
 
     //Field Description
     SelectVendor: "Seleccione el Proveedor",
