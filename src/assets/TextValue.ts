@@ -13,6 +13,7 @@ export const TextValue = {
     Approve: "Aprobar",
     Cancel: "Cancelar",
     Delete: "Eliminar",
+    Select: "Seleccione",
     Update: "Actualizar",
     Finish: "Finalizar",
     Create: "Crear",
@@ -96,6 +97,7 @@ export const TextValue = {
     UpdateLineWrongSupervisorPassword: "Contraseña de supervision erroneo",
     UpdateLineNotSupervisorError: "El codigo introducido no es de un supervisor",
     NoDataFound: "No se encontro datos",
+    MultipleItemsDetected: "Multiples Articulos Detectados",
 
     //Dialog
     ConfirmAction: "Confirmar Acción",
@@ -103,5 +105,6 @@ export const TextValue = {
     ConfirmCancelDocument: "¿Está seguro que desea cancelar el documento #{0}?",
     ConfirmFinishDocument: "¿Está seguro que desea finalizar el documento #{0}?",
     ActionCannotReverse: "Esta acción no se puede revertir",
+    ConfirmItemBarCode: "¿Esta seguro que el codigo {1} le pertenece al articulo {0}?",
 
 }
