@@ -1,31 +1,22 @@
 import ContentTheme from "../Components/ContentTheme";
 import {TextValue} from "../assets/TextValue";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import SaveIcon from '@mui/icons-material/Save';
 import Box from "@mui/material/Box";
-import {Alert, AlertTitle, Button, Card, CardContent, Checkbox, Grid, Paper, Radio, Table, TableBody, TableFooter, TableHead, TextField, Typography} from "@mui/material";
+import {Alert, Button, TextField} from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import React, {useRef} from "react";
 import {useLoading} from "../Components/LoadingContext";
 import {itemCheck, ItemCheckResponse, updateItemBarCode} from "./ItemCheck/Item";
-import TableContainer from "@mui/material/TableContainer";
-import TableRow from "@mui/material/TableRow";
-import TableCell from "@mui/material/TableCell";
 import {ResponseStatus} from "../assets/Common";
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import {StringFormat} from "../assets/Functions";
 import ItemCheckMultipleResult from "./ItemCheck/ItemCheckMultipleResult";
+import ItemCheckResult from "./ItemCheck/ItemCheckResult";
 
 export default function ItemCheck() {
     const [barcodeInput, setBarcodeInput] = React.useState('');
     const [itemCodeInput, setItemCodeInput] = React.useState('');
     const [result, setResult] = React.useState<ItemCheckResponse[] | null>(null);
     const {setLoading} = useLoading();
-    const barcodeRef = useRef<HTMLInputElement>();
-    const itemCodeRef = useRef<HTMLInputElement>();
-    const [checkedBarcodes, setCheckedBarcodes] = React.useState<string[]>([]);
-    const [newBarcodeInput, setNewBarcodeInput] = React.useState('');
-
 
     function handleCheckSubmit(e: React.FormEvent) {
         e.preventDefault();
@@ -49,31 +40,19 @@ export default function ItemCheck() {
             .finally(() => setLoading(false));
     }
 
-    function handleCheckboxChange(barcode: string, isChecked: boolean) {
-        if (isChecked) {
-            setCheckedBarcodes(prev => [...prev, barcode]);
-        } else {
-            setCheckedBarcodes(prev => prev.filter(bc => bc !== barcode));
-        }
-    }
-
-    function handleUpdateSubmit(e: React.FormEvent) {
-        e.preventDefault();
-        if (result?.length !== 1) {
-            return;
-        }
+    function handleUpdateSubmit(checkedBarcodes: string[], newBarcode: string) {
         setLoading(true);
-        executeUpdateItemBarcode(result[0].itemCode);
+        executeUpdateItemBarcode(itemCodeInput, checkedBarcodes, newBarcode);
     }
 
-    function executeUpdateItemBarcode(itemCode: string) {
-        updateItemBarCode(itemCode, checkedBarcodes, newBarcodeInput)
+    function executeUpdateItemBarcode(itemCode: string, checkedBarcodes: string[], newBarcode: string) {
+        updateItemBarCode(itemCode, checkedBarcodes, newBarcode)
             .then((response) => {
                 if (response.status === ResponseStatus.Ok) {
                     executeItemCheck(itemCode, '');
                 } else {
                     if (response.existItem != null) {
-                        window.alert(`Barcode ${newBarcodeInput} already exists for item ${response.existItem}`);
+                        window.alert(`Barcode ${newBarcode} already exists for item ${response.existItem}`);
                     } else {
                         window.alert(response.errorMessage ?? 'Unknown error');
                     }
@@ -85,8 +64,7 @@ export default function ItemCheck() {
                 setLoading(false);
             })
             .finally(function () {
-                setNewBarcodeInput('');
-                setCheckedBarcodes([])
+                setResult(result);
             })
     }
 
@@ -117,7 +95,7 @@ export default function ItemCheck() {
     return (
         <ContentTheme title={TextValue.ItemCheck} icon={<CheckBoxIcon/>}>
             {
-                result == null &&
+                (result == null || result.length === 0) &&
                 <form onSubmit={handleCheckSubmit}>
                     <>
                         <Box mb={1} style={{textAlign: 'center'}}>
@@ -128,7 +106,6 @@ export default function ItemCheck() {
                                 label={TextValue.Barcode}
                                 variant="outlined"
                                 value={barcodeInput}
-                                inputRef={barcodeRef}
                                 onChange={e => setBarcodeInput(e.target.value)}
                                 autoFocus={true}
                             />
@@ -141,7 +118,6 @@ export default function ItemCheck() {
                                 label={TextValue.Code}
                                 variant="outlined"
                                 value={itemCodeInput}
-                                inputRef={itemCodeRef}
                                 onChange={e => setItemCodeInput(e.target.value)}
                             />
                             <Box mt={1}>
@@ -156,76 +132,11 @@ export default function ItemCheck() {
             }
             {
                 result &&
-                <form onSubmit={handleUpdateSubmit}>
-                    {result.length === 0 &&
-                        <Alert variant="filled" severity="error">
-                            {TextValue.NoDataFound}
-                        </Alert>
-                    }
-                    {
-                        result.length === 1 &&
-                        <Card variant="outlined">
-                            <CardContent>
-                                <Typography variant="h6">{TextValue.Code}: {result[0].itemCode}</Typography>
-                                <Typography color="textSecondary">{TextValue.Description}: {result[0].itemName}</Typography>
-                                <Typography color="textSecondary">{TextValue.NumInBuy}: {result[0].numInBuy}</Typography>
-                                <TableContainer component={Paper}>
-                                    <Table size="small">
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableCell>{TextValue.Delete}</TableCell>
-                                                <TableCell>{TextValue.Barcode}</TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {
-                                                result[0]?.barcodes?.map((barcode, index) =>
-                                                    (
-                                                        <TableRow key={index}>
-                                                            <TableCell>
-                                                                <Checkbox
-                                                                    checked={checkedBarcodes.includes(barcode)}
-                                                                    onChange={(e) => handleCheckboxChange(barcode, e.target.checked)}
-                                                                />
-                                                            </TableCell>
-                                                            <TableCell>{barcode}</TableCell>
-                                                        </TableRow>
-                                                    )
-                                                )
-                                            }
-                                        </TableBody>
-                                        <TableFooter>
-                                            <TableRow>
-                                                <TableCell></TableCell>
-                                                <TableCell>
-                                                    <TextField inputProps={{maxLength: 254}} size="small" placeholder="New Barcode" value={newBarcodeInput}
-                                                               onChange={(e) => setNewBarcodeInput(e.target.value)}/>
-                                                </TableCell>
-                                            </TableRow>
-                                        </TableFooter>
-                                    </Table>
-                                </TableContainer>
-                            </CardContent>
-                            <Box mb={1} style={{textAlign: 'center'}}>
-                                <Grid container spacing={3} justifyContent="center">
-                                    <Grid item xs={6}>
-                                        <Button type="submit" variant="contained" color="warning">
-                                            <SaveIcon/>
-                                            {TextValue.Update}
-                                        </Button>
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                        <Button type="button" variant="contained" color="info" onClick={() => handleClear()}>
-                                            <HighlightOffIcon/>
-                                            {TextValue.Clear}
-                                        </Button>
-                                    </Grid>
-                                </Grid>
-                            </Box>
-                        </Card>
-                    }
+                <>
+                    {result.length === 0 && <Alert variant="filled" severity="error"> {TextValue.NoDataFound} </Alert>}
+                    {result.length === 1 && <ItemCheckResult result={result[0]} clear={handleClear} submit={handleUpdateSubmit}/>}
                     {result.length > 1 && <ItemCheckMultipleResult barcode={barcodeInput} result={result} clear={handleClear} setBarcodeItem={handleSetBarcodeItem}/>}
-                </form>
+                </>
             }
         </ContentTheme>
     )
