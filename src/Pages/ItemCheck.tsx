@@ -14,6 +14,7 @@ import TableCell from "@mui/material/TableCell";
 import {ResponseStatus} from "../assets/Common";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import {StringFormat} from "../assets/Functions";
+import ItemCheckMultipleResult from "./ItemCheck/ItemCheckMultipleResult";
 
 export default function ItemCheck() {
     const [barcodeInput, setBarcodeInput] = React.useState('');
@@ -106,7 +107,7 @@ export default function ItemCheck() {
         executeItemCheck(itemCode, '');
     }
 
-    function clear() {
+    function handleClear() {
         setItemCodeInput('');
         setBarcodeInput('');
         setResult(null);
@@ -205,17 +206,17 @@ export default function ItemCheck() {
                                     </Table>
                                 </TableContainer>
                             </CardContent>
-                            <Box mb={1} style={{ textAlign: 'center' }}>
+                            <Box mb={1} style={{textAlign: 'center'}}>
                                 <Grid container spacing={3} justifyContent="center">
                                     <Grid item xs={6}>
                                         <Button type="submit" variant="contained" color="warning">
-                                            <SaveIcon />
+                                            <SaveIcon/>
                                             {TextValue.Update}
                                         </Button>
                                     </Grid>
                                     <Grid item xs={6}>
-                                        <Button type="button" variant="contained" color="info" onClick={() => clear()}>
-                                            <HighlightOffIcon />
+                                        <Button type="button" variant="contained" color="info" onClick={() => handleClear()}>
+                                            <HighlightOffIcon/>
                                             {TextValue.Clear}
                                         </Button>
                                     </Grid>
@@ -223,48 +224,7 @@ export default function ItemCheck() {
                             </Box>
                         </Card>
                     }
-                    {result.length > 1 &&
-                        <>
-                            <Alert variant="filled" severity="warning">
-                                <AlertTitle>
-                                    {TextValue.MultipleItemsDetected}
-                                </AlertTitle>
-                                {TextValue.Barcode}: {result[0].barcodes[0]}
-                            </Alert>
-                            <TableContainer component={Paper}>
-                                <Table size="small">
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell>{TextValue.Item}</TableCell>
-                                            <TableCell>{TextValue.Description}</TableCell>
-                                            <TableCell></TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {
-                                            result.map((item, index) => (
-                                                <TableRow key={index}>
-                                                    <TableCell>{item.itemCode}</TableCell>
-                                                    <TableCell>{item.itemName}</TableCell>
-                                                    <TableCell>
-                                                        <Button variant="contained" color="warning" onClick={() => handleSetBarcodeItem(index)}>{TextValue.Select}</Button>
-                                                    </TableCell>
-                                                </TableRow>
-                                            ))
-                                        }
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                            <br/>
-                            <Box mb={1} style={{ textAlign: 'center' }}>
-                                <Button type="button" variant="contained" color="info" onClick={() => clear()}>
-                                    <HighlightOffIcon />
-                                    {TextValue.Clear}
-                                </Button>
-                            </Box>
-                        </>
-
-                    }
+                    {result.length > 1 && <ItemCheckMultipleResult barcode={barcodeInput} result={result} clear={handleClear} setBarcodeItem={handleSetBarcodeItem}/>}
                 </form>
             }
         </ContentTheme>
