@@ -10,6 +10,7 @@ export const TextValue = {
     //Buttons / Status
     No: "No",
     Yes: "Sí",
+    Add: "Agregar",
     Approve: "Aprobar",
     Cancel: "Cancelar",
     Delete: "Eliminar",
@@ -51,8 +52,10 @@ export const TextValue = {
     Filters: "Filtros",
     Execute: "Ejecutar",
     TransferRequest: "Solicitud de Transferencia",
+    PurchaseOrder: "Orden de Compra",
     SalesOrder: "Orden de Venta",
     ReservedInvoice: "Factura Reservada",
+    DocumentNumber: "Numero de Documento",
     Address: "Direccion",
     Customer: "Cliente",
     OpenQuantity: "Cantidad Abierta",
@@ -68,6 +71,9 @@ export const TextValue = {
     SupervisorCode: 'Codigo de Supervisor',
     Reason: "Razon",
     NumInBuy: 'Cantidad en Unidad',
+    Automatic: 'Automatico',
+    SpecificDocuments: 'Documentos Especificos',
+    DocumentsList: 'Lista de Documentos',
 
     //Field Description
     SelectVendor: "Seleccione el Proveedor",
@@ -78,6 +84,9 @@ export const TextValue = {
     GoodsReceiptStatusError: "El estado de la entrada #{0} es {1}.\nNo se puede continuar.",
     GoodsReceiptIsClosed: "Entrada #{0} esta cerrada",
     IDRequired: "Debe introducir una identificación",
+    VendorRequired: "Debe seleccionar el proveedor",
+    DocumentRequired: "Debe introducir el numero de documento",
+    DuplicateNotAllowed: 'Duplicate values are not allowed.',
     InvalidID: "Identificación Inválida",
     ScanCodeRequired: "Debe escanear un código",
     BarcodeRequired: "Debe escanear un código de barra",
@@ -98,6 +107,10 @@ export const TextValue = {
     UpdateLineNotSupervisorError: "El codigo introducido no es de un supervisor",
     NoDataFound: "No se encontro datos",
     MultipleItemsDetected: "Multiples Articulos Detectados",
+    UnknownError: 'Unknown error',
+    BadDocumentError: 'La {0} #{1} {2}',
+    DoesNotExists: 'no existe',
+    IsNotOpen: 'no esta abierta',
 
     //Dialog
     ConfirmAction: "Confirmar Acción",

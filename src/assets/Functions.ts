@@ -21,6 +21,10 @@ export const ObjectName = (objectType: number | null | undefined) => {
             return TextValue.ReservedInvoice;
         case 17:
             return TextValue.SalesOrder;
+        case 18:
+            return TextValue.ReservedInvoice;
+        case 22:
+            return TextValue.PurchaseOrder;
         case 1250000001:
             return TextValue.TransferRequest;
         default:

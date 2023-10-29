@@ -20,8 +20,6 @@ export default function GoodsReceiptSupervisor() {
     const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(null);
     const [actionType, setActionType] = useState<Action | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
-    const [cardCodeInput, setCardCodeInput] = useState<string | ''>('');
-    const [docNameInput, setDocNameInput] = useState<string | ''>('');
     const [qrOpen, setQrOpen] = useState(false);
     const [snackbar, setSnackbar] = React.useState<SnackbarState>({open: false});
 
@@ -42,25 +40,6 @@ export default function GoodsReceiptSupervisor() {
             })
             .finally(() => setLoading(false));
     }, []);
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (docNameInput === null || docNameInput === '') {
-            alert(TextValue.IDRequired);
-            return;
-        }
-        setLoading(true);
-        createDocument(cardCodeInput, docNameInput, user!)
-            .then(newDocument => {
-                setDocuments(prevDocs => [newDocument, ...prevDocs]);
-                setDocNameInput('');  // Reset the input
-            })
-            .catch(error => {
-                console.error(`Error creating document: ${error}`);
-                errorAlert(`Error creating document: ${error.message}`);
-            })
-            .finally(() => setLoading(false));
-    };
 
     const handleAction = (docId: number, action: Action) => {
         setSelectedDocumentId(docId);
@@ -93,12 +72,8 @@ export default function GoodsReceiptSupervisor() {
 
     return (
         <ContentTheme title={TextValue.GoodsReceiptSupervisor} icon={<SupervisedUserCircleIcon/>}>
-            <DocumentForm
-                cardCodeInput={cardCodeInput}
-                setCardCodeInput={setCardCodeInput}
-                docNameInput={docNameInput}
-                setDocNameInput={setDocNameInput}
-                handleSubmit={handleSubmit}/>
+            <DocumentForm onError={errorAlert} onNewDocument={newDocument => setDocuments(prevDocs => [newDocument, ...prevDocs])}/>
+            <br/>
             {documents.map(doc => <DocumentCard key={doc.id} doc={doc} handleAction={handleAction}/>)}
             <ConfirmationDialog
                 title={TextValue.ConfirmAction}

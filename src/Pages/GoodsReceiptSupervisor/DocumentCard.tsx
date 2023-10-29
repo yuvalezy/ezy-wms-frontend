@@ -8,6 +8,7 @@ import {TextValue} from "../../assets/TextValue";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "../../Components/AppContext";
 import {Authorization} from "../../assets/Authorization";
+import {ObjectName} from "../../assets/Functions";
 
 const theme = createTheme();
 
@@ -36,10 +37,26 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, handleAction}) => {
             <CardContent>
                 <Typography variant="h6">{TextValue.ID}: {doc.name}</Typography>
                 <Typography color="textSecondary">
-                    {handleOpenLink && (<a href="#" onClick={e => {e.preventDefault(); handleOpen(doc.id)}}>{TextValue.Number}: {doc.id}</a>)}
+                    {handleOpenLink && (<a href="#" onClick={e => {
+                        e.preventDefault();
+                        handleOpen(doc.id)
+                    }}>{TextValue.Number}: {doc.id}</a>)}
                     {!handleOpenLink && (<span>{TextValue.Number}: {doc.id}</span>)}
                 </Typography>
-                <Typography color="textSecondary">{TextValue.Vendor}: {doc.businessPartner?.name??doc.businessPartner?.code}</Typography>
+                {doc.businessPartner && <Typography color="textSecondary">{TextValue.Vendor}: {doc.businessPartner?.name ?? doc.businessPartner?.code}</Typography>}
+                {doc.specificDocuments && doc.specificDocuments.length > 0 &&
+                    <Typography color="textSecondary">{TextValue.DocumentsList}:&nbsp;
+                        {
+                            doc.specificDocuments.map(
+                                (value) => {
+                                    let index = doc.specificDocuments?.indexOf(value) ?? -1;
+                                    return <span key={index}>
+                                    {index > 0 && ', '}
+                                    {ObjectName(value.objectType)} #{value.documentNumber}
+                                </span>;
+                                }
+                            )
+                        }</Typography>}
                 <Typography
                     color="textSecondary">{TextValue.DocDate}: {new Date(doc.date).toLocaleDateString()}</Typography>
                 <Typography color="textSecondary">{TextValue.CreatedBy}: {doc.employee.name}</Typography>

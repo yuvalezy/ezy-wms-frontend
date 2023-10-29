@@ -15,8 +15,17 @@ export type Document = {
     statusDate?: string;
     statusEmployee?: Employee;
     businessPartner?: BusinessPartner;
+    type: GoodsReceiptType;
+    error: boolean;
+    errorCode?: number;
+    errorParameters?: any[];
+    specificDocuments?: DocumentItem[]
 }
 
+export type DocumentItem = {
+    objectType: number;
+    documentNumber: number;
+}
 
 export enum DocumentStatus {
     Open = 'Open',
@@ -57,7 +66,12 @@ export enum OrderBy {
     Date = 'Date',
 }
 
-export const createDocument = async (cardCode: string, name: string, user: User): Promise<Document> => {
+export enum GoodsReceiptType {
+    AutoConfirm = 'AutoConfirm',
+    SpecificOrders = 'SpecificOrders'
+}
+
+export const createDocument = async (type: GoodsReceiptType, cardCode: string, name: string, items: DocumentItem[]): Promise<Document> => {
     try {
         if (!globalConfig)
             throw new Error('Config has not been initialized!');
@@ -67,8 +81,10 @@ export const createDocument = async (cardCode: string, name: string, user: User)
 
         const access_token = localStorage.getItem('token');
         const response = await axios.post<Document>(`${globalConfig.baseURL}/api/GoodsReceipt/Create`, {
-            CardCode: cardCode,
-            Name: name
+            cardCode: cardCode,
+            name: name,
+            type: type,
+            documents: items
         }, {
             headers: {
                 'Authorization': `Bearer ${access_token}`
@@ -108,7 +124,7 @@ export type ReasonValue = {
     value: number;
     description: string;
 }
-export const fetchReasons = async() : Promise<ReasonValue[]> => {
+export const fetchReasons = async (): Promise<ReasonValue[]> => {
     if (!globalConfig)
         throw new Error('Config has not been initialized!');
 
@@ -117,7 +133,7 @@ export const fetchReasons = async() : Promise<ReasonValue[]> => {
 
     const access_token = localStorage.getItem('token');
 
-    const response = await axios.get<ReasonValue[]>(`${globalConfig.baseURL}/api/GoodsReceipt/CancelReasons`,  {
+    const response = await axios.get<ReasonValue[]>(`${globalConfig.baseURL}/api/GoodsReceipt/CancelReasons`, {
         headers: {
             'Authorization': `Bearer ${access_token}`
         }
