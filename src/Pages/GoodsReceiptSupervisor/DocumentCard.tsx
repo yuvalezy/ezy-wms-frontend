@@ -1,14 +1,15 @@
 import React from "react";
 import {Box, Button, Card, CardContent, createTheme, Typography,} from "@mui/material";
-import {Document, DocumentStatus, documentStatusToString} from "./Document";
+import {Document, DocumentStatus} from "./Document";
 import QrCodeIcon from '@mui/icons-material/QrCode';
 import DoneIcon from '@mui/icons-material/Done';
 import CancelIcon from '@mui/icons-material/Cancel';
-import {TextValue} from "../../assets/TextValue";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "../../Components/AppContext";
 import {Authorization} from "../../assets/Authorization";
-import {ObjectName} from "../../assets/Functions";
+import {useTranslation} from "react-i18next";
+import {useObjectName} from "../../assets/ObjectName";
+import {useDocumentStatusToString} from "./DocumentStatusString";
 
 const theme = createTheme();
 
@@ -18,6 +19,8 @@ type DocumentCardProps = {
 }
 
 const DocumentCard: React.FC<DocumentCardProps> = ({doc, handleAction}) => {
+    const {t} = useTranslation();
+    const o =  useObjectName();
     const navigate = useNavigate();
     const {user} = useAuth();
 
@@ -26,6 +29,9 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, handleAction}) => {
     }
 
     let handleOpenLink = user?.authorizations?.includes(Authorization.GOODS_RECEIPT);
+
+    const documentStatusToString = useDocumentStatusToString();
+
     return (
         <Card key={doc.id} variant="outlined" sx={{marginBottom: theme.spacing(2), position: 'relative'}}>
             <Button
@@ -35,42 +41,42 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, handleAction}) => {
                 <QrCodeIcon/>
             </Button>
             <CardContent>
-                <Typography variant="h6">{TextValue.ID}: {doc.name}</Typography>
+                <Typography variant="h6">{t('ID')}: {doc.name}</Typography>
                 <Typography color="textSecondary">
                     {handleOpenLink && (<a href="#" onClick={e => {
                         e.preventDefault();
                         handleOpen(doc.id)
-                    }}>{TextValue.Number}: {doc.id}</a>)}
-                    {!handleOpenLink && (<span>{TextValue.Number}: {doc.id}</span>)}
+                    }}>{t('Number')}: {doc.id}</a>)}
+                    {!handleOpenLink && (<span>{t('Number')}: {doc.id}</span>)}
                 </Typography>
-                {doc.businessPartner && <Typography color="textSecondary">{TextValue.Vendor}: {doc.businessPartner?.name ?? doc.businessPartner?.code}</Typography>}
+                {doc.businessPartner && <Typography color="textSecondary">{t('Vendor')}: {doc.businessPartner?.name ?? doc.businessPartner?.code}</Typography>}
                 {doc.specificDocuments && doc.specificDocuments.length > 0 &&
-                    <Typography color="textSecondary">{TextValue.DocumentsList}:&nbsp;
+                    <Typography color="textSecondary">{t('DocumentsList')}:&nbsp;
                         {
                             doc.specificDocuments.map(
                                 (value) => {
                                     let index = doc.specificDocuments?.indexOf(value) ?? -1;
                                     return <span key={index}>
                                     {index > 0 && ', '}
-                                    {ObjectName(value.objectType)} #{value.documentNumber}
+                                    {o(value.objectType)} #{value.documentNumber}
                                 </span>;
                                 }
                             )
                         }</Typography>}
                 <Typography
-                    color="textSecondary">{TextValue.DocDate}: {new Date(doc.date).toLocaleDateString()}</Typography>
-                <Typography color="textSecondary">{TextValue.CreatedBy}: {doc.employee.name}</Typography>
+                    color="textSecondary">{t('DocDate')}: {new Date(doc.date).toLocaleDateString()}</Typography>
+                <Typography color="textSecondary">{t('CreatedBy')}: {doc.employee.name}</Typography>
                 <Typography
-                    color="textSecondary">{TextValue.Status}: {documentStatusToString(doc.status)}</Typography>
+                    color="textSecondary">{t('Status')}: {documentStatusToString(doc.status)}</Typography>
                 <Box sx={{marginTop: theme.spacing(2), display: 'flex', gap: theme.spacing(1)}}>
                     {doc.status === DocumentStatus.InProgress && (
                         <Button variant="contained" color="primary" onClick={() => handleAction(doc.id, 'approve')}>
                             <DoneIcon/>
-                            {TextValue.Finish}
+                            {t('Finish')}
                         </Button>)}
                     <Button variant="contained" color="secondary" onClick={() => handleAction(doc.id, 'cancel')}>
                         <CancelIcon/>
-                        {TextValue.Cancel}
+                        {t('Cancel')}
                     </Button>
                 </Box>
             </CardContent>

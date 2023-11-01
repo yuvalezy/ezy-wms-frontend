@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {Box, TextField, Button, Autocomplete} from "@mui/material";
-import {TextValue} from "../../assets/TextValue";
 import ClearAllIcon from '@mui/icons-material/ClearAll';
 import AssessmentIcon from '@mui/icons-material/Assessment';
-import {BusinessPartner, DocumentStatusOption, DocumentStatusOptions, fetchVendors} from "../../assets/Data";
+import {BusinessPartner, DocumentStatusOption, fetchVendors, useDocumentStatusOptions} from "../../assets/Data";
 import {DatePicker} from "@mui/x-date-pickers";
 import {LocalizationProvider} from '@mui/x-date-pickers';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs'
@@ -12,6 +11,8 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import {useTranslation} from "react-i18next";
+import {TextValue} from "../../assets/TextValue";
 
 interface ReportFilterFormProps {
     idInput: string;
@@ -48,6 +49,8 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({
                                                            }) => {
     const [vendors, setVendors] = useState<BusinessPartner[]>([]);
     const [expanded, setExpanded] = React.useState<boolean>(true);
+    const {t} = useTranslation();
+    const documentStatusOptions = useDocumentStatusOptions();
 
     useEffect(() => {
         fetchVendors()
@@ -82,13 +85,13 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({
                 aria-controls="panel1a-content"
                 id="panel1a-header"
             >
-                <Typography>{TextValue.Filters}</Typography>
+                <Typography>{t('Filters')}</Typography>
             </AccordionSummary>
             <AccordionDetails>
                 <form onSubmit={handleSubmit}>
                     <Box mb={1} style={{textAlign: 'center'}}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker label={TextValue.Date} value={dateInput} onChange={(newValue) => setDateInput(newValue)}/>
+                            <DatePicker label={t('Date')} value={dateInput} onChange={(newValue) => setDateInput(newValue)}/>
                         </LocalizationProvider>
                     </Box>
                     <Box mb={1} style={{textAlign: 'center'}}>
@@ -106,7 +109,7 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({
                         <TextField
                             id="idInput"
                             fullWidth
-                            label={TextValue.Transaction}
+                            label={t('Transaction')}
                             variant="outlined"
                             value={idInput}
                             type="number"
@@ -120,7 +123,7 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({
                     <Box mb={1} style={{textAlign: 'center'}}>
                         <TextField
                             fullWidth
-                            label={TextValue.ID}
+                            label={t('ID')}
                             variant="outlined"
                             value={docNameInput}
                             onChange={e => setDocNameInput(e.target.value)}
@@ -130,7 +133,7 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({
                     <Box mb={1} style={{textAlign: 'center'}}>
                         <TextField
                             fullWidth
-                            label={TextValue.GoodsReceipt}
+                            label={t('GoodsReceipt')}
                             variant="outlined"
                             value={grpoInput}
                             type="number"
@@ -143,7 +146,7 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({
                     </Box>
                     <Box mb={1} style={{textAlign: 'center'}}>
                         <Autocomplete
-                            options={DocumentStatusOptions}
+                            options={documentStatusOptions}
                             value={statusInput}
                             getOptionLabel={(option) => option.name}
                             onChange={(_, newValue) => setStatusInput(newValue)}
@@ -155,12 +158,12 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({
                     <Box mb={1} style={{display: 'flex', justifyContent: 'space-between', textAlign: 'center'}}>
                         <Button variant="contained" color="primary" type="submit">
                             <AssessmentIcon/>
-                            {TextValue.Execute}
+                            {t('Execute')}
                         </Button>
                         <Box mx={2}></Box> {/* Add separation between the buttons */}
                         <Button variant="contained" color="secondary" onClick={() => clearForm()}>
                             <ClearAllIcon/>
-                            {TextValue.Clear}
+                            {t('Clear')}
                         </Button>
                     </Box>
                 </form>

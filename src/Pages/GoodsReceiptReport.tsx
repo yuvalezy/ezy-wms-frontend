@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import {TextValue} from "../assets/TextValue";
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import ContentTheme from "../Components/ContentTheme";
 import ReportFilterForm from "./GoodsReceiptSupervisor/ReportFilterForm";
@@ -8,9 +7,11 @@ import {BusinessPartner, DocumentStatusOption} from "../assets/Data";
 import {Document, fetchDocuments} from "./GoodsReceiptSupervisor/Document";
 import DocumentReportCard from "./GoodsReceiptSupervisor/DocumentReportCard";
 import {useLoading} from "../Components/LoadingContext";
+import {useTranslation} from "react-i18next";
 
 export default function GoodsReceiptReport() {
     const {setLoading} = useLoading();
+    const {t} = useTranslation();
     const [idInput, setIDInput] = useState<string | ''>('');
     const [cardCodeInput, setCardCodeInput] = useState<BusinessPartner | null>(null);
     const [docNameInput, setDocNameInput] = useState<string | ''>('');
@@ -42,7 +43,7 @@ export default function GoodsReceiptReport() {
     };
 
     return (
-        <ContentTheme title={TextValue.GoodsReceiptReport} icon={<SummarizeIcon/>}>
+        <ContentTheme title={t('GoodsReceiptReport')} icon={<SummarizeIcon/>}>
             <ReportFilterForm
                 idInput={idInput}
                 setIDInput={setIDInput}

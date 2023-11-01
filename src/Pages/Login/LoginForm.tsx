@@ -9,16 +9,15 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import LoginThemeProvider from './LoginThemeProvider';
 import CircularProgressOverlay from "../../Components/CircularProgressOverlay";
-import {useEffect} from "react";
-import {globalConfig} from "../../assets/GlobalConfig";
-import {TextValue} from "../../assets/TextValue";
-import {useLoading} from "../../Components/LoadingContext";  // Adjust the path based on your directory structure
+import {useLoading} from "../../Components/LoadingContext";
+import {useTranslation} from "react-i18next";  // Adjust the path based on your directory structure
 
 type LoginFormProps = {
     onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 };
 
 export default function LoginForm({onSubmit}: LoginFormProps) {
+    const {t} = useTranslation();
     const {loading} = useLoading();
     return (
         <>
@@ -46,7 +45,7 @@ export default function LoginForm({onSubmit}: LoginFormProps) {
                                 required
                                 fullWidth
                                 name="username"
-                                label={TextValue.Code}
+                                label={t('Code')}
                                 type="password"
                                 id="username"
                                 autoComplete="current-password"

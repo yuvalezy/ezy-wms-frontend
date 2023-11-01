@@ -8,13 +8,14 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import {GoodsReceiptVSExitReportDataLine} from "./Report";
-import {TextValue} from "../../assets/TextValue";
+import {useTranslation} from "react-i18next";
 
 interface GoodsReceiptVSExitReportTableProps {
     data: GoodsReceiptVSExitReportDataLine[]
 }
 
 const GoodsReceiptVSExitReportTable: React.FC<GoodsReceiptVSExitReportTableProps> = ({data}) => {
+    const {t} = useTranslation();
     const StyledTableCell = styled(TableCell)(({theme}) => ({
         [`&.${tableCellClasses.head}`]: {
             backgroundColor: '#0e4a8f',
@@ -40,10 +41,10 @@ const GoodsReceiptVSExitReportTable: React.FC<GoodsReceiptVSExitReportTableProps
             <Table sx={{minWidth: 650}} size="small">
                 <TableHead>
                     <StyledTableRow>
-                        <StyledTableCell>{TextValue.Code}</StyledTableCell>
-                        <StyledTableCell>{TextValue.Description}</StyledTableCell>
-                        <StyledTableCell align="right">{TextValue.OpenQuantity}</StyledTableCell>
-                        <StyledTableCell align="right">{TextValue.Quantity}</StyledTableCell>
+                        <StyledTableCell>{t('Code')}</StyledTableCell>
+                        <StyledTableCell>{t('Description')}</StyledTableCell>
+                        <StyledTableCell align="right">{t('OpenQuantity')}</StyledTableCell>
+                        <StyledTableCell align="right">{t('Quantity')}</StyledTableCell>
                     </StyledTableRow>
                 </TableHead>
                 <TableBody>

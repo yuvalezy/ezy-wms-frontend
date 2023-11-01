@@ -10,9 +10,9 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import Menu from '@mui/material/Menu';
 import {useAuth} from "./AppContext";
 import {useLocation, useNavigate} from "react-router-dom";
-import {TextValue} from "../assets/TextValue";
-import {Menus} from "../assets/Menus";
 import HomeIcon from '@mui/icons-material/Home';
+import {useTranslation} from "react-i18next";
+import {useMenus} from "../assets/Menus";
 
 interface MenuAppBarProps {
     title: string,
@@ -20,11 +20,12 @@ interface MenuAppBarProps {
 }
 
 const MenuAppBar: React.FC<MenuAppBarProps> = ({title, icon}) => {
+    const {t} = useTranslation();
+    const menus = useMenus();
     const navigate = useNavigate();
     const location = useLocation();
     const {logout, user} = useAuth();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const menus = Menus.GetMenus(user?.authorizations);
 
     const handleMenu = (event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
 
@@ -84,9 +85,9 @@ const MenuAppBar: React.FC<MenuAppBarProps> = ({title, icon}) => {
                         >
                             <MenuItem onClick={() => navigate("/")}
                                       disabled={location.pathname === '/'}>
-                                <HomeIcon/> {TextValue.Home}
+                                <HomeIcon/> {t('Home')}
                             </MenuItem>
-                            {menus.map(menu => (
+                            {menus.GetMenus(user?.authorizations).map(menu => (
                                 <MenuItem key={menu.Text} onClick={() => navigate(menu.Link)}
                                           disabled={location.pathname === menu.Link}>
                                     <menu.Icon/>

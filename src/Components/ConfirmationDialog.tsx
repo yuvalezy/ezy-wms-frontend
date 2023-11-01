@@ -1,6 +1,6 @@
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import React from "react";
-import {TextValue} from "../assets/TextValue";
+import {useTranslation} from "react-i18next";
 
 interface ConfirmationDialogProps {
     title: string;
@@ -12,21 +12,22 @@ interface ConfirmationDialogProps {
 }
 
 const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({title, text, reverse, open, onClose, onConfirm}) => {
+    const {t} = useTranslation();
     return (
         <Dialog open={open} onClose={onClose}>
             <DialogTitle>{title}</DialogTitle>
             <DialogContent>
                 <DialogContentText>
                     {text}
-                    {reverse && <> <br /> {TextValue.ActionCannotReverse} </>}
+                    {reverse && <> <br /> {t('ActionCannotReverse')} </>}
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
                 <Button variant="contained" onClick={onClose} color="primary">
-                    {TextValue.No}
+                    {t('No')}
                 </Button>
                 <Button variant="contained" onClick={onConfirm} color="error">
-                    {TextValue.Yes}
+                    {t('Yes')}
                 </Button>
             </DialogActions>
         </Dialog>

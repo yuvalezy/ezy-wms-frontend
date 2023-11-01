@@ -8,13 +8,14 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import {GoodsReceiptAll} from "./Report";
-import {TextValue} from "../../assets/TextValue";
+import {useTranslation} from "react-i18next";
 
 interface GoodsReceiptAllTableProps {
     data: GoodsReceiptAll[]
 }
 
 const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data}) => {
+    const {t} = useTranslation();
     const StyledTableCell = styled(TableCell)(({theme}) => ({
         [`&.${tableCellClasses.head}`]: {
             backgroundColor: '#0e4a8f',
@@ -41,13 +42,13 @@ const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data})
             <Table sx={{minWidth: 650}} size="small">
                 <TableHead>
                     <StyledTableRow>
-                        <StyledTableCell>{TextValue.Code}</StyledTableCell>
-                        <StyledTableCell>{TextValue.Description}</StyledTableCell>
-                        <StyledTableCell align="right">{TextValue.Quantity}</StyledTableCell>
-                        <StyledTableCell align="right">{TextValue.Delivery}</StyledTableCell>
-                        <StyledTableCell align="right">{TextValue.Showroom}</StyledTableCell>
-                        <StyledTableCell align="right">{TextValue.InWarehouse}</StyledTableCell>
-                        <StyledTableCell align="right">{TextValue.Stock}</StyledTableCell>
+                        <StyledTableCell>{t('Code')}</StyledTableCell>
+                        <StyledTableCell>{t('Description')}</StyledTableCell>
+                        <StyledTableCell align="right">{t('Quantity')}</StyledTableCell>
+                        <StyledTableCell align="right">{t('Delivery')}</StyledTableCell>
+                        <StyledTableCell align="right">{t('Showroom')}</StyledTableCell>
+                        <StyledTableCell align="right">{t('InWarehouse')}</StyledTableCell>
+                        <StyledTableCell align="right">{t('Stock')}</StyledTableCell>
                     </StyledTableRow>
                 </TableHead>
                 <TableBody>

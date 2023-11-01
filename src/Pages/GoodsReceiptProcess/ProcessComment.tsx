@@ -1,9 +1,9 @@
 import React, {useState} from "react";
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextareaAutosize} from "@mui/material";
-import {TextValue} from "../../assets/TextValue";
 import {ProcessAlertValue} from "./ProcessAlert";
 import {useLoading} from "../../Components/LoadingContext";
 import {updateLine} from "./Process";
+import {useTranslation} from "react-i18next";
 
 export interface ProcessCommentProps {
     id: number;
@@ -13,6 +13,7 @@ export interface ProcessCommentProps {
 }
 
 const ProcessComment: React.FC<ProcessCommentProps> = ({id, alert, onAccept, onClose}) => {
+    const {t} = useTranslation();
     const {setLoading} = useLoading();
     const [open, setOpen] = useState(true);
     const [comment, setComment] = useState(alert.comment || '');
@@ -47,10 +48,10 @@ const ProcessComment: React.FC<ProcessCommentProps> = ({id, alert, onAccept, onC
 
     return (
         <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>{TextValue.Comment}</DialogTitle>
+            <DialogTitle>{t('Comment')}</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    <strong>{TextValue.Barcode}: </strong>{alert.barcode}
+                    <strong>{t('Barcode')}: </strong>{alert.barcode}
                 </DialogContentText>
                 <div>
                     <TextareaAutosize style={{minHeight: '100px', width: '100%'}}
@@ -63,10 +64,10 @@ const ProcessComment: React.FC<ProcessCommentProps> = ({id, alert, onAccept, onC
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} color="secondary">
-                    {TextValue.Cancel}
+                    {t('Cancel')}
                 </Button>
                 <Button onClick={handleSave} color="primary">
-                    {TextValue.Accept}
+                    {t('Accept')}
                 </Button>
             </DialogActions>
         </Dialog>

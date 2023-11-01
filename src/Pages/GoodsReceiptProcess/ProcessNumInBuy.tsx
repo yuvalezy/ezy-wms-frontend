@@ -1,11 +1,11 @@
-import React, {useEffect, useRef, useState} from "react";
-import {Autocomplete, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextareaAutosize} from "@mui/material";
-import {TextValue} from "../../assets/TextValue";
+import React, {useRef, useState} from "react";
+import {Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import {ProcessAlertValue} from "./ProcessAlert";
 import {useLoading} from "../../Components/LoadingContext";
-import {fetchReasons, ReasonValue, UpdateLineReturnValue} from "../GoodsReceiptSupervisor/Document";
+import {UpdateLineReturnValue} from "../GoodsReceiptSupervisor/Document";
 import {updateLine} from "./Process";
+import {useTranslation} from "react-i18next";
 
 export interface ProcessNumInBuyProps {
     id: number;
@@ -16,6 +16,7 @@ export interface ProcessNumInBuyProps {
 
 
 const ProcessNumInBuy: React.FC<ProcessNumInBuyProps> = ({id, alert, onAccept, onClose}) => {
+    const {t} = useTranslation();
     const {setLoading} = useLoading();
     const [open, setOpen] = useState(true);
     const [userName, setUserName] = useState('');
@@ -35,19 +36,19 @@ const ProcessNumInBuy: React.FC<ProcessNumInBuyProps> = ({id, alert, onAccept, o
                 let message: string | null = null;
                 switch (value) {
                     case UpdateLineReturnValue.Status:
-                        message = TextValue.UpdateLineStatusError
+                        message = t('UpdateLineStatusError')
                         break;
                     case UpdateLineReturnValue.LineStatus:
-                        message = TextValue.UpdateLineLineStatusError
+                        message = t('UpdateLineLineStatusError')
                         break;
                     case UpdateLineReturnValue.CloseReason:
-                        message = TextValue.UpdateLineReason
+                        message = t('UpdateLineReason')
                         break;
                     case UpdateLineReturnValue.SupervisorPassword:
-                        message = TextValue.UpdateLineWrongSupervisorPassword
+                        message = t('UpdateLineWrongSupervisorPassword')
                         break;
                     case UpdateLineReturnValue.NotSupervisor:
-                        message = TextValue.UpdateLineNotSupervisorError
+                        message = t('UpdateLineNotSupervisorError')
                         break;
                 }
                 if (message !== null) {
@@ -79,10 +80,10 @@ const ProcessNumInBuy: React.FC<ProcessNumInBuyProps> = ({id, alert, onAccept, o
     return (
         <Dialog open={open} onClose={handleClose}>
             <form onSubmit={handleSubmit}>
-                <DialogTitle>{TextValue.NumInBuy}</DialogTitle>
+                <DialogTitle>{t('NumInBuy')}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        <strong>{TextValue.Barcode}: </strong>{alert.barcode}
+                        <strong>{t('Barcode')}: </strong>{alert.barcode}
                     </DialogContentText>
                     <Box mb={1} style={{textAlign: 'center'}}>
                         <TextField
@@ -91,7 +92,7 @@ const ProcessNumInBuy: React.FC<ProcessNumInBuyProps> = ({id, alert, onAccept, o
                             fullWidth
                             name="numInBuy"
                             inputRef={numInBuyRef}
-                            label={TextValue.SupervisorCode}
+                            label={t('SupervisorCode')}
                             type="password"
                             id="numInBuy"
                             autoComplete="current-password"
@@ -106,7 +107,7 @@ const ProcessNumInBuy: React.FC<ProcessNumInBuyProps> = ({id, alert, onAccept, o
                             fullWidth
                             name="numInBuy"
                             inputRef={numInBuyRef}
-                            label={TextValue.NumInBuy}
+                            label={t('NumInBuy')}
                             type="number"
                             id="numInBuy"
                             value={numInBuy}
@@ -119,10 +120,10 @@ const ProcessNumInBuy: React.FC<ProcessNumInBuyProps> = ({id, alert, onAccept, o
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="secondary">
-                        {TextValue.Cancel}
+                        {t('Cancel')}
                     </Button>
                     <Button type="submit" color="primary">
-                        {TextValue.Accept}
+                        {t('Accept')}
                     </Button>
                 </DialogActions>
             </form>

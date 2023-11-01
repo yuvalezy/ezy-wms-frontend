@@ -1,19 +1,22 @@
 import React, {useState} from "react";
 import Box from "@mui/material/Box";
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
-import {TextValue} from "../assets/TextValue";
 import {Button, TextField} from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import {useNavigate} from "react-router-dom";
 import ContentTheme from "../Components/ContentTheme";
 import {IsNumeric, StringFormat} from "../assets/Functions";
 import SnackbarAlert, {SnackbarState} from "../Components/SnackbarAlert";
-import {DocumentStatus, documentStatusToString, fetchDocuments} from "./GoodsReceiptSupervisor/Document";
+import {DocumentStatus, fetchDocuments} from "./GoodsReceiptSupervisor/Document";
+import {useTranslation} from "react-i18next";
+import {useDocumentStatusToString} from "./GoodsReceiptSupervisor/DocumentStatusString";
 
 export default function GoodsReceipt() {
     const [, setLoading] = useState(false);
     const [scanCodeInput, setScanCodeInput] = React.useState('');
     const [snackbar, setSnackbar] = React.useState<SnackbarState>({open: false});
+    const {t} = useTranslation();
+    const documentStatusToString = useDocumentStatusToString();
 
     const navigate = useNavigate();
     const alert = (message: string) => {
@@ -29,12 +32,12 @@ export default function GoodsReceipt() {
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         if (scanCodeInput.length === 0) {
-            alert(TextValue.ScanCodeRequired);
+            alert(t('ScanCodeRequired'));
             return;
         }
         let checkScan = scanCodeInput.split('_');
         if (checkScan.length !== 2 || (checkScan[0] !== 'GRPO' &&  checkScan[0] !== '$GRPO') || !IsNumeric(checkScan[1])) {
-            alert(TextValue.InvalidScanCode);
+            alert(t('InvalidScanCode'));
             return;
         }
         const id = parseInt(checkScan[1]);
@@ -42,13 +45,13 @@ export default function GoodsReceipt() {
         fetchDocuments(id, [])
             .then(doc => {
                 if (doc.length === 0) {
-                    alert(StringFormat(TextValue.GoodsReceiptNotFound, id));
+                    alert(StringFormat(t('GoodsReceiptNotFound'), id));
                     return;
                 }
                 const status = doc[0].status;
 
                 if (status !== DocumentStatus.Open && status !== DocumentStatus.InProgress) {
-                    alert(StringFormat(TextValue.GoodsReceiptStatusError, id, documentStatusToString(status)));
+                    alert(StringFormat(t('GoodsReceiptStatusError'), id, documentStatusToString(status)));
                     return;
                 }
                 navigate(`/goodsReceipt/${id}`);
@@ -58,7 +61,7 @@ export default function GoodsReceipt() {
     }
 
     return (
-        <ContentTheme title={TextValue.GoodsReceipt} icon={<AssignmentTurnedInIcon/>}>
+        <ContentTheme title={t('GoodsReceipt')} icon={<AssignmentTurnedInIcon/>}>
             {ScanForm()}
             <SnackbarAlert state={snackbar} onClose={() => setSnackbar({open: false})}/>
         </ContentTheme>
@@ -71,7 +74,7 @@ export default function GoodsReceipt() {
                     <TextField
                         fullWidth
                         required
-                        label={TextValue.Code}
+                        label={t('Code')}
                         variant="outlined"
                         value={scanCodeInput}
                         type="password"
@@ -81,10 +84,14 @@ export default function GoodsReceipt() {
                     <Box mt={1}>
                         <Button type="submit" variant="contained" color="primary">
                             <DoneIcon/>
-                            {TextValue.Accept}
+                            {t('Accept')}
                         </Button>
                     </Box>
                 </Box></form>
         )
     }
+}
+
+function documentStatusToString(status: DocumentStatus): any {
+    throw new Error("Function not implemented.");
 }

@@ -1,12 +1,11 @@
 import ContentTheme from "../Components/ContentTheme";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
-import {TextValue} from "../assets/TextValue";
 import {useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
 import ErrorMessage from "../Components/ErrorMessagex";
 import {IsNumeric, StringFormat} from "../assets/Functions";
 import Box from "@mui/material/Box";
-import {Button, TextField} from "@mui/material";
+import {AlertColor, Button, TextField} from "@mui/material";
 import BoxConfirmationDialog from '../Components/BoxConfirmationDialog'
 import DoneIcon from "@mui/icons-material/Done";
 import {scanBarcode} from "./GoodsReceiptSupervisor/Document";
@@ -15,12 +14,14 @@ import ProcessAlert, {AlertActionType, ProcessAlertValue} from "./GoodsReceiptPr
 import ProcessComment from "./GoodsReceiptProcess/ProcessComment";
 import {useLoading} from "../Components/LoadingContext";
 import ProcessCancel from "./GoodsReceiptProcess/ProcessCancel";
-import {addItem} from "./GoodsReceiptProcess/Process";
+import {addItem, AddItemResponseMultipleValue} from "./GoodsReceiptProcess/Process";
 import ProcessNumInBuy from "./GoodsReceiptProcess/ProcessNumInBuy";
+import {useTranslation} from "react-i18next";
 
 
 export default function GoodsReceiptProcess() {
     const {scanCode} = useParams();
+    const {t} = useTranslation();
     const barcodeRef = useRef<HTMLInputElement>();
     const [id, setID] = useState<number | null>();
     const [enable, setEnable] = useState(true);
@@ -33,7 +34,7 @@ export default function GoodsReceiptProcess() {
     const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
     const [currentAlertAction, setCurrentAlertAction] = useState<AlertActionType>(AlertActionType.None);
 
-    const title = `${TextValue.GoodsReceipt} #${scanCode}`;
+    const title = `${t('GoodsReceipt')} #${scanCode}`;
 
     useEffect(() => {
         if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
@@ -53,7 +54,7 @@ export default function GoodsReceiptProcess() {
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         if (barcodeInput.length === 0) {
-            window.alert(TextValue.BarcodeRequired);
+            window.alert(t('BarcodeRequired'));
             return;
         }
 
@@ -68,7 +69,7 @@ export default function GoodsReceiptProcess() {
 
     function handleItems(items: Item[]) {
         if (items.length === 0) {
-            alert({barcode: barcodeInput, message: StringFormat(TextValue.BarcodeNotFound, barcodeInput), severity: 'error'});
+            alert({barcode: barcodeInput, message: StringFormat(t('BarcodeNotFound'), barcodeInput), severity: 'error'});
             setBarcodeInput('');
             setLoading(false);
             return;
@@ -85,7 +86,7 @@ export default function GoodsReceiptProcess() {
         const distinctCodes = distinctItems(items);
         if (distinctCodes.length !== 1) {
             let codes = distinctCodes.map(v => `"${v}"`).join(', ');
-            alert({message: StringFormat(TextValue.MultipleItemsError, codes), severity: 'error'});
+            alert({message: StringFormat(t('MultipleItemsError'), codes), severity: 'error'});
             setLoading(false);
             return;
         }
@@ -101,19 +102,58 @@ export default function GoodsReceiptProcess() {
         setBarcodeInput('');
         setLoading(true);
         addItem(id ?? 0, itemCode, barcode)
-            .then(v => {
+            .then(data => {
+                if (data.closedDocument) {
+                    alert({
+                        lineID: data.lineID,
+                        barcode: barcode,
+                        itemCode: itemCode,
+                        message: StringFormat(t('GoodsReceiptIsClosed'), id),
+                        severity: 'error',
+                        multiple: [],
+                        numInBuy: data.numInBuy
+                    });
+                    setEnable(false);
+                    return;
+                }
+
+                let message: string = '';
+                let color: AlertColor = 'info';
+                let multiple: AddItemResponseMultipleValue[] = [];
+                if ((data.warehouse ? 1 : 0) + (data.fulfillment ? 1 : 0) + (data.showroom ? 1 : 0) === 1) {
+                    if (data.warehouse) {
+                        message = t('ScanConfirmStoreInWarehouse');
+                        color = 'success';
+                    }
+                    if (data.fulfillment) {
+                        message = t('ScanConfirmFulfillment');
+                        color = 'warning';
+                    }
+                    if (data.showroom) {
+                        message = t('ScanConfirmShowroom');
+                        color = 'info';
+                    }
+                } else {
+                    if (data.warehouse) {
+                        multiple.push({message: t('ScanConfirmStoreInWarehouse'), severity: 'success'});
+                    }
+                    if (data.fulfillment) {
+                        multiple.push({message: t('ScanConfirmFulfillment'), severity: 'warning'});
+                    }
+                    if (data.showroom) {
+                        multiple.push({message: t('ScanConfirmShowroom'), severity: 'info'});
+                    }
+                }
+
                 alert({
-                    lineID: v.response.lineID,
+                    lineID: data.lineID,
                     barcode: barcode,
                     itemCode: itemCode,
-                    message: v.message,
-                    severity: v.color,
-                    multiple: v.multiple,
-                    numInBuy: v.response.numInBuy
+                    message: message,
+                    severity: color,
+                    multiple: multiple,
+                    numInBuy: data.numInBuy
                 });
-                if (v.response.closedDocument) {
-                    setEnable(false);
-                }
             })
             .catch(error => {
                 console.error(`Error performing action: ${error}`);
@@ -163,7 +203,7 @@ export default function GoodsReceiptProcess() {
                                     <TextField
                                         fullWidth
                                         required
-                                        label={TextValue.Barcode}
+                                        label={t('Barcode')}
                                         variant="outlined"
                                         value={barcodeInput}
                                         onChange={e => setBarcodeInput(e.target.value)}
@@ -174,7 +214,7 @@ export default function GoodsReceiptProcess() {
                                     <Box mt={1}>
                                         <Button type="submit" variant="contained" color="primary" disabled={!enable}>
                                             <DoneIcon/>
-                                            {TextValue.Accept}
+                                            {t('Accept')}
                                         </Button>
                                     </Box>
                                 </Box>
@@ -222,7 +262,7 @@ export default function GoodsReceiptProcess() {
 
                     </>
                 </>
-            ) : <ErrorMessage text={TextValue.InvalidScanCode}/>
+            ) : <ErrorMessage text={t('InvalidScanCode')}/>
             }
         </ContentTheme>
     )

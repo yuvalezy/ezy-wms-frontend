@@ -5,23 +5,24 @@ import Box from "@mui/material/Box";
 import {Grid, Paper, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
 import {useAuth} from "../Components/AppContext";
-import {Menus} from "../assets/Menus";
 import HomeIcon from '@mui/icons-material/Home';
-import {TextValue} from "../assets/TextValue";
+import {useTranslation} from "react-i18next";
+import {useMenus} from "../assets/Menus";
 
 export default function Home() {
     const {user} = useAuth();
+    const {t} = useTranslation();
+    const menus = useMenus();
     const theme = createTheme();
-    const menus = Menus.GetMenus(user?.authorizations);
     return (
         <ThemeProvider theme={theme}>
-            <MenuAppBar title={TextValue.Home} icon={<HomeIcon/>}></MenuAppBar>
+            <MenuAppBar title={t('Home')} icon={<HomeIcon/>}></MenuAppBar>
             <Box sx={{paddingTop: theme.spacing(8), paddingLeft: theme.spacing(1), paddingRight: theme.spacing(1)}}>
                 <Typography variant="h2" style={{textAlign: 'center'}}>
                     {user?.branch}
                 </Typography>
                 <Grid container spacing={3}>
-                    {menus.map(menu =>
+                    {menus.GetMenus(user?.authorizations).map(menu =>
                         (
 
                             <Grid key={menu.Text} item xs={6} style={{height: '100%'}}>

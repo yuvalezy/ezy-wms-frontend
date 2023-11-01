@@ -1,15 +1,15 @@
-import React from 'react';
+import React, {useTransition} from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
-import {TextValue} from "../assets/TextValue";
 import {List, ListItem, ListItemAvatar, ListItemButton, ListItemText} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import {blue} from "@mui/material/colors";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import {Item} from "../assets/Common";
+import {useTranslation} from "react-i18next";
 
 interface BoxConfirmationDialogProps {
     open: boolean,
@@ -20,6 +20,8 @@ interface BoxConfirmationDialogProps {
 }
 
 const BoxConfirmationDialog: React.FC<BoxConfirmationDialogProps> = ({open, onClose, onSelected, itemCode, items}) => {
+    const {t} = useTranslation();
+
     let boxes = 0;
     items?.forEach(item => {
         let boxNumber = item.boxNumber ?? 0;
@@ -32,10 +34,10 @@ const BoxConfirmationDialog: React.FC<BoxConfirmationDialogProps> = ({open, onCl
         <Dialog open={open} onClose={onClose}>
             <DialogTitle>
                 <Typography variant="h5">
-                    {TextValue.Item}: {itemCode}
+                    {t('Item')}: {itemCode}
                 </Typography>
                 <Typography variant="h6">
-                    {TextValue.SelectBox}
+                    {t('SelectBox')}
                 </Typography>
             </DialogTitle>
             <List sx={{pt: 0}}>
@@ -47,14 +49,14 @@ const BoxConfirmationDialog: React.FC<BoxConfirmationDialogProps> = ({open, onCl
                                     <ArrowRightIcon/>
                                 </Avatar>
                             </ListItemAvatar>
-                            <ListItemText primary={`${item.boxNumber} ${TextValue.Of} ${boxes}`}/>
+                            <ListItemText primary={`${item.boxNumber} ${t('Of')} ${boxes}`}/>
                         </ListItemButton>
                     </ListItem>
                 ))}
             </List>
             <DialogActions style={{justifyContent: 'center'}}>
                 <Button onClick={onClose} color="error">
-                    {TextValue.Cancel}
+                    {t('Cancel')}
                 </Button>
             </DialogActions>
         </Dialog>

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { DocumentStatus } from "../Pages/GoodsReceiptSupervisor/Document";
 import {globalConfig} from "./GlobalConfig";
-import {TextValue} from "./TextValue";
+import {useTranslation} from "react-i18next";
 
 export type Employee = {
     id: number;
@@ -19,13 +19,19 @@ export type DocumentStatusOption = {
     status: DocumentStatus;
 };
 
-export const DocumentStatusOptions: DocumentStatusOption[] = [
-    { code: 'Open', name: TextValue.OpenStatus, status: DocumentStatus.Open },
-    { code: 'Processing', name: TextValue.ProcessingStatus, status: DocumentStatus.Processing },
-    { code: 'Finished', name: TextValue.FinishedStatus, status: DocumentStatus.Finished },
-    { code: 'Cancelled', name: TextValue.CancelledStatus, status: DocumentStatus.Cancelled},
-    { code: 'InProgress', name: TextValue.InProgressStatus, status: DocumentStatus.InProgress },
-];
+export function useDocumentStatusOptions() {
+    const { t} = useTranslation();
+
+    const DocumentStatusOptions = [
+        { code: 'Open', name: t('OpenStatus'), status: DocumentStatus.Open },
+        { code: 'Processing', name: t('ProcessingStatus'), status: DocumentStatus.Processing },
+        { code: 'Finished', name: t('FinishedStatus'), status: DocumentStatus.Finished },
+        { code: 'Cancelled', name: t('CancelledStatus'), status: DocumentStatus.Cancelled },
+        { code: 'InProgress', name: t('InProgressStatus'), status: DocumentStatus.InProgress },
+    ];
+
+    return DocumentStatusOptions;
+}
 
 export const fetchVendors = async (): Promise<BusinessPartner[]> => {
     try {

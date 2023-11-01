@@ -8,11 +8,11 @@ import Button from '@mui/material/Button';
 import {DocumentItem} from "./Document";
 import {Select, Typography} from '@mui/material';
 import MenuItem from "@mui/material/MenuItem";
-import {TextValue} from "../../assets/TextValue";
 import AddIcon from '@mui/icons-material/Add';
-import {ObjectName} from "../../assets/Functions";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
+import {useTranslation} from "react-i18next";
+import {useObjectName} from "../../assets/ObjectName";
 
 export interface DocumentListRef {
     clearItems: () => void;
@@ -24,6 +24,8 @@ type DocumentListProps = {
 
 // function DocumentList({onItemsUpdate}: DocumentListProps)
 const DocumentList = forwardRef((props: DocumentListProps, ref) => {
+    const {t} = useTranslation();
+    const o =  useObjectName();
     const docNumRef = useRef<HTMLInputElement>();
     const [items, setItems] = useState<DocumentItem[]>([]);
     const [objType, setObjType] = useState<string>('18');
@@ -36,7 +38,7 @@ const DocumentList = forwardRef((props: DocumentListProps, ref) => {
     }))
     const handleAddClick = () => {
         if (docNum.length === 0) {
-            window.alert(TextValue.DocumentRequired);
+            window.alert(t('DocumentRequired'));
             return;
         }
         let newDocument: DocumentItem = {
@@ -44,7 +46,7 @@ const DocumentList = forwardRef((props: DocumentListProps, ref) => {
             documentNumber: parseInt(docNum)
         };
         if (items.find(i => i.objectType === newDocument.objectType && i.documentNumber === newDocument.documentNumber)) {
-            alert(TextValue.DuplicateNotAllowed)
+            alert(t('DuplicateNotAllowed'))
             return;
         }
         const newItems = items.concat(newDocument);
@@ -64,12 +66,12 @@ const DocumentList = forwardRef((props: DocumentListProps, ref) => {
     return (
         <Box sx={{border: '1px solid rgba(0, 0, 0, 0.12)', borderRadius: '4px', padding: '10px'}}>
             <Typography variant="body1" component="h2" gutterBottom style={{paddingLeft: '5px', color: 'rgba(0, 0, 0, 0.6)'}}>
-                {TextValue.DocumentsList} *
+                {t('DocumentsList')} *
             </Typography>
             <List>
                 {items.map((item, index) => (
                     <ListItem key={index} style={{ display: 'flex', alignItems: 'center' }}>
-                        <ListItemText primary={`${ObjectName(item.objectType)}: ${item.documentNumber}`} />
+                        <ListItemText primary={`${o(item.objectType)}: ${item.documentNumber}`} />
                         <IconButton onClick={() => handleRemoveClick(index)} color="error">
                             <CloseIcon />
                         </IconButton>
@@ -82,13 +84,13 @@ const DocumentList = forwardRef((props: DocumentListProps, ref) => {
                     value={objType}
                     onChange={e => setObjType(e.target.value)}
                 >
-                    <MenuItem value="22">{TextValue.PurchaseOrder}</MenuItem>
-                    <MenuItem value="18">{TextValue.ReservedInvoice}</MenuItem>
+                    <MenuItem value="22">{t('PurchaseOrder')}</MenuItem>
+                    <MenuItem value="18">{t('ReservedInvoice')}</MenuItem>
                 </Select>
             </Box>
             <Box>
                 <TextField
-                    label={TextValue.DocumentNumber}
+                    label={t('DocumentNumber')}
                     fullWidth
                     variant="outlined"
                     type="number"
@@ -105,7 +107,7 @@ const DocumentList = forwardRef((props: DocumentListProps, ref) => {
                     onClick={handleAddClick}
                 >
                     <AddIcon/>
-                    {TextValue.Add}
+                    {t('Add')}
                 </Button>
             </Box>
         </Box>

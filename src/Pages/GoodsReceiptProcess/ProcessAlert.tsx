@@ -3,9 +3,9 @@ import {Alert, AlertColor, AlertTitle} from "@mui/material";
 import InsertCommentIcon from '@mui/icons-material/InsertComment';
 import CancelIcon from '@mui/icons-material/Cancel';
 import PinIcon from '@mui/icons-material/Pin';
-import {TextValue} from "../../assets/TextValue";
 import React from "react";
 import {AddItemResponseMultipleValue} from "./Process";
+import {useTranslation} from "react-i18next";
 
 export interface ProcessAlertValue {
     lineID?: number,
@@ -33,6 +33,7 @@ export enum AlertActionType {
 }
 
 const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction}) => {
+    const {t} = useTranslation();
     const getAlertStyle = () => {
         const style: React.CSSProperties = {
             position: 'relative',
@@ -52,16 +53,16 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction}) => {
     return (
         <Box mt={1} style={{position: 'relative'}}>
             <Alert variant="filled" severity={alert.severity} style={getAlertStyle()}>
-                {alert.barcode && <AlertTitle><strong>{TextValue.Barcode}: </strong>{alert.barcode}</AlertTitle>}
-                <strong>{TextValue.Time}: </strong>{alert.timeStamp} <br/>
+                {alert.barcode && <AlertTitle><strong>{t('Barcode')}: </strong>{alert.barcode}</AlertTitle>}
+                <strong>{t('Time')}: </strong>{alert.timeStamp} <br/>
                 {alert.itemCode && <>
-                    <span><strong>{TextValue.Item}: </strong>{alert.itemCode}</span>
+                    <span><strong>{t('Item')}: </strong>{alert.itemCode}</span>
                     <br/>
-                    <span><strong>{TextValue.NumInBuy}: </strong>{alert.numInBuy}</span>
+                    <span><strong>{t('NumInBuy')}: </strong>{alert.numInBuy}</span>
                     <br/>
                 </>}
-                {alert.message && (<><strong>{TextValue.Message}: </strong>{alert.message}</>)}
-                {alert.multiple != null && alert.multiple.length > 0 && (<><br/><strong>{TextValue.Messages}: </strong>{
+                {alert.message && (<><strong>{t('Message')}: </strong>{alert.message}</>)}
+                {alert.multiple != null && alert.multiple.length > 0 && (<><br/><strong>{t('Messages')}: </strong>{
                     <>
                         {
                             alert.multiple.map(v => <Box mt={0.5}><Alert variant="filled" severity={v.severity}>{v.message}</Alert></Box>)

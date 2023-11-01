@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from "react";
 import ContentTheme from "../Components/ContentTheme";
 import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
-import {TextValue} from "../assets/TextValue";
 import {Alert, Typography} from "@mui/material";
-import {IsNumeric, ObjectName} from "../assets/Functions";
+import {IsNumeric} from "../assets/Functions";
 import {useParams} from "react-router-dom";
 import {fetchGoodsReceiptVSExitReport, GoodsReceiptVSExitReportData} from "./GoodsReceiptSupervisor/Report";
 import SnackbarAlert, {SnackbarState} from "../Components/SnackbarAlert";
@@ -13,14 +12,18 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import GoodsReceiptVSExitReportTable from "./GoodsReceiptSupervisor/GoodsReceiptVSExitReportTable";
 import {useLoading} from "../Components/LoadingContext";
+import {useTranslation} from "react-i18next";
+import {useObjectName} from "../assets/ObjectName";
 
 export default function GoodsReceiptVSExitReport() {
     const [id, setID] = useState<number | null>();
     const {scanCode} = useParams();
+    const {t} = useTranslation();
+    const o = useObjectName();
     const {setLoading} = useLoading();
     const [data, setData] = useState<GoodsReceiptVSExitReportData[] | null>(null);
     const [snackbar, setSnackbar] = React.useState<SnackbarState>({open: false});
-    const title = `${TextValue.GoodsReceiptVSExit} #${scanCode}`;
+    const title = `${t('GoodsReceiptVSExit')} #${scanCode}`;
 
     const errorAlert = (message: string) => {
         setSnackbar({open: true, message: message, color: 'red'});
@@ -42,20 +45,20 @@ export default function GoodsReceiptVSExitReport() {
     }, []);
     return (
         <ContentTheme title={title} icon={<SupervisedUserCircleIcon/>}>
-            <Typography variant="h4">{TextValue.GoodsReceipt} #{id}</Typography>
+            <Typography variant="h4">{t('GoodsReceipt')} #{id}</Typography>
             <div>
                 {data?.map(value => (
                     <Accordion>
                         <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                            <Typography variant="h5"><strong>{ObjectName(value.objectType)}: </strong> {value.number}</Typography>
+                            <Typography variant="h5"><strong>{o(value.objectType)}: </strong> {value.number}</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <Typography>
-                                <strong>{TextValue.Customer}: </strong>
+                                <strong>{t('Customer')}: </strong>
                                 {value.cardName}
                             </Typography>
                             <Typography>
-                                <strong>{TextValue.Address}: </strong>
+                                <strong>{t('Address')}: </strong>
                                 {value.address}
                             </Typography>
                             <GoodsReceiptVSExitReportTable data={value.lines}/>
@@ -63,7 +66,7 @@ export default function GoodsReceiptVSExitReport() {
                     </Accordion>
                 ))}
             </div>
-            {data && data.length === 0 && <Alert severity="warning">{TextValue.NoExitData}</Alert>}
+            {data && data.length === 0 && <Alert severity="warning">{t('NoExitData')}</Alert>}
             <SnackbarAlert state={snackbar} onClose={() => setSnackbar({open: false})}/>
         </ContentTheme>
     )

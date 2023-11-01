@@ -1,7 +1,6 @@
 import axios from "axios";
 import {Item, User} from "../../assets/Common";
 import {BusinessPartner, Employee} from "../../assets/Data";
-import {TextValue} from "../../assets/TextValue";
 import {globalConfig} from "../../assets/GlobalConfig";
 
 export type Action = 'approve' | 'cancel' | 'qrcode';
@@ -44,21 +43,6 @@ export enum UpdateLineReturnValue {
     SupervisorPassword = 'SupervisorPassword',
     NotSupervisor = 'NotSupervisor'
 }
-
-export const documentStatusToString = (status: DocumentStatus): string => {
-    switch (status) {
-        case DocumentStatus.Open:
-            return TextValue.OpenStatus;
-        case DocumentStatus.Processing:
-            return TextValue.ProcessingStatus;
-        case DocumentStatus.Finished:
-            return TextValue.FinishedStatus;
-        case DocumentStatus.Cancelled:
-            return TextValue.CancelledStatus;
-        case DocumentStatus.InProgress:
-            return TextValue.InProgressStatus;
-    }
-};
 
 export enum OrderBy {
     ID = 'ID',
