@@ -1,18 +1,10 @@
 import React, {forwardRef, useImperativeHandle, useRef, useState} from 'react';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import {DocumentItem} from "./Document";
-import {Select, Typography} from '@mui/material';
-import MenuItem from "@mui/material/MenuItem";
-import AddIcon from '@mui/icons-material/Add';
-import CloseIcon from "@mui/icons-material/Close";
-import IconButton from "@mui/material/IconButton";
 import {useTranslation} from "react-i18next";
 import {useObjectName} from "../../assets/ObjectName";
+import "@ui5/webcomponents-icons/dist/add.js"
+import "@ui5/webcomponents-icons/dist/decline.js"
+import {Icon, ComboBox, ComboBoxItem, Input, Button, List, StandardListItem} from "@ui5/webcomponents-react";
 
 export interface DocumentListRef {
     clearItems: () => void;
@@ -25,10 +17,10 @@ type DocumentListProps = {
 // function DocumentList({onItemsUpdate}: DocumentListProps)
 const DocumentList = forwardRef((props: DocumentListProps, ref) => {
     const {t} = useTranslation();
-    const o =  useObjectName();
+    const o = useObjectName();
     const docNumRef = useRef<HTMLInputElement>();
     const [items, setItems] = useState<DocumentItem[]>([]);
-    const [objType, setObjType] = useState<string>('18');
+    const [objType, setObjType] = useState(18);
     const [docNum, setDocNum] = useState<string>('');
 
     useImperativeHandle(ref, () => ({
@@ -42,7 +34,7 @@ const DocumentList = forwardRef((props: DocumentListProps, ref) => {
             return;
         }
         let newDocument: DocumentItem = {
-            objectType: parseInt(objType),
+            objectType: objType,
             documentNumber: parseInt(docNum)
         };
         if (items.find(i => i.objectType === newDocument.objectType && i.documentNumber === newDocument.documentNumber)) {
@@ -64,53 +56,28 @@ const DocumentList = forwardRef((props: DocumentListProps, ref) => {
     };
 
     return (
-        <Box sx={{border: '1px solid rgba(0, 0, 0, 0.12)', borderRadius: '4px', padding: '10px'}}>
-            <Typography variant="body1" component="h2" gutterBottom style={{paddingLeft: '5px', color: 'rgba(0, 0, 0, 0.6)'}}>
-                {t('DocumentsList')} *
-            </Typography>
+        <div style={{border: '1px solid rgba(0, 0, 0, 0.12)', borderRadius: '4px', padding: '5px'}}>
             <List>
                 {items.map((item, index) => (
-                    <ListItem key={index} style={{ display: 'flex', alignItems: 'center' }}>
-                        <ListItemText primary={`${o(item.objectType)}: ${item.documentNumber}`} />
-                        <IconButton onClick={() => handleRemoveClick(index)} color="error">
-                            <CloseIcon />
-                        </IconButton>
-                    </ListItem>
+                    <StandardListItem key={index} style={{display: 'flex', alignItems: 'center'}}>
+                        {`${o(item.objectType)}: ${item.documentNumber}`}
+                        <Icon style={{float: 'right'}} name="decline" design="Negative" onClick={() => handleRemoveClick(index)}/>
+                    </StandardListItem>
                 ))}
-            </List>            <Box style={{paddingBottom: '5px'}}>
-                <Select
-                    required
-                    fullWidth
-                    value={objType}
-                    onChange={e => setObjType(e.target.value)}
-                >
-                    <MenuItem value="22">{t('PurchaseOrder')}</MenuItem>
-                    <MenuItem value="18">{t('ReservedInvoice')}</MenuItem>
-                </Select>
-            </Box>
-            <Box>
-                <TextField
-                    label={t('DocumentNumber')}
-                    fullWidth
-                    variant="outlined"
-                    type="number"
-                    value={docNum}
-                    inputRef={docNumRef}
-                    onChange={(e) => setDocNum(e.target.value)}
-                    style={{marginRight: '10px'}}
-                />
-            </Box>
-            <Box style={{textAlign: 'right', padding: '5px'}}>
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleAddClick}
-                >
-                    <AddIcon/>
-                    {t('Add')}
-                </Button>
-            </Box>
-        </Box>
+            </List>
+            <ComboBox required value={o(objType)} onSelectionChange={e => setObjType(e.detail.item.text === t('PurchaseOrder') ? 22 : 18)}>
+                <>
+                    <ComboBoxItem text={t('PurchaseOrder')}/>
+                    <ComboBoxItem text={t('ReservedInvoice')}/>
+                </>
+            </ComboBox>
+            <br/>
+            <Input value={docNum} type="Number" placeholder={t('DocumentNumber')} onInput={e => setDocNum(e.target.value as string)}/>
+            <Button color="secondary" onClick={handleAddClick}>
+                <Icon name="add"/>
+                {t('Add')}
+            </Button>
+        </div>
     );
 });
 

@@ -1,17 +1,15 @@
 import React from "react";
-import {Box, Button, Card, CardContent, createTheme, Typography,} from "@mui/material";
 import {Document, DocumentStatus} from "./Document";
-import QrCodeIcon from '@mui/icons-material/QrCode';
-import DoneIcon from '@mui/icons-material/Done';
-import CancelIcon from '@mui/icons-material/Cancel';
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "../../Components/AppContext";
 import {Authorization} from "../../assets/Authorization";
 import {useTranslation} from "react-i18next";
 import {useObjectName} from "../../assets/ObjectName";
 import {useDocumentStatusToString} from "./DocumentStatusString";
-
-const theme = createTheme();
+import {Card, CardHeader, Icon, List, StandardListItem, Button} from "@ui5/webcomponents-react";
+import "@ui5/webcomponents-icons/dist/qr-code.js"
+import "@ui5/webcomponents-icons/dist/complete.js"
+import "@ui5/webcomponents-icons/dist/cancel.js"
 
 type DocumentCardProps = {
     doc: Document,
@@ -20,7 +18,7 @@ type DocumentCardProps = {
 
 const DocumentCard: React.FC<DocumentCardProps> = ({doc, handleAction}) => {
     const {t} = useTranslation();
-    const o =  useObjectName();
+    const o = useObjectName();
     const navigate = useNavigate();
     const {user} = useAuth();
 
@@ -33,25 +31,25 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, handleAction}) => {
     const documentStatusToString = useDocumentStatusToString();
 
     return (
-        <Card key={doc.id} variant="outlined" sx={{marginBottom: theme.spacing(2), position: 'relative'}}>
-            <Button
-                style={{position: 'absolute', top: '8px', right: '0px', zIndex: 1}}
-                onClick={() => handleAction(doc.id, 'qrcode')}
-            >
-                <QrCodeIcon/>
-            </Button>
-            <CardContent>
-                <Typography variant="h6">{t('ID')}: {doc.name}</Typography>
-                <Typography color="textSecondary">
+        <Card key={doc.id} header={<CardHeader titleText={`${t('ID')} : ${doc.name}`}/>}>
+            <List>
+                <StandardListItem>
                     {handleOpenLink && (<a href="#" onClick={e => {
                         e.preventDefault();
                         handleOpen(doc.id)
-                    }}>{t('Number')}: {doc.id}</a>)}
-                    {!handleOpenLink && (<span>{t('Number')}: {doc.id}</span>)}
-                </Typography>
-                {doc.businessPartner && <Typography color="textSecondary">{t('Vendor')}: {doc.businessPartner?.name ?? doc.businessPartner?.code}</Typography>}
+                    }}><strong>{t('Number')}:</strong> {doc.id}</a>)}
+                    {!handleOpenLink && (<><strong>{t('Number')}:</strong> {doc.id}</>)}
+                    <a style={{float: 'right'}} onClick={(e) => handleAction(doc.id, 'qrcode')}>
+                        <Icon name="qr-code" />
+                    </a>
+                </StandardListItem>
+                {doc.businessPartner &&
+                    <StandardListItem>
+                        <strong>{t('Vendor')}</strong>: {doc.businessPartner?.name ?? doc.businessPartner?.code}
+                    </StandardListItem>
+                }
                 {doc.specificDocuments && doc.specificDocuments.length > 0 &&
-                    <Typography color="textSecondary">{t('DocumentsList')}:&nbsp;
+                    <StandardListItem><strong>{t('DocumentsList')}: </strong>
                         {
                             doc.specificDocuments.map(
                                 (value) => {
@@ -62,24 +60,22 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, handleAction}) => {
                                 </span>;
                                 }
                             )
-                        }</Typography>}
-                <Typography
-                    color="textSecondary">{t('DocDate')}: {new Date(doc.date).toLocaleDateString()}</Typography>
-                <Typography color="textSecondary">{t('CreatedBy')}: {doc.employee.name}</Typography>
-                <Typography
-                    color="textSecondary">{t('Status')}: {documentStatusToString(doc.status)}</Typography>
-                <Box sx={{marginTop: theme.spacing(2), display: 'flex', gap: theme.spacing(1)}}>
+                        }</StandardListItem>}
+                <StandardListItem><strong>{t('DocDate')}:</strong> {new Date(doc.date).toLocaleDateString()}</StandardListItem>
+                <StandardListItem><strong>{t('CreatedBy')}:</strong> {doc.employee.name}</StandardListItem>
+                <StandardListItem><strong>{t('Status')}:</strong> {documentStatusToString(doc.status)}</StandardListItem>
+                <StandardListItem>
                     {doc.status === DocumentStatus.InProgress && (
-                        <Button variant="contained" color="primary" onClick={() => handleAction(doc.id, 'approve')}>
-                            <DoneIcon/>
+                        <Button color="primary" onClick={() => handleAction(doc.id, 'approve')}>
+                            <Icon name="complete"/>
                             {t('Finish')}
                         </Button>)}
-                    <Button variant="contained" color="secondary" onClick={() => handleAction(doc.id, 'cancel')}>
-                        <CancelIcon/>
+                    <Button color="secondary" onClick={() => handleAction(doc.id, 'cancel')}>
+                        <Icon name="cancel"/>
                         {t('Cancel')}
                     </Button>
-                </Box>
-            </CardContent>
+                </StandardListItem>
+            </List>
         </Card>
     );
 }

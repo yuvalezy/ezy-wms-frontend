@@ -56,7 +56,7 @@ export default function LoginForm({onSubmit}: LoginFormProps) {
                                 variant="contained"
                                 sx={{mt: 3, mb: 2}}
                             >
-                                Entrar
+                                {t('enter')}
                             </Button>
                         </Box>
                     </Box>

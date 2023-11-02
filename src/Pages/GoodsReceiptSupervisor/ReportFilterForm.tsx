@@ -1,18 +1,9 @@
-import React, {useEffect, useState} from 'react';
-import {Box, TextField, Button, Autocomplete} from "@mui/material";
-import ClearAllIcon from '@mui/icons-material/ClearAll';
-import AssessmentIcon from '@mui/icons-material/Assessment';
+import React, {useEffect, useRef, useState} from 'react';
 import {BusinessPartner, DocumentStatusOption, fetchVendors, useDocumentStatusOptions} from "../../assets/Data";
-import {DatePicker} from "@mui/x-date-pickers";
-import {LocalizationProvider} from '@mui/x-date-pickers';
-import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs'
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import Typography from '@mui/material/Typography';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {useTranslation} from "react-i18next";
-import {TextValue} from "../../assets/TextValue";
+import "@ui5/webcomponents-icons/dist/clear-all.js"
+import "@ui5/webcomponents-icons/dist/bar-chart.js"
+import {Icon, Grid, Input, ComboBox, ComboBoxItem, Form, FormItem, DatePicker, Button, Panel, PanelDomRef} from "@ui5/webcomponents-react";
 
 interface ReportFilterFormProps {
     idInput: string;
@@ -48,9 +39,14 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({
                                                                onClear
                                                            }) => {
     const [vendors, setVendors] = useState<BusinessPartner[]>([]);
-    const [expanded, setExpanded] = React.useState<boolean>(true);
     const {t} = useTranslation();
     const documentStatusOptions = useDocumentStatusOptions();
+    const panelRef = useRef<PanelDomRef>(null);
+    const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
+    const [vendorValue, setVendorValue] = useState<string>('');
+    const [statusValue, setStatusValue] = useState<string>('');
+    const [selectedDate, setSelectedDate] = useState<string | undefined>();
+
 
     useEffect(() => {
         fetchVendors()
@@ -69,106 +65,74 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({
         setGRPOInput('');
         setStatusInput(null);
         setDateInput(null);
+
+        setVendorValue('');
+        setStatusValue('');
+        setSelectedDate(undefined);
+
         onClear();
     }
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        setExpanded(false);
+    const handleSubmit = () => {
+        setIsPanelCollapsed(true);
         onSubmit();
     }
 
     return (
-        <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
-            <AccordionSummary
-                expandIcon={<ExpandMoreIcon/>}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-            >
-                <Typography>{t('Filters')}</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-                <form onSubmit={handleSubmit}>
-                    <Box mb={1} style={{textAlign: 'center'}}>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker label={t('Date')} value={dateInput} onChange={(newValue) => setDateInput(newValue)}/>
-                        </LocalizationProvider>
-                    </Box>
-                    <Box mb={1} style={{textAlign: 'center'}}>
-                        <Autocomplete
-                            value={cardCodeInput}
-                            options={vendors}
-                            getOptionLabel={(option) => option.name}
-                            onChange={(_, newValue) => setCardCodeInput(newValue)}
-                            renderInput={(params) =>
-                                <TextField {...params} label={TextValue.Vendor} variant="outlined"/>
-                            }
-                        />
-                    </Box>
-                    <Box mb={1} style={{textAlign: 'center'}}>
-                        <TextField
-                            id="idInput"
-                            fullWidth
-                            label={t('Transaction')}
-                            variant="outlined"
-                            value={idInput}
-                            type="number"
-                            onChange={e => {
-                                let value = e.target.value;
-                                return setIDInput(value);
-                            }}
-                            inputProps={{maxLength: 50}}
-                        />
-                    </Box>
-                    <Box mb={1} style={{textAlign: 'center'}}>
-                        <TextField
-                            fullWidth
-                            label={t('ID')}
-                            variant="outlined"
-                            value={docNameInput}
-                            onChange={e => setDocNameInput(e.target.value)}
-                            inputProps={{maxLength: 50}}
-                        />
-                    </Box>
-                    <Box mb={1} style={{textAlign: 'center'}}>
-                        <TextField
-                            fullWidth
-                            label={t('GoodsReceipt')}
-                            variant="outlined"
-                            value={grpoInput}
-                            type="number"
-                            onChange={e => {
-                                let value = e.target.value;
-                                return setGRPOInput(value);
-                            }}
-                            inputProps={{maxLength: 50}}
-                        />
-                    </Box>
-                    <Box mb={1} style={{textAlign: 'center'}}>
-                        <Autocomplete
-                            options={documentStatusOptions}
-                            value={statusInput}
-                            getOptionLabel={(option) => option.name}
-                            onChange={(_, newValue) => setStatusInput(newValue)}
-                            renderInput={(params) =>
-                                <TextField {...params} label={TextValue.Status} variant="outlined"/>
-                            }
-                        />
-                    </Box>
-                    <Box mb={1} style={{display: 'flex', justifyContent: 'space-between', textAlign: 'center'}}>
-                        <Button variant="contained" color="primary" type="submit">
-                            <AssessmentIcon/>
-                            {t('Execute')}
-                        </Button>
-                        <Box mx={2}></Box> {/* Add separation between the buttons */}
-                        <Button variant="contained" color="secondary" onClick={() => clearForm()}>
-                            <ClearAllIcon/>
-                            {t('Clear')}
-                        </Button>
-                    </Box>
-                </form>
-            </AccordionDetails>
-        </Accordion>
+        <Panel collapsed={isPanelCollapsed} onToggle={() => setIsPanelCollapsed(!isPanelCollapsed)} ref={panelRef} headerText={t('Filters')}>
+            <Form>
+                <FormItem label={t('Date')}>
+                    <DatePicker
+                        value={selectedDate !== undefined ? selectedDate : ""}
+                        primaryCalendarType="Gregorian" onChange={(e) => {
+                        setDateInput(e.target.dateValue);
+                        setSelectedDate(e.target.value);
+                    }}/>
+                </FormItem>
+                <FormItem label={t('Vendor')}>
+                    <ComboBox value={vendorValue} onSelectionChange={(e) => {
+                        setCardCodeInput(vendors[Array.from(e.target.children).indexOf(e.detail.item)]);
+                        setVendorValue(e.detail.item.text);
+                    }}>
+                        {vendors.map(vendor => <ComboBoxItem key={vendor.code} text={vendor.name}/>)}
+                    </ComboBox>
+                </FormItem>
+                <FormItem label={t('Transaction')}>
+                    <Input value={idInput} type="Number" onChange={e => setIDInput(e.target.value as string)}/>
+                </FormItem>
+                <FormItem label={t('ID')}>
+                    <Input value={docNameInput} onChange={e => setDocNameInput(e.target.value as string)} maxlength={50}/>
+                </FormItem>
+                <FormItem label={t('GoodsReceipt')}>
+                    <Input value={grpoInput} type="Number" onChange={e => setGRPOInput(e.target.value as string)} maxlength={50}/>
+                </FormItem>
+                <FormItem label={t('Status')}>
+                    <ComboBox value={statusValue} onSelectionChange={(e) => {
+                        setStatusInput(documentStatusOptions[Array.from(e.target.children).indexOf(e.detail.item)]);
+                        setStatusValue(e.detail.item.text); // Update the state when selection changes
+                    }}>
+                        {documentStatusOptions.map(option => <ComboBoxItem key={option.code} text={option.name}/>)}
+                    </ComboBox>
+                </FormItem>
+                <FormItem>
+                    <Grid>
+                        <div>
+                            <Button color="primary" onClick={e => handleSubmit()}>
+                                <Icon name="bar-chart"/>
+                                {t('Execute')}
+                            </Button>
+                        </div>
+                        <div>
+                            <Button color="secondary" onClick={() => clearForm()}>
+                                <Icon name="clear-all"/>
+                                {t('Clear')}
+                            </Button>
+                        </div>
+                    </Grid>
+                </FormItem>
+
+            </Form>
+        </Panel>
     )
 
 }

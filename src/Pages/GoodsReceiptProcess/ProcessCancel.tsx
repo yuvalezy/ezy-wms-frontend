@@ -1,12 +1,12 @@
 import React, {useEffect, useRef, useState} from "react";
-import {Autocomplete, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextareaAutosize} from "@mui/material";
+import {Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextareaAutosize} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import {ProcessAlertValue} from "./ProcessAlert";
 import {useLoading} from "../../Components/LoadingContext";
 import {fetchReasons, ReasonValue, UpdateLineReturnValue} from "../GoodsReceiptSupervisor/Document";
 import {updateLine} from "./Process";
 import {useTranslation} from "react-i18next";
-import {TextValue} from "../../assets/TextValue";
+import {ComboBox, ComboBoxItem} from "@ui5/webcomponents-react";
 
 export interface ProcessCancelProps {
     id: number;
@@ -14,7 +14,6 @@ export interface ProcessCancelProps {
     onAccept: (alert: ProcessAlertValue) => void;
     onClose: () => void;
 }
-
 
 const ProcessCancel: React.FC<ProcessCancelProps> = ({id, alert, onAccept, onClose}) => {
     const {t} = useTranslation();
@@ -123,19 +122,21 @@ const ProcessCancel: React.FC<ProcessCancelProps> = ({id, alert, onAccept, onClo
                         />
                     </Box>
                     <Box mb={1} style={{textAlign: 'center'}}>
-                        <Autocomplete
-                            value={reason}
-                            options={reasons}
-                            getOptionLabel={(option) => option.description}
-                            onChange={(_, newValue) => setReason(newValue)}
-                            renderInput={(params) =>
-                                <TextField
-                                    {...params}
-                                    label={TextValue.Reason}
-                                    required
-                                    variant="outlined"></TextField>
-                            }
-                        />
+                        <ComboBox onSelectionChange={(e) => console.log(e)}>
+                            {reasons.map(reason => <ComboBoxItem key={reason.value} text={reason.description} />)}
+                        </ComboBox>
+                        {/*<Autocomplete*/}
+                        {/*    value={reason}*/}
+                        {/*    options={reasons}*/}
+                        {/*    getOptionLabel={(option) => option.description}*/}
+                        {/*    onChange={(_, newValue) => setReason(newValue)}*/}
+                        {/*    renderInput={(params) =>*/}
+                        {/*        <TextField InputProps={params.InputProps}*/}
+                        {/*            // InputLabelProps={params.InputLabelProps}*/}
+                        {/*                   id={params.id} fullWidth={params.fullWidth} size={params.size} disabled={params.disabled}*/}
+                        {/*                   label={TextValue.Reason} variant="outlined"/>*/}
+                        {/*    }*/}
+                        {/*/>*/}
                     </Box>
                     <Box mb={1} style={{textAlign: 'center'}}>
                         {t('Comment')}

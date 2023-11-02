@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {LoadingProvider} from "./Components/LoadingContext";
 import './i18n';
+import { ThemeProvider } from '@ui5/webcomponents-react';
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -12,7 +13,9 @@ const root = ReactDOM.createRoot(
 root.render(
     <React.StrictMode>
         <LoadingProvider>
-            <App/>
+            <ThemeProvider>
+                <App/>
+            </ThemeProvider>
         </LoadingProvider>
     </React.StrictMode>
 );

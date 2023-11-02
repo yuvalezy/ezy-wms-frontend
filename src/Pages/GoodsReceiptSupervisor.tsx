@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import ConfirmationDialog from "../Components/ConfirmationDialog";
 import {useAuth} from "../Components/AppContext";
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
@@ -7,13 +7,14 @@ import {StringFormat} from "../assets/Functions";
 import DocumentForm from "./GoodsReceiptSupervisor/DocumentForm";
 import {Document, fetchDocuments, Action, documentAction} from "./GoodsReceiptSupervisor/Document";
 import DocumentCard from "./GoodsReceiptSupervisor/DocumentCard";
-import DocumentQRCodeDialog from "./GoodsReceiptSupervisor/DocumentQRCodeDialog";
 import SnackbarAlert, {SnackbarState} from "../Components/SnackbarAlert";
 import {useLoading} from "../Components/LoadingContext";
 import {useTranslation} from "react-i18next";
-
+import {Dialog, DialogDomRef, Bar, Button} from "@ui5/webcomponents-react";
+import QRCode from "qrcode.react";
 
 export default function GoodsReceiptSupervisor() {
+    const dialogRef = useRef<DialogDomRef>(null);
     const {user} = useAuth();
     const {t} = useTranslation();
     const {setLoading} = useLoading();
@@ -21,7 +22,6 @@ export default function GoodsReceiptSupervisor() {
     const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(null);
     const [actionType, setActionType] = useState<Action | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
-    const [qrOpen, setQrOpen] = useState(false);
     const [snackbar, setSnackbar] = React.useState<SnackbarState>({open: false});
 
     const errorAlert = (message: string) => {
@@ -48,7 +48,8 @@ export default function GoodsReceiptSupervisor() {
         if (action !== 'qrcode') {
             setDialogOpen(true);
         } else {
-            setQrOpen(true);
+            dialogRef?.current?.show();
+            // setQrOpen(true);
         }
     };
 
@@ -75,6 +76,7 @@ export default function GoodsReceiptSupervisor() {
         <ContentTheme title={t('GoodsReceiptSupervisor')} icon={<SupervisedUserCircleIcon/>}>
             <DocumentForm onError={errorAlert} onNewDocument={newDocument => setDocuments(prevDocs => [newDocument, ...prevDocs])}/>
             <br/>
+            <br/>
             {documents.map(doc => <DocumentCard key={doc.id} doc={doc} handleAction={handleAction}/>)}
             <ConfirmationDialog
                 title={t('ConfirmAction')}
@@ -88,8 +90,21 @@ export default function GoodsReceiptSupervisor() {
                 onClose={() => setDialogOpen(false)}
                 onConfirm={handleConfirmAction}
             />
-            <DocumentQRCodeDialog open={qrOpen} onClose={() => setQrOpen(false)}
-                                  selectedDocumentId={selectedDocumentId}/>
+            <Dialog
+                className="footerPartNoPadding"
+                ref={dialogRef}
+                footer={<Bar design="Footer" endContent={
+                    <Button onClick={() => dialogRef?.current?.close()}>{t('Close')}</Button>}/>
+                }
+            >
+                <QRCode
+                    value={`$GRPO_${selectedDocumentId}`}
+                    width={200}
+                    height={200}
+                    color="black"
+                    bgColor="white"
+                />
+            </Dialog>
             <SnackbarAlert state={snackbar} onClose={() => setSnackbar({open: false})}/>
         </ContentTheme>
     )

@@ -1,17 +1,13 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Box, TextField, Button, Autocomplete} from "@mui/material";
 import DescriptionIcon from '@mui/icons-material/Description';
 import {BusinessPartner, fetchVendors} from "../../assets/Data";
 import {createDocument, Document, DocumentItem, GoodsReceiptType} from "./Document";
 import {useLoading} from "../../Components/LoadingContext";
-import Tabs from "@mui/material/Tabs";
-import {a11yProps, CustomTabPanel} from "../../Components/Tabs";
-import Tab from "@mui/material/Tab";
 import DocumentList, {DocumentListRef} from "./DocumentList";
-import { StringFormat} from "../../assets/Functions";
+import {StringFormat} from "../../assets/Functions";
 import {useObjectName} from "../../assets/ObjectName";
 import {useTranslation} from "react-i18next";
-import {TextValue} from "../../assets/TextValue";
+import {Button, ComboBox, ComboBoxItem, Form, FormItem, Input, Tab, TabContainer} from "@ui5/webcomponents-react";
 
 interface DocumentFormProps {
     onNewDocument: (document: Document) => void;
@@ -20,10 +16,10 @@ interface DocumentFormProps {
 
 const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, onError}) => {
     const {t} = useTranslation();
-    const o =  useObjectName();
+    const o = useObjectName();
     const {setLoading} = useLoading();
     const documentListRef = useRef<DocumentListRef>();
-    const [selectedTab, setSelectedTab] = React.useState(0);
+    const [selectedType, setSelectedType] = React.useState(GoodsReceiptType.AutoConfirm);
     const [items, setItems] = useState<DocumentItem[]>([]);
     const [cardCodeInput, setCardCodeInput] = useState<string>('');
     const [docNameInput, setDocNameInput] = useState<string>('');
@@ -39,22 +35,20 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, onError}) => 
             });
     }, []);
 
-    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => setSelectedTab(newValue);
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (docNameInput === null || docNameInput === '') {
             alert(t('IDRequired'));
             return;
         }
-        switch (selectedTab) {
-            case 0:
+        switch (selectedType) {
+            case GoodsReceiptType.AutoConfirm:
                 if (cardCodeInput.length === 0) {
                     alert(t('VendorRequired'));
                     return;
                 }
                 break;
-            case 1:
+            case GoodsReceiptType.SpecificOrders:
                 if (items.length === 0) {
                     alert(t('DocumentRequired'));
                     return;
@@ -63,8 +57,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, onError}) => 
         }
         setLoading(true);
         try {
-            let type: GoodsReceiptType = selectedTab === 0 ? GoodsReceiptType.AutoConfirm : GoodsReceiptType.SpecificOrders;
-            createDocument(type, cardCodeInput, docNameInput, items)
+            createDocument(selectedType, cardCodeInput, docNameInput, items)
                 .then(response => {
                     if (!response.error) {
                         onNewDocument(response);
@@ -114,67 +107,42 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, onError}) => 
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <Box sx={{width: '100%', border: '1px solid rgba(0, 0, 0, 0.12)', borderRadius: '4px',}}>
-                <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
-                    <Tabs value={selectedTab} onChange={handleTabChange} aria-label="basic tabs example" centered>
-                        <Tab label={t('Automatic')} {...a11yProps(0)} />
-                        <Tab label={t('SpecificDocuments')} {...a11yProps(1)} />
-                    </Tabs>
-                </Box>
-                <CustomTabPanel value={selectedTab} index={0}>
-                    <Box mb={1}>
-                        <TextField
-                            fullWidth
-                            required
-                            label={t('ID')}
-                            variant="outlined"
-                            value={docNameInput}
-                            onChange={e => setDocNameInput(e.target.value)}
-                            inputProps={{maxLength: 50}}
-                        />
-                    </Box>
-                    <Box mb={1}>
-                        <Autocomplete
-                            options={vendors}
-                            getOptionLabel={(option) => option.name}
-                            onChange={(_, newValue) => setCardCodeInput(newValue?.code ?? "")}
-                            renderInput={(params) =>
-                                <TextField {...params} label={TextValue.SelectVendor} variant="outlined"/>
-                            }
-                        />
-                    </Box>
-                    <Box mb={1} style={{textAlign: 'center'}}>
-                        <Button variant="contained" color="primary" type="submit">
+        <TabContainer onTabSelect={e => setSelectedType(e.detail.tabIndex === 0 ? GoodsReceiptType.AutoConfirm : GoodsReceiptType.SpecificOrders)}>
+            <Tab text={t('Automatic')} selected>
+                <Form>
+                    <FormItem label={t('ID')}>
+                        <Input value={docNameInput} onInput={e => setDocNameInput(e.target.value as string)} maxlength={50}></Input>
+                    </FormItem>
+                    <FormItem label={t('SelectVendor')}>
+                        <ComboBox onSelectionChange={(e) => setCardCodeInput(vendors[Array.from(e.target.children).indexOf(e.detail.item)].code)}>
+                            {vendors.map(vendor => <ComboBoxItem key={vendor.code} text={vendor.name}/>)}
+                        </ComboBox>
+                    </FormItem>
+                    <FormItem>
+                        <Button color="primary" onClick={handleSubmit}>
                             <DescriptionIcon/>
                             {t('Create')}
                         </Button>
-                    </Box>
-                </CustomTabPanel>
-                <CustomTabPanel value={selectedTab} index={1}>
-                    <Box mb={1}>
-                        <TextField
-                            fullWidth
-                            required
-                            label={t('ID')}
-                            variant="outlined"
-                            value={docNameInput}
-                            onChange={e => setDocNameInput(e.target.value)}
-                            inputProps={{maxLength: 50}}
-                        />
-                    </Box>
-                    <Box mb={1}>
+                    </FormItem>
+                </Form>
+            </Tab>
+            <Tab text={t('SpecificDocuments')}>
+                <Form>
+                    <FormItem label={t('ID')}>
+                        <Input value={docNameInput} onInput={e => setDocNameInput(e.target.value as string)} maxlength={50}></Input>
+                    </FormItem>
+                    <FormItem label={t('DocumentsList')}>
                         <DocumentList ref={documentListRef} onItemsUpdate={setItems}/>
-                    </Box>
-                    <Box mb={1} style={{textAlign: 'center'}}>
-                        <Button variant="contained" color="primary" type="submit">
+                    </FormItem>
+                    <FormItem>
+                        <Button color="primary" onClick={handleSubmit}>
                             <DescriptionIcon/>
                             {t('Create')}
                         </Button>
-                    </Box>
-                </CustomTabPanel>
-            </Box>
-        </form>
+                    </FormItem>
+                </Form>
+            </Tab>
+        </TabContainer>
     )
 }
 

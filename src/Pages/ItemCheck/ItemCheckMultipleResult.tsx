@@ -1,12 +1,32 @@
-import {Alert, AlertTitle, Button, Paper, Table, TableBody, TableHead} from "@mui/material";
-import TableContainer from "@mui/material/TableContainer";
-import TableRow from "@mui/material/TableRow";
-import TableCell from "@mui/material/TableCell";
-import Box from "@mui/material/Box";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+// import {Alert, AlertTitle, Button, Paper, Table, TableBody, TableHead} from "@mui/material";
+// import TableContainer from "@mui/material/TableContainer";
+// import TableRow from "@mui/material/TableRow";
+// import TableCell from "@mui/material/TableCell";
+// import Box from "@mui/material/Box";
+// import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import React from "react";
 import {ItemCheckResponse} from "./Item";
 import {useTranslation} from "react-i18next";
+import {
+    Input,
+    Label,
+    Button,
+    Card,
+    CardHeader,
+    CheckBox,
+    Grid,
+    List,
+    StandardListItem,
+    Table,
+    TableRow,
+    TableCell,
+    TableColumn,
+    Icon,
+    CheckBoxDomRef,
+    MessageStrip
+} from "@ui5/webcomponents-react";
+import "@ui5/webcomponents-icons/dist/save.js"
+import "@ui5/webcomponents-icons/dist/cancel.js"
 
 interface ItemCheckMultipleResultProps {
     barcode: string;
@@ -19,43 +39,42 @@ const ItemCheckMultipleResult: React.FC<ItemCheckMultipleResultProps> = ({barcod
     const {t} = useTranslation();
     return (
         <>
-            <Alert variant="filled" severity="warning">
-                <AlertTitle>
+            <MessageStrip design="Warning" hideCloseButton>
+                <strong>
                     {t('MultipleItemsDetected')}
-                </AlertTitle>
+                </strong>
                 {t('Barcode')}: {barcode}
-            </Alert>
-            <TableContainer component={Paper}>
-                <Table size="small">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>{t('Item')}</TableCell>
-                            <TableCell>{t('Description')}</TableCell>
-                            <TableCell></TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {
-                            result.map((item, index) => (
-                                <TableRow key={index}>
-                                    <TableCell>{item.itemCode}</TableCell>
-                                    <TableCell>{item.itemName}</TableCell>
-                                    <TableCell>
-                                        <Button variant="contained" color="warning" onClick={() => setBarcodeItem(index)}>{t('Select')}</Button>
-                                    </TableCell>
-                                </TableRow>
-                            ))
-                        }
-                    </TableBody>
-                </Table>
-            </TableContainer>
+            </MessageStrip>
             <br/>
-            <Box mb={1} style={{textAlign: 'center'}}>
-                <Button type="button" variant="contained" color="info" onClick={() => clear()}>
-                    <HighlightOffIcon/>
-                    {t('Clear')}
-                </Button>
-            </Box>
+            <br/>
+            <Table
+                columns={<>
+                    <TableColumn>
+                        <Label>{t('Item')}</Label>
+                    </TableColumn>
+                    <TableColumn>
+                        <Label>{t('Description')}</Label>
+                    </TableColumn>
+                    <TableColumn/>
+                </>}
+            >
+                    {
+                        result.map((item, index) => (
+                            <TableRow key={index}>
+                                <TableCell><Label>{item.itemCode}</Label></TableCell>
+                                <TableCell><Label>{item.itemName}</Label></TableCell>
+                                <TableCell>
+                                    <Button design="Emphasized" onClick={() => setBarcodeItem(index)}>{t('Select')}</Button>
+                                </TableCell>
+                            </TableRow>
+                        ))
+                    }
+            </Table>
+            <br/>
+            <Button design="Attention" onClick={() => clear()}>
+                <Icon design="Critical" name="cancel"/>
+                {t('Clear')}
+            </Button>
         </>
     )
 }
