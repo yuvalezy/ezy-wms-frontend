@@ -42,13 +42,13 @@ const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data})
             <Table sx={{minWidth: 650}} size="small">
                 <TableHead>
                     <StyledTableRow>
-                        <StyledTableCell>{t('Code')}</StyledTableCell>
-                        <StyledTableCell>{t('Description')}</StyledTableCell>
+                        <StyledTableCell>{t('code')}</StyledTableCell>
+                        <StyledTableCell>{t('description')}</StyledTableCell>
                         <StyledTableCell align="right">{t('Quantity')}</StyledTableCell>
-                        <StyledTableCell align="right">{t('Delivery')}</StyledTableCell>
-                        <StyledTableCell align="right">{t('Showroom')}</StyledTableCell>
-                        <StyledTableCell align="right">{t('InWarehouse')}</StyledTableCell>
-                        <StyledTableCell align="right">{t('Stock')}</StyledTableCell>
+                        <StyledTableCell align="right">{t('delivery')}</StyledTableCell>
+                        <StyledTableCell align="right">{t('showroom')}</StyledTableCell>
+                        <StyledTableCell align="right">{t('inWarehouse')}</StyledTableCell>
+                        <StyledTableCell align="right">{t('stock')}</StyledTableCell>
                     </StyledTableRow>
                 </TableHead>
                 <TableBody>

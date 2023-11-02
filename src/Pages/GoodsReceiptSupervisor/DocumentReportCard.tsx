@@ -27,26 +27,26 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc}) => {
 
     return (
         <Card key={doc.id}
-              header={<CardHeader titleText={`${t('ID')}: ${doc.name}`}/>}
+              header={<CardHeader titleText={`${t('id')}: ${doc.name}`}/>}
         >
             <List>
-                <StandardListItem><strong>{t('Number')}:</strong> {doc.id}</StandardListItem>
-                <StandardListItem><strong>{t('Vendor')}:</strong> {doc.businessPartner?.name ?? doc.businessPartner?.code}</StandardListItem>
-                <StandardListItem><strong>{t('DocDate')}:</strong> {new Date(doc.date).toLocaleDateString()}</StandardListItem>
-                <StandardListItem><strong>{t('CreatedBy')}:</strong> {doc.employee.name}</StandardListItem>
-                <StandardListItem><strong>{t('Status')}:</strong> {documentStatusToString(doc.status)}</StandardListItem>
+                <StandardListItem><strong>{t('number')}:</strong> {doc.id}</StandardListItem>
+                <StandardListItem><strong>{t('vendor')}:</strong> {doc.businessPartner?.name ?? doc.businessPartner?.code}</StandardListItem>
+                <StandardListItem><strong>{t('docDate')}:</strong> {new Date(doc.date).toLocaleDateString()}</StandardListItem>
+                <StandardListItem><strong>{t('createdBy')}:</strong> {doc.employee.name}</StandardListItem>
+                <StandardListItem><strong>{t('status')}:</strong> {documentStatusToString(doc.status)}</StandardListItem>
                 <StandardListItem>
                     <a href="#" onClick={e => {
                         e.preventDefault();
                         handleOpen('all', doc.id)
-                    }}>{t('GoodsReceiptReport')}</a>
+                    }}>{t('goodsReceiptReport')}</a>
                 </StandardListItem>
                 <StandardListItem>
                     {doc.status === DocumentStatus.Finished &&
                         <a href="#" onClick={e => {
                             e.preventDefault();
                             handleOpen('vs', doc.id)
-                        }}>{t('GoodsReceiptVSExit')}</a>
+                        }}>{t('goodsReceiptVSExit')}</a>
                     }
                 </StandardListItem>
             </List>

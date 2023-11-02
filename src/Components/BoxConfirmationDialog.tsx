@@ -34,10 +34,10 @@ const BoxConfirmationDialog: React.FC<BoxConfirmationDialogProps> = ({open, onCl
         <Dialog open={open} onClose={onClose}>
             <DialogTitle>
                 <Typography variant="h5">
-                    {t('Item')}: {itemCode}
+                    {t('item')}: {itemCode}
                 </Typography>
                 <Typography variant="h6">
-                    {t('SelectBox')}
+                    {t('selectBox')}
                 </Typography>
             </DialogTitle>
             <List sx={{pt: 0}}>
@@ -49,14 +49,14 @@ const BoxConfirmationDialog: React.FC<BoxConfirmationDialogProps> = ({open, onCl
                                     <ArrowRightIcon/>
                                 </Avatar>
                             </ListItemAvatar>
-                            <ListItemText primary={`${item.boxNumber} ${t('Of')} ${boxes}`}/>
+                            <ListItemText primary={`${item.boxNumber} ${t('of')} ${boxes}`}/>
                         </ListItemButton>
                     </ListItem>
                 ))}
             </List>
             <DialogActions style={{justifyContent: 'center'}}>
                 <Button onClick={onClose} color="error">
-                    {t('Cancel')}
+                    {t('cancel')}
                 </Button>
             </DialogActions>
         </Dialog>

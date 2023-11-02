@@ -34,7 +34,7 @@ export default function GoodsReceiptProcess() {
     const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
     const [currentAlertAction, setCurrentAlertAction] = useState<AlertActionType>(AlertActionType.None);
 
-    const title = `${t('GoodsReceipt')} #${scanCode}`;
+    const title = `${t('goodsReceipt')} #${scanCode}`;
 
     useEffect(() => {
         if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
@@ -54,7 +54,7 @@ export default function GoodsReceiptProcess() {
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         if (barcodeInput.length === 0) {
-            window.alert(t('BarcodeRequired'));
+            window.alert(t('barcodeRequired'));
             return;
         }
 
@@ -69,7 +69,7 @@ export default function GoodsReceiptProcess() {
 
     function handleItems(items: Item[]) {
         if (items.length === 0) {
-            alert({barcode: barcodeInput, message: StringFormat(t('BarcodeNotFound'), barcodeInput), severity: 'error'});
+            alert({barcode: barcodeInput, message: StringFormat(t('barcodeNotFound'), barcodeInput), severity: 'error'});
             setBarcodeInput('');
             setLoading(false);
             return;
@@ -86,7 +86,7 @@ export default function GoodsReceiptProcess() {
         const distinctCodes = distinctItems(items);
         if (distinctCodes.length !== 1) {
             let codes = distinctCodes.map(v => `"${v}"`).join(', ');
-            alert({message: StringFormat(t('MultipleItemsError'), codes), severity: 'error'});
+            alert({message: StringFormat(t('multipleItemsError'), codes), severity: 'error'});
             setLoading(false);
             return;
         }
@@ -108,7 +108,7 @@ export default function GoodsReceiptProcess() {
                         lineID: data.lineID,
                         barcode: barcode,
                         itemCode: itemCode,
-                        message: StringFormat(t('GoodsReceiptIsClosed'), id),
+                        message: StringFormat(t('goodsReceiptIsClosed'), id),
                         severity: 'error',
                         multiple: [],
                         numInBuy: data.numInBuy
@@ -122,26 +122,26 @@ export default function GoodsReceiptProcess() {
                 let multiple: AddItemResponseMultipleValue[] = [];
                 if ((data.warehouse ? 1 : 0) + (data.fulfillment ? 1 : 0) + (data.showroom ? 1 : 0) === 1) {
                     if (data.warehouse) {
-                        message = t('ScanConfirmStoreInWarehouse');
+                        message = t('scanConfirmStoreInWarehouse');
                         color = 'success';
                     }
                     if (data.fulfillment) {
-                        message = t('ScanConfirmFulfillment');
+                        message = t('scanConfirmFulfillment');
                         color = 'warning';
                     }
                     if (data.showroom) {
-                        message = t('ScanConfirmShowroom');
+                        message = t('scanConfirmShowroom');
                         color = 'info';
                     }
                 } else {
                     if (data.warehouse) {
-                        multiple.push({message: t('ScanConfirmStoreInWarehouse'), severity: 'success'});
+                        multiple.push({message: t('scanConfirmStoreInWarehouse'), severity: 'success'});
                     }
                     if (data.fulfillment) {
-                        multiple.push({message: t('ScanConfirmFulfillment'), severity: 'warning'});
+                        multiple.push({message: t('scanConfirmFulfillment'), severity: 'warning'});
                     }
                     if (data.showroom) {
-                        multiple.push({message: t('ScanConfirmShowroom'), severity: 'info'});
+                        multiple.push({message: t('scanConfirmShowroom'), severity: 'info'});
                     }
                 }
 
@@ -203,7 +203,7 @@ export default function GoodsReceiptProcess() {
                                     <TextField
                                         fullWidth
                                         required
-                                        label={t('Barcode')}
+                                        label={t('barcode')}
                                         variant="outlined"
                                         value={barcodeInput}
                                         onChange={e => setBarcodeInput(e.target.value)}
@@ -214,7 +214,7 @@ export default function GoodsReceiptProcess() {
                                     <Box mt={1}>
                                         <Button type="submit" variant="contained" color="primary" disabled={!enable}>
                                             <DoneIcon/>
-                                            {t('Accept')}
+                                            {t('accept')}
                                         </Button>
                                     </Box>
                                 </Box>
@@ -262,7 +262,7 @@ export default function GoodsReceiptProcess() {
 
                     </>
                 </>
-            ) : <ErrorMessage text={t('InvalidScanCode')}/>
+            ) : <ErrorMessage text={t('invalidScanCode')}/>
             }
         </ContentTheme>
     )

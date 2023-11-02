@@ -30,7 +30,7 @@ const DocumentList = forwardRef((props: DocumentListProps, ref) => {
     }))
     const handleAddClick = () => {
         if (docNum.length === 0) {
-            window.alert(t('DocumentRequired'));
+            window.alert(t('documentRequired'));
             return;
         }
         let newDocument: DocumentItem = {
@@ -38,7 +38,7 @@ const DocumentList = forwardRef((props: DocumentListProps, ref) => {
             documentNumber: parseInt(docNum)
         };
         if (items.find(i => i.objectType === newDocument.objectType && i.documentNumber === newDocument.documentNumber)) {
-            alert(t('DuplicateNotAllowed'))
+            alert(t('duplicateNotAllowed'))
             return;
         }
         const newItems = items.concat(newDocument);
@@ -65,17 +65,17 @@ const DocumentList = forwardRef((props: DocumentListProps, ref) => {
                     </StandardListItem>
                 ))}
             </List>
-            <ComboBox required value={o(objType)} onSelectionChange={e => setObjType(e.detail.item.text === t('PurchaseOrder') ? 22 : 18)}>
+            <ComboBox required value={o(objType)} onSelectionChange={e => setObjType(e.detail.item.text === t('purchaseOrder') ? 22 : 18)}>
                 <>
-                    <ComboBoxItem text={t('PurchaseOrder')}/>
-                    <ComboBoxItem text={t('ReservedInvoice')}/>
+                    <ComboBoxItem text={t('purchaseOrder')}/>
+                    <ComboBoxItem text={t('reservedInvoice')}/>
                 </>
             </ComboBox>
             <br/>
-            <Input value={docNum} type="Number" placeholder={t('DocumentNumber')} onInput={e => setDocNum(e.target.value as string)}/>
+            <Input value={docNum} type="Number" placeholder={t('documentNumber')} onInput={e => setDocNum(e.target.value as string)}/>
             <Button color="secondary" onClick={handleAddClick}>
                 <Icon name="add"/>
-                {t('Add')}
+                {t('add')}
             </Button>
         </div>
     );

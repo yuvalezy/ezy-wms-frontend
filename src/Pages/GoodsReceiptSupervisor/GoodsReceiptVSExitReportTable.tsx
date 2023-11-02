@@ -41,9 +41,9 @@ const GoodsReceiptVSExitReportTable: React.FC<GoodsReceiptVSExitReportTableProps
             <Table sx={{minWidth: 650}} size="small">
                 <TableHead>
                     <StyledTableRow>
-                        <StyledTableCell>{t('Code')}</StyledTableCell>
-                        <StyledTableCell>{t('Description')}</StyledTableCell>
-                        <StyledTableCell align="right">{t('OpenQuantity')}</StyledTableCell>
+                        <StyledTableCell>{t('code')}</StyledTableCell>
+                        <StyledTableCell>{t('description')}</StyledTableCell>
+                        <StyledTableCell align="right">{t('openQuantity')}</StyledTableCell>
                         <StyledTableCell align="right">{t('Quantity')}</StyledTableCell>
                     </StyledTableRow>
                 </TableHead>

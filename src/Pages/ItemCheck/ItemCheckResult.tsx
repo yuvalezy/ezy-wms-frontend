@@ -47,18 +47,18 @@ const ItemCheckResult: React.FC<ItemCheckResultProps> = ({result, clear, submit}
     }
 
     return (
-        <Card header={<CardHeader titleText={`${t('Code')}: ${result.itemCode}`}/>}>
+        <Card header={<CardHeader titleText={`${t('code')}: ${result.itemCode}`}/>}>
             <List>
-                <StandardListItem><strong>{t('Description')}:</strong> {result.itemName}</StandardListItem>
-                <StandardListItem> <strong>{t('NumInBuy')}:</strong> {result.numInBuy}</StandardListItem>
+                <StandardListItem><strong>{t('description')}:</strong> {result.itemName}</StandardListItem>
+                <StandardListItem> <strong>{t('numInBuy')}:</strong> {result.numInBuy}</StandardListItem>
             </List>
             <Table
                 columns={<>
                     <TableColumn>
-                        <Label>{t('Delete')}</Label>
+                        <Label>{t('delete')}</Label>
                     </TableColumn>
                     <TableColumn>
-                        <Label>{t('Barcode')}</Label>
+                        <Label>{t('barcode')}</Label>
                     </TableColumn>
                 </>}
             >
@@ -84,7 +84,7 @@ const ItemCheckResult: React.FC<ItemCheckResultProps> = ({result, clear, submit}
                     </TableCell>
                     <TableCell>
                         <Label>
-                            <Input maxlength={254} placeholder={t('NewBarcode')} value={newBarcodeInput}
+                            <Input maxlength={254} placeholder={t('newBarcode')} value={newBarcodeInput}
                                    onChange={(e) => setNewBarcodeInput(e.target.value as string)}/>
                         </Label>
                     </TableCell>
@@ -94,13 +94,13 @@ const ItemCheckResult: React.FC<ItemCheckResultProps> = ({result, clear, submit}
                 <div style={{textAlign: 'center', padding: '5px'}}>
                     <Button design="Attention" onClick={() => handleSubmit()} color="warning">
                         <Icon design="Critical" name="save"/>
-                        {t('Update')}
+                        {t('update')}
                     </Button>
                 </div>
                 <div style={{textAlign: 'center', padding: '5px'}}>
                     <Button onClick={() => clear()}>
                         <Icon name="cancel"/>
-                        {t('Clear')}
+                        {t('clear')}
                     </Button>
                 </div>
             </Grid>

@@ -16,7 +16,7 @@ export default function Home() {
     const theme = createTheme();
     return (
         <ThemeProvider theme={theme}>
-            <MenuAppBar title={t('Home')} icon={<HomeIcon/>}></MenuAppBar>
+            <MenuAppBar title={t('home')} icon={<HomeIcon/>}></MenuAppBar>
             <Box sx={{paddingTop: theme.spacing(8), paddingLeft: theme.spacing(1), paddingRight: theme.spacing(1)}}>
                 <Typography variant="h2" style={{textAlign: 'center'}}>
                     {user?.branch}

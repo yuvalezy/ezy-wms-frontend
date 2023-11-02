@@ -56,19 +56,19 @@ const ProcessCancel: React.FC<ProcessCancelProps> = ({id, alert, onAccept, onClo
                 let message: string | null = null;
                 switch (value) {
                     case UpdateLineReturnValue.Status:
-                        message = t('UpdateLineStatusError')
+                        message = t('updateLineStatusError')
                         break;
                     case UpdateLineReturnValue.LineStatus:
-                        message = t('UpdateLineLineStatusError')
+                        message = t('updateLineLineStatusError')
                         break;
                     case UpdateLineReturnValue.CloseReason:
-                        message = t('UpdateLineReason')
+                        message = t('updateLineReason')
                         break;
                     case UpdateLineReturnValue.SupervisorPassword:
-                        message = t('UpdateLineWrongSupervisorPassword')
+                        message = t('updateLineWrongSupervisorPassword')
                         break;
                     case UpdateLineReturnValue.NotSupervisor:
-                        message = t('UpdateLineNotSupervisorError')
+                        message = t('updateLineNotSupervisorError')
                         break;
                 }
                 if (message !== null) {
@@ -101,10 +101,10 @@ const ProcessCancel: React.FC<ProcessCancelProps> = ({id, alert, onAccept, onClo
     return (
         <Dialog open={open} onClose={handleClose}>
             <form onSubmit={handleSubmit}>
-                <DialogTitle>{t('Cancel')}</DialogTitle>
+                <DialogTitle>{t('cancel')}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        <strong>{t('Barcode')}: </strong>{alert.barcode}
+                        <strong>{t('barcode')}: </strong>{alert.barcode}
                     </DialogContentText>
                     <Box mb={1} style={{textAlign: 'center'}}>
                         <TextField
@@ -113,7 +113,7 @@ const ProcessCancel: React.FC<ProcessCancelProps> = ({id, alert, onAccept, onClo
                             fullWidth
                             name="username"
                             inputRef={usernameRef}
-                            label={t('SupervisorCode')}
+                            label={t('supervisorCode')}
                             type="password"
                             id="username"
                             autoComplete="current-password"
@@ -139,7 +139,7 @@ const ProcessCancel: React.FC<ProcessCancelProps> = ({id, alert, onAccept, onClo
                         {/*/>*/}
                     </Box>
                     <Box mb={1} style={{textAlign: 'center'}}>
-                        {t('Comment')}
+                        {t('comment')}
                         <TextareaAutosize style={{minHeight: '50px', width: '100%'}}
                                           minRows={3}
                                           maxRows={5}
@@ -150,10 +150,10 @@ const ProcessCancel: React.FC<ProcessCancelProps> = ({id, alert, onAccept, onClo
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="secondary">
-                        {t('Cancel')}
+                        {t('cancel')}
                     </Button>
                     <Button type="submit" color="primary">
-                        {t('Accept')}
+                        {t('accept')}
                     </Button>
                 </DialogActions>
             </form>

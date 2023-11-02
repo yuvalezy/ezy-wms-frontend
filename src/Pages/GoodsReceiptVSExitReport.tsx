@@ -23,7 +23,7 @@ export default function GoodsReceiptVSExitReport() {
     const {setLoading} = useLoading();
     const [data, setData] = useState<GoodsReceiptVSExitReportData[] | null>(null);
     const [snackbar, setSnackbar] = React.useState<SnackbarState>({open: false});
-    const title = `${t('GoodsReceiptVSExit')} #${scanCode}`;
+    const title = `${t('goodsReceiptVSExit')} #${scanCode}`;
 
     const errorAlert = (message: string) => {
         setSnackbar({open: true, message: message, color: 'red'});
@@ -45,7 +45,7 @@ export default function GoodsReceiptVSExitReport() {
     }, []);
     return (
         <ContentTheme title={title} icon={<SupervisedUserCircleIcon/>}>
-            <Typography variant="h4">{t('GoodsReceipt')} #{id}</Typography>
+            <Typography variant="h4">{t('goodsReceipt')} #{id}</Typography>
             <div>
                 {data?.map(value => (
                     <Accordion>
@@ -54,11 +54,11 @@ export default function GoodsReceiptVSExitReport() {
                         </AccordionSummary>
                         <AccordionDetails>
                             <Typography>
-                                <strong>{t('Customer')}: </strong>
+                                <strong>{t('customer')}: </strong>
                                 {value.cardName}
                             </Typography>
                             <Typography>
-                                <strong>{t('Address')}: </strong>
+                                <strong>{t('address')}: </strong>
                                 {value.address}
                             </Typography>
                             <GoodsReceiptVSExitReportTable data={value.lines}/>
@@ -66,7 +66,7 @@ export default function GoodsReceiptVSExitReport() {
                     </Accordion>
                 ))}
             </div>
-            {data && data.length === 0 && <Alert severity="warning">{t('NoExitData')}</Alert>}
+            {data && data.length === 0 && <Alert severity="warning">{t('noExitData')}</Alert>}
             <SnackbarAlert state={snackbar} onClose={() => setSnackbar({open: false})}/>
         </ContentTheme>
     )

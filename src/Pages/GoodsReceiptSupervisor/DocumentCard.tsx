@@ -31,25 +31,25 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, handleAction}) => {
     const documentStatusToString = useDocumentStatusToString();
 
     return (
-        <Card key={doc.id} header={<CardHeader titleText={`${t('ID')} : ${doc.name}`}/>}>
+        <Card key={doc.id} header={<CardHeader titleText={`${t('id')} : ${doc.name}`}/>}>
             <List>
                 <StandardListItem>
                     {handleOpenLink && (<a href="#" onClick={e => {
                         e.preventDefault();
                         handleOpen(doc.id)
-                    }}><strong>{t('Number')}:</strong> {doc.id}</a>)}
-                    {!handleOpenLink && (<><strong>{t('Number')}:</strong> {doc.id}</>)}
+                    }}><strong>{t('number')}:</strong> {doc.id}</a>)}
+                    {!handleOpenLink && (<><strong>{t('number')}:</strong> {doc.id}</>)}
                     <a style={{float: 'right'}} onClick={(e) => handleAction(doc.id, 'qrcode')}>
                         <Icon name="qr-code" />
                     </a>
                 </StandardListItem>
                 {doc.businessPartner &&
                     <StandardListItem>
-                        <strong>{t('Vendor')}</strong>: {doc.businessPartner?.name ?? doc.businessPartner?.code}
+                        <strong>{t('vendor')}</strong>: {doc.businessPartner?.name ?? doc.businessPartner?.code}
                     </StandardListItem>
                 }
                 {doc.specificDocuments && doc.specificDocuments.length > 0 &&
-                    <StandardListItem><strong>{t('DocumentsList')}: </strong>
+                    <StandardListItem><strong>{t('documentsList')}: </strong>
                         {
                             doc.specificDocuments.map(
                                 (value) => {
@@ -61,18 +61,18 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, handleAction}) => {
                                 }
                             )
                         }</StandardListItem>}
-                <StandardListItem><strong>{t('DocDate')}:</strong> {new Date(doc.date).toLocaleDateString()}</StandardListItem>
-                <StandardListItem><strong>{t('CreatedBy')}:</strong> {doc.employee.name}</StandardListItem>
-                <StandardListItem><strong>{t('Status')}:</strong> {documentStatusToString(doc.status)}</StandardListItem>
+                <StandardListItem><strong>{t('docDate')}:</strong> {new Date(doc.date).toLocaleDateString()}</StandardListItem>
+                <StandardListItem><strong>{t('createdBy')}:</strong> {doc.employee.name}</StandardListItem>
+                <StandardListItem><strong>{t('status')}:</strong> {documentStatusToString(doc.status)}</StandardListItem>
                 <StandardListItem>
                     {doc.status === DocumentStatus.InProgress && (
                         <Button color="primary" onClick={() => handleAction(doc.id, 'approve')}>
                             <Icon name="complete"/>
-                            {t('Finish')}
+                            {t('finish')}
                         </Button>)}
                     <Button color="secondary" onClick={() => handleAction(doc.id, 'cancel')}>
                         <Icon name="cancel"/>
-                        {t('Cancel')}
+                        {t('cancel')}
                     </Button>
                 </StandardListItem>
             </List>

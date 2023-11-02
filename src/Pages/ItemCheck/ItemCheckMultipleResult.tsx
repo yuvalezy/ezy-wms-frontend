@@ -41,19 +41,19 @@ const ItemCheckMultipleResult: React.FC<ItemCheckMultipleResultProps> = ({barcod
         <>
             <MessageStrip design="Warning" hideCloseButton>
                 <strong>
-                    {t('MultipleItemsDetected')}
+                    {t('multipleItemsDetected')}
                 </strong>
-                {t('Barcode')}: {barcode}
+                {t('barcode')}: {barcode}
             </MessageStrip>
             <br/>
             <br/>
             <Table
                 columns={<>
                     <TableColumn>
-                        <Label>{t('Item')}</Label>
+                        <Label>{t('item')}</Label>
                     </TableColumn>
                     <TableColumn>
-                        <Label>{t('Description')}</Label>
+                        <Label>{t('description')}</Label>
                     </TableColumn>
                     <TableColumn/>
                 </>}
@@ -64,7 +64,7 @@ const ItemCheckMultipleResult: React.FC<ItemCheckMultipleResultProps> = ({barcod
                                 <TableCell><Label>{item.itemCode}</Label></TableCell>
                                 <TableCell><Label>{item.itemName}</Label></TableCell>
                                 <TableCell>
-                                    <Button design="Emphasized" onClick={() => setBarcodeItem(index)}>{t('Select')}</Button>
+                                    <Button design="Emphasized" onClick={() => setBarcodeItem(index)}>{t('select')}</Button>
                                 </TableCell>
                             </TableRow>
                         ))
@@ -73,7 +73,7 @@ const ItemCheckMultipleResult: React.FC<ItemCheckMultipleResultProps> = ({barcod
             <br/>
             <Button design="Attention" onClick={() => clear()}>
                 <Icon design="Critical" name="cancel"/>
-                {t('Clear')}
+                {t('clear')}
             </Button>
         </>
     )

@@ -22,7 +22,7 @@ export default function ItemCheck() {
         let barcodeLength = barcodeInput.length === 0;
         let itemCodeLength = itemCodeInput.length === 0;
         if (barcodeLength && itemCodeLength) {
-            window.alert(t('BarcodeOrItemRequired'));
+            window.alert(t('barcodeOrItemRequired'));
             return;
         }
 
@@ -71,7 +71,7 @@ export default function ItemCheck() {
         if (result == null)
             return;
         let itemCode: string = result[index].itemCode;
-        if (!window.confirm(StringFormat(t('ConfirmItemBarCode'), itemCode, barcodeInput))) {
+        if (!window.confirm(StringFormat(t('confirmItemBarCode'), itemCode, barcodeInput))) {
             return;
         }
         setLoading(true);
@@ -92,11 +92,11 @@ export default function ItemCheck() {
 
 
     return (
-        <ContentTheme title={t('ItemCheck')} icon={<CheckBoxIcon/>}>
+        <ContentTheme title={t('itemCheck')} icon={<CheckBoxIcon/>}>
             {
                 (result == null || result.length === 0) &&
                 <Form>
-                    <FormItem label={t('Barcode')}>
+                    <FormItem label={t('barcode')}>
                         <Input
                             required={itemCodeInput.length === 0}
                             disabled={itemCodeInput.length > 0}
@@ -105,7 +105,7 @@ export default function ItemCheck() {
                             autoFocus={true}
                         />
                     </FormItem>
-                    <FormItem label={t('Code')}>
+                    <FormItem label={t('code')}>
                         <Input
                             required={barcodeInput.length === 0}
                             disabled={barcodeInput.length > 0}
@@ -116,7 +116,7 @@ export default function ItemCheck() {
                     <FormItem>
                         <Button onClick={() => handleCheckSubmit()} color="primary">
                             <Icon name="accept" />
-                            {t('Accept')}
+                            {t('accept')}
                         </Button>
                     </FormItem>
                 </Form>
@@ -127,7 +127,7 @@ export default function ItemCheck() {
                     <br/>
                     {result.length === 0 &&
                         <MessageStrip design="Negative" hideCloseButton>
-                            {t('NoDataFound')}
+                            {t('noDataFound')}
                         </MessageStrip>
                     }
                     {result.length === 1 && <ItemCheckResult result={result[0]} clear={handleClear} submit={handleUpdateSubmit}/>}

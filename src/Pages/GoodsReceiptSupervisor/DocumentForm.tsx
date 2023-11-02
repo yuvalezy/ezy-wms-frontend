@@ -38,19 +38,19 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, onError}) => 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (docNameInput === null || docNameInput === '') {
-            alert(t('IDRequired'));
+            alert(t('idRequired'));
             return;
         }
         switch (selectedType) {
             case GoodsReceiptType.AutoConfirm:
                 if (cardCodeInput.length === 0) {
-                    alert(t('VendorRequired'));
+                    alert(t('vendorRequired'));
                     return;
                 }
                 break;
             case GoodsReceiptType.SpecificOrders:
                 if (items.length === 0) {
-                    alert(t('DocumentRequired'));
+                    alert(t('documentRequired'));
                     return;
                 }
                 break;
@@ -65,7 +65,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, onError}) => 
                         documentListRef.current?.clearItems();
                         return;
                     }
-                    let errorMessage: string = t('UnknownError');
+                    let errorMessage: string = t('unknownError');
                     switch (response.errorCode) {
                         case -1:
                             try {
@@ -73,10 +73,10 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, onError}) => 
                                 if (errorParameters != null && errorParameters.length >= 3) {
                                     let errorObjType: number = errorParameters[0];
                                     let errorDocNum: number = errorParameters[1];
-                                    let errorType: string = errorParameters[2] === 'E' ? t('DoesNotExists') : t('IsNotOpen');
+                                    let errorType: string = errorParameters[2] === 'E' ? t('doesNotExists') : t('isNotOpen');
                                     switch (errorParameters[2]) {
                                         case 'E':
-                                            errorType = t('DoesNotExists');
+                                            errorType = t('doesNotExists');
                                             break;
                                         case 'R':
                                             errorType = 'Not Reserved';
@@ -85,10 +85,10 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, onError}) => 
                                             errorType = 'No lines for warehouse';
                                             break;
                                         default:
-                                            errorType = t('IsNotOpen');
+                                            errorType = t('isNotOpen');
                                             break;
                                     }
-                                    errorMessage = StringFormat(t('BadDocumentError'), o(errorObjType), errorDocNum, errorType);
+                                    errorMessage = StringFormat(t('badDocumentError'), o(errorObjType), errorDocNum, errorType);
                                 }
                             } catch {
                             }
@@ -108,12 +108,12 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, onError}) => 
 
     return (
         <TabContainer onTabSelect={e => setSelectedType(e.detail.tabIndex === 0 ? GoodsReceiptType.AutoConfirm : GoodsReceiptType.SpecificOrders)}>
-            <Tab text={t('Automatic')} selected>
+            <Tab text={t('automatic')} selected>
                 <Form>
-                    <FormItem label={t('ID')}>
+                    <FormItem label={t('id')}>
                         <Input value={docNameInput} onInput={e => setDocNameInput(e.target.value as string)} maxlength={50}></Input>
                     </FormItem>
-                    <FormItem label={t('SelectVendor')}>
+                    <FormItem label={t('selectVendor')}>
                         <ComboBox onSelectionChange={(e) => setCardCodeInput(vendors[Array.from(e.target.children).indexOf(e.detail.item)].code)}>
                             {vendors.map(vendor => <ComboBoxItem key={vendor.code} text={vendor.name}/>)}
                         </ComboBox>
@@ -121,23 +121,23 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, onError}) => 
                     <FormItem>
                         <Button color="primary" onClick={handleSubmit}>
                             <DescriptionIcon/>
-                            {t('Create')}
+                            {t('create')}
                         </Button>
                     </FormItem>
                 </Form>
             </Tab>
-            <Tab text={t('SpecificDocuments')}>
+            <Tab text={t('specificDocuments')}>
                 <Form>
-                    <FormItem label={t('ID')}>
+                    <FormItem label={t('id')}>
                         <Input value={docNameInput} onInput={e => setDocNameInput(e.target.value as string)} maxlength={50}></Input>
                     </FormItem>
-                    <FormItem label={t('DocumentsList')}>
+                    <FormItem label={t('documentsList')}>
                         <DocumentList ref={documentListRef} onItemsUpdate={setItems}/>
                     </FormItem>
                     <FormItem>
                         <Button color="primary" onClick={handleSubmit}>
                             <DescriptionIcon/>
-                            {t('Create')}
+                            {t('create')}
                         </Button>
                     </FormItem>
                 </Form>

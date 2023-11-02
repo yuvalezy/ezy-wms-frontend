@@ -59,7 +59,7 @@ export default function GoodsReceiptSupervisor() {
         documentAction(selectedDocumentId!, actionType!, user!)
             .then(() => {
                 setDocuments(prevDocs => prevDocs.filter(doc => doc.id !== selectedDocumentId));
-                alert(actionType === 'approve' ? t('Approved') : t('Cancelled'));
+                alert(actionType === 'approve' ? t('approved') : t('cancelled'));
             })
             .catch(error => {
                 console.error(`Error performing action: ${error}`);
@@ -73,17 +73,17 @@ export default function GoodsReceiptSupervisor() {
     };
 
     return (
-        <ContentTheme title={t('GoodsReceiptSupervisor')} icon={<SupervisedUserCircleIcon/>}>
+        <ContentTheme title={t('goodsReceiptSupervisor')} icon={<SupervisedUserCircleIcon/>}>
             <DocumentForm onError={errorAlert} onNewDocument={newDocument => setDocuments(prevDocs => [newDocument, ...prevDocs])}/>
             <br/>
             <br/>
             {documents.map(doc => <DocumentCard key={doc.id} doc={doc} handleAction={handleAction}/>)}
             <ConfirmationDialog
-                title={t('ConfirmAction')}
+                title={t('confirmAction')}
                 text={
                     StringFormat((actionType === 'approve' ?
-                        t('ConfirmFinishDocument') :
-                        t('ConfirmCancelDocument')), selectedDocumentId)
+                        t('confirmFinishDocument') :
+                        t('confirmCancelDocument')), selectedDocumentId)
                 }
                 open={dialogOpen}
                 reverse={true}
@@ -94,7 +94,7 @@ export default function GoodsReceiptSupervisor() {
                 className="footerPartNoPadding"
                 ref={dialogRef}
                 footer={<Bar design="Footer" endContent={
-                    <Button onClick={() => dialogRef?.current?.close()}>{t('Close')}</Button>}/>
+                    <Button onClick={() => dialogRef?.current?.close()}>{t('close')}</Button>}/>
                 }
             >
                 <QRCode

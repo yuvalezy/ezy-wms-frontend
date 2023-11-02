@@ -32,12 +32,12 @@ export default function GoodsReceipt() {
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         if (scanCodeInput.length === 0) {
-            alert(t('ScanCodeRequired'));
+            alert(t('scanCodeRequired'));
             return;
         }
         let checkScan = scanCodeInput.split('_');
         if (checkScan.length !== 2 || (checkScan[0] !== 'GRPO' &&  checkScan[0] !== '$GRPO') || !IsNumeric(checkScan[1])) {
-            alert(t('InvalidScanCode'));
+            alert(t('invalidScanCode'));
             return;
         }
         const id = parseInt(checkScan[1]);
@@ -45,13 +45,13 @@ export default function GoodsReceipt() {
         fetchDocuments(id, [])
             .then(doc => {
                 if (doc.length === 0) {
-                    alert(StringFormat(t('GoodsReceiptNotFound'), id));
+                    alert(StringFormat(t('goodsReceiptNotFound'), id));
                     return;
                 }
                 const status = doc[0].status;
 
                 if (status !== DocumentStatus.Open && status !== DocumentStatus.InProgress) {
-                    alert(StringFormat(t('GoodsReceiptStatusError'), id, documentStatusToString(status)));
+                    alert(StringFormat(t('goodsReceiptStatusError'), id, documentStatusToString(status)));
                     return;
                 }
                 navigate(`/goodsReceipt/${id}`);
@@ -61,7 +61,7 @@ export default function GoodsReceipt() {
     }
 
     return (
-        <ContentTheme title={t('GoodsReceipt')} icon={<AssignmentTurnedInIcon/>}>
+        <ContentTheme title={t('goodsReceipt')} icon={<AssignmentTurnedInIcon/>}>
             {ScanForm()}
             <SnackbarAlert state={snackbar} onClose={() => setSnackbar({open: false})}/>
         </ContentTheme>
@@ -74,7 +74,7 @@ export default function GoodsReceipt() {
                     <TextField
                         fullWidth
                         required
-                        label={t('Code')}
+                        label={t('code')}
                         variant="outlined"
                         value={scanCodeInput}
                         type="password"
@@ -84,7 +84,7 @@ export default function GoodsReceipt() {
                     <Box mt={1}>
                         <Button type="submit" variant="contained" color="primary">
                             <DoneIcon/>
-                            {t('Accept')}
+                            {t('accept')}
                         </Button>
                     </Box>
                 </Box></form>

@@ -23,11 +23,11 @@ export function useDocumentStatusOptions() {
     const { t} = useTranslation();
 
     const DocumentStatusOptions = [
-        { code: 'Open', name: t('OpenStatus'), status: DocumentStatus.Open },
-        { code: 'Processing', name: t('ProcessingStatus'), status: DocumentStatus.Processing },
-        { code: 'Finished', name: t('FinishedStatus'), status: DocumentStatus.Finished },
-        { code: 'Cancelled', name: t('CancelledStatus'), status: DocumentStatus.Cancelled },
-        { code: 'InProgress', name: t('InProgressStatus'), status: DocumentStatus.InProgress },
+        { code: 'Open', name: t('openStatus'), status: DocumentStatus.Open },
+        { code: 'Processing', name: t('processingStatus'), status: DocumentStatus.Processing },
+        { code: 'Finished', name: t('finishedStatus'), status: DocumentStatus.Finished },
+        { code: 'Cancelled', name: t('cancelledStatus'), status: DocumentStatus.Cancelled },
+        { code: 'InProgress', name: t('inProgressStatus'), status: DocumentStatus.InProgress },
     ];
 
     return DocumentStatusOptions;

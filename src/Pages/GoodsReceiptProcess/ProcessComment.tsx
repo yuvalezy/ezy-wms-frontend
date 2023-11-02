@@ -48,10 +48,10 @@ const ProcessComment: React.FC<ProcessCommentProps> = ({id, alert, onAccept, onC
 
     return (
         <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>{t('Comment')}</DialogTitle>
+            <DialogTitle>{t('comment')}</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    <strong>{t('Barcode')}: </strong>{alert.barcode}
+                    <strong>{t('barcode')}: </strong>{alert.barcode}
                 </DialogContentText>
                 <div>
                     <TextareaAutosize style={{minHeight: '100px', width: '100%'}}
@@ -64,10 +64,10 @@ const ProcessComment: React.FC<ProcessCommentProps> = ({id, alert, onAccept, onC
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} color="secondary">
-                    {t('Cancel')}
+                    {t('cancel')}
                 </Button>
                 <Button onClick={handleSave} color="primary">
-                    {t('Accept')}
+                    {t('accept')}
                 </Button>
             </DialogActions>
         </Dialog>

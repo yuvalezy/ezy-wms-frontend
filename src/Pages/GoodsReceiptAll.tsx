@@ -19,7 +19,7 @@ export default function GoodsReceiptReportAll() {
     const {setLoading} = useLoading();
     const [data, setData] = useState<GoodsReceiptAll[] | null>(null);
     const [snackbar, setSnackbar] = React.useState<SnackbarState>({open: false});
-    const title = `${t('GoodsReceiptVSExit')} #${scanCode}`;
+    const title = `${t('goodsReceiptVSExit')} #${scanCode}`;
 
     const errorAlert = (message: string) => {
         setSnackbar({open: true, message: message, color: 'red'});
@@ -46,7 +46,7 @@ export default function GoodsReceiptReportAll() {
         }
 
         const wb = XLSX.utils.book_new();
-        const headers = [t('Code'), t('Description'), t('Quantity'), t('Delivery'), t('Showroom'), t('Stock')];
+        const headers = [t('code'), t('description'), t('Quantity'), t('delivery'), t('showroom'), t('stock')];
         const dataRows = data.map(item => [item.itemCode, item.itemName, item.quantity, item.delivery, item.showroom, item.stock]);
 
         const wsData = [headers, ...dataRows];
@@ -64,11 +64,11 @@ export default function GoodsReceiptReportAll() {
     return (
         <ContentTheme title={title} icon={<SupervisedUserCircleIcon/>}>
             <div style={{position: 'relative'}}>
-                <Typography variant="h4">{t('GoodsReceipt')} #{id}</Typography>
+                <Typography variant="h4">{t('goodsReceipt')} #{id}</Typography>
                 <img src="/images/excel.jpg" alt="" onClick={() => exportToExcel()} style={{height: '32px', position: 'absolute', right: '10px', top: '8px', cursor: 'pointer', zIndex: '1000'}}/>
             </div>
             {data && <GoodsReceiptAllReportTable data={data}></GoodsReceiptAllReportTable>}
-            {data && data.length === 0 && <Alert severity="warning">{t('NoExitData')}</Alert>}
+            {data && data.length === 0 && <Alert severity="warning">{t('noExitData')}</Alert>}
             <SnackbarAlert state={snackbar} onClose={() => setSnackbar({open: false})}/>
         </ContentTheme>
     )

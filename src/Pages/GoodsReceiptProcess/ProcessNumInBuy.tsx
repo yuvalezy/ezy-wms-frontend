@@ -36,19 +36,19 @@ const ProcessNumInBuy: React.FC<ProcessNumInBuyProps> = ({id, alert, onAccept, o
                 let message: string | null = null;
                 switch (value) {
                     case UpdateLineReturnValue.Status:
-                        message = t('UpdateLineStatusError')
+                        message = t('updateLineStatusError')
                         break;
                     case UpdateLineReturnValue.LineStatus:
-                        message = t('UpdateLineLineStatusError')
+                        message = t('updateLineLineStatusError')
                         break;
                     case UpdateLineReturnValue.CloseReason:
-                        message = t('UpdateLineReason')
+                        message = t('updateLineReason')
                         break;
                     case UpdateLineReturnValue.SupervisorPassword:
-                        message = t('UpdateLineWrongSupervisorPassword')
+                        message = t('updateLineWrongSupervisorPassword')
                         break;
                     case UpdateLineReturnValue.NotSupervisor:
-                        message = t('UpdateLineNotSupervisorError')
+                        message = t('updateLineNotSupervisorError')
                         break;
                 }
                 if (message !== null) {
@@ -80,10 +80,10 @@ const ProcessNumInBuy: React.FC<ProcessNumInBuyProps> = ({id, alert, onAccept, o
     return (
         <Dialog open={open} onClose={handleClose}>
             <form onSubmit={handleSubmit}>
-                <DialogTitle>{t('NumInBuy')}</DialogTitle>
+                <DialogTitle>{t('numInBuy')}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        <strong>{t('Barcode')}: </strong>{alert.barcode}
+                        <strong>{t('barcode')}: </strong>{alert.barcode}
                     </DialogContentText>
                     <Box mb={1} style={{textAlign: 'center'}}>
                         <TextField
@@ -92,7 +92,7 @@ const ProcessNumInBuy: React.FC<ProcessNumInBuyProps> = ({id, alert, onAccept, o
                             fullWidth
                             name="numInBuy"
                             inputRef={numInBuyRef}
-                            label={t('SupervisorCode')}
+                            label={t('supervisorCode')}
                             type="password"
                             id="numInBuy"
                             autoComplete="current-password"
@@ -107,7 +107,7 @@ const ProcessNumInBuy: React.FC<ProcessNumInBuyProps> = ({id, alert, onAccept, o
                             fullWidth
                             name="numInBuy"
                             inputRef={numInBuyRef}
-                            label={t('NumInBuy')}
+                            label={t('numInBuy')}
                             type="number"
                             id="numInBuy"
                             value={numInBuy}
@@ -120,10 +120,10 @@ const ProcessNumInBuy: React.FC<ProcessNumInBuyProps> = ({id, alert, onAccept, o
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="secondary">
-                        {t('Cancel')}
+                        {t('cancel')}
                     </Button>
                     <Button type="submit" color="primary">
-                        {t('Accept')}
+                        {t('accept')}
                     </Button>
                 </DialogActions>
             </form>

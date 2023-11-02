@@ -53,16 +53,16 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction}) => {
     return (
         <Box mt={1} style={{position: 'relative'}}>
             <Alert variant="filled" severity={alert.severity} style={getAlertStyle()}>
-                {alert.barcode && <AlertTitle><strong>{t('Barcode')}: </strong>{alert.barcode}</AlertTitle>}
-                <strong>{t('Time')}: </strong>{alert.timeStamp} <br/>
+                {alert.barcode && <AlertTitle><strong>{t('barcode')}: </strong>{alert.barcode}</AlertTitle>}
+                <strong>{t('time')}: </strong>{alert.timeStamp} <br/>
                 {alert.itemCode && <>
-                    <span><strong>{t('Item')}: </strong>{alert.itemCode}</span>
+                    <span><strong>{t('item')}: </strong>{alert.itemCode}</span>
                     <br/>
-                    <span><strong>{t('NumInBuy')}: </strong>{alert.numInBuy}</span>
+                    <span><strong>{t('numInBuy')}: </strong>{alert.numInBuy}</span>
                     <br/>
                 </>}
-                {alert.message && (<><strong>{t('Message')}: </strong>{alert.message}</>)}
-                {alert.multiple != null && alert.multiple.length > 0 && (<><br/><strong>{t('Messages')}: </strong>{
+                {alert.message && (<><strong>{t('message')}: </strong>{alert.message}</>)}
+                {alert.multiple != null && alert.multiple.length > 0 && (<><br/><strong>{t('messages')}: </strong>{
                     <>
                         {
                             alert.multiple.map(v => <Box mt={0.5}><Alert variant="filled" severity={v.severity}>{v.message}</Alert></Box>)

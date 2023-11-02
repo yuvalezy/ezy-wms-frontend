@@ -19,15 +19,15 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({title, text, rev
             <DialogContent>
                 <DialogContentText>
                     {text}
-                    {reverse && <> <br /> {t('ActionCannotReverse')} </>}
+                    {reverse && <> <br /> {t('actionCannotReverse')} </>}
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
                 <Button variant="contained" onClick={onClose} color="primary">
-                    {t('No')}
+                    {t('no')}
                 </Button>
                 <Button variant="contained" onClick={onConfirm} color="error">
-                    {t('Yes')}
+                    {t('yes')}
                 </Button>
             </DialogActions>
         </Dialog>

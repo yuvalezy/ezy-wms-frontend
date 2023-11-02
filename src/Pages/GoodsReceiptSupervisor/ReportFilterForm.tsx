@@ -79,9 +79,9 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({
     }
 
     return (
-        <Panel collapsed={isPanelCollapsed} onToggle={() => setIsPanelCollapsed(!isPanelCollapsed)} ref={panelRef} headerText={t('Filters')}>
+        <Panel collapsed={isPanelCollapsed} onToggle={() => setIsPanelCollapsed(!isPanelCollapsed)} ref={panelRef} headerText={t('filters')}>
             <Form>
-                <FormItem label={t('Date')}>
+                <FormItem label={t('date')}>
                     <DatePicker
                         value={selectedDate !== undefined ? selectedDate : ""}
                         primaryCalendarType="Gregorian" onChange={(e) => {
@@ -89,7 +89,7 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({
                         setSelectedDate(e.target.value);
                     }}/>
                 </FormItem>
-                <FormItem label={t('Vendor')}>
+                <FormItem label={t('vendor')}>
                     <ComboBox value={vendorValue} onSelectionChange={(e) => {
                         setCardCodeInput(vendors[Array.from(e.target.children).indexOf(e.detail.item)]);
                         setVendorValue(e.detail.item.text);
@@ -97,16 +97,16 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({
                         {vendors.map(vendor => <ComboBoxItem key={vendor.code} text={vendor.name}/>)}
                     </ComboBox>
                 </FormItem>
-                <FormItem label={t('Transaction')}>
+                <FormItem label={t('transaction')}>
                     <Input value={idInput} type="Number" onChange={e => setIDInput(e.target.value as string)}/>
                 </FormItem>
-                <FormItem label={t('ID')}>
+                <FormItem label={t('id')}>
                     <Input value={docNameInput} onChange={e => setDocNameInput(e.target.value as string)} maxlength={50}/>
                 </FormItem>
-                <FormItem label={t('GoodsReceipt')}>
+                <FormItem label={t('goodsReceipt')}>
                     <Input value={grpoInput} type="Number" onChange={e => setGRPOInput(e.target.value as string)} maxlength={50}/>
                 </FormItem>
-                <FormItem label={t('Status')}>
+                <FormItem label={t('status')}>
                     <ComboBox value={statusValue} onSelectionChange={(e) => {
                         setStatusInput(documentStatusOptions[Array.from(e.target.children).indexOf(e.detail.item)]);
                         setStatusValue(e.detail.item.text); // Update the state when selection changes
@@ -125,7 +125,7 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({
                         <div>
                             <Button color="secondary" onClick={() => clearForm()}>
                                 <Icon name="clear-all"/>
-                                {t('Clear')}
+                                {t('clear')}
                             </Button>
                         </div>
                     </Grid>

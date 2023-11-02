@@ -12,25 +12,25 @@ export function useMenus() {
         MenuItems: [
             {
                 Link: "/itemCheck",
-                Text: t('ItemCheck'),
+                Text: t('itemCheck'),
                 Authorization: Authorization.GOODS_RECEIPT_SUPERVISOR,
                 Icon: CheckBoxIcon,
             },
             {
                 Link: "/goodsReceipt",
-                Text: t('GoodsReceipt'),
+                Text: t('goodsReceipt'),
                 Authorization: Authorization.GOODS_RECEIPT,
                 Icon: AssignmentTurnedInIcon,
             },
             {
                 Link: "/goodsReceiptSupervisor",
-                Text: t('GoodsReceiptSupervisor'),
+                Text: t('goodsReceiptSupervisor'),
                 Authorization: Authorization.GOODS_RECEIPT_SUPERVISOR,
                 Icon: SupervisedUserCircleIcon,
             },
             {
                 Link: "/goodsReceiptReport",
-                Text: t('GoodsReceiptReport'),
+                Text: t('goodsReceiptReport'),
                 Authorization: Authorization.GOODS_RECEIPT_SUPERVISOR,
                 Icon: SummarizeIcon,
             },
