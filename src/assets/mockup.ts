@@ -1,9 +1,26 @@
 import { ResponseStatus } from "./Common";
-import {
-  DocumentStatus,
-  GoodsReceiptType,
-  UpdateLineReturnValue,
-} from "../Pages/GoodsReceiptSupervisor/Document";
+
+enum UpdateLineReturnValue {
+  Status = "Status",
+  LineStatus = "LineStatus",
+  CloseReason = "CloseReason",
+  Ok = "Ok",
+  SupervisorPassword = "SupervisorPassword",
+  NotSupervisor = "NotSupervisor",
+}
+
+enum GoodsReceiptType {
+  AutoConfirm = "AutoConfirm",
+  SpecificOrders = "SpecificOrders",
+}
+
+enum DocumentStatus {
+  Open = "Open",
+  Processing = "Processing",
+  Finished = "Finished",
+  Cancelled = "Cancelled",
+  InProgress = "InProgress",
+}
 
 export const itemMockup = [
   {
