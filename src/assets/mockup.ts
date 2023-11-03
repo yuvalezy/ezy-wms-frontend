@@ -100,7 +100,7 @@ export const documentMockup = {
     id: 5678,
     name: "John Doe",
   },
-  status: DocumentStatus.Finished,
+  status: DocumentStatus.InProgress,
   statusDate: "2023-11-03",
   statusEmployee: {
     id: 5678,
@@ -116,11 +116,11 @@ export const documentMockup = {
   errorParameters: [],
   specificDocuments: [
     {
-      objectType: 1,
+      objectType: 18,
       documentNumber: 56789,
     },
     {
-      objectType: 2,
+      objectType: 22,
       documentNumber: 12345,
     },
   ],

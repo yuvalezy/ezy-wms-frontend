@@ -1,7 +1,6 @@
 import axios from "axios";
 import { AlertColor } from "@mui/material";
 import { globalConfig } from "../../assets/GlobalConfig";
-import { StringFormat } from "../../assets/Functions";
 import { UpdateLineReturnValue } from "../GoodsReceiptSupervisor/Document";
 import {
   UpdateLineReturnValueMockup,
