@@ -1,97 +1,122 @@
-import React, {useState} from "react";
+import React, { useState, useContext } from "react";
 import Box from "@mui/material/Box";
-import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
-import {Button, TextField} from "@mui/material";
+import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+import { Button, TextField } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ContentTheme from "../Components/ContentTheme";
-import {IsNumeric, StringFormat} from "../assets/Functions";
-import SnackbarAlert, {SnackbarState} from "../Components/SnackbarAlert";
-import {DocumentStatus, fetchDocuments} from "./GoodsReceiptSupervisor/Document";
-import {useTranslation} from "react-i18next";
-import {useDocumentStatusToString} from "./GoodsReceiptSupervisor/DocumentStatusString";
+import { IsNumeric, StringFormat } from "../assets/Functions";
+import SnackbarAlert, { SnackbarState } from "../Components/SnackbarAlert";
+import {
+  DocumentStatus,
+  fetchDocuments,
+} from "./GoodsReceiptSupervisor/Document";
+import { useTranslation } from "react-i18next";
+import { useDocumentStatusToString } from "./GoodsReceiptSupervisor/DocumentStatusString";
+import { AuthContext } from "../Components/AppContext";
 
 export default function GoodsReceipt() {
-    const [, setLoading] = useState(false);
-    const [scanCodeInput, setScanCodeInput] = React.useState('');
-    const [snackbar, setSnackbar] = React.useState<SnackbarState>({open: false});
-    const {t} = useTranslation();
-    const documentStatusToString = useDocumentStatusToString();
+  const { config } = useContext(AuthContext);
+  const mockup = config?.mockup;
+  const [, setLoading] = useState(false);
+  const [scanCodeInput, setScanCodeInput] = React.useState("");
+  const [snackbar, setSnackbar] = React.useState<SnackbarState>({
+    open: false,
+  });
+  const { t } = useTranslation();
+  const documentStatusToString = useDocumentStatusToString();
 
-    const navigate = useNavigate();
-    const alert = (message: string) => {
-        setSnackbar({open: true, message: message, color: 'DarkRed'});
-        setTimeout(() => setSnackbar({open: false}), 5000);
-    };
+  const navigate = useNavigate();
+  const alert = (message: string) => {
+    setSnackbar({ open: true, message: message, color: "DarkRed" });
+    setTimeout(() => setSnackbar({ open: false }), 5000);
+  };
 
-    const errorAlert = (message: string) => {
-        setSnackbar({open: true, message: message, color: 'red'});
-        setTimeout(() => setSnackbar({open: false}), 5000);
-    };
+  const errorAlert = (message: string) => {
+    setSnackbar({ open: true, message: message, color: "red" });
+    setTimeout(() => setSnackbar({ open: false }), 5000);
+  };
 
-    function handleSubmit(e: React.FormEvent) {
-        e.preventDefault();
-        if (scanCodeInput.length === 0) {
-            alert(t('scanCodeRequired'));
-            return;
-        }
-        let checkScan = scanCodeInput.split('_');
-        if (checkScan.length !== 2 || (checkScan[0] !== 'GRPO' &&  checkScan[0] !== '$GRPO') || !IsNumeric(checkScan[1])) {
-            alert(t('invalidScanCode'));
-            return;
-        }
-        const id = parseInt(checkScan[1]);
-        setLoading(true);
-        fetchDocuments(id, [])
-            .then(doc => {
-                if (doc.length === 0) {
-                    alert(StringFormat(t('goodsReceiptNotFound'), id));
-                    return;
-                }
-                const status = doc[0].status;
-
-                if (status !== DocumentStatus.Open && status !== DocumentStatus.InProgress) {
-                    alert(StringFormat(t('goodsReceiptStatusError'), id, documentStatusToString(status)));
-                    return;
-                }
-                navigate(`/goodsReceipt/${id}`);
-            })
-            .catch(error => errorAlert(`Validate Goods Receipt Error: ${error}`))
-            .finally(() => setLoading(false));
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (scanCodeInput.length === 0) {
+      alert(t("scanCodeRequired"));
+      return;
     }
+    let checkScan = scanCodeInput.split("_");
+    if (
+      checkScan.length !== 2 ||
+      (checkScan[0] !== "GRPO" && checkScan[0] !== "$GRPO") ||
+      !IsNumeric(checkScan[1])
+    ) {
+      alert(t("invalidScanCode"));
+      return;
+    }
+    const id = parseInt(checkScan[1]);
+    setLoading(true);
+    fetchDocuments(mockup as boolean, id, [])
+      .then((doc) => {
+        if (doc.length === 0) {
+          alert(StringFormat(t("goodsReceiptNotFound"), id));
+          return;
+        }
+        const status = doc[0].status;
 
+        if (
+          status !== DocumentStatus.Open &&
+          status !== DocumentStatus.InProgress
+        ) {
+          alert(
+            StringFormat(
+              t("goodsReceiptStatusError"),
+              id,
+              documentStatusToString(status)
+            )
+          );
+          return;
+        }
+        navigate(`/goodsReceipt/${id}`);
+      })
+      .catch((error) => errorAlert(`Validate Goods Receipt Error: ${error}`))
+      .finally(() => setLoading(false));
+  }
+
+  return (
+    <ContentTheme title={t("goodsReceipt")} icon={<AssignmentTurnedInIcon />}>
+      {ScanForm()}
+      <SnackbarAlert
+        state={snackbar}
+        onClose={() => setSnackbar({ open: false })}
+      />
+    </ContentTheme>
+  );
+
+  function ScanForm() {
     return (
-        <ContentTheme title={t('goodsReceipt')} icon={<AssignmentTurnedInIcon/>}>
-            {ScanForm()}
-            <SnackbarAlert state={snackbar} onClose={() => setSnackbar({open: false})}/>
-        </ContentTheme>
-    )
-
-    function ScanForm() {
-        return (
-            <form onSubmit={handleSubmit}>
-                <Box mb={1} style={{textAlign: 'center'}}>
-                    <TextField
-                        fullWidth
-                        required
-                        label={t('code')}
-                        variant="outlined"
-                        value={scanCodeInput}
-                        type="password"
-                        onChange={e => setScanCodeInput(e.target.value)}
-                        autoFocus={true}
-                    />
-                    <Box mt={1}>
-                        <Button type="submit" variant="contained" color="primary">
-                            <DoneIcon/>
-                            {t('accept')}
-                        </Button>
-                    </Box>
-                </Box></form>
-        )
-    }
+      <form onSubmit={handleSubmit}>
+        <Box mb={1} style={{ textAlign: "center" }}>
+          <TextField
+            fullWidth
+            required
+            label={t("code")}
+            variant="outlined"
+            value={scanCodeInput}
+            type="password"
+            onChange={(e) => setScanCodeInput(e.target.value)}
+            autoFocus={true}
+          />
+          <Box mt={1}>
+            <Button type="submit" variant="contained" color="primary">
+              <DoneIcon />
+              {t("accept")}
+            </Button>
+          </Box>
+        </Box>
+      </form>
+    );
+  }
 }
 
 function documentStatusToString(status: DocumentStatus): any {
-    throw new Error("Function not implemented.");
+  throw new Error("Function not implemented.");
 }
