@@ -6,6 +6,7 @@ import {
   UpdateLineReturnValueMockup,
   addItemResponseMockup,
 } from "../../assets/mockup";
+import { Console } from "console";
 
 interface AddItemResponse {
   lineID: number;
@@ -29,8 +30,37 @@ export const addItem = async (
 ): Promise<AddItemResponse> => {
   try {
     if (mockup) {
-      console.log("Mockup data is being used.");
-      return addItemResponseMockup;
+      switch (barcode) {
+        case "approve": {
+          const approve = { ...addItemResponseMockup, warehouse: true };
+          return approve;
+        }
+        case "alert": {
+          const alert = { ...addItemResponseMockup, fulfillment: true };
+          return alert;
+        }
+        case "showroom": {
+          const showroom = { ...addItemResponseMockup, showroom: true };
+          return showroom;
+        }
+        case "cancel": {
+          const cancel = { ...addItemResponseMockup, closedDocument: true };
+          return cancel;
+        }
+        case "error": {
+          return addItemResponseMockup;
+        }
+        default: {
+          const defaultValue = {
+            ...addItemResponseMockup,
+            showroom: true,
+            fulfillment: true,
+            warehouse: true,
+          };
+
+          return defaultValue;
+        }
+      }
     }
 
     if (!globalConfig) throw new Error("Config has not been initialized!");

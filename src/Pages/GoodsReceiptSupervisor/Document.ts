@@ -105,6 +105,11 @@ export const documentAction = async (
   user: User
 ): Promise<boolean> => {
   try {
+    if (mockup && action === "approve") {
+      documentMockup.status = DocumentStatus.Finished;
+      return true;
+    }
+
     if (mockup) {
       console.log("Mockup data is being used.");
       return true;
@@ -239,7 +244,7 @@ export const scanBarcode = async (
 ): Promise<Item[]> => {
   try {
     if (mockup) {
-      console.log("Mockup data is being used.");
+      console.log("Mockup data is being used. holis");
       return itemFatherMockup;
     }
     if (!globalConfig) throw new Error("Config has not been initialized!");

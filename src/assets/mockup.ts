@@ -83,9 +83,9 @@ export const goodsReceiptVSExitReportDataMockup = [
 export const addItemResponseMockup = {
   lineID: 123,
   closedDocument: false,
-  fulfillment: true,
+  fulfillment: false,
   showroom: false,
-  warehouse: true,
+  warehouse: false,
   numInBuy: 5,
 };
 
@@ -125,6 +125,29 @@ export const documentMockup = {
     },
   ],
 };
+
+export const vendorsMockup = [
+  {
+    code: "1",
+    name: "Provedor 1",
+  },
+  {
+    code: "2",
+    name: "Provedor 2",
+  },
+  {
+    code: "3",
+    name: "Provedor 3",
+  },
+  {
+    code: "4",
+    name: "Provedor 4",
+  },
+  {
+    code: "5",
+    name: "Provedor 5",
+  },
+];
 
 export const ReasonValueMockup = [
   {

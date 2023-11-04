@@ -48,7 +48,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
   const [vendors, setVendors] = useState<BusinessPartner[]>([]);
 
   useEffect(() => {
-    fetchVendors()
+    fetchVendors(mockup as boolean)
       .then((data) => {
         setVendors(data);
       })

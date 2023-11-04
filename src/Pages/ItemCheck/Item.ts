@@ -61,8 +61,11 @@ export const updateItemBarCode = async (
   addBarcode: string
 ): Promise<UpdateItemBarCodeResponse> => {
   try {
+    if (mockup && addBarcode) {
+      itemMockup[0].barcodes.push(addBarcode);
+      return updateItemBarMockup;
+    }
     if (mockup) {
-      console.log("Mockup data is being used.");
       return updateItemBarMockup;
     }
 

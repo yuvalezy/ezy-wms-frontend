@@ -71,6 +71,8 @@ export default function ItemCheck() {
     updateItemBarCode(mockup as boolean, itemCode, checkedBarcodes, newBarcode)
       .then((response) => {
         if (response.status === ResponseStatus.Ok) {
+          if (mockup) return executeItemCheck("", newBarcode);
+
           executeItemCheck(itemCode, "");
         } else {
           if (response.existItem != null) {

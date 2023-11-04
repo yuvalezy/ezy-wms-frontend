@@ -135,6 +135,16 @@ export default function GoodsReceiptProcess() {
           return;
         }
 
+        if (mockup && !data.fulfillment && !data.warehouse && !data.showroom) {
+          return alert({
+            barcode: barcode,
+            itemCode: itemCode,
+            numInBuy: data.numInBuy,
+            message: `Error Mockup`,
+            severity: "error",
+          });
+        }
+
         let message: string = "";
         let color: AlertColor = "info";
         let multiple: AddItemResponseMultipleValue[] = [];

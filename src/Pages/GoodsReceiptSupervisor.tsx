@@ -21,6 +21,7 @@ import QRCode from "qrcode.react";
 export default function GoodsReceiptSupervisor() {
   const { config } = useContext(AuthContext);
   const mockup = config?.mockup;
+
   const dialogRef = useRef<DialogDomRef>(null);
   const { user } = useAuth();
   const { t } = useTranslation();
