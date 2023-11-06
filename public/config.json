@@ -1,5 +1,6 @@
 {
   "baseURL": "http://localhost:10000",
   "debug": true,
-  "test": true
+  "test": true,
+  "mockupx": true
 }

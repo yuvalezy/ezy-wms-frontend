@@ -1,14 +1,18 @@
-import {globalConfig} from "../../assets/GlobalConfig";
+import {delay, getMockupConfig, globalConfig} from "../../assets/GlobalConfig";
 import axios from "axios";
+import {
+    GoodsReceiptMockup,
+    goodsReceiptVSExitReportDataMockup,
+} from "../../assets/mockup";
 
 export type GoodsReceiptAll = {
-    itemCode: string,
-    itemName: string,
+    itemCode: string;
+    itemName: string;
     quantity: number;
     delivery: number;
     showroom: number;
     stock: number;
-}
+};
 
 export type GoodsReceiptVSExitReportData = {
     objectType: number;
@@ -16,34 +20,36 @@ export type GoodsReceiptVSExitReportData = {
     cardName: string;
     address: string;
     lines: GoodsReceiptVSExitReportDataLine[];
-}
+};
 
 export type GoodsReceiptVSExitReportDataLine = {
     itemCode: string;
     itemName: string;
     openQuantity: number;
     quantity: number;
-}
-export const fetchGoodsReceiptReportAll = async (
-    id: number,
-): Promise<GoodsReceiptAll[]> => {
+};
+
+const isMockup = getMockupConfig();
+export const fetchGoodsReceiptReportAll = async (id: number): Promise<GoodsReceiptAll[]> => {
     try {
         if (!globalConfig)
-            throw new Error('Config has not been initialized!');
-
+            throw new Error("Config has not been initialized!");
         if (globalConfig.debug)
-            await delay(500);
+            await delay();
+        if (isMockup) {
+            console.log("Mockup data is being used.");
+            return GoodsReceiptMockup;
+        }
 
-        const access_token = localStorage.getItem('token');
+        const access_token = localStorage.getItem("token");
 
         const url = `${globalConfig.baseURL}/api/GoodsReceipt/GoodsReceiptAll/${id}`;
 
-        const response = await axios.get<GoodsReceiptAll[]>(url,
-            {
-                headers: {
-                    'Authorization': `Bearer ${access_token}`
-                }
-            });
+        const response = await axios.get<GoodsReceiptAll[]>(url, {
+            headers: {
+                Authorization: `Bearer ${access_token}`,
+            },
+        });
 
         return response.data;
     } catch (error) {
@@ -51,26 +57,26 @@ export const fetchGoodsReceiptReportAll = async (
         throw error;
     }
 };
-export const fetchGoodsReceiptVSExitReport = async (
-    id: number,
-): Promise<GoodsReceiptVSExitReportData[]> => {
+export const fetchGoodsReceiptVSExitReport = async (id: number): Promise<GoodsReceiptVSExitReportData[]> => {
     try {
-        if (!globalConfig)
-            throw new Error('Config has not been initialized!');
+        if (isMockup) {
+            console.log("Mockup data is being used.");
+            return goodsReceiptVSExitReportDataMockup;
+        }
 
-        if (globalConfig.debug)
-            await delay(500);
+        if (!globalConfig) throw new Error("Config has not been initialized!");
 
-        const access_token = localStorage.getItem('token');
+        if (globalConfig.debug) await delay();
+
+        const access_token = localStorage.getItem("token");
 
         const url = `${globalConfig.baseURL}/api/GoodsReceipt/GoodsReceiptVSExitReport/${id}`;
 
-        const response = await axios.get<GoodsReceiptVSExitReportData[]>(url,
-            {
-                headers: {
-                    'Authorization': `Bearer ${access_token}`
-                }
-            });
+        const response = await axios.get<GoodsReceiptVSExitReportData[]>(url, {
+            headers: {
+                Authorization: `Bearer ${access_token}`,
+            },
+        });
 
         return response.data;
     } catch (error) {
@@ -78,4 +84,3 @@ export const fetchGoodsReceiptVSExitReport = async (
         throw error;
     }
 };
-const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
