@@ -15,7 +15,7 @@ import { Authorization } from "../assets/Authorization";
 export type Config = {
   baseURL: string;
   debug: boolean;
-  mockup: boolean;
+  mockup?: boolean;
 };
 
 interface AuthContextType {
@@ -65,7 +65,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const config: Config = {
           baseURL: baseUrl,
           debug: true,
-          mockup: true,
         };
         setConfig(config);
         setGlobalConfig(config);
