@@ -88,66 +88,68 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (username: string, password: string) => {
     try {
       if (!config) return;
+
       if (config.debug) await new Promise((res) => setTimeout(res, 500));
 
-      // const response = await axios.post(
-      //   `${config.baseURL}/token`,
-      //   {
-      //     username,
-      //     password,
-      //     grant_type: "password",
-      //   },
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/x-www-form-urlencoded",
-      //     },
-      //   }
-      // );
+      if (config.mockup) {
+        const access_token = "juanse";
+        const expires_in = 3600;
 
-      // if (response.data && response.data.access_token) {
-      //   const { access_token, expires_in } = response.data;
+        localStorage.setItem("token", access_token);
+        const expiryTime = new Date().getTime() + expires_in * 1000;
+        localStorage.setItem("token_expiry", expiryTime.toString());
 
-      //   localStorage.setItem("token", access_token);
-      //   const expiryTime = new Date().getTime() + expires_in * 1000;
-      //   localStorage.setItem("token_expiry", expiryTime.toString());
+        setTimeout(logout, expires_in * 1000);
 
-      //   setTimeout(logout, expires_in * 1000);
+        const userInfoResponse = {
+          id: 1,
+          name: "mockUser",
+          branch: "branch",
+          authorizations: [
+            Authorization.GOODS_RECEIPT,
+            Authorization.GOODS_RECEIPT_SUPERVISOR,
+          ],
+        };
 
-      //   const userInfoResponse = await axios.get<User>(
-      //     `${config.baseURL}/api/General/UserInfo`,
-      //     {
-      //       headers: {
-      //         Authorization: `Bearer ${access_token}`,
-      //       },
-      //     }
-      //   );
+        return setUser(userInfoResponse);
+      }
 
-      //   if (userInfoResponse.data) {
-      //     setUser(userInfoResponse.data);
-      //   }
-      // }
+      const response = await axios.post(
+        `${config.baseURL}/token`,
+        {
+          username,
+          password,
+          grant_type: "password",
+        },
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      );
 
-      const access_token = "juanse"; // Replace with your desired mock token value
-      const expires_in = 3600; // Replace with the desired expiry time in seconds
+      if (response.data && response.data.access_token) {
+        const { access_token, expires_in } = response.data;
 
-      localStorage.setItem("token", access_token);
-      const expiryTime = new Date().getTime() + expires_in * 1000;
-      localStorage.setItem("token_expiry", expiryTime.toString());
+        localStorage.setItem("token", access_token);
+        const expiryTime = new Date().getTime() + expires_in * 1000;
+        localStorage.setItem("token_expiry", expiryTime.toString());
 
-      setTimeout(logout, expires_in * 1000);
+        setTimeout(logout, expires_in * 1000);
 
-      const userInfoResponse = {
-        // Replace this with your actual mock user data or remove it if not needed for testing purposes
-        id: 1,
-        name: "mockUser",
-        branch: "branch",
-        authorizations: [
-          Authorization.GOODS_RECEIPT,
-          Authorization.GOODS_RECEIPT_SUPERVISOR,
-        ],
-      };
+        const userInfoResponse = await axios.get<User>(
+          `${config.baseURL}/api/General/UserInfo`,
+          {
+            headers: {
+              Authorization: `Bearer ${access_token}`,
+            },
+          }
+        );
 
-      setUser(userInfoResponse);
+        if (userInfoResponse.data) {
+          setUser(userInfoResponse.data);
+        }
+      }
 
       // Set the mock user data
     } catch (error) {
