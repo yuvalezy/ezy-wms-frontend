@@ -17,7 +17,7 @@ import { AuthContext } from "../Components/AppContext";
 
 export default function GoodsReceipt() {
   const { config } = useContext(AuthContext);
-  const mockup = config?.mockup;
+  
   const [, setLoading] = useState(false);
   const [scanCodeInput, setScanCodeInput] = React.useState("");
   const [snackbar, setSnackbar] = React.useState<SnackbarState>({
@@ -54,7 +54,7 @@ export default function GoodsReceipt() {
     }
     const id = parseInt(checkScan[1]);
     setLoading(true);
-    fetchDocuments(mockup as boolean, id, [])
+    fetchDocuments(id, [])
       .then((doc) => {
         if (doc.length === 0) {
           alert(StringFormat(t("goodsReceiptNotFound"), id));

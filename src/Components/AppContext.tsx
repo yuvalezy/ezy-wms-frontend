@@ -84,70 +84,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // Call the login function after setting the mock token
 
+
   const login = async (username: string, password: string) => {
     try {
       if (!config) return;
 
       if (config.debug) await new Promise((res) => setTimeout(res, 500));
 
-      if (config.mockup) {
-        const access_token = "juanse";
-        const expires_in = 3600;
-
-        localStorage.setItem("token", access_token);
-        const expiryTime = new Date().getTime() + expires_in * 1000;
-        localStorage.setItem("token_expiry", expiryTime.toString());
-
-        setTimeout(logout, expires_in * 1000);
-
-        const userInfoResponse = {
-          id: 1,
-          name: "mockUser",
-          branch: "branch",
-          authorizations: [
-            Authorization.GOODS_RECEIPT,
-            Authorization.GOODS_RECEIPT_SUPERVISOR,
-          ],
-        };
-
-        return setUser(userInfoResponse);
-      }
-
-      const response = await axios.post(
-        `${config.baseURL}/token`,
-        {
-          username,
-          password,
-          grant_type: "password",
-        },
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        }
-      );
-
-      if (response.data && response.data.access_token) {
-        const { access_token, expires_in } = response.data;
-
-        localStorage.setItem("token", access_token);
-        const expiryTime = new Date().getTime() + expires_in * 1000;
-        localStorage.setItem("token_expiry", expiryTime.toString());
-
-        setTimeout(logout, expires_in * 1000);
-
-        const userInfoResponse = await axios.get<User>(
-          `${config.baseURL}/api/General/UserInfo`,
-          {
-            headers: {
-              Authorization: `Bearer ${access_token}`,
-            },
-          }
-        );
-
-        if (userInfoResponse.data) {
-          setUser(userInfoResponse.data);
-        }
+      if (!config.mockup) {
+        return await loginExecute(username, password);
+      } else {
+        return mockupLogin();
       }
 
       // Set the mock user data
@@ -159,6 +106,69 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       alert(`Failed to login: ${error_description || axiosError.message}`);
     }
   };
+
+  async function loginExecute(username: string, password: string) {
+    if (!config)
+      return;
+    const response = await axios.post(
+        `${config.baseURL}/token`,
+        {
+          username,
+          password,
+          grant_type: "password",
+        },
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+    );
+    if (response.data && response.data.access_token) {
+      const {access_token, expires_in} = response.data;
+
+      localStorage.setItem("token", access_token);
+      const expiryTime = new Date().getTime() + expires_in * 1000;
+      localStorage.setItem("token_expiry", expiryTime.toString());
+
+      setTimeout(logout, expires_in * 1000);
+
+      const userInfoResponse = await axios.get<User>(
+          `${config.baseURL}/api/General/UserInfo`,
+          {
+            headers: {
+              Authorization: `Bearer ${access_token}`,
+            },
+          }
+      );
+
+      if (userInfoResponse.data) {
+        setUser(userInfoResponse.data);
+      }
+    }
+  }
+
+  function mockupLogin() {
+    const access_token = "juanse";
+    const expires_in = 3600;
+
+    localStorage.setItem("token", access_token);
+    const expiryTime = new Date().getTime() + expires_in * 1000;
+    localStorage.setItem("token_expiry", expiryTime.toString());
+
+    setTimeout(logout, expires_in * 1000);
+
+    const userInfoResponse = {
+      id: 1,
+      name: "mockUser",
+      branch: "branch",
+      authorizations: [
+        Authorization.GOODS_RECEIPT,
+        Authorization.GOODS_RECEIPT_SUPERVISOR,
+      ],
+    };
+
+    return setUser(userInfoResponse);
+  }
 
   const logout = () => {
     localStorage.removeItem("token");

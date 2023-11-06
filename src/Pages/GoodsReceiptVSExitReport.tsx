@@ -21,7 +21,7 @@ import { AuthContext } from "../Components/AppContext";
 
 export default function GoodsReceiptVSExitReport() {
   const { config } = useContext(AuthContext);
-  const mockup = config?.mockup;
+  
   const [id, setID] = useState<number | null>();
   const { scanCode } = useParams();
   const { t } = useTranslation();
@@ -46,7 +46,7 @@ export default function GoodsReceiptVSExitReport() {
     setID(parseInt(scanCode));
 
     setLoading(true);
-    fetchGoodsReceiptVSExitReport(mockup as boolean, parseInt(scanCode))
+    fetchGoodsReceiptVSExitReport(parseInt(scanCode))
       .then((result) => setData(result))
       .catch((error) => errorAlert(`Loading Error: ${error}`))
       .finally(() => setLoading(false));

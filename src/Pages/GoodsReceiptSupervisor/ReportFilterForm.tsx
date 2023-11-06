@@ -57,7 +57,7 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({
   onClear,
 }) => {
   const { config } = useContext(AuthContext);
-  const mockup = config?.mockup;
+  
   const [vendors, setVendors] = useState<BusinessPartner[]>([]);
   const { t } = useTranslation();
   const documentStatusOptions = useDocumentStatusOptions();
@@ -68,7 +68,7 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({
   const [selectedDate, setSelectedDate] = useState<string | undefined>();
 
   useEffect(() => {
-    fetchVendors(mockup as boolean)
+    fetchVendors()
       .then((data) => {
         setVendors(data);
       })

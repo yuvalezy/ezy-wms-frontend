@@ -1,5 +1,5 @@
 import axios from "axios";
-import { globalConfig } from "../../assets/GlobalConfig";
+import {delay, getMockupConfig, globalConfig} from "../../assets/GlobalConfig";
 import { ResponseStatus } from "../../assets/Common";
 import { itemMockup, updateItemBarMockup } from "../../assets/mockup";
 
@@ -15,20 +15,22 @@ export interface UpdateItemBarCodeResponse {
   errorMessage?: string;
   status: ResponseStatus;
 }
+
+const isMockup = getMockupConfig();
 export const itemCheck = async (
-  mockup: boolean,
   itemCode?: string,
   barcode?: string
 ): Promise<ItemCheckResponse[]> => {
   try {
-    if (mockup) {
+    if (isMockup) {
       console.log("Mockup data is being used.");
       return itemMockup;
     }
 
     if (!globalConfig) throw new Error("Config has not been initialized!");
 
-    if (globalConfig.debug) await delay(500);
+    if (globalConfig.debug)
+      await delay();
 
     const access_token = localStorage.getItem("token");
 
@@ -55,23 +57,26 @@ export const itemCheck = async (
 };
 
 export const updateItemBarCode = async (
-  mockup: boolean,
   itemCode: string,
   removeBarcodes: string[],
   addBarcode: string
 ): Promise<UpdateItemBarCodeResponse> => {
   try {
-    if (mockup && addBarcode) {
-      itemMockup[0].barcodes.push(addBarcode);
-      return updateItemBarMockup;
-    }
-    if (mockup) {
+    if (isMockup) {
+      if (addBarcode) {
+        itemMockup[0].barcodes.push(addBarcode);
+      }
+      if (removeBarcodes.length > 0) {
+          itemMockup[0].barcodes = itemMockup[0].barcodes.filter(
+              (barcode) => !removeBarcodes.includes(barcode)
+          );
+      }
       return updateItemBarMockup;
     }
 
     if (!globalConfig) throw new Error("Config has not been initialized!");
 
-    if (globalConfig.debug) await delay(500);
+    if (globalConfig.debug) await delay();
 
     const access_token = localStorage.getItem("token");
 
@@ -97,7 +102,3 @@ export const updateItemBarCode = async (
     throw error;
   }
 };
-
-// const [checkedBarcodes, setCheckedBarcodes] = React.useState<string[]>([]);
-// const [newBarcodeInput, setNewBarcodeInput] = React.useState('');
-const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));

@@ -30,7 +30,7 @@ const ProcessNumInBuy: React.FC<ProcessNumInBuyProps> = ({
   onClose,
 }) => {
   const { config } = useContext(AuthContext);
-  const mockup = config?.mockup;
+  
   const { t } = useTranslation();
   const { setLoading } = useLoading();
   const [open, setOpen] = useState(true);
@@ -47,7 +47,6 @@ const ProcessNumInBuy: React.FC<ProcessNumInBuyProps> = ({
     e.preventDefault();
     setLoading(true);
     updateLine({
-      mockup: mockup as boolean,
       id: id,
       lineID: alert.lineID ?? -1,
       numInBuy: numInBuy,

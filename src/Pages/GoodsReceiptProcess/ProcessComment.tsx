@@ -28,7 +28,7 @@ const ProcessComment: React.FC<ProcessCommentProps> = ({
   onClose,
 }) => {
   const { config } = useContext(AuthContext);
-  const mockup = config?.mockup;
+  
   const { t } = useTranslation();
   const { setLoading } = useLoading();
   const [open, setOpen] = useState(true);
@@ -42,7 +42,6 @@ const ProcessComment: React.FC<ProcessCommentProps> = ({
   const handleSave = () => {
     setLoading(true);
     updateLine({
-      mockup: mockup as boolean,
       id: id,
       lineID: alert.lineID ?? -1,
       comment: comment,

@@ -1,6 +1,6 @@
 import ContentTheme from "../Components/ContentTheme";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import React, { useContext } from "react";
+import React from "react";
 import { useLoading } from "../Components/LoadingContext";
 import {
   itemCheck,
@@ -21,11 +21,8 @@ import {
   MessageStrip,
 } from "@ui5/webcomponents-react";
 import "@ui5/webcomponents-icons/dist/accept.js";
-import { AuthContext } from "../Components/AppContext";
 
 export default function ItemCheck() {
-  const { config } = useContext(AuthContext);
-  const mockup = config?.mockup;
   const { t } = useTranslation();
   const [barcodeInput, setBarcodeInput] = React.useState("");
   const [itemCodeInput, setItemCodeInput] = React.useState("");
@@ -45,7 +42,7 @@ export default function ItemCheck() {
   }
 
   function executeItemCheck(itemCode: string, barCode: string) {
-    itemCheck(mockup as boolean, itemCode, barCode)
+    itemCheck(itemCode, barCode)
       .then(function (items) {
         setResult(items);
       })
@@ -68,11 +65,9 @@ export default function ItemCheck() {
     checkedBarcodes: string[],
     newBarcode: string
   ) {
-    updateItemBarCode(mockup as boolean, itemCode, checkedBarcodes, newBarcode)
+    updateItemBarCode(itemCode, checkedBarcodes, newBarcode)
       .then((response) => {
         if (response.status === ResponseStatus.Ok) {
-          if (mockup) return executeItemCheck("", newBarcode);
-
           executeItemCheck(itemCode, "");
         } else {
           if (response.existItem != null) {
@@ -110,7 +105,6 @@ export default function ItemCheck() {
         continue;
       }
       await updateItemBarCode(
-        mockup as boolean,
         result[i].itemCode,
         [barcodeInput],
         ""

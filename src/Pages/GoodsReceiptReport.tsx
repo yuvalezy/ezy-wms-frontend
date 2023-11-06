@@ -12,7 +12,7 @@ import { AuthContext } from "../Components/AppContext";
 
 export default function GoodsReceiptReport() {
   const { config } = useContext(AuthContext);
-  const mockup = config?.mockup;
+  
   const { setLoading } = useLoading();
   const { t } = useTranslation();
   const [idInput, setIDInput] = useState<string | "">("");
@@ -41,7 +41,6 @@ export default function GoodsReceiptReport() {
     let statuses = statusInput != null ? [statusInput.status] : [];
     let grpo = grpoInput.length > 0 ? parseInt(grpoInput) : undefined;
     fetchDocuments(
-      mockup as boolean,
       id,
       statuses,
       cardCodeInput,

@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState, useContext } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ConfirmationDialog from "../Components/ConfirmationDialog";
-import { AuthContext, useAuth } from "../Components/AppContext";
+import { useAuth } from "../Components/AppContext";
 import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import ContentTheme from "../Components/ContentTheme";
 import { StringFormat } from "../assets/Functions";
@@ -19,9 +19,6 @@ import { Dialog, DialogDomRef, Bar, Button } from "@ui5/webcomponents-react";
 import QRCode from "qrcode.react";
 
 export default function GoodsReceiptSupervisor() {
-  const { config } = useContext(AuthContext);
-  const mockup = config?.mockup;
-
   const dialogRef = useRef<DialogDomRef>(null);
   const { user } = useAuth();
   const { t } = useTranslation();
@@ -43,7 +40,7 @@ export default function GoodsReceiptSupervisor() {
 
   useEffect(() => {
     setLoading(true);
-    fetchDocuments(mockup as boolean)
+    fetchDocuments()
       .then((data) => {
         setDocuments(data);
       })
@@ -68,7 +65,7 @@ export default function GoodsReceiptSupervisor() {
   const handleConfirmAction = () => {
     setLoading(true);
     setDialogOpen(false);
-    documentAction(mockup as boolean, selectedDocumentId!, actionType!, user!)
+    documentAction(selectedDocumentId!, actionType!, user!)
       .then(() => {
         setDocuments((prevDocs) =>
           prevDocs.filter((doc) => doc.id !== selectedDocumentId)

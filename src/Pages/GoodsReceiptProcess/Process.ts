@@ -1,12 +1,8 @@
 import axios from "axios";
-import { AlertColor } from "@mui/material";
-import { globalConfig } from "../../assets/GlobalConfig";
-import { UpdateLineReturnValue } from "../GoodsReceiptSupervisor/Document";
-import {
-  UpdateLineReturnValueMockup,
-  addItemResponseMockup,
-} from "../../assets/mockup";
-import { Console } from "console";
+import {AlertColor} from "@mui/material";
+import {delay, getMockupConfig, globalConfig} from "../../assets/GlobalConfig";
+import {UpdateLineReturnValue} from "../GoodsReceiptSupervisor/Document";
+import {addItemResponseMockup, UpdateLineReturnValueMockup,} from "../../assets/mockup";
 
 interface AddItemResponse {
   lineID: number;
@@ -22,50 +18,45 @@ export type AddItemResponseMultipleValue = {
   severity: AlertColor;
 };
 
+const isMockup = getMockupConfig();
+
 export const addItem = async (
-  mockup: boolean,
   id: number,
   itemCode: string,
   barcode: string
 ): Promise<AddItemResponse> => {
   try {
-    if (mockup) {
+    if (isMockup) {
       switch (barcode) {
         case "approve": {
-          const approve = { ...addItemResponseMockup, warehouse: true };
-          return approve;
+          return {...addItemResponseMockup, warehouse: true};
         }
         case "alert": {
-          const alert = { ...addItemResponseMockup, fulfillment: true };
-          return alert;
+          return {...addItemResponseMockup, fulfillment: true};
         }
         case "showroom": {
-          const showroom = { ...addItemResponseMockup, showroom: true };
-          return showroom;
+          return {...addItemResponseMockup, showroom: true};
         }
         case "cancel": {
-          const cancel = { ...addItemResponseMockup, closedDocument: true };
-          return cancel;
+          return {...addItemResponseMockup, closedDocument: true};
         }
         case "error": {
           return addItemResponseMockup;
         }
         default: {
-          const defaultValue = {
+          return {
             ...addItemResponseMockup,
             showroom: true,
             fulfillment: true,
             warehouse: true,
           };
-
-          return defaultValue;
         }
       }
     }
 
     if (!globalConfig) throw new Error("Config has not been initialized!");
 
-    if (globalConfig.debug) await delay(500);
+    if (globalConfig.debug) await delay();
 
     const access_token = localStorage.getItem("token");
 
@@ -92,7 +83,6 @@ export const addItem = async (
   }
 };
 export const updateLine = async ({
-  mockup,
   id,
   lineID,
   comment,
@@ -100,7 +90,6 @@ export const updateLine = async ({
   reason,
   numInBuy,
 }: {
-  mockup: boolean;
   id: number;
   lineID: number;
   comment?: string;
@@ -109,14 +98,14 @@ export const updateLine = async ({
   reason?: number;
 }): Promise<UpdateLineReturnValue> => {
   try {
-    if (mockup) {
+    if (isMockup) {
       console.log("Mockup data is being used.");
       return UpdateLineReturnValueMockup;
     }
 
     if (!globalConfig) throw new Error("Config has not been initialized!");
 
-    if (globalConfig.debug) await delay(500);
+    if (globalConfig.debug) await delay();
 
     const access_token = localStorage.getItem("token");
 
@@ -145,4 +134,3 @@ export const updateLine = async ({
     throw error;
   }
 };
-const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));

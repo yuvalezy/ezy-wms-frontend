@@ -24,10 +24,10 @@ import {
 import ProcessNumInBuy from "./GoodsReceiptProcess/ProcessNumInBuy";
 import { useTranslation } from "react-i18next";
 import { AuthContext } from "../Components/AppContext";
+import {getMockupConfig} from "../assets/GlobalConfig";
 
 export default function GoodsReceiptProcess() {
-  const { config } = useContext(AuthContext);
-  const mockup = config?.mockup;
+  const isMockup = getMockupConfig();
   const { scanCode } = useParams();
   const { t } = useTranslation();
   const barcodeRef = useRef<HTMLInputElement>();
@@ -71,7 +71,7 @@ export default function GoodsReceiptProcess() {
     }
 
     setLoading(true);
-    scanBarcode(mockup as boolean, barcodeInput)
+    scanBarcode(barcodeInput)
       .then((items) => handleItems(items))
       .catch((error) => {
         alert({ message: `Scan Bar Code Error: ${error}`, severity: "error" });
@@ -119,7 +119,7 @@ export default function GoodsReceiptProcess() {
     const barcode = barcodeInput;
     setBarcodeInput("");
     setLoading(true);
-    addItem(mockup as boolean, id ?? 0, itemCode, barcode)
+    addItem(id ?? 0, itemCode, barcode)
       .then((data) => {
         if (data.closedDocument) {
           alert({
@@ -135,7 +135,7 @@ export default function GoodsReceiptProcess() {
           return;
         }
 
-        if (mockup && !data.fulfillment && !data.warehouse && !data.showroom) {
+        if (isMockup && !data.fulfillment && !data.warehouse && !data.showroom) {
           return alert({
             barcode: barcode,
             itemCode: itemCode,
@@ -290,6 +290,7 @@ export default function GoodsReceiptProcess() {
             {acceptValues.map((alert) => (
               <ProcessAlert
                 alert={alert}
+                key={alert.lineID}
                 onAction={(type) => alertAction(alert, type)}
               />
             ))}
@@ -311,7 +312,6 @@ export default function GoodsReceiptProcess() {
                     onClose={handleAlertCancelAction}
                   />
                 )}
-                {currentAlertAction}
                 {currentAlertAction === AlertActionType.NumInBuy && (
                   <ProcessNumInBuy
                     id={id}

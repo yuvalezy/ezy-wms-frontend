@@ -18,7 +18,7 @@ import { AuthContext } from "../Components/AppContext";
 
 export default function GoodsReceiptReportAll() {
   const { config } = useContext(AuthContext);
-  const mockup = config?.mockup;
+  
   const { t } = useTranslation();
   const [id, setID] = useState<number | null>();
   const { scanCode } = useParams();
@@ -42,7 +42,7 @@ export default function GoodsReceiptReportAll() {
     setID(parseInt(scanCode));
 
     setLoading(true);
-    fetchGoodsReceiptReportAll(mockup as boolean, parseInt(scanCode))
+    fetchGoodsReceiptReportAll(parseInt(scanCode))
       .then((result) => setData(result))
       .catch((error) => errorAlert(`Loading Error: ${error}`))
       .finally(() => setLoading(false));

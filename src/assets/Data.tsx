@@ -1,8 +1,8 @@
 import axios from "axios";
-import { DocumentStatus } from "../Pages/GoodsReceiptSupervisor/Document";
-import { globalConfig } from "./GlobalConfig";
-import { useTranslation } from "react-i18next";
-import { vendorsMockup } from "./mockup";
+import {DocumentStatus} from "../Pages/GoodsReceiptSupervisor/Document";
+import {getMockupConfig, globalConfig} from "./GlobalConfig";
+import {useTranslation} from "react-i18next";
+import {vendorsMockup} from "./mockup";
 
 export type Employee = {
   id: number;
@@ -23,8 +23,8 @@ export type DocumentStatusOption = {
 export function useDocumentStatusOptions() {
   const { t } = useTranslation();
 
-  const DocumentStatusOptions = [
-    { code: "Open", name: t("openStatus"), status: DocumentStatus.Open },
+  return [
+    {code: "Open", name: t("openStatus"), status: DocumentStatus.Open},
     {
       code: "Processing",
       name: t("processingStatus"),
@@ -46,16 +46,17 @@ export function useDocumentStatusOptions() {
       status: DocumentStatus.InProgress,
     },
   ];
-
-  return DocumentStatusOptions;
 }
 
-export const fetchVendors = async (
-  mockup: boolean
-): Promise<BusinessPartner[]> => {
+const isMockup = getMockupConfig();
+
+export const fetchVendors = async (): Promise<BusinessPartner[]> => {
   try {
-    if (mockup) return vendorsMockup;
-    if (!globalConfig) throw new Error("Config has not been initialized!");
+    if (!globalConfig)
+      throw new Error("Config has not been initialized!");
+
+    if (isMockup)
+      return vendorsMockup;
 
     const access_token = localStorage.getItem("token");
     const response = await axios.get<BusinessPartner[]>(

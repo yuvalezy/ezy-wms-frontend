@@ -22,7 +22,6 @@ import {
   Tab,
   TabContainer,
 } from "@ui5/webcomponents-react";
-import { AuthContext } from "../../Components/AppContext";
 
 interface DocumentFormProps {
   onNewDocument: (document: Document) => void;
@@ -33,8 +32,6 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
   onNewDocument,
   onError,
 }) => {
-  const { config } = useContext(AuthContext);
-  const mockup = config?.mockup;
   const { t } = useTranslation();
   const o = useObjectName();
   const { setLoading } = useLoading();
@@ -48,7 +45,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
   const [vendors, setVendors] = useState<BusinessPartner[]>([]);
 
   useEffect(() => {
-    fetchVendors(mockup as boolean)
+    fetchVendors()
       .then((data) => {
         setVendors(data);
       })
@@ -80,7 +77,6 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
     setLoading(true);
     try {
       createDocument(
-        mockup as boolean,
         selectedType,
         cardCodeInput,
         docNameInput,

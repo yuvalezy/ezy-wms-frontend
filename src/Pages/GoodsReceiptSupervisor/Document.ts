@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Item, User } from "../../assets/Common";
 import { BusinessPartner, Employee } from "../../assets/Data";
-import { globalConfig } from "../../assets/GlobalConfig";
+import {delay, getMockupConfig, globalConfig} from "../../assets/GlobalConfig";
 import {
   ReasonValueMockup,
   documentMockup,
@@ -59,22 +59,23 @@ export enum GoodsReceiptType {
   SpecificOrders = "SpecificOrders",
 }
 
+const isMockup = getMockupConfig();
+
 export const createDocument = async (
-  mockup: boolean,
   type: GoodsReceiptType,
   cardCode: string,
   name: string,
   items: DocumentItem[]
 ): Promise<Document> => {
   try {
-    if (mockup) {
+    if (isMockup) {
       console.log("Mockup data is being used.");
       return documentMockup;
     }
 
     if (!globalConfig) throw new Error("Config has not been initialized!");
 
-    if (globalConfig.debug) await delay(500);
+    if (globalConfig.debug) await delay();
 
     const access_token = localStorage.getItem("token");
     const response = await axios.post<Document>(
@@ -99,25 +100,24 @@ export const createDocument = async (
   }
 };
 export const documentAction = async (
-  mockup: boolean,
   id: number,
   action: Action,
   user: User
 ): Promise<boolean> => {
   try {
-    if (mockup && action === "approve") {
+    if (isMockup && action === "approve") {
       documentMockup.status = DocumentStatus.Finished;
       return true;
     }
 
-    if (mockup) {
+    if (isMockup) {
       console.log("Mockup data is being used.");
       return true;
     }
 
     if (!globalConfig) throw new Error("Config has not been initialized!");
 
-    if (globalConfig.debug) await delay(500);
+    if (globalConfig.debug) await delay();
 
     const access_token = localStorage.getItem("token");
     const response = await axios.post<boolean>(
@@ -145,15 +145,15 @@ export type ReasonValue = {
   description: string;
 };
 
-export const fetchReasons = async (mockup: boolean): Promise<ReasonValue[]> => {
-  if (mockup) {
+export const fetchReasons = async (): Promise<ReasonValue[]> => {
+  if (isMockup) {
     console.log("Mockup data is being used.");
     return ReasonValueMockup;
   }
 
   if (!globalConfig) throw new Error("Config has not been initialized!");
 
-  if (globalConfig.debug) await delay(500);
+  if (globalConfig.debug) await delay();
 
   const access_token = localStorage.getItem("token");
 
@@ -169,7 +169,6 @@ export const fetchReasons = async (mockup: boolean): Promise<ReasonValue[]> => {
   return response.data;
 };
 export const fetchDocuments = async (
-  mockup: boolean,
   id?: number,
   statuses: DocumentStatus[] = [DocumentStatus.Open, DocumentStatus.InProgress],
   businessPartner?: BusinessPartner | null,
@@ -180,14 +179,14 @@ export const fetchDocuments = async (
   desc: boolean = true
 ): Promise<Document[]> => {
   try {
-    if (mockup) {
+    if (isMockup) {
       console.log("Mockup data is being used.");
       return [documentMockup];
     }
 
     if (!globalConfig) throw new Error("Config has not been initialized!");
 
-    if (globalConfig.debug) await delay(500);
+    if (globalConfig.debug) await delay();
 
     const access_token = localStorage.getItem("token");
 
@@ -239,17 +238,16 @@ export const fetchDocuments = async (
 };
 
 export const scanBarcode = async (
-  mockup: boolean,
   scanCode: string
 ): Promise<Item[]> => {
   try {
-    if (mockup) {
+    if (isMockup) {
       console.log("Mockup data is being used. holis");
       return itemFatherMockup;
     }
     if (!globalConfig) throw new Error("Config has not been initialized!");
 
-    if (globalConfig.debug) await delay(500);
+    if (globalConfig.debug) await delay();
 
     const access_token = localStorage.getItem("token");
 
@@ -267,5 +265,3 @@ export const scanBarcode = async (
     throw error;
   }
 };
-
-const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useContext } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -20,7 +20,6 @@ import {
 import { updateLine } from "./Process";
 import { useTranslation } from "react-i18next";
 import { ComboBox, ComboBoxItem } from "@ui5/webcomponents-react";
-import { AuthContext } from "../../Components/AppContext";
 
 export interface ProcessCancelProps {
   id: number;
@@ -35,8 +34,6 @@ const ProcessCancel: React.FC<ProcessCancelProps> = ({
   onAccept,
   onClose,
 }) => {
-  const { config } = useContext(AuthContext);
-  const mockup = config?.mockup;
   const { t } = useTranslation();
   const { setLoading } = useLoading();
   const [open, setOpen] = useState(false);
@@ -48,7 +45,7 @@ const ProcessCancel: React.FC<ProcessCancelProps> = ({
 
   useEffect(() => {
     setLoading(true);
-    fetchReasons(mockup as boolean)
+    fetchReasons()
       .then((reasons) => {
         setReasons(reasons);
         setOpen(true);
@@ -71,7 +68,6 @@ const ProcessCancel: React.FC<ProcessCancelProps> = ({
     e.preventDefault();
     setLoading(true);
     updateLine({
-      mockup: mockup as boolean,
       id: id,
       lineID: alert.lineID ?? -1,
       comment: comment,
@@ -147,9 +143,20 @@ const ProcessCancel: React.FC<ProcessCancelProps> = ({
             />
           </Box>
           <Box mb={1} style={{ textAlign: "center" }}>
-            <ComboBox onSelectionChange={(e) => console.log(e)}>
+            {/*<ComboBox onSelectionChange={(e) => console.log(e)}>*/}
+            {/*  {reasons.map((reason) => (*/}
+            {/*    <ComboBoxItem key={reason.value} text={reason.description} />*/}
+            {/*  ))}*/}
+            {/*</ComboBox>*/}
+            <ComboBox
+                onSelectionChange={(e) =>
+                    setReason(
+                        reasons[Array.from(e.target.children).indexOf(e.detail.item)]
+                    )
+                }
+            >
               {reasons.map((reason) => (
-                <ComboBoxItem key={reason.value} text={reason.description} />
+                  <ComboBoxItem key={reason.value} text={reason.description} />
               ))}
             </ComboBox>
             {/*<Autocomplete*/}
