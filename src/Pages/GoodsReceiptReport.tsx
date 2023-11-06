@@ -59,7 +59,7 @@ export default function GoodsReceiptReport() {
   };
 
   return (
-    <ContentTheme title={t("goodsReceiptReport")} icon={<SummarizeIcon />}>
+    <ContentTheme title={t("goodsReceiptReport")} icon="manager-insight">
       <ReportFilterForm
         idInput={idInput}
         setIDInput={setIDInput}

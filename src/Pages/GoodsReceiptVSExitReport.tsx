@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import ContentTheme from "../Components/ContentTheme";
-import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import { Alert, Typography } from "@mui/material";
 import { IsNumeric } from "../assets/Functions";
 import { useParams } from "react-router-dom";
@@ -20,8 +19,6 @@ import { useObjectName } from "../assets/ObjectName";
 import { AuthContext } from "../Components/AppContext";
 
 export default function GoodsReceiptVSExitReport() {
-  const { config } = useContext(AuthContext);
-  
   const [id, setID] = useState<number | null>();
   const { scanCode } = useParams();
   const { t } = useTranslation();
@@ -52,7 +49,7 @@ export default function GoodsReceiptVSExitReport() {
       .finally(() => setLoading(false));
   }, []);
   return (
-    <ContentTheme title={title} icon={<SupervisedUserCircleIcon />}>
+    <ContentTheme title={title} icon="manager-insight">
       <Typography variant="h4">
         {t("goodsReceipt")} #{id}
       </Typography>

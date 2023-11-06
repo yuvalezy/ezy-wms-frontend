@@ -20,7 +20,6 @@ import {
   Input,
   MessageStrip,
 } from "@ui5/webcomponents-react";
-import "@ui5/webcomponents-icons/dist/accept.js";
 
 export default function ItemCheck() {
   const { t } = useTranslation();
@@ -120,7 +119,7 @@ export default function ItemCheck() {
   }
 
   return (
-    <ContentTheme title={t("itemCheck")} icon={<CheckBoxIcon />}>
+    <ContentTheme title={t("itemCheck")} icon="complete">
       {(result == null || result.length === 0) && (
         <Form>
           <FormItem label={t("barcode")}>

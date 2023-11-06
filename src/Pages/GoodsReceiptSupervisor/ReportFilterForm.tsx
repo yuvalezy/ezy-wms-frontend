@@ -6,8 +6,6 @@ import {
   useDocumentStatusOptions,
 } from "../../assets/Data";
 import { useTranslation } from "react-i18next";
-import "@ui5/webcomponents-icons/dist/clear-all.js";
-import "@ui5/webcomponents-icons/dist/bar-chart.js";
 import {
   Icon,
   Grid,

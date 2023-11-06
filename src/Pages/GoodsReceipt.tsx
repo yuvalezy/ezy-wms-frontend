@@ -82,7 +82,7 @@ export default function GoodsReceipt() {
   }
 
   return (
-    <ContentTheme title={t("goodsReceipt")} icon={<AssignmentTurnedInIcon />}>
+    <ContentTheme title={t("goodsReceipt")} icon="cause">
       {ScanForm()}
       <SnackbarAlert
         state={snackbar}

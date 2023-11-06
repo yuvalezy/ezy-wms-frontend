@@ -7,9 +7,6 @@ import {useTranslation} from "react-i18next";
 import {useObjectName} from "../../assets/ObjectName";
 import {useDocumentStatusToString} from "./DocumentStatusString";
 import {Card, CardHeader, Icon, List, StandardListItem, Button} from "@ui5/webcomponents-react";
-import "@ui5/webcomponents-icons/dist/qr-code.js"
-import "@ui5/webcomponents-icons/dist/complete.js"
-import "@ui5/webcomponents-icons/dist/cancel.js"
 
 type DocumentCardProps = {
     doc: Document,

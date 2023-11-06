@@ -1,7 +1,6 @@
 import ContentTheme from "../Components/ContentTheme";
-import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import { useParams } from "react-router-dom";
-import React, { useEffect, useRef, useState, useContext } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ErrorMessage from "../Components/ErrorMessagex";
 import { IsNumeric, StringFormat } from "../assets/Functions";
 import Box from "@mui/material/Box";
@@ -10,20 +9,13 @@ import BoxConfirmationDialog from "../Components/BoxConfirmationDialog";
 import DoneIcon from "@mui/icons-material/Done";
 import { scanBarcode } from "./GoodsReceiptSupervisor/Document";
 import { distinctItems, Item } from "../assets/Common";
-import ProcessAlert, {
-  AlertActionType,
-  ProcessAlertValue,
-} from "./GoodsReceiptProcess/ProcessAlert";
+import ProcessAlert, { AlertActionType, ProcessAlertValue, } from "./GoodsReceiptProcess/ProcessAlert";
 import ProcessComment from "./GoodsReceiptProcess/ProcessComment";
 import { useLoading } from "../Components/LoadingContext";
 import ProcessCancel from "./GoodsReceiptProcess/ProcessCancel";
-import {
-  addItem,
-  AddItemResponseMultipleValue,
-} from "./GoodsReceiptProcess/Process";
+import { addItem, AddItemResponseMultipleValue, } from "./GoodsReceiptProcess/Process";
 import ProcessNumInBuy from "./GoodsReceiptProcess/ProcessNumInBuy";
 import { useTranslation } from "react-i18next";
-import { AuthContext } from "../Components/AppContext";
 import {getMockupConfig} from "../assets/GlobalConfig";
 
 export default function GoodsReceiptProcess() {
@@ -246,7 +238,7 @@ export default function GoodsReceiptProcess() {
   }
 
   return (
-    <ContentTheme title={title} icon={<AssignmentTurnedInIcon />}>
+    <ContentTheme title={title} icon="cause">
       {id ? (
         <>
           {enable && (

@@ -2,8 +2,6 @@ import React, {forwardRef, useImperativeHandle, useRef, useState} from 'react';
 import {DocumentItem} from "./Document";
 import {useTranslation} from "react-i18next";
 import {useObjectName} from "../../assets/ObjectName";
-import "@ui5/webcomponents-icons/dist/add.js"
-import "@ui5/webcomponents-icons/dist/decline.js"
 import {Icon, ComboBox, ComboBoxItem, Input, Button, List, StandardListItem} from "@ui5/webcomponents-react";
 
 export interface DocumentListRef {

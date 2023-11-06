@@ -18,8 +18,6 @@ import {
     Icon,
     CheckBoxDomRef
 } from "@ui5/webcomponents-react";
-import "@ui5/webcomponents-icons/dist/save.js"
-import "@ui5/webcomponents-icons/dist/cancel.js"
 
 interface ItemCheckResultProps {
     result: ItemCheckResponse;

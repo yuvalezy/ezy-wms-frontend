@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import ContentTheme from "../Components/ContentTheme";
-import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import { Alert, Typography } from "@mui/material";
 import { IsNumeric } from "../assets/Functions";
 import { useParams } from "react-router-dom";
@@ -84,7 +83,7 @@ export default function GoodsReceiptReportAll() {
     saveAs(excelData, `goods_receipt_data_${id}.xlsx`);
   };
   return (
-    <ContentTheme title={title} icon={<SupervisedUserCircleIcon />}>
+    <ContentTheme title={title} icon="manager-insight">
       <div style={{ position: "relative" }}>
         <Typography variant="h4">
           {t("goodsReceipt")} #{id}
