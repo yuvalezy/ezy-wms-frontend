@@ -63,7 +63,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, handleAction}) => {
                 <StandardListItem><strong>{t('status')}:</strong> {documentStatusToString(doc.status)}</StandardListItem>
                 <StandardListItem>
                     {doc.status === DocumentStatus.InProgress && (
-                        <Button color="primary" onClick={() => handleAction(doc.id, 'approve')}>
+                        <Button style={{marginRight: '10px'}} color="primary" onClick={() => handleAction(doc.id, 'approve')}>
                             <Icon name="complete"/>
                             {t('finish')}
                         </Button>)}

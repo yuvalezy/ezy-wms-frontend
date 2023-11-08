@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import SummarizeIcon from "@mui/icons-material/Summarize";
 import ContentTheme from "../Components/ContentTheme";
 import ReportFilterForm from "./GoodsReceiptSupervisor/ReportFilterForm";
 import SnackbarAlert, { SnackbarState } from "../Components/SnackbarAlert";
@@ -11,8 +10,6 @@ import { useTranslation } from "react-i18next";
 import { AuthContext } from "../Components/AppContext";
 
 export default function GoodsReceiptReport() {
-  const { config } = useContext(AuthContext);
-  
   const { setLoading } = useLoading();
   const { t } = useTranslation();
   const [idInput, setIDInput] = useState<string | "">("");

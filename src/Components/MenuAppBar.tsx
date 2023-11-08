@@ -43,7 +43,6 @@ const MenuAppBar: React.FC<MenuAppBarProps> = ({title, icon}) => {
             primaryTitle={title}>
             <ShellBarItem
                 icon="log"
-                text="ShellBarItem"
                 onClick={() => logout()}
             />
         </ShellBar>

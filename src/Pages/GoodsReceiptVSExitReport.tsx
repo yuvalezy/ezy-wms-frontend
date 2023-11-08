@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ContentTheme from "../Components/ContentTheme";
-import { Alert, Typography } from "@mui/material";
 import { IsNumeric } from "../assets/Functions";
 import { useParams } from "react-router-dom";
 import {
@@ -8,15 +7,11 @@ import {
   GoodsReceiptVSExitReportData,
 } from "./GoodsReceiptSupervisor/Report";
 import SnackbarAlert, { SnackbarState } from "../Components/SnackbarAlert";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import GoodsReceiptVSExitReportTable from "./GoodsReceiptSupervisor/GoodsReceiptVSExitReportTable";
 import { useLoading } from "../Components/LoadingContext";
 import { useTranslation } from "react-i18next";
 import { useObjectName } from "../assets/ObjectName";
-import { AuthContext } from "../Components/AppContext";
+import {Panel, Title, Text, MessageStrip} from "@ui5/webcomponents-react";
 
 export default function GoodsReceiptVSExitReport() {
   const [id, setID] = useState<number | null>();
@@ -50,33 +45,29 @@ export default function GoodsReceiptVSExitReport() {
   }, []);
   return (
     <ContentTheme title={title} icon="manager-insight">
-      <Typography variant="h4">
+      <Title level="H1">
         {t("goodsReceipt")} #{id}
-      </Typography>
+      </Title>
       <div>
         {data?.map((value) => (
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="h5">
-                <strong>{o(value.objectType)}: </strong> {value.number}
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>
-                <strong>{t("customer")}: </strong>
-                {value.cardName}
-              </Typography>
-              <Typography>
-                <strong>{t("address")}: </strong>
-                {value.address}
-              </Typography>
-              <GoodsReceiptVSExitReportTable data={value.lines} />
-            </AccordionDetails>
-          </Accordion>
+          <Panel
+              collapsed
+              headerText={`${o(value.objectType)}: ${value.number}`}
+          >
+            <Title level="H3">
+              <strong>{t("customer")}: </strong>
+              {value.cardName}
+            </Title>
+            <Text>
+              <strong>{t("address")}: </strong>
+              {value.address}
+            </Text>
+            <GoodsReceiptVSExitReportTable data={value.lines} />
+          </Panel>
         ))}
       </div>
       {data && data.length === 0 && (
-        <Alert severity="warning">{t("noExitData")}</Alert>
+        <MessageStrip hideCloseButton design="Warning">{t("noExitData")}</MessageStrip>
       )}
       <SnackbarAlert
         state={snackbar}

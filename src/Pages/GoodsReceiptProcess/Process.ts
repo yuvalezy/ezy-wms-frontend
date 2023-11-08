@@ -1,8 +1,8 @@
 import axios from "axios";
-import {AlertColor} from "@mui/material";
 import {delay, getMockupConfig, globalConfig} from "../../assets/GlobalConfig";
 import {UpdateLineReturnValue} from "../GoodsReceiptSupervisor/Document";
 import {addItemResponseMockup, UpdateLineReturnValueMockup,} from "../../assets/mockup";
+import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
 
 interface AddItemResponse {
   lineID: number;
@@ -15,7 +15,7 @@ interface AddItemResponse {
 
 export type AddItemResponseMultipleValue = {
   message: string;
-  severity: AlertColor;
+  severity: MessageStripDesign;
 };
 
 const isMockup = getMockupConfig();

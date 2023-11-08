@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState, useContext } from "react";
-import DescriptionIcon from "@mui/icons-material/Description";
+import React, { useEffect, useRef, useState } from "react";
 import { BusinessPartner, fetchVendors } from "../../assets/Data";
 import {
   createDocument,
@@ -17,7 +16,7 @@ import {
   ComboBox,
   ComboBoxItem,
   Form,
-  FormItem,
+  FormItem, Icon,
   Input,
   Tab,
   TabContainer,
@@ -172,7 +171,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
           </FormItem>
           <FormItem>
             <Button color="primary" onClick={handleSubmit}>
-              <DescriptionIcon />
+              <Icon name="create"/>
               {t("create")}
             </Button>
           </FormItem>
@@ -192,7 +191,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
           </FormItem>
           <FormItem>
             <Button color="primary" onClick={handleSubmit}>
-              <DescriptionIcon />
+              <Icon name="create"/>
               {t("create")}
             </Button>
           </FormItem>

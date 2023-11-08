@@ -1,6 +1,5 @@
 import ContentTheme from "../Components/ContentTheme";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import React from "react";
+import React, {MutableRefObject, useEffect, useRef} from "react";
 import { useLoading } from "../Components/LoadingContext";
 import {
   itemCheck,
@@ -17,7 +16,7 @@ import {
   Form,
   FormItem,
   Icon,
-  Input,
+  Input, InputDomRef,
   MessageStrip,
 } from "@ui5/webcomponents-react";
 
@@ -27,6 +26,11 @@ export default function ItemCheck() {
   const [itemCodeInput, setItemCodeInput] = React.useState("");
   const [result, setResult] = React.useState<ItemCheckResponse[] | null>(null);
   const { setLoading } = useLoading();
+  const barcodeInputRef = useRef<InputDomRef>(null);
+
+  useEffect(() => {
+    setTimeout(() => barcodeInputRef.current?.focus(), 1);
+  }, []);
 
   function handleCheckSubmit() {
     let barcodeLength = barcodeInput.length === 0;
@@ -128,7 +132,7 @@ export default function ItemCheck() {
               disabled={itemCodeInput.length > 0}
               value={barcodeInput}
               onChange={(e) => setBarcodeInput(e.target.value as string)}
-              autoFocus={true}
+              ref={barcodeInputRef}
             />
           </FormItem>
           <FormItem label={t("code")}>

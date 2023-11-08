@@ -72,6 +72,10 @@
   margin-right: 8px; /* space between icon and text */
 }
 
+.right {
+  text-align: right;
+}
+
 /* Responsive adjustments */
 @media (max-width: 600px) {
   .homeMenuItemLink {

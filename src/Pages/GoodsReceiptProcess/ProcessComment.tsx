@@ -1,96 +1,98 @@
-import React, { useState, useContext } from "react";
+import React, {useState, forwardRef, useImperativeHandle, useRef} from "react";
 import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  TextareaAutosize,
-} from "@mui/material";
-import { ProcessAlertValue } from "./ProcessAlert";
-import { useLoading } from "../../Components/LoadingContext";
-import { updateLine } from "./Process";
-import { useTranslation } from "react-i18next";
-import { AuthContext } from "../../Components/AppContext";
+    Bar,
+    Button,
+    Dialog, DialogDomRef,
+    Title,
+    TextArea
+} from "@ui5/webcomponents-react";
+import {ProcessAlertValue} from "./ProcessAlert";
+import {useLoading} from "../../Components/LoadingContext";
+import {updateLine} from "./Process";
+import {useTranslation} from "react-i18next";
 
-export interface ProcessCommentProps {
-  id: number;
-  alert: ProcessAlertValue;
-  onAccept: (alert: ProcessAlertValue) => void;
-  onClose: () => void;
+export interface ProcessCommentRef {
+    show: (show: boolean) => void;
 }
 
-const ProcessComment: React.FC<ProcessCommentProps> = ({
-  id,
-  alert,
-  onAccept,
-  onClose,
-}) => {
-  const { config } = useContext(AuthContext);
-  
-  const { t } = useTranslation();
-  const { setLoading } = useLoading();
-  const [open, setOpen] = useState(true);
-  const [comment, setComment] = useState(alert.comment || "");
+export interface ProcessCommentProps {
+    id: number;
+    alert?: ProcessAlertValue | null;
+    onAccept: (comment: string) => void;
+}
 
-  function handleClose() {
-    setOpen(false);
-    onClose();
-  }
+const ProcessComment = forwardRef((props: ProcessCommentProps, ref) => {
+    const {t} = useTranslation();
+    const dialogRef = useRef<DialogDomRef>(null);
+    const {setLoading} = useLoading();
+    const [comment, setComment] = useState(props.alert?.comment || "");
 
-  const handleSave = () => {
-    setLoading(true);
-    updateLine({
-      id: id,
-      lineID: alert.lineID ?? -1,
-      comment: comment,
-    })
-      .then((_) => {
-        onAccept({
-          ...alert,
-          comment: comment,
-        });
-      })
-      .catch((error) => {
-        console.error(`Error performing update: ${error}`);
-        let errorMessage = error.response?.data["exceptionMessage"];
-        if (errorMessage) window.alert(errorMessage);
-        else window.alert(`Update Line Error: ${error}`);
-      })
-      .finally(function () {
-        setLoading(false);
-        handleClose();
-      });
-  };
+    const handleSave = () => {
+        setLoading(true);
+        updateLine({
+            id: props.id,
+            lineID: props.alert?.lineID ?? -1,
+            comment: comment,
+        })
+            .then((_) => {
+                props.onAccept(comment);
+                dialogRef?.current?.close();
+            })
+            .catch((error) => {
+                console.error(`Error performing update: ${error}`);
+                let errorMessage = error.response?.data["exceptionMessage"];
+                if (errorMessage) window.alert(errorMessage);
+                else window.alert(`Update Line Error: ${error}`);
+            })
+            .finally(function () {
+                setLoading(false);
+            });
+    };
 
-  return (
-    <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>{t("comment")}</DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          <strong>{t("barcode")}: </strong>
-          {alert.barcode}
-        </DialogContentText>
-        <div>
-          <TextareaAutosize
-            style={{ minHeight: "100px", width: "100%" }}
-            minRows={3}
-            maxRows={5}
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-          />
-        </div>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color="secondary">
-          {t("cancel")}
-        </Button>
-        <Button onClick={handleSave} color="primary">
-          {t("accept")}
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
-};
+    useImperativeHandle(ref, () => ({
+        show(show: boolean) {
+            if (show) {
+                dialogRef?.current?.show();
+            } else {
+                dialogRef?.current?.close();
+            }
+        }
+    }))
+
+    return (
+        <Dialog
+            className="footerPartNoPadding"
+            ref={dialogRef}
+            footer={
+                <Bar
+                    design="Footer"
+                    startContent={
+                        <Button design="Negative" onClick={() => dialogRef?.current?.close()}>
+                            {t("cancel")}
+                        </Button>
+                    }
+                    endContent={
+                        <Button onClick={() => handleSave()}>
+                            {t("accept")}
+                        </Button>
+                    }
+                />
+            }
+        >
+            <Title level="H5">
+                {t("comment")}
+            </Title>
+            <Title level="H6">
+                <strong>{t("barcode")}: </strong>
+                {props.alert?.barcode}
+            </Title>
+            <TextArea
+                style={{minHeight: "100px", width: "100%"}}
+                rows={10}
+                value={comment}
+                onInput={(e) => setComment(e.target.value as string)}
+            />
+        </Dialog>
+    );
+});
 export default ProcessComment;

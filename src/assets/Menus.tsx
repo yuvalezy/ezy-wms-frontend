@@ -9,10 +9,13 @@ import "@ui5/webcomponents-icons/dist/cancel.js"
 import "@ui5/webcomponents-icons/dist/add.js"
 import "@ui5/webcomponents-icons/dist/decline.js"
 import "@ui5/webcomponents-icons/dist/accept.js";
+import "@ui5/webcomponents-icons/dist/comment.js";
+import "@ui5/webcomponents-icons/dist/create.js";
 import "@ui5/webcomponents-icons/dist/clear-all.js";
 import "@ui5/webcomponents-icons/dist/bar-chart.js";
 import "@ui5/webcomponents-icons/dist/save.js"
 import "@ui5/webcomponents-icons/dist/cancel.js"
+import "@ui5/webcomponents-icons/dist/numbered-text.js"
 import "@ui5/webcomponents-icons/dist/save.js"
 import "@ui5/webcomponents-icons/dist/cancel.js"
 import "@ui5/webcomponents-icons/dist/log.js"

@@ -1,152 +1,148 @@
-import React, { useRef, useState, useContext } from "react";
+import React, {useRef, useState, forwardRef, useImperativeHandle} from "react";
 import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from "@mui/material";
-import TextField from "@mui/material/TextField";
-import { ProcessAlertValue } from "./ProcessAlert";
-import { useLoading } from "../../Components/LoadingContext";
-import { UpdateLineReturnValue } from "../GoodsReceiptSupervisor/Document";
-import { updateLine } from "./Process";
-import { useTranslation } from "react-i18next";
-import { AuthContext } from "../../Components/AppContext";
+    Bar,
+    Button,
+    Dialog, DialogDomRef,
+    Title,
+    Form, Input, InputDomRef, FormItem
+} from "@ui5/webcomponents-react";
+import {ProcessAlertValue} from "./ProcessAlert";
+import {useLoading} from "../../Components/LoadingContext";
+import {UpdateLineReturnValue} from "../GoodsReceiptSupervisor/Document";
+import {updateLine} from "./Process";
+import {useTranslation} from "react-i18next";
 
-export interface ProcessNumInBuyProps {
-  id: number;
-  alert: ProcessAlertValue;
-  onAccept: (alert: ProcessAlertValue) => void;
-  onClose: () => void;
+export interface ProcessNumInBuyRef {
+    show: (show: boolean) => void;
 }
 
-const ProcessNumInBuy: React.FC<ProcessNumInBuyProps> = ({
-  id,
-  alert,
-  onAccept,
-  onClose,
-}) => {
-  const { config } = useContext(AuthContext);
-  
-  const { t } = useTranslation();
-  const { setLoading } = useLoading();
-  const [open, setOpen] = useState(true);
-  const [userName, setUserName] = useState("");
-  const [numInBuy, setNumInBuy] = useState<number>(alert.numInBuy ?? 1);
-  const numInBuyRef = useRef<HTMLInputElement>();
+export interface ProcessNumInBuyProps {
+    id: number;
+    alert: ProcessAlertValue | null;
+    onAccept: (numInBuy: number) => void;
+}
 
-  function handleClose() {
-    setOpen(false);
-    onClose();
-  }
+const ProcessNumInBuy = forwardRef((props: ProcessNumInBuyProps, ref) => {
+    const {t} = useTranslation();
+    const {setLoading} = useLoading();
+    const [userName, setUserName] = useState("");
+    const [numInBuy, setNumInBuy] = useState<number>(props.alert?.numInBuy ?? 1);
+    const numInBuyRef = useRef<InputDomRef>(null);
+    const dialogRef = useRef<DialogDomRef>(null);
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    updateLine({
-      id: id,
-      lineID: alert.lineID ?? -1,
-      numInBuy: numInBuy,
-      userName: userName,
-    })
-      .then((value) => {
-        let message: string | null = null;
-        switch (value) {
-          case UpdateLineReturnValue.Status:
-            message = t("updateLineStatusError");
-            break;
-          case UpdateLineReturnValue.LineStatus:
-            message = t("updateLineLineStatusError");
-            break;
-          case UpdateLineReturnValue.CloseReason:
-            message = t("updateLineReason");
-            break;
-          case UpdateLineReturnValue.SupervisorPassword:
-            message = t("updateLineWrongSupervisorPassword");
-            break;
-          case UpdateLineReturnValue.NotSupervisor:
-            message = t("updateLineNotSupervisorError");
-            break;
+    function handleSubmit(e: React.FormEvent) {
+        e.preventDefault();
+        setLoading(true);
+        updateLine({
+            id: props.id,
+            lineID: props.alert?.lineID ?? -1,
+            numInBuy: numInBuy,
+            userName: userName,
+        })
+            .then((value) => {
+                let message: string | null = null;
+                switch (value) {
+                    case UpdateLineReturnValue.Status:
+                        message = t("updateLineStatusError");
+                        break;
+                    case UpdateLineReturnValue.LineStatus:
+                        message = t("updateLineLineStatusError");
+                        break;
+                    case UpdateLineReturnValue.CloseReason:
+                        message = t("updateLineReason");
+                        break;
+                    case UpdateLineReturnValue.SupervisorPassword:
+                        message = t("updateLineWrongSupervisorPassword");
+                        break;
+                    case UpdateLineReturnValue.NotSupervisor:
+                        message = t("updateLineNotSupervisorError");
+                        break;
+                }
+                if (message !== null) {
+                    window.alert(message);
+                    setUserName("");
+                    setLoading(false);
+                    setTimeout(() => numInBuyRef.current?.focus(), 100);
+                    return;
+                }
+
+                props.onAccept(numInBuy);
+                dialogRef?.current?.close();
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.error(`Error performing update: ${error}`);
+                let errorMessage = error.response?.data["exceptionMessage"];
+                if (errorMessage) window.alert(errorMessage);
+                else window.alert(`Update Line Error: ${error}`);
+                setLoading(false);
+            });
+    }
+
+    useImperativeHandle(ref, () => ({
+        show(show: boolean) {
+            if (show) {
+                dialogRef?.current?.show();
+            } else {
+                dialogRef?.current?.close();
+            }
         }
-        if (message !== null) {
-          window.alert(message);
-          setUserName("");
-          setLoading(false);
-          setTimeout(() => numInBuyRef.current?.focus(), 100);
-          return;
-        }
+    }))
 
-        onAccept({
-          ...alert,
-          numInBuy: numInBuy,
-        });
-        handleClose();
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error(`Error performing update: ${error}`);
-        let errorMessage = error.response?.data["exceptionMessage"];
-        if (errorMessage) window.alert(errorMessage);
-        else window.alert(`Update Line Error: ${error}`);
-        setLoading(false);
-      });
-  }
-
-  return (
-    <Dialog open={open} onClose={handleClose}>
-      <form onSubmit={handleSubmit}>
-        <DialogTitle>{t("numInBuy")}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            <strong>{t("barcode")}: </strong>
-            {alert.barcode}
-          </DialogContentText>
-          <Box mb={1} style={{ textAlign: "center" }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="numInBuy"
-              inputRef={numInBuyRef}
-              label={t("supervisorCode")}
-              type="password"
-              id="numInBuy"
-              autoComplete="current-password"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
-            />
-          </Box>
-          <Box mb={1} style={{ textAlign: "center" }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="numInBuy"
-              inputRef={numInBuyRef}
-              label={t("numInBuy")}
-              type="number"
-              id="numInBuy"
-              value={numInBuy}
-              onChange={function (e) {
-                let value = e.target.value;
-                return setNumInBuy(value.length > 0 ? parseInt(value) : 1);
-              }}
-            />
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="secondary">
-            {t("cancel")}
-          </Button>
-          <Button type="submit" color="primary">
-            {t("accept")}
-          </Button>
-        </DialogActions>
-      </form>
-    </Dialog>
-  );
-};
+    return (
+        <Dialog
+            className="footerPartNoPadding"
+            ref={dialogRef}
+            footer={
+                <Bar
+                    design="Footer"
+                    startContent={
+                        <Button onClick={handleSubmit}>
+                            {t("accept")}
+                        </Button>
+                    }
+                    endContent={
+                        <Button design="Negative" onClick={() => dialogRef?.current?.close()}>
+                            {t("cancel")}
+                        </Button>
+                    }
+                />
+            }
+        >
+            <Title level="H5">
+                {t("numInBuy")}
+            </Title>
+            <Title level="H6">
+                <strong>{t("barcode")}: </strong>
+                {props.alert?.barcode}
+            </Title>
+            <Form onSubmit={handleSubmit}>
+                <FormItem label={t("supervisorCode")}>
+                    <Input
+                        required
+                        name="username"
+                        type="Password"
+                        id="username"
+                        value={userName}
+                        onChange={(e) => setUserName(e.target.value as string)}
+                    ></Input>
+                </FormItem>
+                <FormItem label={t("numInBuy")}>
+                    <Input
+                        required
+                        name="numInBuy"
+                        ref={numInBuyRef}
+                        type="Number"
+                        id="numInBuy"
+                        value={numInBuy?.toString()}
+                        onChange={function (e) {
+                            let value = e.target.value as string;
+                            return setNumInBuy(value.length > 0 ? parseInt(value) : 1);
+                        }}
+                    ></Input>
+                </FormItem>
+            </Form>
+        </Dialog>
+    );
+});
 export default ProcessNumInBuy;

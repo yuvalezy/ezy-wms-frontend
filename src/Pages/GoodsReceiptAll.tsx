@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ContentTheme from "../Components/ContentTheme";
-import { Alert, Typography } from "@mui/material";
 import { IsNumeric } from "../assets/Functions";
 import { useParams } from "react-router-dom";
 import {
@@ -13,11 +12,9 @@ import { useLoading } from "../Components/LoadingContext";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { useTranslation } from "react-i18next";
-import { AuthContext } from "../Components/AppContext";
+import {MessageStrip, Title} from "@ui5/webcomponents-react";
 
 export default function GoodsReceiptReportAll() {
-  const { config } = useContext(AuthContext);
-  
   const { t } = useTranslation();
   const [id, setID] = useState<number | null>();
   const { scanCode } = useParams();
@@ -85,9 +82,9 @@ export default function GoodsReceiptReportAll() {
   return (
     <ContentTheme title={title} icon="manager-insight">
       <div style={{ position: "relative" }}>
-        <Typography variant="h4">
+        <Title level="H1">
           {t("goodsReceipt")} #{id}
-        </Typography>
+        </Title>
         <img
           src="/images/excel.jpg"
           alt=""
@@ -106,7 +103,7 @@ export default function GoodsReceiptReportAll() {
         <GoodsReceiptAllReportTable data={data}></GoodsReceiptAllReportTable>
       )}
       {data && data.length === 0 && (
-        <Alert severity="warning">{t("noExitData")}</Alert>
+        <MessageStrip hideCloseButton design="Warning">{t("noExitData")}</MessageStrip>
       )}
       <SnackbarAlert
         state={snackbar}

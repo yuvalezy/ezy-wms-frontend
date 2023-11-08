@@ -1,11 +1,8 @@
-import Box from "@mui/material/Box";
-import {Alert, AlertColor, AlertTitle} from "@mui/material";
-import InsertCommentIcon from '@mui/icons-material/InsertComment';
-import CancelIcon from '@mui/icons-material/Cancel';
-import PinIcon from '@mui/icons-material/Pin';
 import React from "react";
 import {AddItemResponseMultipleValue} from "./Process";
 import {useTranslation} from "react-i18next";
+import {Icon, MessageStrip, Title} from "@ui5/webcomponents-react";
+import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
 
 export interface ProcessAlertValue {
     lineID?: number,
@@ -14,7 +11,7 @@ export interface ProcessAlertValue {
     numInBuy?: number,
     timeStamp?: string;
     message?: string;
-    severity: AlertColor;
+    severity: MessageStripDesign;
     comment?: string;
     canceled?: boolean;
     multiple?: AddItemResponseMultipleValue[];
@@ -51,9 +48,9 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction}) => {
     };
 
     return (
-        <Box mt={1} style={{position: 'relative'}}>
-            <Alert variant="filled" severity={alert.severity} style={getAlertStyle()}>
-                {alert.barcode && <AlertTitle><strong>{t('barcode')}: </strong>{alert.barcode}</AlertTitle>}
+        <div style={{position: 'relative', padding: '5px'}}>
+            <MessageStrip hideCloseButton design="Information" style={getAlertStyle()}>
+                {alert.barcode && <Title level="H4"><strong>{t('barcode')}: </strong>{alert.barcode}</Title>}
                 <strong>{t('time')}: </strong>{alert.timeStamp} <br/>
                 {alert.itemCode && <>
                     <span><strong>{t('item')}: </strong>{alert.itemCode}</span>
@@ -65,25 +62,21 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction}) => {
                 {alert.multiple != null && alert.multiple.length > 0 && (<><br/><strong>{t('messages')}: </strong>{
                     <>
                         {
-                            alert.multiple.map(v => <Box mt={0.5}><Alert variant="filled" severity={v.severity}>{v.message}</Alert></Box>)
+                            alert.multiple.map(v => <MessageStrip hideCloseButton design="Warning">{v.message}</MessageStrip>)
                         }
                     </>
                 }</>)}
-                {!(alert.canceled ?? false) && alert.severity !== 'error' &&
+                {!(alert.canceled ?? false) && alert.severity !== 'Negative' &&
                     <div style={{position: 'absolute', top: '10px', right: '10px'}}>
-                        <Box mt={0.5}>
-                            <InsertCommentIcon onClick={() => onAction(AlertActionType.Comments)}/>
-                        </Box>
-                        <Box mt={0.5}>
-                            <CancelIcon onClick={() => onAction(AlertActionType.Cancel)}/>
-                        </Box>
-                        <Box mt={0.5}>
-                            <PinIcon onClick={() => onAction(AlertActionType.NumInBuy)}/>
-                        </Box>
+                        <Icon name="comment" onClick={() => onAction(AlertActionType.Comments)}/>
+                        <br/>
+                        <Icon name="cancel" onClick={() => onAction(AlertActionType.Cancel)}/>
+                        <br/>
+                        <Icon name="numbered-text" onClick={() => onAction(AlertActionType.NumInBuy)}/>
                     </div>
                 }
-            </Alert>
-        </Box>
+            </MessageStrip>
+        </div>
     );
 };
 

@@ -1,28 +1,14 @@
-// import {Alert, AlertTitle, Button, Paper, Table, TableBody, TableHead} from "@mui/material";
-// import TableContainer from "@mui/material/TableContainer";
-// import TableRow from "@mui/material/TableRow";
-// import TableCell from "@mui/material/TableCell";
-// import Box from "@mui/material/Box";
-// import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import React from "react";
 import {ItemCheckResponse} from "./Item";
 import {useTranslation} from "react-i18next";
 import {
-    Input,
     Label,
     Button,
-    Card,
-    CardHeader,
-    CheckBox,
-    Grid,
-    List,
-    StandardListItem,
     Table,
     TableRow,
     TableCell,
     TableColumn,
     Icon,
-    CheckBoxDomRef,
     MessageStrip
 } from "@ui5/webcomponents-react";
 
@@ -37,42 +23,45 @@ const ItemCheckMultipleResult: React.FC<ItemCheckMultipleResultProps> = ({barcod
     const {t} = useTranslation();
     return (
         <>
-            <MessageStrip design="Warning" hideCloseButton>
-                <strong>
-                    {t('multipleItemsDetected')}
-                </strong>
-                {t('barcode')}: {barcode}
-            </MessageStrip>
-            <br/>
-            <br/>
+            <div style={{margin: '5px'}}>
+                <MessageStrip design="Warning" hideCloseButton>
+                    <strong>
+                        {t('multipleItemsDetected')}
+                    </strong>
+                    <br/>
+                    {t('barcode')}: {barcode}
+                </MessageStrip>
+            </div>
             <Table
                 columns={<>
+                    <TableColumn/>
                     <TableColumn>
                         <Label>{t('item')}</Label>
                     </TableColumn>
                     <TableColumn>
                         <Label>{t('description')}</Label>
                     </TableColumn>
-                    <TableColumn/>
                 </>}
             >
-                    {
-                        result.map((item, index) => (
-                            <TableRow key={index}>
-                                <TableCell><Label>{item.itemCode}</Label></TableCell>
-                                <TableCell><Label>{item.itemName}</Label></TableCell>
-                                <TableCell>
-                                    <Button design="Emphasized" onClick={() => setBarcodeItem(index)}>{t('select')}</Button>
-                                </TableCell>
-                            </TableRow>
-                        ))
-                    }
+                {
+                    result.map((item, index) => (
+                        <TableRow key={index}>
+                            <TableCell>
+                                <Button design="Emphasized" onClick={() => setBarcodeItem(index)}>{t('select')}</Button>
+                            </TableCell>
+                            <TableCell><Label>{item.itemCode}</Label></TableCell>
+                            <TableCell><Label>{item.itemName}</Label></TableCell>
+                        </TableRow>
+                    ))
+                }
             </Table>
             <br/>
-            <Button design="Attention" onClick={() => clear()}>
-                <Icon design="Critical" name="cancel"/>
-                {t('clear')}
-            </Button>
+            <div style={{textAlign: 'center'}}>
+                <Button design="Attention" onClick={() => clear()}>
+                    <Icon design="Critical" name="cancel"/>
+                    {t('clear')}
+                </Button>
+            </div>
         </>
     )
 }

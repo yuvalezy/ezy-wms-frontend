@@ -1,8 +1,4 @@
-import React, { useState, useContext } from "react";
-import Box from "@mui/material/Box";
-import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
-import { Button, TextField } from "@mui/material";
-import DoneIcon from "@mui/icons-material/Done";
+import React, {useState, useRef, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import ContentTheme from "../Components/ContentTheme";
 import { IsNumeric, StringFormat } from "../assets/Functions";
@@ -13,11 +9,9 @@ import {
 } from "./GoodsReceiptSupervisor/Document";
 import { useTranslation } from "react-i18next";
 import { useDocumentStatusToString } from "./GoodsReceiptSupervisor/DocumentStatusString";
-import { AuthContext } from "../Components/AppContext";
+import {Button, Form, FormItem, Icon, Input, InputDomRef} from "@ui5/webcomponents-react";
 
 export default function GoodsReceipt() {
-  const { config } = useContext(AuthContext);
-  
   const [, setLoading] = useState(false);
   const [scanCodeInput, setScanCodeInput] = React.useState("");
   const [snackbar, setSnackbar] = React.useState<SnackbarState>({
@@ -25,6 +19,11 @@ export default function GoodsReceipt() {
   });
   const { t } = useTranslation();
   const documentStatusToString = useDocumentStatusToString();
+  const scanCodeInputRef = useRef<InputDomRef>(null);
+
+  useEffect(() => {
+    setTimeout(() =>scanCodeInputRef?.current?.focus(), 1);
+  }, []);
 
   const navigate = useNavigate();
   const alert = (message: string) => {
@@ -93,30 +92,23 @@ export default function GoodsReceipt() {
 
   function ScanForm() {
     return (
-      <form onSubmit={handleSubmit}>
-        <Box mb={1} style={{ textAlign: "center" }}>
-          <TextField
-            fullWidth
-            required
-            label={t("code")}
-            variant="outlined"
-            value={scanCodeInput}
-            type="password"
-            onChange={(e) => setScanCodeInput(e.target.value)}
-            autoFocus={true}
-          />
-          <Box mt={1}>
-            <Button type="submit" variant="contained" color="primary">
-              <DoneIcon />
+        <Form onSubmit={handleSubmit}>
+          <FormItem label={t("code")}>
+              <Input
+                  value={scanCodeInput}
+                  type="Password"
+                  ref={scanCodeInputRef}
+                  required
+                  onInput={(e) => setScanCodeInput(e.target.value as string)}
+              />
+          </FormItem>
+          <FormItem>
+            <Button type="Submit" color="primary">
+              <Icon name="accept" />
               {t("accept")}
             </Button>
-          </Box>
-        </Box>
-      </form>
-    );
+          </FormItem>
+        </Form>
+    )
   }
-}
-
-function documentStatusToString(status: DocumentStatus): any {
-  throw new Error("Function not implemented.");
 }
