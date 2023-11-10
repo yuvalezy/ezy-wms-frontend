@@ -1,5 +1,5 @@
 import axios from "axios";
-import {delay, getMockupConfig, globalConfig} from "../../assets/GlobalConfig";
+import {delay, globalConfig, configUtils} from "../../assets/GlobalConfig";
 import { ResponseStatus } from "../../assets/Common";
 import { itemMockup, updateItemBarMockup } from "../../assets/mockup";
 
@@ -16,13 +16,12 @@ export interface UpdateItemBarCodeResponse {
   status: ResponseStatus;
 }
 
-const isMockup = getMockupConfig();
 export const itemCheck = async (
   itemCode?: string,
   barcode?: string
 ): Promise<ItemCheckResponse[]> => {
   try {
-    if (isMockup) {
+    if (configUtils.isMockup) {
       console.log("Mockup data is being used.");
       return itemMockup;
     }
@@ -62,7 +61,7 @@ export const updateItemBarCode = async (
   addBarcode: string
 ): Promise<UpdateItemBarCodeResponse> => {
   try {
-    if (isMockup) {
+    if (configUtils.isMockup) {
       if (addBarcode) {
         itemMockup[0].barcodes.push(addBarcode);
       }

@@ -1,4 +1,4 @@
-import {delay, getMockupConfig, globalConfig} from "../../assets/GlobalConfig";
+import {configUtils, delay, globalConfig} from "../../assets/GlobalConfig";
 import axios from "axios";
 import {
     GoodsReceiptMockup,
@@ -29,14 +29,13 @@ export type GoodsReceiptVSExitReportDataLine = {
     quantity: number;
 };
 
-const isMockup = getMockupConfig();
 export const fetchGoodsReceiptReportAll = async (id: number): Promise<GoodsReceiptAll[]> => {
     try {
         if (!globalConfig)
             throw new Error("Config has not been initialized!");
         if (globalConfig.debug)
             await delay();
-        if (isMockup) {
+        if (configUtils.isMockup) {
             console.log("Mockup data is being used.");
             return GoodsReceiptMockup;
         }
@@ -59,7 +58,7 @@ export const fetchGoodsReceiptReportAll = async (id: number): Promise<GoodsRecei
 };
 export const fetchGoodsReceiptVSExitReport = async (id: number): Promise<GoodsReceiptVSExitReportData[]> => {
     try {
-        if (isMockup) {
+        if (configUtils.isMockup) {
             console.log("Mockup data is being used.");
             return goodsReceiptVSExitReportDataMockup;
         }

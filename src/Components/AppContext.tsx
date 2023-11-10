@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import axios, { AxiosError } from "axios";
 import { User } from "../assets/Common";
-import {delay, setGlobalConfig } from "../assets/GlobalConfig";
+import {delay, globalConfig, setGlobalConfig} from "../assets/GlobalConfig";
 import { Authorization } from "../assets/Authorization";
 
 // Define the shape of the context

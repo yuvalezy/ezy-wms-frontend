@@ -12,12 +12,11 @@ import ProcessCancel, {ProcessCancelRef} from "./GoodsReceiptProcess/ProcessCanc
 import {addItem, AddItemResponseMultipleValue,} from "./GoodsReceiptProcess/Process";
 import ProcessNumInBuy, {ProcessNumInBuyRef} from "./GoodsReceiptProcess/ProcessNumInBuy";
 import {useTranslation} from "react-i18next";
-import {getMockupConfig} from "../assets/GlobalConfig";
 import {Button, Icon, Form, FormItem, Input, InputDomRef, MessageStrip} from "@ui5/webcomponents-react";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
+import {configUtils} from "../assets/GlobalConfig";
 
 export default function GoodsReceiptProcess() {
-    const isMockup = getMockupConfig();
     const {scanCode} = useParams();
     const {t} = useTranslation();
     const barcodeRef = useRef<InputDomRef>(null);
@@ -124,7 +123,7 @@ export default function GoodsReceiptProcess() {
                     return;
                 }
 
-                if (isMockup && !data.fulfillment && !data.warehouse && !data.showroom) {
+                if (configUtils.isMockup && !data.fulfillment && !data.warehouse && !data.showroom) {
                     return alert({
                         barcode: barcode,
                         itemCode: itemCode,

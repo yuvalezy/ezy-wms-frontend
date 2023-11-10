@@ -1,6 +1,6 @@
 import axios from "axios";
 import {DocumentStatus} from "../Pages/GoodsReceiptSupervisor/Document";
-import {getMockupConfig, globalConfig} from "./GlobalConfig";
+import {configUtils, globalConfig} from "./GlobalConfig";
 import {useTranslation} from "react-i18next";
 import {vendorsMockup} from "./mockup";
 
@@ -48,14 +48,12 @@ export function useDocumentStatusOptions() {
   ];
 }
 
-const isMockup = getMockupConfig();
-
 export const fetchVendors = async (): Promise<BusinessPartner[]> => {
   try {
     if (!globalConfig)
       throw new Error("Config has not been initialized!");
 
-    if (isMockup)
+    if (configUtils.isMockup)
       return vendorsMockup;
 
     const access_token = localStorage.getItem("token");

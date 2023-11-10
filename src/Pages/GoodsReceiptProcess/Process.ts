@@ -1,5 +1,5 @@
 import axios from "axios";
-import {delay, getMockupConfig, globalConfig} from "../../assets/GlobalConfig";
+import {configUtils, delay, globalConfig} from "../../assets/GlobalConfig";
 import {UpdateLineReturnValue} from "../GoodsReceiptSupervisor/Document";
 import {addItemResponseMockup, UpdateLineReturnValueMockup,} from "../../assets/mockup";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
@@ -18,15 +18,13 @@ export type AddItemResponseMultipleValue = {
   severity: MessageStripDesign;
 };
 
-const isMockup = getMockupConfig();
-
 export const addItem = async (
   id: number,
   itemCode: string,
   barcode: string
 ): Promise<AddItemResponse> => {
   try {
-    if (isMockup) {
+    if (configUtils.isMockup) {
       switch (barcode) {
         case "approve": {
           return {...addItemResponseMockup, warehouse: true};
@@ -98,7 +96,7 @@ export const updateLine = async ({
   reason?: number;
 }): Promise<UpdateLineReturnValue> => {
   try {
-    if (isMockup) {
+    if (configUtils.isMockup) {
       console.log("Mockup data is being used.");
       return UpdateLineReturnValueMockup;
     }

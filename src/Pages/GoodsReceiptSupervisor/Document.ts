@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Item, User } from "../../assets/Common";
 import { BusinessPartner, Employee } from "../../assets/Data";
-import {delay, getMockupConfig, globalConfig} from "../../assets/GlobalConfig";
+import {configUtils, delay, globalConfig} from "../../assets/GlobalConfig";
 import {
   ReasonValueMockup,
   documentMockup,
@@ -59,8 +59,6 @@ export enum GoodsReceiptType {
   SpecificOrders = "SpecificOrders",
 }
 
-const isMockup = getMockupConfig();
-
 export const createDocument = async (
   type: GoodsReceiptType,
   cardCode: string,
@@ -68,7 +66,7 @@ export const createDocument = async (
   items: DocumentItem[]
 ): Promise<Document> => {
   try {
-    if (isMockup) {
+    if (configUtils.isMockup) {
       console.log("Mockup data is being used.");
       return documentMockup;
     }
@@ -105,12 +103,11 @@ export const documentAction = async (
   user: User
 ): Promise<boolean> => {
   try {
-    if (isMockup && action === "approve") {
-      documentMockup.status = DocumentStatus.Finished;
-      return true;
-    }
-
-    if (isMockup) {
+    if (configUtils.isMockup) {
+      if (action === "approve") {
+        documentMockup.status = DocumentStatus.Finished;
+        return true;
+      }
       console.log("Mockup data is being used.");
       return true;
     }
@@ -146,7 +143,7 @@ export type ReasonValue = {
 };
 
 export const fetchReasons = async (): Promise<ReasonValue[]> => {
-  if (isMockup) {
+  if (configUtils.isMockup) {
     console.log("Mockup data is being used.");
     return ReasonValueMockup;
   }
@@ -179,14 +176,16 @@ export const fetchDocuments = async (
   desc: boolean = true
 ): Promise<Document[]> => {
   try {
-    if (isMockup) {
+    if (configUtils.isMockup) {
       console.log("Mockup data is being used.");
       return [documentMockup];
     }
 
-    if (!globalConfig) throw new Error("Config has not been initialized!");
+    if (!globalConfig)
+      throw new Error("Config has not been initialized!");
 
-    if (globalConfig.debug) await delay();
+    if (globalConfig.debug)
+      await delay();
 
     const access_token = localStorage.getItem("token");
 
@@ -241,7 +240,7 @@ export const scanBarcode = async (
   scanCode: string
 ): Promise<Item[]> => {
   try {
-    if (isMockup) {
+    if (configUtils.isMockup) {
       console.log("Mockup data is being used. holis");
       return itemFatherMockup;
     }

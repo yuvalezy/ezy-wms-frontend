@@ -49,7 +49,7 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction}) => {
 
     return (
         <div style={{position: 'relative', padding: '5px'}}>
-            <MessageStrip hideCloseButton design="Information" style={getAlertStyle()}>
+            <MessageStrip hideCloseButton design={alert.severity} style={getAlertStyle()}>
                 {alert.barcode && <Title level="H4"><strong>{t('barcode')}: </strong>{alert.barcode}</Title>}
                 <strong>{t('time')}: </strong>{alert.timeStamp} <br/>
                 {alert.itemCode && <>
@@ -62,7 +62,7 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction}) => {
                 {alert.multiple != null && alert.multiple.length > 0 && (<><br/><strong>{t('messages')}: </strong>{
                     <>
                         {
-                            alert.multiple.map(v => <MessageStrip hideCloseButton design="Warning">{v.message}</MessageStrip>)
+                            alert.multiple.map(v => <MessageStrip hideCloseButton design={v.severity}>{v.message}</MessageStrip>)
                         }
                     </>
                 }</>)}

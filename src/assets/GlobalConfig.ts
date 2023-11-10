@@ -6,8 +6,10 @@ export const setGlobalConfig = (config: Config) => {
     globalConfig = config;
 }
 
-export const getMockupConfig = (): boolean => {
-    return globalConfig?.mockup ?? false;
+export const configUtils = {
+    get isMockup(): boolean {
+        return globalConfig?.mockup ?? false;
+    }
 };
 
 export const delay = (): Promise<void> => {

@@ -10,6 +10,7 @@ import {useTranslation} from "react-i18next";
 import {useDocumentStatusToString} from "./GoodsReceiptSupervisor/DocumentStatusString";
 import {Button, Form, FormItem, Icon, Input, InputDomRef, MessageStripDesign} from "@ui5/webcomponents-react";
 import {useThemeContext} from "../Components/ThemeContext";
+import { configUtils } from "../assets/GlobalConfig";
 
 export default function GoodsReceipt() {
     const {setLoading, setAlert} = useThemeContext();
