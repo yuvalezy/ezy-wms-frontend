@@ -1,114 +1,95 @@
-import React, {useState, useRef, useEffect} from "react";
-import { useNavigate } from "react-router-dom";
+import React, {useRef, useEffect} from "react";
+import {useNavigate} from "react-router-dom";
 import ContentTheme from "../Components/ContentTheme";
-import { IsNumeric, StringFormat } from "../assets/Functions";
-import SnackbarAlert, { SnackbarState } from "../Components/SnackbarAlert";
+import {IsNumeric, StringFormat} from "../assets/Functions";
 import {
-  DocumentStatus,
-  fetchDocuments,
+    DocumentStatus,
+    fetchDocuments,
 } from "./GoodsReceiptSupervisor/Document";
-import { useTranslation } from "react-i18next";
-import { useDocumentStatusToString } from "./GoodsReceiptSupervisor/DocumentStatusString";
-import {Button, Form, FormItem, Icon, Input, InputDomRef} from "@ui5/webcomponents-react";
+import {useTranslation} from "react-i18next";
+import {useDocumentStatusToString} from "./GoodsReceiptSupervisor/DocumentStatusString";
+import {Button, Form, FormItem, Icon, Input, InputDomRef, MessageStripDesign} from "@ui5/webcomponents-react";
+import {useThemeContext} from "../Components/ThemeContext";
 
 export default function GoodsReceipt() {
-  const [, setLoading] = useState(false);
-  const [scanCodeInput, setScanCodeInput] = React.useState("");
-  const [snackbar, setSnackbar] = React.useState<SnackbarState>({
-    open: false,
-  });
-  const { t } = useTranslation();
-  const documentStatusToString = useDocumentStatusToString();
-  const scanCodeInputRef = useRef<InputDomRef>(null);
+    const {setLoading, setAlert} = useThemeContext();
+    const [scanCodeInput, setScanCodeInput] = React.useState("");
+    const {t} = useTranslation();
+    const documentStatusToString = useDocumentStatusToString();
+    const scanCodeInputRef = useRef<InputDomRef>(null);
 
-  useEffect(() => {
-    setTimeout(() =>scanCodeInputRef?.current?.focus(), 1);
-  }, []);
+    useEffect(() => {
+        setTimeout(() => scanCodeInputRef?.current?.focus(), 1);
+    }, []);
 
-  const navigate = useNavigate();
-  const alert = (message: string) => {
-    setSnackbar({ open: true, message: message, color: "DarkRed" });
-    setTimeout(() => setSnackbar({ open: false }), 5000);
-  };
+    const navigate = useNavigate();
 
-  const errorAlert = (message: string) => {
-    setSnackbar({ open: true, message: message, color: "red" });
-    setTimeout(() => setSnackbar({ open: false }), 5000);
-  };
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (scanCodeInput.length === 0) {
-      alert(t("scanCodeRequired"));
-      return;
-    }
-    let checkScan = scanCodeInput.split("_");
-    if (
-      checkScan.length !== 2 ||
-      (checkScan[0] !== "GRPO" && checkScan[0] !== "$GRPO") ||
-      !IsNumeric(checkScan[1])
-    ) {
-      alert(t("invalidScanCode"));
-      return;
-    }
-    const id = parseInt(checkScan[1]);
-    setLoading(true);
-    fetchDocuments(id, [])
-      .then((doc) => {
-        if (doc.length === 0) {
-          alert(StringFormat(t("goodsReceiptNotFound"), id));
-          return;
+    function handleSubmit(e: React.FormEvent) {
+        e.preventDefault();
+        if (scanCodeInput.length === 0) {
+            setAlert({message: t("scanCodeRequired"), type: MessageStripDesign.Warning});
+            return;
         }
-        const status = doc[0].status;
-
+        let checkScan = scanCodeInput.split("_");
         if (
-          status !== DocumentStatus.Open &&
-          status !== DocumentStatus.InProgress
+            checkScan.length !== 2 ||
+            (checkScan[0] !== "GRPO" && checkScan[0] !== "$GRPO") ||
+            !IsNumeric(checkScan[1])
         ) {
-          alert(
-            StringFormat(
-              t("goodsReceiptStatusError"),
-              id,
-              documentStatusToString(status)
-            )
-          );
-          return;
+            setAlert({message: t("invalidScanCode"), type: MessageStripDesign.Warning});
+            return;
         }
-        navigate(`/goodsReceipt/${id}`);
-      })
-      .catch((error) => errorAlert(`Validate Goods Receipt Error: ${error}`))
-      .finally(() => setLoading(false));
-  }
+        const id = parseInt(checkScan[1]);
+        setLoading(true);
+        fetchDocuments(id, [])
+            .then((doc) => {
+                if (doc.length === 0) {
+                    setAlert({message: t("goodsReceiptNotFound"), type: MessageStripDesign.Warning});
+                    return;
+                }
+                const status = doc[0].status;
 
-  return (
-    <ContentTheme title={t("goodsReceipt")} icon="cause">
-      {ScanForm()}
-      <SnackbarAlert
-        state={snackbar}
-        onClose={() => setSnackbar({ open: false })}
-      />
-    </ContentTheme>
-  );
+                if (status !== DocumentStatus.Open && status !== DocumentStatus.InProgress) {
+                    setAlert({message: StringFormat(
+                        t("goodsReceiptStatusError"),
+                        id,
+                        documentStatusToString(status)
+                      ), type: MessageStripDesign.Warning});
+                    return;
+                }
+                navigate(`/goodsReceipt/${id}`);
+            })
+            .catch((error) => {
+                setAlert({message: `Validate Goods Receipt Error: ${error}`, type: MessageStripDesign.Negative});
+            })
+            .finally(() => setLoading(false));
+    }
 
-  function ScanForm() {
     return (
-        <Form onSubmit={handleSubmit}>
-          <FormItem label={t("code")}>
-              <Input
-                  value={scanCodeInput}
-                  type="Password"
-                  ref={scanCodeInputRef}
-                  required
-                  onInput={(e) => setScanCodeInput(e.target.value as string)}
-              />
-          </FormItem>
-          <FormItem>
-            <Button type="Submit" color="primary">
-              <Icon name="accept" />
-              {t("accept")}
-            </Button>
-          </FormItem>
-        </Form>
-    )
-  }
+        <ContentTheme title={t("goodsReceipt")} icon="cause">
+            {ScanForm()}
+        </ContentTheme>
+    );
+
+    function ScanForm() {
+        return (
+            <Form onSubmit={handleSubmit}>
+                <FormItem label={t("code")}>
+                    <Input
+                        value={scanCodeInput}
+                        type="Password"
+                        ref={scanCodeInputRef}
+                        required
+                        onInput={(e) => setScanCodeInput(e.target.value as string)}
+                    />
+                </FormItem>
+                <FormItem>
+                    <Button type="Submit" color="primary">
+                        <Icon name="accept"/>
+                        {t("accept")}
+                    </Button>
+                </FormItem>
+            </Form>
+        )
+    }
 }

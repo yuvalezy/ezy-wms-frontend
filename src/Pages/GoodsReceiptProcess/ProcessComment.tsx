@@ -4,10 +4,10 @@ import {
     Button,
     Dialog, DialogDomRef,
     Title,
-    TextArea
+    TextArea, MessageStripDesign
 } from "@ui5/webcomponents-react";
 import {ProcessAlertValue} from "./ProcessAlert";
-import {useLoading} from "../../Components/LoadingContext";
+import {useThemeContext} from "../../Components/ThemeContext";
 import {updateLine} from "./Process";
 import {useTranslation} from "react-i18next";
 
@@ -23,8 +23,9 @@ export interface ProcessCommentProps {
 
 const ProcessComment = forwardRef((props: ProcessCommentProps, ref) => {
     const {t} = useTranslation();
+    const {setAlert} =  useThemeContext();
     const dialogRef = useRef<DialogDomRef>(null);
-    const {setLoading} = useLoading();
+    const {setLoading} = useThemeContext();
     const [comment, setComment] = useState(props.alert?.comment || "");
 
     const handleSave = () => {
@@ -40,9 +41,8 @@ const ProcessComment = forwardRef((props: ProcessCommentProps, ref) => {
             })
             .catch((error) => {
                 console.error(`Error performing update: ${error}`);
-                let errorMessage = error.response?.data["exceptionMessage"];
-                if (errorMessage) window.alert(errorMessage);
-                else window.alert(`Update Line Error: ${error}`);
+                let errorMessage = error.response?.data["exceptionMessage"]??`Update Line Error: ${error}`;
+                setAlert({message: errorMessage, type: MessageStripDesign.Negative});
             })
             .finally(function () {
                 setLoading(false);

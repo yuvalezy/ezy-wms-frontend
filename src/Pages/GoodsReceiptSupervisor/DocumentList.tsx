@@ -2,7 +2,8 @@ import React, {forwardRef, useImperativeHandle, useRef, useState} from 'react';
 import {DocumentItem} from "./Document";
 import {useTranslation} from "react-i18next";
 import {useObjectName} from "../../assets/ObjectName";
-import {Icon, ComboBox, ComboBoxItem, Input, Button, List, StandardListItem} from "@ui5/webcomponents-react";
+import {Icon, ComboBox, ComboBoxItem, Input, Button, List, StandardListItem, MessageStripDesign} from "@ui5/webcomponents-react";
+import {useThemeContext} from "../../Components/ThemeContext";
 
 export interface DocumentListRef {
     clearItems: () => void;
@@ -15,6 +16,7 @@ type DocumentListProps = {
 // function DocumentList({onItemsUpdate}: DocumentListProps)
 const DocumentList = forwardRef((props: DocumentListProps, ref) => {
     const {t} = useTranslation();
+    const {setAlert} = useThemeContext();
     const o = useObjectName();
     const docNumRef = useRef<HTMLInputElement>();
     const [items, setItems] = useState<DocumentItem[]>([]);
@@ -28,7 +30,7 @@ const DocumentList = forwardRef((props: DocumentListProps, ref) => {
     }))
     const handleAddClick = () => {
         if (docNum.length === 0) {
-            window.alert(t('documentRequired'));
+            setAlert({message: t('documentRequired'), type: MessageStripDesign.Warning});
             return;
         }
         let newDocument: DocumentItem = {
@@ -36,7 +38,7 @@ const DocumentList = forwardRef((props: DocumentListProps, ref) => {
             documentNumber: parseInt(docNum)
         };
         if (items.find(i => i.objectType === newDocument.objectType && i.documentNumber === newDocument.documentNumber)) {
-            alert(t('duplicateNotAllowed'))
+            setAlert({message: t('duplicateNotAllowed'), type: MessageStripDesign.Warning});
             return;
         }
         const newItems = items.concat(newDocument);

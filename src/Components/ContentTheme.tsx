@@ -8,10 +8,10 @@ interface ContentThemeProps {
     children?: React.ReactNode;
 }
 
-const ContentTheme : React.FC<ContentThemeProps> = ({title, icon, children}) => {
+const ContentTheme: React.FC<ContentThemeProps> = ({title, icon, children}) => {
     return (
         <ThemeProvider>
-             <MenuAppBar title={title} icon={icon}></MenuAppBar>
+            <MenuAppBar title={title} icon={icon}></MenuAppBar>
             {children}
         </ThemeProvider>
     )

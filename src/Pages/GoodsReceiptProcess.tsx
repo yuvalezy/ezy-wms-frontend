@@ -7,7 +7,7 @@ import {scanBarcode} from "./GoodsReceiptSupervisor/Document";
 import {distinctItems, Item} from "../assets/Common";
 import ProcessAlert, {AlertActionType, ProcessAlertValue,} from "./GoodsReceiptProcess/ProcessAlert";
 import ProcessComment, {ProcessCommentRef} from "./GoodsReceiptProcess/ProcessComment";
-import {useLoading} from "../Components/LoadingContext";
+import {useThemeContext} from "../Components/ThemeContext";
 import ProcessCancel, {ProcessCancelRef} from "./GoodsReceiptProcess/ProcessCancel";
 import {addItem, AddItemResponseMultipleValue,} from "./GoodsReceiptProcess/Process";
 import ProcessNumInBuy, {ProcessNumInBuyRef} from "./GoodsReceiptProcess/ProcessNumInBuy";
@@ -24,7 +24,7 @@ export default function GoodsReceiptProcess() {
     const boxConfirmationDialogRef = useRef<BoxConfirmationDialogRef>(null);
     const [id, setID] = useState<number | null>();
     const [enable, setEnable] = useState(true);
-    const {setLoading} = useLoading();
+    const {setLoading, setAlert} = useThemeContext();
     const [barcodeInput, setBarcodeInput] = React.useState("");
     const [boxItem, setBoxItem] = useState("");
     const [boxItems, setBoxItems] = useState<Item[]>();
@@ -55,7 +55,7 @@ export default function GoodsReceiptProcess() {
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         if (barcodeInput.length === 0) {
-            window.alert(t("barcodeRequired"));
+            setAlert({message: t("barcodeRequired"), type: MessageStripDesign.Warning});
             return;
         }
 

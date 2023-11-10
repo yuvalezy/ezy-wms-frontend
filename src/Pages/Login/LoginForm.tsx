@@ -1,18 +1,16 @@
 import * as React from 'react';
-import { Button, Input, Select, Option, Form, FormItem } from "@ui5/webcomponents-react";
+import {Button, Input, Select, Option, Form, FormItem} from "@ui5/webcomponents-react";
 import "@ui5/webcomponents/dist/features/InputElementsFormSupport.js";
-import { useLoading } from "../../Components/LoadingContext";
-import { useTranslation } from "react-i18next"; // Adjust the path based on your directory structure
-import CircularProgressOverlay from '../../Components/CircularProgressOverlay';
+import {useTranslation} from "react-i18next"; // Adjust the path based on your directory structure
 import {useEffect} from "react";
+import './LoginForm.css';
 
 type LoginFormProps = {
     onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 };
 
-export default function LoginForm({ onSubmit }: LoginFormProps) {
-    const { t, i18n } = useTranslation();
-    const { loading } = useLoading();
+export default function LoginForm({onSubmit}: LoginFormProps) {
+    const {t, i18n} = useTranslation();
 
     const onLanguageChange = (event: CustomEvent) => {
         const language = event.detail.selectedOption.dataset.key;
@@ -30,27 +28,27 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
     }, []);
 
     return (
-        <>
-            {loading && <CircularProgressOverlay />}
-            <Form onSubmit={onSubmit} style={{ width: '300px', margin: 'auto' }}>
-                <FormItem>
-                    &nbsp;
-                </FormItem>
-                <FormItem label={t('code')}>
-                    <Input required name="username" type="Password" />
-                </FormItem>
-                <FormItem label={t('language')}>
-                    <Select onChange={onLanguageChange}>
-                        <Option selected={i18n.language === "en"} data-key="en">English</Option>
-                        <Option selected={i18n.language === "es"} data-key="es">Español</Option>
-                    </Select>
-                </FormItem>
-                <FormItem>
-                    <Button design="Emphasized" type="Submit">
-                        {t('enter')}
-                    </Button>
-                </FormItem>
-            </Form>
-        </>
+        <div className="loginBox">
+            <div className="loginFormContainer">
+                <div className="loginFormTitle">{t('login')}</div>
+                <Form onSubmit={onSubmit}>
+                    {/* Form items here */}
+                    <FormItem label={t('code')}>
+                        <Input style={{width: '100%'}} required name="username" type="Password" />
+                    </FormItem>
+                    <FormItem label={t('language')}>
+                        <Select style={{width: '100%'}} onChange={onLanguageChange}>
+                            <Option selected={i18n.language === "en"} data-key="en">English</Option>
+                            <Option selected={i18n.language === "es"} data-key="es">Español</Option>
+                        </Select>
+                    </FormItem>
+                    <FormItem>
+                        <Button design="Emphasized" type="Submit">
+                            {t('enter')}
+                        </Button>
+                    </FormItem>
+                </Form>
+            </div>
+        </div>
     );
 }

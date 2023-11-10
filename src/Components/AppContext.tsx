@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import axios, { AxiosError } from "axios";
 import { User } from "../assets/Common";
-import { setGlobalConfig } from "../assets/GlobalConfig";
+import {delay, setGlobalConfig } from "../assets/GlobalConfig";
 import { Authorization } from "../assets/Authorization";
 
 // Define the shape of the context
@@ -89,7 +89,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       if (!config) return;
 
-      if (config.debug) await new Promise((res) => setTimeout(res, 500));
+      if (config.debug) await delay();
 
       if (!config.mockup) {
         return await loginExecute(username, password);

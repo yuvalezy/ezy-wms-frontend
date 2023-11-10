@@ -1,41 +1,27 @@
 import React, {useEffect, useRef, useState} from "react";
-import ConfirmationDialog from "../Components/ConfirmationDialog";
 import {useAuth} from "../Components/AppContext";
 import ContentTheme from "../Components/ContentTheme";
 import {StringFormat} from "../assets/Functions";
 import DocumentForm from "./GoodsReceiptSupervisor/DocumentForm";
-import {
-    Document,
-    fetchDocuments,
-    Action,
-    documentAction,
-} from "./GoodsReceiptSupervisor/Document";
+import {Action, Document, documentAction, fetchDocuments,} from "./GoodsReceiptSupervisor/Document";
 import DocumentCard from "./GoodsReceiptSupervisor/DocumentCard";
-import SnackbarAlert, {SnackbarState} from "../Components/SnackbarAlert";
-import {useLoading} from "../Components/LoadingContext";
+import {useThemeContext} from "../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {Dialog, DialogDomRef, Bar, Button} from "@ui5/webcomponents-react";
+import {Bar, Button, Dialog, DialogDomRef, MessageBox, MessageBoxActions, MessageStripDesign} from "@ui5/webcomponents-react";
 import QRCode from "qrcode.react";
 
 export default function GoodsReceiptSupervisor() {
     const dialogRef = useRef<DialogDomRef>(null);
     const {user} = useAuth();
     const {t} = useTranslation();
-    const {setLoading} = useLoading();
+    const {setLoading, setAlert} = useThemeContext();
     const [documents, setDocuments] = useState<Document[]>([]);
     const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(
         null
     );
     const [actionType, setActionType] = useState<Action | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
-    const [snackbar, setSnackbar] = React.useState<SnackbarState>({
-        open: false,
-    });
-
-    const errorAlert = (message: string) => {
-        setSnackbar({open: true, message: message, color: "red"});
-        setTimeout(() => setSnackbar({open: false}), 5000);
-    };
+    const errorAlert = (message: string) => setAlert({message: message, type: MessageStripDesign.Negative});
 
     useEffect(() => {
         setLoading(true);
@@ -69,7 +55,7 @@ export default function GoodsReceiptSupervisor() {
                 setDocuments((prevDocs) =>
                     prevDocs.filter((doc) => doc.id !== selectedDocumentId)
                 );
-                alert(actionType === "approve" ? t("approved") : t("cancelled"));
+                setAlert({message: actionType === "approve" ? t("approved") : t("cancelled"), type: MessageStripDesign.Positive});
             })
             .catch((error) => {
                 console.error(`Error performing action: ${error}`);
@@ -93,19 +79,26 @@ export default function GoodsReceiptSupervisor() {
             {documents.map((doc) => (
                 <DocumentCard key={doc.id} doc={doc} handleAction={handleAction}/>
             ))}
-            <ConfirmationDialog
-                title={t("confirmAction")}
-                text={StringFormat(
+            <MessageBox
+                onClose={(e) => {
+                    if (e.detail.action === MessageBoxActions.OK) {
+                        handleConfirmAction();
+                        return;
+                    }
+                    setDialogOpen(false);
+                }}
+                open={dialogOpen}
+                type="Confirm"
+
+            >
+                {StringFormat(
                     actionType === "approve"
                         ? t("confirmFinishDocument")
                         : t("confirmCancelDocument"),
                     selectedDocumentId
                 )}
-                open={dialogOpen}
-                reverse={true}
-                onClose={() => setDialogOpen(false)}
-                onConfirm={handleConfirmAction}
-            />
+                <br /> {t('actionCannotReverse')}
+            </MessageBox>
             <Dialog
                 className="footerPartNoPadding"
                 ref={dialogRef}
@@ -128,10 +121,6 @@ export default function GoodsReceiptSupervisor() {
                     bgColor="white"
                 />
             </Dialog>
-            <SnackbarAlert
-                state={snackbar}
-                onClose={() => setSnackbar({open: false})}
-            />
         </ContentTheme>
     );
 }

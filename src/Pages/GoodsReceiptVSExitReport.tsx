@@ -6,29 +6,20 @@ import {
   fetchGoodsReceiptVSExitReport,
   GoodsReceiptVSExitReportData,
 } from "./GoodsReceiptSupervisor/Report";
-import SnackbarAlert, { SnackbarState } from "../Components/SnackbarAlert";
 import GoodsReceiptVSExitReportTable from "./GoodsReceiptSupervisor/GoodsReceiptVSExitReportTable";
-import { useLoading } from "../Components/LoadingContext";
+import { useThemeContext } from "../Components/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { useObjectName } from "../assets/ObjectName";
-import {Panel, Title, Text, MessageStrip} from "@ui5/webcomponents-react";
+import {Panel, Title, Text, MessageStrip, MessageStripDesign} from "@ui5/webcomponents-react";
 
 export default function GoodsReceiptVSExitReport() {
   const [id, setID] = useState<number | null>();
   const { scanCode } = useParams();
   const { t } = useTranslation();
   const o = useObjectName();
-  const { setLoading } = useLoading();
+  const {setLoading, setAlert} = useThemeContext();
   const [data, setData] = useState<GoodsReceiptVSExitReportData[] | null>(null);
-  const [snackbar, setSnackbar] = React.useState<SnackbarState>({
-    open: false,
-  });
   const title = `${t("goodsReceiptVSExit")} #${scanCode}`;
-
-  const errorAlert = (message: string) => {
-    setSnackbar({ open: true, message: message, color: "red" });
-    setTimeout(() => setSnackbar({ open: false }), 5000);
-  };
 
   useEffect(() => {
     if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
@@ -40,7 +31,7 @@ export default function GoodsReceiptVSExitReport() {
     setLoading(true);
     fetchGoodsReceiptVSExitReport(parseInt(scanCode))
       .then((result) => setData(result))
-      .catch((error) => errorAlert(`Loading Error: ${error}`))
+      .catch((error) => setAlert({message: `Loading Error: ${error}`, type: MessageStripDesign.Negative}))
       .finally(() => setLoading(false));
   }, []);
   return (
@@ -69,10 +60,6 @@ export default function GoodsReceiptVSExitReport() {
       {data && data.length === 0 && (
         <MessageStrip hideCloseButton design="Warning">{t("noExitData")}</MessageStrip>
       )}
-      <SnackbarAlert
-        state={snackbar}
-        onClose={() => setSnackbar({ open: false })}
-      />
     </ContentTheme>
   );
 }

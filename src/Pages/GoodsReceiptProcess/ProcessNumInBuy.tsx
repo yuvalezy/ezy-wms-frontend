@@ -4,10 +4,10 @@ import {
     Button,
     Dialog, DialogDomRef,
     Title,
-    Form, Input, InputDomRef, FormItem
+    Form, Input, InputDomRef, FormItem, MessageStripDesign
 } from "@ui5/webcomponents-react";
 import {ProcessAlertValue} from "./ProcessAlert";
-import {useLoading} from "../../Components/LoadingContext";
+import {useThemeContext} from "../../Components/ThemeContext";
 import {UpdateLineReturnValue} from "../GoodsReceiptSupervisor/Document";
 import {updateLine} from "./Process";
 import {useTranslation} from "react-i18next";
@@ -24,7 +24,7 @@ export interface ProcessNumInBuyProps {
 
 const ProcessNumInBuy = forwardRef((props: ProcessNumInBuyProps, ref) => {
     const {t} = useTranslation();
-    const {setLoading} = useLoading();
+    const {setLoading, setAlert} = useThemeContext();
     const [userName, setUserName] = useState("");
     const [numInBuy, setNumInBuy] = useState<number>(props.alert?.numInBuy ?? 1);
     const numInBuyRef = useRef<InputDomRef>(null);
@@ -59,7 +59,7 @@ const ProcessNumInBuy = forwardRef((props: ProcessNumInBuyProps, ref) => {
                         break;
                 }
                 if (message !== null) {
-                    window.alert(message);
+                    setAlert({message: t('duplicateNotAllowed'), type: MessageStripDesign.Negative});
                     setUserName("");
                     setLoading(false);
                     setTimeout(() => numInBuyRef.current?.focus(), 100);
@@ -72,9 +72,8 @@ const ProcessNumInBuy = forwardRef((props: ProcessNumInBuyProps, ref) => {
             })
             .catch((error) => {
                 console.error(`Error performing update: ${error}`);
-                let errorMessage = error.response?.data["exceptionMessage"];
-                if (errorMessage) window.alert(errorMessage);
-                else window.alert(`Update Line Error: ${error}`);
+                let errorMessage = error.response?.data["exceptionMessage"]??`Update Line Error: ${error}`;
+                setAlert({message: errorMessage, type: MessageStripDesign.Negative});
                 setLoading(false);
             });
     }

@@ -4,10 +4,10 @@ import {
     Button,
     Dialog, DialogDomRef,
     Title,
-    TextArea, ComboBox, ComboBoxItem, Form, Input, InputDomRef, FormItem
+    TextArea, ComboBox, ComboBoxItem, Form, Input, InputDomRef, FormItem, MessageStripDesign
 } from "@ui5/webcomponents-react";
 import {ProcessAlertValue} from "./ProcessAlert";
-import {useLoading} from "../../Components/LoadingContext";
+import {useThemeContext} from "../../Components/ThemeContext";
 import {
     fetchReasons,
     ReasonValue,
@@ -28,13 +28,17 @@ export interface ProcessCancelProps {
 
 const ProcessCancel = forwardRef((props: ProcessCancelProps, ref) => {
     const {t} = useTranslation();
-    const {setLoading} = useLoading();
+    const {setLoading, setAlert} = useThemeContext();
     const [comment, setComment] = useState(props.alert?.comment || "");
     const [userName, setUserName] = useState("");
     const [reason, setReason] = useState<ReasonValue | null>(null);
     const [reasons, setReasons] = useState<ReasonValue[]>([]);
     const usernameRef = useRef<InputDomRef>(null);
     const dialogRef = useRef<DialogDomRef>(null);
+
+    function errorAlert(message: string) {
+        setAlert({message: message, type: MessageStripDesign.Negative})
+    }
 
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
@@ -66,7 +70,7 @@ const ProcessCancel = forwardRef((props: ProcessCancelProps, ref) => {
                         break;
                 }
                 if (message !== null) {
-                    window.alert(message);
+                    errorAlert(message);
                     setUserName("");
                     setLoading(false);
                     setTimeout(() => usernameRef.current?.focus(), 100);
@@ -79,8 +83,8 @@ const ProcessCancel = forwardRef((props: ProcessCancelProps, ref) => {
             .catch((error) => {
                 console.error(`Error performing update: ${error}`);
                 let errorMessage = error.response?.data["exceptionMessage"];
-                if (errorMessage) window.alert(errorMessage);
-                else window.alert(`Update Line Error: ${error}`);
+                if (errorMessage) errorAlert(errorMessage);
+                else errorAlert(`Update Line Error: ${error}`);
                 setLoading(false);
             });
     }
@@ -97,8 +101,8 @@ const ProcessCancel = forwardRef((props: ProcessCancelProps, ref) => {
                     .catch((error) => {
                         console.error(`Error loading reasons: ${error}`);
                         let errorMessage = error.response?.data["exceptionMessage"];
-                        if (errorMessage) window.alert(errorMessage);
-                        else window.alert(`Error loading reasons: ${error}`);
+                        if (errorMessage) errorAlert(errorMessage);
+                        else errorAlert(`Error loading reasons: ${error}`);
                     })
                     .finally(() => setLoading(false));
             } else {
