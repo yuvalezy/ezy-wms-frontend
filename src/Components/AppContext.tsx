@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import axios, { AxiosError } from "axios";
 import { User } from "../assets/Common";
-import {delay, globalConfig, setGlobalConfig} from "../assets/GlobalConfig";
+import {delay, setGlobalConfig} from "../assets/GlobalConfig";
 import { Authorization } from "../assets/Authorization";
 
 // Define the shape of the context
@@ -16,6 +16,7 @@ export type Config = {
   baseURL: string;
   debug: boolean;
   mockup?: boolean;
+  companyName?: string;
 };
 
 interface AuthContextType {
@@ -49,27 +50,38 @@ interface ErrorResponse {
   error_description: string;
 }
 
+interface CompanyInfo {
+  name: string
+}
+
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [config, setConfig] = useState<Config | null>(null);
 
   useEffect(() => {
     const fetchConfig = async () => {
+      let config: Config;
       try {
         const response = await axios.get<Config>("/config.json");
-        setConfig(response.data);
-        setGlobalConfig(response.data);
+        config = response.data;
       } catch (error) {
         const urlObject = new URL(window.location.href);
         const baseUrl = `${urlObject.protocol}//${urlObject.host}`;
-        const config: Config = {
+        config = {
           baseURL: baseUrl,
           debug: true,
         };
-        setConfig(config);
-        setGlobalConfig(config);
         console.log("Failed to load config.json file, using default URL");
       }
+
+      try {
+        const response = await axios.get<CompanyInfo>(`${config.baseURL}/api/Public/CompanyInfo`);
+        config.companyName = response.data.name;
+      } catch (error) {
+        console.log(`Failed to load company name: ${error}`);
+      }
+      setConfig(config);
+      setGlobalConfig(config);
     };
 
     fetchConfig();

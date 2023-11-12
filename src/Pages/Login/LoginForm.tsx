@@ -4,6 +4,7 @@ import "@ui5/webcomponents/dist/features/InputElementsFormSupport.js";
 import {useTranslation} from "react-i18next"; // Adjust the path based on your directory structure
 import {useEffect} from "react";
 import './LoginForm.css';
+import {globalConfig} from "../../assets/GlobalConfig";
 
 type LoginFormProps = {
     onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
@@ -30,7 +31,12 @@ export default function LoginForm({onSubmit}: LoginFormProps) {
     return (
         <div className="loginBox">
             <div className="loginFormContainer">
-                <div className="loginFormTitle">{t('login')}</div>
+                <div className="loginFormTitle">
+                    {globalConfig?.companyName}
+                </div>
+                <div className="loginFormSubTitle">
+                    {t('login')}
+                </div>
                 <Form onSubmit={onSubmit}>
                     {/* Form items here */}
                     <FormItem label={t('code')}>

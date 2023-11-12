@@ -21,9 +21,16 @@
 }
 
 .loginFormTitle {
-    margin-bottom: 20px;
+    margin-bottom: 4px;
     text-align: center;
     font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+.loginFormSubTitle {
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 18px;
     font-weight: bold;
     color: #333;
 }
