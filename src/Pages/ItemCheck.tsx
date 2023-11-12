@@ -1,13 +1,13 @@
 import ContentTheme from "../Components/ContentTheme";
-import React, {MutableRefObject, useEffect, useRef} from "react";
+import React, {useEffect, useRef} from "react";
 import {useThemeContext} from "../Components/ThemeContext";
 import {
     itemCheck,
     ItemCheckResponse,
     updateItemBarCode,
 } from "./ItemCheck/Item";
-import {ResponseStatus} from "../Assets/Common";
-import {StringFormat} from "../Assets/Functions";
+import {ResponseStatus} from "@Assets/Common";
+import {StringFormat} from "@Assets/Functions";
 import ItemCheckMultipleResult from "./ItemCheck/ItemCheckMultipleResult";
 import ItemCheckResult from "./ItemCheck/ItemCheckResult";
 import {useTranslation} from "react-i18next";

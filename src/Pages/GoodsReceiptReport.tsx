@@ -1,13 +1,13 @@
 import React, {useState} from "react";
 import ContentTheme from "../Components/ContentTheme";
 import ReportFilterForm from "./GoodsReceiptSupervisor/ReportFilterForm";
-import {BusinessPartner} from "../Assets/Data";
+import {BusinessPartner} from "@Assets/Data";
 import { fetchDocuments} from "./GoodsReceiptSupervisor/Document";
 import DocumentReportCard from "./GoodsReceiptSupervisor/DocumentReportCard";
 import {useThemeContext} from "../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {MessageStripDesign} from "@ui5/webcomponents-react";
-import {Document, DocumentStatusOption} from "../Assets/Document";
+import {Document, DocumentStatusOption} from "@Assets/Document";
 
 export default function GoodsReceiptReport() {
     const {setLoading, setAlert} = useThemeContext();

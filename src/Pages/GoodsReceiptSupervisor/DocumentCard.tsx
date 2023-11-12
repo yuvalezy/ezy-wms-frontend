@@ -1,10 +1,10 @@
 import React from "react";
-import {Document, DocumentStatus} from "../../Assets/Document";
+import {Document, DocumentStatus} from "@Assets/Document";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "../../Components/AppContext";
-import {Authorization} from "../../Assets/Authorization";
+import {Authorization} from "@Assets/Authorization";
 import {useTranslation} from "react-i18next";
-import {useObjectName} from "../../Assets/ObjectName";
+import {useObjectName} from "@Assets/ObjectName";
 import {useDocumentStatusToString} from "./DocumentStatusString";
 import {Card, CardHeader, Icon, List, StandardListItem, Button} from "@ui5/webcomponents-react";
 

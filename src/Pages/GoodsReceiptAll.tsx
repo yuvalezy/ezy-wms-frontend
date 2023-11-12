@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ContentTheme from "../Components/ContentTheme";
-import { IsNumeric } from "../Assets/Functions";
+import { IsNumeric } from "@Assets/Functions";
 import { useParams } from "react-router-dom";
 import {
   fetchGoodsReceiptReportAll,

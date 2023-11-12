@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import {useAuth} from "../Components/AppContext";
 import ContentTheme from "../Components/ContentTheme";
-import {StringFormat} from "../Assets/Functions";
+import {StringFormat} from "@Assets/Functions";
 import DocumentForm from "./GoodsReceiptSupervisor/DocumentForm";
 import { documentAction, fetchDocuments,} from "./GoodsReceiptSupervisor/Document";
 import DocumentCard from "./GoodsReceiptSupervisor/DocumentCard";
@@ -9,7 +9,7 @@ import {useThemeContext} from "../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {Bar, Button, Dialog, DialogDomRef, MessageBox, MessageBoxActions, MessageStripDesign} from "@ui5/webcomponents-react";
 import QRCode from "qrcode.react";
-import {Document, DocumentAction} from "../Assets/Document";
+import {Document, DocumentAction} from "@Assets/Document";
 
 export default function GoodsReceiptSupervisor() {
     const dialogRef = useRef<DialogDomRef>(null);

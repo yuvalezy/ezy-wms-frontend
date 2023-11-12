@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "baseUrl": ".", // This must be specified if "paths" is specified.
+    "paths": {
+      "@Assets/*": ["src/Assets/*"]
+    },
     "target": "es5",
     "lib": [
       "dom",

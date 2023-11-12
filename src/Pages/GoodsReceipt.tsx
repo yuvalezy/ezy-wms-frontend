@@ -1,13 +1,13 @@
 import React, {useRef, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 import ContentTheme from "../Components/ContentTheme";
-import {IsNumeric, StringFormat} from "../Assets/Functions";
+import {IsNumeric, StringFormat} from "@Assets/Functions";
 import { fetchDocuments, } from "./GoodsReceiptSupervisor/Document";
 import {useTranslation} from "react-i18next";
 import {useDocumentStatusToString} from "./GoodsReceiptSupervisor/DocumentStatusString";
 import {Button, Form, FormItem, Icon, Input, InputDomRef, MessageStripDesign} from "@ui5/webcomponents-react";
 import {useThemeContext} from "../Components/ThemeContext";
-import {DocumentStatus} from "../Assets/Document";
+import {DocumentStatus} from "@Assets/Document";
 
 export default function GoodsReceipt() {
     const {setLoading, setAlert} = useThemeContext();

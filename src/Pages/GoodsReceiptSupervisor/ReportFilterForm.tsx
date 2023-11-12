@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState, useContext} from "react";
-import {BusinessPartner, fetchVendors, useDocumentStatusOptions,} from "../../Assets/Data";
+import {BusinessPartner, fetchVendors, useDocumentStatusOptions,} from "@Assets/Data";
 import {useTranslation} from "react-i18next";
 import {
     Icon,
@@ -15,7 +15,7 @@ import {
     PanelDomRef,
 } from "@ui5/webcomponents-react";
 import {AuthContext} from "../../Components/AppContext";
-import {DocumentStatusOption} from "../../Assets/Document";
+import {DocumentStatusOption} from "@Assets/Document";
 
 interface ReportFilterFormProps {
     idInput: string;
