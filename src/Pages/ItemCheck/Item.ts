@@ -6,7 +6,7 @@ import { itemMockup, updateItemBarMockup } from "../../assets/mockup";
 export interface ItemCheckResponse {
   itemCode: string;
   itemName: string;
-  numInBuy: number;
+  purPackUn: number;
   barcodes: string[];
 }
 

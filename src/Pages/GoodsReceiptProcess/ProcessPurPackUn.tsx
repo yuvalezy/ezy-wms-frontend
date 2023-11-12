@@ -12,22 +12,22 @@ import {UpdateLineReturnValue} from "../GoodsReceiptSupervisor/Document";
 import {updateLine} from "./Process";
 import {useTranslation} from "react-i18next";
 
-export interface ProcessNumInBuyRef {
+export interface ProcessPurPackUnRef {
     show: (show: boolean) => void;
 }
 
-export interface ProcessNumInBuyProps {
+export interface ProcessPurPackUnProps {
     id: number;
     alert: ProcessAlertValue | null;
-    onAccept: (numInBuy: number) => void;
+    onAccept: (purPackUn: number) => void;
 }
 
-const ProcessNumInBuy = forwardRef((props: ProcessNumInBuyProps, ref) => {
+const ProcessPurPackUn = forwardRef((props: ProcessPurPackUnProps, ref) => {
     const {t} = useTranslation();
     const {setLoading, setAlert} = useThemeContext();
     const [userName, setUserName] = useState("");
-    const [numInBuy, setNumInBuy] = useState<number>(props.alert?.numInBuy ?? 1);
-    const numInBuyRef = useRef<InputDomRef>(null);
+    const [purPackUn, setPurPackUn] = useState<number>(props.alert?.purPackUn ?? 1);
+    const PurPackUnRef = useRef<InputDomRef>(null);
     const dialogRef = useRef<DialogDomRef>(null);
 
     function handleSubmit(e: React.FormEvent) {
@@ -36,7 +36,7 @@ const ProcessNumInBuy = forwardRef((props: ProcessNumInBuyProps, ref) => {
         updateLine({
             id: props.id,
             lineID: props.alert?.lineID ?? -1,
-            numInBuy: numInBuy,
+            purPackUn: purPackUn,
             userName: userName,
         })
             .then((value) => {
@@ -62,11 +62,11 @@ const ProcessNumInBuy = forwardRef((props: ProcessNumInBuyProps, ref) => {
                     setAlert({message: t('duplicateNotAllowed'), type: MessageStripDesign.Negative});
                     setUserName("");
                     setLoading(false);
-                    setTimeout(() => numInBuyRef.current?.focus(), 100);
+                    setTimeout(() => PurPackUnRef.current?.focus(), 100);
                     return;
                 }
 
-                props.onAccept(numInBuy);
+                props.onAccept(purPackUn);
                 dialogRef?.current?.close();
                 setLoading(false);
             })
@@ -109,7 +109,7 @@ const ProcessNumInBuy = forwardRef((props: ProcessNumInBuyProps, ref) => {
             }
         >
             <Title level="H5">
-                {t("numInBuy")}
+                {t("purPackUn")}
             </Title>
             <Title level="H6">
                 <strong>{t("barcode")}: </strong>
@@ -126,17 +126,17 @@ const ProcessNumInBuy = forwardRef((props: ProcessNumInBuyProps, ref) => {
                         onChange={(e) => setUserName(e.target.value as string)}
                     ></Input>
                 </FormItem>
-                <FormItem label={t("numInBuy")}>
+                <FormItem label={t("purPackUn")}>
                     <Input
                         required
-                        name="numInBuy"
-                        ref={numInBuyRef}
+                        name="purPackUn"
+                        ref={PurPackUnRef}
                         type="Number"
-                        id="numInBuy"
-                        value={numInBuy?.toString()}
+                        id="purPackUn"
+                        value={purPackUn?.toString()}
                         onChange={function (e) {
                             let value = e.target.value as string;
-                            return setNumInBuy(value.length > 0 ? parseInt(value) : 1);
+                            return setPurPackUn(value.length > 0 ? parseInt(value) : 1);
                         }}
                     ></Input>
                 </FormItem>
@@ -144,4 +144,4 @@ const ProcessNumInBuy = forwardRef((props: ProcessNumInBuyProps, ref) => {
         </Dialog>
     );
 });
-export default ProcessNumInBuy;
+export default ProcessPurPackUn;

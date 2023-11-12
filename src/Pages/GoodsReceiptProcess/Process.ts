@@ -10,7 +10,7 @@ interface AddItemResponse {
   fulfillment: boolean;
   showroom: boolean;
   warehouse: boolean;
-  numInBuy: number;
+  purPackUn: number;
 }
 
 export type AddItemResponseMultipleValue = {
@@ -86,13 +86,13 @@ export const updateLine = async ({
   comment,
   userName,
   reason,
-  numInBuy,
+  purPackUn,
 }: {
   id: number;
   lineID: number;
   comment?: string;
   userName?: string;
-  numInBuy?: number;
+  purPackUn?: number;
   reason?: number;
 }): Promise<UpdateLineReturnValue> => {
   try {
@@ -117,7 +117,7 @@ export const updateLine = async ({
         comment: comment,
         userName: userName,
         closeReason: reason,
-        quantityInUnit: numInBuy,
+        quantityInUnit: purPackUn,
       },
       {
         headers: {

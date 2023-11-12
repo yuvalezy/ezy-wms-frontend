@@ -8,7 +8,7 @@ export interface ProcessAlertValue {
     lineID?: number,
     barcode?: string | null;
     itemCode?: string | null;
-    numInBuy?: number,
+    purPackUn?: number,
     timeStamp?: string;
     message?: string;
     severity: MessageStripDesign;
@@ -26,7 +26,7 @@ export enum AlertActionType {
     None = -1,
     Comments,
     Cancel,
-    NumInBuy,
+    purPackUn,
 }
 
 const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction}) => {
@@ -55,7 +55,7 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction}) => {
                 {alert.itemCode && <>
                     <span><strong>{t('item')}: </strong>{alert.itemCode}</span>
                     <br/>
-                    <span><strong>{t('numInBuy')}: </strong>{alert.numInBuy}</span>
+                    <span><strong>{t('purPackUn')}: </strong>{alert.purPackUn}</span>
                     <br/>
                 </>}
                 {alert.message && (<><strong>{t('message')}: </strong>{alert.message}</>)}
@@ -72,7 +72,7 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction}) => {
                         <br/>
                         <Icon name="cancel" onClick={() => onAction(AlertActionType.Cancel)}/>
                         <br/>
-                        <Icon name="numbered-text" onClick={() => onAction(AlertActionType.NumInBuy)}/>
+                        <Icon name="numbered-text" onClick={() => onAction(AlertActionType.purPackUn)}/>
                     </div>
                 }
             </MessageStrip>

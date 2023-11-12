@@ -10,7 +10,7 @@ import ProcessComment, {ProcessCommentRef} from "./GoodsReceiptProcess/ProcessCo
 import {useThemeContext} from "../Components/ThemeContext";
 import ProcessCancel, {ProcessCancelRef} from "./GoodsReceiptProcess/ProcessCancel";
 import {addItem, AddItemResponseMultipleValue,} from "./GoodsReceiptProcess/Process";
-import ProcessNumInBuy, {ProcessNumInBuyRef} from "./GoodsReceiptProcess/ProcessNumInBuy";
+import ProcessPurPackUn, {ProcessPurPackUnRef} from "./GoodsReceiptProcess/ProcessPurPackUn";
 import {useTranslation} from "react-i18next";
 import {Button, Icon, Form, FormItem, Input, InputDomRef, MessageStrip} from "@ui5/webcomponents-react";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
@@ -31,7 +31,7 @@ export default function GoodsReceiptProcess() {
     const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
     const processCancelRef = useRef<ProcessCancelRef>(null);
     const processCommentRef = useRef<ProcessCommentRef>(null);
-    const processNumInBuyRef = useRef<ProcessNumInBuyRef>(null);
+    const processPurPackUnRef = useRef<ProcessPurPackUnRef>(null);
 
     const title = `${t("goodsReceipt")} #${scanCode}`;
 
@@ -117,7 +117,7 @@ export default function GoodsReceiptProcess() {
                         message: StringFormat(t("goodsReceiptIsClosed"), id),
                         severity: MessageStripDesign.Negative,
                         multiple: [],
-                        numInBuy: data.numInBuy,
+                        purPackUn: data.purPackUn,
                     });
                     setEnable(false);
                     return;
@@ -127,7 +127,7 @@ export default function GoodsReceiptProcess() {
                     return alert({
                         barcode: barcode,
                         itemCode: itemCode,
-                        numInBuy: data.numInBuy,
+                        purPackUn: data.purPackUn,
                         message: `Error Mockup`,
                         severity: MessageStripDesign.Negative,
                     });
@@ -182,7 +182,7 @@ export default function GoodsReceiptProcess() {
                     message: message,
                     severity: color,
                     multiple: multiple,
-                    numInBuy: data.numInBuy,
+                    purPackUn: data.purPackUn,
                 });
             })
             .catch((error) => {
@@ -218,8 +218,8 @@ export default function GoodsReceiptProcess() {
             case AlertActionType.Comments:
                 processCommentRef?.current?.show(true);
                 break;
-            case AlertActionType.NumInBuy:
-                processNumInBuyRef?.current?.show(true);
+            case AlertActionType.purPackUn:
+                processPurPackUnRef?.current?.show(true);
                 break;
         }
     }
@@ -300,16 +300,16 @@ export default function GoodsReceiptProcess() {
 
                         }}
                     />
-                    <ProcessNumInBuy
+                    <ProcessPurPackUn
                         id={id}
                         alert={currentAlert}
-                        ref={processNumInBuyRef}
-                        onAccept={(numInBuy) => {
+                        ref={processPurPackUnRef}
+                        onAccept={(purPackUn) => {
                             if (currentAlert == null)
                                 return;
                             handleAlertActionAccept({
                                 ...currentAlert,
-                                numInBuy: numInBuy,
+                                purPackUn: purPackUn,
                             });
                         }}
                     />

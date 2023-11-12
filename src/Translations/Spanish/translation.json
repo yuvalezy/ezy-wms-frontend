@@ -73,7 +73,7 @@
   "comment": "Comentario",
   "supervisorCode": "Codigo de Supervisor",
   "reason": "Razon",
-  "numInBuy": "Cantidad en Unidad",
+  "purPackUn": "Cantidad en Unidad",
   "automatic": "Automatico",
   "specificDocuments": "Documentos Especificos",
   "documentsList": "Lista de Documentos",

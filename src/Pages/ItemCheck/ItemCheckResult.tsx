@@ -48,7 +48,7 @@ const ItemCheckResult: React.FC<ItemCheckResultProps> = ({result, clear, submit}
         <Card header={<CardHeader titleText={`${t('code')}: ${result.itemCode}`}/>}>
             <List>
                 <StandardListItem><strong>{t('description')}:</strong> {result.itemName}</StandardListItem>
-                <StandardListItem> <strong>{t('numInBuy')}:</strong> {result.numInBuy}</StandardListItem>
+                <StandardListItem> <strong>{t('purPackUn')}:</strong> {result.purPackUn}</StandardListItem>
             </List>
             <Table
                 columns={<>

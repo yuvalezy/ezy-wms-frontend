@@ -26,7 +26,7 @@ export const itemMockup = [
   {
     itemCode: "exampleItemCode",
     itemName: "exampleItemName",
-    numInBuy: 5,
+    purPackUn: 5,
     barcodes: ["barcode1", "barcode2", "barcode3"],
   },
 ];
@@ -86,7 +86,7 @@ export const addItemResponseMockup = {
   fulfillment: false,
   showroom: false,
   warehouse: false,
-  numInBuy: 5,
+  purPackUn: 5,
 };
 
 export const UpdateLineReturnValueMockup: UpdateLineReturnValue =

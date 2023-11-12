@@ -70,7 +70,7 @@ export const TextValue = {
     Comment: 'Comentario',
     SupervisorCode: 'Codigo de Supervisor',
     Reason: "Razon",
-    NumInBuy: 'Cantidad en Unidad',
+    purPackUn: 'Cantidad en Unidad',
     Automatic: 'Automatico',
     SpecificDocuments: 'Documentos Especificos',
     DocumentsList: 'Lista de Documentos',
