@@ -9,7 +9,7 @@ import ProtectedRoute from "./Components/ProtectedRoute";
 import Unauthorized from "./Components/Unauthorized";
 import GoodsReceiptSupervisor from "./Pages/GoodsReceiptSupervisor";
 import NotFound from "./Components/NotFound";
-import {Authorization} from "./assets/Authorization";
+import {Authorization} from "./Assets/Authorization";
 import GoodsReceiptProcess from "./Pages/GoodsReceiptProcess";
 import GoodsReceiptReport from "./Pages/GoodsReceiptReport";
 import GoodsReceiptVSExitReport from "./Pages/GoodsReceiptVSExitReport";

@@ -8,8 +8,8 @@ import {
 } from "@ui5/webcomponents-react";
 import {ProcessAlertValue} from "./ProcessAlert";
 import {useThemeContext} from "../../Components/ThemeContext";
-import {updateLine} from "./Process";
 import {useTranslation} from "react-i18next";
+import {updateLine} from "./GoodsReceiptProcess";
 
 export interface ProcessCommentRef {
     show: (show: boolean) => void;

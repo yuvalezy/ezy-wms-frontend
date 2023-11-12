@@ -1,5 +1,5 @@
 import React, {forwardRef, useImperativeHandle, useRef} from 'react';
-import {Item} from "../assets/Common";
+import {Item} from "../Assets/Common";
 import {useTranslation} from "react-i18next";
 import {Button, Bar, Dialog, DialogDomRef, Link, List, StandardListItem, Title, Avatar} from "@ui5/webcomponents-react";
 

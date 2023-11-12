@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ContentTheme from "../Components/ContentTheme";
-import { IsNumeric } from "../assets/Functions";
+import { IsNumeric } from "../Assets/Functions";
 import { useParams } from "react-router-dom";
 import {
   fetchGoodsReceiptVSExitReport,
@@ -9,7 +9,7 @@ import {
 import GoodsReceiptVSExitReportTable from "./GoodsReceiptSupervisor/GoodsReceiptVSExitReportTable";
 import { useThemeContext } from "../Components/ThemeContext";
 import { useTranslation } from "react-i18next";
-import { useObjectName } from "../assets/ObjectName";
+import { useObjectName } from "../Assets/ObjectName";
 import {Panel, Title, Text, MessageStrip, MessageStripDesign} from "@ui5/webcomponents-react";
 
 export default function GoodsReceiptVSExitReport() {

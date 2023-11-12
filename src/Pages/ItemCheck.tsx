@@ -6,8 +6,8 @@ import {
     ItemCheckResponse,
     updateItemBarCode,
 } from "./ItemCheck/Item";
-import {ResponseStatus} from "../assets/Common";
-import {StringFormat} from "../assets/Functions";
+import {ResponseStatus} from "../Assets/Common";
+import {StringFormat} from "../Assets/Functions";
 import ItemCheckMultipleResult from "./ItemCheck/ItemCheckMultipleResult";
 import ItemCheckResult from "./ItemCheck/ItemCheckResult";
 import {useTranslation} from "react-i18next";

@@ -8,13 +8,10 @@ import {
 } from "@ui5/webcomponents-react";
 import {ProcessAlertValue} from "./ProcessAlert";
 import {useThemeContext} from "../../Components/ThemeContext";
-import {
-    fetchReasons,
-    ReasonValue,
-    UpdateLineReturnValue,
-} from "../GoodsReceiptSupervisor/Document";
-import {updateLine} from "./Process";
+import { fetchReasons, ReasonValue, } from "../GoodsReceiptSupervisor/Document";
 import {useTranslation} from "react-i18next";
+import {updateLine} from "./GoodsReceiptProcess";
+import {UpdateLineReturnValue} from "../../Assets/Document";
 
 export interface ProcessCancelRef {
     show: (show: boolean) => void;

@@ -1,8 +1,8 @@
 import axios from "axios";
-import {DocumentStatus} from "../Pages/GoodsReceiptSupervisor/Document";
 import {configUtils, globalConfig} from "./GlobalConfig";
 import {useTranslation} from "react-i18next";
 import {vendorsMockup} from "./mockup";
+import {DocumentStatus} from "./Document";
 
 export type Employee = {
   id: number;
@@ -14,11 +14,6 @@ export type BusinessPartner = {
   name: string;
 };
 
-export type DocumentStatusOption = {
-  code: string;
-  name: string;
-  status: DocumentStatus;
-};
 
 export function useDocumentStatusOptions() {
   const { t } = useTranslation();

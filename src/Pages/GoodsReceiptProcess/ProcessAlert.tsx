@@ -1,8 +1,8 @@
 import React from "react";
-import {AddItemResponseMultipleValue} from "./Process";
 import {useTranslation} from "react-i18next";
 import {Icon, MessageStrip, Title} from "@ui5/webcomponents-react";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
+import {AddItemResponseMultipleValue} from "../../Assets/Document";
 
 export interface ProcessAlertValue {
     lineID?: number,

@@ -1,15 +1,10 @@
 import React, {useEffect, useRef, useState} from "react";
-import {BusinessPartner, fetchVendors} from "../../assets/Data";
-import {
-    createDocument,
-    Document,
-    DocumentItem,
-    GoodsReceiptType,
-} from "./Document";
+import {BusinessPartner, fetchVendors} from "../../Assets/Data";
+import {createDocument, GoodsReceiptType,} from "./Document";
 import {useThemeContext} from "../../Components/ThemeContext";
 import DocumentList, {DocumentListRef} from "./DocumentList";
-import {StringFormat} from "../../assets/Functions";
-import {useObjectName} from "../../assets/ObjectName";
+import {StringFormat} from "../../Assets/Functions";
+import {useObjectName} from "../../Assets/ObjectName";
 import {useTranslation} from "react-i18next";
 import {
     Button,
@@ -21,6 +16,7 @@ import {
     Tab,
     TabContainer,
 } from "@ui5/webcomponents-react";
+import {Document, DocumentItem} from "../../Assets/Document";
 
 interface DocumentFormProps {
     onNewDocument: (document: Document) => void;

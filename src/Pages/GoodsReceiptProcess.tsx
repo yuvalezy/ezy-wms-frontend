@@ -1,20 +1,21 @@
 import ContentTheme from "../Components/ContentTheme";
 import {useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
-import {IsNumeric, StringFormat} from "../assets/Functions";
+import {IsNumeric, StringFormat} from "../Assets/Functions";
 import BoxConfirmationDialog, {BoxConfirmationDialogRef} from "../Components/BoxConfirmationDialog";
 import {scanBarcode} from "./GoodsReceiptSupervisor/Document";
-import {distinctItems, Item} from "../assets/Common";
+import {distinctItems, Item} from "../Assets/Common";
 import ProcessAlert, {AlertActionType, ProcessAlertValue,} from "./GoodsReceiptProcess/ProcessAlert";
 import ProcessComment, {ProcessCommentRef} from "./GoodsReceiptProcess/ProcessComment";
 import {useThemeContext} from "../Components/ThemeContext";
 import ProcessCancel, {ProcessCancelRef} from "./GoodsReceiptProcess/ProcessCancel";
-import {addItem, AddItemResponseMultipleValue,} from "./GoodsReceiptProcess/Process";
 import ProcessPurPackUn, {ProcessPurPackUnRef} from "./GoodsReceiptProcess/ProcessPurPackUn";
 import {useTranslation} from "react-i18next";
 import {Button, Icon, Form, FormItem, Input, InputDomRef, MessageStrip} from "@ui5/webcomponents-react";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
-import {configUtils} from "../assets/GlobalConfig";
+import {configUtils} from "../Assets/GlobalConfig";
+import {addItem} from "./GoodsReceiptProcess/GoodsReceiptProcess";
+import {AddItemResponseMultipleValue} from "../Assets/Document";
 
 export default function GoodsReceiptProcess() {
     const {scanCode} = useParams();

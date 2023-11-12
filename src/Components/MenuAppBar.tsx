@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {useAuth} from "./AppContext";
 import {useLocation, useNavigate} from "react-router-dom";
-import {MenuItem, useMenus} from "../assets/Menus";
+import {MenuItem, useMenus} from "../Assets/Menus";
 import {Icon, ShellBar, ShellBarItem, StandardListItem} from "@ui5/webcomponents-react";
 import {useEffect, useState} from "react";
 import {Ui5CustomEvent} from "@ui5/webcomponents-react/dist/interfaces";

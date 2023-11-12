@@ -7,9 +7,9 @@ import React, {
   useEffect,
 } from "react";
 import axios, { AxiosError } from "axios";
-import { User } from "../assets/Common";
-import {delay, setGlobalConfig} from "../assets/GlobalConfig";
-import { Authorization } from "../assets/Authorization";
+import { User } from "../Assets/Common";
+import {delay, setGlobalConfig} from "../Assets/GlobalConfig";
+import { Authorization } from "../Assets/Authorization";
 
 // Define the shape of the context
 export type Config = {

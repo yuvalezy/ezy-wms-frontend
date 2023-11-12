@@ -8,9 +8,9 @@ import {
 } from "@ui5/webcomponents-react";
 import {ProcessAlertValue} from "./ProcessAlert";
 import {useThemeContext} from "../../Components/ThemeContext";
-import {UpdateLineReturnValue} from "../GoodsReceiptSupervisor/Document";
-import {updateLine} from "./Process";
 import {useTranslation} from "react-i18next";
+import {updateLine} from "./GoodsReceiptProcess";
+import {UpdateLineReturnValue} from "../../Assets/Document";
 
 export interface ProcessPurPackUnRef {
     show: (show: boolean) => void;

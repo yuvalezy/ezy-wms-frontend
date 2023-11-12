@@ -4,7 +4,7 @@ import "@ui5/webcomponents/dist/features/InputElementsFormSupport.js";
 import {useTranslation} from "react-i18next"; // Adjust the path based on your directory structure
 import {useEffect} from "react";
 import './LoginForm.css';
-import {globalConfig} from "../../assets/GlobalConfig";
+import {globalConfig} from "../../Assets/GlobalConfig";
 
 type LoginFormProps = {
     onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;

@@ -1,9 +1,9 @@
 import React, {forwardRef, useImperativeHandle, useRef, useState} from 'react';
-import {DocumentItem} from "./Document";
 import {useTranslation} from "react-i18next";
-import {useObjectName} from "../../assets/ObjectName";
+import {useObjectName} from "../../Assets/ObjectName";
 import {Icon, ComboBox, ComboBoxItem, Input, Button, List, StandardListItem, MessageStripDesign} from "@ui5/webcomponents-react";
 import {useThemeContext} from "../../Components/ThemeContext";
+import {DocumentItem} from "../../Assets/Document";
 
 export interface DocumentListRef {
     clearItems: () => void;

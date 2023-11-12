@@ -1,7 +1,7 @@
 import axios from "axios";
-import {delay, globalConfig, configUtils} from "../../assets/GlobalConfig";
-import { ResponseStatus } from "../../assets/Common";
-import { itemMockup, updateItemBarMockup } from "../../assets/mockup";
+import {delay, globalConfig, configUtils} from "../../Assets/GlobalConfig";
+import { ResponseStatus } from "../../Assets/Common";
+import { itemMockup, updateItemBarMockup } from "../../Assets/mockup";
 
 export interface ItemCheckResponse {
   itemCode: string;

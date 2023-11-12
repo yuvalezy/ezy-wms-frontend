@@ -1,14 +1,15 @@
 import React, {useEffect, useRef, useState} from "react";
 import {useAuth} from "../Components/AppContext";
 import ContentTheme from "../Components/ContentTheme";
-import {StringFormat} from "../assets/Functions";
+import {StringFormat} from "../Assets/Functions";
 import DocumentForm from "./GoodsReceiptSupervisor/DocumentForm";
-import {Action, Document, documentAction, fetchDocuments,} from "./GoodsReceiptSupervisor/Document";
+import { documentAction, fetchDocuments,} from "./GoodsReceiptSupervisor/Document";
 import DocumentCard from "./GoodsReceiptSupervisor/DocumentCard";
 import {useThemeContext} from "../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {Bar, Button, Dialog, DialogDomRef, MessageBox, MessageBoxActions, MessageStripDesign} from "@ui5/webcomponents-react";
 import QRCode from "qrcode.react";
+import {Document, DocumentAction} from "../Assets/Document";
 
 export default function GoodsReceiptSupervisor() {
     const dialogRef = useRef<DialogDomRef>(null);
@@ -19,7 +20,7 @@ export default function GoodsReceiptSupervisor() {
     const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(
         null
     );
-    const [actionType, setActionType] = useState<Action | null>(null);
+    const [actionType, setActionType] = useState<DocumentAction | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
     const errorAlert = (message: string) => setAlert({message: message, type: MessageStripDesign.Negative});
 
@@ -36,7 +37,7 @@ export default function GoodsReceiptSupervisor() {
             .finally(() => setLoading(false));
     }, []);
 
-    const handleAction = (docId: number, action: Action) => {
+    const handleAction = (docId: number, action: DocumentAction) => {
         setSelectedDocumentId(docId);
         setActionType(action);
         if (action !== "qrcode") {

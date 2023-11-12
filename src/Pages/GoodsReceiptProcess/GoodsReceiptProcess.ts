@@ -1,22 +1,8 @@
 import axios from "axios";
-import {configUtils, delay, globalConfig} from "../../assets/GlobalConfig";
-import {UpdateLineReturnValue} from "../GoodsReceiptSupervisor/Document";
-import {addItemResponseMockup, UpdateLineReturnValueMockup,} from "../../assets/mockup";
-import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
+import {configUtils, delay, globalConfig} from "../../Assets/GlobalConfig";
+import {addItemResponseMockup, UpdateLineReturnValueMockup,} from "../../Assets/mockup";
+import {AddItemResponse, UpdateLineReturnValue} from "../../Assets/Document";
 
-interface AddItemResponse {
-  lineID: number;
-  closedDocument: boolean;
-  fulfillment: boolean;
-  showroom: boolean;
-  warehouse: boolean;
-  purPackUn: number;
-}
-
-export type AddItemResponseMultipleValue = {
-  message: string;
-  severity: MessageStripDesign;
-};
 
 export const addItem = async (
   id: number,
