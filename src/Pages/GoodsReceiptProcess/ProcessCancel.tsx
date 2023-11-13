@@ -11,7 +11,7 @@ import {useThemeContext} from "../../Components/ThemeContext";
 import { fetchReasons, ReasonValue, } from "../GoodsReceiptSupervisor/Document";
 import {useTranslation} from "react-i18next";
 import {updateLine} from "./GoodsReceiptProcess";
-import {UpdateLineReturnValue} from "@Assets/Document";
+import {UpdateLineReturnValue} from "../../Assets/Document";
 
 export interface ProcessCancelRef {
     show: (show: boolean) => void;

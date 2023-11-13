@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import ContentTheme from "../Components/ContentTheme";
-import { IsNumeric } from "@Assets/Functions";
 import { useParams } from "react-router-dom";
 import {
   fetchGoodsReceiptReportAll,
@@ -12,6 +11,7 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { useTranslation } from "react-i18next";
 import {MessageStrip, MessageStripDesign, Title} from "@ui5/webcomponents-react";
+import {IsNumeric} from "../Assets/Functions";
 
 export default function GoodsReceiptReportAll() {
   const { t } = useTranslation();

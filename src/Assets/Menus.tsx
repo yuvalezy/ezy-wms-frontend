@@ -24,6 +24,7 @@ export interface MenuItem {
     Link: string;
     Text: string;
     Authorization?: Authorization;
+    Authorizations?: Authorization[];
     Icon: string;
 }
 
@@ -34,7 +35,7 @@ export function useMenus() {
         {
             Link: "/itemCheck",
             Text: t('itemCheck'),
-            Authorization: Authorization.GOODS_RECEIPT_SUPERVISOR,
+            Authorizations: [Authorization.GOODS_RECEIPT_SUPERVISOR, Authorization.DELIVERY_SUPERVISOR],
             Icon: "complete",
         },
         {
@@ -53,6 +54,24 @@ export function useMenus() {
             Link: "/goodsReceiptReport",
             Text: t('goodsReceiptReport'),
             Authorization: Authorization.GOODS_RECEIPT_SUPERVISOR,
+            Icon: "manager-insight",
+        },
+        {
+            Link: "/delivery",
+            Text: t('delivery'),
+            Authorization: Authorization.DELIVERY,
+            Icon: "cause",
+        },
+        {
+            Link: "/deliverySupervisor",
+            Text: t('deliverySupervisor'),
+            Authorization: Authorization.DELIVERY_SUPERVISOR,
+            Icon: "kpi-managing-my-area",
+        },
+        {
+            Link: "/deliveryReport",
+            Text: t('deliveryReport'),
+            Authorization: Authorization.DELIVERY_SUPERVISOR,
             Icon: "manager-insight",
         },
     ];

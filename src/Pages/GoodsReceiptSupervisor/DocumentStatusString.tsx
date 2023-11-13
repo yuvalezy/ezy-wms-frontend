@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import {DocumentStatus} from "@Assets/Document";
+import {DocumentStatus} from "../../Assets/Document";
 
 export const useDocumentStatusToString = () => {
     const { t } = useTranslation();

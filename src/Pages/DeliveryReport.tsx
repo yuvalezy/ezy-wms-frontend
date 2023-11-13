@@ -9,7 +9,7 @@ import {MessageStripDesign} from "@ui5/webcomponents-react";
 import {BusinessPartner} from "../Assets/Data";
 import {Document, DocumentStatusOption} from "../Assets/Document";
 
-export default function GoodsReceiptReport() {
+export default function DeliveryReport() {
     const {setLoading, setAlert} = useThemeContext();
     const {t} = useTranslation();
     const [idInput, setIDInput] = useState<string | "">("");

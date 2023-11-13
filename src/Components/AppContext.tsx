@@ -7,9 +7,9 @@ import React, {
   useEffect,
 } from "react";
 import axios, { AxiosError } from "axios";
-import { User } from "@Assets/Common";
-import {delay, setGlobalConfig} from "@Assets/GlobalConfig";
-import { Authorization } from "@Assets/Authorization";
+import { User } from "../Assets/Common";
+import {delay, setGlobalConfig} from "../Assets/GlobalConfig";
+import {Authorization} from "../Assets/Authorization";
 
 // Define the shape of the context
 export type Config = {
@@ -176,6 +176,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       authorizations: [
         Authorization.GOODS_RECEIPT,
         Authorization.GOODS_RECEIPT_SUPERVISOR,
+        Authorization.DELIVERY,
+        Authorization.DELIVERY_SUPERVISOR,
       ],
     };
 

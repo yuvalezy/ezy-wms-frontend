@@ -11,7 +11,7 @@ import QRCode from "qrcode.react";
 import {Document, DocumentAction} from "../Assets/Document";
 import {StringFormat} from "../Assets/Functions";
 
-export default function GoodsReceiptSupervisor() {
+export default function DeliverySupervisor() {
     const dialogRef = useRef<DialogDomRef>(null);
     const {user} = useAuth();
     const {t} = useTranslation();

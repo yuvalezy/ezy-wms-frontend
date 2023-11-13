@@ -9,7 +9,7 @@ import {useThemeContext} from "../Components/ThemeContext";
 import {IsNumeric, StringFormat} from "../Assets/Functions";
 import {DocumentStatus} from "../Assets/Document";
 
-export default function GoodsReceipt() {
+export default function Delivery() {
     const {setLoading, setAlert} = useThemeContext();
     const [scanCodeInput, setScanCodeInput] = React.useState("");
     const {t} = useTranslation();

@@ -1,6 +1,6 @@
-import {configUtils, delay, globalConfig} from "@Assets/GlobalConfig";
 import axios from "axios";
-import { GoodsReceiptMockup, goodsReceiptVSExitReportDataMockup, } from "@Assets/mockup";
+import {configUtils, delay, globalConfig} from "../../Assets/GlobalConfig";
+import {GoodsReceiptMockup, goodsReceiptVSExitReportDataMockup} from "../../Assets/mockup";
 
 export type GoodsReceiptAll = {
     itemCode: string;

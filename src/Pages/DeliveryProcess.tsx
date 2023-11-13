@@ -17,7 +17,7 @@ import {IsNumeric, StringFormat} from "../Assets/Functions";
 import {configUtils} from "../Assets/GlobalConfig";
 import {AddItemResponseMultipleValue} from "../Assets/Document";
 
-export default function GoodsReceiptProcess() {
+export default function DeliveryProcess() {
     const {scanCode} = useParams();
     const {t} = useTranslation();
     const barcodeRef = useRef<InputDomRef>(null);
