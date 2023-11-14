@@ -1,10 +1,11 @@
 import * as React from 'react';
 import {Button, Input, Select, Option, Form, FormItem} from "@ui5/webcomponents-react";
 import "@ui5/webcomponents/dist/features/InputElementsFormSupport.js";
-import {useTranslation} from "react-i18next"; // Adjust the path based on your directory structure
+import {useTranslation} from "react-i18next";
 import {useEffect} from "react";
 import './LoginForm.css';
 import {globalConfig} from "../../Assets/GlobalConfig";
+import Cookies from 'universal-cookie';
 
 type LoginFormProps = {
     onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
@@ -12,14 +13,22 @@ type LoginFormProps = {
 
 export default function LoginForm({onSubmit}: LoginFormProps) {
     const {t, i18n} = useTranslation();
+    const cookies = new Cookies();
 
     const onLanguageChange = (event: CustomEvent) => {
         const language = event.detail.selectedOption.dataset.key;
         i18n.changeLanguage(language);
+
+        const tenYearsFromNow = new Date();
+        tenYearsFromNow.setFullYear(tenYearsFromNow.getFullYear() + 10);
+
+        cookies.set('userLanguage', language, { path: '/', expires: tenYearsFromNow });
     };
 
     useEffect(() => {
-        const browserLang = navigator.language.split('-')[0]; // Gets the browser language
+        const userLanguage = cookies.get('userLanguage');
+        console.log(userLanguage);
+        const browserLang = userLanguage??navigator.language.split('-')[0]; // Gets the browser language
         const availableLanguages = ['en', 'es']; // Add more languages if you support them
         const defaultLang = 'en'; // Fallback language if browser language is not supported
 
@@ -38,7 +47,6 @@ export default function LoginForm({onSubmit}: LoginFormProps) {
                     {t('login')}
                 </div>
                 <Form onSubmit={onSubmit}>
-                    {/* Form items here */}
                     <FormItem label={t('code')}>
                         <Input style={{width: '100%'}} required name="username" type="Password" />
                     </FormItem>
