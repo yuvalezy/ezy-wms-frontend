@@ -5,6 +5,8 @@
   "goodsReceiptSupervisor": "Supervisor de Entrada",
   "goodsReceiptReport": "Reporte de Entradas",
   "goodsReceiptVSExit": "Reporte de Entradas vs Salida",
+  "deliverySupervisor": "Supervisor de Entregas",
+  "deliveryReport": "Reporte de Entregas",
 
   "login": "Entrada de Usuario",
   "enter": "Entrar",
@@ -23,8 +25,8 @@
   "create": "Crear",
   "close": "Cerrar",
   "accept": "Aceptar",
-  "qRCode": "Código QR",
-  "iD": "Identificación",
+  "qrCode": "Código QR",
+  "id": "Identificación",
   "code": "Código",
   "description": "Descripcion",
   "barcode": "Código de Barra",
@@ -41,6 +43,7 @@
   "cancelledStatus": "Cancelado",
   "processingStatus": "Procesando",
 
+  "type": "Tipo",
   "item": "Articulo",
   "vendor": "Proveedor",
   "number": "Número",
@@ -61,6 +64,7 @@
   "documentNumber": "Numero de Documento",
   "address": "Direccion",
   "customer": "Cliente",
+  "customerName": "Nombre de Cliente",
   "openQuantity": "Cantidad Abierta",
   "quantity": "Cantidad",
   "message": "Mensaje",
@@ -77,6 +81,7 @@
   "automatic": "Automatico",
   "specificDocuments": "Documentos Especificos",
   "documentsList": "Lista de Documentos",
+  "openDocuments": "Documentos Abiertos",
 
   "selectVendor": "Seleccione el Proveedor",
   "selectBox": "Seleccione la Caja",

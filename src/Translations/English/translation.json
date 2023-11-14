@@ -5,6 +5,8 @@
   "goodsReceiptSupervisor": "Goods Receipt Supervisor",
   "goodsReceiptReport": "Goods Receipt Report",
   "goodsReceiptVSExit": "Goods Receipt vs Exit",
+  "deliverySupervisor": "Deliveries Supervisor",
+  "deliveryReport": "Deliveries Report",
 
   "login": "Login",
   "enter": "Enter",
@@ -23,8 +25,8 @@
   "create": "Create",
   "close": "Close",
   "accept": "Accept",
-  "qRCode": "QR Code",
-  "iD": "ID",
+  "qrCode": "QR Code",
+  "id": "ID",
   "code": "Code",
   "description": "Description",
   "barcode": "Barcode",
@@ -41,6 +43,7 @@
   "cancelledStatus": "Cancelled",
   "processingStatus": "Processing",
 
+  "type": "Type",
   "item": "Item",
   "vendor": "Vendor",
   "number": "Number",
@@ -61,6 +64,7 @@
   "documentNumber": "Document Number",
   "address": "Address",
   "customer": "Customer",
+  "customerName": "Customer Name",
   "openQuantity": "Open Quantity",
   "quantity": "Quantity",
   "message": "Message",
@@ -77,6 +81,7 @@
   "automatic": "Automatic",
   "specificDocuments": "Specific Documents",
   "documentsList": "Documents List",
+  "openDocuments": "Open Documents",
 
   "selectVendor": "Select Vendor",
   "selectBox": "Select Box",

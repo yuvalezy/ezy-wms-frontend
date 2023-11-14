@@ -27,7 +27,6 @@ export default function LoginForm({onSubmit}: LoginFormProps) {
 
     useEffect(() => {
         const userLanguage = cookies.get('userLanguage');
-        console.log(userLanguage);
         const browserLang = userLanguage??navigator.language.split('-')[0]; // Gets the browser language
         const availableLanguages = ['en', 'es']; // Add more languages if you support them
         const defaultLang = 'en'; // Fallback language if browser language is not supported

@@ -1,4 +1,5 @@
 import { ResponseStatus } from "./Common";
+import {DeliveryOpenDocument} from "./Deliveries";
 
 enum UpdateLineReturnValue {
   Status = "Status",
@@ -154,4 +155,77 @@ export const ReasonValueMockup = [
     value: 1,
     description: "description",
   },
+];
+
+export const DeliveryOpenDocuments: DeliveryOpenDocument[] = [
+  {
+    objType: 13,
+    docEntry: 411,
+    docNum: 4,
+    docDate: new Date("2023-08-27 00:00:00.000"),
+    cardCode: "yuval",
+    cardName: "Yuval Lerner",
+    address: "GERMANY"
+  }
+  ,
+  {
+
+    objType: 13,
+    docEntry: 412,
+    docNum: 5,
+    docDate: new Date("2023-08-27 00:00:00.000"),
+    cardCode: "C23900",
+    cardName: "Mikrochips GmbH",
+    address: "Hessische Str. 5\r\r68305 Mannheim GERMANY"
+  }
+  ,
+  {
+    objType: 13,
+    docEntry: 413,
+    docNum: 6,
+    docDate: new Date("2023-09-24 00:00:00.000"),
+    cardCode: "AITH_DEMO",
+    cardName: "Aith Demo",
+    address: null
+  }
+  ,
+  {
+    objType: 17,
+    docEntry: 527,
+    docNum: 45,
+    docDate: new Date("2023-09-24 00:00:00.000"),
+    cardCode: "AITH_DEMO",
+    cardName: "Aith Demo",
+    address: null
+  }
+  ,
+  {
+    objType: 17,
+    docEntry: 528,
+    docNum: 46,
+    docDate: new Date("2023-10-10 00:00:00.000"),
+    cardCode: "AITH_DEMO",
+    cardName: "Aith Demo",
+    address: null
+  }
+  ,
+  {
+    objType: 17,
+    docEntry: 529,
+    docNum: 47,
+    docDate: new Date("2023-10-10 00:00:00.000"),
+    cardCode: "C99999",
+    cardName: "Einmalkunde",
+    address: null
+  }
+  ,
+  {
+    objType: 17,
+    docEntry: 530,
+    docNum: 48,
+    docDate: new Date("2023-10-18 00:00:00.000"),
+    cardCode: "C30000",
+    cardName: "Computerhandel Müller",
+    address: "Fuldastieg 3\r\r21079 Hamburg GERMANY"
+  }
 ];

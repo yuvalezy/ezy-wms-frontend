@@ -3,6 +3,7 @@ import { Authorization } from "./Authorization";
 import "@ui5/webcomponents-icons/dist/qr-code.js"
 import "@ui5/webcomponents-icons/dist/complete.js"
 import "@ui5/webcomponents-icons/dist/cause.js"
+import "@ui5/webcomponents-icons/dist/cart-2.js"
 import "@ui5/webcomponents-icons/dist/kpi-managing-my-area.js"
 import "@ui5/webcomponents-icons/dist/manager-insight.js"
 import "@ui5/webcomponents-icons/dist/cancel.js"
@@ -60,7 +61,7 @@ export function useMenus() {
             Link: "/delivery",
             Text: t('delivery'),
             Authorization: Authorization.DELIVERY,
-            Icon: "cause",
+            Icon: "cart-2",
         },
         {
             Link: "/deliverySupervisor",
