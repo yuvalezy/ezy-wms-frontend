@@ -89,7 +89,7 @@
   "goodsReceiptNotFound": "The entry #{0} is not valid",
   "goodsReceiptStatusError": "The status of the entry #{0} is {1}.\nCannot continue.",
   "goodsReceiptIsClosed": "Entry #{0} is closed",
-  "iDRequired": "An ID must be entered",
+  "idRequired": "An ID must be entered",
   "vendorRequired": "A vendor must be selected",
   "documentRequired": "A document number must be entered",
   "duplicateNotAllowed": "Duplicate values are not allowed.",
