@@ -54,6 +54,7 @@ export  interface AddItemResponse {
     showroom: boolean;
     warehouse: boolean;
     purPackUn: number;
+    errorMessage?: string;
 }
 
 export type AddItemResponseMultipleValue = {

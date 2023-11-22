@@ -52,10 +52,10 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, onError,}) =>
         }
         switch (selectedType) {
             case GoodsReceiptType.AutoConfirm:
-                if (cardCodeInput.length === 0) {
-                    alert(t("vendorRequired"));
-                    return;
-                }
+                // if (cardCodeInput.length === 0) {
+                //     alert(t("vendorRequired"));
+                //     return;
+                // }
                 break;
             case GoodsReceiptType.SpecificOrders:
                 if (items.length === 0) {

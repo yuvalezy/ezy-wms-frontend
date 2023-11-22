@@ -59,8 +59,12 @@ export const addItem = async (
         },
       }
     );
-
-    return response.data;
+    if (response.data.errorMessage == null) {
+      return response.data;
+    }
+    else {
+      throw new Error(response.data.errorMessage);
+    }
   } catch (error) {
     console.error("Error adding item:", error);
     throw error;
