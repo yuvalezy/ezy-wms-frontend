@@ -6,13 +6,13 @@ import { documentAction, fetchDocuments,} from "./GoodsReceiptSupervisor/Documen
 import DocumentCard from "./GoodsReceiptSupervisor/DocumentCard";
 import {useThemeContext} from "../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {Bar, Button, Dialog, DialogDomRef, MessageBox, MessageBoxActions, MessageStripDesign} from "@ui5/webcomponents-react";
-import QRCode from "qrcode.react";
+import {MessageBox, MessageBoxActions, MessageStripDesign} from "@ui5/webcomponents-react";
 import {Document, DocumentAction} from "../Assets/Document";
 import {StringFormat} from "../Assets/Functions";
+import QRDialog, {QRDialogRef} from "../Components/QRDialog";
 
 export default function GoodsReceiptSupervisor() {
-    const dialogRef = useRef<DialogDomRef>(null);
+    const qrRef = useRef<QRDialogRef>(null);
     const {user} = useAuth();
     const {t} = useTranslation();
     const {setLoading, setAlert} = useThemeContext();
@@ -43,8 +43,7 @@ export default function GoodsReceiptSupervisor() {
         if (action !== "qrcode") {
             setDialogOpen(true);
         } else {
-            dialogRef?.current?.show();
-            // setQrOpen(true);
+            qrRef?.current?.show(true);
         }
     };
 
@@ -66,6 +65,10 @@ export default function GoodsReceiptSupervisor() {
             })
             .finally(() => setLoading(false));
     };
+
+    function handleCloseQR() {
+        qrRef?.current?.show(false);
+    }
 
     return (
         <ContentTheme title={t("goodsReceiptSupervisor")} icon="kpi-managing-my-area">
@@ -100,28 +103,7 @@ export default function GoodsReceiptSupervisor() {
                 )}
                 <br /> {t('actionCannotReverse')}
             </MessageBox>
-            <Dialog
-                className="footerPartNoPadding"
-                ref={dialogRef}
-                footer={
-                    <Bar
-                        design="Footer"
-                        endContent={
-                            <Button onClick={() => dialogRef?.current?.close()}>
-                                {t("close")}
-                            </Button>
-                        }
-                    />
-                }
-            >
-                <QRCode
-                    value={`$GRPO_${selectedDocumentId}`}
-                    width={200}
-                    height={200}
-                    color="black"
-                    bgColor="white"
-                />
-            </Dialog>
+            <QRDialog ref={qrRef} onClose={handleCloseQR} prefix="GRPO" id={selectedDocumentId}/>
         </ContentTheme>
     );
 }

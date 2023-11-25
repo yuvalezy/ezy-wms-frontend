@@ -35,7 +35,7 @@ const MenuAppBar: React.FC<MenuAppBarProps> = ({title, icon}) => {
 
     return (
         <ShellBar
-            logo={<Icon style={{color: 'white'}} name={icon}/>}
+            logo={<Icon name={icon}/>}
             onLogoClick={() => navigate('/')}
             onMenuItemClick={handleMenuClicked}
             menuItems={authorizedMenus.map((item, index) => (

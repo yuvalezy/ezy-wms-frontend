@@ -12,9 +12,15 @@ const resources = {
         translation: translationSpanish
     }
 }
-i18next.use(initReactI18next).init({
-    resources,
-    lng: 'en',
-});
+i18next
+    .use(initReactI18next)
+    .init({
+        fallbackLng: 'en',
+        resources,
+        lng: 'en',
+        react: {
+            useSuspense: false,
+        },
+    });
 
 export default i18next;

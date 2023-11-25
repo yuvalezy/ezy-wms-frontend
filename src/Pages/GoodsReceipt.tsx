@@ -3,11 +3,11 @@ import {useNavigate} from "react-router-dom";
 import ContentTheme from "../Components/ContentTheme";
 import { fetchDocuments, } from "./GoodsReceiptSupervisor/Document";
 import {useTranslation} from "react-i18next";
-import {useDocumentStatusToString} from "./GoodsReceiptSupervisor/DocumentStatusString";
 import {Button, Form, FormItem, Icon, Input, InputDomRef, MessageStripDesign} from "@ui5/webcomponents-react";
 import {useThemeContext} from "../Components/ThemeContext";
 import {IsNumeric, StringFormat} from "../Assets/Functions";
 import {DocumentStatus} from "../Assets/Document";
+import {useDocumentStatusToString} from "../Assets/DocumentStatusString";
 
 export default function GoodsReceipt() {
     const {setLoading, setAlert} = useThemeContext();

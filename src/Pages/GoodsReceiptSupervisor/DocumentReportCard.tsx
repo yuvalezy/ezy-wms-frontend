@@ -2,8 +2,8 @@ import React from "react";
 import {Card, CardHeader, List, StandardListItem} from "@ui5/webcomponents-react";
 import {useNavigate} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import {useDocumentStatusToString} from "./DocumentStatusString";
 import {Document, DocumentStatus} from "../../Assets/Document";
+import {useDocumentStatusToString} from "../../Assets/DocumentStatusString";
 
 type DocumentReportCardProps = {
     doc: Document

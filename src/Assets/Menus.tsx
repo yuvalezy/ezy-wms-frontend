@@ -36,7 +36,7 @@ export function useMenus() {
         {
             Link: "/itemCheck",
             Text: t('itemCheck'),
-            Authorizations: [Authorization.GOODS_RECEIPT_SUPERVISOR, Authorization.DELIVERY_SUPERVISOR],
+            Authorizations: [Authorization.GOODS_RECEIPT_SUPERVISOR, Authorization.PICKING_SUPERVISOR],
             Icon: "complete",
         },
         {
@@ -58,21 +58,21 @@ export function useMenus() {
             Icon: "manager-insight",
         },
         {
-            Link: "/delivery",
-            Text: t('delivery'),
-            Authorization: Authorization.DELIVERY,
+            Link: "/Pick",
+            Text: t('picking'),
+            Authorization: Authorization.PICKING,
             Icon: "cart-2",
         },
         {
-            Link: "/deliverySupervisor",
-            Text: t('deliverySupervisor'),
-            Authorization: Authorization.DELIVERY_SUPERVISOR,
+            Link: "/PickSupervisor",
+            Text: t('pickSupervisor'),
+            Authorization: Authorization.PICKING_SUPERVISOR,
             Icon: "kpi-managing-my-area",
         },
         {
-            Link: "/deliveryReport",
-            Text: t('deliveryReport'),
-            Authorization: Authorization.DELIVERY_SUPERVISOR,
+            Link: "/PickReport",
+            Text: t('pickReport'),
+            Authorization: Authorization.PICKING_SUPERVISOR,
             Icon: "manager-insight",
         },
     ];

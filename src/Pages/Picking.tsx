@@ -1,15 +1,15 @@
 import React, {useRef, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 import ContentTheme from "../Components/ContentTheme";
-import { fetchDocuments, } from "./GoodsReceiptSupervisor/Document";
 import {useTranslation} from "react-i18next";
-import {useDocumentStatusToString} from "./GoodsReceiptSupervisor/DocumentStatusString";
 import {Button, Form, FormItem, Icon, Input, InputDomRef, MessageStripDesign} from "@ui5/webcomponents-react";
 import {useThemeContext} from "../Components/ThemeContext";
 import {IsNumeric, StringFormat} from "../Assets/Functions";
 import {DocumentStatus} from "../Assets/Document";
+import {useDocumentStatusToString} from "../Assets/DocumentStatusString";
+import {fetchPickings} from "./PickSupervisor/PickingDocument";
 
-export default function Delivery() {
+export default function Picking() {
     const {setLoading, setAlert} = useThemeContext();
     const [scanCodeInput, setScanCodeInput] = React.useState("");
     const {t} = useTranslation();
@@ -31,7 +31,7 @@ export default function Delivery() {
         let checkScan = scanCodeInput.split("_");
         if (
             checkScan.length !== 2 ||
-            (checkScan[0] !== "GRPO" && checkScan[0] !== "$GRPO") ||
+            (checkScan[0] !== "PCK" && checkScan[0] !== "$PCK") ||
             !IsNumeric(checkScan[1])
         ) {
             setAlert({message: t("invalidScanCode"), type: MessageStripDesign.Warning});
@@ -39,32 +39,32 @@ export default function Delivery() {
         }
         const id = parseInt(checkScan[1]);
         setLoading(true);
-        fetchDocuments(id, [])
-            .then((doc) => {
-                if (doc.length === 0) {
-                    setAlert({message: t("goodsReceiptNotFound"), type: MessageStripDesign.Warning});
+        fetchPickings(id)
+            .then((pick) => {
+                if (pick.length === 0) {
+                    setAlert({message: t("pickingNotFound"), type: MessageStripDesign.Warning});
                     return;
                 }
-                const status = doc[0].status;
+                const status = pick[0].status;
 
-                if (status !== DocumentStatus.Open && status !== DocumentStatus.InProgress) {
+                if (status !== DocumentStatus.Open) {
                     setAlert({message: StringFormat(
-                        t("goodsReceiptStatusError"),
+                        t("pickingStatusError"),
                         id,
                         documentStatusToString(status)
                       ), type: MessageStripDesign.Warning});
                     return;
                 }
-                navigate(`/goodsReceipt/${id}`);
+                navigate(`/pick/${id}`);
             })
             .catch((error) => {
-                setAlert({message: `Validate Goods Receipt Error: ${error}`, type: MessageStripDesign.Negative});
+                setAlert({message: `Validate Picking Error: ${error}`, type: MessageStripDesign.Negative});
             })
             .finally(() => setLoading(false));
     }
 
     return (
-        <ContentTheme title={t("goodsReceipt")} icon="cause">
+        <ContentTheme title={t("picking")} icon="cause">
             {ScanForm()}
         </ContentTheme>
     );

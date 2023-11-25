@@ -58,9 +58,9 @@ export default function ItemCheck() {
             .finally(() => setLoading(false));
     }
 
-    function handleUpdateSubmit(checkedBarcodes: string[], newBarcode: string) {
+    function handleUpdateSubmit(itemCode: string, checkedBarcodes: string[], newBarcode: string) {
         setLoading(true);
-        executeUpdateItemBarcode(itemCodeInput, checkedBarcodes, newBarcode);
+        executeUpdateItemBarcode(itemCode, checkedBarcodes, newBarcode);
     }
 
     function executeUpdateItemBarcode(

@@ -22,7 +22,7 @@ import {
 interface ItemCheckResultProps {
     result: ItemCheckResponse;
     clear: () => void;
-    submit: (checkedBarcodes: string[], newBarcode: string) => void;
+    submit: (itemCode: string, checkedBarcodes: string[], newBarcode: string) => void;
 }
 
 const ItemCheckResult: React.FC<ItemCheckResultProps> = ({result, clear, submit}) => {
@@ -39,7 +39,7 @@ const ItemCheckResult: React.FC<ItemCheckResultProps> = ({result, clear, submit}
     }
 
     function handleSubmit() {
-        submit(checkedBarcodes, newBarcodeInput);
+        submit(result.itemCode, checkedBarcodes, newBarcodeInput);
         setCheckedBarcodes([]);
         setNewBarcodeInput('');
     }

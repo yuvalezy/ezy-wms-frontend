@@ -8,7 +8,6 @@ import {
     ComboBoxItem,
     Form,
     FormItem,
-    DatePicker,
     Button,
     Panel,
     PanelDomRef,
@@ -99,16 +98,16 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({
             headerText={t("filters")}
         >
             <Form>
-                <FormItem label={t("date")}>
-                    <DatePicker
-                        value={selectedDate !== undefined ? selectedDate : ""}
-                        primaryCalendarType="Gregorian"
-                        onChange={(e) => {
-                            setDateInput(e.target.dateValue);
-                            setSelectedDate(e.target.value);
-                        }}
-                    />
-                </FormItem>
+                {/*<FormItem label={t("date")}>*/}
+                {/*    <DatePicker*/}
+                {/*        value={selectedDate !== undefined ? selectedDate : ""}*/}
+                {/*        primaryCalendarType="Gregorian"*/}
+                {/*        onChange={(e) => {*/}
+                {/*            setDateInput(e.target.dateValue);*/}
+                {/*            setSelectedDate(e.target.value);*/}
+                {/*        }}*/}
+                {/*    />*/}
+                {/*</FormItem>*/}
                 <FormItem label={t("vendor")}>
                     <ComboBox
                         value={vendorValue}
