@@ -2,7 +2,6 @@ import ContentTheme from "../Components/ContentTheme";
 import {useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
 import BoxConfirmationDialog, {BoxConfirmationDialogRef} from "../Components/BoxConfirmationDialog";
-import {scanBarcode} from "./GoodsReceiptSupervisor/Document";
 import ProcessAlert, {AlertActionType, ProcessAlertValue,} from "./GoodsReceiptProcess/ProcessAlert";
 import ProcessComment, {ProcessCommentRef} from "./GoodsReceiptProcess/ProcessComment";
 import {useThemeContext} from "../Components/ThemeContext";
@@ -16,6 +15,7 @@ import {distinctItems, Item} from "../Assets/Common";
 import {IsNumeric, StringFormat} from "../Assets/Functions";
 import {configUtils} from "../Assets/GlobalConfig";
 import {AddItemResponseMultipleValue} from "../Assets/Document";
+import {scanBarcode} from "../Assets/ScanBarcode";
 
 export default function GoodsReceiptProcess() {
     const {scanCode} = useParams();

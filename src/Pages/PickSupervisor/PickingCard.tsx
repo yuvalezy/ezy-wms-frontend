@@ -35,17 +35,17 @@ const PickingCard: React.FC<PickingCardProps> = ({picking, handleAction}) => {
                         <Icon name="qr-code" />
                     </a>
                 </StandardListItem>
-                {picking.salesOrders &&
+                {picking.salesOrders > 0 &&
                     <StandardListItem>
                         <strong>{t('salesOrders')}</strong>: {picking.salesOrders}
                     </StandardListItem>
                 }
-                {picking.invoices &&
+                {picking.invoices > 0 &&
                     <StandardListItem>
                         <strong>{t('invoices')}</strong>: {picking.invoices}
                     </StandardListItem>
                 }
-                {picking.transfers &&
+                {picking.transfers > 0 &&
                     <StandardListItem>
                         <strong>{t('transferRequests')}</strong>: {picking.transfers}
                     </StandardListItem>

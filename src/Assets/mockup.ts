@@ -1,6 +1,6 @@
 import {ResponseStatus} from "./Common";
 import {DeliveryOpenDocument} from "./Deliveries";
-import {PickingDocument, PickingDocumentDetail, PickingDocumentDetailItem} from "../Pages/PickSupervisor/PickingDocument";
+import {PickingDocument, PickingDocumentDetail, PickingDocumentDetailItem, PickStatus} from "../Pages/PickSupervisor/PickingDocument";
 
 enum UpdateLineReturnValue {
     Status = "Status",
@@ -167,7 +167,7 @@ export const PickingMockup: PickingDocument[] = [
         invoices: 8,
         transfers: 5,
         remarks: 'High priority orders',
-        status: DocumentStatus.Open
+        status: PickStatus.Released
     }, {
         entry: 102,
         date: new Date('2023-11-02'),
@@ -175,7 +175,7 @@ export const PickingMockup: PickingDocument[] = [
         invoices: 12,
         transfers: 3,
         remarks: null,
-        status: DocumentStatus.Open
+        status: PickStatus.Released
     }, {
         entry: 103,
         date: new Date('2023-11-03'),
@@ -183,7 +183,7 @@ export const PickingMockup: PickingDocument[] = [
         invoices: 15,
         transfers: 7,
         remarks: 'Include gift vouchers',
-        status: DocumentStatus.Open
+        status: PickStatus.Released
     }, {
         entry: 104,
         date: new Date('2023-11-04'),
@@ -191,7 +191,7 @@ export const PickingMockup: PickingDocument[] = [
         invoices: 5,
         transfers: 2,
         remarks: 'Expedited shipping required',
-        status: DocumentStatus.Open
+        status: PickStatus.Released
     }, {
         entry: 105,
         date: new Date('2023-11-05'),
@@ -199,7 +199,7 @@ export const PickingMockup: PickingDocument[] = [
         invoices: 10,
         transfers: 4,
         remarks: 'Partial order completion',
-        status: DocumentStatus.Open
+        status: PickStatus.Released
     }
 ]
 
@@ -225,29 +225,29 @@ export const PickingDetailsMockup: PickingDocumentDetail[] = [
 ]
 
 export const PickingDetailItemsMockup: PickingDocumentDetailItem[] = [
-    { itemCode: "ABC123", itemName: "Sample Item", quantity: 10, openQuantity: 10, },
-    { itemCode: "ABC555", itemName: "Sample Item 5", quantity: 5, openQuantity: 3, },
-    { itemCode: "ABC222", itemName: "Sample Item 2", quantity: 30, openQuantity: 20, },
-    { itemCode: "XYZ101", itemName: "Item 101", quantity: 15, openQuantity: 15 },
-    { itemCode: "XYZ102", itemName: "Item 102", quantity: 20, openQuantity: 18 },
-    { itemCode: "XYZ103", itemName: "Item 103", quantity: 25, openQuantity: 10 },
-    { itemCode: "XYZ104", itemName: "Item 104", quantity: 12, openQuantity: 12 },
-    { itemCode: "XYZ105", itemName: "Item 105", quantity: 30, openQuantity: 25 },
-    { itemCode: "XYZ106", itemName: "Item 106", quantity: 8, openQuantity: 5 },
-    { itemCode: "XYZ107", itemName: "Item 107", quantity: 18, openQuantity: 10 },
-    { itemCode: "XYZ108", itemName: "Item 108", quantity: 22, openQuantity: 20 },
-    { itemCode: "XYZ109", itemName: "Item 109", quantity: 17, openQuantity: 15 },
-    { itemCode: "XYZ110", itemName: "Item 110", quantity: 19, openQuantity: 19 },
-    { itemCode: "XYZ111", itemName: "Item 111", quantity: 13, openQuantity: 7 },
-    { itemCode: "XYZ112", itemName: "Item 112", quantity: 21, openQuantity: 21 },
-    { itemCode: "XYZ113", itemName: "Item 113", quantity: 16, openQuantity: 14 },
-    { itemCode: "XYZ114", itemName: "Item 114", quantity: 14, openQuantity: 9 },
-    { itemCode: "XYZ115", itemName: "Item 115", quantity: 11, openQuantity: 11 },
-    { itemCode: "XYZ116", itemName: "Item 116", quantity: 9, openQuantity: 6 },
-    { itemCode: "XYZ117", itemName: "Item 117", quantity: 7, openQuantity: 3 },
-    { itemCode: "XYZ118", itemName: "Item 118", quantity: 23, openQuantity: 18 },
-    { itemCode: "XYZ119", itemName: "Item 119", quantity: 26, openQuantity: 26 },
-    { itemCode: "XYZ120", itemName: "Item 120", quantity: 29, openQuantity: 24 },
+    { itemCode: "ABC123", itemName: "Sample Item", quantity: 10, picked: 0, openQuantity: 10, },
+    { itemCode: "ABC555", itemName: "Sample Item 5", quantity: 5, picked: 2, openQuantity: 3, },
+    { itemCode: "ABC222", itemName: "Sample Item 2", quantity: 30, picked: 10, openQuantity: 20, },
+    { itemCode: "XYZ101", itemName: "Item 101", quantity: 15, picked: 0, openQuantity: 15 },
+    { itemCode: "XYZ102", itemName: "Item 102", quantity: 20, picked: 2, openQuantity: 18 },
+    { itemCode: "XYZ103", itemName: "Item 103", quantity: 25, picked: 15, openQuantity: 10 },
+    { itemCode: "XYZ104", itemName: "Item 104", quantity: 12, picked: 0, openQuantity: 12 },
+    { itemCode: "XYZ105", itemName: "Item 105", quantity: 30, picked: 5, openQuantity: 25 },
+    { itemCode: "XYZ106", itemName: "Item 106", quantity: 8, picked: 3, openQuantity: 5 },
+    { itemCode: "XYZ107", itemName: "Item 107", quantity: 18, picked: 8, openQuantity: 10 },
+    { itemCode: "XYZ108", itemName: "Item 108", quantity: 22, picked: 2, openQuantity: 20 },
+    { itemCode: "XYZ109", itemName: "Item 109", quantity: 17, picked: 2, openQuantity: 15 },
+    { itemCode: "XYZ110", itemName: "Item 110", quantity: 19, picked: 0, openQuantity: 19 },
+    { itemCode: "XYZ111", itemName: "Item 111", quantity: 13, picked: 6, openQuantity: 7 },
+    { itemCode: "XYZ112", itemName: "Item 112", quantity: 21, picked: 0, openQuantity: 21 },
+    { itemCode: "XYZ113", itemName: "Item 113", quantity: 16, picked: 2, openQuantity: 14 },
+    { itemCode: "XYZ114", itemName: "Item 114", quantity: 14, picked: 5, openQuantity: 9 },
+    { itemCode: "XYZ115", itemName: "Item 115", quantity: 11, picked: 0, openQuantity: 11 },
+    { itemCode: "XYZ116", itemName: "Item 116", quantity: 9, picked: 3, openQuantity: 6 },
+    { itemCode: "XYZ117", itemName: "Item 117", quantity: 7, picked: 4, openQuantity: 3 },
+    { itemCode: "XYZ118", itemName: "Item 118", quantity: 23, picked: 5, openQuantity: 18 },
+    { itemCode: "XYZ119", itemName: "Item 119", quantity: 26, picked: 0, openQuantity: 26 },
+    { itemCode: "XYZ120", itemName: "Item 120", quantity: 29, picked: 5, openQuantity: 24 },
 ]
 
 

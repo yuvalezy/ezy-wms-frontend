@@ -1,8 +1,8 @@
 import axios from "axios";
 import {Document, DocumentAction, DocumentItem, DocumentStatus, OrderBy} from "../../Assets/Document";
 import {configUtils, delay, globalConfig} from "../../Assets/GlobalConfig";
-import {documentMockup, itemFatherMockup, ReasonValueMockup} from "../../Assets/mockup";
-import {Item, User} from "../../Assets/Common";
+import {documentMockup, ReasonValueMockup} from "../../Assets/mockup";
+import {User} from "../../Assets/Common";
 import {BusinessPartner} from "../../Assets/Data";
 
 
@@ -184,35 +184,6 @@ export const fetchDocuments = async (
         return response.data;
     } catch (error) {
         console.error("Error fetching documents:", error);
-        throw error;
-    }
-};
-
-export const scanBarcode = async (
-    scanCode: string
-): Promise<Item[]> => {
-    try {
-        if (configUtils.isMockup) {
-            console.log("Mockup data is being used. holis");
-            return itemFatherMockup;
-        }
-        if (!globalConfig) throw new Error("Config has not been initialized!");
-
-        if (globalConfig.debug) await delay();
-
-        const access_token = localStorage.getItem("token");
-
-        const url = `${globalConfig.baseURL}/api/General/ItemByBarCode?scanCode=${scanCode}`;
-
-        const response = await axios.get<Item[]>(url, {
-            headers: {
-                Authorization: `Bearer ${access_token}`,
-            },
-        });
-
-        return response.data;
-    } catch (error) {
-        console.error("Error canning barcode:", error);
         throw error;
     }
 };

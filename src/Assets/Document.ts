@@ -47,7 +47,7 @@ export enum OrderBy {
     Name = "Name",
     Date = "Date",
 }
-export  interface AddItemResponse {
+export interface DocumentAddItemResponse {
     lineID: number;
     closedDocument: boolean;
     fulfillment: boolean;

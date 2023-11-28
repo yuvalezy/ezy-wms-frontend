@@ -1,5 +1,5 @@
 import axios from "axios";
-import {AddItemResponse, UpdateLineReturnValue} from "../../Assets/Document";
+import {DocumentAddItemResponse, UpdateLineReturnValue} from "../../Assets/Document";
 import {configUtils, delay, globalConfig} from "../../Assets/GlobalConfig";
 import {addItemResponseMockup, UpdateLineReturnValueMockup} from "../../Assets/mockup";
 
@@ -8,7 +8,7 @@ export const addItem = async (
   id: number,
   itemCode: string,
   barcode: string
-): Promise<AddItemResponse> => {
+): Promise<DocumentAddItemResponse> => {
   try {
     if (configUtils.isMockup) {
       switch (barcode) {
@@ -46,7 +46,7 @@ export const addItem = async (
 
     const url = `${globalConfig.baseURL}/api/GoodsReceipt/AddItem`;
 
-    const response = await axios.post<AddItemResponse>(
+    const response = await axios.post<DocumentAddItemResponse>(
       url,
       {
         id: id,

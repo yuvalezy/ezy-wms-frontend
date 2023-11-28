@@ -6,7 +6,7 @@ import {useTranslation} from "react-i18next";
 import {Button, Icon, Panel, Title, Text} from "@ui5/webcomponents-react";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
 import {IsNumeric} from "../Assets/Functions";
-import {fetchPickings, PickingDocument, PickingDocumentDetail} from "./PickSupervisor/PickingDocument";
+import {fetchPicking, fetchPickings, PickingDocument, PickingDocumentDetail} from "./PickSupervisor/PickingDocument";
 import {useObjectName} from "../Assets/ObjectName";
 
 export default function PickingProcess() {
@@ -33,14 +33,14 @@ export default function PickingProcess() {
         setID(id);
 
         setLoading(true);
-        fetchPickings({id: id, detail: true})
-            .then(values => {
-                if (values.length === 0) {
+        fetchPicking(id)
+            .then(value => {
+                if (value == null) {
                     setPicking(null);
                     errorAlert(t("pickingNotFound"))
                     return;
                 }
-                setPicking(values[0]);
+                setPicking(value);
             })
             .catch(error => errorAlert(error))
             .finally(() => setLoading(false));

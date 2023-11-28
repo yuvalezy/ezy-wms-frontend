@@ -1,19 +1,16 @@
-import React, {useRef, useEffect} from "react";
+import React, {useEffect, useRef} from "react";
 import {useNavigate} from "react-router-dom";
 import ContentTheme from "../Components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import {Button, Form, FormItem, Icon, Input, InputDomRef, MessageStripDesign} from "@ui5/webcomponents-react";
 import {useThemeContext} from "../Components/ThemeContext";
 import {IsNumeric, StringFormat} from "../Assets/Functions";
-import {DocumentStatus} from "../Assets/Document";
-import {useDocumentStatusToString} from "../Assets/DocumentStatusString";
-import {fetchPickings} from "./PickSupervisor/PickingDocument";
+import {fetchPickings, PickStatus} from "./PickSupervisor/PickingDocument";
 
 export default function Picking() {
     const {setLoading, setAlert} = useThemeContext();
     const [scanCodeInput, setScanCodeInput] = React.useState("");
     const {t} = useTranslation();
-    const documentStatusToString = useDocumentStatusToString();
     const scanCodeInputRef = useRef<InputDomRef>(null);
 
     useEffect(() => {
@@ -47,11 +44,11 @@ export default function Picking() {
                 }
                 const status = pick[0].status;
 
-                if (status !== DocumentStatus.Open) {
+                if (status !== PickStatus.Released) {
                     setAlert({message: StringFormat(
                         t("pickingStatusError"),
                         id,
-                        documentStatusToString(status)
+                        status
                       ), type: MessageStripDesign.Warning});
                     return;
                 }
