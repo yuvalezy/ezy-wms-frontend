@@ -1,5 +1,5 @@
 import {configUtils, delay, globalConfig} from "../../Assets/GlobalConfig";
-import {documentMockup, PickingMockup} from "../../Assets/mockup";
+import {documentMockup, PickingDetailItemsMockup, PickingDetailsMockup, PickingMockup} from "../../Assets/mockup";
 import axios from "axios";
 import {Document, DocumentStatus} from "../../Assets/Document";
 
@@ -11,14 +11,53 @@ export type PickingDocument = {
     transfers: number;
     remarks: String | null;
     status: DocumentStatus;
+    detail?: PickingDocumentDetail[];
+}
+export type PickingDocumentDetail = {
+    type: number;
+    entry: number;
+    number: number;
+    date: Date;
+    cardCode: string;
+    cardName: string;
+    items?: PickingDocumentDetailItem[];
+    totalItems: number;
 }
 
-export const fetchPickings = async(id?: number) : Promise<PickingDocument[]> => {
+export type PickingDocumentDetailItem = {
+    itemCode: string;
+    itemName: string;
+    quantity: number;
+    openQuantity: number;
+}
+
+export type pickingsParameters = {
+    id?: number;
+    type?: number;
+    entry?: number;
+    detail?: boolean;
+}
+
+export const fetchPickings = async (params?: pickingsParameters): Promise<PickingDocument[]> => {
     try {
         // if (configUtils.isMockup) {
-            await delay();
-            console.log("Mockup data is being used.");
-            return PickingMockup;
+        await delay();
+        console.log("Mockup data is being used.");
+        let pickingMockup = PickingMockup;
+        if (params?.detail ?? false) {
+            let picking = pickingMockup[0];
+            picking.detail = PickingDetailsMockup;
+            return [picking];
+        }
+        if (params?.type != null) {
+            let picking = pickingMockup[0];
+            picking.detail = PickingDetailsMockup.filter((v) => v.type === params?.type && v.entry === params?.entry);
+            picking.detail.forEach(v => {
+                v.items = PickingDetailItemsMockup;
+            })
+            return [picking];
+       }
+        return pickingMockup;
         // }
 
         // if (!globalConfig)

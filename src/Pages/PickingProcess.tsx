@@ -1,318 +1,75 @@
 import ContentTheme from "../Components/ContentTheme";
-import {useParams} from "react-router-dom";
-import React, {useEffect, useRef, useState} from "react";
-import BoxConfirmationDialog, {BoxConfirmationDialogRef} from "../Components/BoxConfirmationDialog";
+import {useNavigate, useParams} from "react-router-dom";
+import React, {useEffect, useState} from "react";
 import {useThemeContext} from "../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {Button, Icon, Form, FormItem, Input, InputDomRef, MessageStrip} from "@ui5/webcomponents-react";
+import {Button, Icon, Panel, Title, Text} from "@ui5/webcomponents-react";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
-import { Item} from "../Assets/Common";
 import {IsNumeric} from "../Assets/Functions";
-import {configUtils} from "../Assets/GlobalConfig";
+import {fetchPickings, PickingDocument, PickingDocumentDetail} from "./PickSupervisor/PickingDocument";
+import {useObjectName} from "../Assets/ObjectName";
 
 export default function PickingProcess() {
-    const {scanCode} = useParams();
+    const {idParam} = useParams();
     const {t} = useTranslation();
-    const barcodeRef = useRef<InputDomRef>(null);
-    const boxConfirmationDialogRef = useRef<BoxConfirmationDialogRef>(null);
     const [id, setID] = useState<number | null>();
-    const [enable, setEnable] = useState(true);
     const {setLoading, setAlert} = useThemeContext();
-    const [barcodeInput, setBarcodeInput] = React.useState("");
-    const [boxItem, setBoxItem] = useState("");
-    const [boxItems, setBoxItems] = useState<Item[]>();
+    const [picking, setPicking] = useState<PickingDocument | null>(null);
+    const o = useObjectName();
+    const navigate = useNavigate();
 
-    const title = `${t("picking")} #${scanCode}`;
+    const title = `${t("picking")} #${idParam}`;
+
+    function errorAlert(message: string) {
+        setAlert({message: message, type: MessageStripDesign.Negative})
+    }
 
     useEffect(() => {
-        setTimeout(() => barcodeRef.current?.focus(), 1);
-        if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
+        if (idParam === null || idParam === undefined || !IsNumeric(idParam)) {
             setID(null);
             return;
         }
-        setID(parseInt(scanCode));
+        let id = parseInt(idParam);
+        setID(id);
+
+        setLoading(true);
+        fetchPickings({id: id, detail: true})
+            .then(values => {
+                if (values.length === 0) {
+                    setPicking(null);
+                    errorAlert(t("pickingNotFound"))
+                    return;
+                }
+                setPicking(values[0]);
+            })
+            .catch(error => errorAlert(error))
+            .finally(() => setLoading(false));
     }, []);
 
-    // const alert = (alert: ProcessAlertValue) => {
-    //     let date = new Date(Date.now());
-    //     alert.timeStamp =
-    //         date.toLocaleDateString() + " " + date.toLocaleTimeString();
-    //     setAcceptValues([alert, ...acceptValues]);
-    // };
-
-    function handleSubmit(e: React.FormEvent) {
-        e.preventDefault();
-        if (barcodeInput.length === 0) {
-            setAlert({message: t("barcodeRequired"), type: MessageStripDesign.Warning});
-            return;
-        }
-
-        window.alert('unhandled');
-        // setLoading(true);
-        // scanBarcode(barcodeInput)
-        //     .then((items) => handleItems(items))
-        //     .catch((error) => {
-        //         alert({message: `Scan Bar Code Error: ${error}`, severity: MessageStripDesign.Negative});
-        //         setLoading(false);
-        //     });
+    function handleOpen(detail: PickingDocumentDetail) {
+        navigate(`/pick/${id}/${detail.type}/${detail.entry}`);
     }
-
-    // function handleItems(items: Item[]) {
-    //     if (items.length === 0) {
-    //         alert({
-    //             barcode: barcodeInput,
-    //             message: StringFormat(t("barcodeNotFound"), barcodeInput),
-    //             severity: MessageStripDesign.Negative,
-    //         });
-    //         setBarcodeInput("");
-    //         setLoading(false);
-    //         return;
-    //     }
-    //     if (items.length === 1) {
-    //         addItemToPicking(items[0].code);
-    //         return;
-    //     }
-    //     handleMultipleItems(items);
-    // }
-
-    // function handleMultipleItems(items: Item[]) {
-    //     const distinctCodes = distinctItems(items);
-    //     if (distinctCodes.length !== 1) {
-    //         let codes = distinctCodes.map((v) => `"${v}"`).join(", ");
-    //         alert({
-    //             message: StringFormat(t("multipleItemsError"), codes),
-    //             severity: MessageStripDesign.Negative,
-    //         });
-    //         setLoading(false);
-    //         return;
-    //     }
-    //     setBoxItem(distinctCodes[0]);
-    //     setBoxItems(items);
-    //     boxConfirmationDialogRef?.current?.show(true);
-    //     setLoading(false);
-    // }
-
-    // function addItemToPicking(itemCode: string) {
-    //     boxConfirmationDialogRef?.current?.show(false);
-    //     const barcode = barcodeInput;
-    //     setBarcodeInput("");
-    //     setLoading(true);
-    //     addItem(id ?? 0, itemCode, barcode)
-    //         .then((data) => {
-    //             if (data.closedPicking) {
-    //                 alert({
-    //                     lineID: data.lineID,
-    //                     barcode: barcode,
-    //                     itemCode: itemCode,
-    //                     message: StringFormat(t("pickingIsClosed"), id),
-    //                     severity: MessageStripDesign.Negative,
-    //                     multiple: [],
-    //                     purPackUn: data.purPackUn,
-    //                 });
-    //                 setEnable(false);
-    //                 return;
-    //             }
-    //
-    //             if (configUtils.isMockup && !data.fulfillment && !data.warehouse && !data.showroom) {
-    //                 return alert({
-    //                     barcode: barcode,
-    //                     itemCode: itemCode,
-    //                     purPackUn: data.purPackUn,
-    //                     message: `Error Mockup`,
-    //                     severity: MessageStripDesign.Negative,
-    //                 });
-    //             }
-    //
-    //             let message: string = "";
-    //             let color: MessageStripDesign = MessageStripDesign.Information;
-    //             let multiple: AddItemResponseMultipleValue[] = [];
-    //             if (
-    //                 (data.warehouse ? 1 : 0) +
-    //                 (data.fulfillment ? 1 : 0) +
-    //                 (data.showroom ? 1 : 0) ===
-    //                 1
-    //             ) {
-    //                 if (data.warehouse) {
-    //                     message = t("scanConfirmStoreInWarehouse");
-    //                     color = MessageStripDesign.Positive;
-    //                 }
-    //                 if (data.fulfillment) {
-    //                     message = t("scanConfirmFulfillment");
-    //                     color = MessageStripDesign.Warning;
-    //                 }
-    //                 if (data.showroom) {
-    //                     message = t("scanConfirmShowroom");
-    //                     color = MessageStripDesign.Information;
-    //                 }
-    //             } else {
-    //                 if (data.warehouse) {
-    //                     multiple.push({
-    //                         message: t("scanConfirmStoreInWarehouse"),
-    //                         severity: MessageStripDesign.Positive,
-    //                     });
-    //                 }
-    //                 if (data.fulfillment) {
-    //                     multiple.push({
-    //                         message: t("scanConfirmFulfillment"),
-    //                         severity: MessageStripDesign.Warning,
-    //                     });
-    //                 }
-    //                 if (data.showroom) {
-    //                     multiple.push({
-    //                         message: t("scanConfirmShowroom"),
-    //                         severity: MessageStripDesign.Information,
-    //                     });
-    //                 }
-    //             }
-    //
-    //             alert({
-    //                 lineID: data.lineID,
-    //                 barcode: barcode,
-    //                 itemCode: itemCode,
-    //                 message: message,
-    //                 severity: color,
-    //                 multiple: multiple,
-    //                 purPackUn: data.purPackUn,
-    //             });
-    //         })
-    //         .catch((error) => {
-    //             console.error(`Error performing action: ${error}`);
-    //             let errorMessage = error.response?.data["exceptionMessage"];
-    //             if (errorMessage)
-    //                 alert({
-    //                     barcode: barcode,
-    //                     itemCode: itemCode,
-    //                     message: errorMessage,
-    //                     severity: MessageStripDesign.Negative,
-    //                 });
-    //             else
-    //                 alert({
-    //                     barcode: barcode,
-    //                     itemCode: itemCode,
-    //                     message: `Add Item Error: ${error}`,
-    //                     severity: MessageStripDesign.Negative,
-    //                 });
-    //         })
-    //         .finally(function () {
-    //             setLoading(false);
-    //             setTimeout(() => barcodeRef.current?.focus(), 100);
-    //         });
-    // }
-
-    // function alertAction(alert: ProcessAlertValue, type: AlertActionType) {
-    //     setCurrentAlert(alert);
-    //     switch (type) {
-    //         case AlertActionType.Cancel:
-    //             processCancelRef?.current?.show(true);
-    //             break;
-    //         case AlertActionType.Comments:
-    //             processCommentRef?.current?.show(true);
-    //             break;
-    //         case AlertActionType.purPackUn:
-    //             processPurPackUnRef?.current?.show(true);
-    //             break;
-    //     }
-    // }
-
-    // function handleAlertActionAccept(newAlert: ProcessAlertValue): void {
-    //     if (currentAlert == null) {
-    //         return;
-    //     }
-    //     let index = acceptValues.findIndex((v) => v.lineID === currentAlert.lineID);
-    //     let newAcceptValues = acceptValues.filter(
-    //         (v) => v.lineID !== currentAlert.lineID
-    //     );
-    //     newAcceptValues.splice(index, 0, newAlert);
-    //     setAcceptValues(newAcceptValues);
-    //     setCurrentAlert(null);
-    // }
 
     return (
         <ContentTheme title={title} icon="cause">
-            {id ? (
-                <>
-                    {enable && (
-                        <Form onSubmit={handleSubmit}>
-                            <FormItem label={t("barcode")}>
-                                <Input required
-                                       value={barcodeInput}
-                                       onInput={(e) => setBarcodeInput(e.target.value as string)}
-                                       ref={barcodeRef}
-                                       disabled={!enable}
-                                ></Input>
-                            </FormItem>
-                            <FormItem>
-                                <Button
-                                    type="Submit"
-                                    color="primary"
-                                    disabled={!enable}
-                                >
-                                    <Icon name="accept"/>
-                                    {t("accept")}
-                                </Button>
-                            </FormItem>
-                        </Form>
-                    )}
-                    {/*<>*/}
-                    {/*    {acceptValues.map((alert) => (*/}
-                    {/*        <ProcessAlert*/}
-                    {/*            alert={alert}*/}
-                    {/*            key={alert.lineID}*/}
-                    {/*            onAction={(type) => alertAction(alert, type)}*/}
-                    {/*        />*/}
-                    {/*    ))}*/}
-                    {/*</>*/}
-                    {/*<ProcessCancel*/}
-                    {/*    id={id}*/}
-                    {/*    alert={currentAlert}*/}
-                    {/*    ref={processCancelRef}*/}
-                    {/*    onAccept={(comment, cancel) => {*/}
-                    {/*        if (currentAlert == null)*/}
-                    {/*            return;*/}
-                    {/*        handleAlertActionAccept({*/}
-                    {/*            ...currentAlert,*/}
-                    {/*            comment: comment,*/}
-                    {/*            canceled: cancel,*/}
-                    {/*        });*/}
-                    {/*    }}*/}
-                    {/*/>*/}
-                    {/*<ProcessComment*/}
-                    {/*    id={id}*/}
-                    {/*    alert={currentAlert}*/}
-                    {/*    ref={processCommentRef}*/}
-                    {/*    onAccept={(comment) => {*/}
-                    {/*        if (currentAlert == null)*/}
-                    {/*            return;*/}
-                    {/*        handleAlertActionAccept({*/}
-                    {/*            ...currentAlert,*/}
-                    {/*            comment: comment,*/}
-                    {/*        });*/}
-
-                    {/*    }}*/}
-                    {/*/>*/}
-                    {/*<ProcessPurPackUn*/}
-                    {/*    id={id}*/}
-                    {/*    alert={currentAlert}*/}
-                    {/*    ref={processPurPackUnRef}*/}
-                    {/*    onAccept={(purPackUn) => {*/}
-                    {/*        if (currentAlert == null)*/}
-                    {/*            return;*/}
-                    {/*        handleAlertActionAccept({*/}
-                    {/*            ...currentAlert,*/}
-                    {/*            purPackUn: purPackUn,*/}
-                    {/*        });*/}
-                    {/*    }}*/}
-                    {/*/>*/}
-                    {/*<BoxConfirmationDialog*/}
-                    {/*    onSelected={(v: string) => addItemToPicking(v)}*/}
-                    {/*    ref={boxConfirmationDialogRef}*/}
-                    {/*    itemCode={boxItem}*/}
-                    {/*    items={boxItems}*/}
-                    {/*/>*/}
-                </>
-            ) : (
-                <MessageStrip design="Negative">{t("invalidScanCode")}</MessageStrip>
-            )}
+            {picking?.detail?.map((item, index) => (
+                <Panel key={index} headerText={`${o(item.type)}# ${item.number}`}>
+                    <Title level="H5">
+                        <strong>{t("customer")}: </strong>
+                        {item.cardCode} - {item.cardName}
+                    </Title>
+                    <Text>
+                        <strong>{t("totalItems")}: </strong>
+                        {item.totalItems}
+                    </Text>
+                    <div style={{textAlign: 'center', borderBottom: '1px solid #ccc', paddingBottom: '5px'}}>
+                        <Button color="primary" onClick={() => handleOpen(item)}>
+                            <Icon name="begin"/>
+                            {t("start")}
+                        </Button>
+                    </div>
+                </Panel>
+            ))}
         </ContentTheme>
     );
 }

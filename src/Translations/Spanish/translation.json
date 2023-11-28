@@ -37,6 +37,10 @@
   "clear": "Borrar",
   "approved": "El documento ha sido finalizado con éxito.",
   "cancelled": "El documento ha sido cancelado con éxito.",
+  "start": "Iniciar",
+  "back": "Regresar",
+  "pending": "Pendiente",
+  "totalItems": "Items Articulos",
 
   "openStatus": "Abierto",
   "inProgressStatus": "En Proceso",
@@ -90,6 +94,8 @@
   "selectVendor": "Seleccione el Proveedor",
   "selectBox": "Seleccione la Caja",
 
+  "pickingNotFound": "Picking #{0} no es válido",
+  "pickingStatusError": "El estado del picking #{0} es {1}.\nNo se puede continuar.",
   "goodsReceiptNotFound": "La entrada #{0} no es válida",
   "goodsReceiptStatusError": "El estado de la entrada #{0} es {1}.\nNo se puede continuar.",
   "goodsReceiptIsClosed": "Entrada #{0} esta cerrada",

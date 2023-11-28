@@ -18,6 +18,7 @@ import {Authorization} from "./Assets/Authorization";
 import PickingSupervisor from "./Pages/PickingSupervisor";
 import Picking from "./Pages/Picking";
 import PickingProcess from "./Pages/PickingProcess";
+import PickingProcessDetail from "./Pages/PickingProcessDetail";
 
 export default function App() {
     return (
@@ -36,11 +37,10 @@ export default function App() {
                     <Route path="/goodsReceiptReportAll/:scanCode" element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT_SUPERVISOR} element={<GoodsReceiptAll/>}/>}/>
                     {/*Pick*/}
                     <Route path="/pick" element={<ProtectedRoute authorization={Authorization.PICKING} element={<Picking/>}/>}/>
-                    <Route path="/pick/:scanCode" element={<ProtectedRoute authorization={Authorization.PICKING} element={<PickingProcess/>}/>}/>
+                    <Route path="/pick/:idParam" element={<ProtectedRoute authorization={Authorization.PICKING} element={<PickingProcess/>}/>}/>
+                    <Route path="/pick/:idParam/:typeParam/:entryParam" element={<ProtectedRoute authorization={Authorization.PICKING} element={<PickingProcessDetail/>}/>}/>
                     <Route path="/pickSupervisor" element={<ProtectedRoute authorization={Authorization.PICKING_SUPERVISOR} element={<PickingSupervisor/>}/>}/>
                     {/*<Route path="/PickReport" element={<ProtectedRoute authorization={Authorization.Pick_SUPERVISOR} element={<PickReport/>}/>}/>*/}
-                    {/*<Route path="/goodsReceiptVSExitReport/:scanCode" element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT_SUPERVISOR} element={<GoodsReceiptVSExitReport/>}/>}/>*/}
-                    {/*<Route path="/goodsReceiptReportAll/:scanCode" element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT_SUPERVISOR} element={<GoodsReceiptAll/>}/>}/>*/}
                     <Route path="/" element={<ProtectedRoute element={<HomePage/>}/>}/>
                     <Route path="*" element={<NotFound/>}/>
                 </Routes>

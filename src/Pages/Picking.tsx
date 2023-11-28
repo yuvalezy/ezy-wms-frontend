@@ -39,7 +39,7 @@ export default function Picking() {
         }
         const id = parseInt(checkScan[1]);
         setLoading(true);
-        fetchPickings(id)
+        fetchPickings({id: id})
             .then((pick) => {
                 if (pick.length === 0) {
                     setAlert({message: t("pickingNotFound"), type: MessageStripDesign.Warning});

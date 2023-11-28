@@ -14,12 +14,14 @@ import "@ui5/webcomponents-icons/dist/comment.js";
 import "@ui5/webcomponents-icons/dist/create.js";
 import "@ui5/webcomponents-icons/dist/clear-all.js";
 import "@ui5/webcomponents-icons/dist/bar-chart.js";
+import "@ui5/webcomponents-icons/dist/begin.js";
 import "@ui5/webcomponents-icons/dist/save.js"
 import "@ui5/webcomponents-icons/dist/cancel.js"
 import "@ui5/webcomponents-icons/dist/numbered-text.js"
 import "@ui5/webcomponents-icons/dist/save.js"
 import "@ui5/webcomponents-icons/dist/cancel.js"
 import "@ui5/webcomponents-icons/dist/log.js"
+import "@ui5/webcomponents-icons/dist/nav-back.js"
 
 export interface MenuItem {
     Link: string;
@@ -58,19 +60,19 @@ export function useMenus() {
             Icon: "manager-insight",
         },
         {
-            Link: "/Pick",
+            Link: "/pick",
             Text: t('picking'),
             Authorization: Authorization.PICKING,
             Icon: "cart-2",
         },
         {
-            Link: "/PickSupervisor",
+            Link: "/pickSupervisor",
             Text: t('pickSupervisor'),
             Authorization: Authorization.PICKING_SUPERVISOR,
             Icon: "kpi-managing-my-area",
         },
         {
-            Link: "/PickReport",
+            Link: "/pickReport",
             Text: t('pickReport'),
             Authorization: Authorization.PICKING_SUPERVISOR,
             Icon: "manager-insight",

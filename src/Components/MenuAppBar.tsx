@@ -12,9 +12,10 @@ import {MenuItem, useMenus} from "../Assets/Menus";
 interface MenuAppBarProps {
     title: string,
     icon?: string,
+    back?: () => void
 }
 
-const MenuAppBar: React.FC<MenuAppBarProps> = ({title, icon}) => {
+const MenuAppBar: React.FC<MenuAppBarProps> = ({title, icon, back}) => {
     const menus = useMenus();
     const [authorizedMenus, setAuthorizedMenus] = useState<MenuItem[]>([]);
     const navigate = useNavigate();
@@ -33,6 +34,12 @@ const MenuAppBar: React.FC<MenuAppBarProps> = ({title, icon}) => {
         navigate(authorizedMenus[index].Link);
     }
 
+    function handleBack() {
+        if (back != null) {
+            back();
+        }
+    }
+
     return (
         <ShellBar
             logo={<Icon name={icon}/>}
@@ -42,6 +49,12 @@ const MenuAppBar: React.FC<MenuAppBarProps> = ({title, icon}) => {
                 <StandardListItem className={location.pathname !== item.Link ? '' : 'disabled-list-item'} key={index} icon={item.Icon} data-key={index}>{item.Text}</StandardListItem>))}
             primaryTitle={title}
         >
+            {back &&
+            <ShellBarItem
+                icon="nav-back"
+                onClick={() => handleBack()}
+            />
+            }
             <ShellBarItem
                 icon="log"
                 onClick={() => logout()}

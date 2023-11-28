@@ -15,7 +15,7 @@ const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data})
             columns={<>
                 <TableColumn><Label>{t('code')}</Label></TableColumn>
                 <TableColumn><Label>{t('description')}</Label></TableColumn>
-                <TableColumn><Label>{t('Quantity')}</Label></TableColumn>
+                <TableColumn><Label>{t('quantity')}</Label></TableColumn>
                 <TableColumn><Label>{t('delivery')}</Label></TableColumn>
                 <TableColumn><Label>{t('showroom')}</Label></TableColumn>
                 <TableColumn><Label>{t('inWarehouse')}</Label></TableColumn>

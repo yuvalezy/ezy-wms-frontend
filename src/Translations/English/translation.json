@@ -37,6 +37,10 @@
   "clear": "Clear",
   "approved": "The document has been successfully completed.",
   "cancelled": "The document has been successfully cancelled.",
+  "start": "Start",
+  "back": "Back",
+  "pending": "Pending",
+  "totalItems": "Total Items",
 
   "openStatus": "Open",
   "inProgressStatus": "In Progress",

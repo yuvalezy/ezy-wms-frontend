@@ -1,6 +1,6 @@
 import {ResponseStatus} from "./Common";
 import {DeliveryOpenDocument} from "./Deliveries";
-import {PickingDocument} from "../Pages/PickSupervisor/PickingDocument";
+import {PickingDocument, PickingDocumentDetail, PickingDocumentDetailItem} from "../Pages/PickSupervisor/PickingDocument";
 
 enum UpdateLineReturnValue {
     Status = "Status",
@@ -158,6 +158,7 @@ export const ReasonValueMockup = [
     },
 ];
 
+
 export const PickingMockup: PickingDocument[] = [
     {
         entry: 101,
@@ -201,6 +202,54 @@ export const PickingMockup: PickingDocument[] = [
         status: DocumentStatus.Open
     }
 ]
+
+export const PickingDetailsMockup: PickingDocumentDetail[] = [
+    {
+        type: 17,
+        entry: 1,
+        number: 1,
+        date: new Date('2023-11-01'),
+        cardCode: "JD",
+        cardName: "John Doe",
+        totalItems: 5,
+    },
+    {
+        type: 13,
+        entry: 2,
+        number: 2,
+        date: new Date('2023-11-01'),
+        cardCode: "KR",
+        cardName: "Keren Roe Smith",
+        totalItems: 3,
+    }
+]
+
+export const PickingDetailItemsMockup: PickingDocumentDetailItem[] = [
+    { itemCode: "ABC123", itemName: "Sample Item", quantity: 10, openQuantity: 10, },
+    { itemCode: "ABC555", itemName: "Sample Item 5", quantity: 5, openQuantity: 3, },
+    { itemCode: "ABC222", itemName: "Sample Item 2", quantity: 30, openQuantity: 20, },
+    { itemCode: "XYZ101", itemName: "Item 101", quantity: 15, openQuantity: 15 },
+    { itemCode: "XYZ102", itemName: "Item 102", quantity: 20, openQuantity: 18 },
+    { itemCode: "XYZ103", itemName: "Item 103", quantity: 25, openQuantity: 10 },
+    { itemCode: "XYZ104", itemName: "Item 104", quantity: 12, openQuantity: 12 },
+    { itemCode: "XYZ105", itemName: "Item 105", quantity: 30, openQuantity: 25 },
+    { itemCode: "XYZ106", itemName: "Item 106", quantity: 8, openQuantity: 5 },
+    { itemCode: "XYZ107", itemName: "Item 107", quantity: 18, openQuantity: 10 },
+    { itemCode: "XYZ108", itemName: "Item 108", quantity: 22, openQuantity: 20 },
+    { itemCode: "XYZ109", itemName: "Item 109", quantity: 17, openQuantity: 15 },
+    { itemCode: "XYZ110", itemName: "Item 110", quantity: 19, openQuantity: 19 },
+    { itemCode: "XYZ111", itemName: "Item 111", quantity: 13, openQuantity: 7 },
+    { itemCode: "XYZ112", itemName: "Item 112", quantity: 21, openQuantity: 21 },
+    { itemCode: "XYZ113", itemName: "Item 113", quantity: 16, openQuantity: 14 },
+    { itemCode: "XYZ114", itemName: "Item 114", quantity: 14, openQuantity: 9 },
+    { itemCode: "XYZ115", itemName: "Item 115", quantity: 11, openQuantity: 11 },
+    { itemCode: "XYZ116", itemName: "Item 116", quantity: 9, openQuantity: 6 },
+    { itemCode: "XYZ117", itemName: "Item 117", quantity: 7, openQuantity: 3 },
+    { itemCode: "XYZ118", itemName: "Item 118", quantity: 23, openQuantity: 18 },
+    { itemCode: "XYZ119", itemName: "Item 119", quantity: 26, openQuantity: 26 },
+    { itemCode: "XYZ120", itemName: "Item 120", quantity: 29, openQuantity: 24 },
+]
+
 
 export const DeliveryOpenDocuments: DeliveryOpenDocument[] = [
     {
