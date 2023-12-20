@@ -1,12 +1,12 @@
 import React from "react";
 import {useNavigate} from "react-router-dom";
-import {useAuth} from "../../Components/AppContext";
+import {useAuth} from "../../../Components/AppContext";
 import {useTranslation} from "react-i18next";
 import {Card, CardHeader, Icon, List, StandardListItem, Button} from "@ui5/webcomponents-react";
-import {Document, DocumentStatus} from "../../Assets/Document";
-import {useObjectName} from "../../Assets/ObjectName";
-import {Authorization} from "../../Assets/Authorization";
-import {useDocumentStatusToString} from "../../Assets/DocumentStatusString";
+import {Document, DocumentStatus} from "../../../Assets/Document";
+import {useObjectName} from "../../../Assets/ObjectName";
+import {Authorization} from "../../../Assets/Authorization";
+import {useDocumentStatusToString} from "../../../Assets/DocumentStatusString";
 
 type DocumentCardProps = {
     doc: Document,
@@ -63,12 +63,10 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, handleAction}) => {
                 <StandardListItem><strong>{t('status')}:</strong> {documentStatusToString(doc.status)}</StandardListItem>
                 <StandardListItem>
                     {doc.status === DocumentStatus.InProgress && (
-                        <Button style={{marginRight: '10px'}} color="primary" onClick={() => handleAction(doc.id, 'approve')}>
-                            <Icon name="complete"/>
+                        <Button style={{marginRight: '10px'}} color="primary" onClick={() => handleAction(doc.id, 'approve')} icon="complete">
                             {t('finish')}
                         </Button>)}
-                    <Button color="secondary" onClick={() => handleAction(doc.id, 'cancel')}>
-                        <Icon name="cancel"/>
+                    <Button icon="cancel" onClick={() => handleAction(doc.id, 'cancel')}>
                         {t('cancel')}
                     </Button>
                 </StandardListItem>

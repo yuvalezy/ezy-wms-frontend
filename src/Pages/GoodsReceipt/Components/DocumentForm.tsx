@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
-import {createDocument, GoodsReceiptType,} from "./Document";
-import {useThemeContext} from "../../Components/ThemeContext";
+import {createDocument, GoodsReceiptType,} from "../Data/Document";
+import {useThemeContext} from "../../../Components/ThemeContext";
 import DocumentList, {DocumentListRef} from "./DocumentList";
 import {useTranslation} from "react-i18next";
 import {
@@ -13,10 +13,10 @@ import {
     Tab,
     TabContainer,
 } from "@ui5/webcomponents-react";
-import {useObjectName} from "../../Assets/ObjectName";
-import {Document, DocumentItem} from "../../Assets/Document";
-import {BusinessPartner, fetchVendors} from "../../Assets/Data";
-import {StringFormat} from "../../Assets/Functions";
+import {useObjectName} from "../../../Assets/ObjectName";
+import {Document, DocumentItem} from "../../../Assets/Document";
+import {BusinessPartner, fetchVendors} from "../../../Assets/Data";
+import {StringFormat} from "../../../Assets/Functions";
 
 interface DocumentFormProps {
     onNewDocument: (document: Document) => void;
@@ -162,8 +162,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, onError,}) =>
                         </ComboBox>
                     </FormItem>
                     <FormItem>
-                        <Button color="primary" onClick={handleSubmit}>
-                            <Icon name="create"/>
+                        <Button color="primary" icon="create" onClick={handleSubmit}>
                             {t("create")}
                         </Button>
                     </FormItem>
@@ -182,8 +181,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, onError,}) =>
                         <DocumentList ref={documentListRef} onItemsUpdate={setItems}/>
                     </FormItem>
                     <FormItem>
-                        <Button color="primary" onClick={handleSubmit}>
-                            <Icon name="create"/>
+                        <Button color="primary" icon="create" onClick={handleSubmit}>
                             {t("create")}
                         </Button>
                     </FormItem>

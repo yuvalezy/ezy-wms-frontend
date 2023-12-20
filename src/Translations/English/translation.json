@@ -38,9 +38,12 @@
   "approved": "The document has been successfully completed.",
   "cancelled": "The document has been successfully cancelled.",
   "start": "Start",
+  "report": "Report",
   "back": "Back",
   "pending": "Pending",
+  "picked": "Picked",
   "totalItems": "Total Items",
+  "totalOpenItems": "Total Open Items",
 
   "openStatus": "Open",
   "inProgressStatus": "In Progress",
@@ -96,6 +99,8 @@
 
   "pickingNotFound": "Picking #{0} is not valid",
   "pickingStatusError": "The status of the picking #{0} is {1}.\nCannot continue.",
+  "pickingProcessSuccess": "Picking of item {0} was successfully",
+  "pickedIsClosed": "Picking #{0} is closed",
   "goodsReceiptNotFound": "The entry #{0} is not valid",
   "goodsReceiptStatusError": "The status of the entry #{0} is {1}.\nCannot continue.",
   "goodsReceiptIsClosed": "Entry #{0} is closed",

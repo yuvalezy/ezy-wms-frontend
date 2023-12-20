@@ -38,9 +38,12 @@
   "approved": "El documento ha sido finalizado con éxito.",
   "cancelled": "El documento ha sido cancelado con éxito.",
   "start": "Iniciar",
+  "report": "Reporte",
   "back": "Regresar",
   "pending": "Pendiente",
-  "totalItems": "Items Articulos",
+  "picked": "Seleccionada",
+  "totalItems": "Total Articulos",
+  "totalOpenItems": "Total Articulos Abiertos",
 
   "openStatus": "Abierto",
   "inProgressStatus": "En Proceso",
@@ -96,6 +99,8 @@
 
   "pickingNotFound": "Picking #{0} no es válido",
   "pickingStatusError": "El estado del picking #{0} es {1}.\nNo se puede continuar.",
+  "pickingProcessSuccess": "La selección del artículo {0} se realizó con éxito.",
+  "pickedIsClosed": "Picking #{0} esta cerrado",
   "goodsReceiptNotFound": "La entrada #{0} no es válida",
   "goodsReceiptStatusError": "El estado de la entrada #{0} es {1}.\nNo se puede continuar.",
   "goodsReceiptIsClosed": "Entrada #{0} esta cerrada",

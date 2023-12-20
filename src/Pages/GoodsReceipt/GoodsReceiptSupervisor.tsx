@@ -1,15 +1,15 @@
 import React, {useEffect, useRef, useState} from "react";
-import {useAuth} from "../Components/AppContext";
-import ContentTheme from "../Components/ContentTheme";
-import DocumentForm from "./GoodsReceiptSupervisor/DocumentForm";
-import { documentAction, fetchDocuments,} from "./GoodsReceiptSupervisor/Document";
-import DocumentCard from "./GoodsReceiptSupervisor/DocumentCard";
-import {useThemeContext} from "../Components/ThemeContext";
+import {useAuth} from "../../Components/AppContext";
+import ContentTheme from "../../Components/ContentTheme";
+import DocumentForm from "./Components/DocumentForm";
+import { documentAction, fetchDocuments,} from "./Data/Document";
+import DocumentCard from "./Components/DocumentCard";
+import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {MessageBox, MessageBoxActions, MessageStripDesign} from "@ui5/webcomponents-react";
-import {Document, DocumentAction} from "../Assets/Document";
-import {StringFormat} from "../Assets/Functions";
-import QRDialog, {QRDialogRef} from "../Components/QRDialog";
+import {Document, DocumentAction} from "../../Assets/Document";
+import {StringFormat} from "../../Assets/Functions";
+import QRDialog, {QRDialogRef} from "../../Components/QRDialog";
 
 export default function GoodsReceiptSupervisor() {
     const qrRef = useRef<QRDialogRef>(null);

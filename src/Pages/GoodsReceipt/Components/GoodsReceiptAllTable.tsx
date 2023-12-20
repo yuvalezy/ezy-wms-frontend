@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {GoodsReceiptAll} from "./Report";
+import {GoodsReceiptAll} from "../Data/Report";
 import {useTranslation} from "react-i18next";
 import {Label, Table, TableCell, TableColumn, TableRow} from '@ui5/webcomponents-react';
 

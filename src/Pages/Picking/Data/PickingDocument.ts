@@ -1,5 +1,5 @@
-import {configUtils, delay, globalConfig} from "../../Assets/GlobalConfig";
-import {addItemResponseMockup, PickingDetailItemsMockup, PickingDetailsMockup, PickingMockup} from "../../Assets/mockup";
+import {configUtils, delay, globalConfig} from "../../../Assets/GlobalConfig";
+import {addItemResponseMockup, PickingDetailItemsMockup, PickingDetailsMockup, PickingMockup} from "../../../Assets/mockup";
 import axios from "axios";
 
 export enum PickStatus {
@@ -27,6 +27,7 @@ export type PickingDocumentDetail = {
     cardName: string;
     items?: PickingDocumentDetailItem[];
     totalItems: number;
+    totalOpenItems: number;
 }
 
 export type PickingDocumentDetailItem = {
@@ -158,8 +159,10 @@ export const fetchPickings = async (params?: pickingsParameters): Promise<Pickin
 }
 export const addItem = async (
     id: number,
+    type: number,
+    entry: number,
     itemCode: string,
-    barcode: string
+    quantity: number,
 ): Promise<PickingAddItemResponse> => {
     try {
         if (configUtils.isMockup) {
@@ -180,8 +183,10 @@ export const addItem = async (
             url,
             {
                 id: id,
+                type: type,
+                entry: entry,
                 itemCode: itemCode,
-                barcode: barcode,
+                quantity: quantity
             },
             {
                 headers: {

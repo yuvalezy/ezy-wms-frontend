@@ -1,9 +1,9 @@
 import React, {forwardRef, useImperativeHandle, useRef, useState} from 'react';
 import {useTranslation} from "react-i18next";
 import {Icon, ComboBox, ComboBoxItem, Input, Button, List, StandardListItem, MessageStripDesign} from "@ui5/webcomponents-react";
-import {useThemeContext} from "../../Components/ThemeContext";
-import {DocumentItem} from "../../Assets/Document";
-import {useObjectName} from "../../Assets/ObjectName";
+import {useThemeContext} from "../../../Components/ThemeContext";
+import {DocumentItem} from "../../../Assets/Document";
+import {useObjectName} from "../../../Assets/ObjectName";
 
 export interface DocumentListRef {
     clearItems: () => void;
@@ -73,8 +73,7 @@ const DocumentList = forwardRef((props: DocumentListProps, ref) => {
             </ComboBox>
             <br/>
             <Input value={docNum} type="Number" placeholder={t('documentNumber')} onInput={e => setDocNum(e.target.value as string)}/>
-            <Button color="secondary" onClick={handleAddClick}>
-                <Icon name="add"/>
+            <Button color="secondary" icon="add" onClick={handleAddClick}>
                 {t('add')}
             </Button>
         </div>

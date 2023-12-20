@@ -1,10 +1,10 @@
-import ContentTheme from "../Components/ContentTheme";
+import ContentTheme from "../../Components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import {useEffect, useRef, useState} from "react";
-import {fetchPickings, PickingDocument} from "./PickSupervisor/PickingDocument";
-import PickingCard from "./PickSupervisor/PickingCard";
-import QRDialog, {QRDialogRef} from "../Components/QRDialog";
-import {useThemeContext} from "../Components/ThemeContext";
+import {fetchPickings, PickingDocument} from "./Data/PickingDocument";
+import PickingCard from "./Components/PickingCard";
+import QRDialog, {QRDialogRef} from "../../Components/QRDialog";
+import {useThemeContext} from "../../Components/ThemeContext";
 import {MessageStripDesign} from "@ui5/webcomponents-react";
 
 export default function PickingSupervisor() {

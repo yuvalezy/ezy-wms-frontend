@@ -1,6 +1,6 @@
 import {ResponseStatus} from "./Common";
 import {DeliveryOpenDocument} from "./Deliveries";
-import {PickingDocument, PickingDocumentDetail, PickingDocumentDetailItem, PickStatus} from "../Pages/PickSupervisor/PickingDocument";
+import {PickingDocument, PickingDocumentDetail, PickingDocumentDetailItem, PickStatus} from "../Pages/Picking/Data/PickingDocument";
 
 enum UpdateLineReturnValue {
     Status = "Status",
@@ -212,6 +212,7 @@ export const PickingDetailsMockup: PickingDocumentDetail[] = [
         cardCode: "JD",
         cardName: "John Doe",
         totalItems: 5,
+        totalOpenItems: 5,
     },
     {
         type: 13,
@@ -221,6 +222,7 @@ export const PickingDetailsMockup: PickingDocumentDetail[] = [
         cardCode: "KR",
         cardName: "Keren Roe Smith",
         totalItems: 3,
+        totalOpenItems: 2,
     }
 ]
 

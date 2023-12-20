@@ -1,9 +1,9 @@
 import axios from "axios";
-import {Document, DocumentAction, DocumentItem, DocumentStatus, OrderBy} from "../../Assets/Document";
-import {configUtils, delay, globalConfig} from "../../Assets/GlobalConfig";
-import {documentMockup, ReasonValueMockup} from "../../Assets/mockup";
-import {User} from "../../Assets/Common";
-import {BusinessPartner} from "../../Assets/Data";
+import {Document, DocumentAction, DocumentItem, DocumentStatus, OrderBy} from "../../../Assets/Document";
+import {configUtils, delay, globalConfig} from "../../../Assets/GlobalConfig";
+import {documentMockup, ReasonValueMockup} from "../../../Assets/mockup";
+import {User} from "../../../Assets/Common";
+import {BusinessPartner} from "../../../Assets/Data";
 
 
 export enum GoodsReceiptType {

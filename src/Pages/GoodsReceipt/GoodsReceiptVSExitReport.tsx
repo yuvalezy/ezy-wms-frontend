@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import ContentTheme from "../Components/ContentTheme";
+import ContentTheme from "../../Components/ContentTheme";
 import { useParams } from "react-router-dom";
 import {
   fetchGoodsReceiptVSExitReport,
   GoodsReceiptVSExitReportData,
-} from "./GoodsReceiptSupervisor/Report";
-import GoodsReceiptVSExitReportTable from "./GoodsReceiptSupervisor/GoodsReceiptVSExitReportTable";
-import { useThemeContext } from "../Components/ThemeContext";
+} from "./Data/Report";
+import GoodsReceiptVSExitReportTable from "./Components/GoodsReceiptVSExitReportTable";
+import { useThemeContext } from "../../Components/ThemeContext";
 import { useTranslation } from "react-i18next";
 import {Panel, Title, Text, MessageStrip, MessageStripDesign} from "@ui5/webcomponents-react";
-import {useObjectName} from "../Assets/ObjectName";
-import {IsNumeric} from "../Assets/Functions";
+import {useObjectName} from "../../Assets/ObjectName";
+import {IsNumeric} from "../../Assets/Functions";
 
 export default function GoodsReceiptVSExitReport() {
   const [id, setID] = useState<number | null>();

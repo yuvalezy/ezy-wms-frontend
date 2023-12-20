@@ -142,8 +142,7 @@ export default function ItemCheck() {
                         />
                     </FormItem>
                     <FormItem>
-                        <Button onClick={() => handleCheckSubmit()} color="primary">
-                            <Icon name="accept"/>
+                        <Button onClick={() => handleCheckSubmit()} icon="accept">
                             {t("accept")}
                         </Button>
                     </FormItem>

@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState, useContext} from "react";
 import {useTranslation} from "react-i18next";
 import {
-    Icon,
     Grid,
     Input,
     ComboBox,
@@ -12,9 +11,9 @@ import {
     Panel,
     PanelDomRef,
 } from "@ui5/webcomponents-react";
-import {AuthContext} from "../../Components/AppContext";
-import {BusinessPartner, fetchVendors, useDocumentStatusOptions} from "../../Assets/Data";
-import {DocumentStatusOption} from "../../Assets/Document";
+import {AuthContext} from "../../../Components/AppContext";
+import {BusinessPartner, fetchVendors, useDocumentStatusOptions} from "../../../Assets/Data";
+import {DocumentStatusOption} from "../../../Assets/Document";
 
 interface ReportFilterFormProps {
     idInput: string;
@@ -165,14 +164,12 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({
                 <FormItem>
                     <Grid>
                         <div>
-                            <Button color="primary" onClick={(e) => handleSubmit()}>
-                                <Icon name="bar-chart"/>
+                            <Button color="primary" icon="bar-chart" onClick={(e) => handleSubmit()}>
                                 {t("Execute")}
                             </Button>
                         </div>
                         <div>
-                            <Button color="secondary" onClick={() => clearForm()}>
-                                <Icon name="clear-all"/>
+                            <Button color="secondary" icon="clear-all" onClick={() => clearForm()}>
                                 {t("clear")}
                             </Button>
                         </div>

@@ -1,21 +1,21 @@
-import ContentTheme from "../Components/ContentTheme";
+import ContentTheme from "../../Components/ContentTheme";
 import {useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
-import BoxConfirmationDialog, {BoxConfirmationDialogRef} from "../Components/BoxConfirmationDialog";
-import ProcessAlert, {AlertActionType, ProcessAlertValue,} from "./GoodsReceiptProcess/ProcessAlert";
-import ProcessComment, {ProcessCommentRef} from "./GoodsReceiptProcess/ProcessComment";
-import {useThemeContext} from "../Components/ThemeContext";
-import ProcessCancel, {ProcessCancelRef} from "./GoodsReceiptProcess/ProcessCancel";
-import ProcessPurPackUn, {ProcessPurPackUnRef} from "./GoodsReceiptProcess/ProcessPurPackUn";
+import BoxConfirmationDialog, {BoxConfirmationDialogRef} from "../../Components/BoxConfirmationDialog";
+import ProcessAlert, {AlertActionType, ProcessAlertValue,} from "./Components/ProcessAlert";
+import ProcessComment, {ProcessCommentRef} from "./Components/ProcessComment";
+import {useThemeContext} from "../../Components/ThemeContext";
+import ProcessCancel, {ProcessCancelRef} from "./Components/ProcessCancel";
+import ProcessPurPackUn, {ProcessPurPackUnRef} from "./Components/ProcessPurPackUn";
 import {useTranslation} from "react-i18next";
-import {Button, Icon, Form, FormItem, Input, InputDomRef, MessageStrip} from "@ui5/webcomponents-react";
+import {Button, Form, FormItem, Input, InputDomRef, MessageStrip} from "@ui5/webcomponents-react";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
-import {addItem} from "./GoodsReceiptProcess/GoodsReceiptProcess";
-import {distinctItems, Item} from "../Assets/Common";
-import {IsNumeric, StringFormat} from "../Assets/Functions";
-import {configUtils} from "../Assets/GlobalConfig";
-import {AddItemResponseMultipleValue} from "../Assets/Document";
-import {scanBarcode} from "../Assets/ScanBarcode";
+import {addItem} from "./Data/GoodsReceiptProcess";
+import {distinctItems, Item} from "../../Assets/Common";
+import {IsNumeric, StringFormat} from "../../Assets/Functions";
+import {configUtils} from "../../Assets/GlobalConfig";
+import {AddItemResponseMultipleValue} from "../../Assets/Document";
+import {scanBarcode} from "../../Assets/ScanBarcode";
 
 export default function GoodsReceiptProcess() {
     const {scanCode} = useParams();
@@ -253,12 +253,7 @@ export default function GoodsReceiptProcess() {
                                 ></Input>
                             </FormItem>
                             <FormItem>
-                                <Button
-                                    type="Submit"
-                                    color="primary"
-                                    disabled={!enable}
-                                >
-                                    <Icon name="accept"/>
+                                <Button type="Submit" icon="accept" disabled={!enable}>
                                     {t("accept")}
                                 </Button>
                             </FormItem>

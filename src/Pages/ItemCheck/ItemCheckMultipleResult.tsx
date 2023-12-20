@@ -57,8 +57,7 @@ const ItemCheckMultipleResult: React.FC<ItemCheckMultipleResultProps> = ({barcod
             </Table>
             <br/>
             <div style={{textAlign: 'center'}}>
-                <Button design="Attention" onClick={() => clear()}>
-                    <Icon design="Critical" name="cancel"/>
+                <Button design="Attention" icon="cancel" onClick={() => clear()}>
                     {t('clear')}
                 </Button>
             </div>

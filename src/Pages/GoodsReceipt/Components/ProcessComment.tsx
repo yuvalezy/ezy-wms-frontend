@@ -7,9 +7,9 @@ import {
     TextArea, MessageStripDesign
 } from "@ui5/webcomponents-react";
 import {ProcessAlertValue} from "./ProcessAlert";
-import {useThemeContext} from "../../Components/ThemeContext";
+import {useThemeContext} from "../../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {updateLine} from "./GoodsReceiptProcess";
+import {updateLine} from "../Data/GoodsReceiptProcess";
 
 export interface ProcessCommentRef {
     show: (show: boolean) => void;

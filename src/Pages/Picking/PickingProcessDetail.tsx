@@ -1,19 +1,16 @@
-import ContentTheme from "../Components/ContentTheme";
+import ContentTheme from "../../Components/ContentTheme";
 import {useNavigate, useParams} from "react-router-dom";
 import React, {CSSProperties, useEffect, useRef, useState} from "react";
-import BoxConfirmationDialog, {BoxConfirmationDialogRef} from "../Components/BoxConfirmationDialog";
-import {useThemeContext} from "../Components/ThemeContext";
+import BoxConfirmationDialog, {BoxConfirmationDialogRef} from "../../Components/BoxConfirmationDialog";
+import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {Button, Icon, Form, FormItem, Input, InputDomRef, MessageStrip, Panel, Title, Text, Table, TableColumn, Label, TableRow, TableCell} from "@ui5/webcomponents-react";
+import {Button, Icon, Form, FormItem, Input, InputDomRef, Title, Table, TableColumn, Label, TableRow, TableCell} from "@ui5/webcomponents-react";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
-import {distinctItems, Item} from "../Assets/Common";
-import {IsNumeric, StringFormat} from "../Assets/Functions";
-import {configUtils} from "../Assets/GlobalConfig";
-import {addItem, fetchPicking, fetchPickings, PickingDocument, PickingDocumentDetail} from "./PickSupervisor/PickingDocument";
-import {useObjectName} from "../Assets/ObjectName";
-import {AddItemResponseMultipleValue} from "../Assets/Document";
-import {scanBarcode} from "../Assets/ScanBarcode";
-import {ProcessAlertValue} from "./GoodsReceiptProcess/ProcessAlert";
+import {distinctItems, Item} from "../../Assets/Common";
+import {IsNumeric, StringFormat} from "../../Assets/Functions";
+import {addItem, fetchPicking, PickingDocument, PickingDocumentDetail} from "./Data/PickingDocument";
+import {useObjectName} from "../../Assets/ObjectName";
+import {scanBarcode} from "../../Assets/ScanBarcode";
 
 export default function PickingProcessDetail() {
     const {idParam, typeParam, entryParam} = useParams();
@@ -59,6 +56,10 @@ export default function PickingProcessDetail() {
     }, []);
 
     useEffect(() => {
+        loadData();
+    }, [id, type, entry]);
+
+    function loadData(reload = false) {
         if (!id || !type || !entry) {
             return;
         }
@@ -75,12 +76,18 @@ export default function PickingProcessDetail() {
                     let valueDetail = value.detail[0];
                     setDetail(valueDetail);
                     setTitle(`${t("picking")} #${id} - ${o(type)}# ${valueDetail.number}`);
+                    if (reload) {
+                        if (valueDetail.totalOpenItems === 0) {
+                            navigateBack();
+                            return;
+                        }
+                    }
                     setTimeout(() => barcodeRef.current?.focus(), 1);
                 }
             })
             .catch(error => errorAlert(error))
             .finally(() => setLoading(false));
-    }, [id, type, entry]);
+    }
 
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
@@ -124,96 +131,30 @@ export default function PickingProcessDetail() {
     }
     function addItemToPicking(itemCode: string) {
         boxConfirmationDialogRef?.current?.show(false);
-        const barcode = barcodeInput;
+        let barcode = barcodeInput;
         setBarcodeInput("");
+        if (id == null || type == null || entry == null) {
+            return;
+        }
         setLoading(true);
-        addItem(id ?? 0, itemCode, barcode)
+        addItem(id, type, entry, itemCode, 1)
             .then((data) => {
                 if (data.closedDocument) {
-                    errorAlert(StringFormat(t("goodsReceiptIsClosed"), id));
+                    errorAlert(StringFormat(t("pickedIsClosed"), id));
                     setEnable(false);
                     return;
                 }
 
-                if (configUtils.isMockup) {
-                    window.alert('Add Mockup');
-                    //todo mockup
-                    // return alert({
-                    //     barcode: barcode,
-                    //     itemCode: itemCode,
-                    //     purPackUn: data.purPackUn,
-                    //     message: `Error Mockup`,
-                    //     severity: MessageStripDesign.Negative,
-                    // });
-                }
-
-                //todo process
-                // let message: string = "";
-                // let color: MessageStripDesign = MessageStripDesign.Information;
-                // let multiple: AddItemResponseMultipleValue[] = [];
-                // if (
-                //     (data.warehouse ? 1 : 0) +
-                //     (data.fulfillment ? 1 : 0) +
-                //     (data.showroom ? 1 : 0) ===
-                //     1
-                // ) {
-                //     if (data.warehouse) {
-                //         message = t("scanConfirmStoreInWarehouse");
-                //         color = MessageStripDesign.Positive;
-                //     }
-                //     if (data.fulfillment) {
-                //         message = t("scanConfirmFulfillment");
-                //         color = MessageStripDesign.Warning;
-                //     }
-                //     if (data.showroom) {
-                //         message = t("scanConfirmShowroom");
-                //         color = MessageStripDesign.Information;
-                //     }
-                // } else {
-                //     if (data.warehouse) {
-                //         multiple.push({
-                //             message: t("scanConfirmStoreInWarehouse"),
-                //             severity: MessageStripDesign.Positive,
-                //         });
-                //     }
-                //     if (data.fulfillment) {
-                //         multiple.push({
-                //             message: t("scanConfirmFulfillment"),
-                //             severity: MessageStripDesign.Warning,
-                //         });
-                //     }
-                //     if (data.showroom) {
-                //         multiple.push({
-                //             message: t("scanConfirmShowroom"),
-                //             severity: MessageStripDesign.Information,
-                //         });
-                //     }
-                // }
-                //
-                // alert({
-                //     lineID: data.lineID,
-                //     barcode: barcode,
-                //     itemCode: itemCode,
-                //     message: message,
-                //     severity: color,
-                //     multiple: multiple,
-                //     purPackUn: data.purPackUn,
-                // });
+                setAlert({message: StringFormat(t("pickingProcessSuccess"), barcode), type: MessageStripDesign.Positive})
+                loadData(true);
             })
             .catch((error) => {
                 console.error(`Error performing action: ${error}`);
-                let errorMessage = error.response?.data["exceptionMessage"];
-                if (errorMessage){
-                    errorAlert(StringFormat(errorMessage));
-                }
-                else {
-                    errorAlert(`Add Item Error: ${error}`);
-                }
-            })
-            .finally(function () {
+                let errorMessage = error.response?.data["exceptionMessage"] ?? `Add Item Error: ${error}`;
+                errorAlert(errorMessage);
                 setLoading(false);
                 setTimeout(() => barcodeRef.current?.focus(), 100);
-            });
+            }) ;
     }
 
     const contentStyle: CSSProperties = {
@@ -225,8 +166,12 @@ export default function PickingProcessDetail() {
         right: '0px'
     };
 
+    function navigateBack() {
+        navigate(`/pick/${id}`);
+    }
+
     return (
-        <ContentTheme title={title} icon="cause" back={() => navigate(`/pick/${id}`)}>
+        <ContentTheme title={title} icon="cause" back={() => navigateBack()}>
             {
                 detail &&
                 <>
@@ -245,7 +190,7 @@ export default function PickingProcessDetail() {
                             </>}
                         >
                             {detail.items?.map((row) => (
-                                <TableRow key={row.itemCode}>
+                                <TableRow key={row.itemCode} className={row.openQuantity === 0 ? 'completed-row' : ''}>
                                     <TableCell><Label>{row.itemCode}</Label></TableCell>
                                     <TableCell><Label>{row.itemName}</Label></TableCell>
                                     <TableCell><Label>{row.quantity}</Label></TableCell>
@@ -255,6 +200,7 @@ export default function PickingProcessDetail() {
                             ))}
                         </Table>
                     </div>
+                    {detail.totalOpenItems > 0 &&
                     <div style={{position: 'fixed', bottom: '0px', left: '0px', right: '0px', paddingBottom: '5px', borderTop: '1px solid #ccc', backgroundColor: '#fff'}}>
                         <Form onSubmit={handleSubmit}>
                             <FormItem label={t("barcode")}>
@@ -277,6 +223,7 @@ export default function PickingProcessDetail() {
                             </FormItem>
                         </Form>
                     </div>
+                    }
                     <BoxConfirmationDialog
                         onSelected={(v: string) => addItemToPicking(v)}
                         ref={boxConfirmationDialogRef}

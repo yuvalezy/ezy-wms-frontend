@@ -1,13 +1,13 @@
-import ContentTheme from "../Components/ContentTheme";
+import ContentTheme from "../../Components/ContentTheme";
 import {useNavigate, useParams} from "react-router-dom";
-import React, {useEffect, useState} from "react";
-import {useThemeContext} from "../Components/ThemeContext";
+import React, {CSSProperties, useEffect, useState} from "react";
+import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {Button, Icon, Panel, Title, Text} from "@ui5/webcomponents-react";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
-import {IsNumeric} from "../Assets/Functions";
-import {fetchPicking, fetchPickings, PickingDocument, PickingDocumentDetail} from "./PickSupervisor/PickingDocument";
-import {useObjectName} from "../Assets/ObjectName";
+import {IsNumeric} from "../../Assets/Functions";
+import {fetchPicking, fetchPickings, PickingDocument, PickingDocumentDetail} from "./Data/PickingDocument";
+import {useObjectName} from "../../Assets/ObjectName";
 
 export default function PickingProcess() {
     const {idParam} = useParams();
@@ -50,23 +50,45 @@ export default function PickingProcess() {
         navigate(`/pick/${id}/${detail.type}/${detail.entry}`);
     }
 
+    function rowStyle(item: PickingDocumentDetail) : CSSProperties {
+        let properties = {} as CSSProperties;
+        if (item.totalOpenItems === 0) {
+            properties.textDecoration = 'line-through';
+        }
+        return properties;
+    }
+
     return (
         <ContentTheme title={title} icon="cause">
             {picking?.detail?.map((item, index) => (
-                <Panel key={index} headerText={`${o(item.type)}# ${item.number}`}>
+                <Panel key={index} headerText={`${o(item.type)}# ${item.number}`} style={rowStyle(item)}>
                     <Title level="H5">
                         <strong>{t("customer")}: </strong>
                         {item.cardCode} - {item.cardName}
                     </Title>
-                    <Text>
-                        <strong>{t("totalItems")}: </strong>
-                        {item.totalItems}
-                    </Text>
+                    <div>
+                        <Text>
+                            <strong>{t("totalItems")}: </strong>
+                            {item.totalItems}
+                        </Text>
+                    </div>
+                    <div>
+                        <Text>
+                            <strong>{t("totalOpenItems")}: </strong>
+                            {item.totalOpenItems}
+                        </Text>
+                    </div>
                     <div style={{textAlign: 'center', borderBottom: '1px solid #ccc', paddingBottom: '5px'}}>
-                        <Button color="primary" onClick={() => handleOpen(item)}>
-                            <Icon name="begin"/>
+                        {item.totalOpenItems > 0 &&
+                        <Button icon="begin" onClick={() => handleOpen(item)}>
                             {t("start")}
                         </Button>
+                        }
+                        {item.totalOpenItems === 0 &&
+                            <Button design="Attention" icon="manager-insight" onClick={() => handleOpen(item)}>
+                                {t("report")}
+                            </Button>
+                        }
                     </div>
                 </Panel>
             ))}

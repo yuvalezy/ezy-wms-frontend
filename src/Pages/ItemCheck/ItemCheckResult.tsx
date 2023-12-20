@@ -90,14 +90,12 @@ const ItemCheckResult: React.FC<ItemCheckResultProps> = ({result, clear, submit}
             </Table>
             <Grid>
                 <div style={{textAlign: 'center', padding: '5px'}}>
-                    <Button design="Attention" onClick={() => handleSubmit()} color="warning">
-                        <Icon design="Critical" name="save"/>
+                    <Button icon="save" design="Attention" onClick={() => handleSubmit()} color="warning">
                         {t('update')}
                     </Button>
                 </div>
                 <div style={{textAlign: 'center', padding: '5px'}}>
-                    <Button onClick={() => clear()}>
-                        <Icon name="cancel"/>
+                    <Button icon="cancel" onClick={() => clear()}>
                         {t('clear')}
                     </Button>
                 </div>

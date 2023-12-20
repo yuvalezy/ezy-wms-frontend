@@ -83,3 +83,10 @@
     margin: 5px;
   }
 }
+
+.completed-row ui5-table-cell {
+  background-color: #e0f7e0 !important;
+}
+.completed-row ui5-table-cell ui5-label {
+  text-decoration: line-through;
+}

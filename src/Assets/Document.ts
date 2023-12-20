@@ -1,6 +1,6 @@
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
 import {BusinessPartner, Employee} from "./Data";
-import {GoodsReceiptType} from "../Pages/GoodsReceiptSupervisor/Document";
+import {GoodsReceiptType} from "../Pages/GoodsReceipt/Data/Document";
 
 export type DocumentAction = "approve" | "cancel" | "qrcode";
 

@@ -4,21 +4,21 @@ import {Routes, Route, BrowserRouter} from "react-router-dom";
 import LoginPage from "./Pages/Login";
 import HomePage from "./Pages/Home";
 import {AuthProvider} from "./Components/AppContext";
-import GoodsReceipt from "./Pages/GoodsReceipt";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import Unauthorized from "./Components/Unauthorized";
-import GoodsReceiptSupervisor from "./Pages/GoodsReceiptSupervisor";
 import NotFound from "./Components/NotFound";
-import GoodsReceiptProcess from "./Pages/GoodsReceiptProcess";
-import GoodsReceiptReport from "./Pages/GoodsReceiptReport";
-import GoodsReceiptVSExitReport from "./Pages/GoodsReceiptVSExitReport";
-import GoodsReceiptAll from './Pages/GoodsReceiptAll';
 import ItemCheck from "./Pages/ItemCheck";
 import {Authorization} from "./Assets/Authorization";
-import PickingSupervisor from "./Pages/PickingSupervisor";
-import Picking from "./Pages/Picking";
-import PickingProcess from "./Pages/PickingProcess";
-import PickingProcessDetail from "./Pages/PickingProcessDetail";
+import PickingSupervisor from "./Pages/Picking/PickingSupervisor";
+import Picking from "./Pages/Picking/Picking";
+import PickingProcess from "./Pages/Picking/PickingProcess";
+import PickingProcessDetail from "./Pages/Picking/PickingProcessDetail";
+import GoodsReceipt from "./Pages/GoodsReceipt/GoodsReceipt";
+import GoodsReceiptProcess from "./Pages/GoodsReceipt/GoodsReceiptProcess";
+import GoodsReceiptSupervisor from "./Pages/GoodsReceipt/GoodsReceiptSupervisor";
+import GoodsReceiptReport from "./Pages/GoodsReceipt/GoodsReceiptReport";
+import GoodsReceiptVSExitReport from "./Pages/GoodsReceipt/GoodsReceiptVSExitReport";
+import GoodsReceiptAll from './Pages/GoodsReceipt/GoodsReceiptAll';
 
 export default function App() {
     return (

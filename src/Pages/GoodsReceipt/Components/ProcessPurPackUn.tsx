@@ -7,10 +7,10 @@ import {
     Form, Input, InputDomRef, FormItem, MessageStripDesign
 } from "@ui5/webcomponents-react";
 import {ProcessAlertValue} from "./ProcessAlert";
-import {useThemeContext} from "../../Components/ThemeContext";
+import {useThemeContext} from "../../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {updateLine} from "./GoodsReceiptProcess";
-import {UpdateLineReturnValue} from "../../Assets/Document";
+import {updateLine} from "../Data/GoodsReceiptProcess";
+import {UpdateLineReturnValue} from "../../../Assets/Document";
 
 export interface ProcessPurPackUnRef {
     show: (show: boolean) => void;

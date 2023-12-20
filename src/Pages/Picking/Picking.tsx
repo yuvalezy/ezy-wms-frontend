@@ -1,11 +1,11 @@
 import React, {useEffect, useRef} from "react";
 import {useNavigate} from "react-router-dom";
-import ContentTheme from "../Components/ContentTheme";
+import ContentTheme from "../../Components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import {Button, Form, FormItem, Icon, Input, InputDomRef, MessageStripDesign} from "@ui5/webcomponents-react";
-import {useThemeContext} from "../Components/ThemeContext";
-import {IsNumeric, StringFormat} from "../Assets/Functions";
-import {fetchPickings, PickStatus} from "./PickSupervisor/PickingDocument";
+import {useThemeContext} from "../../Components/ThemeContext";
+import {IsNumeric, StringFormat} from "../../Assets/Functions";
+import {fetchPickings, PickStatus} from "./Data/PickingDocument";
 
 export default function Picking() {
     const {setLoading, setAlert} = useThemeContext();
@@ -79,8 +79,7 @@ export default function Picking() {
                     />
                 </FormItem>
                 <FormItem>
-                    <Button type="Submit" color="primary">
-                        <Icon name="accept"/>
+                    <Button type="Submit" icon="accept">
                         {t("accept")}
                     </Button>
                 </FormItem>

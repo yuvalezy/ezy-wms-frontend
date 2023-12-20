@@ -1,10 +1,10 @@
 import React from "react";
 import {useNavigate} from "react-router-dom";
-import {useAuth} from "../../Components/AppContext";
+import {useAuth} from "../../../Components/AppContext";
 import {useTranslation} from "react-i18next";
 import {Card, CardHeader, Icon, List, StandardListItem} from "@ui5/webcomponents-react";
-import {Authorization} from "../../Assets/Authorization";
-import {PickingDocument} from "./PickingDocument";
+import {Authorization} from "../../../Assets/Authorization";
+import {PickingDocument} from "../Data/PickingDocument";
 
 type PickingCardProps = {
     picking: PickingDocument,
