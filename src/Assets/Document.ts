@@ -66,3 +66,8 @@ export type DocumentStatusOption = {
     name: string;
     status: DocumentStatus;
 };
+
+export type ProcessResponse = {
+    ok: boolean,
+    errorMessage?: string;
+}

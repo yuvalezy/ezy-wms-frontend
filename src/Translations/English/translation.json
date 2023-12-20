@@ -86,6 +86,8 @@
   "inWarehouse": "In Warehouse",
   "stock": "Stock",
   "comment": "Comment",
+  "process": "Process",
+  "progress": "Progress",
   "supervisorCode": "Supervisor Code",
   "reason": "Reason",
   "purPackUn": "Quantity in Unit",
@@ -132,11 +134,14 @@
   "badDocumentError": "The {0} #{1} {2}",
   "doesNotExists": "does not exist",
   "isNotOpen": "is not open",
+  "pickOpenQuantityAlert": "Picking #{0} still has open quantity",
+  "pickingUpdateSuccess": "Picking update #{0} was successfully",
 
   "confirmAction": "Confirm Action",
   "confirmApproveDocument": "Are you sure you want to approve document #{0}?",
   "confirmCancelDocument": "Are you sure you want to cancel document #{0}?",
   "confirmFinishDocument": "Are you sure you want to finish document #{0}?",
   "actionCannotReverse": "This action cannot be reversed",
-  "confirmItemBarCode": "Are you sure that the code {1} belongs to the item {0}?"
+  "confirmItemBarCode": "Are you sure that the code {1} belongs to the item {0}?",
+  "confirmContinue": "Do you want to continue?"
 }

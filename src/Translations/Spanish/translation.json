@@ -86,6 +86,8 @@
   "inWarehouse": "En Bodega",
   "stock": "Inventario",
   "comment": "Comentario",
+  "process": "Procesar",
+  "progress": "Progreso",
   "supervisorCode": "Codigo de Supervisor",
   "reason": "Razon",
   "purPackUn": "Cantidad en Unidad",
@@ -132,11 +134,14 @@
   "badDocumentError": "La {0} #{1} {2}",
   "doesNotExists": "no existe",
   "isNotOpen": "no esta abierta",
+  "pickOpenQuantityAlert": "El Picking #{0} aún tiene cantidad pendiente",
+  "pickingUpdateSuccess": "La actualización del Picking #{0} se realizó con éxito",
 
   "confirmAction": "Confirmar Acción",
   "confirmApproveDocument": "¿Está seguro que desea aprobar el documento #{0}?",
   "confirmCancelDocument": "¿Está seguro que desea cancelar el documento #{0}?",
   "confirmFinishDocument": "¿Está seguro que desea finalizar el documento #{0}?",
   "actionCannotReverse": "Esta acción no se puede revertir",
-  "confirmItemBarCode": "¿Esta seguro que el codigo {1} le pertenece al articulo {0}?"
+  "confirmItemBarCode": "¿Esta seguro que el codigo {1} le pertenece al articulo {0}?",
+  "confirmContinue": "¿Esta seguro que desea continuar?"
 }

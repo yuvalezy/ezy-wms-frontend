@@ -3,7 +3,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import React, {CSSProperties, useEffect, useState} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {Button, Icon, Panel, Title, Text} from "@ui5/webcomponents-react";
+import {Button, Icon, Panel, Title, Text, ProgressIndicator} from "@ui5/webcomponents-react";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
 import {IsNumeric} from "../../Assets/Functions";
 import {fetchPicking, fetchPickings, PickingDocument, PickingDocumentDetail} from "./Data/PickingDocument";
@@ -78,10 +78,15 @@ export default function PickingProcess() {
                             {item.totalOpenItems}
                         </Text>
                     </div>
+                    <div>
+                        <ProgressIndicator
+                            value={100 - item.totalOpenItems * 100 / item.totalItems}
+                        />
+                    </div>
                     <div style={{textAlign: 'center', borderBottom: '1px solid #ccc', paddingBottom: '5px'}}>
                         {item.totalOpenItems > 0 &&
                         <Button icon="begin" onClick={() => handleOpen(item)}>
-                            {t("start")}
+                            {t("process")}
                         </Button>
                         }
                         {item.totalOpenItems === 0 &&

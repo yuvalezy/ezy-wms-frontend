@@ -12,6 +12,6 @@ export const configUtils = {
     }
 };
 
-export const delay = (): Promise<void> => {
-    return new Promise((resolve) => setTimeout(resolve, 500));
+export const delay = (ms = 500): Promise<void> => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
 }

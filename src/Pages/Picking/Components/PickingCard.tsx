@@ -2,16 +2,17 @@ import React from "react";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "../../../Components/AppContext";
 import {useTranslation} from "react-i18next";
-import {Card, CardHeader, Icon, List, StandardListItem} from "@ui5/webcomponents-react";
+import {Button, Card, CardHeader, Icon, List, ProgressIndicator, StandardListItem} from "@ui5/webcomponents-react";
 import {Authorization} from "../../../Assets/Authorization";
 import {PickingDocument} from "../Data/PickingDocument";
 
 type PickingCardProps = {
     picking: PickingDocument,
-    handleAction: (id: PickingDocument, action: 'qrcode') => void
+    onAction: (id: PickingDocument, action: 'qrcode') => void,
+    onUpdatePick: (picking: PickingDocument) => void
 }
 
-const PickingCard: React.FC<PickingCardProps> = ({picking, handleAction}) => {
+const PickingCard: React.FC<PickingCardProps> = ({picking, onAction, onUpdatePick}) => {
     const {t} = useTranslation();
     const navigate = useNavigate();
     const {user} = useAuth();
@@ -31,7 +32,7 @@ const PickingCard: React.FC<PickingCardProps> = ({picking, handleAction}) => {
                         handleOpen(picking.entry)
                     }}><strong>{t('number')}:</strong> {picking.entry}</a>)}
                     {!handleOpenLink && (<><strong>{t('date')}:</strong> {new Date(picking.date).toLocaleDateString()}</>)}
-                    <a style={{float: 'right'}} onClick={(e) => handleAction(picking, 'qrcode')}>
+                    <a style={{float: 'right'}} onClick={(e) => onAction(picking, 'qrcode')}>
                         <Icon name="qr-code" />
                     </a>
                 </StandardListItem>
@@ -50,9 +51,21 @@ const PickingCard: React.FC<PickingCardProps> = ({picking, handleAction}) => {
                         <strong>{t('transferRequests')}</strong>: {picking.transfers}
                     </StandardListItem>
                 }
+                <StandardListItem>
+                    <ProgressIndicator
+                        value={100 - picking.openQuantity * 100 / picking.quantity}
+                    />
+                </StandardListItem>
                 {picking.remarks &&
                     <StandardListItem>
                         <strong>{t('comment')}</strong>: {picking.remarks}
+                    </StandardListItem>
+                }
+                {picking.updateQuantity > 0 &&
+                    <StandardListItem>
+                        <div style={{textAlign: 'center'}}>
+                            <Button onClick={() => onUpdatePick(picking)} type="Button" icon="accept">{t("update")}</Button>
+                        </div>
                     </StandardListItem>
                 }
             </List>

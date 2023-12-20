@@ -1,6 +1,7 @@
 import {configUtils, delay, globalConfig} from "../../../Assets/GlobalConfig";
-import {addItemResponseMockup, PickingDetailItemsMockup, PickingDetailsMockup, PickingMockup} from "../../../Assets/mockup";
+import {addItemResponseMockup, PickingDetailItemsMockup, PickingDetailsMockup, PickingMockup, processResponseMockup} from "../../../Assets/mockup";
 import axios from "axios";
+import {ProcessResponse} from "../../../Assets/Document";
 
 export enum PickStatus {
     Released = "Released",
@@ -16,6 +17,9 @@ export type PickingDocument = {
     transfers: number;
     remarks: String | null;
     status: PickStatus;
+    quantity: number;
+    openQuantity: number;
+    updateQuantity: number;
     detail?: PickingDocumentDetail[];
 }
 export type PickingDocumentDetail = {
@@ -201,6 +205,43 @@ export const addItem = async (
         }
     } catch (error) {
         console.error("Error adding item:", error);
+        throw error;
+    }
+};
+export const processPicking = async (
+    id: number,
+): Promise<ProcessResponse> => {
+    try {
+        if (configUtils.isMockup) {
+            return {
+                ...processResponseMockup,
+            };
+        }
+
+        if (!globalConfig) throw new Error("Config has not been initialized!");
+
+        if (globalConfig.debug) await delay();
+
+        const access_token = localStorage.getItem("token");
+
+        const url = `${globalConfig.baseURL}/api/Picking/Process`;
+
+        const response = await axios.post<ProcessResponse>(
+            url,
+            { id: id },
+            {
+                headers: {
+                    Authorization: `Bearer ${access_token}`,
+                },
+            }
+        );
+        if (response.data.errorMessage == null) {
+            return response.data;
+        } else {
+            throw new Error(response.data.errorMessage);
+        }
+    } catch (error) {
+        console.error("Error process picking:", error);
         throw error;
     }
 };

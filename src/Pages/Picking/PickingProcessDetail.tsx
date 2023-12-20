@@ -34,6 +34,7 @@ export default function PickingProcessDetail() {
     function errorAlert(message: string) {
         setAlert({message: message, type: MessageStripDesign.Negative})
     }
+
     useEffect(() => {
         setTitle(t("picking"));
         [idParam, typeParam, entryParam].forEach((p, index) => {
@@ -103,6 +104,7 @@ export default function PickingProcessDetail() {
                 setLoading(false);
             });
     }
+
     function handleItems(items: Item[]) {
         if (items.length === 0) {
             errorAlert(StringFormat(t("barcodeNotFound"), barcodeInput));
@@ -116,6 +118,7 @@ export default function PickingProcessDetail() {
         }
         handleMultipleItems(items);
     }
+
     function handleMultipleItems(items: Item[]) {
         const distinctCodes = distinctItems(items);
         if (distinctCodes.length !== 1) {
@@ -129,6 +132,7 @@ export default function PickingProcessDetail() {
         boxConfirmationDialogRef?.current?.show(true);
         setLoading(false);
     }
+
     function addItemToPicking(itemCode: string) {
         boxConfirmationDialogRef?.current?.show(false);
         let barcode = barcodeInput;
@@ -154,7 +158,7 @@ export default function PickingProcessDetail() {
                 errorAlert(errorMessage);
                 setLoading(false);
                 setTimeout(() => barcodeRef.current?.focus(), 100);
-            }) ;
+            });
     }
 
     const contentStyle: CSSProperties = {
@@ -201,28 +205,21 @@ export default function PickingProcessDetail() {
                         </Table>
                     </div>
                     {detail.totalOpenItems > 0 &&
-                    <div style={{position: 'fixed', bottom: '0px', left: '0px', right: '0px', paddingBottom: '5px', borderTop: '1px solid #ccc', backgroundColor: '#fff'}}>
-                        <Form onSubmit={handleSubmit}>
-                            <FormItem label={t("barcode")}>
-                                <Input required
-                                       value={barcodeInput}
-                                       onInput={(e) => setBarcodeInput(e.target.value as string)}
-                                       ref={barcodeRef}
-                                       disabled={!enable}
-                                ></Input>
-                            </FormItem>
-                            <FormItem>
-                                <Button
-                                    type="Submit"
-                                    color="primary"
-                                    disabled={!enable}
-                                >
-                                    <Icon name="accept"/>
-                                    {t("accept")}
-                                </Button>
-                            </FormItem>
-                        </Form>
-                    </div>
+                        <div style={{position: 'fixed', bottom: '0px', left: '0px', right: '0px', paddingBottom: '5px', borderTop: '1px solid #ccc', backgroundColor: '#fff'}}>
+                            <Form onSubmit={handleSubmit}>
+                                <FormItem label={t("barcode")}>
+                                    <Input required
+                                           value={barcodeInput}
+                                           onInput={(e) => setBarcodeInput(e.target.value as string)}
+                                           ref={barcodeRef}
+                                           disabled={!enable}
+                                    ></Input>
+                                </FormItem>
+                                <FormItem>
+                                    <Button type="Submit" disabled={!enable} icon="accept">{t("accept")}</Button>
+                                </FormItem>
+                            </Form>
+                        </div>
                     }
                     <BoxConfirmationDialog
                         onSelected={(v: string) => addItemToPicking(v)}
