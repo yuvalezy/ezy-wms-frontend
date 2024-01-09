@@ -1,12 +1,16 @@
-import {Alert, AlertTitle, Button, Paper, Table, TableBody, TableHead} from "@mui/material";
-import {TextValue} from "../../assets/TextValue";
-import TableContainer from "@mui/material/TableContainer";
-import TableRow from "@mui/material/TableRow";
-import TableCell from "@mui/material/TableCell";
-import Box from "@mui/material/Box";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import React from "react";
 import {ItemCheckResponse} from "./Item";
+import {useTranslation} from "react-i18next";
+import {
+    Label,
+    Button,
+    Table,
+    TableRow,
+    TableCell,
+    TableColumn,
+    Icon,
+    MessageStrip
+} from "@ui5/webcomponents-react";
 
 interface ItemCheckMultipleResultProps {
     barcode: string;
@@ -16,45 +20,47 @@ interface ItemCheckMultipleResultProps {
 }
 
 const ItemCheckMultipleResult: React.FC<ItemCheckMultipleResultProps> = ({barcode, result, clear, setBarcodeItem}) => {
+    const {t} = useTranslation();
     return (
         <>
-            <Alert variant="filled" severity="warning">
-                <AlertTitle>
-                    {TextValue.MultipleItemsDetected}
-                </AlertTitle>
-                {TextValue.Barcode}: {barcode}
-            </Alert>
-            <TableContainer component={Paper}>
-                <Table size="small">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>{TextValue.Item}</TableCell>
-                            <TableCell>{TextValue.Description}</TableCell>
-                            <TableCell></TableCell>
+            <div style={{margin: '5px'}}>
+                <MessageStrip design="Warning" hideCloseButton>
+                    <strong>
+                        {t('multipleItemsDetected')}
+                    </strong>
+                    <br/>
+                    {t('barcode')}: {barcode}
+                </MessageStrip>
+            </div>
+            <Table
+                columns={<>
+                    <TableColumn/>
+                    <TableColumn>
+                        <Label>{t('item')}</Label>
+                    </TableColumn>
+                    <TableColumn>
+                        <Label>{t('description')}</Label>
+                    </TableColumn>
+                </>}
+            >
+                {
+                    result.map((item, index) => (
+                        <TableRow key={index}>
+                            <TableCell>
+                                <Button design="Emphasized" onClick={() => setBarcodeItem(index)}>{t('select')}</Button>
+                            </TableCell>
+                            <TableCell><Label>{item.itemCode}</Label></TableCell>
+                            <TableCell><Label>{item.itemName}</Label></TableCell>
                         </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {
-                            result.map((item, index) => (
-                                <TableRow key={index}>
-                                    <TableCell>{item.itemCode}</TableCell>
-                                    <TableCell>{item.itemName}</TableCell>
-                                    <TableCell>
-                                        <Button variant="contained" color="warning" onClick={() => setBarcodeItem(index)}>{TextValue.Select}</Button>
-                                    </TableCell>
-                                </TableRow>
-                            ))
-                        }
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                    ))
+                }
+            </Table>
             <br/>
-            <Box mb={1} style={{textAlign: 'center'}}>
-                <Button type="button" variant="contained" color="info" onClick={() => clear()}>
-                    <HighlightOffIcon/>
-                    {TextValue.Clear}
+            <div style={{textAlign: 'center'}}>
+                <Button design="Attention" icon="cancel" onClick={() => clear()}>
+                    {t('clear')}
                 </Button>
-            </Box>
+            </div>
         </>
     )
 }

@@ -3,16 +3,20 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {LoadingProvider} from "./Components/LoadingContext";
+import {ThemeContextProvider} from "./Components/ThemeContext";
+import './i18n';
+import { ThemeProvider } from '@ui5/webcomponents-react';
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
 root.render(
     <React.StrictMode>
-        <LoadingProvider>
-            <App/>
-        </LoadingProvider>
+        <ThemeContextProvider>
+            <ThemeProvider>
+                <App/>
+            </ThemeProvider>
+        </ThemeContextProvider>
     </React.StrictMode>
 );
 

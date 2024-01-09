@@ -1,68 +1,67 @@
 import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import LoginThemeProvider from './LoginThemeProvider';
-import CircularProgressOverlay from "../../Components/CircularProgressOverlay";
+import {Button, Input, Select, Option, Form, FormItem} from "@ui5/webcomponents-react";
+import "@ui5/webcomponents/dist/features/InputElementsFormSupport.js";
+import {useTranslation} from "react-i18next";
 import {useEffect} from "react";
-import {globalConfig} from "../../assets/GlobalConfig";
-import {TextValue} from "../../assets/TextValue";
-import {useLoading} from "../../Components/LoadingContext";  // Adjust the path based on your directory structure
+import './LoginForm.css';
+import {globalConfig} from "../../Assets/GlobalConfig";
+import Cookies from 'universal-cookie';
 
 type LoginFormProps = {
     onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 };
 
 export default function LoginForm({onSubmit}: LoginFormProps) {
-    const {loading} = useLoading();
+    const {t, i18n} = useTranslation();
+    const cookies = new Cookies();
+
+    const onLanguageChange = (event: CustomEvent) => {
+        const language = event.detail.selectedOption.dataset.key;
+        i18n.changeLanguage(language);
+
+        const tenYearsFromNow = new Date();
+        tenYearsFromNow.setFullYear(tenYearsFromNow.getFullYear() + 10);
+
+        cookies.set('userLanguage', language, { path: '/', expires: tenYearsFromNow });
+    };
+
+    useEffect(() => {
+        const userLanguage = cookies.get('userLanguage');
+        const browserLang = userLanguage??navigator.language.split('-')[0]; // Gets the browser language
+        const availableLanguages = ['en', 'es']; // Add more languages if you support them
+        const defaultLang = 'en'; // Fallback language if browser language is not supported
+
+        // If the browser language is in the list of available languages, use it, otherwise fallback to default
+        const languageToSet = availableLanguages.includes(browserLang) ? browserLang : defaultLang;
+        i18n.changeLanguage(languageToSet);
+    }, []);
+
     return (
-        <>
-            {loading && <CircularProgressOverlay/>}
-            <LoginThemeProvider>
-                <Container component="main" maxWidth="xs">
-                    <CssBaseline/>
-                    <Box
-                        sx={{
-                            marginTop: 8,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
-                            <LockOutlinedIcon/>
-                        </Avatar>
-                        <Typography component="h1" variant="h5">
-                            WMS
-                        </Typography>
-                        <Box component="form" onSubmit={onSubmit} noValidate sx={{mt: 1}}>
-                            <TextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                name="username"
-                                label={TextValue.Code}
-                                type="password"
-                                id="username"
-                                autoComplete="current-password"
-                            />
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                sx={{mt: 3, mb: 2}}
-                            >
-                                Entrar
-                            </Button>
-                        </Box>
-                    </Box>
-                </Container>
-            </LoginThemeProvider>
-        </>
+        <div className="loginBox">
+            <div className="loginFormContainer">
+                <div className="loginFormTitle">
+                    {globalConfig?.companyName}
+                </div>
+                <div className="loginFormSubTitle">
+                    {t('login')}
+                </div>
+                <Form onSubmit={onSubmit}>
+                    <FormItem label={t('code')}>
+                        <Input style={{width: '100%'}} required name="username" type="Password" />
+                    </FormItem>
+                    <FormItem label={t('language')}>
+                        <Select style={{width: '100%'}} onChange={onLanguageChange}>
+                            <Option selected={i18n.language === "en"} data-key="en">English</Option>
+                            <Option selected={i18n.language === "es"} data-key="es">Español</Option>
+                        </Select>
+                    </FormItem>
+                    <FormItem>
+                        <Button design="Emphasized" type="Submit">
+                            {t('enter')}
+                        </Button>
+                    </FormItem>
+                </Form>
+            </div>
+        </div>
     );
 }

@@ -1,29 +1,42 @@
 import ContentTheme from "../Components/ContentTheme";
-import {TextValue} from "../assets/TextValue";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import Box from "@mui/material/Box";
-import {Alert, Button, TextField} from "@mui/material";
-import DoneIcon from "@mui/icons-material/Done";
-import React, {useRef} from "react";
-import {useLoading} from "../Components/LoadingContext";
-import {itemCheck, ItemCheckResponse, updateItemBarCode} from "./ItemCheck/Item";
-import {ResponseStatus} from "../assets/Common";
-import {StringFormat} from "../assets/Functions";
+import React, {useEffect, useRef} from "react";
+import {useThemeContext} from "../Components/ThemeContext";
+import {
+    itemCheck,
+    ItemCheckResponse,
+    updateItemBarCode,
+} from "./ItemCheck/Item";
 import ItemCheckMultipleResult from "./ItemCheck/ItemCheckMultipleResult";
 import ItemCheckResult from "./ItemCheck/ItemCheckResult";
+import {useTranslation} from "react-i18next";
+import {
+    Button,
+    Form,
+    FormItem,
+    Icon,
+    Input, InputDomRef,
+    MessageStrip, MessageStripDesign,
+} from "@ui5/webcomponents-react";
+import {ResponseStatus} from "../Assets/Common";
+import {StringFormat} from "../Assets/Functions";
 
 export default function ItemCheck() {
-    const [barcodeInput, setBarcodeInput] = React.useState('');
-    const [itemCodeInput, setItemCodeInput] = React.useState('');
+    const {t} = useTranslation();
+    const [barcodeInput, setBarcodeInput] = React.useState("");
+    const [itemCodeInput, setItemCodeInput] = React.useState("");
     const [result, setResult] = React.useState<ItemCheckResponse[] | null>(null);
-    const {setLoading} = useLoading();
+    const {setLoading, setAlert} = useThemeContext();
+    const barcodeInputRef = useRef<InputDomRef>(null);
 
-    function handleCheckSubmit(e: React.FormEvent) {
-        e.preventDefault();
+    useEffect(() => {
+        setTimeout(() => barcodeInputRef.current?.focus(), 1);
+    }, []);
+
+    function handleCheckSubmit() {
         let barcodeLength = barcodeInput.length === 0;
         let itemCodeLength = itemCodeInput.length === 0;
         if (barcodeLength && itemCodeLength) {
-            window.alert(TextValue.BarcodeOrItemRequired);
+            setAlert({message: t("barcodeOrItemRequired"), type: MessageStripDesign.Warning});
             return;
         }
 
@@ -36,43 +49,55 @@ export default function ItemCheck() {
             .then(function (items) {
                 setResult(items);
             })
-            .catch(error => window.alert({message: `Item Check Error: ${error}`, severity: 'error'}))
+            .catch((error) =>
+                setAlert({
+                    message: `Item Check Error: ${error}`,
+                    type: MessageStripDesign.Negative,
+                })
+            )
             .finally(() => setLoading(false));
     }
 
-    function handleUpdateSubmit(checkedBarcodes: string[], newBarcode: string) {
+    function handleUpdateSubmit(itemCode: string, checkedBarcodes: string[], newBarcode: string) {
         setLoading(true);
-        executeUpdateItemBarcode(itemCodeInput, checkedBarcodes, newBarcode);
+        executeUpdateItemBarcode(itemCode, checkedBarcodes, newBarcode);
     }
 
-    function executeUpdateItemBarcode(itemCode: string, checkedBarcodes: string[], newBarcode: string) {
+    function executeUpdateItemBarcode(
+        itemCode: string,
+        checkedBarcodes: string[],
+        newBarcode: string
+    ) {
         updateItemBarCode(itemCode, checkedBarcodes, newBarcode)
             .then((response) => {
                 if (response.status === ResponseStatus.Ok) {
-                    executeItemCheck(itemCode, '');
+                    executeItemCheck(itemCode, "");
                 } else {
                     if (response.existItem != null) {
-                        window.alert(`Barcode ${newBarcode} already exists for item ${response.existItem}`);
+                        setAlert({message: `Barcode ${newBarcode} already exists for item ${response.existItem}`, type: MessageStripDesign.Warning});
                     } else {
-                        window.alert(response.errorMessage ?? 'Unknown error');
+                        setAlert({message: response.errorMessage ?? "Unknown error", type: MessageStripDesign.Negative});
                     }
                     setLoading(false);
                 }
             })
-            .catch(error => {
-                window.alert(`Item Check Error: ${error}`);
+            .catch((error) => {
+                setAlert({message: `Item Check Error: ${error}`, type: MessageStripDesign.Negative});
                 setLoading(false);
             })
             .finally(function () {
                 setResult(result);
-            })
+            });
     }
 
     async function handleSetBarcodeItem(index: number) {
-        if (result == null)
-            return;
+        if (result == null) return;
         let itemCode: string = result[index].itemCode;
-        if (!window.confirm(StringFormat(TextValue.ConfirmItemBarCode, itemCode, barcodeInput))) {
+        if (
+            !window.confirm(
+                StringFormat(t("confirmItemBarCode"), itemCode, barcodeInput)
+            )
+        ) {
             return;
         }
         setLoading(true);
@@ -80,64 +105,74 @@ export default function ItemCheck() {
             if (i === index) {
                 continue;
             }
-            await updateItemBarCode(result[i].itemCode, [barcodeInput], '');
+            await updateItemBarCode(
+                result[i].itemCode,
+                [barcodeInput],
+                ""
+            );
         }
-        executeItemCheck(itemCode, '');
+        executeItemCheck(itemCode, "");
     }
 
     function handleClear() {
-        setItemCodeInput('');
-        setBarcodeInput('');
+        setItemCodeInput("");
+        setBarcodeInput("");
         setResult(null);
     }
 
-
     return (
-        <ContentTheme title={TextValue.ItemCheck} icon={<CheckBoxIcon/>}>
-            {
-                (result == null || result.length === 0) &&
-                <form onSubmit={handleCheckSubmit}>
-                    <>
-                        <Box mb={1} style={{textAlign: 'center'}}>
-                            <TextField
-                                fullWidth
-                                required={itemCodeInput.length === 0}
-                                disabled={itemCodeInput.length > 0}
-                                label={TextValue.Barcode}
-                                variant="outlined"
-                                value={barcodeInput}
-                                onChange={e => setBarcodeInput(e.target.value)}
-                                autoFocus={true}
-                            />
-                        </Box>
-                        <Box mb={1} style={{textAlign: 'center'}}>
-                            <TextField
-                                fullWidth
-                                required={barcodeInput.length === 0}
-                                disabled={barcodeInput.length > 0}
-                                label={TextValue.Code}
-                                variant="outlined"
-                                value={itemCodeInput}
-                                onChange={e => setItemCodeInput(e.target.value)}
-                            />
-                            <Box mt={1}>
-                                <Button type="submit" variant="contained" color="primary">
-                                    <DoneIcon/>
-                                    {TextValue.Accept}
-                                </Button>
-                            </Box>
-                        </Box>
-                    </>
-                </form>
-            }
-            {
-                result &&
+        <ContentTheme title={t("itemCheck")} icon="complete">
+            {(result == null || result.length === 0) && (
+                <Form>
+                    <FormItem label={t("barcode")}>
+                        <Input
+                            required={itemCodeInput.length === 0}
+                            disabled={itemCodeInput.length > 0}
+                            value={barcodeInput}
+                            onChange={(e) => setBarcodeInput(e.target.value as string)}
+                            ref={barcodeInputRef}
+                        />
+                    </FormItem>
+                    <FormItem label={t("code")}>
+                        <Input
+                            required={barcodeInput.length === 0}
+                            disabled={barcodeInput.length > 0}
+                            value={itemCodeInput}
+                            onChange={(e) => setItemCodeInput(e.target.value as string)}
+                        />
+                    </FormItem>
+                    <FormItem>
+                        <Button onClick={() => handleCheckSubmit()} icon="accept">
+                            {t("accept")}
+                        </Button>
+                    </FormItem>
+                </Form>
+            )}
+            {result && (
                 <>
-                    {result.length === 0 && <Alert variant="filled" severity="error"> {TextValue.NoDataFound} </Alert>}
-                    {result.length === 1 && <ItemCheckResult result={result[0]} clear={handleClear} submit={handleUpdateSubmit}/>}
-                    {result.length > 1 && <ItemCheckMultipleResult barcode={barcodeInput} result={result} clear={handleClear} setBarcodeItem={handleSetBarcodeItem}/>}
+                    <br/>
+                    {result.length === 0 && (
+                        <MessageStrip design="Negative" hideCloseButton>
+                            {t("noDataFound")}
+                        </MessageStrip>
+                    )}
+                    {result.length === 1 && (
+                        <ItemCheckResult
+                            result={result[0]}
+                            clear={handleClear}
+                            submit={handleUpdateSubmit}
+                        />
+                    )}
+                    {result.length > 1 && (
+                        <ItemCheckMultipleResult
+                            barcode={barcodeInput}
+                            result={result}
+                            clear={handleClear}
+                            setBarcodeItem={handleSetBarcodeItem}
+                        />
+                    )}
                 </>
-            }
+            )}
         </ContentTheme>
-    )
+    );
 }

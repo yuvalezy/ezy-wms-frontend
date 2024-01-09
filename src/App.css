@@ -36,3 +36,57 @@
     transform: rotate(360deg);
   }
 }
+
+.disabled-list-item {
+  background-color: #e0e0e0; /* light grey */
+  color: #a0a0a0; /* grey text to indicate disabled */
+  pointer-events: none; /* Prevent mouse interactions */
+}
+
+.homeMenuItemLink {
+  margin: 10px; /* adjust as needed */
+  border: 1px solid #ccc; /* light grey border */
+  border-radius: 8px; /* rounded corners */
+  padding: 20px; /* space inside the box */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* subtle shadow */
+  transition: box-shadow 0.2s ease-in-out; /* smooth transition for shadow */
+  display: block; /* ensures the link fills the space */
+  background-color: white; /* background color */
+  text-decoration: none; /* no underline */
+  color: inherit;
+}
+
+.homeMenuItemLink:hover {
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2); /* darker shadow on hover */
+}
+
+.homeMenuItem {
+  display: flex; /* to center icon and text horizontally */
+  justify-content: center; /* align children to the center */
+  align-items: center; /* align children vertically */
+  text-align: center;
+  color: #0854A0;
+}
+
+.homeMenuItemIcon {
+  margin-right: 8px; /* space between icon and text */
+}
+
+.right {
+  text-align: right;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .homeMenuItemLink {
+    padding: 10px;
+    margin: 5px;
+  }
+}
+
+.completed-row ui5-table-cell {
+  background-color: #e0f7e0 !important;
+}
+.completed-row ui5-table-cell ui5-label {
+  text-decoration: line-through;
+}

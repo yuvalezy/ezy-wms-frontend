@@ -3,12 +3,12 @@ import {useAuth} from "../Components/AppContext";
 import {useState} from "react";
 import {Navigate} from "react-router-dom";
 import LoginForm from "./Login/LoginForm";
-import {useLoading} from "../Components/LoadingContext";
+import {useThemeContext} from "../Components/ThemeContext";
 
 
 export default function Login() {
     const [redirectToHome, setRedirectToHome] = useState(false);
-    const { setLoading} = useLoading();
+    const {setLoading} = useThemeContext();
 
     const {login} = useAuth();
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {

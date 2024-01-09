@@ -1,64 +1,77 @@
-import React from 'react';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogTitle from '@mui/material/DialogTitle';
-import Button from '@mui/material/Button';
-import {TextValue} from "../assets/TextValue";
-import {List, ListItem, ListItemAvatar, ListItemButton, ListItemText} from "@mui/material";
-import Typography from "@mui/material/Typography";
-import Avatar from "@mui/material/Avatar";
-import {blue} from "@mui/material/colors";
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import {Item} from "../assets/Common";
+import React, {forwardRef, useImperativeHandle, useRef} from 'react';
+import {useTranslation} from "react-i18next";
+import {Button, Bar, Dialog, DialogDomRef, Link, List, StandardListItem, Title, Avatar} from "@ui5/webcomponents-react";
+import {Item} from "../Assets/Common";
 
-interface BoxConfirmationDialogProps {
-    open: boolean,
-    onClose: () => void,
-    onSelected: (itemCode: string) => void,
-    itemCode: string;
-    items?: Item[]
+export interface BoxConfirmationDialogRef {
+    show: (show: boolean) => void;
 }
 
-const BoxConfirmationDialog: React.FC<BoxConfirmationDialogProps> = ({open, onClose, onSelected, itemCode, items}) => {
+type BoxConfirmationDialogProps = {
+    onSelected: (itemCode: string) => void;
+    itemCode: string;
+    items?: Item[];
+}
+
+const BoxConfirmationDialog = forwardRef((props: BoxConfirmationDialogProps, ref) => {
+    const {t} = useTranslation();
+    const dialogRef = useRef<DialogDomRef>(null);
+
     let boxes = 0;
-    items?.forEach(item => {
+    props.items?.forEach(item => {
         let boxNumber = item.boxNumber ?? 0;
         if (boxNumber > boxes) {
             boxes = boxNumber;
         }
     });
+    useImperativeHandle(ref, () => ({
+        show(show: boolean) {
+            if (show) {
+                dialogRef?.current?.show();
+            } else {
+                dialogRef?.current?.close();
+            }
+        }
+    }))
 
     return (
-        <Dialog open={open} onClose={onClose}>
-            <DialogTitle>
-                <Typography variant="h5">
-                    {TextValue.Item}: {itemCode}
-                </Typography>
-                <Typography variant="h6">
-                    {TextValue.SelectBox}
-                </Typography>
-            </DialogTitle>
-            <List sx={{pt: 0}}>
-                {items?.map((item, i) => (
-                    <ListItem disableGutters key={i}>
-                        <ListItemButton onClick={() => onSelected(item.code)}>
-                            <ListItemAvatar>
-                                <Avatar sx={{bgcolor: blue[100], color: blue[600]}}>
-                                    <ArrowRightIcon/>
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText primary={`${item.boxNumber} ${TextValue.Of} ${boxes}`}/>
-                        </ListItemButton>
-                    </ListItem>
+        <Dialog
+            className="footerPartNoPadding"
+            ref={dialogRef}
+            footer={
+                <Bar
+                    design="Footer"
+                    endContent={
+                        <Button onClick={() => dialogRef?.current?.close()}>
+                            {t("close")}
+                        </Button>
+                    }
+                />
+            }
+        >
+            <Title level="H5">
+                {t('item')}: {props.itemCode}
+            </Title>
+            <Title level="H6">
+                {t('selectBox')}
+            </Title>
+            <List>
+                {props.items?.map((item, i) => (
+                    <StandardListItem key={i}>
+                        <Link onClick={() => props.onSelected(item.code)}>
+                            <Avatar
+                                colorScheme="Accent6"
+                                icon="slim-arrow-right"
+                                shape="Circle"
+                                size="XS"
+                            />
+                            {`${item.boxNumber} ${t('of')} ${boxes}`}
+                        </Link>
+                    </StandardListItem>
                 ))}
             </List>
-            <DialogActions style={{justifyContent: 'center'}}>
-                <Button onClick={onClose} color="error">
-                    {TextValue.Cancel}
-                </Button>
-            </DialogActions>
         </Dialog>
     );
-}
+});
 
 export default BoxConfirmationDialog;
