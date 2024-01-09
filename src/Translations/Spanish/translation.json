@@ -8,6 +8,9 @@
   "picking": "Picking",
   "pickSupervisor": "Supervisor de Picking",
   "pickReport": "Reporte de Picking",
+  "counting": "Conteo",
+  "countingSupervisor": "Supervisor de Conteo",
+  "countingReport": "Reporte de Conteo",
 
   "login": "Entrada de Usuario",
   "enter": "Entrar",

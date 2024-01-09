@@ -7,7 +7,7 @@ import {AuthProvider} from "./Components/AppContext";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import Unauthorized from "./Components/Unauthorized";
 import NotFound from "./Components/NotFound";
-import ItemCheck from "./Pages/ItemCheck";
+import ItemCheck from "./Pages/ItemCheck/ItemCheck";
 import {Authorization} from "./Assets/Authorization";
 import PickingSupervisor from "./Pages/Picking/PickingSupervisor";
 import Picking from "./Pages/Picking/Picking";
@@ -19,6 +19,9 @@ import GoodsReceiptSupervisor from "./Pages/GoodsReceipt/GoodsReceiptSupervisor"
 import GoodsReceiptReport from "./Pages/GoodsReceipt/GoodsReceiptReport";
 import GoodsReceiptVSExitReport from "./Pages/GoodsReceipt/GoodsReceiptVSExitReport";
 import GoodsReceiptAll from './Pages/GoodsReceipt/GoodsReceiptAll';
+import Counting from "./Pages/Counting/Counting";
+import CountingProcess from "./Pages/Counting/CountingProcess";
+import CountingSupervisor from "./Pages/Counting/CountingSupervisor";
 
 export default function App() {
     return (
@@ -28,6 +31,10 @@ export default function App() {
                     <Route path="/login" element={<LoginPage/>}/>
                     <Route path="/unauthorized" element={<Unauthorized/>}/>
                     <Route path="/itemCheck" element={<ProtectedRoute authorizations={[Authorization.GOODS_RECEIPT_SUPERVISOR, Authorization.PICKING_SUPERVISOR]} element={<ItemCheck/>}/>}/>
+                    {/*Counting*/}
+                    <Route path="/counting" element={<ProtectedRoute authorization={Authorization.COUNTING} element={<Counting/>}/>}/>
+                    <Route path="/counting/:scanCode" element={<ProtectedRoute authorization={Authorization.COUNTING} element={<CountingProcess/>}/>}/>
+                    <Route path="/countingSupervisor" element={<ProtectedRoute authorization={Authorization.COUNTING_SUPERVISOR} element={<CountingSupervisor/>}/>}/>
                     {/*Goods Receipt*/}
                     <Route path="/goodsReceipt" element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT} element={<GoodsReceipt/>}/>}/>
                     <Route path="/goodsReceipt/:scanCode" element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT} element={<GoodsReceiptProcess/>}/>}/>

@@ -1,24 +1,23 @@
-import ContentTheme from "../Components/ContentTheme";
+import ContentTheme from "../../Components/ContentTheme";
 import React, {useEffect, useRef} from "react";
-import {useThemeContext} from "../Components/ThemeContext";
+import {useThemeContext} from "../../Components/ThemeContext";
 import {
     itemCheck,
     ItemCheckResponse,
     updateItemBarCode,
-} from "./ItemCheck/Item";
-import ItemCheckMultipleResult from "./ItemCheck/ItemCheckMultipleResult";
-import ItemCheckResult from "./ItemCheck/ItemCheckResult";
+} from "./Item";
+import ItemCheckMultipleResult from "./ItemCheckMultipleResult";
+import ItemCheckResult from "./ItemCheckResult";
 import {useTranslation} from "react-i18next";
 import {
     Button,
     Form,
     FormItem,
-    Icon,
     Input, InputDomRef,
     MessageStrip, MessageStripDesign,
 } from "@ui5/webcomponents-react";
-import {ResponseStatus} from "../Assets/Common";
-import {StringFormat} from "../Assets/Functions";
+import {ResponseStatus} from "../../Assets/Common";
+import {StringFormat} from "../../Assets/Functions";
 
 export default function ItemCheck() {
     const {t} = useTranslation();

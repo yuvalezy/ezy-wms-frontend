@@ -5,6 +5,8 @@ import "@ui5/webcomponents-icons/dist/complete.js"
 import "@ui5/webcomponents-icons/dist/cause.js"
 import "@ui5/webcomponents-icons/dist/cart-2.js"
 import "@ui5/webcomponents-icons/dist/kpi-managing-my-area.js"
+import "@ui5/webcomponents-icons/dist/product.js"
+import "@ui5/webcomponents-icons/dist/factory.js"
 import "@ui5/webcomponents-icons/dist/manager-insight.js"
 import "@ui5/webcomponents-icons/dist/cancel.js"
 import "@ui5/webcomponents-icons/dist/add.js"
@@ -71,12 +73,30 @@ export function useMenus() {
             Authorization: Authorization.PICKING_SUPERVISOR,
             Icon: "kpi-managing-my-area",
         },
+        // {
+        //     Link: "/pickReport",
+        //     Text: t('pickReport'),
+        //     Authorization: Authorization.PICKING_SUPERVISOR,
+        //     Icon: "manager-insight",
+        // },
         {
-            Link: "/pickReport",
-            Text: t('pickReport'),
-            Authorization: Authorization.PICKING_SUPERVISOR,
-            Icon: "manager-insight",
+            Link: "/counting",
+            Text: t('counting'),
+            Authorization: Authorization.COUNTING,
+            Icon: "product",
         },
+        {
+            Link: "/countingSupervisor",
+            Text: t('countingSupervisor'),
+            Authorization: Authorization.COUNTING_SUPERVISOR,
+            Icon: "factory",
+        },
+        // {
+        //     Link: "/countingReport",
+        //     Text: t('countingReport'),
+        //     Authorization: Authorization.COUNTING_SUPERVISOR,
+        //     Icon: "manager-insight",
+        // },
     ];
 
     const GetMenus = (authorizations: Authorization[] | undefined) => {

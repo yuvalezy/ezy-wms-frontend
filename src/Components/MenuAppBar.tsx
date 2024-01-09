@@ -46,7 +46,7 @@ const MenuAppBar: React.FC<MenuAppBarProps> = ({title, icon, back}) => {
             onLogoClick={() => navigate('/')}
             onMenuItemClick={handleMenuClicked}
             menuItems={authorizedMenus.map((item, index) => (
-                <StandardListItem className={location.pathname !== item.Link ? '' : 'disabled-list-item'} key={index} icon={item.Icon} data-key={index}>{item.Text}</StandardListItem>))}
+                <StandardListItem selected={location.pathname === item.Link} key={index} icon={item.Icon} data-key={index}>{item.Text}</StandardListItem>))}
             primaryTitle={title}
         >
             {back &&

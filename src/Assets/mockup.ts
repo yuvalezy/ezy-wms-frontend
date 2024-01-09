@@ -2,6 +2,7 @@ import {ResponseStatus} from "./Common";
 import {DeliveryOpenDocument} from "./Deliveries";
 import {PickingDocument, PickingDocumentDetail, PickingDocumentDetailItem, PickStatus} from "../Pages/Picking/Data/PickingDocument";
 import {ProcessResponse} from "./Document";
+import {Counting} from "./Counting";
 
 enum UpdateLineReturnValue {
     Status = "Status",
@@ -344,3 +345,21 @@ export const DeliveryOpenDocuments: DeliveryOpenDocument[] = [
         address: "Fuldastieg 3\r\r21079 Hamburg GERMANY"
     }
 ];
+export const countingMockup : Counting = {
+    id: 1,
+    name: "Mock Document",
+    date: "2023-11-03",
+    employee: {
+        id: 5678,
+        name: "John Doe",
+    },
+    status: DocumentStatus.InProgress,
+    statusDate: "2023-11-03",
+    statusEmployee: {
+        id: 5678,
+        name: "John Doe",
+    },
+    error: false,
+    errorCode: 0,
+    errorParameters: [],
+};

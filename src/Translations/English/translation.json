@@ -8,6 +8,9 @@
   "picking": "Picking",
   "pickSupervisor": "Picking Supervisor",
   "pickReport": "Picking Report",
+  "counting": "Counting",
+  "countingSupervisor": "Counting Supervisor",
+  "countingReport": "Counting Report",
 
   "login": "Login",
   "enter": "Enter",

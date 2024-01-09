@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../Components/AppContext";
 import { useTranslation } from "react-i18next";
 import ContentTheme from "../Components/ContentTheme";
-import { Grid, Icon } from "@ui5/webcomponents-react";
+import {Grid, Icon} from "@ui5/webcomponents-react";
 import {useMenus} from "../Assets/Menus";
 
 export default function Home() {
@@ -17,7 +17,7 @@ export default function Home() {
                 {menus.GetMenus(user?.authorizations).map((menu, index) => (
                     <Link to={menu.Link} key={index} className="homeMenuItemLink">
                         <div className="homeMenuItem">
-                            <Icon name={menu.Icon} className="homeMenuItemIcon"/>
+                            <Icon design="NonInteractive" name={menu.Icon} className="homeMenuItemIcon"/>
                             <span>{menu.Text}</span>
                         </div>
                     </Link>

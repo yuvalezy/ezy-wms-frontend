@@ -178,6 +178,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         Authorization.GOODS_RECEIPT_SUPERVISOR,
         Authorization.PICKING,
         Authorization.PICKING_SUPERVISOR,
+        Authorization.COUNTING,
+        Authorization.COUNTING_SUPERVISOR,
       ],
     };
 
