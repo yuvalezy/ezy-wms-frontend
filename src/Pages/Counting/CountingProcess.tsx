@@ -11,6 +11,7 @@ import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {configUtils} from "../../Assets/GlobalConfig";
 import {AddItemResponseMultipleValue} from "../../Assets/Document";
 import {scanBarcode} from "../../Assets/ScanBarcode";
+import {useAuth} from "../../Components/AppContext";
 
 export default function CountingProcess() {
     const {scanCode} = useParams();
@@ -21,6 +22,7 @@ export default function CountingProcess() {
     const [enable, setEnable] = useState(true);
     const {setLoading, setAlert} = useThemeContext();
     const [barcodeInput, setBarcodeInput] = React.useState("");
+    const {user } = useAuth();
 
     const title = `${t("counting")} #${scanCode}`;
 
@@ -41,7 +43,8 @@ export default function CountingProcess() {
 
     return (
         <ContentTheme title={title} icon="product">
-            <span>Todo</span>
+            <span>Todo {user?.binLocations??false}</span>
+            test
         </ContentTheme>
     );
 }

@@ -4,6 +4,7 @@ export interface User {
     id: number;
     name: string;
     branch: string;
+    binLocations: boolean;
     authorizations: Authorization[];
 }
 
@@ -13,6 +14,7 @@ export interface Item {
     father: string;
     boxNumber?: number;
 }
+
 export enum ResponseStatus {
     Error = 'Error',
     Ok = 'Ok'
@@ -20,6 +22,6 @@ export enum ResponseStatus {
 
 export function distinctItems(items: Item[]): string[] {
     return items
-        .map(item => item.father??item.code)
+        .map(item => item.father ?? item.code)
         .filter((code, index, array) => array.indexOf(code) === index);
 }

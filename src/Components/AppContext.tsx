@@ -173,6 +173,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       id: 1,
       name: "mockUser",
       branch: "branch",
+      binLocations: true,
       authorizations: [
         Authorization.GOODS_RECEIPT,
         Authorization.GOODS_RECEIPT_SUPERVISOR,
