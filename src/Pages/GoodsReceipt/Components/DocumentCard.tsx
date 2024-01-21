@@ -11,10 +11,11 @@ import {useDocumentStatusToString} from "../../../Assets/DocumentStatusString";
 type DocumentCardProps = {
     doc: Document,
     supervisor: boolean,
-    handleAction: (docId: number, action: 'approve' | 'cancel' | 'qrcode') => void
+    action: (docId: number, action: 'approve' | 'cancel' | 'qrcode') => void,
+    docDetails: (doc: Document) => void
 }
 
-const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor, handleAction}) => {
+const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor, action, docDetails}) => {
     const {t} = useTranslation();
     const o = useObjectName();
     const navigate = useNavigate();
@@ -37,7 +38,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor, handleActio
                         handleOpen(doc.id)
                     }}><strong>{t('number')}:</strong> {doc.id}</a>)}
                     {!handleOpenLink && (<><strong>{t('number')}:</strong> {doc.id}</>)}
-                    <a style={{float: 'right'}} onClick={(e) => handleAction(doc.id, 'qrcode')}>
+                    <a style={{float: 'right'}} onClick={(e) => action(doc.id, 'qrcode')}>
                         <Icon name="qr-code"/>
                     </a>
                 </StandardListItem>
@@ -47,7 +48,10 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor, handleActio
                     </StandardListItem>
                 }
                 {doc.specificDocuments && doc.specificDocuments.length > 0 &&
-                    <StandardListItem><strong>{t('documentsList')}: </strong>
+                    <StandardListItem><a href="#" onClick={e => {
+                        e.preventDefault();
+                        docDetails(doc);
+                    }}><strong>{t('documentsList')}: </strong>
                         {
                             doc.specificDocuments.map(
                                 (value) => {
@@ -58,17 +62,17 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor, handleActio
                                 </span>;
                                 }
                             )
-                        }</StandardListItem>}
+                        }</a></StandardListItem>}
                 <StandardListItem><strong>{t('docDate')}:</strong> {new Date(doc.date).toLocaleDateString()}</StandardListItem>
                 <StandardListItem><strong>{t('createdBy')}:</strong> {doc.employee.name}</StandardListItem>
                 <StandardListItem><strong>{t('status')}:</strong> {documentStatusToString(doc.status)}</StandardListItem>
                 {supervisor &&
                     <StandardListItem>
                         {doc.status === DocumentStatus.InProgress && (
-                            <Button style={{marginRight: '10px'}} color="primary" onClick={() => handleAction(doc.id, 'approve')} icon="complete">
+                            <Button style={{marginRight: '10px'}} color="primary" onClick={() => action(doc.id, 'approve')} icon="complete">
                                 {t('finish')}
                             </Button>)}
-                        <Button icon="cancel" onClick={() => handleAction(doc.id, 'cancel')}>
+                        <Button icon="cancel" onClick={() => action(doc.id, 'cancel')}>
                             {t('cancel')}
                         </Button>
                     </StandardListItem>

@@ -12,6 +12,7 @@ import {StringFormat} from "../../Assets/Functions";
 import QRDialog, {QRDialogRef} from "../../Components/QRDialog";
 import {globalSettings} from "../../Assets/GlobalConfig";
 import {Authorization} from "../../Assets/Authorization";
+import DocumentListDialog, {DocumentListDialogRef} from "./Components/DocumentListDialog";
 
 export default function GoodsReceiptSupervisor() {
     const qrRef = useRef<QRDialogRef>(null);
@@ -21,9 +22,11 @@ export default function GoodsReceiptSupervisor() {
     const {setLoading, setAlert} = useThemeContext();
     const [documents, setDocuments] = useState<Document[]>([]);
     const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(null);
+    const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
     const [actionType, setActionType] = useState<DocumentAction | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
     const errorAlert = (message: string) => setAlert({message: message, type: MessageStripDesign.Negative});
+    const documentListDialogRef = useRef<DocumentListDialogRef>(null);
 
     useEffect(() => {
         setSupervisor(user?.authorizations.filter((v) => v === Authorization.GOODS_RECEIPT_SUPERVISOR).length === 1);
@@ -38,6 +41,11 @@ export default function GoodsReceiptSupervisor() {
             })
             .finally(() => setLoading(false));
     }, []);
+
+    function handleDocDetails(doc: Document) {
+        setSelectedDocument(doc);
+        documentListDialogRef?.current?.show();
+    }
 
     const handleAction = (docId: number, action: DocumentAction) => {
         setSelectedDocumentId(docId);
@@ -93,7 +101,7 @@ export default function GoodsReceiptSupervisor() {
             <br/>
             <br/>
             {documents.map((doc) => (
-                <DocumentCard supervisor={supervisor} key={doc.id} doc={doc} handleAction={handleAction}/>
+                <DocumentCard supervisor={supervisor} key={doc.id} doc={doc} action={handleAction} docDetails={handleDocDetails}/>
             ))}
             <MessageBox
                 onClose={(e) => {
@@ -116,6 +124,7 @@ export default function GoodsReceiptSupervisor() {
                 <br/> {t('actionCannotReverse')}
             </MessageBox>
             <QRDialog ref={qrRef} onClose={handleCloseQR} prefix="GRPO" id={selectedDocumentId}/>
+            <DocumentListDialog ref={documentListDialogRef} doc={selectedDocument}/>
         </ContentTheme>
     );
 }
