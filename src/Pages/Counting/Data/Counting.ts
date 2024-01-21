@@ -1,9 +1,8 @@
 import {configUtils, delay, globalConfig} from "../../../Assets/GlobalConfig";
 import {countingMockup, documentMockup} from "../../../Assets/mockup";
-import {BusinessPartner} from "../../../Assets/Data";
 import {DocumentAction, DocumentStatus} from "../../../Assets/Document";
 import axios from "axios";
-import {Counting, OrderBy} from "../../../Assets/Counting";
+import {Counting, CountingContent, OrderBy} from "../../../Assets/Counting";
 import {User} from "../../../Assets/Common";
 
 export const createCounting = async (
@@ -136,3 +135,40 @@ export const fetchCountings = async (
         throw error;
     }
 };
+
+export const fetchCountingContent = async (id: number, binEntry?: number): Promise<CountingContent[]> => {
+    try {
+        if (configUtils.isMockup) {
+            console.log("Mockup data is being used.");
+            //todo return mockup
+        }
+
+        if (!globalConfig)
+            throw new Error("Config has not been initialized!");
+
+        if (globalConfig.debug)
+            await delay();
+
+        const access_token = localStorage.getItem("token");
+
+        const url = `${globalConfig.baseURL}/api/Counting/CountingContent`;
+
+        const response = await axios.post<CountingContent[]>(
+            url,
+            {
+                id: id,
+                binEntry: binEntry
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${access_token}`,
+                },
+            }
+        );
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching countings:", error);
+        throw error;
+    }
+}

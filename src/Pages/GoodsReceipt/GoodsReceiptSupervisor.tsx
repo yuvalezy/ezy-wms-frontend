@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import {useAuth} from "../../Components/AppContext";
 import ContentTheme from "../../Components/ContentTheme";
 import DocumentForm from "./Components/DocumentForm";
-import { documentAction, fetchDocuments,} from "./Data/Document";
+import {documentAction, fetchDocuments,} from "./Data/Document";
 import DocumentCard from "./Components/DocumentCard";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
@@ -10,21 +10,23 @@ import {MessageBox, MessageBoxActions, MessageStripDesign} from "@ui5/webcompone
 import {Document, DocumentAction} from "../../Assets/Document";
 import {StringFormat} from "../../Assets/Functions";
 import QRDialog, {QRDialogRef} from "../../Components/QRDialog";
+import {globalSettings} from "../../Assets/GlobalConfig";
+import {Authorization} from "../../Assets/Authorization";
 
 export default function GoodsReceiptSupervisor() {
     const qrRef = useRef<QRDialogRef>(null);
     const {user} = useAuth();
+    const [supervisor, setSupervisor] = useState(false);
     const {t} = useTranslation();
     const {setLoading, setAlert} = useThemeContext();
     const [documents, setDocuments] = useState<Document[]>([]);
-    const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(
-        null
-    );
+    const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(null);
     const [actionType, setActionType] = useState<DocumentAction | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
     const errorAlert = (message: string) => setAlert({message: message, type: MessageStripDesign.Negative});
 
     useEffect(() => {
+        setSupervisor(user?.authorizations.filter((v) => v === Authorization.GOODS_RECEIPT_SUPERVISOR).length === 1);
         setLoading(true);
         fetchDocuments()
             .then((data) => {
@@ -70,8 +72,18 @@ export default function GoodsReceiptSupervisor() {
         qrRef?.current?.show(false);
     }
 
+    function getTitle(): string {
+        let title = t("goodsReceiptSupervisor");
+        if (!globalSettings?.grpoCreateSupervisorRequired ?? false) {
+            if (!supervisor) {
+                title = t("goodsReceiptCreation");
+            }
+        }
+        return title;
+    }
+
     return (
-        <ContentTheme title={t("goodsReceiptSupervisor")} icon="kpi-managing-my-area">
+        <ContentTheme title={getTitle()} icon="kpi-managing-my-area">
             <DocumentForm
                 onError={errorAlert}
                 onNewDocument={(newDocument) =>
@@ -81,7 +93,7 @@ export default function GoodsReceiptSupervisor() {
             <br/>
             <br/>
             {documents.map((doc) => (
-                <DocumentCard key={doc.id} doc={doc} handleAction={handleAction}/>
+                <DocumentCard supervisor={supervisor} key={doc.id} doc={doc} handleAction={handleAction}/>
             ))}
             <MessageBox
                 onClose={(e) => {
@@ -101,7 +113,7 @@ export default function GoodsReceiptSupervisor() {
                         : t("confirmCancelDocument"),
                     selectedDocumentId
                 )}
-                <br /> {t('actionCannotReverse')}
+                <br/> {t('actionCannotReverse')}
             </MessageBox>
             <QRDialog ref={qrRef} onClose={handleCloseQR} prefix="GRPO" id={selectedDocumentId}/>
         </ContentTheme>

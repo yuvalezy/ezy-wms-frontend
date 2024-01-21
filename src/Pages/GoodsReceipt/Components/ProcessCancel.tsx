@@ -8,10 +8,11 @@ import {
 } from "@ui5/webcomponents-react";
 import {ProcessAlertValue} from "./ProcessAlert";
 import {useThemeContext} from "../../../Components/ThemeContext";
-import { fetchReasons, ReasonValue, } from "../Data/Document";
+import {fetchReasons, ReasonValue,} from "../Data/Document";
 import {useTranslation} from "react-i18next";
 import {updateLine} from "../Data/GoodsReceiptProcess";
 import {UpdateLineReturnValue} from "../../../Assets/Document";
+import {configUtils} from "../../../Assets/GlobalConfig";
 
 export interface ProcessCancelRef {
     show: (show: boolean) => void;
@@ -145,17 +146,19 @@ const ProcessCancel = forwardRef((props: ProcessCancelProps, ref) => {
                     />
 
                 </FormItem>
-                <FormItem label={t("supervisorCode")}>
-                    <Input
-                        required
-                        name="username"
-                        ref={usernameRef}
-                        type="Password"
-                        id="username"
-                        value={userName}
-                        onChange={(e) => setUserName(e.target.value as string)}
-                    ></Input>
-                </FormItem>
+                {configUtils.grpoModificationSupervisor &&
+                    <FormItem label={t("supervisorCode")}>
+                        <Input
+                            required
+                            name="username"
+                            ref={usernameRef}
+                            type="Password"
+                            id="username"
+                            value={userName}
+                            onChange={(e) => setUserName(e.target.value as string)}
+                        ></Input>
+                    </FormItem>
+                }
                 <FormItem label={t("reason")}>
                     <ComboBox
                         onSelectionChange={(e) =>

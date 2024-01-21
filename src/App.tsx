@@ -22,8 +22,18 @@ import GoodsReceiptAll from './Pages/GoodsReceipt/GoodsReceiptAll';
 import Counting from "./Pages/Counting/Counting";
 import CountingProcess from "./Pages/Counting/CountingProcess";
 import CountingSupervisor from "./Pages/Counting/CountingSupervisor";
+import {globalSettings} from "./Assets/GlobalConfig";
 
 export default function App() {
+    function getGoodsReceiptSupervisorAuthorizations() {
+        let authorizations = [Authorization.GOODS_RECEIPT_SUPERVISOR];
+        if (globalSettings?.grpoCreateSupervisorRequired) {
+            return;
+        }
+        authorizations.push(Authorization.GOODS_RECEIPT)
+        return authorizations;
+    }
+
     return (
         <AuthProvider>
             <BrowserRouter>
@@ -38,7 +48,7 @@ export default function App() {
                     {/*Goods Receipt*/}
                     <Route path="/goodsReceipt" element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT} element={<GoodsReceipt/>}/>}/>
                     <Route path="/goodsReceipt/:scanCode" element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT} element={<GoodsReceiptProcess/>}/>}/>
-                    <Route path="/goodsReceiptSupervisor" element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT_SUPERVISOR} element={<GoodsReceiptSupervisor/>}/>}/>
+                    <Route path="/goodsReceiptSupervisor" element={<ProtectedRoute authorizations={getGoodsReceiptSupervisorAuthorizations()} element={<GoodsReceiptSupervisor/>}/>}/>
                     <Route path="/goodsReceiptReport" element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT_SUPERVISOR} element={<GoodsReceiptReport/>}/>}/>
                     <Route path="/goodsReceiptVSExitReport/:scanCode" element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT_SUPERVISOR} element={<GoodsReceiptVSExitReport/>}/>}/>
                     <Route path="/goodsReceiptReportAll/:scanCode" element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT_SUPERVISOR} element={<GoodsReceiptAll/>}/>}/>

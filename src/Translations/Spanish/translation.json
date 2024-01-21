@@ -2,7 +2,8 @@
   "home": "Inicio",
   "itemCheck": "Revision de Articulo",
   "goodsReceipt": "Entrada",
-  "goodsReceiptSupervisor": "Supervisor de Entrada",
+  "goodsReceiptSupervisor": "Supervisor de Entradas",
+  "goodsReceiptCreation": "Creación de Entradas",
   "goodsReceiptReport": "Reporte de Entradas",
   "goodsReceiptVSExit": "Reporte de Entradas vs Salida",
   "picking": "Picking",
@@ -55,6 +56,7 @@
   "processingStatus": "Procesando",
 
   "type": "Tipo",
+  "bin": "Ubicación",
   "item": "Articulo",
   "vendor": "Proveedor",
   "number": "Número",
@@ -98,10 +100,12 @@
   "specificDocuments": "Documentos Especificos",
   "documentsList": "Lista de Documentos",
   "openDocuments": "Documentos Abiertos",
+  "nodata": "No hay datos",
 
   "selectVendor": "Seleccione el Proveedor",
   "selectBox": "Seleccione la Caja",
 
+  "scanBinLocation": "Escanear la Ubicación",
   "pickingNotFound": "Picking #{0} no es válido",
   "pickingStatusError": "El estado del picking #{0} es {1}.\nNo se puede continuar.",
   "pickingProcessSuccess": "La selección del artículo {0} se realizó con éxito.",

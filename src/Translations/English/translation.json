@@ -3,6 +3,7 @@
   "itemCheck": "Item Check",
   "goodsReceipt": "Goods Receipt",
   "goodsReceiptSupervisor": "Goods Receipt Supervisor",
+  "goodsReceiptCreation": "Goods Receipt Creation",
   "goodsReceiptReport": "Goods Receipt Report",
   "goodsReceiptVSExit": "Goods Receipt vs Exit",
   "picking": "Picking",
@@ -55,6 +56,7 @@
   "processingStatus": "Processing",
 
   "type": "Type",
+  "bin": "Bin Location",
   "item": "Item",
   "vendor": "Vendor",
   "number": "Number",
@@ -98,10 +100,12 @@
   "specificDocuments": "Specific Documents",
   "documentsList": "Documents List",
   "openDocuments": "Open Documents",
+  "nodata": "No Data",
 
   "selectVendor": "Select Vendor",
   "selectBox": "Select Box",
 
+  "scanBinLocation": "Scan Bin Location",
   "pickingNotFound": "Picking #{0} is not valid",
   "pickingStatusError": "The status of the picking #{0} is {1}.\nCannot continue.",
   "pickingProcessSuccess": "Picking of item {0} was successfully",

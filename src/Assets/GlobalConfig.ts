@@ -1,14 +1,25 @@
 import {Config} from "../Components/AppContext";
+import {ApplicationSettings} from "./Common";
 
 export let globalConfig: Config | null = null;
+export let globalSettings: ApplicationSettings | null = null;
 
-export const setGlobalConfig = (config: Config) => {
-    globalConfig = config;
+export type setGlobalConfigProps = {
+    config?: Config
+    settings?: ApplicationSettings
+}
+
+export const setGlobalConfig = (props: setGlobalConfigProps) => {
+    globalConfig = props.config??globalConfig;
+    globalSettings = props?.settings??globalSettings;
 }
 
 export const configUtils = {
     get isMockup(): boolean {
         return globalConfig?.mockup ?? false;
+    },
+    get grpoModificationSupervisor(): boolean {
+        return globalSettings?.grpoModificationSupervisor??false;
     }
 };
 

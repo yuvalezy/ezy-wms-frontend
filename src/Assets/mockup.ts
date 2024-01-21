@@ -1,8 +1,8 @@
-import {ResponseStatus} from "./Common";
+import {BinLocation, ResponseStatus} from "./Common";
 import {DeliveryOpenDocument} from "./Deliveries";
 import {PickingDocument, PickingDocumentDetail, PickingDocumentDetailItem, PickStatus} from "../Pages/Picking/Data/PickingDocument";
 import {ProcessResponse} from "./Document";
-import {Counting} from "./Counting";
+import {Counting, CountingContent} from "./Counting";
 
 enum UpdateLineReturnValue {
     Status = "Status",
@@ -363,3 +363,31 @@ export const countingMockup : Counting = {
     errorCode: 0,
     errorParameters: [],
 };
+
+
+export const binMockup : BinLocation = {
+    entry: 1,
+    code: "1234",
+}
+
+export const countProcessRows : CountingContent[] = [
+    {code: "test1", name: "test1 name", quantity: 22},
+    {code: "test2", name: "test2 name", quantity: 22},
+    {code: "test3", name: "test3 name", quantity: 22},
+    {code: "test4", name: "test4 name", quantity: 22},
+    {code: "test5", name: "test5 name", quantity: 22},
+    {code: "test6", name: "test6 name", quantity: 22},
+    {code: "test7", name: "test7 name", quantity: 22},
+    {code: "test8", name: "test8 name", quantity: 22},
+    {code: "test9", name: "test9 name", quantity: 22},
+    {code: "test10", name: "test10 name", quantity: 22},
+    {code: "test11", name: "test11 name", quantity: 22},
+    {code: "test12", name: "test12 name", quantity: 22},
+    {code: "test13", name: "test13 name", quantity: 22},
+    {code: "test14", name: "test14 name", quantity: 22},
+    {code: "test15", name: "test15 name", quantity: 22},
+    {code: "test16", name: "test16 name", quantity: 22},
+    {code: "test17", name: "test17 name", quantity: 22},
+    {code: "test18", name: "test18 name", quantity: 22},
+    {code: "test19", name: "test19 name", quantity: 22},
+]

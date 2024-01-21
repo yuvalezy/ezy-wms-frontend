@@ -1,5 +1,5 @@
-import { useTranslation } from 'react-i18next';
-import { Authorization } from "./Authorization";
+import {useTranslation} from 'react-i18next';
+import {Authorization} from "./Authorization";
 import "@ui5/webcomponents-icons/dist/qr-code.js"
 import "@ui5/webcomponents-icons/dist/complete.js"
 import "@ui5/webcomponents-icons/dist/cause.js"
@@ -24,6 +24,7 @@ import "@ui5/webcomponents-icons/dist/save.js"
 import "@ui5/webcomponents-icons/dist/cancel.js"
 import "@ui5/webcomponents-icons/dist/log.js"
 import "@ui5/webcomponents-icons/dist/nav-back.js"
+import {globalSettings} from "./GlobalConfig";
 
 export interface MenuItem {
     Link: string;
@@ -34,7 +35,9 @@ export interface MenuItem {
 }
 
 export function useMenus() {
-    const { t } = useTranslation();
+    const {t} = useTranslation();
+
+    const goodsReceiptSupervisorRoute = "/goodsReceiptSupervisor"
 
     const MenuItems: MenuItem[] = [ // Changed to an array of type MenuItem[]
         {
@@ -50,9 +53,9 @@ export function useMenus() {
             Icon: "cause",
         },
         {
-            Link: "/goodsReceiptSupervisor",
+            Link: goodsReceiptSupervisorRoute,
             Text: t('goodsReceiptSupervisor'),
-            Authorization: Authorization.GOODS_RECEIPT_SUPERVISOR,
+            Authorizations: [Authorization.GOODS_RECEIPT_SUPERVISOR],
             Icon: "kpi-managing-my-area",
         },
         {
@@ -100,17 +103,44 @@ export function useMenus() {
     ];
 
     const GetMenus = (authorizations: Authorization[] | undefined) => {
+        if (authorizations !== undefined) {
+            applySettings(authorizations);
+        }
         return MenuItems.filter(item => {
-            if (item.Authorization === undefined) {
+            if (item.Authorization === undefined && item.Authorizations === undefined) {
                 return true;
             }
             if (authorizations) {
-                return authorizations.includes(item.Authorization);
+                if (item.Authorization !== undefined) {
+                    return authorizations.includes(item.Authorization);
+                }
+                if (item.Authorizations !== undefined) {
+                    if (item.Link === goodsReceiptSupervisorRoute) {
+                        window.console.log(item.Authorizations);
+                    }
+                    for (let itemAuthorization of item.Authorizations) {
+                        if (authorizations.includes(itemAuthorization)) {
+                            return true;
+                        }
+                    }
+                }
             }
             return false;
         });
     };
 
+    function applySettings(authorizations: Authorization[]) {
+        if (globalSettings?.grpoCreateSupervisorRequired) {
+            return;
+        }
+        let menuItem = MenuItems.filter((v) => v.Link === goodsReceiptSupervisorRoute)[0];
+        if (menuItem.Authorizations != null) {
+            menuItem.Authorizations.push(Authorization.GOODS_RECEIPT)
+        }
+        let isSupervisor = authorizations.filter((v) => v === Authorization.GOODS_RECEIPT_SUPERVISOR).length === 1;
+        menuItem.Text = !isSupervisor ? t('goodsReceiptCreation') : t('goodsReceiptSupervisor');
+    }
+
     // It's common to return objects directly rather than an object with properties.
-    return { MenuItems, GetMenus };
+    return {MenuItems, GetMenus};
 }

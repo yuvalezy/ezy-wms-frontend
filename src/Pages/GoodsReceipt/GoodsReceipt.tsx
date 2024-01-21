@@ -42,7 +42,7 @@ export default function GoodsReceipt() {
         fetchDocuments(id, [])
             .then((doc) => {
                 if (doc.length === 0) {
-                    setAlert({message: t("goodsReceiptNotFound"), type: MessageStripDesign.Warning});
+                    setAlert({message: StringFormat(t("goodsReceiptNotFound"), id), type: MessageStripDesign.Warning});
                     return;
                 }
                 const status = doc[0].status;

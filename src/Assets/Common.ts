@@ -6,6 +6,12 @@ export interface User {
     branch: string;
     binLocations: boolean;
     authorizations: Authorization[];
+    settings: ApplicationSettings;
+}
+
+export interface ApplicationSettings {
+    grpoModificationSupervisor: boolean;
+    grpoCreateSupervisorRequired: boolean;
 }
 
 export interface Item {
@@ -13,6 +19,11 @@ export interface Item {
     name: string;
     father: string;
     boxNumber?: number;
+}
+
+export type BinLocation = {
+    entry: number;
+    code: string;
 }
 
 export enum ResponseStatus {

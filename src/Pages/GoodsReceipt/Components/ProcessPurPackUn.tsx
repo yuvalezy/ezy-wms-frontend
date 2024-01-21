@@ -11,6 +11,7 @@ import {useThemeContext} from "../../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {updateLine} from "../Data/GoodsReceiptProcess";
 import {UpdateLineReturnValue} from "../../../Assets/Document";
+import {configUtils} from "../../../Assets/GlobalConfig";
 
 export interface ProcessPurPackUnRef {
     show: (show: boolean) => void;
@@ -72,7 +73,7 @@ const ProcessPurPackUn = forwardRef((props: ProcessPurPackUnProps, ref) => {
             })
             .catch((error) => {
                 console.error(`Error performing update: ${error}`);
-                let errorMessage = error.response?.data["exceptionMessage"]??`Update Line Error: ${error}`;
+                let errorMessage = error.response?.data["exceptionMessage"] ?? `Update Line Error: ${error}`;
                 setAlert({message: errorMessage, type: MessageStripDesign.Negative});
                 setLoading(false);
             });
@@ -116,16 +117,18 @@ const ProcessPurPackUn = forwardRef((props: ProcessPurPackUnProps, ref) => {
                 {props.alert?.barcode}
             </Title>
             <Form onSubmit={handleSubmit}>
-                <FormItem label={t("supervisorCode")}>
-                    <Input
-                        required
-                        name="username"
-                        type="Password"
-                        id="username"
-                        value={userName}
-                        onChange={(e) => setUserName(e.target.value as string)}
-                    ></Input>
-                </FormItem>
+                {configUtils.grpoModificationSupervisor &&
+                    <FormItem label={t("supervisorCode")}>
+                        <Input
+                            required
+                            name="username"
+                            type="Password"
+                            id="username"
+                            value={userName}
+                            onChange={(e) => setUserName(e.target.value as string)}
+                        ></Input>
+                    </FormItem>
+                }
                 <FormItem label={t("purPackUn")}>
                     <Input
                         required

@@ -20,3 +20,8 @@ export type Counting = {
     errorParameters?: any[];
 }
 
+export type CountingContent = {
+    code: string;
+    name: string;
+    quantity: number;
+}
