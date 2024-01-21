@@ -9,26 +9,24 @@ import {
 import {ProcessAlertValue} from "./ProcessAlert";
 import {useThemeContext} from "../../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {updateLine} from "../Data/GoodsReceiptProcess";
-import {configUtils} from "../../../Assets/GlobalConfig";
+import {updateLine} from "../Data/CountingProcess";
 import {UpdateLineReturnValue} from "../../../Assets/Common";
 
-export interface ProcessPurPackUnRef {
+export interface ProcessQuantityRef {
     show: (show: boolean) => void;
 }
 
-export interface ProcessPurPackUnProps {
+export interface ProcessQuantityProps {
     id: number;
     alert: ProcessAlertValue | null;
-    onAccept: (purPackUn: number) => void;
+    onAccept: (quantity: number) => void;
 }
 
-const ProcessPurPackUn = forwardRef((props: ProcessPurPackUnProps, ref) => {
+const ProcessQuantity = forwardRef((props: ProcessQuantityProps, ref) => {
     const {t} = useTranslation();
     const {setLoading, setAlert} = useThemeContext();
-    const [userName, setUserName] = useState("");
-    const [purPackUn, setPurPackUn] = useState<number>(props.alert?.purPackUn ?? 1);
-    const PurPackUnRef = useRef<InputDomRef>(null);
+    const [quantity, setQuantity] = useState<number>(props.alert?.quantity ?? 1);
+    const QuantityRef = useRef<InputDomRef>(null);
     const dialogRef = useRef<DialogDomRef>(null);
 
     function handleSubmit(e: React.FormEvent) {
@@ -37,8 +35,7 @@ const ProcessPurPackUn = forwardRef((props: ProcessPurPackUnProps, ref) => {
         updateLine({
             id: props.id,
             lineID: props.alert?.lineID ?? -1,
-            purPackUn: purPackUn,
-            userName: userName,
+            quantity: quantity,
         })
             .then((value) => {
                 let message: string | null = null;
@@ -52,22 +49,15 @@ const ProcessPurPackUn = forwardRef((props: ProcessPurPackUnProps, ref) => {
                     case UpdateLineReturnValue.CloseReason:
                         message = t("updateLineReason");
                         break;
-                    case UpdateLineReturnValue.SupervisorPassword:
-                        message = t("updateLineWrongSupervisorPassword");
-                        break;
-                    case UpdateLineReturnValue.NotSupervisor:
-                        message = t("updateLineNotSupervisorError");
-                        break;
                 }
                 if (message !== null) {
                     setAlert({message: t('duplicateNotAllowed'), type: MessageStripDesign.Negative});
-                    setUserName("");
                     setLoading(false);
-                    setTimeout(() => PurPackUnRef.current?.focus(), 100);
+                    setTimeout(() => QuantityRef.current?.focus(), 100);
                     return;
                 }
 
-                props.onAccept(purPackUn);
+                props.onAccept(quantity);
                 dialogRef?.current?.close();
                 setLoading(false);
             })
@@ -110,36 +100,28 @@ const ProcessPurPackUn = forwardRef((props: ProcessPurPackUnProps, ref) => {
             }
         >
             <Title level="H5">
-                {t("purPackUn")}
+                {t("quantity")}
             </Title>
             <Title level="H6">
                 <strong>{t("barcode")}: </strong>
                 {props.alert?.barcode}
             </Title>
+            <Title level="H6">
+                <strong>{t("item")}: </strong>
+                {props.alert?.itemCode}
+            </Title>
             <Form onSubmit={handleSubmit}>
-                {configUtils.grpoModificationSupervisor &&
-                    <FormItem label={t("supervisorCode")}>
-                        <Input
-                            required
-                            name="username"
-                            type="Password"
-                            id="username"
-                            value={userName}
-                            onChange={(e) => setUserName(e.target.value as string)}
-                        ></Input>
-                    </FormItem>
-                }
-                <FormItem label={t("purPackUn")}>
+                <FormItem label={t("quantity")}>
                     <Input
                         required
-                        name="purPackUn"
-                        ref={PurPackUnRef}
+                        name="quantity"
+                        ref={QuantityRef}
                         type="Number"
-                        id="purPackUn"
-                        value={purPackUn?.toString()}
+                        id="quantity"
+                        value={quantity?.toString()}
                         onChange={function (e) {
                             let value = e.target.value as string;
-                            return setPurPackUn(value.length > 0 ? parseInt(value) : 1);
+                            return setQuantity(value.length > 0 ? parseInt(value) : 1);
                         }}
                     ></Input>
                 </FormItem>
@@ -147,4 +129,4 @@ const ProcessPurPackUn = forwardRef((props: ProcessPurPackUnProps, ref) => {
         </Dialog>
     );
 });
-export default ProcessPurPackUn;
+export default ProcessQuantity;

@@ -33,15 +33,6 @@ export enum DocumentStatus {
     InProgress = "InProgress",
 }
 
-export enum UpdateLineReturnValue {
-    Status = "Status",
-    LineStatus = "LineStatus",
-    CloseReason = "CloseReason",
-    Ok = "Ok",
-    SupervisorPassword = "SupervisorPassword",
-    NotSupervisor = "NotSupervisor",
-}
-
 export enum OrderBy {
     ID = "ID",
     Name = "Name",

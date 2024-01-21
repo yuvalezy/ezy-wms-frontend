@@ -7,7 +7,6 @@ import {useThemeContext} from "../../Components/ThemeContext";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {DocumentStatus} from "../../Assets/Document";
 import {useDocumentStatusToString} from "../../Assets/DocumentStatusString";
-import {useAuth} from "../../Components/AppContext";
 import {fetchCountings} from "./Data/Counting";
 
 export default function Counting() {
@@ -16,7 +15,6 @@ export default function Counting() {
     const {t} = useTranslation();
     const documentStatusToString = useDocumentStatusToString();
     const scanCodeInputRef = useRef<InputDomRef>(null);
-    const {user } = useAuth();
 
     useEffect(() => {
         setTimeout(() => scanCodeInputRef?.current?.focus(), 1);

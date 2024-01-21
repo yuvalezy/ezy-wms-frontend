@@ -36,3 +36,12 @@ export function distinctItems(items: Item[]): string[] {
         .map(item => item.father ?? item.code)
         .filter((code, index, array) => array.indexOf(code) === index);
 }
+
+export enum UpdateLineReturnValue {
+    Status = "Status",
+    LineStatus = "LineStatus",
+    CloseReason = "CloseReason",
+    Ok = "Ok",
+    SupervisorPassword = "SupervisorPassword",
+    NotSupervisor = "NotSupervisor",
+}

@@ -16,11 +16,13 @@ import BarCodeScanner, {BarCodeScannerRef} from "../../Components/BarCodeScanner
 import {CountingContent} from "../../Assets/Counting";
 import BinLocationScanner from "../../Components/BinLocationScanner";
 import {countProcessRows} from "../../Assets/mockup";
-import QuantityPopup, {QuantityPopupProperties, QuantityPopupRef} from "./Components/QuantityPopup";
 import {ProcessPurPackUnRef} from "../GoodsReceipt/Components/ProcessPurPackUn";
 import {addItem} from "./Data/CountingProcess";
 import {fetchCountingContent} from "./Data/Counting";
 import ProcessAlert, {AlertActionType, ProcessAlertValue} from "./Components/ProcessAlert";
+import ProcessCancel from "./Components/ProcessCancel";
+import {ProcessCancelRef} from "../GoodsReceipt/Components/ProcessCancel";
+import ProcessQuantity, {ProcessQuantityRef} from "./Components/ProcessQuantity";
 
 export default function CountingProcess() {
     const {scanCode} = useParams();
@@ -34,8 +36,9 @@ export default function CountingProcess() {
     const barcodeRef = useRef<BarCodeScannerRef>(null);
     const binLocationInputRef = useRef<InputDomRef>(null);
     const [rows, setRows] = useState<CountingContent[] | null>(null);
-    const qtyPopupRef = useRef<QuantityPopupRef>(null);
     const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
+    const processCancelRef = useRef<ProcessCancelRef>(null);
+    const processQuantityRef = useRef<ProcessQuantityRef>(null);
 
     const title = `${t("counting")} #${scanCode}`;
 
@@ -65,6 +68,7 @@ export default function CountingProcess() {
             setLoading(false);
         }
     }
+
     function onBinClear() {
         setBinLocation(null);
         setRows(null);
@@ -194,10 +198,6 @@ export default function CountingProcess() {
         // setLoading(false);
     }
 
-    function handleQtyAccept(properties: QuantityPopupProperties) {
-        window.alert(properties.itemCode);
-    }
-
     function getContentStyle(): CSSProperties {
         let properties: CSSProperties = {
             borderBottom: '1px solid darkGrey'
@@ -209,6 +209,19 @@ export default function CountingProcess() {
     }
 
     function alertAction(type: AlertActionType) {
+        switch (type) {
+            case AlertActionType.Cancel:
+                processCancelRef?.current?.show(true);
+                break;
+            case AlertActionType.Quantity:
+                processQuantityRef?.current?.show(true);
+                break;
+        }
+    }
+
+    function handleAlertActionAccept(newAlert: ProcessAlertValue): void {
+        setCurrentAlert(newAlert);
+        loadRows();
     }
 
     return (
@@ -217,7 +230,7 @@ export default function CountingProcess() {
                 <div className="containerStyle">
                     {user?.binLocations && <BinLocationScanner onChanged={onBinChanged} onClear={onBinClear}/>}
                     <div className="contentStyle" style={getContentStyle()}>
-                        {currentAlert != null && <ProcessAlert alert={currentAlert} onAction={alertAction}/>}
+                        {currentAlert && <ProcessAlert alert={currentAlert} onAction={alertAction}/>}
                         {rows != null && rows.length > 0 &&
                             <Table
                                 columns={<>
@@ -242,11 +255,40 @@ export default function CountingProcess() {
                                 </MessageStrip>
                             </div>
                         }
-                        <QuantityPopup ref={qtyPopupRef} onAccept={handleQtyAccept}/>
                     </div>
                     <BarCodeScanner ref={barcodeRef} onSubmit={handleScanBarcode} enabled={enable}/>
                 </div>
             </div>
+            {currentAlert && id &&
+                <>
+                    <ProcessCancel
+                        id={id}
+                        alert={currentAlert}
+                        ref={processCancelRef}
+                        onAccept={(comment, cancel) => {
+                            if (currentAlert == null)
+                                return;
+                            handleAlertActionAccept({
+                                ...currentAlert,
+                                comment: comment,
+                                canceled: cancel,
+                            });
+                        }}
+                    />
+                    <ProcessQuantity
+                        id={id}
+                        alert={currentAlert}
+                        ref={processQuantityRef}
+                        onAccept={quantity => {
+                            if (currentAlert == null)
+                                return;
+                            handleAlertActionAccept({
+                                ...currentAlert,
+                                quantity: quantity,
+                            });
+                        }}
+                    />
+                </>}
         </ContentTheme>
     );
 }

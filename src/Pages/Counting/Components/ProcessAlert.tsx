@@ -11,6 +11,7 @@ export interface ProcessAlertValue {
     timeStamp?: string;
     message?: string;
     severity: MessageStripDesign;
+    comment?: string;
     canceled?: boolean;
 }
 

@@ -1,7 +1,7 @@
 import axios from "axios";
 import {Document, DocumentAction, DocumentItem, DocumentStatus, OrderBy} from "../../../Assets/Document";
 import {configUtils, delay, globalConfig} from "../../../Assets/GlobalConfig";
-import {documentMockup, ReasonValueMockup} from "../../../Assets/mockup";
+import {documentMockup} from "../../../Assets/mockup";
 import {User} from "../../../Assets/Common";
 import {BusinessPartner} from "../../../Assets/Data";
 
@@ -89,34 +89,6 @@ export const documentAction = async (
     }
 };
 
-export type ReasonValue = {
-    value: number;
-    description: string;
-};
-
-export const fetchReasons = async (): Promise<ReasonValue[]> => {
-    if (configUtils.isMockup) {
-        console.log("Mockup data is being used.");
-        return ReasonValueMockup;
-    }
-
-    if (!globalConfig) throw new Error("Config has not been initialized!");
-
-    if (globalConfig.debug) await delay();
-
-    const access_token = localStorage.getItem("token");
-
-    const response = await axios.get<ReasonValue[]>(
-        `${globalConfig.baseURL}/api/GoodsReceipt/CancelReasons`,
-        {
-            headers: {
-                Authorization: `Bearer ${access_token}`,
-            },
-        }
-    );
-
-    return response.data;
-};
 export const fetchDocuments = async (
     id?: number,
     statuses: DocumentStatus[] = [DocumentStatus.Open, DocumentStatus.InProgress],
