@@ -29,14 +29,22 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor, action, doc
 
     const documentStatusToString = useDocumentStatusToString();
 
+    function goodsReceiptClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
+        e.preventDefault();
+        handleOpen(doc.id);
+    }
+
+    function documentDetailsClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
+        e.preventDefault();
+        docDetails(doc);
+    }
+
+
     return (
         <Card key={doc.id} header={<CardHeader titleText={`${t('id')} : ${doc.name}`}/>}>
             <List>
                 <StandardListItem>
-                    {handleOpenLink && (<a href="#" onClick={e => {
-                        e.preventDefault();
-                        handleOpen(doc.id)
-                    }}><strong>{t('number')}:</strong> {doc.id}</a>)}
+                    {handleOpenLink && (<a href="#" onClick={goodsReceiptClick}><strong>{t('number')}:</strong> {doc.id}</a>)}
                     {!handleOpenLink && (<><strong>{t('number')}:</strong> {doc.id}</>)}
                     <a style={{float: 'right'}} onClick={(e) => action(doc.id, 'qrcode')}>
                         <Icon name="qr-code"/>
@@ -48,10 +56,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor, action, doc
                     </StandardListItem>
                 }
                 {doc.specificDocuments && doc.specificDocuments.length > 0 &&
-                    <StandardListItem><a href="#" onClick={e => {
-                        e.preventDefault();
-                        docDetails(doc);
-                    }}><strong>{t('documentsList')}: </strong>
+                    <StandardListItem><a href="#" onClick={documentDetailsClick}><strong>{t('documentsList')}: </strong>
                         {
                             doc.specificDocuments.map(
                                 (value) => {
