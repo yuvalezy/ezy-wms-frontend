@@ -73,6 +73,14 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor, action, doc
                 <StandardListItem><strong>{t('status')}:</strong> {documentStatusToString(doc.status)}</StandardListItem>
                 {supervisor &&
                     <StandardListItem>
+                        <a href="#" onClick={e => {
+                            e.preventDefault();
+                            navigate(`/goodsReceiptReportAll/${doc.id}`)
+                        }}>{t('goodsReceiptReport')}</a>
+                    </StandardListItem>
+                }
+                {supervisor &&
+                    <StandardListItem>
                         {doc.status === DocumentStatus.InProgress && (
                             <Button style={{marginRight: '10px'}} color="primary" onClick={() => action(doc.id, 'approve')} icon="complete">
                                 {t('finish')}

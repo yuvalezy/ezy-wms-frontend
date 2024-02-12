@@ -109,3 +109,8 @@
     flex: 1;
     overflow-y: auto;
 }
+
+.clickCell {
+    color: blue;
+    text-decoration: underline;
+}

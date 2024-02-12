@@ -3,6 +3,7 @@ import {DeliveryOpenDocument} from "./Deliveries";
 import {PickingDocument, PickingDocumentDetail, PickingDocumentDetailItem, PickStatus} from "../Pages/Picking/Data/PickingDocument";
 import {ProcessResponse} from "./Document";
 import {Counting, CountingContent} from "./Counting";
+import {GoodsReceiptAllDetail} from "../Pages/GoodsReceipt/Data/Report";
 
 enum UpdateLineReturnValue {
     Status = "Status",
@@ -60,6 +61,12 @@ export const GoodsReceiptMockup = [
         stock: 2,
     },
 ];
+
+export const GoodsReceiptAllDetailMockup : GoodsReceiptAllDetail[] = [
+    {lineID: 1, timeStamp: new Date(), employeeName: "Test", quantity: 1},
+    {lineID: 2, timeStamp: new Date(), employeeName: "Test", quantity: 3},
+    {lineID: 3, timeStamp: new Date(), employeeName: "Test", quantity: 10},
+]
 
 export const goodsReceiptVSExitReportDataMockup = [
     {

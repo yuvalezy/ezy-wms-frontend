@@ -5,9 +5,10 @@ import {Label, Table, TableCell, TableColumn, TableRow} from '@ui5/webcomponents
 
 interface GoodsReceiptAllTableProps {
     data: GoodsReceiptAll[]
+    onClick: (data: GoodsReceiptAll) => void;
 }
 
-const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data}) => {
+const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data, onClick}) => {
     const {t} = useTranslation();
 
     return (
@@ -23,14 +24,14 @@ const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data})
             </>}
         >
             {data.map((row) => (
-                <TableRow key={row.itemCode}>
-                    <TableCell><Label>{row.itemCode}</Label></TableCell>
-                    <TableCell><Label>{row.itemName}</Label></TableCell>
-                    <TableCell><Label>{row.quantity}</Label></TableCell>
-                    <TableCell><Label>{row.delivery}</Label></TableCell>
-                    <TableCell><Label>{row.showroom}</Label></TableCell>
-                    <TableCell><Label>{row.quantity - row.delivery - row.showroom}</Label></TableCell>
-                    <TableCell><Label>{row.stock}</Label></TableCell>
+                <TableRow style={{cursor: 'pointer'}} onClick={() => onClick(row)} key={row.itemCode}>
+                    <TableCell className="clickCell">{row.itemCode}</TableCell>
+                    <TableCell className="clickCell">{row.itemName}</TableCell>
+                    <TableCell className="clickCell">{row.quantity}</TableCell>
+                    <TableCell className="clickCell">{row.delivery}</TableCell>
+                    <TableCell className="clickCell">{row.showroom}</TableCell>
+                    <TableCell className="clickCell">{row.quantity - row.delivery - row.showroom}</TableCell>
+                    <TableCell className="clickCell">{row.stock}</TableCell>
                 </TableRow>
             ))}
         </Table>

@@ -48,6 +48,8 @@
   "picked": "Picked",
   "totalItems": "Total Items",
   "totalOpenItems": "Total Open Items",
+  "detail": "Detail",
+  "employee": "Employee",
 
   "openStatus": "Open",
   "inProgressStatus": "In Progress",

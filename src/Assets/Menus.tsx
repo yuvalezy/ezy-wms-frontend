@@ -115,9 +115,6 @@ export function useMenus() {
                     return authorizations.includes(item.Authorization);
                 }
                 if (item.Authorizations !== undefined) {
-                    if (item.Link === goodsReceiptSupervisorRoute) {
-                        window.console.log(item.Authorizations);
-                    }
                     for (let itemAuthorization of item.Authorizations) {
                         if (authorizations.includes(itemAuthorization)) {
                             return true;

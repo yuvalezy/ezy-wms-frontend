@@ -48,6 +48,8 @@
   "picked": "Seleccionada",
   "totalItems": "Total Articulos",
   "totalOpenItems": "Total Articulos Abiertos",
+  "detail": "Detalle",
+  "employee": "Empleado",
 
   "openStatus": "Abierto",
   "inProgressStatus": "En Proceso",
