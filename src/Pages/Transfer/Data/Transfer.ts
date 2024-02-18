@@ -1,9 +1,14 @@
 import {BusinessPartner, Employee} from "../../../Assets/Data";
 import {configUtils, delay, globalConfig} from "../../../Assets/GlobalConfig";
-import {documentMockup, transferMockup} from "../../../Assets/mockup";
+import {transferMockup} from "../../../Assets/mockup";
 import axios from "axios";
-import {Document, DocumentOrderBy} from "../../../Assets/Document";
-import {Status} from "../../../Assets/Common";
+import {SourceTarget, Status} from "../../../Assets/Common";
+
+interface TransferAddItemResponse {
+    lineID?: number
+    closedTransfer: boolean;
+    errorMessage?: string;
+}
 
 export type Transfer = {
     id: number;
@@ -110,3 +115,85 @@ export const fetchTransfers = async (
         throw error;
     }
 };
+
+export const addItem = async (
+    id: number,
+    itemCode: string,
+    barcode: string,
+    binEntry?: number
+): Promise<TransferAddItemResponse> => {
+    try {
+        if (configUtils.isMockup) {
+            //todo mockup
+        }
+
+        if (!globalConfig) throw new Error("Config has not been initialized!");
+
+        if (globalConfig.debug) await delay();
+
+        const access_token = localStorage.getItem("token");
+
+        const url = `${globalConfig.baseURL}/api/Transfer/AddItem`;
+
+        const response = await axios.post<TransferAddItemResponse>(
+            url,
+            {
+                id: id,
+                itemCode: itemCode,
+                barcode: barcode,
+                binEntry: binEntry,
+                quantity: 1
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${access_token}`,
+                },
+            }
+        );
+        if (response.data.errorMessage == null) {
+            return response.data;
+        } else {
+            throw new Error(response.data.errorMessage);
+        }
+    } catch (error) {
+        console.error("Error adding item:", error);
+        throw error;
+    }
+}
+export const fetchTransferContent = async (id: number, type: SourceTarget, binEntry?: number): Promise<TransferBinContent[]> => {
+    try {
+        if (configUtils.isMockup) {
+            console.log("Mockup data is being used.");
+            //todo return mockup
+        }
+
+        if (!globalConfig)
+            throw new Error("Config has not been initialized!");
+
+        if (globalConfig.debug)
+            await delay();
+
+        const access_token = localStorage.getItem("token");
+
+        const url = `${globalConfig.baseURL}/api/Transfer/TransferContent`;
+
+        const response = await axios.post<TransferBinContent[]>(
+            url,
+            {
+                id: id,
+                binEntry: binEntry,
+                type: type
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${access_token}`,
+                },
+            }
+        );
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching transfer content:", error);
+        throw error;
+    }
+}

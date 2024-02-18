@@ -1,20 +1,18 @@
 import ContentTheme from "../../Components/ContentTheme";
-import {Link, useParams} from "react-router-dom";
-import React, {CSSProperties, MouseEventHandler, useEffect, useRef, useState} from "react";
+import {useParams} from "react-router-dom";
+import React, {CSSProperties, useEffect, useRef, useState} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {Button, Form, FormItem, Grid, Icon, Input, InputDomRef, Label, MessageStrip, Table, TableCell, TableColumn, TableRow} from "@ui5/webcomponents-react";
+import {Label, MessageStrip, Table, TableCell, TableColumn, TableRow} from "@ui5/webcomponents-react";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {useAuth} from "../../Components/AppContext";
-import {BinLocation, distinctItems, Item} from "../../Assets/Common";
+import {BinLocation, distinctItems, Item, SourceTarget} from "../../Assets/Common";
 import BarCodeScanner, {BarCodeScannerRef} from "../../Components/BarCodeScanner";
-import {TransferBinContent} from "./Data/Transfer";
+import {addItem, fetchTransferContent, TransferBinContent} from "./Data/Transfer";
 import BinLocationScanner from "../../Components/BinLocationScanner";
 import {delay} from "../../Assets/GlobalConfig";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
-import {fetchCountingContent} from "../Counting/Data/Counting";
 import {scanBarcode} from "../../Assets/ScanBarcode";
-import {addItem} from "../Counting/Data/CountingProcess";
 import ProcessAlert, {AlertActionType, ProcessAlertValue} from "../../Components/ProcessAlert";
 
 export default function TransferProcessSource() {
@@ -71,7 +69,7 @@ export default function TransferProcessSource() {
             return;
         }
         binEntry ??= binLocation?.entry;
-        fetchCountingContent(id, binEntry)
+        fetchTransferContent(id, SourceTarget.Source, binEntry)
             .then((v) => setRows(v))
             .catch((e) => {
                 setAlert({
