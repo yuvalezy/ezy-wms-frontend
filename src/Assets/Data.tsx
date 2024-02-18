@@ -2,7 +2,8 @@ import axios from "axios";
 import {configUtils, globalConfig} from "./GlobalConfig";
 import {useTranslation} from "react-i18next";
 import {vendorsMockup} from "./mockup";
-import {DocumentStatus} from "./Document";
+
+import {Status} from "./Common";
 
 export type Employee = {
   id: number;
@@ -19,26 +20,26 @@ export function useDocumentStatusOptions() {
   const { t } = useTranslation();
 
   return [
-    {code: "Open", name: t("openStatus"), status: DocumentStatus.Open},
+    {code: "Open", name: t("openStatus"), status: Status.Open},
     {
       code: "Processing",
       name: t("processingStatus"),
-      status: DocumentStatus.Processing,
+      status: Status.Processing,
     },
     {
       code: "Finished",
       name: t("finishedStatus"),
-      status: DocumentStatus.Finished,
+      status: Status.Finished,
     },
     {
       code: "Cancelled",
       name: t("cancelledStatus"),
-      status: DocumentStatus.Cancelled,
+      status: Status.Cancelled,
     },
     {
       code: "InProgress",
       name: t("inProgressStatus"),
-      status: DocumentStatus.InProgress,
+      status: Status.InProgress,
     },
   ];
 }

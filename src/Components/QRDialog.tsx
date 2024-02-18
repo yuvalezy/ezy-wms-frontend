@@ -7,7 +7,6 @@ export interface QRDialogRef {
     show: (show: boolean) => void;
 }
 type QRDialogProps = {
-    onClose: () => void;
     prefix: string;
     id: number | null;
 };
@@ -32,7 +31,7 @@ const QRDialog = forwardRef((props: QRDialogProps, ref) => {
                 <Bar
                     design="Footer"
                     endContent={
-                        <Button onClick={props.onClose}>{t('close')}</Button>
+                        <Button onClick={() => dialogRef?.current?.close()}>{t('close')}</Button>
                     }
                 />
             }

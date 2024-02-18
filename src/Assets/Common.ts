@@ -1,4 +1,5 @@
 import {Authorization} from "./Authorization";
+import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
 
 export interface User {
     id: number;
@@ -37,6 +38,15 @@ export function distinctItems(items: Item[]): string[] {
         .filter((code, index, array) => array.indexOf(code) === index);
 }
 
+export interface UpdateLineParameters {
+    id: number;
+    lineID: number;
+    comment?: string;
+    userName?: string;
+    quantity?: number;
+    reason?: number;
+}
+
 export enum UpdateLineReturnValue {
     Status = "Status",
     LineStatus = "LineStatus",
@@ -45,3 +55,17 @@ export enum UpdateLineReturnValue {
     SupervisorPassword = "SupervisorPassword",
     NotSupervisor = "NotSupervisor",
 }
+
+export enum Status {
+    Open = "Open",
+    Processing = "Processing",
+    Finished = "Finished",
+    Cancelled = "Cancelled",
+    InProgress = "InProgress",
+}
+
+export type AddItemResponseMultipleValue = {
+    message: string;
+    severity: MessageStripDesign;
+};
+export type ObjectAction = "approve" | "cancel" | "qrcode";

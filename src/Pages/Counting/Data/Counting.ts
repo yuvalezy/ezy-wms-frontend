@@ -1,9 +1,8 @@
 import {configUtils, delay, globalConfig} from "../../../Assets/GlobalConfig";
 import {countingMockup, documentMockup} from "../../../Assets/mockup";
-import {DocumentAction, DocumentStatus} from "../../../Assets/Document";
 import axios from "axios";
 import {Counting, CountingContent, OrderBy} from "../../../Assets/Counting";
-import {User} from "../../../Assets/Common";
+import {ObjectAction, Status, User} from "../../../Assets/Common";
 
 export const createCounting = async (
     name: string
@@ -38,13 +37,13 @@ export const createCounting = async (
 }
 export const countingAction = async (
     id: number,
-    action: DocumentAction,
+    action: ObjectAction,
     user: User
 ): Promise<boolean> => {
     try {
         if (configUtils.isMockup) {
             if (action === "approve") {
-                documentMockup.status = DocumentStatus.Finished;
+                documentMockup.status = Status.Finished;
                 return true;
             }
             console.log("Mockup data is being used.");
@@ -77,7 +76,7 @@ export const countingAction = async (
 };
 export const fetchCountings = async (
     id?: number,
-    statuses: DocumentStatus[] = [DocumentStatus.Open, DocumentStatus.InProgress],
+    statuses: Status[] = [Status.Open, Status.InProgress],
     date?: Date | null,
     docName?: string,
     orderBy: OrderBy = OrderBy.ID,

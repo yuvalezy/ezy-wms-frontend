@@ -1,5 +1,6 @@
 import {Employee} from "./Data";
-import {DocumentStatus} from "./Document";
+
+import {Status} from "./Common";
 
 export enum OrderBy {
     ID = "ID",
@@ -12,7 +13,7 @@ export type Counting = {
     name: string;
     date: string;
     employee: Employee;
-    status: DocumentStatus;
+    status: Status;
     statusDate?: string;
     statusEmployee?: Employee;
     error: boolean;

@@ -24,6 +24,10 @@ import "@ui5/webcomponents-icons/dist/save.js"
 import "@ui5/webcomponents-icons/dist/cancel.js"
 import "@ui5/webcomponents-icons/dist/log.js"
 import "@ui5/webcomponents-icons/dist/nav-back.js"
+import "@ui5/webcomponents-icons/dist/move.js"
+import "@ui5/webcomponents-icons/dist/functional-location.js"
+import "@ui5/webcomponents-icons/dist/map.js"
+import "@ui5/webcomponents-icons/dist/journey-depart.js"
 import {globalSettings} from "./GlobalConfig";
 
 export interface MenuItem {
@@ -100,6 +104,18 @@ export function useMenus() {
         //     Authorization: Authorization.COUNTING_SUPERVISOR,
         //     Icon: "manager-insight",
         // },
+        {
+            Link: "/transfer",
+            Text: t('transfer'),
+            Authorization: Authorization.TRANSFER,
+            Icon: "move",
+        },
+        {
+            Link: "/transferSupervisor",
+            Text: t('transferSupervisor'),
+            Authorization: Authorization.TRANSFER_SUPERVISOR,
+            Icon: "journey-depart",
+        },
     ];
 
     const GetMenus = (authorizations: Authorization[] | undefined) => {

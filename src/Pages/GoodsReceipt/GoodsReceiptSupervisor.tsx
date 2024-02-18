@@ -7,12 +7,13 @@ import DocumentCard from "./Components/DocumentCard";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {MessageBox, MessageBoxActions, MessageStripDesign} from "@ui5/webcomponents-react";
-import {Document, DocumentAction} from "../../Assets/Document";
+import {Document} from "../../Assets/Document";
 import {StringFormat} from "../../Assets/Functions";
 import QRDialog, {QRDialogRef} from "../../Components/QRDialog";
 import {globalSettings} from "../../Assets/GlobalConfig";
 import {Authorization} from "../../Assets/Authorization";
 import DocumentListDialog, {DocumentListDialogRef} from "./Components/DocumentListDialog";
+import {ObjectAction} from "../../Assets/Common";
 
 export default function GoodsReceiptSupervisor() {
     const qrRef = useRef<QRDialogRef>(null);
@@ -23,7 +24,7 @@ export default function GoodsReceiptSupervisor() {
     const [documents, setDocuments] = useState<Document[]>([]);
     const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(null);
     const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
-    const [actionType, setActionType] = useState<DocumentAction | null>(null);
+    const [actionType, setActionType] = useState<ObjectAction | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
     const errorAlert = (message: string) => setAlert({message: message, type: MessageStripDesign.Negative});
     const documentListDialogRef = useRef<DocumentListDialogRef>(null);
@@ -47,7 +48,7 @@ export default function GoodsReceiptSupervisor() {
         documentListDialogRef?.current?.show();
     }
 
-    const handleAction = (docId: number, action: DocumentAction) => {
+    const handleAction = (docId: number, action: ObjectAction) => {
         setSelectedDocumentId(docId);
         setActionType(action);
         if (action !== "qrcode") {
@@ -75,10 +76,6 @@ export default function GoodsReceiptSupervisor() {
             })
             .finally(() => setLoading(false));
     };
-
-    function handleCloseQR() {
-        qrRef?.current?.show(false);
-    }
 
     function getTitle(): string {
         let title = t("goodsReceiptSupervisor");
@@ -123,7 +120,7 @@ export default function GoodsReceiptSupervisor() {
                 )}
                 <br/> {t('actionCannotReverse')}
             </MessageBox>
-            <QRDialog ref={qrRef} onClose={handleCloseQR} prefix="GRPO" id={selectedDocumentId}/>
+            <QRDialog ref={qrRef} prefix="GRPO" id={selectedDocumentId}/>
             <DocumentListDialog ref={documentListDialogRef} doc={selectedDocument}/>
         </ContentTheme>
     );

@@ -23,6 +23,14 @@ import Counting from "./Pages/Counting/Counting";
 import CountingProcess from "./Pages/Counting/CountingProcess";
 import CountingSupervisor from "./Pages/Counting/CountingSupervisor";
 import {globalSettings} from "./Assets/GlobalConfig";
+import Transfer from "./Pages/Transfer/Transfer";
+import TransferSupervisor from "./Pages/Transfer/TransferSupervisor";
+import TransferProcess from "./Pages/Transfer/TransferProcess";
+import TransferProcessSource from "./Pages/Transfer/TransferProcessSource";
+
+function TransferProcessTarget() {
+    return null;
+}
 
 export default function App() {
     function getGoodsReceiptSupervisorAuthorizations() {
@@ -58,6 +66,12 @@ export default function App() {
                     <Route path="/pick/:idParam/:typeParam/:entryParam" element={<ProtectedRoute authorization={Authorization.PICKING} element={<PickingProcessDetail/>}/>}/>
                     <Route path="/pickSupervisor" element={<ProtectedRoute authorization={Authorization.PICKING_SUPERVISOR} element={<PickingSupervisor/>}/>}/>
                     {/*<Route path="/PickReport" element={<ProtectedRoute authorization={Authorization.Pick_SUPERVISOR} element={<PickReport/>}/>}/>*/}
+                    {/*Transfer*/}
+                    <Route path="/transfer" element={<ProtectedRoute authorization={Authorization.TRANSFER} element={<Transfer/>}/>}/>
+                    <Route path="/transfer/:scanCode" element={<ProtectedRoute authorization={Authorization.TRANSFER} element={<TransferProcess/>}/>}/>
+                    <Route path="/transfer/:scanCode/source" element={<ProtectedRoute authorization={Authorization.TRANSFER} element={<TransferProcessSource/>}/>}/>
+                    <Route path="/transfer/:scanCode/target" element={<ProtectedRoute authorization={Authorization.TRANSFER} element={<TransferProcessTarget/>}/>}/>
+                    <Route path="/transferSupervisor" element={<ProtectedRoute authorization={Authorization.TRANSFER_SUPERVISOR} element={<TransferSupervisor/>}/>}/>
                     <Route path="/" element={<ProtectedRoute element={<HomePage/>}/>}/>
                     <Route path="*" element={<NotFound/>}/>
                 </Routes>

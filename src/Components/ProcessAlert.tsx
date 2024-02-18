@@ -2,7 +2,8 @@ import React from "react";
 import {useTranslation} from "react-i18next";
 import {Icon, MessageStrip, Title} from "@ui5/webcomponents-react";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
-import {AddItemResponseMultipleValue} from "../../../Assets/Document";
+
+import {AddItemResponseMultipleValue} from "../Assets/Common";
 export interface ProcessAlertValue {
     lineID?: number,
     barcode?: string | null;
@@ -13,6 +14,7 @@ export interface ProcessAlertValue {
     severity: MessageStripDesign;
     comment?: string;
     canceled?: boolean;
+    multiple?: AddItemResponseMultipleValue[];
 }
 
 export interface ProcessAlertProps {
@@ -21,6 +23,8 @@ export interface ProcessAlertProps {
 }
 
 export enum AlertActionType {
+    None = -1,
+    Comments,
     Cancel,
     Quantity,
 }
@@ -33,8 +37,10 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction}) => {
         };
 
         let cancelled = alert.canceled ?? false;
-        if (cancelled) {
+        if (cancelled || (alert.multiple != null && alert.multiple.length > 0)) {
             style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
+        }
+        if (cancelled) {
             style.textDecoration = 'line-through';
         }
 
@@ -53,6 +59,13 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction}) => {
                     <br/>
                 </>}
                 {alert.message && (<><strong>{t('message')}: </strong>{alert.message}</>)}
+                {alert.multiple != null && alert.multiple.length > 0 && (<><br/><strong>{t('messages')}: </strong>{
+                    <>
+                        {
+                            alert.multiple.map(v => <MessageStrip hideCloseButton design={v.severity}>{v.message}</MessageStrip>)
+                        }
+                    </>
+                }</>)}
                 {!(alert.canceled ?? false) && alert.severity !== 'Negative' &&
                     <div style={{position: 'absolute', top: '10px', right: '10px'}}>
                         <Icon name="cancel" onClick={() => onAction(AlertActionType.Cancel)}/>

@@ -1,26 +1,23 @@
 import ContentTheme from "../../Components/ContentTheme";
-import {useParams} from "react-router-dom";
-import React, {CSSProperties, useEffect, useRef, useState} from "react";
+import {Link, useParams} from "react-router-dom";
+import React, {CSSProperties, MouseEventHandler, useEffect, useRef, useState} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {Label, MessageStrip, Table, TableCell, TableColumn, TableRow} from "@ui5/webcomponents-react";
-import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
-import {BinLocation, distinctItems, Item} from "../../Assets/Common";
+import {Button, Form, FormItem, Grid, Icon, Input, InputDomRef, Label, MessageStrip, Table, TableCell, TableColumn, TableRow} from "@ui5/webcomponents-react";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
-import {delay} from "../../Assets/GlobalConfig";
-import {scanBarcode} from "../../Assets/ScanBarcode";
 import {useAuth} from "../../Components/AppContext";
+import {BinLocation, distinctItems, Item} from "../../Assets/Common";
 import BarCodeScanner, {BarCodeScannerRef} from "../../Components/BarCodeScanner";
-import {CountingContent} from "../../Assets/Counting";
+import {TransferBinContent} from "./Data/Transfer";
 import BinLocationScanner from "../../Components/BinLocationScanner";
-import {addItem, updateLine} from "./Data/CountingProcess";
-import {fetchCountingContent} from "./Data/Counting";
+import {delay} from "../../Assets/GlobalConfig";
+import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
+import {fetchCountingContent} from "../Counting/Data/Counting";
+import {scanBarcode} from "../../Assets/ScanBarcode";
+import {addItem} from "../Counting/Data/CountingProcess";
 import ProcessAlert, {AlertActionType, ProcessAlertValue} from "../../Components/ProcessAlert";
-import ProcessCancel, {ProcessCancelRef} from "../../Components/ProcessCancel";
-import ProcessQuantity, {ProcessQuantityRef} from "../../Components/ProcessQuantity";
-import {ReasonType} from "../../Assets/Reasons";
 
-export default function CountingProcess() {
+export default function TransferProcessSource() {
     const {scanCode} = useParams();
     const {t} = useTranslation();
     const [id, setID] = useState<number | null>();
@@ -29,12 +26,10 @@ export default function CountingProcess() {
     const {setLoading, setAlert} = useThemeContext();
     const {user} = useAuth();
     const barcodeRef = useRef<BarCodeScannerRef>(null);
-    const [rows, setRows] = useState<CountingContent[] | null>(null);
+    const [rows, setRows] = useState<TransferBinContent[] | null>(null);
     const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
-    const processCancelRef = useRef<ProcessCancelRef>(null);
-    const processQuantityRef = useRef<ProcessQuantityRef>(null);
 
-    const title = `${t("counting")} #${scanCode}`;
+    const title = `${t("transfer")} #${scanCode} - ${t("selectSourceBin")}`;
 
     useEffect(() => {
         setEnable(!user?.binLocations ?? false);
@@ -203,14 +198,14 @@ export default function CountingProcess() {
     }
 
     function alertAction(type: AlertActionType) {
-        switch (type) {
-            case AlertActionType.Cancel:
-                processCancelRef?.current?.show(true);
-                break;
-            case AlertActionType.Quantity:
-                processQuantityRef?.current?.show(true);
-                break;
-        }
+        // switch (type) {
+        //     case AlertActionType.Cancel:
+        //         processCancelRef?.current?.show(true);
+        //         break;
+        //     case AlertActionType.Quantity:
+        //         processQuantityRef?.current?.show(true);
+        //         break;
+        // }
     }
 
     function handleAlertActionAccept(newAlert: ProcessAlertValue): void {
@@ -219,70 +214,42 @@ export default function CountingProcess() {
     }
 
     return (
-        <ContentTheme title={title} icon="product">
-            <div className="themeContentStyle">
-                <div className="containerStyle">
-                    {user?.binLocations && <BinLocationScanner onChanged={onBinChanged} onClear={onBinClear}/>}
-                    <div className="contentStyle" style={getContentStyle()}>
-                        {currentAlert && <ProcessAlert alert={currentAlert} onAction={alertAction}/>}
-                        {rows != null && rows.length > 0 &&
-                            <Table
-                                columns={<>
-                                    <TableColumn><Label>{t('code')}</Label></TableColumn>
-                                    <TableColumn><Label>{t('description')}</Label></TableColumn>
-                                    <TableColumn><Label>{t('quantity')}</Label></TableColumn>
-                                </>}
-                            >
-                                {rows.map((row) => (
-                                    <TableRow key={row.code}>
-                                        <TableCell><Label>{row.code}</Label></TableCell>
-                                        <TableCell><Label>{row.name}</Label></TableCell>
-                                        <TableCell><Label>{row.quantity}</Label></TableCell>
-                                    </TableRow>
-                                ))}
-                            </Table>
-                        }
-                        {rows != null && rows.length === 0 &&
-                            <div style={{padding: '10px'}}>
-                                <MessageStrip hideCloseButton design={MessageStripDesign.Information}>
-                                    {t("nodata")}
-                                </MessageStrip>
-                            </div>
-                        }
+        <ContentTheme title={title} icon="functional-location">
+            {id &&
+                <div className="themeContentStyle">
+                    <div className="containerStyle">
+                        {user?.binLocations && <BinLocationScanner onChanged={onBinChanged} onClear={onBinClear}/>}
+                        <div className="contentStyle" style={getContentStyle()}>
+                            {currentAlert && <ProcessAlert alert={currentAlert} onAction={alertAction}/>}
+                            {rows != null && rows.length > 0 &&
+                                <Table
+                                    columns={<>
+                                        <TableColumn><Label>{t('code')}</Label></TableColumn>
+                                        <TableColumn><Label>{t('description')}</Label></TableColumn>
+                                        <TableColumn><Label>{t('quantity')}</Label></TableColumn>
+                                    </>}
+                                >
+                                    {rows.map((row) => (
+                                        <TableRow key={row.code}>
+                                            <TableCell><Label>{row.code}</Label></TableCell>
+                                            <TableCell><Label>{row.name}</Label></TableCell>
+                                            <TableCell><Label>{row.quantity}</Label></TableCell>
+                                        </TableRow>
+                                    ))}
+                                </Table>
+                            }
+                            {rows != null && rows.length === 0 &&
+                                <div style={{padding: '10px'}}>
+                                    <MessageStrip hideCloseButton design={MessageStripDesign.Information}>
+                                        {t("nodata")}
+                                    </MessageStrip>
+                                </div>
+                            }
+                        </div>
+                        <BarCodeScanner ref={barcodeRef} onSubmit={handleScanBarcode} enabled={enable}/>
                     </div>
-                    <BarCodeScanner ref={barcodeRef} onSubmit={handleScanBarcode} enabled={enable}/>
                 </div>
-            </div>
-            {currentAlert && id &&
-                <>
-                    <ProcessCancel
-                        id={id}
-                        alert={currentAlert}
-                        ref={processCancelRef}
-                        onAccept={(comment, cancel) => {
-                            if (currentAlert == null)
-                                return;
-                            handleAlertActionAccept({
-                                ...currentAlert,
-                                comment: comment,
-                                canceled: cancel,
-                            });
-                        }}
-                     reasonType={ReasonType.Counting} updateLine={updateLine}/>
-                    <ProcessQuantity
-                        id={id}
-                        alert={currentAlert}
-                        ref={processQuantityRef}
-                        onAccept={quantity => {
-                            if (currentAlert == null)
-                                return;
-                            handleAlertActionAccept({
-                                ...currentAlert,
-                                quantity: quantity,
-                            });
-                        }}
-                     updateLine={updateLine}/>
-                </>}
+            }
         </ContentTheme>
     );
 }

@@ -2,20 +2,21 @@ import ContentTheme from "../../Components/ContentTheme";
 import {useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
 import BoxConfirmationDialog, {BoxConfirmationDialogRef} from "../../Components/BoxConfirmationDialog";
-import ProcessAlert, {AlertActionType, ProcessAlertValue,} from "./Components/ProcessAlert";
-import ProcessComment, {ProcessCommentRef} from "./Components/ProcessComment";
+import ProcessComment, {ProcessCommentRef} from "../../Components/ProcessComment";
 import {useThemeContext} from "../../Components/ThemeContext";
-import ProcessCancel, {ProcessCancelRef} from "./Components/ProcessCancel";
-import ProcessPurPackUn, {ProcessPurPackUnRef} from "./Components/ProcessPurPackUn";
+import ProcessCancel, {ProcessCancelRef} from "../../Components/ProcessCancel";
 import {useTranslation} from "react-i18next";
 import {Button, Form, FormItem, Input, InputDomRef, MessageStrip} from "@ui5/webcomponents-react";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
-import {addItem} from "./Data/GoodsReceiptProcess";
-import {distinctItems, Item} from "../../Assets/Common";
+import {addItem, updateLine} from "./Data/GoodsReceiptProcess";
+import {AddItemResponseMultipleValue, distinctItems, Item} from "../../Assets/Common";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {configUtils} from "../../Assets/GlobalConfig";
-import {AddItemResponseMultipleValue} from "../../Assets/Document";
 import {scanBarcode} from "../../Assets/ScanBarcode";
+import ProcessAlert, {AlertActionType, ProcessAlertValue} from "../../Components/ProcessAlert";
+import {ReasonType} from "../../Assets/Reasons";
+import ProcessQuantity, {ProcessQuantityRef} from "../../Components/ProcessQuantity";
+import {DocumentAddItemResponse} from "../../Assets/Document";
 
 export default function GoodsReceiptProcess() {
     const {scanCode} = useParams();
@@ -32,7 +33,7 @@ export default function GoodsReceiptProcess() {
     const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
     const processCancelRef = useRef<ProcessCancelRef>(null);
     const processCommentRef = useRef<ProcessCommentRef>(null);
-    const processPurPackUnRef = useRef<ProcessPurPackUnRef>(null);
+    const processQuantityRef = useRef<ProcessQuantityRef>(null);
 
     const title = `${t("goodsReceipt")} #${scanCode}`;
 
@@ -103,6 +104,7 @@ export default function GoodsReceiptProcess() {
         setLoading(false);
     }
 
+
     function addItemToDocument(itemCode: string) {
         boxConfirmationDialogRef?.current?.show(false);
         const barcode = barcodeInput;
@@ -110,39 +112,19 @@ export default function GoodsReceiptProcess() {
         setLoading(true);
         addItem(id ?? 0, itemCode, barcode)
             .then((data) => {
-                if (data.closedDocument) {
-                    alert({
-                        lineID: data.lineID,
-                        barcode: barcode,
-                        itemCode: itemCode,
-                        message: StringFormat(t("goodsReceiptIsClosed"), id),
-                        severity: MessageStripDesign.Negative,
-                        multiple: [],
-                        purPackUn: data.purPackUn,
-                    });
-                    setEnable(false);
+                if (isClosedDocument(data, itemCode, barcode)) {
                     return;
                 }
 
                 if (configUtils.isMockup && !data.fulfillment && !data.warehouse && !data.showroom) {
-                    return alert({
-                        barcode: barcode,
-                        itemCode: itemCode,
-                        purPackUn: data.purPackUn,
-                        message: `Error Mockup`,
-                        severity: MessageStripDesign.Negative,
-                    });
+                    return alert({barcode: barcode, itemCode: itemCode, quantity: data.quantity, message: `Error Mockup`, severity: MessageStripDesign.Negative});
                 }
 
                 let message: string = "";
                 let color: MessageStripDesign = MessageStripDesign.Information;
                 let multiple: AddItemResponseMultipleValue[] = [];
-                if (
-                    (data.warehouse ? 1 : 0) +
-                    (data.fulfillment ? 1 : 0) +
-                    (data.showroom ? 1 : 0) ===
-                    1
-                ) {
+                let totalErrors = (data.warehouse ? 1 : 0) + (data.fulfillment ? 1 : 0) + (data.showroom ? 1 : 0);
+                if (totalErrors === 1) {
                     if (data.warehouse) {
                         message = t("scanConfirmStoreInWarehouse");
                         color = MessageStripDesign.Positive;
@@ -157,57 +139,44 @@ export default function GoodsReceiptProcess() {
                     }
                 } else {
                     if (data.warehouse) {
-                        multiple.push({
-                            message: t("scanConfirmStoreInWarehouse"),
-                            severity: MessageStripDesign.Positive,
-                        });
+                        multiple.push({message: t("scanConfirmStoreInWarehouse"), severity: MessageStripDesign.Positive});
                     }
                     if (data.fulfillment) {
-                        multiple.push({
-                            message: t("scanConfirmFulfillment"),
-                            severity: MessageStripDesign.Warning,
-                        });
+                        multiple.push({message: t("scanConfirmFulfillment"), severity: MessageStripDesign.Warning});
                     }
                     if (data.showroom) {
-                        multiple.push({
-                            message: t("scanConfirmShowroom"),
-                            severity: MessageStripDesign.Information,
-                        });
+                        multiple.push({message: t("scanConfirmShowroom"), severity: MessageStripDesign.Information});
                     }
                 }
 
-                alert({
-                    lineID: data.lineID,
-                    barcode: barcode,
-                    itemCode: itemCode,
-                    message: message,
-                    severity: color,
-                    multiple: multiple,
-                    purPackUn: data.purPackUn,
-                });
+                alert({lineID: data.lineID, barcode: barcode, itemCode: itemCode, message: message, severity: color, multiple: multiple, quantity: data.quantity});
             })
             .catch((error) => {
                 console.error(`Error performing action: ${error}`);
-                let errorMessage = error.response?.data["exceptionMessage"];
-                if (errorMessage)
-                    alert({
-                        barcode: barcode,
-                        itemCode: itemCode,
-                        message: errorMessage,
-                        severity: MessageStripDesign.Negative,
-                    });
-                else
-                    alert({
-                        barcode: barcode,
-                        itemCode: itemCode,
-                        message: `Add Item Error: ${error}`,
-                        severity: MessageStripDesign.Negative,
-                    });
+                let errorMessage = error.response?.data["exceptionMessage"] ?? `Add Item Error: ${error}`;
+                alert({barcode: barcode, itemCode: itemCode, message: errorMessage, severity: MessageStripDesign.Negative});
             })
             .finally(function () {
                 setLoading(false);
                 setTimeout(() => barcodeRef.current?.focus(), 100);
             });
+    }
+
+    function isClosedDocument(data: DocumentAddItemResponse, itemCode: string, barcode: string): boolean {
+        if (!data.closedDocument) {
+            return false;
+        }
+        alert({
+            lineID: data.lineID,
+            barcode: barcode,
+            itemCode: itemCode,
+            message: StringFormat(t("goodsReceiptIsClosed"), id),
+            severity: MessageStripDesign.Negative,
+            multiple: [],
+            quantity: data.quantity
+        });
+        setEnable(false);
+        return true;
     }
 
     function alertAction(alert: ProcessAlertValue, type: AlertActionType) {
@@ -219,24 +188,44 @@ export default function GoodsReceiptProcess() {
             case AlertActionType.Comments:
                 processCommentRef?.current?.show(true);
                 break;
-            case AlertActionType.purPackUn:
-                processPurPackUnRef?.current?.show(true);
+            case AlertActionType.Quantity:
+                processQuantityRef?.current?.show(true);
                 break;
         }
     }
 
-    function handleAlertActionAccept(newAlert: ProcessAlertValue): void {
+    function handleAlertActionAccept(type: AlertActionType, value?: string | number, cancel?: boolean): void {
         if (currentAlert == null) {
             return;
         }
+
+        const updatedAlert: ProcessAlertValue = { ...currentAlert };
+
+        switch (type) {
+            case AlertActionType.Cancel:
+                updatedAlert.comment = value as string;
+                updatedAlert.canceled = cancel??false;
+                break;
+            case AlertActionType.Comments:
+                updatedAlert.comment = value as string;
+                break;
+            case AlertActionType.Quantity:
+                updatedAlert.quantity = value as number;
+                break;
+        }
+
         let index = acceptValues.findIndex((v) => v.lineID === currentAlert.lineID);
-        let newAcceptValues = acceptValues.filter(
-            (v) => v.lineID !== currentAlert.lineID
-        );
-        newAcceptValues.splice(index, 0, newAlert);
+        let newAcceptValues = [...acceptValues];
+        if (index !== -1) {
+            newAcceptValues[index] = updatedAlert;
+        } else {
+            newAcceptValues.push(updatedAlert);
+        }
+
         setAcceptValues(newAcceptValues);
         setCurrentAlert(null);
     }
+
 
     return (
         <ContentTheme title={title} icon="cause">
@@ -259,56 +248,33 @@ export default function GoodsReceiptProcess() {
                             </FormItem>
                         </Form>
                     )}
-                    <>
-                        {acceptValues.map((alert) => (
-                            <ProcessAlert
-                                alert={alert}
-                                key={alert.lineID}
-                                onAction={(type) => alertAction(alert, type)}
-                            />
-                        ))}
-                    </>
+                    {acceptValues.map((alert) => (
+                        <ProcessAlert
+                            alert={alert}
+                            key={alert.lineID}
+                            onAction={(type) => alertAction(alert, type)}
+                        />
+                    ))}
                     <ProcessCancel
                         id={id}
                         alert={currentAlert}
                         ref={processCancelRef}
-                        onAccept={(comment, cancel) => {
-                            if (currentAlert == null)
-                                return;
-                            handleAlertActionAccept({
-                                ...currentAlert,
-                                comment: comment,
-                                canceled: cancel,
-                            });
-                        }}
-                    />
+                        supervisorPassword={configUtils.grpoModificationSupervisor}
+                        onAccept={(comment, cancel) => handleAlertActionAccept(AlertActionType.Cancel, comment, cancel)}
+                        reasonType={ReasonType.GoodsReceipt} updateLine={updateLine}/>
                     <ProcessComment
                         id={id}
                         alert={currentAlert}
                         ref={processCommentRef}
-                        onAccept={(comment) => {
-                            if (currentAlert == null)
-                                return;
-                            handleAlertActionAccept({
-                                ...currentAlert,
-                                comment: comment,
-                            });
-
-                        }}
+                        onAccept={(comment) => handleAlertActionAccept(AlertActionType.Comments, comment)}
                     />
-                    <ProcessPurPackUn
+                    <ProcessQuantity
                         id={id}
                         alert={currentAlert}
-                        ref={processPurPackUnRef}
-                        onAccept={(purPackUn) => {
-                            if (currentAlert == null)
-                                return;
-                            handleAlertActionAccept({
-                                ...currentAlert,
-                                purPackUn: purPackUn,
-                            });
-                        }}
-                    />
+                        ref={processQuantityRef}
+                        supervisorPassword={configUtils.grpoModificationSupervisor}
+                        onAccept={(quantity) => handleAlertActionAccept(AlertActionType.Quantity, quantity)}
+                        updateLine={updateLine}/>
                     <BoxConfirmationDialog
                         onSelected={(v: string) => addItemToDocument(v)}
                         ref={boxConfirmationDialogRef}

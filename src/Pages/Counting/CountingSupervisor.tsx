@@ -4,13 +4,13 @@ import ContentTheme from "../../Components/ContentTheme";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {MessageBox, MessageBoxActions, MessageStripDesign} from "@ui5/webcomponents-react";
-import {DocumentAction} from "../../Assets/Document";
 import {StringFormat} from "../../Assets/Functions";
 import QRDialog, {QRDialogRef} from "../../Components/QRDialog";
 import CountingForm from "./Components/CountingForm";
 import {countingAction, fetchCountings} from "./Data/Counting";
 import {Counting} from "../../Assets/Counting";
 import CountingCard from "./Components/CountingCard";
+import {ObjectAction} from "../../Assets/Common";
 
 export default function CountingSupervisor() {
     const qrRef = useRef<QRDialogRef>(null);
@@ -21,7 +21,7 @@ export default function CountingSupervisor() {
     const [selectedID , setSelectedID] = useState<number | null>(
         null
     );
-    const [actionType, setActionType] = useState<DocumentAction | null>(null);
+    const [actionType, setActionType] = useState<ObjectAction | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
     const errorAlert = (message: string) => setAlert({message: message, type: MessageStripDesign.Negative});
 
@@ -38,7 +38,7 @@ export default function CountingSupervisor() {
             .finally(() => setLoading(false));
     }, []);
 
-    const handleAction = (docId: number, action: DocumentAction) => {
+    const handleAction = (docId: number, action: ObjectAction) => {
         setSelectedID(docId);
         setActionType(action);
         if (action !== "qrcode") {
@@ -66,10 +66,6 @@ export default function CountingSupervisor() {
             })
             .finally(() => setLoading(false));
     };
-
-    function handleCloseQR() {
-        qrRef?.current?.show(false);
-    }
 
     return (
         <ContentTheme title={t("countingSupervisor")} icon="factory">
@@ -104,7 +100,7 @@ export default function CountingSupervisor() {
                 )}
                 <br /> {t('actionCannotReverse')}
             </MessageBox>
-            <QRDialog ref={qrRef} onClose={handleCloseQR} prefix="CNT" id={selectedID}/>
+            <QRDialog ref={qrRef} prefix="CNT" id={selectedID}/>
         </ContentTheme>
     );
 }

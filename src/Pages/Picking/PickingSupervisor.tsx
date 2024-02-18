@@ -56,17 +56,12 @@ export default function PickingSupervisor() {
             });
     }
 
-
-    function handleQRClose() {
-        qrRef?.current?.show(false);
-    }
-
     return (
         <ContentTheme title={t("pickSupervisor")} icon="kpi-managing-my-area">
             {pickings.map((pick) => (
                 <PickingCard key={pick.entry} picking={pick} onAction={handleAction} onUpdatePick={handleUpdatePick}/>
             ))}
-            <QRDialog ref={qrRef} onClose={handleQRClose} prefix="PCK" id={selectedPickEntry}/>
+            <QRDialog ref={qrRef} prefix="PCK" id={selectedPickEntry}/>
         </ContentTheme>
     );
 }

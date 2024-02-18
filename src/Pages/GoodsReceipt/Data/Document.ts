@@ -1,8 +1,8 @@
 import axios from "axios";
-import {Document, DocumentAction, DocumentItem, DocumentStatus, OrderBy} from "../../../Assets/Document";
+import {Document, DocumentItem, DocumentOrderBy} from "../../../Assets/Document";
 import {configUtils, delay, globalConfig} from "../../../Assets/GlobalConfig";
 import {documentMockup} from "../../../Assets/mockup";
-import {User} from "../../../Assets/Common";
+import {ObjectAction, Status, User} from "../../../Assets/Common";
 import {BusinessPartner} from "../../../Assets/Data";
 
 
@@ -51,13 +51,13 @@ export const createDocument = async (
 };
 export const documentAction = async (
     id: number,
-    action: DocumentAction,
+    action: ObjectAction,
     user: User
 ): Promise<boolean> => {
     try {
         if (configUtils.isMockup) {
             if (action === "approve") {
-                documentMockup.status = DocumentStatus.Finished;
+                documentMockup.status = Status.Finished;
                 return true;
             }
             console.log("Mockup data is being used.");
@@ -91,12 +91,12 @@ export const documentAction = async (
 
 export const fetchDocuments = async (
     id?: number,
-    statuses: DocumentStatus[] = [DocumentStatus.Open, DocumentStatus.InProgress],
+    statuses: Status[] = [Status.Open, Status.InProgress],
     businessPartner?: BusinessPartner | null,
     date?: Date | null,
     docName?: string,
     grpo?: number,
-    orderBy: OrderBy = OrderBy.ID,
+    orderBy: DocumentOrderBy = DocumentOrderBy.ID,
     desc: boolean = true
 ): Promise<Document[]> => {
     try {

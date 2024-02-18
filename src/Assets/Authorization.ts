@@ -4,5 +4,7 @@ export enum Authorization {
     PICKING = 'Picking',
     PICKING_SUPERVISOR = 'PickingSupervisor',
     COUNTING = 'Counting',
-    COUNTING_SUPERVISOR = 'CountingSupervisor'
+    COUNTING_SUPERVISOR = 'CountingSupervisor',
+    TRANSFER = 'Transfer',
+    TRANSFER_SUPERVISOR = 'TransferSupervisor'
 }

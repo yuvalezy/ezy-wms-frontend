@@ -1,11 +1,8 @@
 import {Bar, Button, CheckBox, Dialog, DialogDomRef, Input, Label, MessageStripDesign, Table, TableCell, TableColumn, TableRow, Title} from "@ui5/webcomponents-react";
 import React, {forwardRef, useImperativeHandle, useRef, useState} from "react";
-import {ProcessAlertValue} from "./ProcessAlert";
-import ProcessCancel from "./ProcessCancel";
 import {useThemeContext} from "../../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {fetchGoodsReceiptReportAll, fetchGoodsReceiptReportAllDetails, GoodsReceiptAll, GoodsReceiptAllDetail, GoodsReceiptAllDetailUpdate} from "../Data/Report";
-import {fetchReasons, ReasonType, ReasonValue} from "../../../Assets/Reasons";
+import {fetchGoodsReceiptReportAllDetails, GoodsReceiptAll, GoodsReceiptAllDetail, GoodsReceiptAllDetailUpdate} from "../Data/Report";
 
 export interface GRPOAllDetailRef {
     show: (data: GoodsReceiptAll) => void;

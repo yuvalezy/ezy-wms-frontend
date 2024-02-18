@@ -1,9 +1,12 @@
-import {BinLocation, ResponseStatus} from "./Common";
+import {BinLocation, ResponseStatus, Status} from "./Common";
 import {DeliveryOpenDocument} from "./Deliveries";
 import {PickingDocument, PickingDocumentDetail, PickingDocumentDetailItem, PickStatus} from "../Pages/Picking/Data/PickingDocument";
-import {ProcessResponse} from "./Document";
+import {DocumentAddItemResponse, ProcessResponse} from "./Document";
 import {Counting, CountingContent} from "./Counting";
 import {GoodsReceiptAllDetail} from "../Pages/GoodsReceipt/Data/Report";
+import {Transfer} from "../Pages/Transfer/Data/Transfer";
+import {TransferAddItemResponse} from "../Pages/Transfer/Data/TransferProcess";
+import {ObjectStatus} from "@ui5/webcomponents-react";
 
 enum UpdateLineReturnValue {
     Status = "Status",
@@ -17,14 +20,6 @@ enum UpdateLineReturnValue {
 enum GoodsReceiptType {
     AutoConfirm = "AutoConfirm",
     SpecificOrders = "SpecificOrders",
-}
-
-enum DocumentStatus {
-    Open = "Open",
-    Processing = "Processing",
-    Finished = "Finished",
-    Cancelled = "Cancelled",
-    InProgress = "InProgress",
 }
 
 export const itemMockup = [
@@ -94,13 +89,13 @@ export const goodsReceiptVSExitReportDataMockup = [
 export const processResponseMockup: ProcessResponse = {
     ok: true
 }
-export const addItemResponseMockup = {
+export const addItemResponseMockup : DocumentAddItemResponse = {
     lineID: 123,
     closedDocument: false,
     fulfillment: false,
     showroom: false,
     warehouse: false,
-    purPackUn: 5,
+    quantity: 5,
 };
 
 export const UpdateLineReturnValueMockup: UpdateLineReturnValue =
@@ -114,7 +109,7 @@ export const documentMockup = {
         id: 5678,
         name: "John Doe",
     },
-    status: DocumentStatus.InProgress,
+    status: Status.InProgress,
     statusDate: "2023-11-03",
     statusEmployee: {
         id: 5678,
@@ -360,7 +355,7 @@ export const countingMockup : Counting = {
         id: 5678,
         name: "John Doe",
     },
-    status: DocumentStatus.InProgress,
+    status: Status.InProgress,
     statusDate: "2023-11-03",
     statusEmployee: {
         id: 5678,
@@ -398,3 +393,22 @@ export const countProcessRows : CountingContent[] = [
     {code: "test18", name: "test18 name", quantity: 22},
     {code: "test19", name: "test19 name", quantity: 22},
 ]
+export const transferMockup : Transfer = {
+    id: 1,
+    date: "2023-11-03",
+    employee: {
+        id: 5678,
+        name: "John Doe",
+    },
+    status: Status.InProgress,
+    statusDate: "2023-11-03",
+    statusEmployee: {
+        id: 5678,
+        name: "John Doe",
+    }
+};
+export const transferAddItemResponseMockup : TransferAddItemResponse = {
+    lineID: 123,
+    closedTransfer: false,
+    purPackUn: 5,
+};

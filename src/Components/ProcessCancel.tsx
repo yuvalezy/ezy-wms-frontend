@@ -1,12 +1,12 @@
 import React, {forwardRef, useImperativeHandle, useRef, useState} from "react";
-import {Bar, Button, ComboBox, ComboBoxItem, Dialog, DialogDomRef, Form, FormItem, MessageStripDesign, TextArea, Title} from "@ui5/webcomponents-react";
+import {Bar, Button, ComboBox, ComboBoxItem, Dialog, DialogDomRef, Form, FormItem, Input, InputDomRef, MessageStripDesign, TextArea, Title} from "@ui5/webcomponents-react";
 import {ProcessAlertValue} from "./ProcessAlert";
-import {useThemeContext} from "../../../Components/ThemeContext";
-import {fetchReasons, ReasonType, ReasonValue,} from "../../../Assets/Reasons";
+import {useThemeContext} from "./ThemeContext";
+import {fetchReasons, ReasonType, ReasonValue,} from "../Assets/Reasons";
 import {useTranslation} from "react-i18next";
-import {updateLine} from "../Data/CountingProcess";
 
-import {UpdateLineReturnValue} from "../../../Assets/Common";
+import {configUtils} from "../Assets/GlobalConfig";
+import {UpdateLineParameters, UpdateLineReturnValue} from "../Assets/Common";
 
 export interface ProcessCancelRef {
     show: (show: boolean) => void;
@@ -15,15 +15,20 @@ export interface ProcessCancelRef {
 export interface ProcessCancelProps {
     id: number;
     alert: ProcessAlertValue | null;
+    supervisorPassword?: boolean;
+    reasonType: ReasonType;
     onAccept: (comment: string, cancel: boolean) => void;
+    updateLine: (parameters: UpdateLineParameters) => Promise<UpdateLineReturnValue>;
 }
 
 const ProcessCancel = forwardRef((props: ProcessCancelProps, ref) => {
     const {t} = useTranslation();
     const {setLoading, setAlert} = useThemeContext();
     const [comment, setComment] = useState(props.alert?.comment || "");
+    const [userName, setUserName] = useState("");
     const [reason, setReason] = useState<ReasonValue | null>(null);
     const [reasons, setReasons] = useState<ReasonValue[]>([]);
+    const usernameRef = useRef<InputDomRef>(null);
     const dialogRef = useRef<DialogDomRef>(null);
 
     function errorAlert(message: string) {
@@ -33,10 +38,11 @@ const ProcessCancel = forwardRef((props: ProcessCancelProps, ref) => {
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         setLoading(true);
-        updateLine({
+        props.updateLine({
             id: props.id,
             lineID: props.alert?.lineID ?? -1,
             comment: comment,
+            userName: userName,
             reason: reason?.value ?? -1,
         })
             .then((value) => {
@@ -51,10 +57,18 @@ const ProcessCancel = forwardRef((props: ProcessCancelProps, ref) => {
                     case UpdateLineReturnValue.CloseReason:
                         message = t("updateLineReason");
                         break;
+                    case UpdateLineReturnValue.SupervisorPassword:
+                        message = t("updateLineWrongSupervisorPassword");
+                        break;
+                    case UpdateLineReturnValue.NotSupervisor:
+                        message = t("updateLineNotSupervisorError");
+                        break;
                 }
-                if (message != null) {
+                if (message !== null) {
                     errorAlert(message);
+                    setUserName("");
                     setLoading(false);
+                    setTimeout(() => usernameRef.current?.focus(), 100);
                     return;
                 }
                 props.onAccept(comment, true);
@@ -75,8 +89,9 @@ const ProcessCancel = forwardRef((props: ProcessCancelProps, ref) => {
             if (show) {
                 setComment("");
                 setReason(null);
+                setUserName("");
                 setLoading(true);
-                fetchReasons(ReasonType.Counting)
+                fetchReasons(props.reasonType)
                     .then((reasons) => {
                         setReasons(reasons);
                         dialogRef?.current?.show();
@@ -135,6 +150,19 @@ const ProcessCancel = forwardRef((props: ProcessCancelProps, ref) => {
                     />
 
                 </FormItem>
+                {(props.supervisorPassword??false) &&
+                    <FormItem label={t("supervisorCode")}>
+                        <Input
+                            required
+                            name="username"
+                            ref={usernameRef}
+                            type="Password"
+                            id="username"
+                            value={userName}
+                            onChange={(e) => setUserName(e.target.value as string)}
+                        ></Input>
+                    </FormItem>
+                }
                 <FormItem label={t("reason")}>
                     <ComboBox
                         value={reason?.description?.toString()??""}

@@ -1,15 +1,16 @@
-import React, {useRef, useEffect} from "react";
-import {useNavigate} from "react-router-dom";
 import ContentTheme from "../../Components/ContentTheme";
 import {useTranslation} from "react-i18next";
-import {Button, Form, FormItem, Input, InputDomRef, MessageStripDesign} from "@ui5/webcomponents-react";
 import {useThemeContext} from "../../Components/ThemeContext";
-import {IsNumeric, StringFormat} from "../../Assets/Functions";
+import React, {useEffect, useRef} from "react";
 import {useDocumentStatusToString} from "../../Assets/DocumentStatusString";
-import {fetchCountings} from "./Data/Counting";
+import {Button, Form, FormItem, Input, InputDomRef, MessageStripDesign} from "@ui5/webcomponents-react";
+import {useNavigate} from "react-router-dom";
+import {IsNumeric, StringFormat} from "../../Assets/Functions";
+import {fetchDocuments} from "../GoodsReceipt/Data/Document";
+import {fetchTransfers} from "./Data/Transfer";
 import {Status} from "../../Assets/Common";
 
-export default function Counting() {
+export default function Transfer() {
     const {setLoading, setAlert} = useThemeContext();
     const [scanCodeInput, setScanCodeInput] = React.useState("");
     const {t} = useTranslation();
@@ -31,7 +32,7 @@ export default function Counting() {
         let checkScan = scanCodeInput.split("_");
         if (
             checkScan.length !== 2 ||
-            (checkScan[0] !== "CNT" && checkScan[0] !== "$CNT") ||
+            (checkScan[0] !== "TRSF" && checkScan[0] !== "$TRSF") ||
             !IsNumeric(checkScan[1])
         ) {
             setAlert({message: t("invalidScanCode"), type: MessageStripDesign.Warning});
@@ -39,32 +40,32 @@ export default function Counting() {
         }
         const id = parseInt(checkScan[1]);
         setLoading(true);
-        fetchCountings(id, [])
-            .then((counts) => {
-                if (counts.length === 0) {
-                    setAlert({message: t("countingNotFound"), type: MessageStripDesign.Warning});
+        fetchTransfers(id, [])
+            .then((doc) => {
+                if (doc.length === 0) {
+                    setAlert({message: StringFormat(t("transferNotFound"), id), type: MessageStripDesign.Warning});
                     return;
                 }
-                const status = counts[0].status;
+                const status = doc[0].status;
 
                 if (status !== Status.Open && status !== Status.InProgress) {
                     setAlert({message: StringFormat(
-                            t("countingStatusError"),
+                            t("transferStatusError"),
                             id,
                             documentStatusToString(status)
                         ), type: MessageStripDesign.Warning});
                     return;
                 }
-                navigate(`/counting/${id}`);
+                navigate(`/transfer/${id}`);
             })
             .catch((error) => {
-                setAlert({message: `Validate Counting Error: ${error}`, type: MessageStripDesign.Negative});
+                setAlert({message: `Validate Transfer Error: ${error}`, type: MessageStripDesign.Negative});
             })
             .finally(() => setLoading(false));
     }
 
     return (
-        <ContentTheme title={t("counting")} icon="product">
+        <ContentTheme title={t("transfer")} icon="move">
             {ScanForm()}
         </ContentTheme>
     );

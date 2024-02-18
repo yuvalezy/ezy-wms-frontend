@@ -1,15 +1,13 @@
-import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
 import {BusinessPartner, Employee} from "./Data";
 import {GoodsReceiptType} from "../Pages/GoodsReceipt/Data/Document";
-
-export type DocumentAction = "approve" | "cancel" | "qrcode";
+import {Status} from "./Common";
 
 export type Document = {
     id: number;
     name: string;
     date: string;
     employee: Employee;
-    status: DocumentStatus;
+    status: Status;
     statusDate?: string;
     statusEmployee?: Employee;
     businessPartner?: BusinessPartner;
@@ -25,15 +23,7 @@ export type DocumentItem = {
     documentNumber: number;
 };
 
-export enum DocumentStatus {
-    Open = "Open",
-    Processing = "Processing",
-    Finished = "Finished",
-    Cancelled = "Cancelled",
-    InProgress = "InProgress",
-}
-
-export enum OrderBy {
+export enum DocumentOrderBy {
     ID = "ID",
     Name = "Name",
     Date = "Date",
@@ -44,18 +34,14 @@ export interface DocumentAddItemResponse {
     fulfillment: boolean;
     showroom: boolean;
     warehouse: boolean;
-    purPackUn: number;
+    quantity: number;
     errorMessage?: string;
 }
 
-export type AddItemResponseMultipleValue = {
-    message: string;
-    severity: MessageStripDesign;
-};
 export type DocumentStatusOption = {
     code: string;
     name: string;
-    status: DocumentStatus;
+    status: Status;
 };
 
 export type ProcessResponse = {

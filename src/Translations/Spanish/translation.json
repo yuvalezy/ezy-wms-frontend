@@ -12,6 +12,9 @@
   "counting": "Conteo",
   "countingSupervisor": "Supervisor de Conteo",
   "countingReport": "Reporte de Conteo",
+  "transfer": "Transferencia",
+  "transferSupervisor": "Supervisor de Transferencia",
+  "transferReport": "Reporte de Transferencia",
 
   "login": "Entrada de Usuario",
   "enter": "Entrar",
@@ -106,6 +109,8 @@
 
   "selectVendor": "Seleccione el Proveedor",
   "selectBox": "Seleccione la Caja",
+  "selectSourceBin": "Seleccionar ubicación de origen",
+  "selectTargetBin": "Seleccionar ubicación de destino",
 
   "scanBinLocation": "Escanear la Ubicación",
   "pickingNotFound": "Picking #{0} no es válido",
@@ -115,6 +120,9 @@
   "goodsReceiptNotFound": "La entrada #{0} no es válida",
   "goodsReceiptStatusError": "El estado de la entrada #{0} es {1}.\nNo se puede continuar.",
   "goodsReceiptIsClosed": "Entrada #{0} esta cerrada",
+  "transferNotFound": "La transferencia #{0} no es válida",
+  "transferStatusError": "El estado de la transferencia #{0} es {1}.\nNo se puede continuar.",
+  "transferIsClosed": "Transferencia #{0} esta cerrada",
   "countingNotFound": "El Conteo de Inventario #{0} no es válida",
   "countingStatusError": "El estado del Conteo de Inventario #{0} es {1}.\nNo se puede continuar.",
   "countingIsClosed": "Conteo de Inventario #{0} esta cerrado",

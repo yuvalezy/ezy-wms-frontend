@@ -3,34 +3,33 @@ import {useNavigate} from "react-router-dom";
 import {useAuth} from "../../../Components/AppContext";
 import {useTranslation} from "react-i18next";
 import {Card, CardHeader, Icon, List, StandardListItem, Button} from "@ui5/webcomponents-react";
-import {Document} from "../../../Assets/Document";
 import {useObjectName} from "../../../Assets/ObjectName";
 import {Authorization} from "../../../Assets/Authorization";
 import {useDocumentStatusToString} from "../../../Assets/DocumentStatusString";
-import {Counting} from "../../../Assets/Counting";
+import {Transfer} from "../Data/Transfer";
 import {Status} from "../../../Assets/Common";
 
-type CountingCardProps = {
-    doc: Counting,
-    handleAction: (docId: number, action: 'approve' | 'cancel' | 'qrcode') => void
+type TransferCardProps = {
+    doc: Transfer,
+    onAction: (id: number, action: 'approve' | 'cancel' | 'qrcode') => void
 }
 
-const CountingCard: React.FC<CountingCardProps> = ({doc, handleAction}) => {
+const TransferCard: React.FC<TransferCardProps> = ({doc, onAction}) => {
     const {t} = useTranslation();
     const o = useObjectName();
     const navigate = useNavigate();
     const {user} = useAuth();
 
     function handleOpen(id: number) {
-        navigate(`/counting/${id}`);
+        navigate(`/transfer/${id}`);
     }
 
-    let handleOpenLink = user?.authorizations?.includes(Authorization.COUNTING);
+    let handleOpenLink = user?.authorizations?.includes(Authorization.TRANSFER);
 
     const documentStatusToString = useDocumentStatusToString();
 
     return (
-        <Card key={doc.id} header={<CardHeader titleText={`${t('id')} : ${doc.name}`}/>}>
+        <Card key={doc.id} header={<CardHeader titleText={`${t('id')}`}/>}>
             <List>
                 <StandardListItem>
                     {handleOpenLink && (<a href="#" onClick={e => {
@@ -38,7 +37,7 @@ const CountingCard: React.FC<CountingCardProps> = ({doc, handleAction}) => {
                         handleOpen(doc.id)
                     }}><strong>{t('number')}:</strong> {doc.id}</a>)}
                     {!handleOpenLink && (<><strong>{t('number')}:</strong> {doc.id}</>)}
-                    <a style={{float: 'right'}} onClick={(e) => handleAction(doc.id, 'qrcode')}>
+                    <a style={{float: 'right'}} onClick={(e) => onAction(doc.id, 'qrcode')}>
                         <Icon name="qr-code" />
                     </a>
                 </StandardListItem>
@@ -47,10 +46,10 @@ const CountingCard: React.FC<CountingCardProps> = ({doc, handleAction}) => {
                 <StandardListItem><strong>{t('status')}:</strong> {documentStatusToString(doc.status)}</StandardListItem>
                 <StandardListItem>
                     {doc.status === Status.InProgress && (
-                        <Button style={{marginRight: '10px'}} color="primary" onClick={() => handleAction(doc.id, 'approve')} icon="complete">
+                        <Button style={{marginRight: '10px'}} color="primary" onClick={() => onAction(doc.id, 'approve')} icon="complete">
                             {t('finish')}
                         </Button>)}
-                    <Button icon="cancel" onClick={() => handleAction(doc.id, 'cancel')}>
+                    <Button icon="cancel" onClick={() => onAction(doc.id, 'cancel')}>
                         {t('cancel')}
                     </Button>
                 </StandardListItem>
@@ -59,4 +58,4 @@ const CountingCard: React.FC<CountingCardProps> = ({doc, handleAction}) => {
     );
 }
 
-export default CountingCard;
+export default TransferCard;

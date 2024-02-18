@@ -2,8 +2,9 @@ import React from "react";
 import {Card, CardHeader, List, StandardListItem} from "@ui5/webcomponents-react";
 import {useNavigate} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import {Document, DocumentStatus} from "../../../Assets/Document";
+import {Document} from "../../../Assets/Document";
 import {useDocumentStatusToString} from "../../../Assets/DocumentStatusString";
+import {Status} from "../../../Assets/Common";
 
 type DocumentReportCardProps = {
     doc: Document
@@ -42,7 +43,7 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc}) => {
                     }}>{t('goodsReceiptReport')}</a>
                 </StandardListItem>
                 <StandardListItem>
-                    {doc.status === DocumentStatus.Finished &&
+                    {doc.status === Status.Finished &&
                         <a href="#" onClick={e => {
                             e.preventDefault();
                             handleOpen('vs', doc.id)

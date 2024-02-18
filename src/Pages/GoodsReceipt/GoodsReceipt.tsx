@@ -6,8 +6,8 @@ import {useTranslation} from "react-i18next";
 import {Button, Form, FormItem, Input, InputDomRef, MessageStripDesign} from "@ui5/webcomponents-react";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
-import {DocumentStatus} from "../../Assets/Document";
 import {useDocumentStatusToString} from "../../Assets/DocumentStatusString";
+import {Status} from "../../Assets/Common";
 
 export default function GoodsReceipt() {
     const {setLoading, setAlert} = useThemeContext();
@@ -47,7 +47,7 @@ export default function GoodsReceipt() {
                 }
                 const status = doc[0].status;
 
-                if (status !== DocumentStatus.Open && status !== DocumentStatus.InProgress) {
+                if (status !== Status.Open && status !== Status.InProgress) {
                     setAlert({message: StringFormat(
                         t("goodsReceiptStatusError"),
                         id,

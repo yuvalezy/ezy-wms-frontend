@@ -1,20 +1,21 @@
 import { useTranslation } from 'react-i18next';
-import {DocumentStatus} from "./Document";
+
+import {Status} from "./Common";
 
 export const useDocumentStatusToString = () => {
     const { t } = useTranslation();
 
-    return (status: DocumentStatus) => {
+    return (status: Status) => {
         switch (status) {
-            case DocumentStatus.Open:
+            case Status.Open:
                 return t('openStatus');
-            case DocumentStatus.Processing:
+            case Status.Processing:
                 return t('processingStatus');
-            case DocumentStatus.Finished:
+            case Status.Finished:
                 return t('finishedStatus');
-            case DocumentStatus.Cancelled:
+            case Status.Cancelled:
                 return t('cancelledStatus');
-            case DocumentStatus.InProgress:
+            case Status.InProgress:
                 return t('inProgressStatus');
             default:
                 return '';

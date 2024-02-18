@@ -12,6 +12,9 @@
   "counting": "Counting",
   "countingSupervisor": "Counting Supervisor",
   "countingReport": "Counting Report",
+  "transfer": "Transfer",
+  "transferSupervisor": "Transfer Supervisor",
+  "transferReport": "Transfer Report",
 
   "login": "Login",
   "enter": "Enter",
@@ -106,6 +109,8 @@
 
   "selectVendor": "Select Vendor",
   "selectBox": "Select Box",
+  "selectSourceBin": "Select Source Bin Location",
+  "selectTargetBin": "Select Target Bin Location",
 
   "scanBinLocation": "Scan Bin Location",
   "pickingNotFound": "Picking #{0} is not valid",
@@ -115,6 +120,9 @@
   "goodsReceiptNotFound": "The entry #{0} is not valid",
   "goodsReceiptStatusError": "The status of the entry #{0} is {1}.\nCannot continue.",
   "goodsReceiptIsClosed": "Entry #{0} is closed",
+  "transferNotFound": "The transfer #{0} is not valid",
+  "transferStatusError": "The status of the transfer #{0} is {1}.\nCannot continue.",
+  "transferIsClosed": "Transfer #{0} is closed",
   "countingNotFound": "The Inventory Counting #{0} is not valid",
   "countingStatusError": "The status of the Inventory Counting #{0} is {1}.\nCannot continue.",
   "countingIsClosed": "Inventory Counting #{0} is closed",
