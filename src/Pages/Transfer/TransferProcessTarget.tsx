@@ -29,7 +29,7 @@ export default function TransferProcessTarget() {
     const [rows, setRows] = useState<TransferBinContent[] | null>(null);
     const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
 
-    const title = `${t("transfer")} #${scanCode} - ${t("selectTargetBin")}`;
+    const title = `${t("transfer")} #${scanCode} - ${t("selectTransferTarget")}`;
 
 
     return (

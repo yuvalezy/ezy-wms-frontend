@@ -55,6 +55,33 @@ export const createTransfer = async (): Promise<Transfer> => {
         throw error; // Re-throwing so that the calling function can decide what to do with the error
     }
 };
+export const checkIsComplete = async (id: number): Promise<boolean> => {
+    try {
+        if (configUtils.isMockup) {
+            console.log("Mockup data is being used.");
+            return true;
+        }
+
+        if (!globalConfig) throw new Error("Config has not been initialized!");
+
+        if (globalConfig.debug) await delay();
+
+        const access_token = localStorage.getItem("token");
+        const response = await axios.get<boolean>(
+            `${globalConfig.baseURL}/api/Transfer/IsComplete/${id}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${access_token}`,
+                },
+            }
+        );
+
+        return response.data;
+    } catch (error) {
+        console.error("Error creating transfer:", error);
+        throw error; // Re-throwing so that the calling function can decide what to do with the error
+    }
+};
 export const fetchTransfers = async (
     id?: number,
     statuses: Status[] = [Status.Open, Status.InProgress],

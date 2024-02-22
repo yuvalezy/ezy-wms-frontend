@@ -1,12 +1,12 @@
 import ContentTheme from "../../Components/ContentTheme";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import React, {CSSProperties, useEffect, useRef, useState} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {Label, MessageStrip, Table, TableCell, TableColumn, TableRow} from "@ui5/webcomponents-react";
-import {IsNumeric} from "../../Assets/Functions";
+import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {useAuth} from "../../Components/AppContext";
-import {BinLocation, SourceTarget} from "../../Assets/Common";
+import {AxiosErrorResponse, BinLocation, SourceTarget} from "../../Assets/Common";
 import BarCodeScanner, {BarCodeScannerRef} from "../../Components/BarCodeScanner";
 import {addItem, fetchTransferContent, TransferBinContent} from "./Data/Transfer";
 import BinLocationScanner from "../../Components/BinLocationScanner";
@@ -17,6 +17,7 @@ import {ScrollableContent} from "../../Components/ScrollableContent";
 import {ReasonType} from "../../Assets/Reasons";
 import Processes, {ProcessesRef} from "../../Components/Processes";
 import {updateLine} from "./Data/TransferProcess";
+import {AxiosError} from "axios";
 
 export default function TransferProcessSource() {
     const {scanCode} = useParams();
@@ -30,8 +31,15 @@ export default function TransferProcessSource() {
     const [rows, setRows] = useState<TransferBinContent[] | null>(null);
     const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
     const processesRef = useRef<ProcessesRef>(null);
+    const navigate = useNavigate();
 
-    const title = `${t("transfer")} #${scanCode} - ${t("selectSourceBin")}`;
+    function getTitle(): string {
+        if (binLocation == null) {
+            return `${t("transfer")} #${scanCode} - ${t("selectTransferSource")}`;
+        } else {
+            return StringFormat(`${t("selectItemsForTransfers")}`, scanCode);
+        }
+    }
 
     useEffect(() => {
         setEnable(!user?.binLocations ?? false);
@@ -112,9 +120,16 @@ export default function TransferProcessSource() {
                 loadRows();
                 barcodeRef?.current?.focus();
             })
-            .catch((e) => {
+            .catch((error) => {
+                let message = error.message;
+                try {
+                    const axiosError = error as AxiosError;
+                    const data = axiosError.response?.data as AxiosErrorResponse;
+                    message = data?.exceptionMessage;
+                } catch(e) {
+                }
                 setAlert({
-                    message: `Add Item Error Error: ${e}`,
+                    message: `Add Item Error Error: ${message}`,
                     type: MessageStripDesign.Negative,
                 });
             })
@@ -156,9 +171,12 @@ export default function TransferProcessSource() {
         setCurrentAlert(newAlert);
         loadRows();
     }
+    function navigateBack() {
+        navigate(`/transfer/${id}`);
+    }
 
     return (
-        <ContentTheme title={title} icon="functional-location">
+        <ContentTheme title={getTitle()} icon="functional-location" back={() => navigateBack()}>
             {id &&
                 <ScrollableContent>
                     {user?.binLocations && <BinLocationScanner onChanged={onBinChanged} onClear={onBinClear}/>}

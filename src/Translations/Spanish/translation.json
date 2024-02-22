@@ -109,8 +109,9 @@
 
   "selectVendor": "Seleccione el Proveedor",
   "selectBox": "Seleccione la Caja",
-  "selectSourceBin": "Seleccionar ubicación de origen",
-  "selectTargetBin": "Seleccionar ubicación de destino",
+  "selectTransferSource": "Elija la ubicación de recogida",
+  "selectItemsForTransfers": "Select Items for Transfer #{0}",
+  "selectTransferTarget": "Elija artículos para el destino",
 
   "scanBinLocation": "Escanear la Ubicación",
   "pickingNotFound": "Picking #{0} no es válido",

@@ -1,6 +1,11 @@
 import {Authorization} from "./Authorization";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
 
+export interface AxiosErrorResponse {
+    exceptionMessage: string;
+    exceptionType: string;
+    message: string;
+}
 export interface User {
     id: number;
     name: string;

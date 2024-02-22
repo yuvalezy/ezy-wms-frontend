@@ -114,3 +114,12 @@
     color: blue;
     text-decoration: underline;
 }
+.disabled-div {
+    cursor: not-allowed;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.disabled-div .homeMenuItem, .disabled-div ui5-icon {
+    color: grey;
+}
