@@ -20,6 +20,7 @@ export interface ProcessAlertValue {
 export interface ProcessAlertProps {
     alert: ProcessAlertValue;
     onAction: (type: AlertActionType) => void;
+    enableComment?: boolean;
 }
 
 export enum AlertActionType {
@@ -29,7 +30,7 @@ export enum AlertActionType {
     Quantity,
 }
 
-const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction}) => {
+const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComment}) => {
     const {t} = useTranslation();
     const getAlertStyle = () => {
         const style: React.CSSProperties = {
@@ -71,6 +72,12 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction}) => {
                         <Icon name="cancel" onClick={() => onAction(AlertActionType.Cancel)}/>
                         <br/>
                         <Icon name="numbered-text" onClick={() => onAction(AlertActionType.Quantity)}/>
+                        {enableComment &&
+                            <>
+                                <br/>
+                                <Icon name="comment" onClick={() => onAction(AlertActionType.Comments)}/>
+                            </>
+                        }
                     </div>
                 }
             </MessageStrip>

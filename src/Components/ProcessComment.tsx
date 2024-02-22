@@ -9,7 +9,7 @@ import {
 import {ProcessAlertValue} from "./ProcessAlert";
 import {useThemeContext} from "./ThemeContext";
 import {useTranslation} from "react-i18next";
-import {updateLine} from "../Pages/GoodsReceipt/Data/GoodsReceiptProcess";
+import {UpdateLineParameters, UpdateLineReturnValue} from "../Assets/Common";
 
 export interface ProcessCommentRef {
     show: (show: boolean) => void;
@@ -19,6 +19,8 @@ export interface ProcessCommentProps {
     id: number;
     alert?: ProcessAlertValue | null;
     onAccept: (comment: string) => void;
+    updateLine: (parameters: UpdateLineParameters) => Promise<UpdateLineReturnValue>;
+    updateComplete?: () => void;
 }
 
 const ProcessComment = forwardRef((props: ProcessCommentProps, ref) => {
@@ -30,7 +32,7 @@ const ProcessComment = forwardRef((props: ProcessCommentProps, ref) => {
 
     const handleSave = () => {
         setLoading(true);
-        updateLine({
+        props.updateLine({
             id: props.id,
             lineID: props.alert?.lineID ?? -1,
             comment: comment,
@@ -38,13 +40,16 @@ const ProcessComment = forwardRef((props: ProcessCommentProps, ref) => {
             .then((_) => {
                 props.onAccept(comment);
                 dialogRef?.current?.close();
+                if (props.updateComplete == null) {
+                    setLoading(false);
+                } else {
+                    props.updateComplete();
+                }
             })
             .catch((error) => {
                 console.error(`Error performing update: ${error}`);
                 let errorMessage = error.response?.data["exceptionMessage"]??`Update Line Error: ${error}`;
                 setAlert({message: errorMessage, type: MessageStripDesign.Negative});
-            })
-            .finally(function () {
                 setLoading(false);
             });
     };

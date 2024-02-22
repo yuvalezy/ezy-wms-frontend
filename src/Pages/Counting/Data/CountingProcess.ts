@@ -1,7 +1,7 @@
 import {configUtils, delay, globalConfig} from "../../../Assets/GlobalConfig";
 import axios from "axios";
 import {UpdateLineReturnValueMockup} from "../../../Assets/mockup";
-import {UpdateLineReturnValue} from "../../../Assets/Common";
+import {UpdateLineParameters, UpdateLineReturnValue} from "../../../Assets/Common";
 
 export type Process = {
     hello: number
@@ -13,13 +13,7 @@ interface CountingAddItemResponse {
     errorMessage?: string;
 }
 
-export const updateLine = async ({id, lineID, comment, reason, quantity,}: {
-    id: number;
-    lineID: number;
-    comment?: string;
-    quantity?: number;
-    reason?: number;
-}): Promise<UpdateLineReturnValue> => {
+export const updateLine = async ({id, lineID, comment, reason, quantity}: UpdateLineParameters): Promise<UpdateLineReturnValue> => {
     try {
         if (configUtils.isMockup) {
             console.log("Mockup data is being used.");

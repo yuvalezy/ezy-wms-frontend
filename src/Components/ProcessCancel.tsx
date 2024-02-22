@@ -4,8 +4,6 @@ import {ProcessAlertValue} from "./ProcessAlert";
 import {useThemeContext} from "./ThemeContext";
 import {fetchReasons, ReasonType, ReasonValue,} from "../Assets/Reasons";
 import {useTranslation} from "react-i18next";
-
-import {configUtils} from "../Assets/GlobalConfig";
 import {UpdateLineParameters, UpdateLineReturnValue} from "../Assets/Common";
 
 export interface ProcessCancelRef {
@@ -19,6 +17,7 @@ export interface ProcessCancelProps {
     reasonType: ReasonType;
     onAccept: (comment: string, cancel: boolean) => void;
     updateLine: (parameters: UpdateLineParameters) => Promise<UpdateLineReturnValue>;
+    updateComplete?: () => void;
 }
 
 const ProcessCancel = forwardRef((props: ProcessCancelProps, ref) => {
@@ -73,7 +72,11 @@ const ProcessCancel = forwardRef((props: ProcessCancelProps, ref) => {
                 }
                 props.onAccept(comment, true);
                 dialogRef?.current?.close();
-                setLoading(false);
+                if (props.updateComplete == null) {
+                    setLoading(false);
+                } else {
+                    props.updateComplete();
+                }
             })
             .catch((error) => {
                 console.error(`Error performing update: ${error}`);

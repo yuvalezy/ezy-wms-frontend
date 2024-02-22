@@ -9,7 +9,8 @@ export type ReasonValue = {
 
 export enum ReasonType {
     GoodsReceipt = "GoodsReceipt",
-    Counting = "Counting"
+    Counting = "Counting",
+    Transfer = "Transfer",
 }
 
 export const fetchReasons = async (type: ReasonType): Promise<ReasonValue[]> => {

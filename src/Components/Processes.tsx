@@ -1,0 +1,53 @@
+import {AlertActionType, ProcessAlertValue} from "./ProcessAlert";
+import ProcessCancel, {ProcessCancelRef} from "./ProcessCancel";
+import {ReasonType} from "../Assets/Reasons";
+import ProcessQuantity, {ProcessQuantityRef} from "./ProcessQuantity";
+import React, {forwardRef, useImperativeHandle, useRef} from "react";
+import {UpdateLineParameters, UpdateLineReturnValue} from "../Assets/Common";
+import ProcessComment, {ProcessCommentRef} from "./ProcessComment";
+
+export interface ProcessesRef {
+    open: (type: AlertActionType) => void;
+}
+
+export interface ProcessesProps {
+    id: number;
+    alert: ProcessAlertValue | null;
+    reasonType: ReasonType
+    supervisorPassword?: boolean;
+    onCancel?: (comment: string, cancel: boolean) => void;
+    onCommentsChanged?: (comment: string) => void;
+    onQuantityChanged?: (quantity: number) => void;
+    onUpdateLine: (parameters: UpdateLineParameters) => Promise<UpdateLineReturnValue>;
+    onUpdateComplete?: () => void;
+}
+
+const Processes = forwardRef((props: ProcessesProps, ref) => {
+    const processCancelRef = useRef<ProcessCancelRef>(null);
+    const processQuantityRef = useRef<ProcessQuantityRef>(null);
+    const processCommentRef = useRef<ProcessCommentRef>(null);
+
+    useImperativeHandle(ref, () => ({
+        open: (type: AlertActionType) => {
+            switch (type) {
+                case AlertActionType.Cancel:
+                    processCancelRef?.current?.show(true);
+                    break;
+                case AlertActionType.Quantity:
+                    processQuantityRef?.current?.show(true);
+                    break;
+                case AlertActionType.Comments:
+                    processCommentRef?.current?.show(true);
+                    break;
+            }
+        }
+    }));
+
+    return <>
+        {props.onCancel && <ProcessCancel id={props.id} alert={props.alert} ref={processCancelRef} supervisorPassword={props.supervisorPassword} onAccept={props.onCancel} reasonType={props.reasonType} updateLine={props.onUpdateLine} updateComplete={props.onUpdateComplete}/> }
+        {props.onQuantityChanged && <ProcessQuantity id={props.id} alert={props.alert} ref={processQuantityRef} supervisorPassword={props.supervisorPassword} onAccept={props.onQuantityChanged} updateLine={props.onUpdateLine} updateComplete={props.onUpdateComplete}/>}
+        {props.onCommentsChanged && <ProcessComment id={props.id} alert={props.alert} ref={processCommentRef} onAccept={props.onCommentsChanged} updateLine={props.onUpdateLine} updateComplete={props.onUpdateComplete}/>}
+    </>
+})
+
+export default Processes;

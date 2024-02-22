@@ -21,6 +21,7 @@ export interface ProcessQuantityProps {
     supervisorPassword?: boolean;
     onAccept: (quantity: number) => void;
     updateLine: (parameters: UpdateLineParameters) => Promise<UpdateLineReturnValue>;
+    updateComplete?: () => void;
 }
 
 const ProcessQuantity = forwardRef((props: ProcessQuantityProps, ref) => {
@@ -58,9 +59,12 @@ const ProcessQuantity = forwardRef((props: ProcessQuantityProps, ref) => {
                     case UpdateLineReturnValue.NotSupervisor:
                         message = t("updateLineNotSupervisorError");
                         break;
+                    case UpdateLineReturnValue.QuantityMoreThenAvailable:
+                        message = t("updateLineQuantityMoreThenAvailableError");
+                        break;
                 }
                 if (message !== null) {
-                    setAlert({message: t('duplicateNotAllowed'), type: MessageStripDesign.Negative});
+                    setAlert({message: message, type: MessageStripDesign.Negative});
                     setUserName("");
                     setLoading(false);
                     setTimeout(() => QuantityRef.current?.focus(), 100);
@@ -69,7 +73,11 @@ const ProcessQuantity = forwardRef((props: ProcessQuantityProps, ref) => {
 
                 props.onAccept(quantity);
                 dialogRef?.current?.close();
-                setLoading(false);
+                if (props.updateComplete == null) {
+                    setLoading(false);
+                } else {
+                    props.updateComplete();
+                }
             })
             .catch((error) => {
                 console.error(`Error performing update: ${error}`);

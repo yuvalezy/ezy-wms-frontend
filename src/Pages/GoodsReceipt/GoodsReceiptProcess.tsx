@@ -11,12 +11,14 @@ import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
 import {addItem, updateLine} from "./Data/GoodsReceiptProcess";
 import {AddItemResponseMultipleValue, distinctItems, Item} from "../../Assets/Common";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
-import {configUtils} from "../../Assets/GlobalConfig";
+import {configUtils, delay} from "../../Assets/GlobalConfig";
 import {scanBarcode} from "../../Assets/ScanBarcode";
 import ProcessAlert, {AlertActionType, ProcessAlertValue} from "../../Components/ProcessAlert";
 import {ReasonType} from "../../Assets/Reasons";
 import ProcessQuantity, {ProcessQuantityRef} from "../../Components/ProcessQuantity";
 import {DocumentAddItemResponse} from "../../Assets/Document";
+import Processes, {ProcessesRef} from "../../Components/Processes";
+import processes from "../../Components/Processes";
 
 export default function GoodsReceiptProcess() {
     const {scanCode} = useParams();
@@ -31,9 +33,7 @@ export default function GoodsReceiptProcess() {
     const [boxItems, setBoxItems] = useState<Item[]>();
     const [acceptValues, setAcceptValues] = useState<ProcessAlertValue[]>([]);
     const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
-    const processCancelRef = useRef<ProcessCancelRef>(null);
-    const processCommentRef = useRef<ProcessCommentRef>(null);
-    const processQuantityRef = useRef<ProcessQuantityRef>(null);
+    const processesRef = useRef<ProcessesRef>(null);
 
     const title = `${t("goodsReceipt")} #${scanCode}`;
 
@@ -181,17 +181,7 @@ export default function GoodsReceiptProcess() {
 
     function alertAction(alert: ProcessAlertValue, type: AlertActionType) {
         setCurrentAlert(alert);
-        switch (type) {
-            case AlertActionType.Cancel:
-                processCancelRef?.current?.show(true);
-                break;
-            case AlertActionType.Comments:
-                processCommentRef?.current?.show(true);
-                break;
-            case AlertActionType.Quantity:
-                processQuantityRef?.current?.show(true);
-                break;
-        }
+        delay(1).then(() => processesRef?.current?.open(type));
     }
 
     function handleAlertActionAccept(type: AlertActionType, value?: string | number, cancel?: boolean): void {
@@ -250,31 +240,18 @@ export default function GoodsReceiptProcess() {
                     )}
                     {acceptValues.map((alert) => (
                         <ProcessAlert
+                            enableComment={true}
                             alert={alert}
                             key={alert.lineID}
                             onAction={(type) => alertAction(alert, type)}
                         />
                     ))}
-                    <ProcessCancel
-                        id={id}
-                        alert={currentAlert}
-                        ref={processCancelRef}
-                        supervisorPassword={configUtils.grpoModificationSupervisor}
-                        onAccept={(comment, cancel) => handleAlertActionAccept(AlertActionType.Cancel, comment, cancel)}
-                        reasonType={ReasonType.GoodsReceipt} updateLine={updateLine}/>
-                    <ProcessComment
-                        id={id}
-                        alert={currentAlert}
-                        ref={processCommentRef}
-                        onAccept={(comment) => handleAlertActionAccept(AlertActionType.Comments, comment)}
-                    />
-                    <ProcessQuantity
-                        id={id}
-                        alert={currentAlert}
-                        ref={processQuantityRef}
-                        supervisorPassword={configUtils.grpoModificationSupervisor}
-                        onAccept={(quantity) => handleAlertActionAccept(AlertActionType.Quantity, quantity)}
-                        updateLine={updateLine}/>
+                    {currentAlert && id && <Processes ref={processesRef} id={id} alert={currentAlert} reasonType={ReasonType.GoodsReceipt}
+                                                      onCancel={(comment, cancel) => handleAlertActionAccept(AlertActionType.Cancel, comment, cancel)}
+                                                      onCommentsChanged={(comment) => handleAlertActionAccept(AlertActionType.Comments, comment)}
+                                                      onQuantityChanged={(quantity) => handleAlertActionAccept(AlertActionType.Quantity, quantity)}
+                                                      supervisorPassword={configUtils.grpoModificationSupervisor}
+                                                      onUpdateLine={updateLine}/>}
                     <BoxConfirmationDialog
                         onSelected={(v: string) => addItemToDocument(v)}
                         ref={boxConfirmationDialogRef}

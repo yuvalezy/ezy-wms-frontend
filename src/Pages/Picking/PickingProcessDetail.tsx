@@ -12,6 +12,7 @@ import {addItem, fetchPicking, PickingDocument, PickingDocumentDetail} from "./D
 import {useObjectName} from "../../Assets/ObjectName";
 import {scanBarcode} from "../../Assets/ScanBarcode";
 import BarCodeScanner, {BarCodeScannerRef} from "../../Components/BarCodeScanner";
+import {ScrollableContent} from "../../Components/ScrollableContent";
 
 export default function PickingProcessDetail() {
     const {idParam, typeParam, entryParam} = useParams();
@@ -90,51 +91,9 @@ export default function PickingProcessDetail() {
             .finally(() => setLoading(false));
     }
 
-    function handleSubmit(barcode: string) {
-        if (barcode.length === 0) {
-            setAlert({message: t("barcodeRequired"), type: MessageStripDesign.Warning});
-            return;
-        }
-        setLoading(true);
-        scanBarcode(barcode)
-            .then((items) => handleItems(items, barcode))
-            .catch((error) => {
-                errorAlert(`Scan Bar Code Error: ${error}`);
-                setLoading(false);
-            });
-    }
 
-    function handleItems(items: Item[], barcode: string) {
-        if (items.length === 0) {
-            errorAlert(StringFormat(t("barcodeNotFound"), barcode));
-            barcodeRef?.current?.clear()
-            setLoading(false);
-            return;
-        }
-        if (items.length === 1) {
-            addItemToPicking(items[0].code);
-            return;
-        }
-        handleMultipleItems(items);
-    }
-
-    function handleMultipleItems(items: Item[]) {
-        const distinctCodes = distinctItems(items);
-        if (distinctCodes.length !== 1) {
-            let codes = distinctCodes.map((v) => `"${v}"`).join(", ");
-            errorAlert(StringFormat(t("multipleItemsError"), codes));
-            setLoading(false);
-            return;
-        }
-        setBoxItem(distinctCodes[0]);
-        setBoxItems(items);
-        boxConfirmationDialogRef?.current?.show(true);
-        setLoading(false);
-    }
-
-    function addItemToPicking(itemCode: string) {
+    function handleAddItem(itemCode: string, barcode: string) {
         boxConfirmationDialogRef?.current?.show(false);
-        let barcode = barcodeRef?.current?.getBarcode();
         barcodeRef?.current?.clear();
         if (id == null || type == null || entry == null) {
             return;
@@ -167,44 +126,42 @@ export default function PickingProcessDetail() {
     return (
         <ContentTheme title={title} icon="cause" back={() => navigateBack()}>
             {detail &&
-                <div className="themeContentStyle">
-                    <div className="containerStyle">
-                        <div>
-                            <Title level="H5">
-                                <strong>{t("customer")}: </strong>
-                                {detail.cardCode} - {detail.cardName}
-                            </Title>
-                        </div>
-                        <div className="contentStyle">
-                            <Table
-                                columns={<>
-                                    <TableColumn><Label>{t('code')}</Label></TableColumn>
-                                    <TableColumn><Label>{t('description')}</Label></TableColumn>
-                                    <TableColumn><Label>{t('quantity')}</Label></TableColumn>
-                                    <TableColumn><Label>{t('picked')}</Label></TableColumn>
-                                    <TableColumn><Label>{t('pending')}</Label></TableColumn>
-                                </>}
-                            >
-                                {detail.items?.map((row) => (
-                                    <TableRow key={row.itemCode} className={row.openQuantity === 0 ? 'completed-row' : ''}>
-                                        <TableCell><Label>{row.itemCode}</Label></TableCell>
-                                        <TableCell><Label>{row.itemName}</Label></TableCell>
-                                        <TableCell><Label>{row.quantity}</Label></TableCell>
-                                        <TableCell><Label>{row.picked}</Label></TableCell>
-                                        <TableCell><Label>{row.openQuantity}</Label></TableCell>
-                                    </TableRow>
-                                ))}
-                            </Table>
-                        </div>
-                        {detail.totalOpenItems > 0 && <BarCodeScanner ref={barcodeRef} onSubmit={handleSubmit} enabled={enable}/>}
+                <ScrollableContent>
+                    <div>
+                        <Title level="H5">
+                            <strong>{t("customer")}: </strong>
+                            {detail.cardCode} - {detail.cardName}
+                        </Title>
                     </div>
+                    <div className="contentStyle">
+                        <Table
+                            columns={<>
+                                <TableColumn><Label>{t('code')}</Label></TableColumn>
+                                <TableColumn><Label>{t('description')}</Label></TableColumn>
+                                <TableColumn><Label>{t('quantity')}</Label></TableColumn>
+                                <TableColumn><Label>{t('picked')}</Label></TableColumn>
+                                <TableColumn><Label>{t('pending')}</Label></TableColumn>
+                            </>}
+                        >
+                            {detail.items?.map((row) => (
+                                <TableRow key={row.itemCode} className={row.openQuantity === 0 ? 'completed-row' : ''}>
+                                    <TableCell><Label>{row.itemCode}</Label></TableCell>
+                                    <TableCell><Label>{row.itemName}</Label></TableCell>
+                                    <TableCell><Label>{row.quantity}</Label></TableCell>
+                                    <TableCell><Label>{row.picked}</Label></TableCell>
+                                    <TableCell><Label>{row.openQuantity}</Label></TableCell>
+                                </TableRow>
+                            ))}
+                        </Table>
+                    </div>
+                    {detail.totalOpenItems > 0 && <BarCodeScanner ref={barcodeRef} onAddItem={handleAddItem} enabled={enable}/>}
                     <BoxConfirmationDialog
-                        onSelected={(v: string) => addItemToPicking(v)}
+                        onSelected={(itemCode: string) => handleAddItem(itemCode, barcodeRef?.current?.getValue() ?? "")}
                         ref={boxConfirmationDialogRef}
                         itemCode={boxItem}
                         items={boxItems}
                     />
-                </div>
+                </ScrollableContent>
             }
         </ContentTheme>
     );

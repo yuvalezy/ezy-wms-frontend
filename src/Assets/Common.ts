@@ -54,6 +54,7 @@ export enum UpdateLineReturnValue {
     Ok = "Ok",
     SupervisorPassword = "SupervisorPassword",
     NotSupervisor = "NotSupervisor",
+    QuantityMoreThenAvailable = "QuantityMoreThenAvailable",
 }
 
 export enum Status {

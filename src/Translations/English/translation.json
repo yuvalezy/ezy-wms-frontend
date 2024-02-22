@@ -148,6 +148,7 @@
   "updateLineReason": "Invalid cancellation status",
   "updateLineWrongSupervisorPassword": "Wrong supervisor password",
   "updateLineNotSupervisorError": "The entered code is not a supervisor code",
+  "updateLineQuantityMoreThenAvailableError": "Quantity exceeds available stock. Please enter a quantity that does not exceed the available inventory.",
   "noDataFound": "No data found",
   "multipleItemsDetected": "Multiple Items Detected",
   "unknownError": "Unknown error",

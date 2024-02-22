@@ -148,6 +148,7 @@
   "updateLineReason": "Estado de cancelacion invalido",
   "updateLineWrongSupervisorPassword": "Contraseña de supervision erroneo",
   "updateLineNotSupervisorError": "El codigo introducido no es de un supervisor",
+  "updateLineQuantityMoreThenAvailableError": "La cantidad excede el stock disponible. Por favor, introduzca una cantidad que no supere el inventario disponible.",
   "noDataFound": "No se encontro datos",
   "multipleItemsDetected": "Multiples Articulos Detectados",
   "unknownError": "Error desconocido",

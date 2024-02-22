@@ -76,13 +76,13 @@ export const updateLine = async ({
   comment,
   userName,
   reason,
-  purPackUn,
+  quantity,
 }: {
   id: number;
   lineID: number;
   comment?: string;
   userName?: string;
-  purPackUn?: number;
+  quantity?: number;
   reason?: number;
 }): Promise<UpdateLineReturnValue> => {
   try {
@@ -107,7 +107,7 @@ export const updateLine = async ({
         comment: comment,
         userName: userName,
         closeReason: reason,
-        quantityInUnit: purPackUn,
+        quantity: quantity,
       },
       {
         headers: {
