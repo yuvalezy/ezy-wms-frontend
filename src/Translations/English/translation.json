@@ -112,9 +112,10 @@
   "selectTransferSource": "Choose Pickup Location",
   "selectItemsForTransfers": "Select Items for Transfer #{0}",
   "selectTransferTarget": "Choose Items for Destination",
-  "selectTransferItemTarget": "BIN Destination Item {0}",
 
   "scanBinLocation": "Scan Bin Location",
+  "binLocationNotFound": "Bin Location {0} not found.",
+  "transferItemNotFound": "Could not find data for item {0}",
   "pickingNotFound": "Picking #{0} is not valid",
   "pickingStatusError": "The status of the picking #{0} is {1}.\nCannot continue.",
   "pickingProcessSuccess": "Picking of item {0} was successfully",

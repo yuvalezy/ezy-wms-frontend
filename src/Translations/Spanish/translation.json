@@ -112,9 +112,10 @@
   "selectTransferSource": "Elija la ubicación de recogida",
   "selectItemsForTransfers": "Seleccionar artículos para transferencia #{0}",
   "selectTransferTarget": "Elija artículos para el destino",
-  "selectTransferItemTarget": "Ubicación artículo destino {0}",
 
   "scanBinLocation": "Escanear la Ubicación",
+  "binLocationNotFound": "Ubicación del contenedor {0} no encontrada.",
+  "transferItemNotFound": "No se pudo encontrar datos para el artículo {0}",
   "pickingNotFound": "Picking #{0} no es válido",
   "pickingStatusError": "El estado del picking #{0} es {1}.\nNo se puede continuar.",
   "pickingProcessSuccess": "La selección del artículo {0} se realizó con éxito.",

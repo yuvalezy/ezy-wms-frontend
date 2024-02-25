@@ -5,25 +5,22 @@ import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {IsNumeric} from "../../Assets/Functions";
 import {useAuth} from "../../Components/AppContext";
-import {BinLocation, SourceTarget} from "../../Assets/Common";
 import {BarCodeScannerRef} from "../../Components/BarCodeScanner";
-import {fetchTransferContent, TransferBinContent} from "./Data/Transfer";
-import {ProcessAlertValue} from "../../Components/ProcessAlert";
+import {fetchTransferContent, TransferContent} from "./Data/Transfer";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
 import {ScrollableContent} from "../../Components/ScrollableContent";
 import {Button, Label, ProgressIndicator, Table, TableCell, TableColumn, TableRow} from "@ui5/webcomponents-react";
+import {SourceTarget} from "../../Assets/Common";
 
 export default function TransferProcessTarget() {
     const {scanCode} = useParams();
     const {t} = useTranslation();
     const [id, setID] = useState<number | null>();
-    const [binLocation, setBinLocation] = useState<BinLocation | null>(null);
     const [enable, setEnable] = useState(false);
     const {setLoading, setAlert} = useThemeContext();
     const {user} = useAuth();
     const barcodeRef = useRef<BarCodeScannerRef>(null);
-    const [rows, setRows] = useState<TransferBinContent[] | null>(null);
-    const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
+    const [rows, setRows] = useState<TransferContent[] | null>(null);
     const navigate = useNavigate();
 
     const title = `${t("transfer")} #${scanCode} - ${t("selectTransferTarget")}`;
@@ -44,7 +41,7 @@ export default function TransferProcessTarget() {
     }, []);
 
     function loadRows(value: number) {
-        fetchTransferContent({id: value ?? id, type: SourceTarget.Target, open: true})
+        fetchTransferContent({id: value ?? id, type: SourceTarget.Target})
             .then((results) => setRows(results))
             .catch((e) => {
                 setAlert({
@@ -87,7 +84,7 @@ export default function TransferProcessTarget() {
                                 <TableCell><Label>{row.code}</Label></TableCell>
                                 <TableCell><Label>{row.name}</Label></TableCell>
                                 <TableCell><Label>{row.quantity}</Label></TableCell>
-                                <TableCell> <ProgressIndicator value={row.progress}/> </TableCell>
+                                <TableCell><ProgressIndicator value={row.progress}/></TableCell>
                             </TableRow>
                         ))}
                     </Table>

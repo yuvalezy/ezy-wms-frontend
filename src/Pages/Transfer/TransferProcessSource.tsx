@@ -8,12 +8,12 @@ import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {useAuth} from "../../Components/AppContext";
 import {AxiosErrorResponse, BinLocation, SourceTarget} from "../../Assets/Common";
 import BarCodeScanner, {BarCodeScannerRef} from "../../Components/BarCodeScanner";
-import {addItem, fetchTransferContent, TransferBinContent} from "./Data/Transfer";
+import {addItem, fetchTransferContent, TransferContent} from "./Data/Transfer";
 import BinLocationScanner from "../../Components/BinLocationScanner";
 import {delay} from "../../Assets/GlobalConfig";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
 import ProcessAlert, {ProcessAlertValue} from "../../Components/ProcessAlert";
-import {ScrollableContent} from "../../Components/ScrollableContent";
+import {ScrollableContent, ScrollableContentBox} from "../../Components/ScrollableContent";
 import {ReasonType} from "../../Assets/Reasons";
 import Processes, {ProcessesRef} from "../../Components/Processes";
 import {updateLine} from "./Data/TransferProcess";
@@ -28,7 +28,7 @@ export default function TransferProcessSource() {
     const {setLoading, setAlert} = useThemeContext();
     const {user} = useAuth();
     const barcodeRef = useRef<BarCodeScannerRef>(null);
-    const [rows, setRows] = useState<TransferBinContent[] | null>(null);
+    const [rows, setRows] = useState<TransferContent[] | null>(null);
     const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
     const processesRef = useRef<ProcessesRef>(null);
     const navigate = useNavigate();
@@ -98,7 +98,7 @@ export default function TransferProcessSource() {
         if (id == null) {
             return;
         }
-        addItem(id, itemCode, barcode, binLocation?.entry)
+        addItem({id, itemCode, barcode, type: SourceTarget.Source, binEntry: binLocation?.entry})
             .then((v) => {
                 if (v.errorMessage != null) {
                     setAlert({
@@ -134,18 +134,7 @@ export default function TransferProcessSource() {
                 });
             })
             .finally(() => setLoading(false));
-        // qtyPopupRef?.current?.show({barcode: barcode, itemCode: items[0].code});
         return;
-    }
-
-    function getContentStyle(): CSSProperties {
-        let properties: CSSProperties = {
-            borderBottom: '1px solid darkGrey'
-        };
-        if (user?.binLocations) {
-            properties.borderTop = '1px solid darkGrey'
-        }
-        return properties
     }
 
     function handleQuantityChanged(quantity: number) {
@@ -180,7 +169,7 @@ export default function TransferProcessSource() {
             {id &&
                 <ScrollableContent>
                     {user?.binLocations && <BinLocationScanner onChanged={onBinChanged} onClear={onBinClear}/>}
-                    <div className="contentStyle" style={getContentStyle()}>
+                    <ScrollableContentBox borderUp={user?.binLocations??false}>
                         {currentAlert && <ProcessAlert alert={currentAlert} onAction={(type) => processesRef?.current?.open(type)}/>}
                         {rows != null && rows.length > 0 &&
                             <Table
@@ -206,7 +195,7 @@ export default function TransferProcessSource() {
                                 </MessageStrip>
                             </div>
                         }
-                    </div>
+                    </ScrollableContentBox>
                     <BarCodeScanner ref={barcodeRef} onAddItem={handleAddItem} enabled={enable}/>
                 </ScrollableContent>
             }

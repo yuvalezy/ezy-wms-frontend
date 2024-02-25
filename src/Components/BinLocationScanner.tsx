@@ -4,10 +4,12 @@ import {BinLocation} from "../Assets/Common";
 import {useTranslation} from "react-i18next";
 import {scanBinLocation} from "../Assets/ScanBinLocation";
 import {useThemeContext} from "./ThemeContext";
+import { StringFormat } from '../Assets/Functions';
 
 export interface BinLocationScannerProps {
-    onChanged: (bin: BinLocation) => void;
-    onClear: () => void;
+    onScan?: (bin: BinLocation) => void;
+    onChanged?: (bin: BinLocation) => void;
+    onClear?: () => void;
 }
 
 export interface BinLocationScannerRef {
@@ -16,7 +18,7 @@ export interface BinLocationScannerRef {
     getBin: () => string;
 }
 
-const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerProps>(({onChanged, onClear}, ref) => {
+const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerProps>(({onScan, onChanged, onClear}, ref) => {
     const {setLoading, setAlert} = useThemeContext();
     const {t} = useTranslation();
     const binRef = useRef<InputDomRef>(null);
@@ -35,6 +37,13 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
         }
     }));
 
+    function errorMessage(message: string) {
+        setAlert({
+            message: message,
+            type: MessageStripDesign.Negative,
+        });
+    }
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (binInput.length === 0) {
@@ -44,30 +53,26 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
         try {
             scanBinLocation(binInput)
                 .then((v) => {
-                    if (v != null) {
-                        setBinLocation(v);
-                        onChanged(v);
+                    if (v == null) {
+                        errorMessage(StringFormat(t(`binLocationNotFound`), binInput));
+                        setBinInput('');
+                        setLoading(false);
                         return;
                     }
-                    setAlert({
-                        message: `Bin Location ${binInput} not found.`,
-                        type: MessageStripDesign.Negative,
-                    });
-                    setBinInput('');
-                    setLoading(false);
+                    if (onChanged) {
+                        setBinLocation(v);
+                        onChanged(v);
+                    }
+                    if (onScan) {
+                        onScan(v);
+                    }
                 })
                 .catch((e) => {
-                    setAlert({
-                        message: `Bin Location Error: ${e}`,
-                        type: MessageStripDesign.Negative,
-                    });
+                    errorMessage(`Bin Location Error: ${e}`);
                     setLoading(false);
                 })
         } catch (e) {
-            setAlert({
-                message: `Bin Location Error: ${e}`,
-                type: MessageStripDesign.Negative,
-            })
+            errorMessage(`Bin Location Error: ${e}`);
             setLoading(false);
         }
     };
@@ -75,7 +80,8 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
     function clear() {
         setBinInput('');
         setBinLocation(null);
-        onClear();
+        if (onClear)
+            onClear();
         binRef?.current?.focus();
     }
 

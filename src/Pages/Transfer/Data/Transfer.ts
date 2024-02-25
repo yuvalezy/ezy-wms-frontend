@@ -1,4 +1,4 @@
-import {BusinessPartner, Employee} from "../../../Assets/Data";
+import {Employee} from "../../../Assets/Data";
 import {configUtils, delay, globalConfig} from "../../../Assets/GlobalConfig";
 import {transferMockup} from "../../../Assets/mockup";
 import axios from "axios";
@@ -19,16 +19,24 @@ export type Transfer = {
     statusEmployee: Employee;
 }
 
-export type TransferBinContent = {
+export type TransferContent = {
     code: string;
     name: string;
     quantity: number;
     progress?: number;
+    bins?: TransferContentBin[];
 }
+export type TransferContentBin = {
+    entry: number;
+    code: string;
+    quantity: number;
+}
+
 export enum TransfersOrderBy {
     ID = "ID",
     Date = "Date",
 }
+
 export const createTransfer = async (): Promise<Transfer> => {
     try {
         if (configUtils.isMockup) {
@@ -53,7 +61,7 @@ export const createTransfer = async (): Promise<Transfer> => {
         return response.data;
     } catch (error) {
         console.error("Error creating transfer:", error);
-        throw error; // Re-throwing so that the calling function can decide what to do with the error
+        throw error;
     }
 };
 export const checkIsComplete = async (id: number): Promise<boolean> => {
@@ -144,13 +152,18 @@ export const fetchTransfers = async (
     }
 };
 
-export const addItem = async (
+export type addItemParameters = {
     id: number,
     itemCode: string,
-    barcode: string,
-    binEntry?: number
-): Promise<TransferAddItemResponse> => {
+    barcode?: string,
+    type: SourceTarget,
+    binEntry?: number,
+    quantity?: number,
+}
+
+export const addItem = async (params: addItemParameters): Promise<TransferAddItemResponse> => {
     try {
+        params.quantity ??=1;
         if (configUtils.isMockup) {
             //todo mockup
         }
@@ -165,13 +178,7 @@ export const addItem = async (
 
         const response = await axios.post<TransferAddItemResponse>(
             url,
-            {
-                id: id,
-                itemCode: itemCode,
-                barcode: barcode,
-                binEntry: binEntry,
-                quantity: 1
-            },
+            params,
             {
                 headers: {
                     Authorization: `Bearer ${access_token}`,
@@ -193,9 +200,10 @@ export type transferContentParameters = {
     id: number;
     type: SourceTarget;
     binEntry?: number;
-    open?: boolean;
+    targetBins?: boolean,
+    itemCode?: string
 }
-export const fetchTransferContent = async (params: transferContentParameters): Promise<TransferBinContent[]> => {
+export const fetchTransferContent = async (params: transferContentParameters): Promise<TransferContent[]> => {
     try {
         if (configUtils.isMockup) {
             console.log("Mockup data is being used.");
@@ -212,7 +220,7 @@ export const fetchTransferContent = async (params: transferContentParameters): P
 
         const url = `${globalConfig.baseURL}/api/Transfer/TransferContent`;
 
-        const response = await axios.post<TransferBinContent[]>(
+        const response = await axios.post<TransferContent[]>(
             url,
             params,
             {

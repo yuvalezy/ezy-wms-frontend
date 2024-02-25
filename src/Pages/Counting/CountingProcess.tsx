@@ -17,6 +17,7 @@ import {fetchCountingContent} from "./Data/Counting";
 import ProcessAlert, {ProcessAlertValue} from "../../Components/ProcessAlert";
 import {ReasonType} from "../../Assets/Reasons";
 import Processes, {ProcessesRef} from "../../Components/Processes";
+import {ScrollableContentBox} from "../../Components/ScrollableContent";
 
 export default function CountingProcess() {
     const {scanCode} = useParams();
@@ -86,16 +87,6 @@ export default function CountingProcess() {
     }
 
 
-    function getContentStyle(): CSSProperties {
-        let properties: CSSProperties = {
-            borderBottom: '1px solid darkGrey'
-        };
-        if (user?.binLocations) {
-            properties.borderTop = '1px solid darkGrey'
-        }
-        return properties
-    }
-
     function handleQuantityChanged(quantity: number) {
         if (currentAlert == null)
             return;
@@ -161,7 +152,7 @@ export default function CountingProcess() {
             <div className="themeContentStyle">
                 <div className="containerStyle">
                     {user?.binLocations && <BinLocationScanner onChanged={onBinChanged} onClear={onBinClear}/>}
-                    <div className="contentStyle" style={getContentStyle()}>
+                    <ScrollableContentBox borderUp={user?.binLocations??false}>
                         {currentAlert && <ProcessAlert alert={currentAlert} onAction={(type) => processesRef?.current?.open(type)}/>}
                         {rows != null && rows.length > 0 &&
                             <Table
@@ -187,7 +178,7 @@ export default function CountingProcess() {
                                 </MessageStrip>
                             </div>
                         }
-                    </div>
+                    </ScrollableContentBox>
                     <BarCodeScanner ref={barcodeRef} enabled={enable} onAddItem={handleAddItem}/>
                 </div>
             </div>
