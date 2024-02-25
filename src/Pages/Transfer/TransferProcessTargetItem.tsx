@@ -8,13 +8,16 @@ import {useAuth} from "../../Components/AppContext";
 import {AxiosErrorResponse, BinLocation, SourceTarget} from "../../Assets/Common";
 import {BarCodeScannerRef} from "../../Components/BarCodeScanner";
 import {addItem, fetchTransferContent, TransferContent} from "./Data/Transfer";
-import {ProcessAlertValue} from "../../Components/ProcessAlert";
+import ProcessAlert, {ProcessAlertValue} from "../../Components/ProcessAlert";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
 import {ScrollableContent, ScrollableContentBox} from "../../Components/ScrollableContent";
 import {Button, Label, MessageStrip, Panel, Text, ProgressIndicator, Table, TableCell, TableColumn, TableRow, Title} from "@ui5/webcomponents-react";
 import BinLocationScanner, {BinLocationScannerRef} from "../../Components/BinLocationScanner";
 import {delay} from "../../Assets/GlobalConfig";
 import {AxiosError} from "axios";
+import Processes, {ProcessesRef} from "../../Components/Processes";
+import {ReasonType} from "../../Assets/Reasons";
+import {updateLine} from "./Data/TransferProcess";
 
 export default function TransferProcessTargetItem() {
     const {scanCode, itemCode} = useParams();
@@ -26,6 +29,7 @@ export default function TransferProcessTargetItem() {
     const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
     const navigate = useNavigate();
     const binRef = useRef<BinLocationScannerRef>(null);
+    const processesRef = useRef<ProcessesRef>(null);
 
     const title = `${t("transfer")} #${scanCode} - ${t("selectTransferTarget")}`;
 
@@ -48,8 +52,8 @@ export default function TransferProcessTargetItem() {
         });
     }
 
-    function loadData(value: number) {
-        fetchTransferContent({id: value ?? id, type: SourceTarget.Target, targetBins: true, itemCode})
+    function loadData(value?: number) {
+        fetchTransferContent({id: value ?? id ?? 0, type: SourceTarget.Target, targetBins: true, itemCode})
             .then((results) => {
                 if (results.length > 0) {
                     setContent(results[0]);
@@ -82,7 +86,7 @@ export default function TransferProcessTargetItem() {
                     timeStamp: date.toLocaleDateString() + " " + date.toLocaleTimeString()
                 })
                 binRef?.current?.clear();
-                loadData(id)
+                loadData()
                 binRef?.current?.focus();
             })
             .catch((error) => {
@@ -98,6 +102,29 @@ export default function TransferProcessTargetItem() {
             .finally(() => setLoading(false));
     }
 
+    function handleQuantityChanged(quantity: number) {
+        if (currentAlert == null)
+            return;
+        acceptAlertChanged({
+            ...currentAlert,
+            quantity: quantity,
+        });
+    }
+
+    function handleCancel(comment: string, cancel: boolean) {
+        if (currentAlert == null)
+            return;
+        acceptAlertChanged({
+            ...currentAlert,
+            comment: comment,
+            canceled: cancel,
+        });
+    }
+    function acceptAlertChanged(newAlert: ProcessAlertValue): void {
+        setCurrentAlert(newAlert);
+        loadData();
+    }
+
     function navigateBack() {
         navigate(`/transfer/${id}/target`);
     }
@@ -111,10 +138,12 @@ export default function TransferProcessTargetItem() {
                             <strong>{t("item")}: </strong>
                             {content.code} - {content.name}
                         </Title>
-                        <Text><strong>{t("quantity")}: </strong>{content.quantity}</Text>
+                        <Text><strong>{t("quantity")}: </strong>{content.quantity}</Text><br/>
+                        <Text><strong>{t("openQuantity")}: </strong>{content.openQuantity}</Text>
                         <ProgressIndicator value={content.progress ?? 0}/>
                     </Panel>
                     <ScrollableContentBox>
+                        {currentAlert && <ProcessAlert alert={currentAlert} onAction={(type) => processesRef?.current?.open(type)}/>}
                         <Table
                             columns={<>
                                 <TableColumn><Label>{t('bin')}</Label></TableColumn>
@@ -132,6 +161,16 @@ export default function TransferProcessTargetItem() {
                     {user?.binLocations && (content.progress??0) < 100 && <BinLocationScanner ref={binRef} onScan={onScan}/>}
                 </ScrollableContent>
             }
+            {currentAlert && id && <Processes
+                ref={processesRef}
+                id={id}
+                alert={currentAlert}
+                reasonType={ReasonType.Transfer}
+                onCancel={handleCancel}
+                onQuantityChanged={handleQuantityChanged}
+                onUpdateLine={updateLine}
+                onUpdateComplete={loadData}
+            />}
         </ContentTheme>
     );
 }

@@ -23,6 +23,7 @@ export type TransferContent = {
     code: string;
     name: string;
     quantity: number;
+    openQuantity: number;
     progress?: number;
     bins?: TransferContentBin[];
 }
@@ -163,7 +164,7 @@ export type addItemParameters = {
 
 export const addItem = async (params: addItemParameters): Promise<TransferAddItemResponse> => {
     try {
-        params.quantity ??=1;
+        params.quantity ??= 1;
         if (configUtils.isMockup) {
             //todo mockup
         }

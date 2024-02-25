@@ -135,10 +135,12 @@ const ProcessCancel = forwardRef((props: ProcessCancelProps, ref) => {
             <Title level="H5">
                 {t("cancel")}
             </Title>
+            {props.alert?.barcode &&
             <Title level="H6">
                 <strong>{t("barcode")}: </strong>
                 {props.alert?.barcode}
             </Title>
+            }
             <Title level="H6">
                 <strong>{t("item")}: </strong>
                 {props.alert?.itemCode}
