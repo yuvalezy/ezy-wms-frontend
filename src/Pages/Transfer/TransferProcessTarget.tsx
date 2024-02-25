@@ -70,7 +70,7 @@ export default function TransferProcessTarget() {
                             <TableColumn></TableColumn>
                             <TableColumn><Label>{t('code')}</Label></TableColumn>
                             <TableColumn><Label>{t('description')}</Label></TableColumn>
-                            <TableColumn><Label>{t('quantity')}</Label></TableColumn>
+                            <TableColumn><Label>{t('openQuantity')}</Label></TableColumn>
                             <TableColumn><Label>{t('progress')}</Label></TableColumn>
                         </>}
                     >
@@ -83,7 +83,7 @@ export default function TransferProcessTarget() {
                                 </TableCell>
                                 <TableCell><Label>{row.code}</Label></TableCell>
                                 <TableCell><Label>{row.name}</Label></TableCell>
-                                <TableCell><Label>{row.quantity}</Label></TableCell>
+                                <TableCell><Label>{row.openQuantity}</Label></TableCell>
                                 <TableCell><ProgressIndicator value={row.progress}/></TableCell>
                             </TableRow>
                         ))}

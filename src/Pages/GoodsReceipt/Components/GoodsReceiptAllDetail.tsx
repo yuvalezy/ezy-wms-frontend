@@ -3,6 +3,9 @@ import React, {forwardRef, useImperativeHandle, useRef, useState} from "react";
 import {useThemeContext} from "../../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {fetchGoodsReceiptReportAllDetails, GoodsReceiptAll, GoodsReceiptAllDetail, GoodsReceiptAllDetailUpdate} from "../Data/Report";
+import {fetchDocuments} from "../Data/Document";
+import {StringFormat} from "../../../Assets/Functions";
+import {Status} from "../../../Assets/Common";
 
 export interface GRPOAllDetailRef {
     show: (data: GoodsReceiptAll) => void;
@@ -33,20 +36,32 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
         }
     }
 
+    function loadDetails(data: GoodsReceiptAll) {
+        setLoading(true);
+        setEnableUpdate(false);
+        setCheckedRows({})
+        setQuantityChanges({})
+        fetchDocuments(props.id, [])
+            .then((doc) => {
+                setEnableUpdate(doc[0].status === Status.InProgress);
+                fetchGoodsReceiptReportAllDetails(props.id, data.itemCode)
+                    .then((result) => {
+                        dialogRef?.current?.show();
+                        setData(result);
+                    })
+                    .catch((error) => setAlert({message: `Loading Error: ${error}`, type: MessageStripDesign.Negative}))
+                    .finally(() => setLoading(false));
+            })
+            .catch((error) => {
+                setAlert({message: `Validate Goods Receipt Error: ${error}`, type: MessageStripDesign.Negative});
+            })
+            .finally(() => setLoading(false));
+    }
+
     useImperativeHandle(ref, () => ({
         show(data: GoodsReceiptAll) {
             setCurrentData(data);
-            setLoading(true);
-            setEnableUpdate(false);
-            setCheckedRows({})
-            setQuantityChanges({})
-            fetchGoodsReceiptReportAllDetails(props.id, data.itemCode)
-                .then((result) => {
-                    dialogRef?.current?.show();
-                    setData(result);
-                })
-                .catch((error) => setAlert({message: `Loading Error: ${error}`, type: MessageStripDesign.Negative}))
-                .finally(() => setLoading(false));
+            loadDetails(data);
         }
     }))
 
@@ -66,6 +81,15 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
         setEnableUpdate(true);
     }
 
+    function startContent() {
+        if (!enableUpdate) {
+            return null;
+        }
+        return <Button disabled={!enableUpdate} onClick={() => update()}>
+            {t("update")}
+        </Button>
+    }
+
     return (
         <Dialog
             className="footerPartNoPadding"
@@ -73,11 +97,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
             footer={
                 <Bar
                     design="Footer"
-                    startContent={
-                        <Button disabled={!enableUpdate} onClick={() => update()}>
-                            {t("update")}
-                        </Button>
-                    }
+                    startContent={startContent()}
                     endContent={
                         <Button design="Negative" onClick={() => dialogRef?.current?.close()}>
                             {t("close")}
@@ -96,7 +116,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                 <Table
 
                     columns={<>
-                        <TableColumn><Label>{t('delete')}</Label></TableColumn>
+                        {enableUpdate && <TableColumn><Label>{t('delete')}</Label></TableColumn>}
                         <TableColumn><Label>{t('employee')}</Label></TableColumn>
                         <TableColumn><Label>{t('date')}</Label></TableColumn>
                         <TableColumn><Label>{t('time')}</Label></TableColumn>
@@ -105,12 +125,13 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                 >
                     {data.map((row) => (
                         <TableRow key={row.lineID}>
-                            <TableCell><CheckBox checked={checkedRows[row.lineID]} onChange={(e) => handleCheckboxChange(row.lineID, e.target.checked ?? false)}/></TableCell>
+                            {enableUpdate && <TableCell><CheckBox checked={checkedRows[row.lineID]} onChange={(e) => handleCheckboxChange(row.lineID, e.target.checked ?? false)}/></TableCell>}
                             <TableCell>{row.employeeName}</TableCell>
                             <TableCell>{row.timeStamp?.toLocaleDateString()}</TableCell>
                             <TableCell>{row.timeStamp?.toLocaleTimeString()}</TableCell>
-                            <TableCell><Input type="Number" style={{textAlign: 'right', width: '100px'}} value={row.quantity.toString()}
-                                              onChange={(e) => handleQuantityChange(row.lineID, parseInt(e.target.value ?? "0", 10))}/></TableCell>
+                            <TableCell>{enableUpdate && <Input type="Number" style={{textAlign: 'right', width: '100px'}} value={row.quantity.toString()}
+                                              onChange={(e) => handleQuantityChange(row.lineID, parseInt(e.target.value ?? "0", 10))}/>}
+                                {!enableUpdate && row.quantity}</TableCell>
                         </TableRow>
                     ))}
                 </Table>
