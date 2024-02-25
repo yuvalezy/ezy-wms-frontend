@@ -82,7 +82,7 @@ export default function TransferProcessSource() {
         }
         binEntry ??= binLocation?.entry;
         setLoading(true);
-        fetchTransferContent(id, SourceTarget.Source, binEntry)
+        fetchTransferContent({id, type: SourceTarget.Source, binEntry})
             .then((v) => setRows(v))
             .catch((e) => {
                 setAlert({

@@ -23,6 +23,7 @@ export type TransferBinContent = {
     code: string;
     name: string;
     quantity: number;
+    progress?: number;
 }
 export enum TransfersOrderBy {
     ID = "ID",
@@ -187,7 +188,14 @@ export const addItem = async (
         throw error;
     }
 }
-export const fetchTransferContent = async (id: number, type: SourceTarget, binEntry?: number): Promise<TransferBinContent[]> => {
+
+export type transferContentParameters = {
+    id: number;
+    type: SourceTarget;
+    binEntry?: number;
+    open?: boolean;
+}
+export const fetchTransferContent = async (params: transferContentParameters): Promise<TransferBinContent[]> => {
     try {
         if (configUtils.isMockup) {
             console.log("Mockup data is being used.");
@@ -206,11 +214,7 @@ export const fetchTransferContent = async (id: number, type: SourceTarget, binEn
 
         const response = await axios.post<TransferBinContent[]>(
             url,
-            {
-                id: id,
-                binEntry: binEntry,
-                type: type
-            },
+            params,
             {
                 headers: {
                     Authorization: `Bearer ${access_token}`,

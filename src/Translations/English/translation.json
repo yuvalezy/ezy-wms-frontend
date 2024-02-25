@@ -110,8 +110,9 @@
   "selectVendor": "Select Vendor",
   "selectBox": "Select Box",
   "selectTransferSource": "Choose Pickup Location",
-  "selectItemsForTransfers": "Seleccionar artículos para transferencia #{0}",
+  "selectItemsForTransfers": "Select Items for Transfer #{0}",
   "selectTransferTarget": "Choose Items for Destination",
+  "selectTransferItemTarget": "BIN Destination Item {0}",
 
   "scanBinLocation": "Scan Bin Location",
   "pickingNotFound": "Picking #{0} is not valid",

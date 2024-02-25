@@ -3,9 +3,9 @@ import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {IsNumeric} from "../../Assets/Functions";
+import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {useAuth} from "../../Components/AppContext";
-import {BinLocation, SourceTarget} from "../../Assets/Common";
+import {BinLocation} from "../../Assets/Common";
 import {BarCodeScannerRef} from "../../Components/BarCodeScanner";
 import {fetchTransferContent, TransferBinContent} from "./Data/Transfer";
 import {ProcessAlertValue} from "../../Components/ProcessAlert";
@@ -13,8 +13,8 @@ import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
 import {ScrollableContent} from "../../Components/ScrollableContent";
 import {Button, Label, ProgressIndicator, Table, TableCell, TableColumn, TableRow} from "@ui5/webcomponents-react";
 
-export default function TransferProcessTarget() {
-    const {scanCode} = useParams();
+export default function TransferProcessTargetItem() {
+    const {scanCode, itemCode} = useParams();
     const {t} = useTranslation();
     const [id, setID] = useState<number | null>();
     const [binLocation, setBinLocation] = useState<BinLocation | null>(null);
@@ -26,42 +26,24 @@ export default function TransferProcessTarget() {
     const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
     const navigate = useNavigate();
 
-    const title = `${t("transfer")} #${scanCode} - ${t("selectTransferTarget")}`;
+    const title = `${t("transfer")} #${scanCode} - ${StringFormat(t("selectTransferItemTarget"), itemCode)}`;
 
     useEffect(() => {
         setEnable(!user?.binLocations ?? false);
         if (enable) {
             setTimeout(() => barcodeRef.current?.focus(), 1);
         }
-        if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
+        if (scanCode == null || !IsNumeric(scanCode) || itemCode == null) {
             setID(null);
             return;
         }
         setLoading(true);
         let value = parseInt(scanCode);
         setID(value);
-        loadRows(value);
     }, []);
 
-    function loadRows(value: number) {
-        fetchTransferContent({id: value ?? id, type: SourceTarget.Target, open: true})
-            .then((results) => setRows(results))
-            .catch((e) => {
-                setAlert({
-                    message: `Loading Rows Error: ${e}`,
-                    type: MessageStripDesign.Negative,
-                });
-                setRows([]);
-            })
-            .finally(() => setLoading(false));
-    }
-
     function navigateBack() {
-        navigate(`/transfer/${id}`);
-    }
-
-    function handleOpen(code: string) {
-        navigate(`/transfer/${id}/target/${code}`);
+        navigate(`/transfer/${id}/transfer`);
     }
 
     return (
@@ -70,7 +52,6 @@ export default function TransferProcessTarget() {
                 <ScrollableContent>
                     <Table
                         columns={<>
-                            <TableColumn></TableColumn>
                             <TableColumn><Label>{t('code')}</Label></TableColumn>
                             <TableColumn><Label>{t('description')}</Label></TableColumn>
                             <TableColumn><Label>{t('quantity')}</Label></TableColumn>
@@ -79,11 +60,6 @@ export default function TransferProcessTarget() {
                     >
                         {rows.map((row) => (
                             <TableRow key={row.code}>
-                                <TableCell>
-                                    <Button icon="begin" onClick={() => handleOpen(row.code)}>
-                                        {t("select")}
-                                    </Button>
-                                </TableCell>
                                 <TableCell><Label>{row.code}</Label></TableCell>
                                 <TableCell><Label>{row.name}</Label></TableCell>
                                 <TableCell><Label>{row.quantity}</Label></TableCell>
