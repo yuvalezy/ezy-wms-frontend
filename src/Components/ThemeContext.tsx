@@ -39,6 +39,7 @@ export const ThemeContextProvider: React.FC<{ children: React.ReactNode }> = ({ 
         let message = error;
         //check if error is String
         if (typeof error !== 'string') {
+            window.console.error(error);
             if (error.message)
                 message = error.message;
             if (error.response?.data?.exceptionMessage)

@@ -17,11 +17,13 @@ import Processes, {ProcessesRef} from "../../Components/Processes";
 import {ReasonType} from "../../Assets/Reasons";
 import {updateLine} from "./Data/TransferProcess";
 import TransferTargetItemsDetailsDialog, {TransferTargetItemsDetailRef} from "./Components/TransferTargetItemDetails";
+import {Authorization} from "../../Assets/Authorization";
 
 export default function TransferProcessTargetItem() {
     const {scanCode, itemCode} = useParams();
     const {t} = useTranslation();
     const [id, setID] = useState<number | null>();
+    const [supervisor, setSupervisor] = useState<boolean>(false);
     const {setLoading, setError} = useThemeContext();
     const {user} = useAuth();
     const [content, setContent] = useState<TransferContent | null>(null);
@@ -41,6 +43,7 @@ export default function TransferProcessTargetItem() {
         setLoading(true);
         let value = parseInt(scanCode);
         setID(value);
+        setSupervisor(user?.authorizations?.filter((v) => v === Authorization.TRANSFER_SUPERVISOR)?.length === 1);
         loadData(value);
         delay(1).then(() => binRef?.current?.focus());
     }, []);
@@ -106,10 +109,12 @@ export default function TransferProcessTargetItem() {
             canceled: cancel,
         });
     }
+
     function acceptAlertChanged(newAlert: ProcessAlertValue): void {
         setCurrentAlert(newAlert);
         loadData();
     }
+
     function handleClick(bin: TransferContentBin) {
         if (content == null)
             return;
@@ -160,15 +165,16 @@ export default function TransferProcessTargetItem() {
                             {content?.bins?.map((bin) => (
                                 <TableRow key={bin.entry}>
                                     <TableCell><Label>{bin.code}</Label></TableCell>
-                                    <TableCell><a href="#" onClick={e => {
+                                    <TableCell>{supervisor && <a href="#" onClick={e => {
                                         e.preventDefault();
                                         handleClick(bin)
-                                    }}>{bin.quantity}</a></TableCell>
+                                    }}>{bin.quantity}</a>}
+                                        {!supervisor && bin.quantity}</TableCell>
                                 </TableRow>
                             ))}
                         </Table>
                     </ScrollableContentBox>
-                    {user?.binLocations && (content.progress??0) < 100 && <BinLocationScanner ref={binRef} onScan={onScan}/>}
+                    {user?.binLocations && (content.progress ?? 0) < 100 && <BinLocationScanner ref={binRef} onScan={onScan}/>}
                 </ScrollableContent>
             }
             {currentAlert && id && <Processes

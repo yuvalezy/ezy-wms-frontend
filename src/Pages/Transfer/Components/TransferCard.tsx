@@ -2,7 +2,7 @@ import React from "react";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "../../../Components/AppContext";
 import {useTranslation} from "react-i18next";
-import {Card, CardHeader, Icon, List, StandardListItem, Button} from "@ui5/webcomponents-react";
+import {Card, CardHeader, Icon, List, StandardListItem, Button, ProgressIndicator} from "@ui5/webcomponents-react";
 import {useObjectName} from "../../../Assets/ObjectName";
 import {Authorization} from "../../../Assets/Authorization";
 import {useDocumentStatusToString} from "../../../Assets/DocumentStatusString";
@@ -45,7 +45,10 @@ const TransferCard: React.FC<TransferCardProps> = ({doc, onAction}) => {
                 <StandardListItem><strong>{t('createdBy')}:</strong> {doc.employee.name}</StandardListItem>
                 <StandardListItem><strong>{t('status')}:</strong> {documentStatusToString(doc.status)}</StandardListItem>
                 <StandardListItem>
-                    {doc.status === Status.InProgress && (
+                    <ProgressIndicator value={doc.progress ?? 0}/>
+                </StandardListItem>
+                <StandardListItem>
+                    {doc.status === Status.InProgress && doc.progress === 100 && (
                         <Button style={{marginRight: '10px'}} color="primary" onClick={() => onAction(doc.id, 'approve')} icon="complete">
                             {t('finish')}
                         </Button>)}

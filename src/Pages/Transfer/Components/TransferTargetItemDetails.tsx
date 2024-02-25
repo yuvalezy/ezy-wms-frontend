@@ -40,7 +40,7 @@ const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsD
         setEnableUpdate(false);
         setCheckedRows({})
         setQuantityChanges({})
-        fetchTransfers(props.id, [])
+        fetchTransfers({id: props.id})
             .then((transfer) => {
                 setEnableUpdate(transfer[0].status === Status.InProgress);
                 fetchTargetItemDetails(props.id, content.code, bin.entry)

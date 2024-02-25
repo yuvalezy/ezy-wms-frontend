@@ -1,8 +1,8 @@
 import {Employee} from "../../../Assets/Data";
 import {configUtils, delay, globalConfig} from "../../../Assets/GlobalConfig";
-import {GoodsReceiptAllDetailMockup, transferMockup} from "../../../Assets/mockup";
+import {documentMockup, GoodsReceiptAllDetailMockup, transferMockup} from "../../../Assets/mockup";
 import axios from "axios";
-import {DetailUpdateParameters, SourceTarget, Status} from "../../../Assets/Common";
+import {DetailUpdateParameters, ObjectAction, SourceTarget, Status, User} from "../../../Assets/Common";
 
 interface TransferAddItemResponse {
     lineID?: number
@@ -17,6 +17,7 @@ export type Transfer = {
     status: Status;
     statusDate: string;
     statusEmployee: Employee;
+    progress?: number;
 }
 
 export type TransferContent = {
@@ -92,14 +93,26 @@ export const checkIsComplete = async (id: number): Promise<boolean> => {
         throw error; // Re-throwing so that the calling function can decide what to do with the error
     }
 };
-export const fetchTransfers = async (
+
+export type TransferUpdateParameters = {
     id?: number,
-    statuses: Status[] = [Status.Open, Status.InProgress],
+    statuses?: Status[];
     date?: Date | null,
     number?: number,
-    orderBy: TransfersOrderBy = TransfersOrderBy.ID,
-    desc: boolean = true
-): Promise<Transfer[]> => {
+    orderBy?: TransfersOrderBy;
+    desc?: boolean;
+    progress?: boolean
+}
+export const fetchTransfers = async (params: TransferUpdateParameters): Promise<Transfer[]> => {
+    if (params.statuses == null)
+         params.statuses = params.id == null ? [Status.Open, Status.InProgress] : [];
+    if (params.orderBy == null)
+        params.orderBy = TransfersOrderBy.ID;
+    if (params.desc == null)
+        params.desc = true;
+    if (params.progress == null)
+        params.progress = false;
+
     try {
         if (configUtils.isMockup) {
             console.log("Mockup data is being used.");
@@ -115,25 +128,27 @@ export const fetchTransfers = async (
         const access_token = localStorage.getItem("token");
 
         const queryParams = new URLSearchParams();
-        queryParams.append("OrderBy", orderBy.toString());
-        queryParams.append("Desc", desc.toString());
+        queryParams.append("OrderBy", params.orderBy.toString());
+        queryParams.append("Desc", params.desc.toString());
 
-        if (statuses && statuses.length > 0) {
-            statuses.forEach((status) =>
-                queryParams.append("Status", status.toString())
-            );
+        params.statuses.forEach((status) =>
+            queryParams.append("Status", status.toString())
+        );
+
+        if (params.id !== null && params.id !== undefined) {
+            queryParams.append("ID", params.id.toString());
         }
 
-        if (id !== null && id !== undefined) {
-            queryParams.append("ID", id.toString());
+        if (params.number !== null && params.number !== undefined) {
+            queryParams.append("Number", params.number.toString());
         }
 
-        if (number !== null && number !== undefined) {
-            queryParams.append("Number", number.toString());
+        if (params.date !== null && params.date !== undefined) {
+            queryParams.append("Date", params.date.toISOString());
         }
 
-        if (date !== null && date !== undefined) {
-            queryParams.append("Date", date.toISOString());
+        if (params.progress !== null && params.progress !== undefined) {
+            queryParams.append("Progress", params.progress.toString());
         }
 
         const url = `${
@@ -307,3 +322,41 @@ export const updateTransferTargetItem = async(data: DetailUpdateParameters) => {
         throw error;
     }
 }
+export const transferAction = async (
+    id: number,
+    action: ObjectAction,
+): Promise<boolean> => {
+    try {
+        if (configUtils.isMockup) {
+            if (action === "approve") {
+                //todo
+                return true;
+            }
+            console.log("Mockup data is being used.");
+            return true;
+        }
+
+        if (!globalConfig) throw new Error("Config has not been initialized!");
+
+        if (globalConfig.debug) await delay();
+
+        const access_token = localStorage.getItem("token");
+        const response = await axios.post<boolean>(
+            `${globalConfig.baseURL}/api/Transfer/${
+                action === "approve" ? "Process" : "Cancel"
+            }`,
+            {
+                ID: id,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${access_token}`,
+                },
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error creating transfer: ", error);
+        throw error; // Re-throwing so that the calling function can decide what to do with the error
+    }
+};

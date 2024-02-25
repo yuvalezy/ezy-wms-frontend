@@ -40,7 +40,7 @@ export default function Transfer() {
         }
         const id = parseInt(checkScan[1]);
         setLoading(true);
-        fetchTransfers(id, [])
+        fetchTransfers({id})
             .then((doc) => {
                 if (doc.length === 0) {
                     setAlert({message: StringFormat(t("transferNotFound"), id), type: MessageStripDesign.Warning});

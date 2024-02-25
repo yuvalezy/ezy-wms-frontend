@@ -5,14 +5,14 @@ import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {Button, Form, FormItem, Grid, Icon, Input, InputDomRef, MessageStrip, MessageStripDesign} from "@ui5/webcomponents-react";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
-import {checkIsComplete} from "./Data/Transfer";
+import {checkIsComplete, transferAction} from "./Data/Transfer";
 
 export default function TransferProcess() {
     const {scanCode} = useParams();
     const {t} = useTranslation();
     const [id, setID] = useState<number | null>();
     const [enableFinish, setEnableFinish] = useState(false);
-    const {setLoading, setAlert} = useThemeContext();
+    const {setLoading, setAlert, setError} = useThemeContext();
 
     const title = `${t("transfer")} #${scanCode}`;
 
@@ -26,34 +26,24 @@ export default function TransferProcess() {
         setID(value);
         checkIsComplete(value)
             .then((isComplete) => setEnableFinish(isComplete))
-            .catch((error) => setAlert({type: MessageStripDesign.Negative, message: error.message}))
+            .catch((error) => setError(error))
             .finally(() => setLoading(false));
     }, []);
 
 
     function finish() {
-        if (!enableFinish)
+        if (!enableFinish || id == null)
             return;
-        if (window.confirm(t("AreYouSure"))) {
-            // setLoading(true);
-            // fetch(`/api/transfer/finish/${id}`, {
-            //     method: 'POST',
-            // }).then(res => {
-            //     if (res.ok) {
-            //         setAlert({
-            //             type: 'success',
-            //             title: t('Success'),
-            //             message: t('TransferFinished')
-            //         });
-            //     } else {
-            //         setAlert({
-            //             type: 'error',
-            //             title: t('Error'),
-            //             message: t('TransferFinishedError')
-            //         });
-            //     }
-            //     setLoading(false);
-            // });
+        if (window.confirm(StringFormat(t("createTransferConfirm"), id))) {
+            setLoading(true);
+            transferAction(id, "approve")
+                .then(() => {
+                    setAlert({message: t("transferApproved"), type: MessageStripDesign.Positive});
+                })
+                .catch((error) => {
+                    setError(error);
+                })
+                .finally(() => setLoading(false));
         }
     }
 
