@@ -22,17 +22,13 @@ export interface ProcessCancelProps {
 
 const ProcessCancel = forwardRef((props: ProcessCancelProps, ref) => {
     const {t} = useTranslation();
-    const {setLoading, setAlert} = useThemeContext();
+    const {setLoading, setError} = useThemeContext();
     const [comment, setComment] = useState(props.alert?.comment || "");
     const [userName, setUserName] = useState("");
     const [reason, setReason] = useState<ReasonValue | null>(null);
     const [reasons, setReasons] = useState<ReasonValue[]>([]);
     const usernameRef = useRef<InputDomRef>(null);
     const dialogRef = useRef<DialogDomRef>(null);
-
-    function errorAlert(message: string) {
-        setAlert({message: message, type: MessageStripDesign.Negative})
-    }
 
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
@@ -64,7 +60,7 @@ const ProcessCancel = forwardRef((props: ProcessCancelProps, ref) => {
                         break;
                 }
                 if (message !== null) {
-                    errorAlert(message);
+                    setError(message);
                     setUserName("");
                     setLoading(false);
                     setTimeout(() => usernameRef.current?.focus(), 100);
@@ -79,10 +75,7 @@ const ProcessCancel = forwardRef((props: ProcessCancelProps, ref) => {
                 }
             })
             .catch((error) => {
-                console.error(`Error performing update: ${error}`);
-                let errorMessage = error.response?.data["exceptionMessage"];
-                if (errorMessage) errorAlert(errorMessage);
-                else errorAlert(`Update Line Error: ${error}`);
+                setError(error);
                 setLoading(false);
             });
     }
@@ -100,10 +93,7 @@ const ProcessCancel = forwardRef((props: ProcessCancelProps, ref) => {
                         dialogRef?.current?.show();
                     })
                     .catch((error) => {
-                        console.error(`Error loading reasons: ${error}`);
-                        let errorMessage = error.response?.data["exceptionMessage"];
-                        if (errorMessage) errorAlert(errorMessage);
-                        else errorAlert(`Error loading reasons: ${error}`);
+                        setError(error);
                     })
                     .finally(() => setLoading(false));
             } else {

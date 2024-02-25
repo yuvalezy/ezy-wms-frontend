@@ -5,31 +5,31 @@ import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {useAuth} from "../../Components/AppContext";
-import {AxiosErrorResponse, BinLocation, SourceTarget} from "../../Assets/Common";
-import {BarCodeScannerRef} from "../../Components/BarCodeScanner";
-import {addItem, fetchTransferContent, TransferContent} from "./Data/Transfer";
+import {BinLocation, DetailUpdateParameters, SourceTarget} from "../../Assets/Common";
+import {addItem, fetchTransferContent, TransferContent, TransferContentBin, updateTransferTargetItem} from "./Data/Transfer";
 import ProcessAlert, {ProcessAlertValue} from "../../Components/ProcessAlert";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
 import {ScrollableContent, ScrollableContentBox} from "../../Components/ScrollableContent";
-import {Button, Label, MessageStrip, Panel, Text, ProgressIndicator, Table, TableCell, TableColumn, TableRow, Title} from "@ui5/webcomponents-react";
+import {Label, Panel, Text, ProgressIndicator, Table, TableCell, TableColumn, TableRow, Title} from "@ui5/webcomponents-react";
 import BinLocationScanner, {BinLocationScannerRef} from "../../Components/BinLocationScanner";
 import {delay} from "../../Assets/GlobalConfig";
-import {AxiosError} from "axios";
 import Processes, {ProcessesRef} from "../../Components/Processes";
 import {ReasonType} from "../../Assets/Reasons";
 import {updateLine} from "./Data/TransferProcess";
+import TransferTargetItemsDetailsDialog, {TransferTargetItemsDetailRef} from "./Components/TransferTargetItemDetails";
 
 export default function TransferProcessTargetItem() {
     const {scanCode, itemCode} = useParams();
     const {t} = useTranslation();
     const [id, setID] = useState<number | null>();
-    const {setLoading, setAlert} = useThemeContext();
+    const {setLoading, setError} = useThemeContext();
     const {user} = useAuth();
     const [content, setContent] = useState<TransferContent | null>(null);
     const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
     const navigate = useNavigate();
     const binRef = useRef<BinLocationScannerRef>(null);
     const processesRef = useRef<ProcessesRef>(null);
+    const detailDialogRef = useRef<TransferTargetItemsDetailRef>(null);
 
     const title = `${t("transfer")} #${scanCode} - ${t("selectTransferTarget")}`;
 
@@ -45,24 +45,17 @@ export default function TransferProcessTargetItem() {
         delay(1).then(() => binRef?.current?.focus());
     }, []);
 
-    function errorMessage(message: string) {
-        setAlert({
-            message: message,
-            type: MessageStripDesign.Negative,
-        });
-    }
-
     function loadData(value?: number) {
         fetchTransferContent({id: value ?? id ?? 0, type: SourceTarget.Target, targetBins: true, itemCode})
             .then((results) => {
                 if (results.length > 0) {
                     setContent(results[0]);
                 } else {
-                    errorMessage(StringFormat(t('transferItemNotFound'), itemCode));
+                    setError(StringFormat(t('transferItemNotFound'), itemCode));
                 }
             })
             .catch((e) => {
-                errorMessage(`Loading Rows Error: ${e}`);
+                setError(e);
             })
             .finally(() => setLoading(false));
     }
@@ -74,7 +67,7 @@ export default function TransferProcessTargetItem() {
         addItem({id, itemCode, type: SourceTarget.Target, binEntry: bin.entry})
             .then((v) => {
                 if (v.errorMessage != null) {
-                    errorMessage(v.errorMessage);
+                    setError(v.errorMessage);
                     return;
                 }
                 let date = new Date(Date.now());
@@ -90,14 +83,7 @@ export default function TransferProcessTargetItem() {
                 binRef?.current?.focus();
             })
             .catch((error) => {
-                let message = error.message;
-                try {
-                    const axiosError = error as AxiosError;
-                    const data = axiosError.response?.data as AxiosErrorResponse;
-                    message = data?.exceptionMessage;
-                } catch(e) {
-                }
-                errorMessage(`Add Item Error Error: ${message}`);
+                setError(error);
             })
             .finally(() => setLoading(false));
     }
@@ -124,9 +110,30 @@ export default function TransferProcessTargetItem() {
         setCurrentAlert(newAlert);
         loadData();
     }
+    function handleClick(bin: TransferContentBin) {
+        if (content == null)
+            return;
+        detailDialogRef?.current?.show(content, bin);
+    }
 
     function navigateBack() {
         navigate(`/transfer/${id}/target`);
+    }
+
+    function onUpdate(data: DetailUpdateParameters) {
+        if (id == null) {
+            return;
+        }
+        setLoading(true);
+        updateTransferTargetItem(data)
+            .then(() => {
+                detailDialogRef?.current?.hide();
+                loadData();
+            })
+            .catch((error) => {
+                setError(error);
+                setLoading(false);
+            });
     }
 
     return (
@@ -153,7 +160,10 @@ export default function TransferProcessTargetItem() {
                             {content?.bins?.map((bin) => (
                                 <TableRow key={bin.entry}>
                                     <TableCell><Label>{bin.code}</Label></TableCell>
-                                    <TableCell><Label>{bin.quantity}</Label></TableCell>
+                                    <TableCell><a href="#" onClick={e => {
+                                        e.preventDefault();
+                                        handleClick(bin)
+                                    }}>{bin.quantity}</a></TableCell>
                                 </TableRow>
                             ))}
                         </Table>
@@ -171,6 +181,7 @@ export default function TransferProcessTargetItem() {
                 onUpdateLine={updateLine}
                 onUpdateComplete={loadData}
             />}
+            {id && <TransferTargetItemsDetailsDialog ref={detailDialogRef} id={id} onUpdate={onUpdate}/>}
         </ContentTheme>
     );
 }

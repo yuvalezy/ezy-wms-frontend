@@ -19,7 +19,7 @@ export interface BinLocationScannerRef {
 }
 
 const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerProps>(({onScan, onChanged, onClear}, ref) => {
-    const {setLoading, setAlert} = useThemeContext();
+    const {setLoading, setError} = useThemeContext();
     const {t} = useTranslation();
     const binRef = useRef<InputDomRef>(null);
     const [binInput, setBinInput] = useState('');
@@ -37,13 +37,6 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
         }
     }));
 
-    function errorMessage(message: string) {
-        setAlert({
-            message: message,
-            type: MessageStripDesign.Negative,
-        });
-    }
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (binInput.length === 0) {
@@ -54,7 +47,7 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
             scanBinLocation(binInput)
                 .then((v) => {
                     if (v == null) {
-                        errorMessage(StringFormat(t(`binLocationNotFound`), binInput));
+                        setError(StringFormat(t(`binLocationNotFound`), binInput));
                         setBinInput('');
                         setLoading(false);
                         return;
@@ -68,11 +61,11 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
                     }
                 })
                 .catch((e) => {
-                    errorMessage(`Bin Location Error: ${e}`);
+                    setError(e);
                     setLoading(false);
                 })
         } catch (e) {
-            errorMessage(`Bin Location Error: ${e}`);
+            setError(e);
             setLoading(false);
         }
     };

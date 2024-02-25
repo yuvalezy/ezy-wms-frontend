@@ -1,6 +1,7 @@
 import axios from "axios";
 import {configUtils, delay, globalConfig} from "../../../Assets/GlobalConfig";
 import {GoodsReceiptAllDetailMockup, GoodsReceiptMockup, goodsReceiptVSExitReportDataMockup} from "../../../Assets/mockup";
+import {DetailUpdateParameters} from "../../../Assets/Common";
 
 export type GoodsReceiptAll = {
     itemCode: string;
@@ -15,11 +16,6 @@ export type GoodsReceiptAllDetail = {
     employeeName: string;
     timeStamp: Date;
     quantity: number;
-};
-export type GoodsReceiptAllDetailUpdate = {
-    id: number;
-    removeRows: number[];
-    quantityChanges: { [key: number]: number }
 };
 
 export type GoodsReceiptVSExitReportData = {
@@ -98,7 +94,7 @@ export const fetchGoodsReceiptReportAllDetails = async (id: number, item: string
         throw error;
     }
 };
-export const updateGoodsReceiptReport = async(data: GoodsReceiptAllDetailUpdate) => {
+export const updateGoodsReceiptReport = async(data: DetailUpdateParameters) => {
     try {
         if (configUtils.isMockup) {
             return;

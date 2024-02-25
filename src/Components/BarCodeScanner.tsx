@@ -21,7 +21,7 @@ export interface BarCodeScannerRef {
 const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>(({enabled, onAddItem}, ref) => {
     const barcodeRef = useRef<InputDomRef>(null);
     const [barcodeInput, setBarcodeInput] = useState('');
-    const {setLoading, setAlert} = useThemeContext();
+    const {setLoading, setAlert, setError} = useThemeContext();
     const {t} = useTranslation();
 
     useImperativeHandle(ref, () => ({
@@ -52,14 +52,12 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>(({enab
             scanBarcode(barcode)
                 .then((items) => handleItems(items))
                 .catch((error) => {
-                    alert({message: `Scan Bar Code Error: ${error}`, severity: MessageStripDesign.Negative});
+                    setError(error);
                     setLoading(false);
                 });
         } catch (e) {
-            setAlert({
-                message: `Scan Barcode Error: ${e}`,
-                type: MessageStripDesign.Negative,
-            });
+            setError(e);
+            setLoading(false);
         }
     }
 
@@ -99,10 +97,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>(({enab
         const distinctCodes = distinctItems(items);
         if (distinctCodes.length !== 1) {
             let codes = distinctCodes.map((v) => `"${v}"`).join(", ");
-            alert({
-                message: StringFormat(t("multipleItemsError"), codes),
-                severity: MessageStripDesign.Negative,
-            });
+            setError(StringFormat(t("multipleItemsError"), codes));
             setLoading(false);
             return;
         }

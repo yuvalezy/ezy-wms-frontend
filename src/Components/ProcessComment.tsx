@@ -25,7 +25,7 @@ export interface ProcessCommentProps {
 
 const ProcessComment = forwardRef((props: ProcessCommentProps, ref) => {
     const {t} = useTranslation();
-    const {setAlert} =  useThemeContext();
+    const {setError} =  useThemeContext();
     const dialogRef = useRef<DialogDomRef>(null);
     const {setLoading} = useThemeContext();
     const [comment, setComment] = useState(props.alert?.comment || "");
@@ -47,9 +47,7 @@ const ProcessComment = forwardRef((props: ProcessCommentProps, ref) => {
                 }
             })
             .catch((error) => {
-                console.error(`Error performing update: ${error}`);
-                let errorMessage = error.response?.data["exceptionMessage"]??`Update Line Error: ${error}`;
-                setAlert({message: errorMessage, type: MessageStripDesign.Negative});
+                setError(error);
                 setLoading(false);
             });
     };

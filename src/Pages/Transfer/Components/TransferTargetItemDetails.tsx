@@ -2,25 +2,26 @@ import {Bar, Button, CheckBox, Dialog, DialogDomRef, Input, Label, MessageStripD
 import React, {forwardRef, useImperativeHandle, useRef, useState} from "react";
 import {useThemeContext} from "../../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {fetchGoodsReceiptReportAllDetails, GoodsReceiptAll, GoodsReceiptAllDetail} from "../Data/Report";
-import {fetchDocuments} from "../Data/Document";
 import {DetailUpdateParameters, Status} from "../../../Assets/Common";
+import {fetchTargetItemDetails, fetchTransfers, TargetItemDetail, TransferContent, TransferContentBin} from "../Data/Transfer";
 
-export interface GRPOAllDetailRef {
-    show: (data: GoodsReceiptAll) => void;
+export interface TransferTargetItemsDetailRef {
+    show: (content: TransferContent, bin: TransferContentBin) => void;
+    hide: () => void;
 }
 
-export interface GRPOAllDetailProps {
+export interface TransferTargetItemsDetailProps {
     id: number;
     onUpdate: (data: DetailUpdateParameters) => void;
 }
 
-const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
+const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsDetailProps, ref) => {
     const {t} = useTranslation();
     const {setLoading, setAlert} = useThemeContext();
     const dialogRef = useRef<DialogDomRef>(null);
-    const [currentData, setCurrentData] = useState<GoodsReceiptAll | null>(null);
-    const [data, setData] = useState<GoodsReceiptAllDetail[] | null>([]);
+    const [content, setContent] = useState<TransferContent | null>(null);
+    const [bin, setBin] = useState<TransferContentBin | null>(null);
+    const [data, setData] = useState<TargetItemDetail[]>([]);
     const [enableUpdate, setEnableUpdate] = useState(false);
     const [checkedRows, setCheckedRows] = useState<{ [key: number]: boolean }>({}); // State to store checked rows
     const [quantityChanges, setQuantityChanges] = useState<{ [key: number]: number }>({}); // State to store quantity changes
@@ -28,22 +29,21 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
     function update() {
         try {
             const removeRows = data?.filter(detail => checkedRows[detail.lineID]).map(detail => detail.lineID) ?? [];
-            dialogRef?.current?.close();
             props.onUpdate({id: props.id, removeRows: removeRows, quantityChanges: quantityChanges});
         } catch (e) {
             setAlert({message: `Error: ${e}`, type: MessageStripDesign.Negative})
         }
     }
 
-    function loadDetails(data: GoodsReceiptAll) {
+    function loadDetails(content: TransferContent, bin: TransferContentBin) {
         setLoading(true);
         setEnableUpdate(false);
         setCheckedRows({})
         setQuantityChanges({})
-        fetchDocuments(props.id, [])
-            .then((doc) => {
-                setEnableUpdate(doc[0].status === Status.InProgress);
-                fetchGoodsReceiptReportAllDetails(props.id, data.itemCode)
+        fetchTransfers(props.id, [])
+            .then((transfer) => {
+                setEnableUpdate(transfer[0].status === Status.InProgress);
+                fetchTargetItemDetails(props.id, content.code, bin.entry)
                     .then((result) => {
                         dialogRef?.current?.show();
                         setData(result);
@@ -58,9 +58,13 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
     }
 
     useImperativeHandle(ref, () => ({
-        show(data: GoodsReceiptAll) {
-            setCurrentData(data);
-            loadDetails(data);
+        show(content: TransferContent, bin: TransferContentBin) {
+            setContent(content)
+            setBin(bin);
+            loadDetails(content, bin);
+        },
+        hide() {
+            dialogRef?.current?.close();
         }
     }))
 
@@ -106,12 +110,12 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
             }
         >
             <Title level="H5">
-                {t("detail")}
+                {t("detail")} - {bin?.code}
             </Title>
             <Title level="H6">
-                {currentData?.itemCode} - {currentData?.itemName}
+                {content?.code} - {content?.name}
             </Title>
-            {data &&
+            {content && bin &&
                 <Table
 
                     columns={<>
@@ -138,4 +142,4 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
         </Dialog>
     );
 });
-export default GoodsReceiptAllDialog;
+export default TransferTargetItemsDetailsDialog;

@@ -80,3 +80,9 @@ export enum SourceTarget {
     Source = "Source",
     Target = "Target"
 }
+
+export type DetailUpdateParameters = {
+    id: number;
+    removeRows: number[];
+    quantityChanges: { [key: number]: number }
+};

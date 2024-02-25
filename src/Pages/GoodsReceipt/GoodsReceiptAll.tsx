@@ -2,8 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import ContentTheme from "../../Components/ContentTheme";
 import {useParams} from "react-router-dom";
 import {
-    fetchGoodsReceiptReportAll,
-    GoodsReceiptAll, GoodsReceiptAllDetailUpdate, updateGoodsReceiptReport,
+    fetchGoodsReceiptReportAll, GoodsReceiptAll, updateGoodsReceiptReport,
 } from "./Data/Report";
 import GoodsReceiptAllReportTable from "./Components/GoodsReceiptAllTable";
 import {useThemeContext} from "../../Components/ThemeContext";
@@ -14,6 +13,7 @@ import {MessageStrip, MessageStripDesign, Title} from "@ui5/webcomponents-react"
 import {IsNumeric} from "../../Assets/Functions";
 import {GRPOAllDetailRef} from "./Components/GoodsReceiptAllDetail";
 import GoodsReceiptAllDialog from "./Components/GoodsReceiptAllDetail";
+import {DetailUpdateParameters} from "../../Assets/Common";
 
 export default function GoodsReceiptReportAll() {
     const {t} = useTranslation();
@@ -91,7 +91,7 @@ export default function GoodsReceiptReportAll() {
         detailRef?.current?.show(newData);
     }
 
-    function onDetailUpdate(data: GoodsReceiptAllDetailUpdate) {
+    function onDetailUpdate(data: DetailUpdateParameters) {
         if (id == null) {
             return;
         }

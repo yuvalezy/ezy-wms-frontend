@@ -1,8 +1,8 @@
 import {Employee} from "../../../Assets/Data";
 import {configUtils, delay, globalConfig} from "../../../Assets/GlobalConfig";
-import {transferMockup} from "../../../Assets/mockup";
+import {GoodsReceiptAllDetailMockup, transferMockup} from "../../../Assets/mockup";
 import axios from "axios";
-import {SourceTarget, Status} from "../../../Assets/Common";
+import {DetailUpdateParameters, SourceTarget, Status} from "../../../Assets/Common";
 
 interface TransferAddItemResponse {
     lineID?: number
@@ -234,6 +234,76 @@ export const fetchTransferContent = async (params: transferContentParameters): P
         return response.data;
     } catch (error) {
         console.error("Error fetching transfer content:", error);
+        throw error;
+    }
+}
+export type TargetItemDetail = {
+    lineID: number;
+    employeeName: string;
+    timeStamp: Date;
+    quantity: number;
+};
+export const fetchTargetItemDetails = async (id: number, item: string, binEntry: number): Promise<TargetItemDetail[]> => {
+    try {
+        if (!globalConfig)
+            throw new Error("Config has not been initialized!");
+        if (globalConfig.debug)
+            await delay();
+        if (configUtils.isMockup) {
+            console.log("Mockup data is being used.");
+            return GoodsReceiptAllDetailMockup;
+        }
+
+        const access_token = localStorage.getItem("token");
+
+        const url = `${globalConfig.baseURL}/api/Transfer/TransferContentTargetDetail`;
+
+        const response = await axios.post<any[]>(url, {
+            id: id,
+            itemCode: item,
+            binEntry: binEntry
+        },{
+            headers: {
+                Authorization: `Bearer ${access_token}`,
+            },
+        });
+
+        const details: TargetItemDetail[] = response.data.map((item: any) => ({
+            lineID: item.lineID,
+            employeeName: item.employeeName,
+            timeStamp: new Date(item.timeStamp),
+            quantity: item.quantity
+        }));
+
+        return details;
+    } catch (error) {
+        console.error("Error fetching all details:", error);
+        throw error;
+    }
+};
+export const updateTransferTargetItem = async(data: DetailUpdateParameters) => {
+    try {
+        if (configUtils.isMockup) {
+            return;
+        }
+
+        if (!globalConfig) throw new Error("Config has not been initialized!");
+
+        if (globalConfig.debug) await delay();
+
+        const access_token = localStorage.getItem("token");
+
+        const url = `${globalConfig.baseURL}/api/Transfer/UpdateContentTargetDetail`;
+
+        const response = await axios.post(url, data, {
+            headers: {
+                Authorization: `Bearer ${access_token}`,
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error updating goods receipt:", error);
         throw error;
     }
 }
