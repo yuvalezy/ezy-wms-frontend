@@ -25,7 +25,7 @@ export default function TransferProcessSource() {
     const [id, setID] = useState<number | null>();
     const [binLocation, setBinLocation] = useState<BinLocation | null>(null);
     const [enable, setEnable] = useState(false);
-    const {setLoading, setAlert} = useThemeContext();
+    const {setLoading, setAlert, setError} = useThemeContext();
     const {user} = useAuth();
     const barcodeRef = useRef<BarCodeScannerRef>(null);
     const [rows, setRows] = useState<TransferContent[] | null>(null);
@@ -60,10 +60,7 @@ export default function TransferProcessSource() {
             loadRows(bin.entry);
             delay(1).then(() => barcodeRef?.current?.focus());
         } catch (e) {
-            setAlert({
-                message: `Bin Location Changed Error: ${e}`,
-                type: MessageStripDesign.Negative,
-            });
+            setError(e);
             setLoading(false);
         }
     }
@@ -85,10 +82,7 @@ export default function TransferProcessSource() {
         fetchTransferContent({id, type: SourceTarget.Source, binEntry})
             .then((v) => setRows(v))
             .catch((e) => {
-                setAlert({
-                    message: `Loading Rows Error: ${e}`,
-                    type: MessageStripDesign.Negative,
-                });
+                setError(e);
                 setRows([]);
             })
             .finally(() => setLoading(false));
@@ -101,10 +95,7 @@ export default function TransferProcessSource() {
         addItem({id, itemCode, barcode, type: SourceTarget.Source, binEntry: binLocation?.entry})
             .then((v) => {
                 if (v.errorMessage != null) {
-                    setAlert({
-                        message: v.errorMessage,
-                        type: MessageStripDesign.Negative,
-                    });
+                    setError(v.errorMessage);
                     return;
                 }
                 let date = new Date(Date.now());
@@ -121,17 +112,7 @@ export default function TransferProcessSource() {
                 barcodeRef?.current?.focus();
             })
             .catch((error) => {
-                let message = error.message;
-                try {
-                    const axiosError = error as AxiosError;
-                    const data = axiosError.response?.data as AxiosErrorResponse;
-                    message = data?.exceptionMessage;
-                } catch(e) {
-                }
-                setAlert({
-                    message: `Add Item Error Error: ${message}`,
-                    type: MessageStripDesign.Negative,
-                });
+                setError(error);
             })
             .finally(() => setLoading(false));
         return;

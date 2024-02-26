@@ -2,9 +2,7 @@ import ContentTheme from "../../Components/ContentTheme";
 import {useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
 import BoxConfirmationDialog, {BoxConfirmationDialogRef} from "../../Components/BoxConfirmationDialog";
-import ProcessComment, {ProcessCommentRef} from "../../Components/ProcessComment";
 import {useThemeContext} from "../../Components/ThemeContext";
-import ProcessCancel, {ProcessCancelRef} from "../../Components/ProcessCancel";
 import {useTranslation} from "react-i18next";
 import {Button, Form, FormItem, Input, InputDomRef, MessageStrip} from "@ui5/webcomponents-react";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
@@ -15,10 +13,8 @@ import {configUtils, delay} from "../../Assets/GlobalConfig";
 import {scanBarcode} from "../../Assets/ScanBarcode";
 import ProcessAlert, {AlertActionType, ProcessAlertValue} from "../../Components/ProcessAlert";
 import {ReasonType} from "../../Assets/Reasons";
-import ProcessQuantity, {ProcessQuantityRef} from "../../Components/ProcessQuantity";
 import {DocumentAddItemResponse} from "../../Assets/Document";
 import Processes, {ProcessesRef} from "../../Components/Processes";
-import processes from "../../Components/Processes";
 
 export default function GoodsReceiptProcess() {
     const {scanCode} = useParams();
@@ -27,7 +23,7 @@ export default function GoodsReceiptProcess() {
     const boxConfirmationDialogRef = useRef<BoxConfirmationDialogRef>(null);
     const [id, setID] = useState<number | null>();
     const [enable, setEnable] = useState(true);
-    const {setLoading, setAlert} = useThemeContext();
+    const {setLoading, setAlert, setError} = useThemeContext();
     const [barcodeInput, setBarcodeInput] = React.useState("");
     const [boxItem, setBoxItem] = useState("");
     const [boxItems, setBoxItems] = useState<Item[]>();
@@ -64,7 +60,7 @@ export default function GoodsReceiptProcess() {
         scanBarcode(barcodeInput)
             .then((items) => handleItems(items))
             .catch((error) => {
-                alert({message: `Scan Bar Code Error: ${error}`, severity: MessageStripDesign.Negative});
+                setError(error);
                 setLoading(false);
             });
     }

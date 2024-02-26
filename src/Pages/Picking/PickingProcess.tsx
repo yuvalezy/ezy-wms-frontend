@@ -13,16 +13,12 @@ export default function PickingProcess() {
     const {idParam} = useParams();
     const {t} = useTranslation();
     const [id, setID] = useState<number | null>();
-    const {setLoading, setAlert} = useThemeContext();
+    const {setLoading, setError} = useThemeContext();
     const [picking, setPicking] = useState<PickingDocument | null>(null);
     const o = useObjectName();
     const navigate = useNavigate();
 
     const title = `${t("picking")} #${idParam}`;
-
-    function errorAlert(message: string) {
-        setAlert({message: message, type: MessageStripDesign.Negative})
-    }
 
     useEffect(() => {
         if (idParam === null || idParam === undefined || !IsNumeric(idParam)) {
@@ -37,12 +33,12 @@ export default function PickingProcess() {
             .then(value => {
                 if (value == null) {
                     setPicking(null);
-                    errorAlert(t("pickingNotFound"))
+                    setError(t("pickingNotFound"))
                     return;
                 }
                 setPicking(value);
             })
-            .catch(error => errorAlert(error))
+            .catch(error => setError(error))
             .finally(() => setLoading(false));
     }, []);
 

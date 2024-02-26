@@ -10,7 +10,7 @@ import {BusinessPartner} from "../../Assets/Data";
 import {Document, DocumentStatusOption} from "../../Assets/Document";
 
 export default function GoodsReceiptReport() {
-    const {setLoading, setAlert} = useThemeContext();
+    const {setLoading, setAlert, setError} = useThemeContext();
     const {t} = useTranslation();
     const [idInput, setIDInput] = useState<string | "">("");
     const [cardCodeInput, setCardCodeInput] = useState<BusinessPartner | null>(null);
@@ -19,10 +19,6 @@ export default function GoodsReceiptReport() {
     const [statusInput, setStatusInput] = useState<DocumentStatusOption | null>(null);
     const [dateInput, setDateInput] = useState<Date | null>(null);
     const [documents, setDocuments] = useState<Document[]>([]);
-
-    const errorAlert = (message: string) => {
-        setAlert({message: message, type: MessageStripDesign.Negative})
-    };
 
     const onSubmit = () => {
         setLoading(true);
@@ -37,13 +33,8 @@ export default function GoodsReceiptReport() {
             docNameInput,
             grpo
         )
-            .then((data) => {
-                setDocuments(data);
-            })
-            .catch((error) => {
-                console.error(`Error fetching documents: ${error}`);
-                errorAlert(`Error fetching documents: ${error}`);
-            })
+            .then((data) => setDocuments(data))
+            .catch((error) => setError(error))
             .finally(() => setLoading(false));
     };
 

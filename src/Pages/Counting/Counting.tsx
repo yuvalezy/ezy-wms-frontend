@@ -8,9 +8,10 @@ import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {useDocumentStatusToString} from "../../Assets/DocumentStatusString";
 import {fetchCountings} from "./Data/Counting";
 import {Status} from "../../Assets/Common";
+import {setEngine} from "node:crypto";
 
 export default function Counting() {
-    const {setLoading, setAlert} = useThemeContext();
+    const {setLoading, setAlert, setError} = useThemeContext();
     const [scanCodeInput, setScanCodeInput] = React.useState("");
     const {t} = useTranslation();
     const documentStatusToString = useDocumentStatusToString();
@@ -58,7 +59,7 @@ export default function Counting() {
                 navigate(`/counting/${id}`);
             })
             .catch((error) => {
-                setAlert({message: `Validate Counting Error: ${error}`, type: MessageStripDesign.Negative});
+                setError(error);
             })
             .finally(() => setLoading(false));
     }

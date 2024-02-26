@@ -75,11 +75,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>(({enab
         }
         let barcode = barcodeInput;
         if (items.length === 0) {
-            alert({
-                barcode: barcode,
-                message: StringFormat(t("barcodeNotFound"), barcode),
-                severity: MessageStripDesign.Negative,
-            });
+            setError(StringFormat(t("barcodeNotFound"), barcode));
             clearBarCode();
             setLoading(false);
             return;

@@ -1,26 +1,17 @@
 import React, {useState} from "react";
 import {useThemeContext} from "../../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {
-    Button,
-    Form,
-    FormItem, Input, MessageStripDesign,
-
-
-} from "@ui5/webcomponents-react";
-import {useObjectName} from "../../../Assets/ObjectName";
+import {Button, Form, FormItem, Input,} from "@ui5/webcomponents-react";
 import {createCounting} from "../Data/Counting";
 import {Counting} from "../../../Assets/Counting";
 
 interface CountingFormProps {
     onNewCounting: (document: Counting) => void;
-    onError: (errorMessage: string) => void;
 }
 
-const CountingForm: React.FC<CountingFormProps> = ({onNewCounting, onError,}) => {
+const CountingForm: React.FC<CountingFormProps> = ({onNewCounting,}) => {
     const {t} = useTranslation();
-    const o = useObjectName();
-    const {setLoading, setAlert} = useThemeContext();
+    const {setLoading, setError} = useThemeContext();
     const [docNameInput, setDocNameInput] = useState<string>("");
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -40,15 +31,12 @@ const CountingForm: React.FC<CountingFormProps> = ({onNewCounting, onError,}) =>
                     }
                     let errorMessage: string = t("unknownError");
                     //if needed specific code, look into Document.ts to copy structure from createDocument
-                    setAlert({message: errorMessage, type: MessageStripDesign.Negative});
+                    setError(errorMessage);
                 })
-                .catch((e) => {
-                    console.error(`Error creating counting: ${e}`);
-                    onError(`Error creating counting: ${e.message}`);
-                })
+                .catch((e) => setError(e))
                 .finally(() => setLoading(false));
         } catch (e: any) {
-            onError(`Error creating document: ${e.message}`);
+            setError(e);
         }
     };
 

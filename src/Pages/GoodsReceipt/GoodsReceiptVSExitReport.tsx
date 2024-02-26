@@ -17,7 +17,7 @@ export default function GoodsReceiptVSExitReport() {
   const { scanCode } = useParams();
   const { t } = useTranslation();
   const o = useObjectName();
-  const {setLoading, setAlert} = useThemeContext();
+  const {setLoading, setAlert, setError} = useThemeContext();
   const [data, setData] = useState<GoodsReceiptVSExitReportData[] | null>(null);
   const title = `${t("goodsReceiptVSExit")} #${scanCode}`;
 
@@ -31,7 +31,7 @@ export default function GoodsReceiptVSExitReport() {
     setLoading(true);
     fetchGoodsReceiptVSExitReport(parseInt(scanCode))
       .then((result) => setData(result))
-      .catch((error) => setAlert({message: `Loading Error: ${error}`, type: MessageStripDesign.Negative}))
+      .catch((error) => setError(error))
       .finally(() => setLoading(false));
   }, []);
   return (

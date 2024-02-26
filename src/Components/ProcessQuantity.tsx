@@ -26,7 +26,7 @@ export interface ProcessQuantityProps {
 
 const ProcessQuantity = forwardRef((props: ProcessQuantityProps, ref) => {
     const {t} = useTranslation();
-    const {setLoading, setAlert} = useThemeContext();
+    const {setLoading, setAlert, setError} = useThemeContext();
     const [userName, setUserName] = useState("");
     const [quantity, setQuantity] = useState<number>(props.alert?.quantity ?? 1);
     const QuantityRef = useRef<InputDomRef>(null);
@@ -64,7 +64,7 @@ const ProcessQuantity = forwardRef((props: ProcessQuantityProps, ref) => {
                         break;
                 }
                 if (message !== null) {
-                    setAlert({message: message, type: MessageStripDesign.Negative});
+                    setError(message);
                     setUserName("");
                     setLoading(false);
                     setTimeout(() => QuantityRef.current?.focus(), 100);
@@ -80,15 +80,14 @@ const ProcessQuantity = forwardRef((props: ProcessQuantityProps, ref) => {
                 }
             })
             .catch((error) => {
-                console.error(`Error performing update: ${error}`);
-                let errorMessage = error.response?.data["exceptionMessage"] ?? `Update Line Error: ${error}`;
-                setAlert({message: errorMessage, type: MessageStripDesign.Negative});
+                setError(error);
                 setLoading(false);
             });
     }
 
     useImperativeHandle(ref, () => ({
         show(show: boolean) {
+            setQuantity(props.alert?.quantity??1);
             if (show) {
                 dialogRef?.current?.show();
             } else {

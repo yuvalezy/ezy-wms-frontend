@@ -19,7 +19,7 @@ export default function GoodsReceiptReportAll() {
     const {t} = useTranslation();
     const [id, setID] = useState<number | null>();
     const {scanCode} = useParams();
-    const {setLoading, setAlert} = useThemeContext();
+    const {setLoading, setAlert, setError} = useThemeContext();
     const [data, setData] = useState<GoodsReceiptAll[] | null>(null);
     const title = `${t("goodsReceiptReport")} #${scanCode}`;
     const detailRef = useRef<GRPOAllDetailRef>();
@@ -45,7 +45,7 @@ export default function GoodsReceiptReportAll() {
         const fetchID = loadID ?? id ?? 0
         fetchGoodsReceiptReportAll(fetchID)
             .then((result) => setData(result))
-            .catch((error) => setAlert({message: `Loading Error: ${error}`, type: MessageStripDesign.Negative}))
+            .catch((error) => setError(error))
             .finally(() => setLoading(false))
         ;
     }
@@ -99,7 +99,7 @@ export default function GoodsReceiptReportAll() {
         updateGoodsReceiptReport(data)
             .then(() => loadData())
             .catch((error) => {
-                setAlert({message: `Loading Error: ${error}`, type: MessageStripDesign.Negative});
+                setError(error);
                 setLoading(false);
             });
     }

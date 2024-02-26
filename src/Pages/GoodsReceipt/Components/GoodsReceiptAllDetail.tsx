@@ -17,7 +17,7 @@ export interface GRPOAllDetailProps {
 
 const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
     const {t} = useTranslation();
-    const {setLoading, setAlert} = useThemeContext();
+    const {setLoading, setError} = useThemeContext();
     const dialogRef = useRef<DialogDomRef>(null);
     const [currentData, setCurrentData] = useState<GoodsReceiptAll | null>(null);
     const [data, setData] = useState<GoodsReceiptAllDetail[] | null>([]);
@@ -31,7 +31,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
             dialogRef?.current?.close();
             props.onUpdate({id: props.id, removeRows: removeRows, quantityChanges: quantityChanges});
         } catch (e) {
-            setAlert({message: `Error: ${e}`, type: MessageStripDesign.Negative})
+            setError(e);
         }
     }
 
@@ -48,11 +48,11 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                         dialogRef?.current?.show();
                         setData(result);
                     })
-                    .catch((error) => setAlert({message: `Loading Error: ${error}`, type: MessageStripDesign.Negative}))
+                    .catch((error) => setError(error))
                     .finally(() => setLoading(false));
             })
             .catch((error) => {
-                setAlert({message: `Validate Goods Receipt Error: ${error}`, type: MessageStripDesign.Negative});
+                setError(error);
                 setLoading(false);
             });
     }

@@ -20,26 +20,20 @@ export default function GoodsReceiptSupervisor() {
     const {user} = useAuth();
     const [supervisor, setSupervisor] = useState(false);
     const {t} = useTranslation();
-    const {setLoading, setAlert} = useThemeContext();
+    const {setLoading, setAlert, setError} = useThemeContext();
     const [documents, setDocuments] = useState<Document[]>([]);
     const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(null);
     const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
     const [actionType, setActionType] = useState<ObjectAction | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
-    const errorAlert = (message: string) => setAlert({message: message, type: MessageStripDesign.Negative});
     const documentListDialogRef = useRef<DocumentListDialogRef>(null);
 
     useEffect(() => {
         setSupervisor(user?.authorizations.filter((v) => v === Authorization.GOODS_RECEIPT_SUPERVISOR).length === 1);
         setLoading(true);
         fetchDocuments()
-            .then((data) => {
-                setDocuments(data);
-            })
-            .catch((error) => {
-                console.error(`Error fetching documents: ${error}`);
-                errorAlert(`Error fetching documents: ${error}`);
-            })
+            .then((data) => setDocuments(data))
+            .catch((error) => setError(error))
             .finally(() => setLoading(false));
     }, []);
 
@@ -68,12 +62,7 @@ export default function GoodsReceiptSupervisor() {
                 );
                 setAlert({message: actionType === "approve" ? t("approved") : t("cancelled"), type: MessageStripDesign.Positive});
             })
-            .catch((error) => {
-                console.error(`Error performing action: ${error}`);
-                let errorMessage = error.response?.data["exceptionMessage"];
-                if (errorMessage) errorAlert(`SAP Error: ${errorMessage}`);
-                else errorAlert(`Error performing action: ${error}`);
-            })
+            .catch((error) => setError(error))
             .finally(() => setLoading(false));
     };
 
@@ -90,7 +79,6 @@ export default function GoodsReceiptSupervisor() {
     return (
         <ContentTheme title={getTitle()} icon="kpi-managing-my-area">
             <DocumentForm
-                onError={errorAlert}
                 onNewDocument={(newDocument) =>
                     setDocuments((prevDocs) => [newDocument, ...prevDocs])
                 }

@@ -1,16 +1,15 @@
 import ContentTheme from "../../Components/ContentTheme";
 import {useNavigate, useParams} from "react-router-dom";
-import React, {CSSProperties, useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import BoxConfirmationDialog, {BoxConfirmationDialogRef} from "../../Components/BoxConfirmationDialog";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {Title, Table, TableColumn, Label, TableRow, TableCell} from "@ui5/webcomponents-react";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
-import {distinctItems, Item} from "../../Assets/Common";
+import {Item} from "../../Assets/Common";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {addItem, fetchPicking, PickingDocument, PickingDocumentDetail} from "./Data/PickingDocument";
 import {useObjectName} from "../../Assets/ObjectName";
-import {scanBarcode} from "../../Assets/ScanBarcode";
 import BarCodeScanner, {BarCodeScannerRef} from "../../Components/BarCodeScanner";
 import {ScrollableContent} from "../../Components/ScrollableContent";
 
@@ -23,7 +22,7 @@ export default function PickingProcessDetail() {
     const {t} = useTranslation();
     const boxConfirmationDialogRef = useRef<BoxConfirmationDialogRef>(null);
     const [enable, setEnable] = useState(true);
-    const {setLoading, setAlert} = useThemeContext();
+    const {setLoading, setAlert, setError} = useThemeContext();
     const [boxItem, setBoxItem] = useState("");
     const [boxItems, setBoxItems] = useState<Item[]>();
     const [, setPicking] = useState<PickingDocument | null>(null);
@@ -32,9 +31,6 @@ export default function PickingProcessDetail() {
     const navigate = useNavigate();
     const barcodeRef = useRef<BarCodeScannerRef>(null);
 
-    function errorAlert(message: string) {
-        setAlert({message: message, type: MessageStripDesign.Negative})
-    }
 
     useEffect(() => {
         setTitle(t("picking"));
@@ -70,7 +66,7 @@ export default function PickingProcessDetail() {
             .then(value => {
                 if (value == null) {
                     setPicking(null);
-                    errorAlert(t("pickingNotFound"))
+                    setError(t("pickingNotFound"))
                     return;
                 }
                 setPicking(value);
@@ -87,7 +83,7 @@ export default function PickingProcessDetail() {
                     setTimeout(() => barcodeRef?.current?.focus(), 1);
                 }
             })
-            .catch(error => errorAlert(error))
+            .catch(error => setError(error))
             .finally(() => setLoading(false));
     }
 
@@ -102,7 +98,7 @@ export default function PickingProcessDetail() {
         addItem(id, type, entry, itemCode, 1)
             .then((data) => {
                 if (data.closedDocument) {
-                    errorAlert(StringFormat(t("pickedIsClosed"), id));
+                    setError(StringFormat(t("pickedIsClosed"), id));
                     setEnable(false);
                     return;
                 }
@@ -113,7 +109,7 @@ export default function PickingProcessDetail() {
             .catch((error) => {
                 console.error(`Error performing action: ${error}`);
                 let errorMessage = error.response?.data["exceptionMessage"] ?? `Add Item Error: ${error}`;
-                errorAlert(errorMessage);
+                setError(errorMessage);
                 setLoading(false);
                 setTimeout(() => barcodeRef.current?.focus(), 100);
             });

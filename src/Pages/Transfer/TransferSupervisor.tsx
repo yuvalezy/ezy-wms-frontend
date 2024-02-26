@@ -21,12 +21,8 @@ export default function TransferSupervisor() {
     useEffect(() => {
         setLoading(true);
         fetchTransfers({progress: true})
-            .then((data) => {
-                setTransfers(data);
-            })
-            .catch((error) => {
-                setError(error);
-            })
+            .then((data) => setTransfers(data))
+            .catch((error) => setError(error))
             .finally(() => setLoading(false));
     }, []);
     function create() {
@@ -34,12 +30,12 @@ export default function TransferSupervisor() {
         try {
             createTransfer()
                 .then((response) => {
-                    setAlert({message: t("transferCreated"), type: MessageStripDesign.Positive});
+                    setTransfers((prevTransfers) => [response, ...prevTransfers]);
                 })
                 .catch((e) => {
                     setError(e);
-                })
-                .finally(() => setLoading(false));
+
+                }).finally(() => setLoading(false));
         } catch (e: any) {
             setError(e);
         }

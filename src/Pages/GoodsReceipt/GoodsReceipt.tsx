@@ -10,7 +10,7 @@ import {useDocumentStatusToString} from "../../Assets/DocumentStatusString";
 import {Status} from "../../Assets/Common";
 
 export default function GoodsReceipt() {
-    const {setLoading, setAlert} = useThemeContext();
+    const {setLoading, setAlert, setError} = useThemeContext();
     const [scanCodeInput, setScanCodeInput] = React.useState("");
     const {t} = useTranslation();
     const documentStatusToString = useDocumentStatusToString();
@@ -57,9 +57,7 @@ export default function GoodsReceipt() {
                 }
                 navigate(`/goodsReceipt/${id}`);
             })
-            .catch((error) => {
-                setAlert({message: `Validate Goods Receipt Error: ${error}`, type: MessageStripDesign.Negative});
-            })
+            .catch((error) => setError(error))
             .finally(() => setLoading(false));
     }
 

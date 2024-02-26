@@ -8,7 +8,7 @@ import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {fetchPickings, PickStatus} from "./Data/PickingDocument";
 
 export default function Picking() {
-    const {setLoading, setAlert} = useThemeContext();
+    const {setLoading, setAlert, setError} = useThemeContext();
     const [scanCodeInput, setScanCodeInput] = React.useState("");
     const {t} = useTranslation();
     const scanCodeInputRef = useRef<InputDomRef>(null);
@@ -54,9 +54,7 @@ export default function Picking() {
                 }
                 navigate(`/pick/${id}`);
             })
-            .catch((error) => {
-                setAlert({message: `Validate Picking Error: ${error}`, type: MessageStripDesign.Negative});
-            })
+            .catch((error) => setError(error))
             .finally(() => setLoading(false));
     }
 

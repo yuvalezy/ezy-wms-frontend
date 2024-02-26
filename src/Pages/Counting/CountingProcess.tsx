@@ -25,7 +25,7 @@ export default function CountingProcess() {
     const [id, setID] = useState<number | null>();
     const [binLocation, setBinLocation] = useState<BinLocation | null>(null);
     const [enable, setEnable] = useState(false);
-    const {setLoading, setAlert} = useThemeContext();
+    const {setLoading, setAlert, setError} = useThemeContext();
     const {user} = useAuth();
     const barcodeRef = useRef<BarCodeScannerRef>(null);
     const [rows, setRows] = useState<CountingContent[] | null>(null);
@@ -53,10 +53,7 @@ export default function CountingProcess() {
             loadRows(bin.entry);
             delay(1).then(() => barcodeRef?.current?.focus());
         } catch (e) {
-            setAlert({
-                message: `Bin Location Changed Error: ${e}`,
-                type: MessageStripDesign.Negative,
-            });
+            setError(e);
             setLoading(false);
         }
     }
@@ -77,10 +74,7 @@ export default function CountingProcess() {
         fetchCountingContent(id, binEntry)
             .then((v) => setRows(v))
             .catch((e) => {
-                setAlert({
-                    message: `Loading Rows Error: ${e}`,
-                    type: MessageStripDesign.Negative,
-                });
+                setError(e);
                 setRows([]);
             })
             .finally(() => setLoading(false));
@@ -118,10 +112,7 @@ export default function CountingProcess() {
         addItem(id, itemCode, barcode, binLocation?.entry)
             .then((v) => {
                 if (v.errorMessage != null) {
-                    setAlert({
-                        message: v.errorMessage,
-                        type: MessageStripDesign.Negative,
-                    });
+                    setError(v.errorMessage);
                     return;
                 }
                 let date = new Date(Date.now());
@@ -138,10 +129,7 @@ export default function CountingProcess() {
                 barcodeRef?.current?.focus();
             })
             .catch((e) => {
-                setAlert({
-                    message: `Add Item Error Error: ${e}`,
-                    type: MessageStripDesign.Negative,
-                });
+                setError(e);
             })
             .finally(() => setLoading(false));
     }

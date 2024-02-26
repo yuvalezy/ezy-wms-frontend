@@ -7,7 +7,6 @@ import {IsNumeric} from "../../Assets/Functions";
 import {useAuth} from "../../Components/AppContext";
 import {BarCodeScannerRef} from "../../Components/BarCodeScanner";
 import {fetchTransferContent, TransferContent} from "./Data/Transfer";
-import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
 import {ScrollableContent} from "../../Components/ScrollableContent";
 import {Button, Label, ProgressIndicator, Table, TableCell, TableColumn, TableRow} from "@ui5/webcomponents-react";
 import {SourceTarget} from "../../Assets/Common";
@@ -17,7 +16,7 @@ export default function TransferProcessTarget() {
     const {t} = useTranslation();
     const [id, setID] = useState<number | null>();
     const [enable, setEnable] = useState(false);
-    const {setLoading, setAlert} = useThemeContext();
+    const {setLoading, setError} = useThemeContext();
     const {user} = useAuth();
     const barcodeRef = useRef<BarCodeScannerRef>(null);
     const [rows, setRows] = useState<TransferContent[] | null>(null);
@@ -44,10 +43,7 @@ export default function TransferProcessTarget() {
         fetchTransferContent({id: value ?? id, type: SourceTarget.Target})
             .then((results) => setRows(results))
             .catch((e) => {
-                setAlert({
-                    message: `Loading Rows Error: ${e}`,
-                    type: MessageStripDesign.Negative,
-                });
+                setError(e);
                 setRows([]);
             })
             .finally(() => setLoading(false));

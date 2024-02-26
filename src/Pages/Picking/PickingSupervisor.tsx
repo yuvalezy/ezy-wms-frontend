@@ -14,9 +14,7 @@ export default function PickingSupervisor() {
     const [pickings, setPickings] = useState<PickingDocument[]>([]);
     const [selectedPickEntry, setSelectedPickEntry] = useState<number>(-1);
     const qrRef = useRef<QRDialogRef>(null);
-    const {setLoading, setAlert} = useThemeContext();
-    const errorAlert = (message: string) => setAlert({message: message, type: MessageStripDesign.Negative});
-
+    const {setLoading, setAlert, setError} = useThemeContext();
     useEffect(() => {
         loadData();
     }, []);
@@ -27,10 +25,7 @@ export default function PickingSupervisor() {
             .then(values => {
                 setPickings(values);
             })
-            .catch((error) => {
-                console.error(`Error fetching pickings: ${error}`);
-                errorAlert(`Error fetching pickings: ${error}`);
-            })
+            .catch((error) => setError(error))
             .finally(() => setLoading(false));
     }
 
@@ -50,8 +45,7 @@ export default function PickingSupervisor() {
                 loadData();
             })
             .catch((error) => {
-                console.error(`Error processing picking: ${error}`);
-                errorAlert(`Error processing picking: ${error}`);
+                setError(error);
                 setLoading(false);
             });
     }

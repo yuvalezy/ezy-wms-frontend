@@ -16,14 +16,13 @@ export default function CountingSupervisor() {
     const qrRef = useRef<QRDialogRef>(null);
     const {user} = useAuth();
     const {t} = useTranslation();
-    const {setLoading, setAlert} = useThemeContext();
+    const {setLoading, setAlert, setError} = useThemeContext();
     const [countings, setCountings] = useState<Counting[]>([]);
     const [selectedID , setSelectedID] = useState<number | null>(
         null
     );
     const [actionType, setActionType] = useState<ObjectAction | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
-    const errorAlert = (message: string) => setAlert({message: message, type: MessageStripDesign.Negative});
 
     useEffect(() => {
         setLoading(true);
@@ -31,10 +30,7 @@ export default function CountingSupervisor() {
             .then((data) => {
                 setCountings(data);
             })
-            .catch((error) => {
-                console.error(`Error fetching countings: ${error}`);
-                errorAlert(`Error fetching countings: ${error}`);
-            })
+            .catch((error) => setError(error))
             .finally(() => setLoading(false));
     }, []);
 
@@ -58,19 +54,13 @@ export default function CountingSupervisor() {
                 );
                 setAlert({message: actionType === "approve" ? t("approved") : t("cancelled"), type: MessageStripDesign.Positive});
             })
-            .catch((error) => {
-                console.error(`Error performing action: ${error}`);
-                let errorMessage = error.response?.data["exceptionMessage"];
-                if (errorMessage) errorAlert(`SAP Error: ${errorMessage}`);
-                else errorAlert(`Error performing action: ${error}`);
-            })
+            .catch((error) => setError(error))
             .finally(() => setLoading(false));
     };
 
     return (
         <ContentTheme title={t("countingSupervisor")} icon="factory">
             <CountingForm
-                onError={errorAlert}
                 onNewCounting={(newCounting) =>
                     setCountings((prev) => [newCounting, ...prev])
                 }

@@ -24,7 +24,7 @@ export default function ItemCheck() {
     const [barcodeInput, setBarcodeInput] = React.useState("");
     const [itemCodeInput, setItemCodeInput] = React.useState("");
     const [result, setResult] = React.useState<ItemCheckResponse[] | null>(null);
-    const {setLoading, setAlert} = useThemeContext();
+    const {setLoading, setAlert, setError} = useThemeContext();
     const barcodeInputRef = useRef<InputDomRef>(null);
 
     useEffect(() => {
@@ -48,12 +48,7 @@ export default function ItemCheck() {
             .then(function (items) {
                 setResult(items);
             })
-            .catch((error) =>
-                setAlert({
-                    message: `Item Check Error: ${error}`,
-                    type: MessageStripDesign.Negative,
-                })
-            )
+            .catch((error) => setError(error))
             .finally(() => setLoading(false));
     }
 
@@ -72,16 +67,18 @@ export default function ItemCheck() {
                 if (response.status === ResponseStatus.Ok) {
                     executeItemCheck(itemCode, "");
                 } else {
+                    let errorMessage: string;
                     if (response.existItem != null) {
-                        setAlert({message: `Barcode ${newBarcode} already exists for item ${response.existItem}`, type: MessageStripDesign.Warning});
+                        errorMessage = `Barcode ${newBarcode} already exists for item ${response.existItem}`;
                     } else {
-                        setAlert({message: response.errorMessage ?? "Unknown error", type: MessageStripDesign.Negative});
+                        errorMessage = response.errorMessage ?? "Unknown error";
                     }
+                    setError(errorMessage);
                     setLoading(false);
                 }
             })
             .catch((error) => {
-                setAlert({message: `Item Check Error: ${error}`, type: MessageStripDesign.Negative});
+                setError(error);
                 setLoading(false);
             })
             .finally(function () {

@@ -11,7 +11,7 @@ import {fetchTransfers} from "./Data/Transfer";
 import {Status} from "../../Assets/Common";
 
 export default function Transfer() {
-    const {setLoading, setAlert} = useThemeContext();
+    const {setLoading, setAlert, setError} = useThemeContext();
     const [scanCodeInput, setScanCodeInput] = React.useState("");
     const {t} = useTranslation();
     const documentStatusToString = useDocumentStatusToString();
@@ -58,9 +58,7 @@ export default function Transfer() {
                 }
                 navigate(`/transfer/${id}`);
             })
-            .catch((error) => {
-                setAlert({message: `Validate Transfer Error: ${error}`, type: MessageStripDesign.Negative});
-            })
+            .catch((error) => setError(error))
             .finally(() => setLoading(false));
     }
 

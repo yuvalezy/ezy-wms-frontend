@@ -8,9 +8,7 @@ import {
     ComboBox,
     ComboBoxItem,
     Form,
-    FormItem, Icon,
-    Input, MessageStripDesign,
-    Tab,
+    FormItem, Input, Tab,
     TabContainer,
 } from "@ui5/webcomponents-react";
 import {useObjectName} from "../../../Assets/ObjectName";
@@ -20,13 +18,12 @@ import {StringFormat} from "../../../Assets/Functions";
 
 interface DocumentFormProps {
     onNewDocument: (document: Document) => void;
-    onError: (errorMessage: string) => void;
 }
 
-const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, onError,}) => {
+const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument,}) => {
     const {t} = useTranslation();
     const o = useObjectName();
-    const {setLoading, setAlert} = useThemeContext();
+    const {setLoading, setAlert, setError} = useThemeContext();
     const documentListRef = useRef<DocumentListRef>();
     const [selectedType, setSelectedType] = React.useState(GoodsReceiptType.AutoConfirm);
     const [items, setItems] = useState<DocumentItem[]>([]);
@@ -36,12 +33,8 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, onError,}) =>
 
     useEffect(() => {
         fetchVendors()
-            .then((data) => {
-                setVendors(data);
-            })
-            .catch((error) => {
-                console.error("Error fetching vendors:", error);
-            });
+            .then((data) => setVendors(data))
+            .catch((error) => setError(error));
     }, []);
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -116,15 +109,12 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, onError,}) =>
                             }
                             break;
                     }
-                    setAlert({message: errorMessage, type: MessageStripDesign.Negative});
+                    setError(errorMessage);
                 })
-                .catch((e) => {
-                    console.error(`Error creating document: ${e}`);
-                    onError(`Error creating document: ${e.message}`);
-                })
+                .catch((e) => setError(e))
                 .finally(() => setLoading(false));
         } catch (e: any) {
-            onError(`Error creating document: ${e.message}`);
+            setError(e);
         }
     };
 
