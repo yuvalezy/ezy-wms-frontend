@@ -5,9 +5,8 @@ import {fetchPickings, PickingDocument, processPicking} from "./Data/PickingDocu
 import PickingCard from "./Components/PickingCard";
 import QRDialog, {QRDialogRef} from "../../Components/QRDialog";
 import {useThemeContext} from "../../Components/ThemeContext";
-import {MessageStripDesign} from "@ui5/webcomponents-react";
+import {MessageStrip, MessageStripDesign} from "@ui5/webcomponents-react";
 import {StringFormat} from "../../Assets/Functions";
-import {delay} from "../../Assets/GlobalConfig";
 
 export default function PickingSupervisor() {
     const {t} = useTranslation();
@@ -22,9 +21,7 @@ export default function PickingSupervisor() {
     function loadData() {
         setLoading(true);
         fetchPickings()
-            .then(values => {
-                setPickings(values);
-            })
+            .then(values => setPickings(values))
             .catch((error) => setError(error))
             .finally(() => setLoading(false));
     }
@@ -55,6 +52,13 @@ export default function PickingSupervisor() {
             {pickings.map((pick) => (
                 <PickingCard key={pick.entry} picking={pick} onAction={handleAction} onUpdatePick={handleUpdatePick}/>
             ))}
+            {pickings.length === 0 &&
+                <div style={{padding: '10px'}}>
+                    <MessageStrip hideCloseButton design={MessageStripDesign.Information}>
+                        {t("nodata")}
+                    </MessageStrip>
+                </div>
+            }
             <QRDialog ref={qrRef} prefix="PCK" id={selectedPickEntry}/>
         </ContentTheme>
     );

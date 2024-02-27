@@ -1,5 +1,5 @@
 import React, {forwardRef, useImperativeHandle, useRef, useState} from 'react';
-import {Form, FormItem, Input, Button, InputDomRef} from "@ui5/webcomponents-react";
+import {Form, FormItem, Input, Button, InputDomRef, Grid} from "@ui5/webcomponents-react";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
 import {scanBarcode} from "../Assets/ScanBarcode";
 import {distinctItems, Item} from "../Assets/Common";
@@ -10,6 +10,9 @@ import {useTranslation} from "react-i18next";
 export interface BarCodeScannerProps {
     enabled: boolean;
     onAddItem: (itemCode: string, barcode: string) => void;
+    onAddAction?: () => void;
+    addActionLabel?: string;
+    addActionIcon?: string;
 }
 
 export interface BarCodeScannerRef {
@@ -18,7 +21,7 @@ export interface BarCodeScannerRef {
     getValue: () => string;
 }
 
-const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>(({enabled, onAddItem}, ref) => {
+const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>(({enabled, onAddItem, onAddAction, addActionLabel, addActionIcon}, ref) => {
     const barcodeRef = useRef<InputDomRef>(null);
     const [barcodeInput, setBarcodeInput] = useState('');
     const {setLoading, setAlert, setError} = useThemeContext();
@@ -82,6 +85,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>(({enab
         }
         if (items.length === 1) {
             let itemCode = items[0].code;
+            barcodeRef?.current?.blur();
             onAddItem(itemCode, barcode);
             // qtyPopupRef?.current?.show({barcode: barcode, itemCode: items[0].code});
             return;
@@ -116,7 +120,16 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>(({enab
                 ></Input>
             </FormItem>
             <FormItem>
-                <Button type="Submit" disabled={!enabled}>Accept</Button>
+                {onAddAction == null && <Button type="Submit" disabled={!enabled}>Accept</Button>}
+                {onAddAction &&
+                    <Grid>
+                        <div>
+                            <Button type="Submit" disabled={!enabled}>Accept</Button>
+                        </div>
+                        <div>
+                            <Button color="secondary" icon={addActionIcon} onClick={onAddAction}>{addActionLabel}</Button>
+                        </div>
+                    </Grid>}
             </FormItem>
         </Form>
     );

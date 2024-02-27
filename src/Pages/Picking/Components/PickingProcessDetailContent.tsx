@@ -1,5 +1,5 @@
 import {Label, Table, TableCell, TableColumn, TableRow} from "@ui5/webcomponents-react";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {PickingDocumentDetailItem} from "../Data/PickingDocument";
 import BinLocationQuantities from "../../../Components/BinLocationQuantities";
@@ -8,8 +8,14 @@ export interface PickingProcessDetailContentProps {
     items?: PickingDocumentDetailItem[];
 }
 
-export const PickingProcessDetailContent: React.FC<PickingProcessDetailContentProps> = ({items}) => {
+export const PickingProcessDetailContent: React.FC<PickingProcessDetailContentProps> = ({items }) => {
     const {t} = useTranslation();
+    const [available, setAvailable] = useState(false);
+
+    useEffect(() => {
+        setAvailable(items?.some(i => i.available != null && i.available > 0)??false);
+    }, [items]);
+
     return (
         <div className="contentStyle">
             <Table
@@ -19,6 +25,7 @@ export const PickingProcessDetailContent: React.FC<PickingProcessDetailContentPr
                     <TableColumn><Label>{t('quantity')}</Label></TableColumn>
                     <TableColumn><Label>{t('picked')}</Label></TableColumn>
                     <TableColumn><Label>{t('pending')}</Label></TableColumn>
+                    {available && <TableColumn><Label>{t('available')}</Label></TableColumn>}
                 </>}
             >
                 {items?.map((row) => (
@@ -29,8 +36,9 @@ export const PickingProcessDetailContent: React.FC<PickingProcessDetailContentPr
                             <TableCell><Label>{row.quantity}</Label></TableCell>
                             <TableCell><Label>{row.picked}</Label></TableCell>
                             <TableCell><Label>{row.openQuantity}</Label></TableCell>
+                            {available && <TableCell><Label>{row.available}</Label></TableCell>}
                         </TableRow>
-                        {row.openQuantity > 0 && <tr>
+                        {!available && row.openQuantity > 0 && <tr>
                             <td colSpan={5} style={{textAlign: 'center'}}>
                                 {row.binQuantities && <BinLocationQuantities data={row.binQuantities}/>}
                             </td>

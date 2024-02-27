@@ -51,6 +51,7 @@
   "back": "Regresar",
   "pending": "Pendiente",
   "picked": "Seleccionada",
+  "available": "Disponible",
   "totalItems": "Total Articulos",
   "totalOpenItems": "Total Articulos Abiertos",
   "detail": "Detalle",
@@ -64,6 +65,7 @@
 
   "type": "Tipo",
   "bin": "Ubicación",
+  "changeBin": "Selección de Ubicación",
   "item": "Articulo",
   "vendor": "Proveedor",
   "number": "Número",

@@ -41,9 +41,17 @@ export type PickingDocumentDetailItem = {
     quantity: number;
     picked: number;
     openQuantity: number;
+    available?: number;
     binQuantities?: BinLocation[];
 }
 
+export type pickingParameters = {
+    id: number;
+    type?: number;
+    entry?: number;
+    availableBins?: boolean;
+    binLocation?: number
+}
 export type pickingsParameters = {
     id?: number;
     date?: Date;
@@ -59,17 +67,17 @@ export interface PickingAddItemResponse {
     errorMessage?: string;
 }
 
-export const fetchPicking = async (id: number, type?: number, entry?: number, availableBins?: boolean): Promise<PickingDocument> => {
+export const fetchPicking = async (params: pickingParameters): Promise<PickingDocument> => {
     try {
         if (configUtils.isMockup) {
             await delay();
             console.log("Mockup data is being used.");
             let picking = PickingMockup[0];
-            if (type == null) {
+            if (params.type == null) {
                 picking.detail = PickingDetailsMockup;
             }
             else {
-                picking.detail = PickingDetailsMockup.filter((v) => v.type === type && v.entry === entry);
+                picking.detail = PickingDetailsMockup.filter((v) => v.type === params.type && v.entry === params.entry);
                 picking.detail.forEach(v => v.items = PickingDetailItemsMockup);
             }
             return picking;
@@ -85,20 +93,24 @@ export const fetchPicking = async (id: number, type?: number, entry?: number, av
 
         const queryParams = new URLSearchParams();
 
-        if (type != null) {
-            queryParams.append("type", type.toString());
+        if (params.type != null) {
+            queryParams.append("type", params.type.toString());
         }
-        if (entry != null) {
-            queryParams.append("entry", entry.toString());
+        if (params.entry != null) {
+            queryParams.append("entry", params.entry.toString());
         }
 
-        if (availableBins != null && availableBins) {
+        if (params.availableBins != null && params.availableBins) {
             queryParams.append("availableBins", "true");
+        }
+
+        if (params.binLocation != null) {
+            queryParams.append("binEntry", params.binLocation.toString());
         }
 
         const url = `${
             globalConfig.baseURL
-        }/api/Picking/Picking/${id}?${queryParams.toString()}`;
+        }/api/Picking/Picking/${params.id}?${queryParams.toString()}`;
 
         const response = await axios.get<PickingDocument>(url, {
             headers: {
@@ -172,13 +184,15 @@ export const fetchPickings = async (params?: pickingsParameters): Promise<Pickin
         throw error;
     }
 }
-export const addItem = async (
+export interface addItemParameters {
     id: number,
     type: number,
     entry: number,
     itemCode: string,
     quantity: number,
-): Promise<PickingAddItemResponse> => {
+    binEntry: number,
+}
+export const addItem = async (params: addItemParameters): Promise<PickingAddItemResponse> => {
     try {
         if (configUtils.isMockup) {
             return {
@@ -196,13 +210,7 @@ export const addItem = async (
 
         const response = await axios.post<PickingAddItemResponse>(
             url,
-            {
-                id: id,
-                type: type,
-                entry: entry,
-                itemCode: itemCode,
-                quantity: quantity
-            },
+            params,
             {
                 headers: {
                     Authorization: `Bearer ${access_token}`,

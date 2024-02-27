@@ -51,6 +51,7 @@
   "back": "Back",
   "pending": "Pending",
   "picked": "Picked",
+  "available": "Available",
   "totalItems": "Total Items",
   "totalOpenItems": "Total Open Items",
   "detail": "Detail",
@@ -64,6 +65,7 @@
 
   "type": "Type",
   "bin": "Bin Location",
+  "changeBin": "Change Bin",
   "item": "Item",
   "vendor": "Vendor",
   "number": "Number",

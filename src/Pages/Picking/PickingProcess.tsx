@@ -29,7 +29,7 @@ export default function PickingProcess() {
         setID(id);
 
         setLoading(true);
-        fetchPicking(id)
+        fetchPicking({id})
             .then(value => {
                 if (value == null) {
                     setPicking(null);

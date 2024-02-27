@@ -6,13 +6,14 @@ import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {Title, Table, TableColumn, Label, TableRow, TableCell} from "@ui5/webcomponents-react";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
-import {Item} from "../../Assets/Common";
+import {BinLocation, Item} from "../../Assets/Common";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {addItem, fetchPicking, PickingDocument, PickingDocumentDetail} from "./Data/PickingDocument";
 import {useObjectName} from "../../Assets/ObjectName";
 import BarCodeScanner, {BarCodeScannerRef} from "../../Components/BarCodeScanner";
 import {ScrollableContent} from "../../Components/ScrollableContent";
 import PickingProcessDetailContent from "./Components/PickingProcessDetailContent";
+import BinLocationScanner, {BinLocationScannerRef} from "../../Components/BinLocationScanner";
 
 export default function PickingProcessDetail() {
     const {idParam, typeParam, entryParam} = useParams();
@@ -31,6 +32,8 @@ export default function PickingProcessDetail() {
     const o = useObjectName();
     const navigate = useNavigate();
     const barcodeRef = useRef<BarCodeScannerRef>(null);
+    const binLocationRef = useRef<BinLocationScannerRef>(null);
+    const [binLocation, setBinLocation] = useState<BinLocation | null>(null);
 
 
     useEffect(() => {
@@ -58,31 +61,51 @@ export default function PickingProcessDetail() {
         loadData();
     }, [id, type, entry]);
 
-    function loadData(reload = false) {
+    function onBinChanged(bin: BinLocation) {
+        setBinLocation(bin);
+        loadData({binEntry: bin.entry});
+    }
+
+    function onBinClear() {
+        setBinLocation(null);
+        loadData();
+    }
+
+    interface loadDataParameters {
+        reload?: boolean
+        binEntry?: number;
+    }
+    function loadData(params?: loadDataParameters) {
         if (!id || !type || !entry) {
             return;
         }
 
-        fetchPicking(id, type, entry, true)
+        fetchPicking({id, type, entry, availableBins: true, binLocation: params?.binEntry})
             .then(value => {
                 if (value == null) {
                     setPicking(null);
                     setError(t("pickingNotFound"))
                     return;
                 }
-                setPicking(value);
                 if (value.detail != null) {
                     let valueDetail = value.detail[0];
                     setDetail(valueDetail);
                     setTitle(`${t("picking")} #${id} - ${o(type)}# ${valueDetail.number}`);
-                    if (reload) {
-                        if (valueDetail.totalOpenItems === 0) {
-                            navigateBack();
-                            return;
-                        }
+                    if (params?.binEntry != null && valueDetail.items?.length === 0) {
+                        binLocationRef?.current?.clear();
+                        return;
                     }
-                    setTimeout(() => barcodeRef?.current?.focus(), 1);
+                    if (params?.reload && valueDetail.totalOpenItems === 0) {
+                        navigateBack();
+                        return;
+                    }
+                    if (params?.binEntry != null) {
+                        setTimeout(() => barcodeRef?.current?.focus(), 1);
+                    } else {
+                        setTimeout(() => binLocationRef?.current?.focus(), 1);
+                    }
                 }
+                setPicking(value);
             })
             .catch(error => setError(error))
             .finally(() => setLoading(false));
@@ -92,11 +115,11 @@ export default function PickingProcessDetail() {
     function handleAddItem(itemCode: string, barcode: string) {
         boxConfirmationDialogRef?.current?.show(false);
         barcodeRef?.current?.clear();
-        if (id == null || type == null || entry == null) {
+        if (id == null || type == null || entry == null || binLocation == null) {
             return;
         }
         setLoading(true);
-        addItem(id, type, entry, itemCode, 1)
+        addItem({id, type, entry, itemCode, quantity: 1, binEntry: binLocation.entry})
             .then((data) => {
                 if (data.closedDocument) {
                     setError(StringFormat(t("pickedIsClosed"), id));
@@ -105,7 +128,7 @@ export default function PickingProcessDetail() {
                 }
 
                 setAlert({message: StringFormat(t("pickingProcessSuccess"), barcode), type: MessageStripDesign.Positive})
-                loadData(true);
+                loadData({reload: true, binEntry: binLocation.entry});
             })
             .catch((error) => {
                 console.error(`Error performing action: ${error}`);
@@ -123,22 +146,27 @@ export default function PickingProcessDetail() {
     return (
         <ContentTheme title={title} icon="cause" back={() => navigateBack()}>
             {detail &&
-                <ScrollableContent>
-                    <div>
-                        <Title level="H5">
-                            <strong>{t("customer")}: </strong>
-                            {detail.cardCode} - {detail.cardName}
-                        </Title>
-                    </div>
-                    <PickingProcessDetailContent items={detail.items} />
-                    {detail.totalOpenItems > 0 && <BarCodeScanner ref={barcodeRef} onAddItem={handleAddItem} enabled={enable}/>}
-                    <BoxConfirmationDialog
-                        onSelected={(itemCode: string) => handleAddItem(itemCode, barcodeRef?.current?.getValue() ?? "")}
-                        ref={boxConfirmationDialogRef}
-                        itemCode={boxItem}
-                        items={boxItems}
-                    />
-                </ScrollableContent>
+                <>
+                    <ScrollableContent>
+                        <div>
+                            <Title level="H5">
+                                <strong>{t("customer")}: </strong>
+                                {detail.cardCode} - {detail.cardName}
+                            </Title>
+                        </div>
+                        <PickingProcessDetailContent items={detail.items}/>
+                        {detail.totalOpenItems > 0 && <>
+                            {binLocation && <BarCodeScanner ref={barcodeRef} onAddItem={handleAddItem} enabled={enable}/>}
+                            <BinLocationScanner ref={binLocationRef} onChanged={onBinChanged} onClear={onBinClear}/>
+                        </>}
+                        <BoxConfirmationDialog
+                            onSelected={(itemCode: string) => handleAddItem(itemCode, barcodeRef?.current?.getValue() ?? "")}
+                            ref={boxConfirmationDialogRef}
+                            itemCode={boxItem}
+                            items={boxItems}
+                        />
+                    </ScrollableContent>
+                </>
             }
         </ContentTheme>
     );

@@ -30,7 +30,7 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
             binRef?.current?.focus();
         },
         clear() {
-            setBinInput('');
+            clear();
         },
         getBin() {
             return binInput;
