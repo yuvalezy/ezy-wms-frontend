@@ -6,6 +6,7 @@ import {useTranslation} from "react-i18next";
 import {Button, Form, FormItem, Grid, Icon, Input, InputDomRef, MessageStrip, MessageStripDesign} from "@ui5/webcomponents-react";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {checkIsComplete, transferAction} from "./Data/Transfer";
+import QRDialog, {QRDialogRef} from "../../Components/QRDialog";
 
 export default function TransferProcess() {
     const {scanCode} = useParams();
@@ -13,7 +14,7 @@ export default function TransferProcess() {
     const [id, setID] = useState<number | null>();
     const [enableFinish, setEnableFinish] = useState(false);
     const {setLoading, setAlert, setError} = useThemeContext();
-
+    const qrRef = useRef<QRDialogRef>(null);
     const title = `${t("transfer")} #${scanCode}`;
 
     useEffect(() => {
@@ -47,7 +48,7 @@ export default function TransferProcess() {
         }
     }
 
-    function finishButtonClasses() : string {
+    function finishButtonClasses(): string {
         let classNames = "homeMenuItemLink";
         if (!enableFinish) {
             classNames += " disabled-div";
@@ -55,8 +56,10 @@ export default function TransferProcess() {
         return classNames;
     }
 
+
     return (
         <ContentTheme title={title} icon="cause">
+            {id && <QRDialog ref={qrRef} prefix="TRSF" id={id}/>}
             {id &&
                 <Grid>
                     <Link to={`/transfer/${id}/source`} key="0" className="homeMenuItemLink">
@@ -71,7 +74,13 @@ export default function TransferProcess() {
                             <span>{t("selectTransferTarget")}</span>
                         </div>
                     </Link>
-                    <div onClick={() => finish()} key="customAction" className={finishButtonClasses()} style={{cursor: 'pointer'}}>
+                    <div onClick={() => qrRef?.current?.show(true)} key="btnQR" className="homeMenuItemLink" style={{cursor: 'pointer'}}>
+                        <div className="homeMenuItem">
+                            <Icon design="NonInteractive" name="qr-code" className="homeMenuItemIcon"/>
+                            <span>{t("qrCode")}</span>
+                        </div>
+                    </div>
+                    <div onClick={() => finish()} key="btnFinish" className={finishButtonClasses()} style={{cursor: 'pointer'}}>
                         <div className="homeMenuItem">
                             <Icon design="NonInteractive" name="accept" className="homeMenuItemIcon"/>
                             <span>{t("finish")}</span>
