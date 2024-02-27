@@ -10,6 +10,11 @@ export interface ItemCheckResponse {
   barcodes: string[];
 }
 
+export interface ItemStockResponse {
+  binCode: string;
+  quantity: number;
+}
+
 export interface UpdateItemBarCodeResponse {
   existItem?: string;
   errorMessage?: string;
@@ -93,6 +98,43 @@ export const updateItemBarCode = async (
           Authorization: `Bearer ${access_token}`,
         },
       }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error checking item barcode:", error);
+    throw error;
+  }
+};
+export const itemStock = async (
+    itemCode: string,
+): Promise<ItemStockResponse[]> => {
+  try {
+    if (configUtils.isMockup) {
+      console.log("Mockup data is being used.");
+      //todo implement
+      throw new Error("Mockup data is not implemented.");
+    }
+
+    if (!globalConfig) throw new Error("Config has not been initialized!");
+
+    if (globalConfig.debug)
+      await delay();
+
+    const access_token = localStorage.getItem("token");
+
+    const url = `${globalConfig.baseURL}/api/General/ItemStock`;
+
+    const response = await axios.post<ItemStockResponse[]>(
+        url,
+        {
+          itemCode: itemCode,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
     );
 
     return response.data;

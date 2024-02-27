@@ -3,10 +3,11 @@ import {ItemCheckResponse} from "./Item";
 import {useTranslation} from "react-i18next";
 import {
     Card,
-    CardHeader
+    CardHeader, Tab, TabContainer
 } from "@ui5/webcomponents-react";
 import ItemDetailsList from "./Components/ItemDetailsList";
 import BarcodeTable from "./Components/BarcodeTable";
+import StockTable from "./Components/StockTable";
 
 interface ItemCheckResultProps {
     result: ItemCheckResponse;
@@ -19,7 +20,14 @@ const ItemCheckResult: React.FC<ItemCheckResultProps> = ({result, submit}) => {
     return (
         <Card header={<CardHeader titleText={`${t('code')}: ${result.itemCode}`}/>}>
             <ItemDetailsList result={result}/>
-            <BarcodeTable itemCode={result.itemCode} barcodes={result.barcodes} submit={submit}/>
+            <TabContainer>
+                <Tab text={t("barcodes")} selected>
+                    <BarcodeTable itemCode={result.itemCode} barcodes={result.barcodes} submit={submit}/>
+                </Tab>
+                <Tab text={t("stock")}>
+                    <StockTable itemCode={result.itemCode}/>
+                </Tab>
+            </TabContainer>
         </Card>
     )
 }
