@@ -117,7 +117,7 @@ export default function ItemCheck() {
     }
 
     return (
-        <ContentTheme title={t("itemCheck")} icon="complete">
+        <ContentTheme title={t("itemCheck")} icon="complete" back={() => handleClear()}>
             {(result == null || result.length === 0) && (
                 <Form>
                     <FormItem label={t("barcode")}>
@@ -155,7 +155,6 @@ export default function ItemCheck() {
                     {result.length === 1 && (
                         <ItemCheckResult
                             result={result[0]}
-                            clear={handleClear}
                             submit={handleUpdateSubmit}
                         />
                     )}

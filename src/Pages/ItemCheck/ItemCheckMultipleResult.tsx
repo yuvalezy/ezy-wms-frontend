@@ -8,7 +8,6 @@ import {
     TableRow,
     TableCell,
     TableColumn,
-    Icon,
     MessageStrip
 } from "@ui5/webcomponents-react";
 
@@ -19,7 +18,7 @@ interface ItemCheckMultipleResultProps {
     setBarcodeItem: (index: number) => void;
 }
 
-const ItemCheckMultipleResult: React.FC<ItemCheckMultipleResultProps> = ({barcode, result, clear, setBarcodeItem}) => {
+const ItemCheckMultipleResult: React.FC<ItemCheckMultipleResultProps> = ({barcode, clear, result, setBarcodeItem}) => {
     const {t} = useTranslation();
     return (
         <>
