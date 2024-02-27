@@ -12,6 +12,7 @@ import {addItem, fetchPicking, PickingDocument, PickingDocumentDetail} from "./D
 import {useObjectName} from "../../Assets/ObjectName";
 import BarCodeScanner, {BarCodeScannerRef} from "../../Components/BarCodeScanner";
 import {ScrollableContent} from "../../Components/ScrollableContent";
+import PickingProcessDetailContent from "./Components/PickingProcessDetailContent";
 
 export default function PickingProcessDetail() {
     const {idParam, typeParam, entryParam} = useParams();
@@ -62,7 +63,7 @@ export default function PickingProcessDetail() {
             return;
         }
 
-        fetchPicking(id, type, entry)
+        fetchPicking(id, type, entry, true)
             .then(value => {
                 if (value == null) {
                     setPicking(null);
@@ -129,27 +130,7 @@ export default function PickingProcessDetail() {
                             {detail.cardCode} - {detail.cardName}
                         </Title>
                     </div>
-                    <div className="contentStyle">
-                        <Table
-                            columns={<>
-                                <TableColumn><Label>{t('code')}</Label></TableColumn>
-                                <TableColumn><Label>{t('description')}</Label></TableColumn>
-                                <TableColumn><Label>{t('quantity')}</Label></TableColumn>
-                                <TableColumn><Label>{t('picked')}</Label></TableColumn>
-                                <TableColumn><Label>{t('pending')}</Label></TableColumn>
-                            </>}
-                        >
-                            {detail.items?.map((row) => (
-                                <TableRow key={row.itemCode} className={row.openQuantity === 0 ? 'completed-row' : ''}>
-                                    <TableCell><Label>{row.itemCode}</Label></TableCell>
-                                    <TableCell><Label>{row.itemName}</Label></TableCell>
-                                    <TableCell><Label>{row.quantity}</Label></TableCell>
-                                    <TableCell><Label>{row.picked}</Label></TableCell>
-                                    <TableCell><Label>{row.openQuantity}</Label></TableCell>
-                                </TableRow>
-                            ))}
-                        </Table>
-                    </div>
+                    <PickingProcessDetailContent items={detail.items} />
                     {detail.totalOpenItems > 0 && <BarCodeScanner ref={barcodeRef} onAddItem={handleAddItem} enabled={enable}/>}
                     <BoxConfirmationDialog
                         onSelected={(itemCode: string) => handleAddItem(itemCode, barcodeRef?.current?.getValue() ?? "")}

@@ -2,6 +2,7 @@ import {configUtils, delay, globalConfig} from "../../../Assets/GlobalConfig";
 import {addItemResponseMockup, PickingDetailItemsMockup, PickingDetailsMockup, PickingMockup, processResponseMockup} from "../../../Assets/mockup";
 import axios from "axios";
 import {ProcessResponse} from "../../../Assets/Document";
+import {BinLocation} from "../../../Assets/Common";
 
 export enum PickStatus {
     Released = "Released",
@@ -40,6 +41,7 @@ export type PickingDocumentDetailItem = {
     quantity: number;
     picked: number;
     openQuantity: number;
+    binQuantities?: BinLocation[];
 }
 
 export type pickingsParameters = {
@@ -48,6 +50,7 @@ export type pickingsParameters = {
     type?: number;
     entry?: number;
     detail?: boolean;
+    availableBins?: boolean;
 }
 
 export interface PickingAddItemResponse {
@@ -56,7 +59,7 @@ export interface PickingAddItemResponse {
     errorMessage?: string;
 }
 
-export const fetchPicking = async (id: number, type?: number, entry?: number): Promise<PickingDocument> => {
+export const fetchPicking = async (id: number, type?: number, entry?: number, availableBins?: boolean): Promise<PickingDocument> => {
     try {
         if (configUtils.isMockup) {
             await delay();
@@ -87,6 +90,10 @@ export const fetchPicking = async (id: number, type?: number, entry?: number): P
         }
         if (entry != null) {
             queryParams.append("entry", entry.toString());
+        }
+
+        if (availableBins != null && availableBins) {
+            queryParams.append("availableBins", "true");
         }
 
         const url = `${
@@ -142,6 +149,10 @@ export const fetchPickings = async (params?: pickingsParameters): Promise<Pickin
             }
             if (params.date !== null && params.date !== undefined) {
                 queryParams.append("date", params.date.toISOString());
+            }
+
+            if (params.availableBins) {
+                queryParams.append("availableBins", "true");
             }
         }
 

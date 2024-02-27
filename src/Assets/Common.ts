@@ -30,6 +30,7 @@ export interface Item {
 export type BinLocation = {
     entry: number;
     code: string;
+    quantity: number;
 }
 
 export enum ResponseStatus {

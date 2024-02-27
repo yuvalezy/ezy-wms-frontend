@@ -370,6 +370,7 @@ export const countingMockup : Counting = {
 export const binMockup : BinLocation = {
     entry: 1,
     code: "1234",
+    quantity: 1
 }
 
 export const countProcessRows : CountingContent[] = [
