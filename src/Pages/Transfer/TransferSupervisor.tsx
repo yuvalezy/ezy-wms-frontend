@@ -1,6 +1,6 @@
 import ContentTheme from "../../Components/ContentTheme";
 import {useTranslation} from "react-i18next";
-import {Button, Form, FormItem, MessageBox, MessageBoxActions, MessageStripDesign} from "@ui5/webcomponents-react";
+import {Button, Form, FormItem, Input, MessageBox, MessageBoxActions, MessageStripDesign, TextArea} from "@ui5/webcomponents-react";
 import React, {useEffect, useRef, useState} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {createTransfer, fetchTransfers, Transfer, transferAction} from "./Data/Transfer";
@@ -17,6 +17,8 @@ export default function TransferSupervisor() {
     const [selectedTransferId, setSelectedTransferId] = useState<number | null>(null);
     const [actionType, setActionType] = useState<ObjectAction | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [docNameInput, setDocNameInput] = useState<string>("");
+    const [commentsInput, setCommentsInput] = useState<string>("");
 
     useEffect(() => {
         setLoading(true);
@@ -28,9 +30,11 @@ export default function TransferSupervisor() {
     function create() {
         setLoading(true);
         try {
-            createTransfer()
+            createTransfer(docNameInput, commentsInput)
                 .then((response) => {
                     setTransfers((prevTransfers) => [response, ...prevTransfers]);
+                    setDocNameInput('');
+                    setCommentsInput('');
                 })
                 .catch((e) => {
                     setError(e);
@@ -68,6 +72,21 @@ export default function TransferSupervisor() {
 
     return <ContentTheme title={t("transferSupervisor")} icon="journey-depart">
         <Form>
+            <FormItem label={t("id")}>
+                <Input
+                    value={docNameInput}
+                    onInput={(e) => setDocNameInput(e.target.value as string)}
+                    maxlength={50}
+                ></Input>
+            </FormItem>
+            <FormItem label={t("comment")}>
+                <TextArea
+                    style={{minHeight: "100px", width: "100%"}}
+                    rows={5}
+                    value={commentsInput}
+                    onInput={(e) => setCommentsInput(e.target.value as string)}
+                />
+            </FormItem>
             <FormItem>
                 <Button color="primary" icon="create" onClick={() => create()}>
                     {t("create")}

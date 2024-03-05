@@ -39,7 +39,10 @@ export enum TransfersOrderBy {
     Date = "Date",
 }
 
-export const createTransfer = async (): Promise<Transfer> => {
+export const createTransfer = async (
+    name: string,
+    comments: string,
+): Promise<Transfer> => {
     try {
         if (configUtils.isMockup) {
             console.log("Mockup data is being used.");
@@ -52,7 +55,7 @@ export const createTransfer = async (): Promise<Transfer> => {
 
         const access_token = localStorage.getItem("token");
         const response = await axios.post<Transfer>(
-            `${globalConfig.baseURL}/api/Transfer/Create`, {},
+            `${globalConfig.baseURL}/api/Transfer/Create`, {name, comments},
             {
                 headers: {
                     Authorization: `Bearer ${access_token}`,
