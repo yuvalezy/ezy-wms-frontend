@@ -1,6 +1,6 @@
 import {Employee} from "../../../Assets/Data";
 import {configUtils, delay, globalConfig} from "../../../Assets/GlobalConfig";
-import {documentMockup, GoodsReceiptAllDetailMockup, transferMockup} from "../../../Assets/mockup";
+import {GoodsReceiptAllDetailMockup, transferMockup} from "../../../Assets/mockup";
 import axios from "axios";
 import {DetailUpdateParameters, ObjectAction, SourceTarget, Status, User} from "../../../Assets/Common";
 
@@ -12,12 +12,14 @@ interface TransferAddItemResponse {
 
 export type Transfer = {
     id: number;
+    name?: string;
     date: string;
     employee: Employee;
     status: Status;
     statusDate: string;
     statusEmployee: Employee;
     progress?: number;
+    comments?: string;
 }
 
 export type TransferContent = {
@@ -108,7 +110,7 @@ export type TransferUpdateParameters = {
 }
 export const fetchTransfers = async (params: TransferUpdateParameters): Promise<Transfer[]> => {
     if (params.statuses == null)
-         params.statuses = params.id == null ? [Status.Open, Status.InProgress] : [];
+        params.statuses = params.id == null ? [Status.Open, Status.InProgress] : [];
     if (params.orderBy == null)
         params.orderBy = TransfersOrderBy.ID;
     if (params.desc == null)
@@ -280,7 +282,7 @@ export const fetchTargetItemDetails = async (id: number, item: string, binEntry:
             id: id,
             itemCode: item,
             binEntry: binEntry
-        },{
+        }, {
             headers: {
                 Authorization: `Bearer ${access_token}`,
             },
@@ -299,7 +301,7 @@ export const fetchTargetItemDetails = async (id: number, item: string, binEntry:
         throw error;
     }
 };
-export const updateTransferTargetItem = async(data: DetailUpdateParameters) => {
+export const updateTransferTargetItem = async (data: DetailUpdateParameters) => {
     try {
         if (configUtils.isMockup) {
             return;

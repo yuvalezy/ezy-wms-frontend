@@ -3,7 +3,6 @@ import {useNavigate} from "react-router-dom";
 import {useAuth} from "../../../Components/AppContext";
 import {useTranslation} from "react-i18next";
 import {Card, CardHeader, Icon, List, StandardListItem, Button, ProgressIndicator} from "@ui5/webcomponents-react";
-import {useObjectName} from "../../../Assets/ObjectName";
 import {Authorization} from "../../../Assets/Authorization";
 import {useDocumentStatusToString} from "../../../Assets/DocumentStatusString";
 import {Transfer} from "../Data/Transfer";
@@ -16,7 +15,6 @@ type TransferCardProps = {
 
 const TransferCard: React.FC<TransferCardProps> = ({doc, onAction}) => {
     const {t} = useTranslation();
-    const o = useObjectName();
     const navigate = useNavigate();
     const {user} = useAuth();
 
@@ -28,8 +26,15 @@ const TransferCard: React.FC<TransferCardProps> = ({doc, onAction}) => {
 
     const documentStatusToString = useDocumentStatusToString();
 
+    function cardTitle() : string {
+        if (doc.name == null || doc.name.length === 0)
+            return '';
+        return `${t('id')} : ${doc.name}`;
+    }
+
+
     return (
-        <Card key={doc.id} header={<CardHeader titleText={`${t('id')}`}/>}>
+        <Card key={doc.id} header={<CardHeader titleText={cardTitle()}/>}>
             <List>
                 <StandardListItem>
                     {handleOpenLink && (<a href="#" onClick={e => {
@@ -38,12 +43,13 @@ const TransferCard: React.FC<TransferCardProps> = ({doc, onAction}) => {
                     }}><strong>{t('number')}:</strong> {doc.id}</a>)}
                     {!handleOpenLink && (<><strong>{t('number')}:</strong> {doc.id}</>)}
                     <a style={{float: 'right'}} onClick={(e) => onAction(doc.id, 'qrcode')}>
-                        <Icon name="qr-code" />
+                        <Icon name="qr-code"/>
                     </a>
                 </StandardListItem>
                 <StandardListItem><strong>{t('docDate')}:</strong> {new Date(doc.date).toLocaleDateString()}</StandardListItem>
                 <StandardListItem><strong>{t('createdBy')}:</strong> {doc.employee.name}</StandardListItem>
                 <StandardListItem><strong>{t('status')}:</strong> {documentStatusToString(doc.status)}</StandardListItem>
+                {doc.comments && <StandardListItem><strong>{t('comment')}:</strong> {doc.comments}</StandardListItem>}
                 <StandardListItem>
                     <ProgressIndicator value={doc.progress ?? 0}/>
                 </StandardListItem>

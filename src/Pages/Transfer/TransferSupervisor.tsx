@@ -8,6 +8,7 @@ import TransferCard from "./Components/TransferCard";
 import QRDialog, {QRDialogRef} from "../../Components/QRDialog";
 import {ObjectAction} from "../../Assets/Common";
 import {StringFormat} from "../../Assets/Functions";
+import TransferForm from "./Components/TransferForm";
 
 export default function TransferSupervisor() {
     const qrRef = useRef<QRDialogRef>(null);
@@ -17,8 +18,6 @@ export default function TransferSupervisor() {
     const [selectedTransferId, setSelectedTransferId] = useState<number | null>(null);
     const [actionType, setActionType] = useState<ObjectAction | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
-    const [docNameInput, setDocNameInput] = useState<string>("");
-    const [commentsInput, setCommentsInput] = useState<string>("");
 
     useEffect(() => {
         setLoading(true);
@@ -27,23 +26,6 @@ export default function TransferSupervisor() {
             .catch((error) => setError(error))
             .finally(() => setLoading(false));
     }, []);
-    function create() {
-        setLoading(true);
-        try {
-            createTransfer(docNameInput, commentsInput)
-                .then((response) => {
-                    setTransfers((prevTransfers) => [response, ...prevTransfers]);
-                    setDocNameInput('');
-                    setCommentsInput('');
-                })
-                .catch((e) => {
-                    setError(e);
-
-                }).finally(() => setLoading(false));
-        } catch (e: any) {
-            setError(e);
-        }
-    }
     const handleConfirmAction = () => {
         setLoading(true);
         setDialogOpen(false);
@@ -71,28 +53,7 @@ export default function TransferSupervisor() {
     }
 
     return <ContentTheme title={t("transferSupervisor")} icon="journey-depart">
-        <Form>
-            <FormItem label={t("id")}>
-                <Input
-                    value={docNameInput}
-                    onInput={(e) => setDocNameInput(e.target.value as string)}
-                    maxlength={50}
-                ></Input>
-            </FormItem>
-            <FormItem label={t("comment")}>
-                <TextArea
-                    style={{minHeight: "100px", width: "100%"}}
-                    rows={5}
-                    value={commentsInput}
-                    onInput={(e) => setCommentsInput(e.target.value as string)}
-                />
-            </FormItem>
-            <FormItem>
-                <Button color="primary" icon="create" onClick={() => create()}>
-                    {t("create")}
-                </Button>
-            </FormItem>
-        </Form>
+        <TransferForm onNewTransfer={transfer => setTransfers((prevTransfers) => [transfer, ...prevTransfers])}/>
         <br/>
         <br/>
         {transfers.map((transfer) => (
