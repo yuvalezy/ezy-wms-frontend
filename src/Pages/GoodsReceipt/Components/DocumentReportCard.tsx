@@ -26,6 +26,8 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc}) => {
         }
     }
 
+    const activeStatuses = [Status.InProgress, Status.Processing, Status.Finished];
+
     return (
         <Card key={doc.id}
               header={<CardHeader titleText={`${t('id')}: ${doc.name}`}/>}
@@ -42,14 +44,14 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc}) => {
                         handleOpen('all', doc.id)
                     }}>{t('goodsReceiptReport')}</a>
                 </StandardListItem>
-                <StandardListItem>
-                    {doc.status === Status.Finished &&
+                {activeStatuses.includes(doc.status) &&
+                    <StandardListItem>
                         <a href="#" onClick={e => {
                             e.preventDefault();
                             handleOpen('vs', doc.id)
                         }}>{t('goodsReceiptVSExit')}</a>
-                    }
-                </StandardListItem>
+                    </StandardListItem>
+                }
             </List>
         </Card>
     );

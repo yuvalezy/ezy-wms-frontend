@@ -40,6 +40,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor, action, doc
         docDetails(doc);
     }
 
+    const activeStatuses = [Status.InProgress, Status.Processing, Status.Finished];
 
     return (
         <Card key={doc.id} header={<CardHeader titleText={`${t('id')} : ${doc.name}`}/>}>
@@ -73,23 +74,31 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor, action, doc
                 <StandardListItem><strong>{t('createdBy')}:</strong> {doc.employee.name}</StandardListItem>
                 <StandardListItem><strong>{t('status')}:</strong> {documentStatusToString(doc.status)}</StandardListItem>
                 {supervisor &&
-                    <StandardListItem>
-                        <a href="#" onClick={e => {
-                            e.preventDefault();
-                            navigate(`/goodsReceiptReportAll/${doc.id}`)
-                        }}>{t('goodsReceiptReport')}</a>
-                    </StandardListItem>
-                }
-                {supervisor &&
-                    <StandardListItem>
-                        {doc.status === Status.InProgress && (
-                            <Button style={{marginRight: '10px'}} color="primary" onClick={() => action(doc.id, 'approve')} icon="complete">
-                                {t('finish')}
-                            </Button>)}
-                        <Button icon="cancel" onClick={() => action(doc.id, 'cancel')}>
-                            {t('cancel')}
-                        </Button>
-                    </StandardListItem>
+                    <>
+                        <StandardListItem>
+                            <a href="#" onClick={e => {
+                                e.preventDefault();
+                                navigate(`/goodsReceiptReportAll/${doc.id}`)
+                            }}>{t('goodsReceiptReport')}</a>
+                        </StandardListItem>
+                        {activeStatuses.includes(doc.status) &&
+                            <StandardListItem>
+                                <a href="#" onClick={e => {
+                                    e.preventDefault();
+                                    navigate(`/goodsReceiptVSExitReport/${doc.id}`)
+                                }}>{t('goodsReceiptVSExit')}</a>
+                            </StandardListItem>
+                        }
+                        <StandardListItem>
+                            {doc.status === Status.InProgress && (
+                                <Button style={{marginRight: '10px'}} color="primary" onClick={() => action(doc.id, 'approve')} icon="complete">
+                                    {t('finish')}
+                                </Button>)}
+                            <Button icon="cancel" onClick={() => action(doc.id, 'cancel')}>
+                                {t('cancel')}
+                            </Button>
+                        </StandardListItem>
+                    </>
                 }
             </List>
         </Card>
