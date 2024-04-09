@@ -7,6 +7,7 @@ import {BinLocation} from "../../../Assets/Common";
 export enum PickStatus {
     Released = "Released",
     Picked = "Picked",
+    PartiallyDelivered = "Delivered",
     Closed = "Closed"
 }
 
