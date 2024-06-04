@@ -19,7 +19,7 @@ import {configUtils, delay} from "../../Assets/GlobalConfig";
 import {scanBarcode} from "../../Assets/ScanBarcode";
 import ProcessAlert, {AlertActionType, ProcessAlertValue} from "../../Components/ProcessAlert";
 import {ReasonType} from "../../Assets/Reasons";
-import {DocumentAddItemResponse} from "../../Assets/Document";
+import {DocumentAddItemResponse, DocumentUpdateLineQuantityResponse} from "../../Assets/Document";
 import Processes, {ProcessesRef} from "../../Components/Processes";
 
 export default function GoodsReceiptProcess() {
@@ -226,18 +226,67 @@ export default function GoodsReceiptProcess() {
         return new Promise((resolve, reject) => {
             try {
                 let response = UpdateLineReturnValue.Ok;
-                let error: string | undefined = "";
+                let error;
+                if (currentAlert == null) {
+                    return;
+                }
+
+                const updatedAlert: ProcessAlertValue = { ...currentAlert };
                 updateLineQuantity({id: id??-1, lineID: parameters.lineID, userName: parameters.userName, quantity: parameters.quantity})
-                    .then((r) => {
-                        response = r.returnValue;
-                        error = r.errorMessage;
+                    .then((data) => {
+                        response = data.returnValue;
+                        error = data.errorMessage;
+                        let message: string = "";
+                        let color: MessageStripDesign = MessageStripDesign.Information;
+                        let multiple: AddItemResponseMultipleValue[] = [];
+                        let totalErrors = (data.warehouse ? 1 : 0) + (data.fulfillment ? 1 : 0) + (data.showroom ? 1 : 0);
+                        if (totalErrors === 1) {
+                            if (data.warehouse) {
+                                message = t("scanConfirmStoreInWarehouse");
+                                color = MessageStripDesign.Positive;
+                            }
+                            if (data.fulfillment) {
+                                message = t("scanConfirmFulfillment");
+                                color = MessageStripDesign.Warning;
+                            }
+                            if (data.showroom) {
+                                message = t("scanConfirmShowroom");
+                                color = MessageStripDesign.Information;
+                            }
+                        } else {
+                            if (data.warehouse) {
+                                multiple.push({message: t("scanConfirmStoreInWarehouse"), severity: MessageStripDesign.Positive});
+                            }
+                            if (data.fulfillment) {
+                                multiple.push({message: t("scanConfirmFulfillment"), severity: MessageStripDesign.Warning});
+                            }
+                            if (data.showroom) {
+                                multiple.push({message: t("scanConfirmShowroom"), severity: MessageStripDesign.Information});
+                            }
+                        }
+                        updatedAlert.quantity = parameters.quantity;
+                        updatedAlert.multiple = multiple;
+                        updatedAlert.message = message;
+                        updatedAlert.severity = color;
+
+                        let index = acceptValues.findIndex((v) => v.lineID === currentAlert.lineID);
+                        let newAcceptValues = [...acceptValues];
+                        if (index !== -1) {
+                            newAcceptValues[index] = updatedAlert;
+                        } else {
+                            newAcceptValues.push(updatedAlert);
+                        }
+
+                        setAcceptValues(newAcceptValues);
+                        setCurrentAlert(null);
                     });
-                if (error != null && error.length > 0) {
+                if (error != null) {
                     reject(error);
                     return;
                 }
                 resolve(response);
-                handleAlertActionAccept(AlertActionType.Quantity, parameters.quantity??-1);
+                // error = r.errorMessage;
+
             } catch (error) {
                 reject(error);
             }
