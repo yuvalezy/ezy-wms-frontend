@@ -281,13 +281,14 @@ export default function GoodsReceiptProcess() {
                         setCurrentAlert(null);
                     });
                 if (error != null) {
+                    setError(error);
                     reject(error);
                     return;
                 }
                 resolve(response);
-                // error = r.errorMessage;
 
             } catch (error) {
+                setError(error);
                 reject(error);
             }
         });
