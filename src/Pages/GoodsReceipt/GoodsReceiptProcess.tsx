@@ -6,8 +6,14 @@ import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {Button, Form, FormItem, Input, InputDomRef, MessageStrip} from "@ui5/webcomponents-react";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
-import {addItem, updateLine} from "./Data/GoodsReceiptProcess";
-import {AddItemResponseMultipleValue, distinctItems, Item} from "../../Assets/Common";
+import {addItem, updateLine, updateLineQuantity} from "./Data/GoodsReceiptProcess";
+import {
+    AddItemResponseMultipleValue,
+    distinctItems,
+    Item,
+    UpdateLineParameters,
+    UpdateLineReturnValue
+} from "../../Assets/Common";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {configUtils, delay} from "../../Assets/GlobalConfig";
 import {scanBarcode} from "../../Assets/ScanBarcode";
@@ -213,6 +219,31 @@ export default function GoodsReceiptProcess() {
     }
 
 
+    function handleUpdateLine(parameters: UpdateLineParameters): Promise<UpdateLineReturnValue> {
+        if (parameters.quantity == null) {
+            return updateLine(parameters);
+        }
+        return new Promise((resolve, reject) => {
+            try {
+                let response = UpdateLineReturnValue.Ok;
+                let error: string | undefined = "";
+                updateLineQuantity({id: id??-1, lineID: parameters.lineID, userName: parameters.userName, quantity: parameters.quantity})
+                    .then((r) => {
+                        response = r.returnValue;
+                        error = r.errorMessage;
+                    });
+                if (error != null && error.length > 0) {
+                    reject(error);
+                    return;
+                }
+                resolve(response);
+                handleAlertActionAccept(AlertActionType.Quantity, parameters.quantity??-1);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
     return (
         <ContentTheme title={title} icon="cause">
             {id ? (
@@ -247,7 +278,7 @@ export default function GoodsReceiptProcess() {
                                                       onCommentsChanged={(comment) => handleAlertActionAccept(AlertActionType.Comments, comment)}
                                                       onQuantityChanged={(quantity) => handleAlertActionAccept(AlertActionType.Quantity, quantity)}
                                                       supervisorPassword={configUtils.grpoModificationSupervisor}
-                                                      onUpdateLine={updateLine}/>}
+                                                      onUpdateLine={handleUpdateLine}/>}
                     <BoxConfirmationDialog
                         onSelected={(v: string) => addItemToDocument(v)}
                         ref={boxConfirmationDialogRef}

@@ -1,6 +1,6 @@
 import {BusinessPartner, Employee} from "./Data";
 import {GoodsReceiptType} from "../Pages/GoodsReceipt/Data/Document";
-import {Status} from "./Common";
+import {Status, UpdateLineReturnValue} from "./Common";
 
 export type Document = {
     id: number;
@@ -35,6 +35,15 @@ export interface DocumentAddItemResponse {
     showroom: boolean;
     warehouse: boolean;
     quantity: number;
+    errorMessage?: string;
+}
+export interface DocumentUpdateLineQuantityResponse {
+    closedDocument: boolean;
+    fulfillment: boolean;
+    showroom: boolean;
+    warehouse: boolean;
+    quantity: number;
+    returnValue: UpdateLineReturnValue;
     errorMessage?: string;
 }
 

@@ -1,5 +1,5 @@
 import axios from "axios";
-import {DocumentAddItemResponse} from "../../../Assets/Document";
+import {DocumentAddItemResponse, DocumentUpdateLineQuantityResponse} from "../../../Assets/Document";
 import {configUtils, delay, globalConfig} from "../../../Assets/GlobalConfig";
 import {addItemResponseMockup, UpdateLineReturnValueMockup} from "../../../Assets/mockup";
 import {UpdateLineReturnValue} from "../../../Assets/Common";
@@ -119,6 +119,54 @@ export const updateLine = async ({
     return response.data;
   } catch (error) {
     console.error("Error updating line:", error);
+    throw error;
+  }
+};
+export const updateLineQuantity = async ({
+                                   id,
+                                   lineID,
+                                   userName,
+                                   quantity,
+                                 }: {
+  id: number;
+  lineID: number;
+  userName?: string;
+  quantity?: number;
+}): Promise<DocumentUpdateLineQuantityResponse> => {
+  try {
+    // if (configUtils.isMockup) {
+    //   console.log("Mockup data is being used.");
+    //   return UpdateLineReturnValueMockup;
+    // }
+
+    if (!globalConfig)
+      throw new Error("Config has not been initialized!");
+
+    if (globalConfig.debug)
+      await delay();
+
+    const access_token = localStorage.getItem("token");
+
+    const url = `${globalConfig.baseURL}/api/GoodsReceipt/UpdateLineQuantity`;
+
+    const response = await axios.post<DocumentUpdateLineQuantityResponse>(
+        url,
+        {
+          id: id,
+          lineID: lineID,
+          userName: userName,
+          quantity: quantity,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error updating line quantity:", error);
     throw error;
   }
 };
