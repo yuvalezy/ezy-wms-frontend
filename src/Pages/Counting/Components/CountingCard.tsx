@@ -46,6 +46,12 @@ const CountingCard: React.FC<CountingCardProps> = ({doc, handleAction}) => {
                 <StandardListItem><strong>{t('createdBy')}:</strong> {doc.employee.name}</StandardListItem>
                 <StandardListItem><strong>{t('status')}:</strong> {documentStatusToString(doc.status)}</StandardListItem>
                 <StandardListItem>
+                    <a href="#" onClick={e => {
+                        e.preventDefault();
+                        navigate(`/countingSummaryReport/${doc.id}`)
+                    }}>{t('countingSummaryReport')}</a>
+                </StandardListItem>
+                <StandardListItem>
                     {doc.status === Status.InProgress && (
                         <Button style={{marginRight: '10px'}} color="primary" onClick={() => handleAction(doc.id, 'approve')} icon="complete">
                             {t('finish')}

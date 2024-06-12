@@ -29,6 +29,7 @@ import TransferProcess from "./Pages/Transfer/TransferProcess";
 import TransferProcessSource from "./Pages/Transfer/TransferProcessSource";
 import TransferProcessTarget from "./Pages/Transfer/TransferProcessTarget";
 import TransferProcessTargetItem from "./Pages/Transfer/TransferProcessTargetItem";
+import CountingSummaryReport from "./Pages/Counting/CountingSummaryReport";
 
 export default function App() {
     function getGoodsReceiptSupervisorAuthorizations() {
@@ -51,6 +52,7 @@ export default function App() {
                     <Route path="/counting" element={<ProtectedRoute authorization={Authorization.COUNTING} element={<Counting/>}/>}/>
                     <Route path="/counting/:scanCode" element={<ProtectedRoute authorization={Authorization.COUNTING} element={<CountingProcess/>}/>}/>
                     <Route path="/countingSupervisor" element={<ProtectedRoute authorization={Authorization.COUNTING_SUPERVISOR} element={<CountingSupervisor/>}/>}/>
+                    <Route path="/countingSummaryReport/:scanCode" element={<ProtectedRoute authorization={Authorization.COUNTING_SUPERVISOR} element={<CountingSummaryReport/>}/>}/>
                     {/*Goods Receipt*/}
                     <Route path="/goodsReceipt" element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT} element={<GoodsReceipt/>}/>}/>
                     <Route path="/goodsReceipt/:scanCode" element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT} element={<GoodsReceiptProcess/>}/>}/>

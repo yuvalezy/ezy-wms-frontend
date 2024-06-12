@@ -12,6 +12,7 @@
   "counting": "Counting",
   "countingSupervisor": "Counting Supervisor",
   "countingReport": "Counting Report",
+  "countingSummaryReport": "Counting Summary Report",
   "transfer": "Transfer",
   "transferSupervisor": "Transfer Supervisor",
   "transferReport": "Transfer Report",
@@ -119,6 +120,7 @@
 
   "scanBinLocation": "Scan Bin Location",
   "binLocationNotFound": "Bin Location {0} not found.",
+  "showBinLocations": "Show Bin Locations",
   "transferItemNotFound": "Could not find data for item {0}",
   "createTransferConfirm": "Are you sure you want to finish transfer #{0}?",
   "pickingNotFound": "Picking #{0} is not valid",
