@@ -14,6 +14,7 @@ import {IsNumeric} from "../../Assets/Functions";
 import {GRPOAllDetailRef} from "./Components/GoodsReceiptAllDetail";
 import GoodsReceiptAllDialog from "./Components/GoodsReceiptAllDetail";
 import {DetailUpdateParameters} from "../../Assets/Common";
+import ExcelExporter from "../../Components/ExcelExporter";
 
 export default function GoodsReceiptReportAll() {
     const {t} = useTranslation();
@@ -50,42 +51,25 @@ export default function GoodsReceiptReportAll() {
         ;
     }
 
+    const excelHeaders = [
+        t("code"),
+        t("description"),
+        t("Quantity"),
+        t("delivery"),
+        t("showroom"),
+        t("stock"),
+    ];
 
-    const exportToExcel = () => {
-        if (data == null) {
-            return;
-        }
-
-        const wb = XLSX.utils.book_new();
-        const headers = [
-            t("code"),
-            t("description"),
-            t("Quantity"),
-            t("delivery"),
-            t("showroom"),
-            t("stock"),
-        ];
-        const dataRows = data.map((item) => [
+    function excelData() {
+        return data?.map((item) => [
             item.itemCode,
             item.itemName,
             item.quantity,
             item.delivery,
             item.showroom,
             item.stock,
-        ]);
-
-        const wsData = [headers, ...dataRows];
-
-        const ws = XLSX.utils.aoa_to_sheet(wsData);
-
-        // Add the worksheet to the workbook
-        XLSX.utils.book_append_sheet(wb, ws, "GoodsReceiptData");
-
-        // Generate a Blob containing the Excel file
-        const excelBuffer = XLSX.write(wb, {bookType: "xlsx", type: "array"});
-        const excelData = new Blob([excelBuffer], {type: ".xlsx"});
-        saveAs(excelData, `goods_receipt_data_${id}.xlsx`);
-    };
+        ])??[];
+    }
 
     function openDetails(newData: GoodsReceiptAll) {
         detailRef?.current?.show(newData);
@@ -110,19 +94,7 @@ export default function GoodsReceiptReportAll() {
                 <Title level="H1">
                     {t("goodsReceipt")} #{id}
                 </Title>
-                <img
-                    src="/images/excel.jpg"
-                    alt=""
-                    onClick={() => exportToExcel()}
-                    style={{
-                        height: "32px",
-                        position: "absolute",
-                        right: "10px",
-                        top: "8px",
-                        cursor: "pointer",
-                        zIndex: "1000",
-                    }}
-                />
+                <ExcelExporter name="GoodsReceiptData" headers={excelHeaders} getData={excelData} fileName={`goods_receipt_data_${id}`}/>
             </div>
             {data && <>
                 <GoodsReceiptAllReportTable onClick={openDetails} data={data}></GoodsReceiptAllReportTable>

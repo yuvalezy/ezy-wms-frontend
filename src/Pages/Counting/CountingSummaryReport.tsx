@@ -7,8 +7,7 @@ import {useParams} from "react-router-dom";
 import {IsNumeric} from "../../Assets/Functions";
 import {CountingSummaryReportData, fetchCountingSummaryReport} from "./Data/Report";
 import CountingSummaryReportTable from "./Components/CountingSummaryReportTable";
-import * as XLSX from "xlsx";
-import {saveAs} from "file-saver";
+import ExcelExporter from "../../Components/ExcelExporter";
 
 export default function CountingSummaryReport() {
     const [id, setID] = useState<number | null>();
@@ -31,56 +30,27 @@ export default function CountingSummaryReport() {
             .finally(() => setLoading(false));
     }, []);
 
-    const exportToExcel = () => {
-        if (data == null) {
-            return;
-        }
+    const excelHeaders = [
+        t("bin"),
+        t("code"),
+        t("description"),
+        t("quantity")
+    ];
 
-        const wb = XLSX.utils.book_new();
-        const headers = [
-            t("bin"),
-            t("code"),
-            t("description"),
-            t("quantity")
-        ];
-        const dataRows = data.lines.map((item) => [
+    function excelData() {
+        return data?.lines.map((item) => [
             item.binCode,
             item.itemCode,
             item.itemName,
             item.quantity
-        ]);
-
-        const wsData = [headers, ...dataRows];
-
-        const ws = XLSX.utils.aoa_to_sheet(wsData);
-
-        // Add the worksheet to the workbook
-        XLSX.utils.book_append_sheet(wb, ws, "CountingData");
-
-        // Generate a Blob containing the Excel file
-        const excelBuffer = XLSX.write(wb, {bookType: "xlsx", type: "array"});
-        const excelData = new Blob([excelBuffer], {type: ".xlsx"});
-        saveAs(excelData, `counting_data_${id}.xlsx`);
-    };
-
+        ])??[];
+    }
     return (
         <ContentTheme title={t("countingSummaryReport")} icon="manager-insight">
             <Title level="H1">
                 {t("counting")} #{id}
             </Title>
-            <img
-                src="/images/excel.jpg"
-                alt=""
-                onClick={() => exportToExcel()}
-                style={{
-                    height: "32px",
-                    position: "absolute",
-                    right: "10px",
-                    top: "8px",
-                    cursor: "pointer",
-                    zIndex: "1000",
-                }}
-            />
+            <ExcelExporter name="CountingData" headers={excelHeaders} getData={excelData} fileName={`counting_data_${id}`}/>
             <Title level="H2">
                 {t("id")} {data?.name}
             </Title>
