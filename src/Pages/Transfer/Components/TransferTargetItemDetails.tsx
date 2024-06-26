@@ -1,4 +1,4 @@
-import {Bar, Button, CheckBox, Dialog, DialogDomRef, Input, Label, MessageStripDesign, Table, TableCell, TableColumn, TableRow, Title} from "@ui5/webcomponents-react";
+import {Bar, Button, CheckBox, Dialog, DialogDomRef, Input, Label, Table, TableCell, TableColumn, TableRow, Title} from "@ui5/webcomponents-react";
 import React, {forwardRef, useImperativeHandle, useRef, useState} from "react";
 import {useThemeContext} from "../../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
@@ -17,7 +17,7 @@ export interface TransferTargetItemsDetailProps {
 
 const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsDetailProps, ref) => {
     const {t} = useTranslation();
-    const {setLoading, setAlert, setError} = useThemeContext();
+    const {setLoading, setError} = useThemeContext();
     const dialogRef = useRef<DialogDomRef>(null);
     const [content, setContent] = useState<TransferContent | null>(null);
     const [bin, setBin] = useState<TransferContentBin | null>(null);

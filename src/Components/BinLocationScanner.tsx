@@ -1,5 +1,5 @@
 import React, {forwardRef, useImperativeHandle, useRef, useState} from 'react';
-import {Form, FormItem, Input, Button, InputDomRef, Title, Link, MessageStripDesign} from "@ui5/webcomponents-react";
+import {Form, FormItem, Input, Button, InputDomRef, Title, Link} from "@ui5/webcomponents-react";
 import {BinLocation} from "../Assets/Common";
 import {useTranslation} from "react-i18next";
 import {scanBinLocation} from "../Assets/ScanBinLocation";

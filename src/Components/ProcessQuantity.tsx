@@ -4,7 +4,7 @@ import {
     Button,
     Dialog, DialogDomRef,
     Title,
-    Form, Input, InputDomRef, FormItem, MessageStripDesign
+    Form, Input, InputDomRef, FormItem
 } from "@ui5/webcomponents-react";
 import {ProcessAlertValue} from "./ProcessAlert";
 import {useTranslation} from "react-i18next";
@@ -26,7 +26,7 @@ export interface ProcessQuantityProps {
 
 const ProcessQuantity = forwardRef((props: ProcessQuantityProps, ref) => {
     const {t} = useTranslation();
-    const {setLoading, setAlert, setError} = useThemeContext();
+    const {setLoading, setError} = useThemeContext();
     const [userName, setUserName] = useState("");
     const [quantity, setQuantity] = useState<number>(props.alert?.quantity ?? 1);
     const QuantityRef = useRef<InputDomRef>(null);

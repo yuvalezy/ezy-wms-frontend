@@ -8,7 +8,7 @@ import {
 import GoodsReceiptVSExitReportTable from "./Components/GoodsReceiptVSExitReportTable";
 import { useThemeContext } from "../../Components/ThemeContext";
 import { useTranslation } from "react-i18next";
-import {Panel, Title, Text, MessageStrip, MessageStripDesign} from "@ui5/webcomponents-react";
+import {Panel, Title, Text, MessageStrip} from "@ui5/webcomponents-react";
 import {useObjectName} from "../../Assets/ObjectName";
 import {IsNumeric} from "../../Assets/Functions";
 
@@ -17,7 +17,7 @@ export default function GoodsReceiptVSExitReport() {
   const { scanCode } = useParams();
   const { t } = useTranslation();
   const o = useObjectName();
-  const {setLoading, setAlert, setError} = useThemeContext();
+  const {setLoading, setError} = useThemeContext();
   const [data, setData] = useState<GoodsReceiptVSExitReportData[] | null>(null);
   const title = `${t("goodsReceiptVSExit")} #${scanCode}`;
 

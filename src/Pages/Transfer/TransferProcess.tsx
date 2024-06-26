@@ -1,9 +1,9 @@
 import ContentTheme from "../../Components/ContentTheme";
 import {Link, useParams} from "react-router-dom";
-import React, {MouseEventHandler, useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {Button, Form, FormItem, Grid, Icon, Input, InputDomRef, MessageStrip, MessageStripDesign} from "@ui5/webcomponents-react";
+import {Grid, Icon, MessageStripDesign} from "@ui5/webcomponents-react";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {checkIsComplete, transferAction} from "./Data/Transfer";
 import QRDialog, {QRDialogRef} from "../../Components/QRDialog";

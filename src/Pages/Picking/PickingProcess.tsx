@@ -3,10 +3,9 @@ import {useNavigate, useParams} from "react-router-dom";
 import React, {CSSProperties, useEffect, useState} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {Button, Icon, Panel, Title, Text, ProgressIndicator} from "@ui5/webcomponents-react";
-import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
+import {Button, Panel, Title, Text, ProgressIndicator} from "@ui5/webcomponents-react";
 import {IsNumeric} from "../../Assets/Functions";
-import {fetchPicking, fetchPickings, PickingDocument, PickingDocumentDetail} from "./Data/PickingDocument";
+import {fetchPicking, PickingDocument, PickingDocumentDetail} from "./Data/PickingDocument";
 import {useObjectName} from "../../Assets/ObjectName";
 
 export default function PickingProcess() {

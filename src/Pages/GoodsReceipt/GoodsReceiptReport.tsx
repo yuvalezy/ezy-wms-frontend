@@ -9,7 +9,7 @@ import {BusinessPartner} from "../../Assets/Data";
 import {Document, DocumentStatusOption} from "../../Assets/Document";
 
 export default function GoodsReceiptReport() {
-    const {setLoading, setAlert, setError} = useThemeContext();
+    const {setLoading, setError} = useThemeContext();
     const {t} = useTranslation();
     const [idInput, setIDInput] = useState<string | "">("");
     const [cardCodeInput, setCardCodeInput] = useState<BusinessPartner | null>(null);

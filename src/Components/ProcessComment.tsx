@@ -4,7 +4,7 @@ import {
     Button,
     Dialog, DialogDomRef,
     Title,
-    TextArea, MessageStripDesign
+    TextArea
 } from "@ui5/webcomponents-react";
 import {ProcessAlertValue} from "./ProcessAlert";
 import {useThemeContext} from "./ThemeContext";

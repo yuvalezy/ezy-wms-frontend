@@ -2,7 +2,7 @@ import {Employee} from "../../../Assets/Data";
 import {configUtils, delay, globalConfig} from "../../../Assets/GlobalConfig";
 import {GoodsReceiptAllDetailMockup, transferMockup} from "../../../Assets/mockup";
 import axios from "axios";
-import {DetailUpdateParameters, ObjectAction, SourceTarget, Status, User} from "../../../Assets/Common";
+import {DetailUpdateParameters, ObjectAction, SourceTarget, Status} from "../../../Assets/Common";
 
 interface TransferAddItemResponse {
     lineID?: number

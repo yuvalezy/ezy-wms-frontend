@@ -1,5 +1,5 @@
 import React, {forwardRef, useImperativeHandle, useRef, useState} from "react";
-import {Bar, Button, ComboBox, ComboBoxItem, Dialog, DialogDomRef, Form, FormItem, Input, InputDomRef, MessageStripDesign, TextArea, Title} from "@ui5/webcomponents-react";
+import {Bar, Button, ComboBox, ComboBoxItem, Dialog, DialogDomRef, Form, FormItem, Input, InputDomRef, TextArea, Title} from "@ui5/webcomponents-react";
 import {ProcessAlertValue} from "./ProcessAlert";
 import {useThemeContext} from "./ThemeContext";
 import {fetchReasons, ReasonType, ReasonValue,} from "../Assets/Reasons";

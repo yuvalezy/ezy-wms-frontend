@@ -1,12 +1,12 @@
 import ContentTheme from "../../Components/ContentTheme";
 import {useNavigate, useParams} from "react-router-dom";
-import React, {CSSProperties, useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {Label, MessageStrip, Table, TableCell, TableColumn, TableRow} from "@ui5/webcomponents-react";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {useAuth} from "../../Components/AppContext";
-import {AxiosErrorResponse, BinLocation, SourceTarget} from "../../Assets/Common";
+import {BinLocation, SourceTarget} from "../../Assets/Common";
 import BarCodeScanner, {BarCodeScannerRef} from "../../Components/BarCodeScanner";
 import {addItem, fetchTransferContent, TransferContent} from "./Data/Transfer";
 import BinLocationScanner from "../../Components/BinLocationScanner";
@@ -17,7 +17,6 @@ import {ScrollableContent, ScrollableContentBox} from "../../Components/Scrollab
 import {ReasonType} from "../../Assets/Reasons";
 import Processes, {ProcessesRef} from "../../Components/Processes";
 import {updateLine} from "./Data/TransferProcess";
-import {AxiosError} from "axios";
 
 export default function TransferProcessSource() {
     const {scanCode} = useParams();
@@ -25,7 +24,7 @@ export default function TransferProcessSource() {
     const [id, setID] = useState<number | null>();
     const [binLocation, setBinLocation] = useState<BinLocation | null>(null);
     const [enable, setEnable] = useState(false);
-    const {setLoading, setAlert, setError} = useThemeContext();
+    const {setLoading, setError} = useThemeContext();
     const {user} = useAuth();
     const barcodeRef = useRef<BarCodeScannerRef>(null);
     const [rows, setRows] = useState<TransferContent[] | null>(null);

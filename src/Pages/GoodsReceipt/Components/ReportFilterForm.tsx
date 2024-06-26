@@ -48,8 +48,6 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({
                                                                onSubmit,
                                                                onClear,
                                                            }) => {
-    const {config} = useContext(AuthContext);
-
     const [vendors, setVendors] = useState<BusinessPartner[]>([]);
     const {t} = useTranslation();
     const documentStatusOptions = useDocumentStatusOptions();

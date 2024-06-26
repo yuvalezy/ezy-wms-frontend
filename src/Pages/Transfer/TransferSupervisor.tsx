@@ -1,9 +1,9 @@
 import ContentTheme from "../../Components/ContentTheme";
 import {useTranslation} from "react-i18next";
-import {Button, Form, FormItem, Input, MessageBox, MessageBoxActions, MessageStripDesign, TextArea} from "@ui5/webcomponents-react";
+import {MessageBox, MessageBoxActions, MessageStripDesign} from "@ui5/webcomponents-react";
 import React, {useEffect, useRef, useState} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
-import {createTransfer, fetchTransfers, Transfer, transferAction} from "./Data/Transfer";
+import {fetchTransfers, Transfer, transferAction} from "./Data/Transfer";
 import TransferCard from "./Components/TransferCard";
 import QRDialog, {QRDialogRef} from "../../Components/QRDialog";
 import {ObjectAction} from "../../Assets/Common";

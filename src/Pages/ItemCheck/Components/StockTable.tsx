@@ -1,5 +1,5 @@
 import {useTranslation} from "react-i18next";
-import {Button, CheckBox, Grid, Input, Label, Table, TableCell, TableColumn, TableRow} from "@ui5/webcomponents-react";
+import {Label, Table, TableCell, TableColumn, TableRow} from "@ui5/webcomponents-react";
 import React, {useEffect, useState} from "react";
 import {itemStock, ItemStockResponse} from "../Item";
 import {useThemeContext} from "../../../Components/ThemeContext";

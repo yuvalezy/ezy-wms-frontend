@@ -6,7 +6,6 @@ import {Counting, CountingContent} from "./Counting";
 import {GoodsReceiptAllDetail} from "../Pages/GoodsReceipt/Data/Report";
 import {Transfer} from "../Pages/Transfer/Data/Transfer";
 import {TransferAddItemResponse} from "../Pages/Transfer/Data/TransferProcess";
-import {ObjectStatus} from "@ui5/webcomponents-react";
 
 enum UpdateLineReturnValue {
     Status = "Status",

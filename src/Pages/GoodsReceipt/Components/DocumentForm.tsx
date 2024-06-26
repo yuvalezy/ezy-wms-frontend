@@ -23,7 +23,7 @@ interface DocumentFormProps {
 const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument,}) => {
     const {t} = useTranslation();
     const o = useObjectName();
-    const {setLoading, setAlert, setError} = useThemeContext();
+    const {setLoading, setError} = useThemeContext();
     const documentListRef = useRef<DocumentListRef>();
     const [selectedType, setSelectedType] = React.useState(GoodsReceiptType.AutoConfirm);
     const [items, setItems] = useState<DocumentItem[]>([]);

@@ -68,10 +68,6 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>(({enab
         setBarcodeInput('');
     }
 
-    function focusBarCode() {
-        barcodeRef?.current?.focus();
-    }
-
     function handleItems(items: Item[]) {
         if (barcodeRef == null || barcodeRef.current == null) {
             return;

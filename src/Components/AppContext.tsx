@@ -10,8 +10,6 @@ import axios, {AxiosError} from "axios";
 import {User} from "../Assets/Common";
 import {delay, setGlobalConfig} from "../Assets/GlobalConfig";
 import {Authorization} from "../Assets/Authorization";
-import {useMenus} from "../Assets/Menus";
-import {useTranslation} from "react-i18next";
 
 // Define the shape of the context
 export type Config = {
@@ -60,8 +58,6 @@ interface CompanyInfo {
 export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     const [user, setUser] = useState<User | null>(null);
     const [config, setConfig] = useState<Config | null>(null);
-    const menus = useMenus();
-    const { t } = useTranslation();
 
     useEffect(() => {
         const fetchConfig = async () => {

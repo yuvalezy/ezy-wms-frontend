@@ -6,7 +6,6 @@ import {useDocumentStatusToString} from "../../Assets/DocumentStatusString";
 import {Button, Form, FormItem, Input, InputDomRef, MessageStripDesign} from "@ui5/webcomponents-react";
 import {useNavigate} from "react-router-dom";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
-import {fetchDocuments} from "../GoodsReceipt/Data/Document";
 import {fetchTransfers} from "./Data/Transfer";
 import {Status} from "../../Assets/Common";
 
