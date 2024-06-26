@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import {Routes, Route, BrowserRouter} from "react-router-dom";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 import LoginPage from "./Pages/Login";
 import HomePage from "./Pages/Home";
 import {AuthProvider} from "./Components/AppContext";
@@ -30,6 +30,7 @@ import TransferProcessSource from "./Pages/Transfer/TransferProcessSource";
 import TransferProcessTarget from "./Pages/Transfer/TransferProcessTarget";
 import TransferProcessTargetItem from "./Pages/Transfer/TransferProcessTargetItem";
 import CountingSummaryReport from "./Pages/Counting/CountingSummaryReport";
+import BinCheck from "./Pages/BinCheck/BinCheck";
 
 export default function App() {
     function getGoodsReceiptSupervisorAuthorizations() {
@@ -47,7 +48,8 @@ export default function App() {
                 <Routes>
                     <Route path="/login" element={<LoginPage/>}/>
                     <Route path="/unauthorized" element={<Unauthorized/>}/>
-                    <Route path="/itemCheck" element={<ProtectedRoute authorizations={[Authorization.GOODS_RECEIPT_SUPERVISOR, Authorization.PICKING_SUPERVISOR]} element={<ItemCheck/>}/>}/>
+                    <Route path="/binCheck" element={<ProtectedRoute authorizations={[Authorization.GOODS_RECEIPT_SUPERVISOR, Authorization.PICKING_SUPERVISOR, Authorization.COUNTING_SUPERVISOR, Authorization.TRANSFER_SUPERVISOR]} element={<BinCheck/>}/>}/>
+                    <Route path="/itemCheck" element={<ProtectedRoute authorizations={[Authorization.GOODS_RECEIPT_SUPERVISOR, Authorization.PICKING_SUPERVISOR, Authorization.COUNTING_SUPERVISOR, Authorization.TRANSFER_SUPERVISOR]} element={<ItemCheck/>}/>}/>
                     {/*Counting*/}
                     <Route path="/counting" element={<ProtectedRoute authorization={Authorization.COUNTING} element={<Counting/>}/>}/>
                     <Route path="/counting/:scanCode" element={<ProtectedRoute authorization={Authorization.COUNTING} element={<CountingProcess/>}/>}/>

@@ -118,6 +118,7 @@
   "selectItemsForTransfers": "Seleccionar artículos para transferencia #{0}",
   "selectTransferTarget": "Elija artículos para el destino",
 
+  "binCheck": "Revision de Ubicación",
   "scanBinLocation": "Escanear la Ubicación",
   "binLocationNotFound": "Ubicación del contenedor {0} no encontrada.",
   "showBinLocations": "Mostrar Ubicaciones",

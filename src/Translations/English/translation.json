@@ -118,6 +118,7 @@
   "selectItemsForTransfers": "Select Items for Transfer #{0}",
   "selectTransferTarget": "Choose Items for Destination",
 
+  "binCheck": "Bin Check",
   "scanBinLocation": "Scan Bin Location",
   "binLocationNotFound": "Bin Location {0} not found.",
   "showBinLocations": "Show Bin Locations",

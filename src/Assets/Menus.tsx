@@ -3,6 +3,7 @@ import {Authorization} from "./Authorization";
 import "@ui5/webcomponents-icons/dist/qr-code.js"
 import "@ui5/webcomponents-icons/dist/complete.js"
 import "@ui5/webcomponents-icons/dist/cause.js"
+import "@ui5/webcomponents-icons/dist/dimension.js"
 import "@ui5/webcomponents-icons/dist/cart-2.js"
 import "@ui5/webcomponents-icons/dist/kpi-managing-my-area.js"
 import "@ui5/webcomponents-icons/dist/product.js"
@@ -49,6 +50,12 @@ export function useMenus() {
             Text: t('itemCheck'),
             Authorizations: [Authorization.GOODS_RECEIPT_SUPERVISOR, Authorization.PICKING_SUPERVISOR],
             Icon: "complete",
+        },
+        {
+            Link: "/binCheck",
+            Text: t('binCheck'),
+            Authorizations: [Authorization.GOODS_RECEIPT_SUPERVISOR, Authorization.PICKING_SUPERVISOR, Authorization.COUNTING_SUPERVISOR, Authorization.TRANSFER_SUPERVISOR],
+            Icon: "dimension",
         },
         {
             Link: "/goodsReceipt",
