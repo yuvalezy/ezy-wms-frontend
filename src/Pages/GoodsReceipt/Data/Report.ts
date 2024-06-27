@@ -33,6 +33,32 @@ export type GoodsReceiptVSExitReportDataLine = {
     quantity: number;
 };
 
+export type GoodsReceiptValidateProcess = {
+    documentNumber: number;
+    cardCode: string;
+    cardName: string;
+    baseType: number;
+    baseEntry: number;
+    lines: GoodsReceiptValidateProcessLine[];
+}
+
+export type GoodsReceiptValidateProcessLine = {
+    lineNumber: number;
+    itemCode: string;
+    itemName: string;
+    quantity: number;
+    baseLine: number;
+    openInvQty: number;
+    lineStatus: GoodsReceiptValidateProcessLineStatus;
+}
+
+export enum GoodsReceiptValidateProcessLineStatus {
+    OK = 'OK',
+    LessScan = 'LessScan',
+    MoreScan = 'MoreScan',
+    ClosedLine = 'ClosedLine'
+}
+
 export const fetchGoodsReceiptReportAll = async (id: number): Promise<GoodsReceiptAll[]> => {
     try {
         if (!globalConfig)
@@ -136,6 +162,33 @@ export const fetchGoodsReceiptVSExitReport = async (id: number): Promise<GoodsRe
         const url = `${globalConfig.baseURL}/api/GoodsReceipt/GoodsReceiptVSExitReport/${id}`;
 
         const response = await axios.get<GoodsReceiptVSExitReportData[]>(url, {
+            headers: {
+                Authorization: `Bearer ${access_token}`,
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching documents:", error);
+        throw error;
+    }
+};
+export const fetchGoodsReceiptValidateProcess = async (id: number): Promise<GoodsReceiptValidateProcess[]> => {
+    try {
+        // if (configUtils.isMockup) {
+        //     console.log("Mockup data is being used.");
+        //     return goodsReceiptVSExitReportDataMockup;
+        // }
+
+        if (!globalConfig) throw new Error("Config has not been initialized!");
+
+        if (globalConfig.debug) await delay();
+
+        const access_token = localStorage.getItem("token");
+
+        const url = `${globalConfig.baseURL}/api/GoodsReceipt/GoodsReceiptValidateProcess/${id}`;
+
+        const response = await axios.get<GoodsReceiptValidateProcess[]>(url, {
             headers: {
                 Authorization: `Bearer ${access_token}`,
             },

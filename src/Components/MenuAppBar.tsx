@@ -3,11 +3,14 @@ import {useAuth} from "./AppContext";
 import {useLocation, useNavigate} from "react-router-dom";
 import {Icon, ShellBar, ShellBarItem, StandardListItem} from "@ui5/webcomponents-react";
 import {useEffect, useState} from "react";
-import {Ui5CustomEvent} from "@ui5/webcomponents-react/dist/interfaces";
 import {ShellBarDomRef} from "@ui5/webcomponents-react/dist/webComponents/ShellBar";
-import {ShellBarMenuItemClickEventDetail} from "@ui5/webcomponents-fiori/dist/ShellBar";
+import {
+    ShellBarMenuItemClickEventDetail,
+    ShellBarNotificationsClickEventDetail
+} from "@ui5/webcomponents-fiori/dist/ShellBar";
 import "@ui5/webcomponents-icons/dist/home.js"
 import {MenuItem, useMenus} from "../Assets/Menus";
+import type {Ui5CustomEvent} from "@ui5/webcomponents-react/dist/types";
 
 interface MenuAppBarProps {
     title: string,
@@ -34,6 +37,7 @@ const MenuAppBar: React.FC<MenuAppBarProps> = ({title, icon, back}) => {
         navigate(authorizedMenus[index].Link);
     }
 
+
     function handleBack() {
         if (back != null) {
             back();
@@ -46,14 +50,15 @@ const MenuAppBar: React.FC<MenuAppBarProps> = ({title, icon, back}) => {
             onLogoClick={() => navigate('/')}
             onMenuItemClick={handleMenuClicked}
             menuItems={authorizedMenus.map((item, index) => (
-                <StandardListItem selected={location.pathname === item.Link} key={index} icon={item.Icon} data-key={index}>{item.Text}</StandardListItem>))}
+                <StandardListItem selected={location.pathname === item.Link} key={index} icon={item.Icon}
+                                  data-key={index}>{item.Text}</StandardListItem>))}
             primaryTitle={title}
         >
             {back &&
-            <ShellBarItem
-                icon="nav-back"
-                onClick={() => handleBack()}
-            />
+                <ShellBarItem
+                    icon="nav-back"
+                    onClick={() => handleBack()}
+                />
             }
             <ShellBarItem
                 icon="log"

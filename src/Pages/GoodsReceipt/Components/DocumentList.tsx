@@ -20,7 +20,7 @@ const DocumentList = forwardRef((props: DocumentListProps, ref) => {
     const o = useObjectName();
     const docNumRef = useRef<HTMLInputElement>();
     const [items, setItems] = useState<DocumentItem[]>([]);
-    const [objType, setObjType] = useState(18);
+    const [objType, setObjType] = useState(22);
     const [docNum, setDocNum] = useState<string>('');
 
     useImperativeHandle(ref, () => ({

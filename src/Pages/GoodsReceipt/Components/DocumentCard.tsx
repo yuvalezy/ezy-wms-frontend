@@ -8,6 +8,7 @@ import {useObjectName} from "../../../Assets/ObjectName";
 import {Authorization} from "../../../Assets/Authorization";
 import {useDocumentStatusToString} from "../../../Assets/DocumentStatusString";
 import {Status} from "../../../Assets/Common";
+import {activeStatuses, processStatuses, useHandleOpen} from "../Data/GoodsReceiptUtils";
 
 type DocumentCardProps = {
     doc: Document,
@@ -19,34 +20,23 @@ type DocumentCardProps = {
 const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor, action, docDetails}) => {
     const {t} = useTranslation();
     const o = useObjectName();
-    const navigate = useNavigate();
     const {user} = useAuth();
+    const handleOpen = useHandleOpen();
 
-    function handleOpen(id: number) {
-        navigate(`/goodsReceipt/${id}`);
-    }
-
-    let handleOpenLink = user?.authorizations?.includes(Authorization.GOODS_RECEIPT);
+    const handleOpenLink = user?.authorizations?.includes(Authorization.GOODS_RECEIPT);
 
     const documentStatusToString = useDocumentStatusToString();
-
-    function goodsReceiptClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
-        e.preventDefault();
-        handleOpen(doc.id);
-    }
 
     function documentDetailsClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
         e.preventDefault();
         docDetails(doc);
     }
 
-    const activeStatuses = [Status.InProgress, Status.Processing, Status.Finished];
-
     return (
         <Card key={doc.id} header={<CardHeader titleText={`${t('id')} : ${doc.name}`}/>}>
             <List>
                 <StandardListItem>
-                    {handleOpenLink && (<a href="#" onClick={goodsReceiptClick}><strong>{t('number')}:</strong> {doc.id}</a>)}
+                    {handleOpenLink && (<a href="#" onClick={(e) => handleOpen(e, 'open', doc.id)}><strong>{t('number')}:</strong> {doc.id}</a>)}
                     {!handleOpenLink && (<><strong>{t('number')}:</strong> {doc.id}</>)}
                     <a style={{float: 'right'}} onClick={(e) => action(doc.id, 'qrcode')}>
                         <Icon name="qr-code"/>
@@ -76,17 +66,16 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor, action, doc
                 {supervisor &&
                     <>
                         <StandardListItem>
-                            <a href="#" onClick={e => {
-                                e.preventDefault();
-                                navigate(`/goodsReceiptReportAll/${doc.id}`)
-                            }}>{t('goodsReceiptReport')}</a>
+                            <a href="#" onClick={e => handleOpen(e, 'all', doc.id)}>{t('goodsReceiptReport')}</a>
                         </StandardListItem>
                         {activeStatuses.includes(doc.status) &&
                             <StandardListItem>
-                                <a href="#" onClick={e => {
-                                    e.preventDefault();
-                                    navigate(`/goodsReceiptVSExitReport/${doc.id}`)
-                                }}>{t('goodsReceiptVSExit')}</a>
+                                <a href="#" onClick={e => handleOpen(e, 'vs', doc.id)}>{t('goodsReceiptVSExit')}</a>
+                            </StandardListItem>
+                        }
+                        {processStatuses.includes(doc.status) &&
+                            <StandardListItem>
+                                <a href="#" onClick={e => handleOpen(e, 'diff', doc.id)}>{t('differencesReport')}</a>
                             </StandardListItem>
                         }
                         <StandardListItem>
