@@ -1,33 +1,74 @@
 import * as React from 'react';
 import {
-    GoodsReceiptValidateProcessLine,
+    fetchGoodsReceiptValidateProcessLineDetails, GoodsReceiptValidateProcess,
+    GoodsReceiptValidateProcessLine, GoodsReceiptValidateProcessLineDetails,
     GoodsReceiptValidateProcessLineStatus,
 } from "../Data/Report";
 import {useTranslation} from "react-i18next";
-import {Label, Table, TableCell, TableColumn, TableRow} from '@ui5/webcomponents-react';
-import {CSSProperties} from "react";
+import {Icon, Label, Table, TableCell, TableColumn, TableGroupRow, TableRow} from '@ui5/webcomponents-react';
+import {CSSProperties, useState} from "react";
+import {useThemeContext} from "../../../Components/ThemeContext";
 
 
 interface GoodsReceiptProcessDifferenceTableProps {
-    data: GoodsReceiptValidateProcessLine[]
+    id: number
+    data: GoodsReceiptValidateProcess
 }
 
-const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifferenceTableProps> = ({data}) => {
+const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifferenceTableProps> = ({id, data}) => {
     const {t} = useTranslation();
+    const {setLoading, setAlert, setError} = useThemeContext();
+    const [expandedRows, setExpandedRows] = useState<{ [key: number]: boolean }>({});
+    const [expandedRowsData, setExpandedRowsData] = useState<{
+        [key: number]: GoodsReceiptValidateProcessLineDetails[]
+    }>({});
 
-    const getRowStyle = (status: GoodsReceiptValidateProcessLineStatus) : CSSProperties => {
+    const toggleRow = (line: GoodsReceiptValidateProcessLine) => {
+        const lineNumber = line.lineNumber;
+
+        function expandCollapse() {
+            setExpandedRows(prevState => ({
+                ...prevState,
+                [lineNumber]: !prevState[lineNumber]
+            }));
+        }
+
+        if (lineNumber in expandedRowsData) {
+            expandCollapse();
+            return;
+        }
+        setLoading(true);
+        fetchGoodsReceiptValidateProcessLineDetails(id, data.baseType, data.baseEntry, line.baseLine)
+            .then((details) => {
+                setExpandedRowsData(prevState => ({
+                    ...prevState,
+                    [lineNumber]: details
+                }));
+                expandCollapse();
+            })
+            .catch((e) => setError(e))
+            .finally(() => setLoading(false));
+    };
+
+
+    const getRowStyle = (status: GoodsReceiptValidateProcessLineStatus): CSSProperties => {
+        let props: CSSProperties = {cursor: "pointer"}
         switch (status) {
             case GoodsReceiptValidateProcessLineStatus.OK:
-                return { backgroundColor: '#d4edda' }; // Green
+                props.backgroundColor = '#d4edda';// Green
+                break;
             case GoodsReceiptValidateProcessLineStatus.LessScan:
-                return { backgroundColor: '#f8d7da' }; // Red
+                props.backgroundColor = '#f8d7da';// Red
+                break;
             case GoodsReceiptValidateProcessLineStatus.MoreScan:
-                return { backgroundColor: '#fff3cd' }; // Yellow
+                props.backgroundColor = '#fff3cd';// Yellow
+                break;
             case GoodsReceiptValidateProcessLineStatus.ClosedLine:
-                return { backgroundColor: '#d1ecf1' }; // Light Blue
+                props.backgroundColor = '#d1ecf1';// Light Blue
+                break;
             default:
-                return {};
         }
+        return props;
     };
 
     function getRowStatusLabel(status: GoodsReceiptValidateProcessLineStatus) {
@@ -35,9 +76,9 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
             case GoodsReceiptValidateProcessLineStatus.OK:
                 return t("complete");
             case GoodsReceiptValidateProcessLineStatus.LessScan:
-                return t("lessThenOrdered");
-            case GoodsReceiptValidateProcessLineStatus.MoreScan:
                 return t("moreThenOrdered");
+            case GoodsReceiptValidateProcessLineStatus.MoreScan:
+                return t("lessThenOrdered");
             case GoodsReceiptValidateProcessLineStatus.ClosedLine:
                 return t("closed");
             default:
@@ -48,6 +89,7 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
     return (
         <Table
             columns={<>
+                <TableColumn><Label></Label></TableColumn>
                 <TableColumn><Label>#</Label></TableColumn>
                 <TableColumn><Label>{t('code')}</Label></TableColumn>
                 <TableColumn><Label>{t('description')}</Label></TableColumn>
@@ -56,16 +98,44 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
                 <TableColumn><Label>{t('status')}</Label></TableColumn>
             </>}
         >
-            {data.map((row) => (
+            {data.lines.map((row) => (
                 <>
-                    <TableRow key={row.lineNumber}>
+                    <TableRow onClick={() => toggleRow(row)} key={row.lineNumber}>
+                        <TableCell style={getRowStyle(row.lineStatus)}>
+                            <Icon name={expandedRows[row.lineNumber] ? "arrow-bottom" : "arrow-right"}/>
+                        </TableCell>
                         <TableCell style={getRowStyle(row.lineStatus)}><Label>{row.lineNumber}</Label></TableCell>
                         <TableCell style={getRowStyle(row.lineStatus)}><Label>{row.itemCode}</Label></TableCell>
                         <TableCell style={getRowStyle(row.lineStatus)}><Label>{row.itemName}</Label></TableCell>
                         <TableCell style={getRowStyle(row.lineStatus)}><Label>{row.quantity}</Label></TableCell>
                         <TableCell style={getRowStyle(row.lineStatus)}><Label>{row.openInvQty}</Label></TableCell>
-                        <TableCell style={getRowStyle(row.lineStatus)}><Label>{getRowStatusLabel(row.lineStatus)}</Label></TableCell>
+                        <TableCell
+                            style={getRowStyle(row.lineStatus)}><Label>{getRowStatusLabel(row.lineStatus)}</Label></TableCell>
                     </TableRow>
+                    {expandedRows[row.lineNumber] && expandedRowsData[row.lineNumber] && (
+                        <TableGroupRow>
+                            <Table
+                                columns={<>
+                                    <TableColumn><Label>{t('date')}</Label></TableColumn>
+                                    <TableColumn><Label>{t('time')}</Label></TableColumn>
+                                    <TableColumn><Label>{t('employee')}</Label></TableColumn>
+                                    <TableColumn><Label>{t('quantity')}</Label></TableColumn>
+                                    <TableColumn><Label>{t('scannedQuantity')}</Label></TableColumn>
+                                </>}
+                            >
+                                {expandedRowsData[row.lineNumber].map((detail) => {
+                                    let timeStamp = new Date(detail.timeStamp);
+                                        return <TableRow key={detail.timeStamp}>
+                                            <TableCell><Label>{timeStamp.toLocaleDateString()}</Label></TableCell>
+                                            <TableCell><Label>{timeStamp.toLocaleTimeString()}</Label></TableCell>
+                                            <TableCell><Label>{detail.employee}</Label></TableCell>
+                                            <TableCell><Label>{detail.quantity}</Label></TableCell>
+                                            <TableCell><Label>{detail.scannedQuantity}</Label></TableCell>
+                                        </TableRow>
+                                    }
+                                )}
+                            </Table>
+                        </TableGroupRow>)}
                 </>
             ))}
         </Table>

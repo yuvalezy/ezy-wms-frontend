@@ -37,7 +37,7 @@ export default function GoodsReceiptProcessDifferenceReport() {
                 {t("goodsReceipt")} #{id}
             </Title>
             <div>
-                {data?.map((value) => (
+                {id && data?.map((value) => (
                     <Panel
                         collapsed
                         headerText={`${o(value.baseType)}: ${value.documentNumber}`}
@@ -50,7 +50,7 @@ export default function GoodsReceiptProcessDifferenceReport() {
                             <strong>{t("supplierName")}: </strong>
                             {value.cardName}
                         </Title>
-                        <GoodsReceiptProcessDifferenceTable data={value.lines} />
+                        <GoodsReceiptProcessDifferenceTable id={id} data={value} />
                     </Panel>
                 ))}
             </div>

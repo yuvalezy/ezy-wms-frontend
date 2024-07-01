@@ -1,6 +1,10 @@
 import axios from "axios";
 import {configUtils, delay, globalConfig} from "../../../Assets/GlobalConfig";
-import {GoodsReceiptAllDetailMockup, GoodsReceiptMockup, goodsReceiptVSExitReportDataMockup} from "../../../Assets/mockup";
+import {
+    GoodsReceiptAllDetailMockup,
+    GoodsReceiptMockup,
+    goodsReceiptVSExitReportDataMockup
+} from "../../../Assets/mockup";
 import {DetailUpdateParameters} from "../../../Assets/Common";
 
 export type GoodsReceiptAll = {
@@ -50,6 +54,13 @@ export type GoodsReceiptValidateProcessLine = {
     baseLine: number;
     openInvQty: number;
     lineStatus: GoodsReceiptValidateProcessLineStatus;
+}
+
+export type GoodsReceiptValidateProcessLineDetails = {
+    timeStamp: string;
+    employee: string;
+    quantity: number;
+    scannedQuantity: number;
 }
 
 export enum GoodsReceiptValidateProcessLineStatus {
@@ -120,7 +131,7 @@ export const fetchGoodsReceiptReportAllDetails = async (id: number, item: string
         throw error;
     }
 };
-export const updateGoodsReceiptReport = async(data: DetailUpdateParameters) => {
+export const updateGoodsReceiptReport = async (data: DetailUpdateParameters) => {
     try {
         if (configUtils.isMockup) {
             return;
@@ -189,6 +200,38 @@ export const fetchGoodsReceiptValidateProcess = async (id: number): Promise<Good
         const url = `${globalConfig.baseURL}/api/GoodsReceipt/GoodsReceiptValidateProcess/${id}`;
 
         const response = await axios.get<GoodsReceiptValidateProcess[]>(url, {
+            headers: {
+                Authorization: `Bearer ${access_token}`,
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching documents:", error);
+        throw error;
+    }
+};
+export const fetchGoodsReceiptValidateProcessLineDetails = async (id: number, baseType: number, baseEntry: number, baseLine: number): Promise<GoodsReceiptValidateProcessLineDetails[]> => {
+    try {
+        // if (configUtils.isMockup) {
+        //     console.log("Mockup data is being used.");
+        //     return goodsReceiptVSExitReportDataMockup;
+        // }
+
+        if (!globalConfig) throw new Error("Config has not been initialized!");
+
+        if (globalConfig.debug) await delay();
+
+        const access_token = localStorage.getItem("token");
+
+        const url = `${globalConfig.baseURL}/api/GoodsReceipt/GoodsReceiptValidateProcessLineDetails`;
+
+        const response = await axios.post<GoodsReceiptValidateProcessLineDetails[]>(url, {
+            id: id,
+            baseType: baseType,
+            baseEntry: baseEntry,
+            baseLine: baseLine
+        },{
             headers: {
                 Authorization: `Bearer ${access_token}`,
             },
