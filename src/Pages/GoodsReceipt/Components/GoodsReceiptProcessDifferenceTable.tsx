@@ -57,14 +57,16 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
             </>}
         >
             {data.map((row) => (
-                <TableRow key={row.lineNumber}>
-                    <TableCell style={getRowStyle(row.lineStatus)}><Label>{row.lineNumber}</Label></TableCell>
-                    <TableCell style={getRowStyle(row.lineStatus)}><Label>{row.itemCode}</Label></TableCell>
-                    <TableCell style={getRowStyle(row.lineStatus)}><Label>{row.itemName}</Label></TableCell>
-                    <TableCell style={getRowStyle(row.lineStatus)}><Label>{row.quantity}</Label></TableCell>
-                    <TableCell style={getRowStyle(row.lineStatus)}><Label>{row.openInvQty}</Label></TableCell>
-                    <TableCell style={getRowStyle(row.lineStatus)}><Label>{getRowStatusLabel(row.lineStatus)}</Label></TableCell>
-                </TableRow>
+                <>
+                    <TableRow key={row.lineNumber}>
+                        <TableCell style={getRowStyle(row.lineStatus)}><Label>{row.lineNumber}</Label></TableCell>
+                        <TableCell style={getRowStyle(row.lineStatus)}><Label>{row.itemCode}</Label></TableCell>
+                        <TableCell style={getRowStyle(row.lineStatus)}><Label>{row.itemName}</Label></TableCell>
+                        <TableCell style={getRowStyle(row.lineStatus)}><Label>{row.quantity}</Label></TableCell>
+                        <TableCell style={getRowStyle(row.lineStatus)}><Label>{row.openInvQty}</Label></TableCell>
+                        <TableCell style={getRowStyle(row.lineStatus)}><Label>{getRowStatusLabel(row.lineStatus)}</Label></TableCell>
+                    </TableRow>
+                </>
             ))}
         </Table>
     );
