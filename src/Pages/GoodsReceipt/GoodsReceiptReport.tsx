@@ -1,37 +1,20 @@
 import React, {useState} from "react";
 import ContentTheme from "../../Components/ContentTheme";
 import ReportFilterForm from "./Components/ReportFilterForm";
-import { fetchDocuments} from "./Data/Document";
+import {fetchDocuments, GoodsReceiptReportFilter} from "./Data/Document";
 import DocumentReportCard from "./Components/DocumentReportCard";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {BusinessPartner} from "../../Assets/Data";
-import {Document, DocumentStatusOption} from "../../Assets/Document";
+import {Document} from "../../Assets/Document";
 
 export default function GoodsReceiptReport() {
     const {setLoading, setError} = useThemeContext();
     const {t} = useTranslation();
-    const [idInput, setIDInput] = useState<string | "">("");
-    const [cardCodeInput, setCardCodeInput] = useState<BusinessPartner | null>(null);
-    const [docNameInput, setDocNameInput] = useState<string | "">("");
-    const [grpoInput, setGRPOInput] = useState<string | "">("");
-    const [statusInput, setStatusInput] = useState<DocumentStatusOption | null>(null);
-    const [dateInput, setDateInput] = useState<Date | null>(null);
     const [documents, setDocuments] = useState<Document[]>([]);
 
-    const onSubmit = () => {
+    const onSubmit = (filters: GoodsReceiptReportFilter) => {
         setLoading(true);
-        let id = idInput.length > 0 ? parseInt(idInput) : undefined;
-        let statuses = statusInput != null ? [statusInput.status] : [];
-        let grpo = grpoInput.length > 0 ? parseInt(grpoInput) : undefined;
-        fetchDocuments(
-            id,
-            statuses,
-            cardCodeInput,
-            dateInput,
-            docNameInput,
-            grpo
-        )
+        fetchDocuments(filters)
             .then((data) => setDocuments(data))
             .catch((error) => setError(error))
             .finally(() => setLoading(false));
@@ -40,18 +23,6 @@ export default function GoodsReceiptReport() {
     return (
         <ContentTheme title={t("goodsReceiptReport")} icon="manager-insight">
             <ReportFilterForm
-                idInput={idInput}
-                setIDInput={setIDInput}
-                cardCodeInput={cardCodeInput}
-                setCardCodeInput={setCardCodeInput}
-                docNameInput={docNameInput}
-                setDocNameInput={setDocNameInput}
-                grpoInput={grpoInput}
-                setGRPOInput={setGRPOInput}
-                statusInput={statusInput}
-                setStatusInput={setStatusInput}
-                dateInput={dateInput}
-                setDateInput={setDateInput}
                 onSubmit={onSubmit}
                 onClear={() => setDocuments([])}
             />

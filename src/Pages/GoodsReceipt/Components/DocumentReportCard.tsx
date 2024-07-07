@@ -1,10 +1,8 @@
 import React from "react";
 import {Card, CardHeader, List, StandardListItem} from "@ui5/webcomponents-react";
-import {useNavigate} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {Document} from "../../../Assets/Document";
 import {useDocumentStatusToString} from "../../../Assets/DocumentStatusString";
-import {Status} from "../../../Assets/Common";
 import {activeStatuses, processStatuses, useHandleOpen} from "../Data/GoodsReceiptUtils";
 
 type DocumentReportCardProps = {
@@ -22,10 +20,16 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc}) => {
         >
             <List>
                 <StandardListItem><strong>{t('number')}:</strong> {doc.id}</StandardListItem>
-                <StandardListItem><strong>{t('vendor')}:</strong> {doc.businessPartner?.name ?? doc.businessPartner?.code}</StandardListItem>
-                <StandardListItem><strong>{t('docDate')}:</strong> {new Date(doc.date).toLocaleDateString()}</StandardListItem>
+                <StandardListItem><strong>{t('vendor')}:</strong> {doc.businessPartner?.name ?? doc.businessPartner?.code}
+                </StandardListItem>
+                <StandardListItem><strong>{t('docDate')}:</strong> {new Date(doc.date).toLocaleDateString()}
+                </StandardListItem>
                 <StandardListItem><strong>{t('createdBy')}:</strong> {doc.employee.name}</StandardListItem>
-                <StandardListItem><strong>{t('status')}:</strong> {documentStatusToString(doc.status)}</StandardListItem>
+                <StandardListItem><strong>{t('status')}:</strong> {documentStatusToString(doc.status)}
+                </StandardListItem>
+                {doc.statusDate &&
+                    <StandardListItem><strong>{t('statusDate')}:</strong> {new Date(doc.statusDate).toLocaleDateString()}
+                    </StandardListItem>}
                 <StandardListItem>
                     <a href="#" onClick={e => handleOpen(e, 'all', doc.id)}>{t('goodsReceiptReport')}</a>
                 </StandardListItem>

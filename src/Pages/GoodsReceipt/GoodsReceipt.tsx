@@ -39,7 +39,7 @@ export default function GoodsReceipt() {
         }
         const id = parseInt(checkScan[1]);
         setLoading(true);
-        fetchDocuments(id, [])
+        fetchDocuments({id, status: []})
             .then((doc) => {
                 if (doc.length === 0) {
                     setAlert({message: StringFormat(t("goodsReceiptNotFound"), id), type: MessageStripDesign.Warning});

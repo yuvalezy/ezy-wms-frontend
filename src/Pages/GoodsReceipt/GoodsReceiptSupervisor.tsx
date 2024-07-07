@@ -13,7 +13,7 @@ import QRDialog, {QRDialogRef} from "../../Components/QRDialog";
 import {globalSettings} from "../../Assets/GlobalConfig";
 import {Authorization} from "../../Assets/Authorization";
 import DocumentListDialog, {DocumentListDialogRef} from "./Components/DocumentListDialog";
-import {ObjectAction} from "../../Assets/Common";
+import {ObjectAction, Status} from "../../Assets/Common";
 
 export default function GoodsReceiptSupervisor() {
     const qrRef = useRef<QRDialogRef>(null);
@@ -31,7 +31,7 @@ export default function GoodsReceiptSupervisor() {
     useEffect(() => {
         setSupervisor(user?.authorizations.filter((v) => v === Authorization.GOODS_RECEIPT_SUPERVISOR).length === 1);
         setLoading(true);
-        fetchDocuments()
+        fetchDocuments({status: [Status.Open, Status.InProgress]})
             .then((data) => setDocuments(data))
             .catch((error) => setError(error))
             .finally(() => setLoading(false));

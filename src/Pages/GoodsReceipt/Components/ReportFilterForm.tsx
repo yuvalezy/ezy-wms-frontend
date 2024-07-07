@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState, useContext} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {
     Grid,
@@ -9,53 +9,24 @@ import {
     FormItem,
     Button,
     Panel,
-    PanelDomRef,
+    PanelDomRef, DatePicker,
 } from "@ui5/webcomponents-react";
-import {AuthContext} from "../../../Components/AppContext";
 import {BusinessPartner, fetchVendors, useDocumentStatusOptions} from "../../../Assets/Data";
-import {DocumentStatusOption} from "../../../Assets/Document";
+import {GoodsReceiptReportFilter} from "../Data/Document";
 
 interface ReportFilterFormProps {
-    idInput: string;
-    setIDInput: (value: string) => void;
-    cardCodeInput: BusinessPartner | null;
-    setCardCodeInput: (value: BusinessPartner | null) => void;
-    docNameInput: string;
-    setDocNameInput: (value: string) => void;
-    grpoInput: string;
-    setGRPOInput: (value: string) => void;
-    statusInput: DocumentStatusOption | null;
-    setStatusInput: (value: DocumentStatusOption | null) => void;
-    dateInput: Date | null;
-    setDateInput: (value: Date | null) => void;
-    onSubmit: () => void;
+    onSubmit: (filters: GoodsReceiptReportFilter) => void;
     onClear: () => void;
 }
 
-const ReportFilterForm: React.FC<ReportFilterFormProps> = ({
-                                                               idInput,
-                                                               setIDInput,
-                                                               cardCodeInput,
-                                                               setCardCodeInput,
-                                                               docNameInput,
-                                                               setDocNameInput,
-                                                               grpoInput,
-                                                               setGRPOInput,
-                                                               statusInput,
-                                                               setStatusInput,
-                                                               dateInput,
-                                                               setDateInput,
-                                                               onSubmit,
-                                                               onClear,
-                                                           }) => {
+const ReportFilterForm: React.FC<ReportFilterFormProps> = ({onSubmit, onClear}) => {
+    const [filters, setFilters] = useState<GoodsReceiptReportFilter>({})
     const [vendors, setVendors] = useState<BusinessPartner[]>([]);
     const {t} = useTranslation();
     const documentStatusOptions = useDocumentStatusOptions();
     const panelRef = useRef<PanelDomRef>(null);
     const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
-    const [vendorValue, setVendorValue] = useState<string>("");
     const [statusValue, setStatusValue] = useState<string>("");
-    const [selectedDate, setSelectedDate] = useState<string | undefined>();
 
     useEffect(() => {
         fetchVendors()
@@ -68,24 +39,28 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({
     }, []);
 
     function clearForm() {
-        setIDInput("");
-        setCardCodeInput(null);
-        setDocNameInput("");
-        setGRPOInput("");
-        setStatusInput(null);
-        setDateInput(null);
-
-        setVendorValue("");
+        setFilters({});
         setStatusValue("");
-        setSelectedDate(undefined);
-
         onClear();
     }
 
     const handleSubmit = () => {
         setIsPanelCollapsed(true);
-        onSubmit();
+        onSubmit(filters);
     };
+
+    function changeCardCode(name: string | null) {
+        let businessPartner: BusinessPartner | null = null;
+        if (name != null) {
+            businessPartner = vendors.find((v) => v.name === name) || null;
+        }
+        setFilters((prevFilters) => {
+            return {
+                ...prevFilters,
+                businessPartner: businessPartner?.code
+            };
+        });
+    }
 
     return (
         <Panel
@@ -95,50 +70,99 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({
             headerText={t("filters")}
         >
             <Form>
-                {/*<FormItem label={t("date")}>*/}
-                {/*    <DatePicker*/}
-                {/*        value={selectedDate !== undefined ? selectedDate : ""}*/}
-                {/*        primaryCalendarType="Gregorian"*/}
-                {/*        onChange={(e) => {*/}
-                {/*            setDateInput(e.target.dateValue);*/}
-                {/*            setSelectedDate(e.target.value);*/}
-                {/*        }}*/}
-                {/*    />*/}
-                {/*</FormItem>*/}
                 <FormItem label={t("vendor")}>
                     <ComboBox
-                        value={vendorValue}
-                        onSelectionChange={(e) => {
-                            setCardCodeInput(
-                                vendors[Array.from(e.target.children).indexOf(e.detail.item)]
-                            );
-                            setVendorValue(e.detail.item.text);
-                        }}
+                        value={filters.businessPartner != null ? vendors.find((v) => v.code === filters.businessPartner)?.name??"" : ""}
+                        onSelectionChange={(e) => changeCardCode(e.detail.item.text)}
                     >
                         {vendors.map((vendor) => (
                             <ComboBoxItem key={vendor.code} text={vendor.name}/>
                         ))}
                     </ComboBox>
                 </FormItem>
-                <FormItem label={t("transaction")}>
+                <FormItem label={t("number")}>
                     <Input
-                        value={idInput}
+                        value={filters.id != null ? filters.id.toString() : ""}
                         type="Number"
-                        onChange={(e) => setIDInput(e.target.value as string)}
+                        onChange={(e) => {
+                            let value = e.target.value as string;
+                            return setFilters((pf) => ({
+                                ...pf,
+                                id: value.length > 0 ? parseInt(value) : null
+                            }));
+                        }}
                     />
                 </FormItem>
                 <FormItem label={t("id")}>
                     <Input
-                        value={docNameInput}
-                        onChange={(e) => setDocNameInput(e.target.value as string)}
+                        value={filters.name??""}
+                        onChange={(e) =>
+                            setFilters((pf) => ({
+                                ...pf,
+                                name: e.target.value as string
+                            }))}
+                        maxlength={50}
+                    />
+                </FormItem>
+                <FormItem label={`${t("status")} - ${t("fromDate")}`}>
+                    <DatePicker
+                        value={filters.dateFrom ? filters.dateFrom.toISOString().split('T')[0] : ""}
+                        primaryCalendarType="Gregorian"
+                        onChange={(e) => {
+                            const newDate = e.target.value ? new Date(e.target.value) : null;
+                            setFilters((prevFilters) => ({
+                                ...prevFilters,
+                                dateFrom: newDate,
+                            }));
+                        }}
+                    />
+                </FormItem>
+                <FormItem label={`${t("status")} - ${t("toDate")}`}>
+                    <DatePicker
+                        value={filters.dateTo ? filters.dateTo.toISOString().split('T')[0] : ""}
+                        primaryCalendarType="Gregorian"
+                        onChange={(e) => {
+                            const newDate = e.target.value ? new Date(e.target.value) : null;
+                            setFilters((prevFilters) => ({
+                                ...prevFilters,
+                                dateTo: newDate,
+                            }));
+                        }}
+                    />
+                </FormItem>
+                <FormItem label={t("purchaseOrder")}>
+                    <Input
+                        value={filters.purchaseOrder}
+                        type="Number"
+                        onChange={(e) =>
+                            setFilters((pf) => ({
+                                ...pf,
+                                purchaseOrder: e.target.value as string
+                            }))}
+                        maxlength={50}
+                    />
+                </FormItem>
+                <FormItem label={t("reservedInvoice")}>
+                    <Input
+                        value={filters.reservedInvoice}
+                        type="Number"
+                        onChange={(e) =>
+                            setFilters((pf) => ({
+                                ...pf,
+                                reservedInvoice: e.target.value as string
+                            }))}
                         maxlength={50}
                     />
                 </FormItem>
                 <FormItem label={t("goodsReceipt")}>
                     <Input
-                        value={grpoInput}
+                        value={filters.grpo}
                         type="Number"
-                        onChange={(e) => setGRPOInput(e.target.value as string)}
+                        onChange={(e) =>
+                            setFilters((pf) => ({
+                                ...pf,
+                                grpo: e.target.value as string
+                            }))}
                         maxlength={50}
                     />
                 </FormItem>
@@ -146,11 +170,10 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({
                     <ComboBox
                         value={statusValue}
                         onSelectionChange={(e) => {
-                            setStatusInput(
-                                documentStatusOptions[
-                                    Array.from(e.target.children).indexOf(e.detail.item)
-                                    ]
-                            );
+                            setFilters((pf) => ({
+                                ...pf,
+                                status: [documentStatusOptions[ Array.from(e.target.children).indexOf(e.detail.item) ].status]
+                            }))
                             setStatusValue(e.detail.item.text); // Update the state when selection changes
                         }}
                     >

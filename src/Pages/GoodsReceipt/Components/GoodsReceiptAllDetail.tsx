@@ -40,7 +40,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
         setEnableUpdate(false);
         setCheckedRows({})
         setQuantityChanges({})
-        fetchDocuments(props.id, [])
+        fetchDocuments({id: props.id})
             .then((doc) => {
                 setEnableUpdate(doc[0].status === Status.InProgress);
                 fetchGoodsReceiptReportAllDetails(props.id, data.itemCode)

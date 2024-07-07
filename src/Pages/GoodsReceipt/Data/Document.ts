@@ -3,12 +3,26 @@ import {Document, DocumentItem, DocumentOrderBy} from "../../../Assets/Document"
 import {configUtils, delay, globalConfig} from "../../../Assets/GlobalConfig";
 import {documentMockup} from "../../../Assets/mockup";
 import {ObjectAction, Status, User} from "../../../Assets/Common";
-import {BusinessPartner} from "../../../Assets/Data";
 
 
 export enum GoodsReceiptType {
     AutoConfirm = "AutoConfirm",
     SpecificOrders = "SpecificOrders",
+}
+
+export type GoodsReceiptReportFilter = {
+    id?: number | null;
+    businessPartner?: string | null;
+    name?: string;
+    grpo?: string;
+    purchaseOrder?: string;
+    reservedInvoice?: string;
+    status?: Status[] | null;
+    date?: Date | null;
+    dateFrom?: Date | null;
+    dateTo?: Date | null;
+    orderBy?: DocumentOrderBy | null;
+    orderByDesc?: boolean | null;
 }
 
 export const createDocument = async (
@@ -90,12 +104,7 @@ export const documentAction = async (
 };
 
 export const fetchDocuments = async (
-    id?: number,
-    statuses: Status[] = [Status.Open, Status.InProgress],
-    businessPartner?: BusinessPartner | null,
-    date?: Date | null,
-    docName?: string,
-    grpo?: number,
+    filters: GoodsReceiptReportFilter,
     orderBy: DocumentOrderBy = DocumentOrderBy.ID,
     desc: boolean = true
 ): Promise<Document[]> => {
@@ -113,41 +122,44 @@ export const fetchDocuments = async (
 
         const access_token = localStorage.getItem("token");
 
-        const queryParams = new URLSearchParams();
-        queryParams.append("OrderBy", orderBy.toString());
-        queryParams.append("Desc", desc.toString());
+        // const queryParams = new URLSearchParams();
+        // queryParams.append("OrderBy", orderBy.toString());
+        // queryParams.append("Desc", desc.toString());
+        //
+        // if (filters.statuses && filters.statuses.length > 0) {
+        //     filters.statuses.forEach((status) =>
+        //         queryParams.append("Status", status.toString())
+        //     );
+        // }
+        //
+        // if (filters.id !== null && filters.id !== undefined) {
+        //     queryParams.append("ID", filters.id.toString());
+        // }
+        //
+        // if (filters.grpo !== null && filters.grpo !== undefined) {
+        //     queryParams.append("GRPO", filters.grpo.toString());
+        // }
+        //
+        // if (filters.docName !== null && filters.docName !== undefined) {
+        //     queryParams.append("Name", filters.docName);
+        // }
+        //
+        // if (filters.businessPartner !== null && filters.businessPartner !== undefined) {
+        //     queryParams.append("BusinessPartner", filters.businessPartner.code);
+        // }
+        //
+        // if (filters.date !== null && filters.date !== undefined) {
+        //     queryParams.append("Date", filters.date.toISOString());
+        // }
 
-        if (statuses && statuses.length > 0) {
-            statuses.forEach((status) =>
-                queryParams.append("Status", status.toString())
-            );
-        }
-
-        if (id !== null && id !== undefined) {
-            queryParams.append("ID", id.toString());
-        }
-
-        if (grpo !== null && grpo !== undefined) {
-            queryParams.append("GRPO", grpo.toString());
-        }
-
-        if (docName !== null && docName !== undefined) {
-            queryParams.append("Name", docName);
-        }
-
-        if (businessPartner !== null && businessPartner !== undefined) {
-            queryParams.append("BusinessPartner", businessPartner.code);
-        }
-
-        if (date !== null && date !== undefined) {
-            queryParams.append("Date", date.toISOString());
-        }
-
+        // const url = `${
+        //     globalConfig.baseURL
+        // }/api/GoodsReceipt/Documents?${queryParams.toString()}`;
         const url = `${
             globalConfig.baseURL
-        }/api/GoodsReceipt/Documents?${queryParams.toString()}`;
+        }/api/GoodsReceipt/Documents`;
 
-        const response = await axios.get<Document[]>(url, {
+        const response = await axios.post<Document[]>(url, filters, {
             headers: {
                 Authorization: `Bearer ${access_token}`,
             },
