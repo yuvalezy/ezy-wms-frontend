@@ -29,6 +29,7 @@ const ExcelExporter: React.FC<ExcelExporterProps> = ({name, fileName, headers, g
 
     return (
         <img
+            className="no-print"
             src="/images/excel.jpg"
             alt=""
             onClick={() => exportToExcel()}

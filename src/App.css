@@ -123,3 +123,12 @@
 .disabled-div .homeMenuItem, .disabled-div ui5-icon {
     color: grey;
 }
+
+@media print {
+    .no-print {
+        display:none;
+    }
+}
+.break-before {
+    page-break-before: always;
+}

@@ -46,6 +46,7 @@ const MenuAppBar: React.FC<MenuAppBarProps> = ({title, icon, back}) => {
 
     return (
         <ShellBar
+            className="no-print"
             logo={<Icon name={icon}/>}
             onLogoClick={() => navigate('/')}
             onMenuItemClick={handleMenuClicked}

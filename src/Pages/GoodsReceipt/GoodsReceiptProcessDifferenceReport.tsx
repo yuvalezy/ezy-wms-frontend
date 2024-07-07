@@ -74,7 +74,7 @@ export default function GoodsReceiptProcessDifferenceReport() {
             <div>
                 {id && data?.map((value) => (
                     <Panel
-                        collapsed
+                        className="break-before"
                         headerText={`${o(value.baseType)}: ${value.documentNumber}`}
                     >
                         <Title level="H3">
