@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
     fetchGoodsReceiptValidateProcessLineDetails, GoodsReceiptValidateProcess,
     GoodsReceiptValidateProcessLine, GoodsReceiptValidateProcessLineDetails,
-    GoodsReceiptValidateProcessLineStatus,
+    ProcessLineStatus,
 } from "../Data/Report";
 import {useTranslation} from "react-i18next";
 import {Icon, Label, Table, TableCell, TableColumn, TableGroupRow, TableRow} from '@ui5/webcomponents-react';
@@ -51,19 +51,19 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
     };
 
 
-    const getRowStyle = (status: GoodsReceiptValidateProcessLineStatus): CSSProperties => {
+    const getRowStyle = (status: ProcessLineStatus): CSSProperties => {
         let props: CSSProperties = {cursor: "pointer"}
         switch (status) {
-            case GoodsReceiptValidateProcessLineStatus.OK:
+            case ProcessLineStatus.OK:
                 props.backgroundColor = '#d4edda';// Green
                 break;
-            case GoodsReceiptValidateProcessLineStatus.LessScan:
+            case ProcessLineStatus.LessScan:
                 props.backgroundColor = '#f8d7da';// Red
                 break;
-            case GoodsReceiptValidateProcessLineStatus.MoreScan:
+            case ProcessLineStatus.MoreScan:
                 props.backgroundColor = '#fff3cd';// Yellow
                 break;
-            case GoodsReceiptValidateProcessLineStatus.ClosedLine:
+            case ProcessLineStatus.ClosedLine:
                 props.backgroundColor = '#d1ecf1';// Light Blue
                 break;
             default:
@@ -71,16 +71,18 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
         return props;
     };
 
-    function getRowStatusLabel(status: GoodsReceiptValidateProcessLineStatus) {
+    function getRowStatusLabel(status: ProcessLineStatus) {
         switch (status) {
-            case GoodsReceiptValidateProcessLineStatus.OK:
+            case ProcessLineStatus.OK:
                 return t("complete");
-            case GoodsReceiptValidateProcessLineStatus.LessScan:
+            case ProcessLineStatus.LessScan:
                 return t("moreThenOrdered");
-            case GoodsReceiptValidateProcessLineStatus.MoreScan:
+            case ProcessLineStatus.MoreScan:
                 return t("lessThenOrdered");
-            case GoodsReceiptValidateProcessLineStatus.ClosedLine:
+            case ProcessLineStatus.ClosedLine:
                 return t("closed");
+            case ProcessLineStatus.NotReceived:
+                return t("notReceived");
             default:
                 return '';
         }

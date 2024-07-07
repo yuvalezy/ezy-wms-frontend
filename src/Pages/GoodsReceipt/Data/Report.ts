@@ -53,7 +53,7 @@ export type GoodsReceiptValidateProcessLine = {
     quantity: number;
     baseLine: number;
     openInvQty: number;
-    lineStatus: GoodsReceiptValidateProcessLineStatus;
+    lineStatus: ProcessLineStatus;
 }
 
 export type GoodsReceiptValidateProcessLineDetails = {
@@ -63,11 +63,12 @@ export type GoodsReceiptValidateProcessLineDetails = {
     scannedQuantity: number;
 }
 
-export enum GoodsReceiptValidateProcessLineStatus {
+export enum ProcessLineStatus {
     OK = 'OK',
     LessScan = 'LessScan',
     MoreScan = 'MoreScan',
-    ClosedLine = 'ClosedLine'
+    ClosedLine = 'ClosedLine',
+    NotReceived = 'NotReceived'
 }
 
 export const fetchGoodsReceiptReportAll = async (id: number): Promise<GoodsReceiptAll[]> => {
@@ -231,7 +232,7 @@ export const fetchGoodsReceiptValidateProcessLineDetails = async (id: number, ba
             baseType: baseType,
             baseEntry: baseEntry,
             baseLine: baseLine
-        },{
+        }, {
             headers: {
                 Authorization: `Bearer ${access_token}`,
             },
