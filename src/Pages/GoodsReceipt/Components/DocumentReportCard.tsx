@@ -4,15 +4,23 @@ import {useTranslation} from "react-i18next";
 import {Document} from "../../../Assets/Document";
 import {useDocumentStatusToString} from "../../../Assets/DocumentStatusString";
 import {activeStatuses, processStatuses, useHandleOpen} from "../Data/GoodsReceiptUtils";
+import {useObjectName} from "../../../Assets/ObjectName";
 
 type DocumentReportCardProps = {
     doc: Document
+    docDetails: (doc: Document) => void
 }
 
-const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc}) => {
+const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc, docDetails}) => {
     const {t} = useTranslation();
     const documentStatusToString = useDocumentStatusToString();
     const handleOpen = useHandleOpen();
+    const o = useObjectName();
+
+    function documentDetailsClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
+        e.preventDefault();
+        docDetails(doc);
+    }
 
     return (
         <Card key={doc.id}
@@ -20,8 +28,23 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc}) => {
         >
             <List>
                 <StandardListItem><strong>{t('number')}:</strong> {doc.id}</StandardListItem>
-                <StandardListItem><strong>{t('vendor')}:</strong> {doc.businessPartner?.name ?? doc.businessPartner?.code}
+                {doc.businessPartner != null &&
+                <StandardListItem><strong>{t('vendor')}:</strong> {doc.businessPartner.name ?? doc.businessPartner.code}
                 </StandardListItem>
+                }
+                {doc.specificDocuments && doc.specificDocuments.length > 0 &&
+                    <StandardListItem><a href="#" onClick={documentDetailsClick}><strong>{t('documentsList')}: </strong>
+                        {
+                            doc.specificDocuments.map(
+                                (value) => {
+                                    let index = doc.specificDocuments?.indexOf(value) ?? -1;
+                                    return <span key={index}>
+                                    {index > 0 && ', '}
+                                        {o(value.objectType)} #{value.documentNumber}
+                                </span>;
+                                }
+                            )
+                        }</a></StandardListItem>}
                 <StandardListItem><strong>{t('docDate')}:</strong> {new Date(doc.date).toLocaleDateString()}
                 </StandardListItem>
                 <StandardListItem><strong>{t('createdBy')}:</strong> {doc.employee.name}</StandardListItem>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import ContentTheme from "../../Components/ContentTheme";
 import ReportFilterForm from "./Components/ReportFilterForm";
 import {fetchDocuments, GoodsReceiptReportFilter} from "./Data/Document";
@@ -6,6 +6,7 @@ import DocumentReportCard from "./Components/DocumentReportCard";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {Document} from "../../Assets/Document";
+import DocumentListDialog, {DocumentListDialogRef} from "./Components/DocumentListDialog";
 
 export default function GoodsReceiptReport() {
     const {loading, setLoading, setError} = useThemeContext();
@@ -14,6 +15,8 @@ export default function GoodsReceiptReport() {
     const [lastID, setLastID] = useState(-1);
     const [filters, setFilters] = useState<GoodsReceiptReportFilter | null>(null);
     const [stop, setStop] = useState(false);
+    const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
+    const documentListDialogRef = useRef<DocumentListDialogRef>(null);
 
     const onSubmit = (filters: GoodsReceiptReportFilter) => {
         setFilters(filters);
@@ -22,6 +25,11 @@ export default function GoodsReceiptReport() {
     useEffect(() => {
         loadData();
     }, [filters]);
+
+    function handleDocDetails(doc: Document) {
+        setSelectedDocument(doc);
+        documentListDialogRef?.current?.show();
+    }
 
     const loadData = () => {
         if (filters == null || stop) {
@@ -59,16 +67,16 @@ export default function GoodsReceiptReport() {
 
     return (
         <ContentTheme title={t("goodsReceiptReport")} icon="manager-insight">
-            Count: {documents.length}
             <ReportFilterForm
                 onSubmit={onSubmit}
                 onClear={() => setDocuments([])}
             />
             <div style={{margin: "5px"}}>
                 {documents.map((doc) => (
-                    <DocumentReportCard key={doc.id} doc={doc}/>
+                    <DocumentReportCard key={doc.id} doc={doc} docDetails={handleDocDetails}/>
                 ))}
             </div>
+            <DocumentListDialog ref={documentListDialogRef} doc={selectedDocument}/>
         </ContentTheme>
     );
 }
