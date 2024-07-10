@@ -23,6 +23,9 @@ export type GoodsReceiptReportFilter = {
     dateTo?: Date | null;
     orderBy?: DocumentOrderBy | null;
     orderByDesc?: boolean | null;
+    pageSize?: number | null;
+    pageNumber?: number | null;
+    lastID?: number | null;
 }
 
 export const createDocument = async (

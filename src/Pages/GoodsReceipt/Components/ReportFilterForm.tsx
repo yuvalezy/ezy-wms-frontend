@@ -20,7 +20,7 @@ interface ReportFilterFormProps {
 }
 
 const ReportFilterForm: React.FC<ReportFilterFormProps> = ({onSubmit, onClear}) => {
-    const [filters, setFilters] = useState<GoodsReceiptReportFilter>({})
+    const [filters, setFilters] = useState<GoodsReceiptReportFilter>(newFilters())
     const [vendors, setVendors] = useState<BusinessPartner[]>([]);
     const {t} = useTranslation();
     const documentStatusOptions = useDocumentStatusOptions();
@@ -38,8 +38,12 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({onSubmit, onClear}) 
             });
     }, []);
 
+    function newFilters() : GoodsReceiptReportFilter {
+        return {lastID: -1, pageSize: 10};
+    }
+
     function clearForm() {
-        setFilters({});
+        setFilters(newFilters());
         setStatusValue("");
         onClear();
     }
