@@ -1,16 +1,16 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ContentTheme from "../../Components/ContentTheme";
 import ReportFilterForm from "./Components/ReportFilterForm";
-import {fetchDocuments, GoodsReceiptReportFilter} from "./Data/Document";
+import { fetchDocuments, GoodsReceiptReportFilter } from "./Data/Document";
 import DocumentReportCard from "./Components/DocumentReportCard";
-import {useThemeContext} from "../../Components/ThemeContext";
-import {useTranslation} from "react-i18next";
-import {Document} from "../../Assets/Document";
-import DocumentListDialog, {DocumentListDialogRef} from "./Components/DocumentListDialog";
+import { useThemeContext } from "../../Components/ThemeContext";
+import { useTranslation } from "react-i18next";
+import { Document } from "../../Assets/Document";
+import DocumentListDialog, { DocumentListDialogRef } from "./Components/DocumentListDialog";
 
 export default function GoodsReceiptReport() {
-    const {loading, setLoading, setError} = useThemeContext();
-    const {t} = useTranslation();
+    const { loading, setLoading, setError } = useThemeContext();
+    const { t } = useTranslation();
     const [documents, setDocuments] = useState<Document[]>([]);
     const [lastID, setLastID] = useState(-1);
     const [filters, setFilters] = useState<GoodsReceiptReportFilter | null>(null);
@@ -18,32 +18,40 @@ export default function GoodsReceiptReport() {
     const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
     const documentListDialogRef = useRef<DocumentListDialogRef>(null);
 
-    const onSubmit = (filters: GoodsReceiptReportFilter) => {
-        setFilters(filters);
-    }
+    const filtersRef = useRef<GoodsReceiptReportFilter | null>(filters);
+    const lastIDRef = useRef<number>(lastID);
 
     useEffect(() => {
-        loadData();
+        filtersRef.current = filters;
     }, [filters]);
+
+    useEffect(() => {
+        lastIDRef.current = lastID;
+    }, [lastID]);
+
+    const onSubmit = (filters: GoodsReceiptReportFilter) => {
+        setFilters(filters);
+        loadData(filters);
+    }
 
     function handleDocDetails(doc: Document) {
         setSelectedDocument(doc);
         documentListDialogRef?.current?.show();
     }
 
-    const loadData = () => {
-        if (filters == null || stop) {
+    const loadData = (filters: GoodsReceiptReportFilter | null) => {
+        if (stop || !filters) {
             return;
         }
         setLoading(true);
         fetchDocuments(filters)
             .then((data) => {
-                if ((data?.length??0) === 0) {
+                if ((data?.length ?? 0) === 0) {
                     setStop(true);
                     return;
                 }
                 setDocuments(prevDocs => [...prevDocs, ...data]);
-                setLastID(data[data.length-1].id)
+                setLastID(data[data.length - 1].id)
             })
             .catch((error) => setError(error))
             .finally(() => setLoading(false));
@@ -55,14 +63,13 @@ export default function GoodsReceiptReport() {
     }, [loading, lastID]);
 
     const handleScroll = () => {
-        if (window.innerHeight + document.documentElement.scrollTop <= document.documentElement.offsetHeight - 50 || loading || filters == null || stop) {
+        if (window.innerHeight + document.documentElement.scrollTop <= document.documentElement.offsetHeight - 50 || loading || !filtersRef.current || stop) {
             return;
         }
         setLoading(true);
-        setFilters(prevFilters => ({
-            ...prevFilters,
-            lastID: lastID
-        }));
+        const newFilters = { ...filtersRef.current, lastID: lastIDRef.current };
+        setFilters(newFilters);
+        loadData(newFilters);
     };
 
     return (
@@ -71,12 +78,12 @@ export default function GoodsReceiptReport() {
                 onSubmit={onSubmit}
                 onClear={() => setDocuments([])}
             />
-            <div style={{margin: "5px"}}>
+            <div style={{ margin: "5px" }}>
                 {documents.map((doc) => (
-                    <DocumentReportCard key={doc.id} doc={doc} docDetails={handleDocDetails}/>
+                    <DocumentReportCard key={doc.id} doc={doc} docDetails={handleDocDetails} />
                 ))}
             </div>
-            <DocumentListDialog ref={documentListDialogRef} doc={selectedDocument}/>
+            <DocumentListDialog ref={documentListDialogRef} doc={selectedDocument} />
         </ContentTheme>
     );
 }
