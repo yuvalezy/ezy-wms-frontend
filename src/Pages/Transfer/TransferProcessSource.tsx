@@ -17,10 +17,12 @@ import {ScrollableContent, ScrollableContentBox} from "../../Components/Scrollab
 import {ReasonType} from "../../Assets/Reasons";
 import Processes, {ProcessesRef} from "../../Components/Processes";
 import {updateLine} from "./Data/TransferProcess";
+import {useDateTimeFormat} from "../../Assets/DateFormat";
 
 export default function TransferProcessSource() {
     const {scanCode} = useParams();
     const {t} = useTranslation();
+    const { dateTimeFormat } = useDateTimeFormat();
     const [id, setID] = useState<number | null>();
     const [binLocation, setBinLocation] = useState<BinLocation | null>(null);
     const [enable, setEnable] = useState(false);
@@ -104,7 +106,7 @@ export default function TransferProcessSource() {
                     barcode: barcode,
                     itemCode: itemCode,
                     severity: MessageStripDesign.Information,
-                    timeStamp: date.toLocaleDateString() + " " + date.toLocaleTimeString()
+                    timeStamp: dateTimeFormat(date)
                 })
                 barcodeRef?.current?.clear();
                 loadRows();

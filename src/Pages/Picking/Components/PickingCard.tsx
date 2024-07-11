@@ -5,6 +5,7 @@ import {useTranslation} from "react-i18next";
 import {Button, Card, CardHeader, Icon, List, ProgressIndicator, StandardListItem} from "@ui5/webcomponents-react";
 import {Authorization} from "../../../Assets/Authorization";
 import {PickingDocument} from "../Data/PickingDocument";
+import {useDateTimeFormat} from "../../../Assets/DateFormat";
 
 type PickingCardProps = {
     picking: PickingDocument,
@@ -16,6 +17,7 @@ const PickingCard: React.FC<PickingCardProps> = ({picking, onAction, onUpdatePic
     const {t} = useTranslation();
     const navigate = useNavigate();
     const {user} = useAuth();
+    const { dateFormat } = useDateTimeFormat();
 
     function handleOpen(id: number) {
         navigate(`/pick/${id}`);
@@ -31,7 +33,7 @@ const PickingCard: React.FC<PickingCardProps> = ({picking, onAction, onUpdatePic
                         e.preventDefault();
                         handleOpen(picking.entry)
                     }}><strong>{t('number')}:</strong> {picking.entry}</a>)}
-                    {!handleOpenLink && (<><strong>{t('date')}:</strong> {new Date(picking.date).toLocaleDateString()}</>)}
+                    {!handleOpenLink && (<><strong>{t('date')}:</strong> {dateFormat(new Date(picking.date))}</>)}
                     <a style={{float: 'right'}} onClick={(e) => onAction(picking, 'qrcode')}>
                         <Icon name="qr-code" />
                     </a>

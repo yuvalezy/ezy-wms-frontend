@@ -4,6 +4,7 @@ import {useThemeContext} from "../../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {DetailUpdateParameters, Status} from "../../../Assets/Common";
 import {fetchTargetItemDetails, fetchTransfers, TargetItemDetail, TransferContent, TransferContentBin} from "../Data/Transfer";
+import {useDateTimeFormat} from "../../../Assets/DateFormat";
 
 export interface TransferTargetItemsDetailRef {
     show: (content: TransferContent, bin: TransferContentBin) => void;
@@ -17,6 +18,7 @@ export interface TransferTargetItemsDetailProps {
 
 const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsDetailProps, ref) => {
     const {t} = useTranslation();
+    const { dateFormat, timeFormat } = useDateTimeFormat();
     const {setLoading, setError} = useThemeContext();
     const dialogRef = useRef<DialogDomRef>(null);
     const [content, setContent] = useState<TransferContent | null>(null);
@@ -130,8 +132,8 @@ const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsD
                         <TableRow key={row.lineID}>
                             {enableUpdate && <TableCell><CheckBox checked={checkedRows[row.lineID]} onChange={(e) => handleCheckboxChange(row.lineID, e.target.checked ?? false)}/></TableCell>}
                             <TableCell>{row.employeeName}</TableCell>
-                            <TableCell>{row.timeStamp?.toLocaleDateString()}</TableCell>
-                            <TableCell>{row.timeStamp?.toLocaleTimeString()}</TableCell>
+                            <TableCell>{dateFormat(row.timeStamp)}</TableCell>
+                            <TableCell>{timeFormat(row.timeStamp)}</TableCell>
                             <TableCell>{enableUpdate && <Input type="Number" style={{textAlign: 'right', width: '100px'}} value={row.quantity.toString()}
                                               onChange={(e) => handleQuantityChange(row.lineID, parseInt(e.target.value ?? "0", 10))}/>}
                                 {!enableUpdate && row.quantity}</TableCell>

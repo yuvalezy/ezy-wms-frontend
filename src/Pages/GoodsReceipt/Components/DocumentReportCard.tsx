@@ -5,6 +5,7 @@ import {Document} from "../../../Assets/Document";
 import {useDocumentStatusToString} from "../../../Assets/DocumentStatusString";
 import {activeStatuses, processStatuses, useHandleOpen} from "../Data/GoodsReceiptUtils";
 import {useObjectName} from "../../../Assets/ObjectName";
+import {useDateTimeFormat} from "../../../Assets/DateFormat";
 
 type DocumentReportCardProps = {
     doc: Document
@@ -13,6 +14,7 @@ type DocumentReportCardProps = {
 
 const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc, docDetails}) => {
     const {t} = useTranslation();
+    const { dateFormat } = useDateTimeFormat();
     const documentStatusToString = useDocumentStatusToString();
     const handleOpen = useHandleOpen();
     const o = useObjectName();
@@ -45,13 +47,13 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc, docDetails}
                                 }
                             )
                         }</a></StandardListItem>}
-                <StandardListItem><strong>{t('docDate')}:</strong> {new Date(doc.date).toLocaleDateString()}
+                <StandardListItem><strong>{t('docDate')}:</strong> {dateFormat(new Date(doc.date))}
                 </StandardListItem>
                 <StandardListItem><strong>{t('createdBy')}:</strong> {doc.employee.name}</StandardListItem>
                 <StandardListItem><strong>{t('status')}:</strong> {documentStatusToString(doc.status)}
                 </StandardListItem>
                 {doc.statusDate &&
-                    <StandardListItem><strong>{t('statusDate')}:</strong> {new Date(doc.statusDate).toLocaleDateString()}
+                    <StandardListItem><strong>{t('statusDate')}:</strong> {dateFormat(new Date(doc.statusDate))}
                     </StandardListItem>}
                 <StandardListItem>
                     <a href="#" onClick={e => handleOpen(e, 'all', doc.id)}>{t('goodsReceiptReport')}</a>

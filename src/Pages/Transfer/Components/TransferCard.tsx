@@ -7,6 +7,7 @@ import {Authorization} from "../../../Assets/Authorization";
 import {useDocumentStatusToString} from "../../../Assets/DocumentStatusString";
 import {Transfer} from "../Data/Transfer";
 import {Status} from "../../../Assets/Common";
+import {useDateTimeFormat} from "../../../Assets/DateFormat";
 
 type TransferCardProps = {
     doc: Transfer,
@@ -17,6 +18,7 @@ const TransferCard: React.FC<TransferCardProps> = ({doc, onAction}) => {
     const {t} = useTranslation();
     const navigate = useNavigate();
     const {user} = useAuth();
+    const { dateFormat } = useDateTimeFormat();
 
     function handleOpen(id: number) {
         navigate(`/transfer/${id}`);
@@ -46,7 +48,7 @@ const TransferCard: React.FC<TransferCardProps> = ({doc, onAction}) => {
                         <Icon name="qr-code"/>
                     </a>
                 </StandardListItem>
-                <StandardListItem><strong>{t('docDate')}:</strong> {new Date(doc.date).toLocaleDateString()}</StandardListItem>
+                <StandardListItem><strong>{t('docDate')}:</strong> {dateFormat(new Date(doc.date))}</StandardListItem>
                 <StandardListItem><strong>{t('createdBy')}:</strong> {doc.employee.name}</StandardListItem>
                 <StandardListItem><strong>{t('status')}:</strong> {documentStatusToString(doc.status)}</StandardListItem>
                 {doc.comments && <StandardListItem><strong>{t('comment')}:</strong> {doc.comments}</StandardListItem>}

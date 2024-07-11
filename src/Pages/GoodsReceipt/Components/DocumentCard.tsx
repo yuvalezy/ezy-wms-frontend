@@ -9,6 +9,7 @@ import {Authorization} from "../../../Assets/Authorization";
 import {useDocumentStatusToString} from "../../../Assets/DocumentStatusString";
 import {Status} from "../../../Assets/Common";
 import {activeStatuses, processStatuses, useHandleOpen} from "../Data/GoodsReceiptUtils";
+import {useDateTimeFormat} from "../../../Assets/DateFormat";
 
 type DocumentCardProps = {
     doc: Document,
@@ -20,6 +21,7 @@ type DocumentCardProps = {
 const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor, action, docDetails}) => {
     const {t} = useTranslation();
     const o = useObjectName();
+    const { dateFormat } = useDateTimeFormat();
     const {user} = useAuth();
     const handleOpen = useHandleOpen();
 
@@ -60,7 +62,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor, action, doc
                                 }
                             )
                         }</a></StandardListItem>}
-                <StandardListItem><strong>{t('docDate')}:</strong> {new Date(doc.date).toLocaleDateString()}</StandardListItem>
+                <StandardListItem><strong>{t('docDate')}:</strong> {dateFormat(new Date(doc.date))}</StandardListItem>
                 <StandardListItem><strong>{t('createdBy')}:</strong> {doc.employee.name}</StandardListItem>
                 <StandardListItem><strong>{t('status')}:</strong> {documentStatusToString(doc.status)}</StandardListItem>
                 {supervisor &&

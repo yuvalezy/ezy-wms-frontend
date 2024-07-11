@@ -8,6 +8,7 @@ import {useTranslation} from "react-i18next";
 import {Icon, Label, Table, TableCell, TableColumn, TableGroupRow, TableRow} from '@ui5/webcomponents-react';
 import {CSSProperties, useState} from "react";
 import {useThemeContext} from "../../../Components/ThemeContext";
+import {useDateTimeFormat} from "../../../Assets/DateFormat";
 
 
 interface GoodsReceiptProcessDifferenceTableProps {
@@ -17,6 +18,7 @@ interface GoodsReceiptProcessDifferenceTableProps {
 
 const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifferenceTableProps> = ({id, data}) => {
     const {t} = useTranslation();
+    const { dateFormat, timeFormat } = useDateTimeFormat();
     const {setLoading, setAlert, setError} = useThemeContext();
     const [expandedRows, setExpandedRows] = useState<{ [key: number]: boolean }>({});
     const [expandedRowsData, setExpandedRowsData] = useState<{
@@ -128,8 +130,8 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
                                 {expandedRowsData[row.lineNumber].map((detail) => {
                                     let timeStamp = new Date(detail.timeStamp);
                                         return <TableRow key={detail.timeStamp}>
-                                            <TableCell><Label>{timeStamp.toLocaleDateString()}</Label></TableCell>
-                                            <TableCell><Label>{timeStamp.toLocaleTimeString()}</Label></TableCell>
+                                            <TableCell><Label>{dateFormat(timeStamp)}</Label></TableCell>
+                                            <TableCell><Label>{timeFormat(timeStamp)}</Label></TableCell>
                                             <TableCell><Label>{detail.employee}</Label></TableCell>
                                             <TableCell><Label>{detail.quantity}</Label></TableCell>
                                             <TableCell><Label>{detail.scannedQuantity}</Label></TableCell>

@@ -1,6 +1,6 @@
 import ContentTheme from "../../Components/ContentTheme";
 import {useParams} from "react-router-dom";
-import React, {CSSProperties, useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {Label, MessageStrip, Table, TableCell, TableColumn, TableRow} from "@ui5/webcomponents-react";
@@ -18,10 +18,12 @@ import ProcessAlert, {ProcessAlertValue} from "../../Components/ProcessAlert";
 import {ReasonType} from "../../Assets/Reasons";
 import Processes, {ProcessesRef} from "../../Components/Processes";
 import {ScrollableContentBox} from "../../Components/ScrollableContent";
+import {useDateTimeFormat} from "../../Assets/DateFormat";
 
 export default function CountingProcess() {
     const {scanCode} = useParams();
     const {t} = useTranslation();
+    const { dateTimeFormat } = useDateTimeFormat();
     const [id, setID] = useState<number | null>();
     const [binLocation, setBinLocation] = useState<BinLocation | null>(null);
     const [enable, setEnable] = useState(false);
@@ -122,7 +124,7 @@ export default function CountingProcess() {
                     barcode: barcode,
                     itemCode: itemCode,
                     severity: MessageStripDesign.Information,
-                    timeStamp: date.toLocaleDateString() + " " + date.toLocaleTimeString()
+                    timeStamp: dateTimeFormat(date)
                 })
                 barcodeRef?.current?.clear();
                 loadRows();

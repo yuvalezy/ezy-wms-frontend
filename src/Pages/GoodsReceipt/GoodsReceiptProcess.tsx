@@ -19,12 +19,14 @@ import {configUtils, delay} from "../../Assets/GlobalConfig";
 import {scanBarcode} from "../../Assets/ScanBarcode";
 import ProcessAlert, {AlertActionType, ProcessAlertValue} from "../../Components/ProcessAlert";
 import {ReasonType} from "../../Assets/Reasons";
-import {DocumentAddItemResponse, DocumentUpdateLineQuantityResponse} from "../../Assets/Document";
+import {DocumentAddItemResponse} from "../../Assets/Document";
 import Processes, {ProcessesRef} from "../../Components/Processes";
+import {useDateTimeFormat} from "../../Assets/DateFormat";
 
 export default function GoodsReceiptProcess() {
     const {scanCode} = useParams();
     const {t} = useTranslation();
+    const { dateTimeFormat } = useDateTimeFormat();
     const barcodeRef = useRef<InputDomRef>(null);
     const boxConfirmationDialogRef = useRef<BoxConfirmationDialogRef>(null);
     const [id, setID] = useState<number | null>();
@@ -50,8 +52,7 @@ export default function GoodsReceiptProcess() {
 
     const alert = (alert: ProcessAlertValue) => {
         let date = new Date(Date.now());
-        alert.timeStamp =
-            date.toLocaleDateString() + " " + date.toLocaleTimeString();
+        alert.timeStamp = dateTimeFormat(date);
         setAcceptValues([alert, ...acceptValues]);
     };
 

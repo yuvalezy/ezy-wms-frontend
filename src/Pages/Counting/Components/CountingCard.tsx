@@ -8,6 +8,7 @@ import {Authorization} from "../../../Assets/Authorization";
 import {useDocumentStatusToString} from "../../../Assets/DocumentStatusString";
 import {Counting} from "../../../Assets/Counting";
 import {Status} from "../../../Assets/Common";
+import {useDateTimeFormat} from "../../../Assets/DateFormat";
 
 type CountingCardProps = {
     doc: Counting,
@@ -16,7 +17,7 @@ type CountingCardProps = {
 
 const CountingCard: React.FC<CountingCardProps> = ({doc, handleAction}) => {
     const {t} = useTranslation();
-    const o = useObjectName();
+    const { dateFormat } = useDateTimeFormat();
     const navigate = useNavigate();
     const {user} = useAuth();
 
@@ -41,7 +42,7 @@ const CountingCard: React.FC<CountingCardProps> = ({doc, handleAction}) => {
                         <Icon name="qr-code" />
                     </a>
                 </StandardListItem>
-                <StandardListItem><strong>{t('docDate')}:</strong> {new Date(doc.date).toLocaleDateString()}</StandardListItem>
+                <StandardListItem><strong>{t('docDate')}:</strong> {dateFormat(new Date(doc.date))}</StandardListItem>
                 <StandardListItem><strong>{t('createdBy')}:</strong> {doc.employee.name}</StandardListItem>
                 <StandardListItem><strong>{t('status')}:</strong> {documentStatusToString(doc.status)}</StandardListItem>
                 <StandardListItem>

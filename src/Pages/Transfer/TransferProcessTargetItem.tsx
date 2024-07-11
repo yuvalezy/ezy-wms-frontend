@@ -18,10 +18,12 @@ import {ReasonType} from "../../Assets/Reasons";
 import {updateLine} from "./Data/TransferProcess";
 import TransferTargetItemsDetailsDialog, {TransferTargetItemsDetailRef} from "./Components/TransferTargetItemDetails";
 import {Authorization} from "../../Assets/Authorization";
+import {useDateTimeFormat} from "../../Assets/DateFormat";
 
 export default function TransferProcessTargetItem() {
     const {scanCode, itemCode} = useParams();
     const {t} = useTranslation();
+    const { dateTimeFormat } = useDateTimeFormat();
     const [id, setID] = useState<number | null>();
     const [supervisor, setSupervisor] = useState<boolean>(false);
     const {setLoading, setError} = useThemeContext();
@@ -79,7 +81,7 @@ export default function TransferProcessTargetItem() {
                     quantity: 1,
                     itemCode: itemCode,
                     severity: MessageStripDesign.Information,
-                    timeStamp: date.toLocaleDateString() + " " + date.toLocaleTimeString()
+                    timeStamp: dateTimeFormat(date)
                 })
                 binRef?.current?.clear();
                 loadData()
