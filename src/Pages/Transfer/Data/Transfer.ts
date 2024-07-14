@@ -27,6 +27,7 @@ export type TransferContent = {
     name: string;
     quantity: number;
     openQuantity: number;
+    binQuantity?: number;
     progress?: number;
     bins?: TransferContentBin[];
 }
@@ -218,11 +219,12 @@ export const addItem = async (params: addItemParameters): Promise<TransferAddIte
 }
 
 export type transferContentParameters = {
-    id: number;
-    type: SourceTarget;
-    binEntry?: number;
-    targetBins?: boolean,
+    id: number
+    type: SourceTarget
+    binEntry?: number
+    targetBins?: boolean
     itemCode?: string
+    targetBinQuantity?: boolean
 }
 export const fetchTransferContent = async (params: transferContentParameters): Promise<TransferContent[]> => {
     try {

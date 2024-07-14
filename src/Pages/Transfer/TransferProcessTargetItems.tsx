@@ -8,7 +8,16 @@ import {useAuth} from "../../Components/AppContext";
 import {BarCodeScannerRef} from "../../Components/BarCodeScanner";
 import {fetchTransferContent, TransferContent} from "./Data/Transfer";
 import {ScrollableContent} from "../../Components/ScrollableContent";
-import {Button, Label, ProgressIndicator, Table, TableCell, TableColumn, TableRow} from "@ui5/webcomponents-react";
+import {
+    Button,
+    Label,
+    ProgressIndicator,
+    Table,
+    TableCell,
+    TableColumn,
+    TableGroupRow,
+    TableRow
+} from "@ui5/webcomponents-react";
 import {SourceTarget} from "../../Assets/Common";
 
 export default function TransferProcessTarget() {
@@ -67,21 +76,24 @@ export default function TransferProcessTarget() {
                             <TableColumn><Label>{t('code')}</Label></TableColumn>
                             <TableColumn><Label>{t('description')}</Label></TableColumn>
                             <TableColumn><Label>{t('openQuantity')}</Label></TableColumn>
-                            <TableColumn><Label>{t('progress')}</Label></TableColumn>
                         </>}
                     >
                         {rows.map((row) => (
-                            <TableRow key={row.code}>
-                                <TableCell>
-                                    <Button icon="begin" onClick={() => handleOpen(row.code)}>
-                                        {t("select")}
-                                    </Button>
-                                </TableCell>
-                                <TableCell><Label>{row.code}</Label></TableCell>
-                                <TableCell><Label>{row.name}</Label></TableCell>
-                                <TableCell><Label>{row.openQuantity}</Label></TableCell>
-                                <TableCell><ProgressIndicator value={row.progress}/></TableCell>
-                            </TableRow>
+                            <>
+                                <TableRow key={row.code}>
+                                    <TableCell>
+                                        <Button icon="begin" onClick={() => handleOpen(row.code)}>
+                                            {t("select")}
+                                        </Button>
+                                    </TableCell>
+                                    <TableCell><Label>{row.code}</Label></TableCell>
+                                    <TableCell><Label>{row.name}</Label></TableCell>
+                                    <TableCell><Label>{row.openQuantity}</Label></TableCell>
+                                </TableRow>
+                                <TableGroupRow>
+                                    <ProgressIndicator value={row.progress}/>
+                                </TableGroupRow>
+                            </>
                         ))}
                     </Table>
                 </ScrollableContent>

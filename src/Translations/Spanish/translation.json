@@ -98,6 +98,7 @@
   "customer": "Cliente",
   "customerName": "Nombre de Cliente",
   "openQuantity": "Cantidad Abierta",
+  "binQuantity": "Cantidad Ubicación",
   "quantity": "Cantidad",
   "scannedQuantity": "Cantidad Escaneada",
   "documentQuantity": "Cantidad Document",
