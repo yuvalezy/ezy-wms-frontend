@@ -129,7 +129,8 @@
   "selectBox": "Select Box",
   "selectTransferSource": "Choose Pickup Location",
   "selectItemsForTransfers": "Select Items for Transfer #{0}",
-  "selectTransferTarget": "Choose Items for Destination",
+  "selectTransferTargetItems": "Choose Items for Destination",
+  "selectTransferTargetBins": "Choose Bins for Destination",
 
   "binCheck": "Bin Check",
   "scanBinLocation": "Scan Bin Location",

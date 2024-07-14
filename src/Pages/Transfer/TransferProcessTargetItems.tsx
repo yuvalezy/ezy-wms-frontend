@@ -22,7 +22,7 @@ export default function TransferProcessTarget() {
     const [rows, setRows] = useState<TransferContent[] | null>(null);
     const navigate = useNavigate();
 
-    const title = `${t("transfer")} #${scanCode} - ${t("selectTransferTarget")}`;
+    const title = `${t("transfer")} #${scanCode} - ${t("selectTransferTargetItems")}`;
 
     useEffect(() => {
         setEnable(!user?.binLocations ?? false);
@@ -54,7 +54,7 @@ export default function TransferProcessTarget() {
     }
 
     function handleOpen(code: string) {
-        navigate(`/transfer/${id}/target/${code}`);
+        navigate(`/transfer/${id}/targetItems/${code}`);
     }
 
     return (

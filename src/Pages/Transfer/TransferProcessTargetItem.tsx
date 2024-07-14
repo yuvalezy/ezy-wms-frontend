@@ -35,7 +35,7 @@ export default function TransferProcessTargetItem() {
     const processesRef = useRef<ProcessesRef>(null);
     const detailDialogRef = useRef<TransferTargetItemsDetailRef>(null);
 
-    const title = `${t("transfer")} #${scanCode} - ${t("selectTransferTarget")}`;
+    const title = `${t("transfer")} #${scanCode} - ${t("selectTransferTargetItems")}`;
 
     useEffect(() => {
         if (scanCode == null || !IsNumeric(scanCode) || itemCode == null) {
@@ -124,7 +124,7 @@ export default function TransferProcessTargetItem() {
     }
 
     function navigateBack() {
-        navigate(`/transfer/${id}/target`);
+        navigate(`/transfer/${id}/targetItems`);
     }
 
     function onUpdate(data: DetailUpdateParameters) {

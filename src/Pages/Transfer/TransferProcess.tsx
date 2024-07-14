@@ -68,10 +68,16 @@ export default function TransferProcess() {
                             <span>{t("selectTransferSource")}</span>
                         </div>
                     </Link>
-                    <Link to={`/transfer/${id}/target`} key="1" className="homeMenuItemLink">
+                    <Link to={`/transfer/${id}/targetBins`} key="1" className="homeMenuItemLink">
                         <div className="homeMenuItem">
                             <Icon design="NonInteractive" name="map" className="homeMenuItemIcon"/>
-                            <span>{t("selectTransferTarget")}</span>
+                            <span>{t("selectTransferTargetBins")}</span>
+                        </div>
+                    </Link>
+                    <Link to={`/transfer/${id}/targetItems`} key="1" className="homeMenuItemLink">
+                        <div className="homeMenuItem">
+                            <Icon design="NonInteractive" name="map" className="homeMenuItemIcon"/>
+                            <span>{t("selectTransferTargetItems")}</span>
                         </div>
                     </Link>
                     <div onClick={() => qrRef?.current?.show(true)} key="btnQR" className="homeMenuItemLink" style={{cursor: 'pointer'}}>
