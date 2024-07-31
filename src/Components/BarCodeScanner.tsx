@@ -9,7 +9,8 @@ import {useTranslation} from "react-i18next";
 
 export interface BarCodeScannerProps {
     enabled: boolean;
-    onAddItem: (itemCode: string, barcode: string) => void;
+    item?: boolean;
+    onAddItem: (item: Item) => void;
     onAddAction?: () => void;
     addActionLabel?: string;
     addActionIcon?: string;
@@ -21,7 +22,7 @@ export interface BarCodeScannerRef {
     getValue: () => string;
 }
 
-const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>(({enabled, onAddItem, onAddAction, addActionLabel, addActionIcon}, ref) => {
+const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>(({enabled, item, onAddItem, onAddAction, addActionLabel, addActionIcon}, ref) => {
     const barcodeRef = useRef<InputDomRef>(null);
     const [barcodeInput, setBarcodeInput] = useState('');
     const {setLoading, setAlert, setError} = useThemeContext();
@@ -47,12 +48,13 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>(({enab
     function handleScanBarcode(barcode: string) {
         try {
             if (barcode.length === 0) {
-                setAlert({message: t("barcodeRequired"), type: MessageStripDesign.Warning});
+                let message = !item ? t("barcodeRequired") : t("scanCodeRequired");
+                setAlert({message: message, type: MessageStripDesign.Warning});
                 return;
             }
 
             setLoading(true);
-            scanBarcode(barcode)
+            scanBarcode(barcode, item)
                 .then((items) => handleItems(items))
                 .catch((error) => {
                     setError(error);
@@ -74,15 +76,17 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>(({enab
         }
         let barcode = barcodeInput;
         if (items.length === 0) {
-            setError(StringFormat(t("barcodeNotFound"), barcode));
+            let template = !item ? t("barcodeNotFound") : t("codeNotFound");
+            setError(StringFormat(template, barcode));
             clearBarCode();
             setLoading(false);
             return;
         }
         if (items.length === 1) {
-            let itemCode = items[0].code;
+            let item = items[0];
+            item.barcode = barcode;
             barcodeRef?.current?.blur();
-            onAddItem(itemCode, barcode);
+            onAddItem(items[0]);
             // qtyPopupRef?.current?.show({barcode: barcode, itemCode: items[0].code});
             return;
         }
@@ -105,9 +109,11 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>(({enab
         // setLoading(false);
     }
 
+    const barcodeLabel = !item ? t("barcode") : t("code");
+
     return (
         <Form onSubmit={handleSubmit} style={{paddingBottom: '3px'}}>
-            <FormItem label="Barcode">
+            <FormItem label={barcodeLabel}>
                 <Input required
                        value={barcodeInput}
                        ref={barcodeRef}

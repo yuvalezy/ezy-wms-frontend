@@ -34,7 +34,10 @@ export default function TransferSupervisor() {
                 setTransfers((prevTransfers) =>
                     prevTransfers.filter((transfer) => transfer.id !== selectedTransferId)
                 );
-                setAlert({message: actionType === "approve" ? t("transferApproved") : t("transferCancelled"), type: MessageStripDesign.Positive});
+                setAlert({
+                    message: actionType === "approve" ? t("transferApproved") : t("transferCancelled"),
+                    type: MessageStripDesign.Positive
+                });
             })
             .catch((error) => {
                 setError(error);
@@ -56,7 +59,7 @@ export default function TransferSupervisor() {
         <TransferForm onNewTransfer={transfer => setTransfers((prevTransfers) => [transfer, ...prevTransfers])}/>
         <br/>
         <br/>
-        {transfers.map((transfer) => (
+        {transfers.map((transfer, index) => (
             <TransferCard key={transfer.id} doc={transfer} onAction={handleAction}/>
         ))}
         <MessageBox

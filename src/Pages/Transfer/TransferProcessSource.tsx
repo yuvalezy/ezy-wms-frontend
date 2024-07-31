@@ -6,7 +6,7 @@ import {useTranslation} from "react-i18next";
 import {Label, MessageStrip, Table, TableCell, TableColumn, TableRow} from "@ui5/webcomponents-react";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {useAuth} from "../../Components/AppContext";
-import {BinLocation, SourceTarget} from "../../Assets/Common";
+import {BinLocation, Item, SourceTarget} from "../../Assets/Common";
 import BarCodeScanner, {BarCodeScannerRef} from "../../Components/BarCodeScanner";
 import {addItem, fetchTransferContent, TransferContent} from "./Data/Transfer";
 import BinLocationScanner from "../../Components/BinLocationScanner";
@@ -89,11 +89,11 @@ export default function TransferProcessSource() {
             .finally(() => setLoading(false));
     }
 
-    function handleAddItem(itemCode: string, barcode: string) {
+    function handleAddItem(item: Item) {
         if (id == null) {
             return;
         }
-        addItem({id, itemCode, barcode, type: SourceTarget.Source, binEntry: binLocation?.entry})
+        addItem({id, itemCode: item.code, barcode: item.barcode, type: SourceTarget.Source, binEntry: binLocation?.entry})
             .then((v) => {
                 if (v.errorMessage != null) {
                     setError(v.errorMessage);
@@ -103,8 +103,8 @@ export default function TransferProcessSource() {
                 setCurrentAlert({
                     lineID: v.lineID,
                     quantity: 1,
-                    barcode: barcode,
-                    itemCode: itemCode,
+                    barcode: item.barcode,
+                    itemCode: item.code,
                     severity: MessageStripDesign.Information,
                     timeStamp: dateTimeFormat(date)
                 })

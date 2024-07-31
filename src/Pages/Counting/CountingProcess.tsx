@@ -5,7 +5,7 @@ import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {Label, MessageStrip, Table, TableCell, TableColumn, TableRow} from "@ui5/webcomponents-react";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
-import {BinLocation} from "../../Assets/Common";
+import {BinLocation, Item} from "../../Assets/Common";
 import {IsNumeric} from "../../Assets/Functions";
 import {delay} from "../../Assets/GlobalConfig";
 import {useAuth} from "../../Components/AppContext";
@@ -107,11 +107,11 @@ export default function CountingProcess() {
         loadRows();
     }
 
-    function handleAddItem(itemCode: string, barcode: string) {
+    function handleAddItem(item: Item) {
         if (id == null) {
             return;
         }
-        addItem(id, itemCode, barcode, binLocation?.entry)
+        addItem(id, item.code, item.barcode??"", binLocation?.entry)
             .then((v) => {
                 if (v.errorMessage != null) {
                     setError(v.errorMessage);
@@ -121,8 +121,8 @@ export default function CountingProcess() {
                 setCurrentAlert({
                     lineID: v.lineID,
                     quantity: 1,
-                    barcode: barcode,
-                    itemCode: itemCode,
+                    barcode: item.barcode,
+                    itemCode: item.code,
                     severity: MessageStripDesign.Information,
                     timeStamp: dateTimeFormat(date)
                 })

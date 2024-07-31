@@ -20,6 +20,12 @@ import {
 } from "@ui5/webcomponents-react";
 import {SourceTarget} from "../../Assets/Common";
 
+class TransferProcessTargetItemsValue extends React.Component {
+    render() {
+        return null;
+    }
+}
+
 export default function TransferProcessTarget() {
     const {scanCode} = useParams();
     const {t} = useTranslation();
@@ -70,6 +76,7 @@ export default function TransferProcessTarget() {
         <ContentTheme title={title} icon="functional-location" back={() => navigateBack()}>
             {rows &&
                 <ScrollableContent>
+                    {/*{rows.map((row) => (<TransferProcessTargetItemsValue/>))}*/}
                     <Table
                         columns={<>
                             <TableColumn></TableColumn>

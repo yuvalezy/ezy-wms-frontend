@@ -33,6 +33,7 @@ import CountingSummaryReport from "./Pages/Counting/CountingSummaryReport";
 import BinCheck from "./Pages/BinCheck/BinCheck";
 import GoodsReceiptProcessDifferenceReport from "./Pages/GoodsReceipt/GoodsReceiptProcessDifferenceReport";
 import TransferProcessTargetBins from "./Pages/Transfer/TransferProcessTargetBins";
+import TransferRequest from "./Pages/Transfer/TransferRequest";
 
 export default function App() {
     function getGoodsReceiptSupervisorAuthorizations() {
@@ -79,6 +80,7 @@ export default function App() {
                     <Route path="/transfer/:scanCode/targetItems" element={<ProtectedRoute authorization={Authorization.TRANSFER} element={<TransferProcessTargetItems/>}/>}/>
                     <Route path="/transfer/:scanCode/targetItems/:itemCode" element={<ProtectedRoute authorization={Authorization.TRANSFER} element={<TransferProcessTargetItem/>}/>}/>
                     <Route path="/transferSupervisor" element={<ProtectedRoute authorization={Authorization.TRANSFER_SUPERVISOR} element={<TransferSupervisor/>}/>}/>
+                    <Route path="/transferRequest" element={<ProtectedRoute authorization={Authorization.TRANSFER_REQUEST} element={<TransferRequest/>}/>}/>
                     <Route path="/" element={<ProtectedRoute element={<HomePage/>}/>}/>
                     <Route path="*" element={<NotFound/>}/>
                 </Routes>

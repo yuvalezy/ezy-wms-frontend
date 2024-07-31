@@ -7,4 +7,5 @@ export enum Authorization {
     COUNTING_SUPERVISOR = 'CountingSupervisor',
     TRANSFER = 'Transfer',
     TRANSFER_SUPERVISOR = 'TransferSupervisor',
+    TRANSFER_REQUEST = 'TransferRequest',
 }

@@ -44,10 +44,12 @@
   "barcodes": "Códigos de Barra",
   "unknown": "Desconocido",
   "clear": "Borrar",
+  "createRequest": "Create Request",
   "approved": "El documento ha sido finalizado con éxito.",
   "cancelled": "El documento ha sido cancelado con éxito.",
   "transferApproved": "La transferencia ha sido finalizado con éxito.",
   "transferCancelled": "La transferencia ha sido cancelado con éxito.",
+  "transferRequestCreated": "Se ha creado su solicitud de transferencia {0}.",
   "start": "Iniciar",
   "report": "Reporte",
   "back": "Regresar",
@@ -156,11 +158,13 @@
   "vendorRequired": "Debe seleccionar el proveedor",
   "documentRequired": "Debe introducir el numero de documento",
   "duplicateNotAllowed": "Valores duplicados no son permitidos.",
+  "duplicateItems":"El artículo con este código ya existe.",
   "invalidID": "Identificación Inválida",
   "scanCodeRequired": "Debe escanear un código",
   "barcodeRequired": "Debe escanear un código de barra",
   "barcodeOrItemRequired": "Debe escanear un código de barra or articulo",
   "barcodeNotFound": "No se encontro el codigo de barra \"{0}\"",
+  "codeNotFound": "No se encontro el codigo \"{0}\"",
   "multipleItemsError": "Codigo retorno multiples codigos de articulos:\n{0}.\nSolicite la correcion en el sistema e intente de nuevo.",
   "noExitData": "No tiene salidas o transferencias pendientes.",
   "invalidScanCode": "Código Erróneo",
@@ -183,6 +187,8 @@
   "isNotOpen": "no esta abierta",
   "pickOpenQuantityAlert": "El Picking #{0} aún tiene cantidad pendiente",
   "pickingUpdateSuccess": "La actualización del Picking #{0} se realizó con éxito",
+  "noAuthorizationOptions": "No tienes autorización para ver ninguna opción del menú.",
+  "scanItemBarCodeStart": "Escanee un artículo o código de barras para comenzar",
 
   "confirmAction": "Confirmar Acción",
   "confirmApproveDocument": "¿Está seguro que desea aprobar el documento #{0}?",
@@ -192,5 +198,6 @@
   "confirmFinishTransfer": "¿Está seguro que desea finalizar la transferencia #{0}?",
   "actionCannotReverse": "Esta acción no se puede revertir",
   "confirmItemBarCode": "¿Esta seguro que el codigo {1} le pertenece al articulo {0}?",
-  "confirmContinue": "¿Esta seguro que desea continuar?"
+  "confirmContinue": "¿Está seguro que desea continuar?",
+  "confirmRemoveItem": "¿Está seguro de que quiere eliminar el artículo {0}?"
 }

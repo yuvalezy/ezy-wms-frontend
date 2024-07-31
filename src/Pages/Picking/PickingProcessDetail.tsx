@@ -156,7 +156,7 @@ export default function PickingProcessDetail() {
                         </div>
                         <PickingProcessDetailContent items={detail.items}/>
                         {detail.totalOpenItems > 0 && <>
-                            {binLocation && <BarCodeScanner ref={barcodeRef} onAddItem={handleAddItem} enabled={enable}/>}
+                            {binLocation && <BarCodeScanner ref={barcodeRef} onAddItem={(item) => handleAddItem(item.code, item.barcode??"")} enabled={enable}/>}
                             <BinLocationScanner ref={binLocationRef} onChanged={onBinChanged} onClear={onBinClear}/>
                         </>}
                         <BoxConfirmationDialog

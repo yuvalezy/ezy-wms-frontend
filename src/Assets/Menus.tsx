@@ -30,6 +30,7 @@ import "@ui5/webcomponents-icons/dist/download.js"
 import "@ui5/webcomponents-icons/dist/functional-location.js"
 import "@ui5/webcomponents-icons/dist/map.js"
 import "@ui5/webcomponents-icons/dist/journey-depart.js"
+import "@ui5/webcomponents-icons/dist/request.js"
 import {globalSettings} from "./GlobalConfig";
 
 export interface MenuItem {
@@ -123,6 +124,12 @@ export function useMenus() {
             Text: t('transferSupervisor'),
             Authorization: Authorization.TRANSFER_SUPERVISOR,
             Icon: "journey-depart",
+        },
+        {
+            Link: "/transferRequest",
+            Text: t('transferRequest'),
+            Authorization: Authorization.TRANSFER_REQUEST,
+            Icon: "request",
         },
     ];
 

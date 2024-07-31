@@ -4,7 +4,8 @@ import {itemFatherMockup} from "./mockup";
 import axios from "axios";
 
 export const scanBarcode = async (
-    scanCode: string
+    scanCode: string,
+    item?: boolean
 ): Promise<Item[]> => {
     try {
         if (configUtils.isMockup) {
@@ -17,7 +18,7 @@ export const scanBarcode = async (
 
         const access_token = localStorage.getItem("token");
 
-        const url = `${globalConfig.baseURL}/api/General/ItemByBarCode?scanCode=${scanCode}`;
+        const url = `${globalConfig.baseURL}/api/General/ItemByBarCode?scanCode=${scanCode}&item=${item??false}`;
 
         const response = await axios.get<Item[]>(url, {
             headers: {

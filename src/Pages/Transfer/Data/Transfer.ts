@@ -367,3 +367,30 @@ export const transferAction = async (
         throw error; // Re-throwing so that the calling function can decide what to do with the error
     }
 };
+
+export const createRequest = async (contents: TransferContent[]) : Promise<number> => {
+    try {
+        // if (configUtils.isMockup) {
+        //     ...
+        // }
+
+        if (!globalConfig) throw new Error("Config has not been initialized!");
+
+        if (globalConfig.debug) await delay();
+
+        const access_token = localStorage.getItem("token");
+        const response = await axios.post<int>(
+            `${globalConfig.baseURL}/api/Transfer/CreateTransferRequest`,
+            contents,
+            {
+                headers: {
+                    Authorization: `Bearer ${access_token}`,
+                },
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error creating transfer request: ", error);
+        throw error; // Re-throwing so that the calling function can decide what to do with the error
+    }
+}

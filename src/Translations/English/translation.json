@@ -44,10 +44,12 @@
   "barcodes": "Barcodes",
   "unknown": "Unknown",
   "clear": "Clear",
+  "createRequest": "Crear Solicitud",
   "approved": "The document has been successfully completed.",
   "cancelled": "The document has been successfully cancelled.",
   "transferApproved": "The transfer has been successfully completed.",
   "transferCancelled": "The transfer has been successfully cancelled.",
+  "transferRequestCreated": "You transfer request {0} has been created.",
   "start": "Start",
   "report": "Report",
   "back": "Back",
@@ -156,11 +158,13 @@
   "vendorRequired": "A vendor must be selected",
   "documentRequired": "A document number must be entered",
   "duplicateNotAllowed": "Duplicate values are not allowed.",
+  "duplicateItems":"Item with this code already exists.",
   "invalidID": "Invalid ID",
   "scanCodeRequired": "A code must be scanned",
   "barcodeRequired": "A barcode must be scanned",
   "barcodeOrItemRequired": "A barcode or item must be scanned",
   "barcodeNotFound": "Barcode \"{0}\" not found",
+  "codeNotFound": "Code \"{0}\" not found",
   "multipleItemsError": "Code returns multiple item codes:\n{0}.\nRequest a correction in the system and try again.",
   "noExitData": "You have no pending exits or transfers.",
   "invalidScanCode": "Invalid Code",
@@ -183,6 +187,8 @@
   "isNotOpen": "is not open",
   "pickOpenQuantityAlert": "Picking #{0} still has open quantity",
   "pickingUpdateSuccess": "Picking update #{0} was successfully",
+  "noAuthorizationOptions": "You do not have authorization to view any menu options.",
+  "scanItemBarCodeStart": "Scan an item or barcode to start",
 
   "confirmAction": "Confirm Action",
   "confirmApproveDocument": "Are you sure you want to approve document #{0}?",
@@ -192,5 +198,6 @@
   "confirmFinishTransfer": "Are you sure you want to finish transfer #{0}?",
   "actionCannotReverse": "This action cannot be reversed",
   "confirmItemBarCode": "Are you sure that the code {1} belongs to the item {0}?",
-  "confirmContinue": "Do you want to continue?"
+  "confirmContinue": "Do you want to continue?",
+  "confirmRemoveItem": "Are you sure you want to remove item {0}?"
 }

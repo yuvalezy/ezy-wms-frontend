@@ -20,11 +20,12 @@ export interface ApplicationSettings {
     grpoCreateSupervisorRequired: boolean;
 }
 
-export interface Item {
+export type Item = {
     code: string;
     name: string;
     father: string;
     boxNumber?: number;
+    barcode?: string;
 }
 
 export type BinLocation = {
