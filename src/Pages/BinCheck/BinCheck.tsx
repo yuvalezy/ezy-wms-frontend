@@ -4,14 +4,12 @@ import {useTranslation} from "react-i18next";
 import {useThemeContext} from "../../Components/ThemeContext";
 import BinLocationScanner, {BinLocationScannerRef} from "../../Components/BinLocationScanner";
 import {BinLocation, SourceTarget} from "../../Assets/Common";
-import {addItem} from "../Transfer/Data/Transfer";
-import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
 import {useAuth} from "../../Components/AppContext";
 import {Label, MessageStrip, Table, TableCell, TableColumn, TableRow} from "@ui5/webcomponents-react";
 import {binCheck, BinContentResponse} from "./Bins";
 import {ScrollableContentBox} from "../../Components/ScrollableContent";
-import ProcessAlert from "../../Components/ProcessAlert";
 import {delay} from "../../Assets/GlobalConfig";
+import ExcelExporter from "../../Components/ExcelExporter";
 
 export default function BinCheck() {
     const {t} = useTranslation();
@@ -43,7 +41,23 @@ export default function BinCheck() {
         </ContentTheme>
     )
 
+    const excelHeaders = [
+        t("code"),
+        t("description"),
+        t("quantity"),
+    ];
+
+    function excelData() {
+        return binContent?.map((value) => [
+            value.itemCode,
+            value.itemName,
+            value.onHand,
+        ]) ?? [];
+    }
+
     return <ContentTheme title={t("binCheck")} icon="dimension">
+        {binContent && <ExcelExporter name="BinCheck" headers={excelHeaders} getData={excelData}
+                                      fileName={`bincheck_${binRef?.current?.getBin()}`}/>}
         <div className="themeContentStyle">
             <div className="containerStyle">
                 {binContent &&
@@ -51,7 +65,7 @@ export default function BinCheck() {
                         <Table
                             columns={<>
                                 <TableColumn><Label>{t('code')}</Label></TableColumn>
-                                <TableColumn><Label>{t('name')}</Label></TableColumn>
+                                <TableColumn><Label>{t('description')}</Label></TableColumn>
                                 <TableColumn><Label>{t('quantity')}</Label></TableColumn>
                             </>}
                         >
@@ -65,7 +79,7 @@ export default function BinCheck() {
                         </Table>
                     </ScrollableContentBox>
                 }
-                <BinLocationScanner ref={binRef} onScan={onScan} onChanged={() => {}} onClear={onBinClear}/>
+                <BinLocationScanner ref={binRef} onScan={onScan} onChanged={() => { }} onClear={onBinClear}/>
             </div>
         </div>
     </ContentTheme>
