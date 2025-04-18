@@ -8,7 +8,7 @@ import {
 } from "./Data/Report";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {MessageStrip, Panel, Title} from "@ui5/webcomponents-react";
+import {CheckBox, MessageStrip, Panel, Title} from "@ui5/webcomponents-react";
 import {useObjectName} from "../../Assets/ObjectName";
 import {IsNumeric} from "../../Assets/Functions";
 import GoodsReceiptProcessDifferenceTable from "./Components/GoodsReceiptProcessDifferenceTable";
@@ -22,6 +22,7 @@ export default function GoodsReceiptProcessDifferenceReport() {
     const {setLoading, setError} = useThemeContext();
     const [data, setData] = useState<GoodsReceiptValidateProcess[] | null>(null);
     const title = `${t("goodsReceipt")} - ${t("differencesReport")} #${scanCode}`;
+    const [displayPackage, setDisplayPackage] = useState(true);
 
     useEffect(() => {
         if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
@@ -50,10 +51,14 @@ export default function GoodsReceiptProcessDifferenceReport() {
         data?.forEach(value => {
             value.lines.forEach((line) => {
                 let itemCode = line.itemCode;
+                let quantity = line.quantity;
+                if (displayPackage) {
+                    quantity /= line.packUnit;
+                }
                 if (!itemMap[itemCode]) {
-                    itemMap[itemCode] = [itemCode, line.itemName, line.quantity];
+                    itemMap[itemCode] = [itemCode, line.itemName, quantity];
                 } else {
-                    itemMap[itemCode][2] = (itemMap[itemCode][2] as number) + line.quantity;
+                    itemMap[itemCode][2] = (itemMap[itemCode][2] as number) + quantity;
                 }
                 if (line.lineStatus !== ProcessLineStatus.OK && line.lineStatus !== ProcessLineStatus.ClosedLine) {
                     issueFoundMap[itemCode] = true;
@@ -71,7 +76,9 @@ export default function GoodsReceiptProcessDifferenceReport() {
             </Title>
             <ExcelExporter name="DifferenceReport" headers={excelHeaders} getData={excelData}
                            fileName={`goods_receipt_differences_${id}`}/>
-            <div>
+            <>
+                <CheckBox text={t('packageQuantity')} checked={displayPackage}
+                          onChange={(e) => setDisplayPackage(e.target.checked)}/>
                 {id && data?.map((value) => (
                     <Panel
                         className="break-before"
@@ -85,10 +92,10 @@ export default function GoodsReceiptProcessDifferenceReport() {
                             <strong>{t("supplierName")}: </strong>
                             {value.cardName}
                         </Title>
-                        <GoodsReceiptProcessDifferenceTable id={id} data={value}/>
+                        <GoodsReceiptProcessDifferenceTable displayPackage={displayPackage} id={id} data={value}/>
                     </Panel>
                 ))}
-            </div>
+            </>
             {data && <>
                 {data.length === 0 && (<MessageStrip hideCloseButton design="Warning">{t("nodata")}</MessageStrip>)}
             </>}
