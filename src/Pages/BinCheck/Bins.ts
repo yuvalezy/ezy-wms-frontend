@@ -1,10 +1,12 @@
 import axios from "axios";
-import {configUtils, delay, globalConfig} from "../../Assets/GlobalConfig";
+import {delay, globalConfig} from "../../Assets/GlobalConfig";
 
 export interface BinContentResponse {
     itemCode: string;
     itemName: string;
     onHand: number;
+    packUnit: number,
+    buyUnitMsr: string,
 }
 
 export const binCheck = async (
