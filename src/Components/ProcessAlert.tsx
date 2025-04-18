@@ -9,6 +9,8 @@ export interface ProcessAlertValue {
     barcode?: string | null;
     itemCode?: string | null;
     quantity?: number,
+    packUnit?: number,
+    buyUnitMsr?: string | null,
     timeStamp?: string;
     message?: string;
     severity: MessageStripDesign;
@@ -58,6 +60,12 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
                     <br/>
                     <span><strong>{t('quantity')}: </strong>{alert.quantity}</span>
                     <br/>
+                    {alert.packUnit &&
+                        <>
+                            <span><strong>{t('packageQuantity')}: </strong>{alert.quantity! * alert.packUnit!} {alert.buyUnitMsr}</span>
+                            <br/>
+                        </>
+                    }
                 </>}
                 {alert.message && (<><strong>{t('message')}: </strong>{alert.message}</>)}
                 {alert.multiple != null && alert.multiple.length > 0 && (<><br/><strong>{t('messages')}: </strong>{

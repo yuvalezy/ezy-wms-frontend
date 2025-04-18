@@ -95,7 +95,9 @@ export const addItemResponseMockup : DocumentAddItemResponse = {
     fulfillment: false,
     showroom: false,
     warehouse: false,
-    quantity: 5,
+    quantity: 1,
+    packUnit: 12,
+    buyUnitMsr: "DOZ"
 };
 
 export const UpdateLineReturnValueMockup: UpdateLineReturnValue =

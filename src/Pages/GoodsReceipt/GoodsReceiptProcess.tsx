@@ -152,7 +152,7 @@ export default function GoodsReceiptProcess() {
                     }
                 }
 
-                alert({lineID: data.lineID, barcode: barcode, itemCode: itemCode, message: message, severity: color, multiple: multiple, quantity: data.quantity});
+                alert({lineID: data.lineID, barcode, itemCode, message, severity: color, multiple, quantity: data.quantity, packUnit: data.packUnit, buyUnitMsr: data.buyUnitMsr});
             })
             .catch((error) => {
                 console.error(`Error performing action: ${error}`);
