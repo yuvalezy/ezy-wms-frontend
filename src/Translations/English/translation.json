@@ -104,6 +104,8 @@
   "quantity": "Quantity",
   "scannedQuantity": "Scanned Quantity",
   "documentQuantity": "Document Quantity",
+  "packageQuantity": "Package Quantity",
+  "packages": "Packages",
   "message": "Message",
   "messages": "Messages",
   "time": "Time",

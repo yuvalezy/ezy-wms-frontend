@@ -53,6 +53,7 @@ export const GoodsReceiptMockup = [
         delivery: 5,
         showroom: 3,
         stock: 2,
+        packUnit: 5
     },
 ];
 
