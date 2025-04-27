@@ -6,11 +6,11 @@ export const formatValueByPack = (value: number | null | undefined, packUnit: nu
   }
 
   // If calculation should not be applied, or packUnit is invalid, return original value
-  if (displayPackage || !packUnit || packUnit <= 0) {
+  if (!displayPackage || !packUnit || packUnit <= 0) {
     return value;
   }
 
-  const calculatedValue = value * packUnit;
+  const calculatedValue = value / packUnit;
 
   // Check if the result is an integer (has no decimal part)
   if (Number.isInteger(calculatedValue)) {
