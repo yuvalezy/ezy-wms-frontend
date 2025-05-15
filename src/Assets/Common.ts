@@ -88,3 +88,9 @@ export type DetailUpdateParameters = {
     removeRows: number[];
     quantityChanges: { [key: number]: number }
 };
+
+export enum UnitType {
+    Unit = 'Unit',
+    Dozen = 'Dozen',
+    Pack = 'Pack'
+}

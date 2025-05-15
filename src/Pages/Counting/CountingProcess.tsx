@@ -5,13 +5,13 @@ import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {Label, MessageStrip, Table, TableCell, TableColumn, TableRow} from "@ui5/webcomponents-react";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
-import {BinLocation, Item} from "../../Assets/Common";
+import {BinLocation, Item, UnitType} from "../../Assets/Common";
 import {IsNumeric} from "../../Assets/Functions";
 import {delay} from "../../Assets/GlobalConfig";
 import {useAuth} from "../../Components/AppContext";
 import BarCodeScanner, {BarCodeScannerRef} from "../../Components/BarCodeScanner";
 import {CountingContent} from "../../Assets/Counting";
-import BinLocationScanner from "../../Components/BinLocationScanner";
+import BinLocationScanner, {BinLocationScannerRef} from "../../Components/BinLocationScanner";
 import {addItem, updateLine} from "./Data/CountingProcess";
 import {fetchCountingContent} from "./Data/Counting";
 import ProcessAlert, {ProcessAlertValue} from "../../Components/ProcessAlert";
@@ -26,6 +26,7 @@ export default function CountingProcess() {
     const { dateTimeFormat } = useDateTimeFormat();
     const [id, setID] = useState<number | null>();
     const [binLocation, setBinLocation] = useState<BinLocation | null>(null);
+    const binLocationRef = useRef<BinLocationScannerRef>(null);
     const [enable, setEnable] = useState(false);
     const {setLoading, setAlert, setError} = useThemeContext();
     const {user} = useAuth();
@@ -38,15 +39,16 @@ export default function CountingProcess() {
 
     useEffect(() => {
         setEnable(!user?.binLocations ?? false);
-        if (enable) {
-            setTimeout(() => barcodeRef.current?.focus(), 1);
-        }
         if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
             setID(null);
             return;
         }
+        delay(1).then(() => {
+            barcodeRef.current?.focus();
+            binLocationRef.current?.focus();
+        });
         setID(parseInt(scanCode));
-    }, []);
+    }, [scanCode, user?.binLocations]);
 
     function onBinChanged(bin: BinLocation) {
         try {
@@ -65,6 +67,7 @@ export default function CountingProcess() {
         setRows(null);
         setEnable(false);
         setCurrentAlert(null);
+        delay(1).then(() => binLocationRef?.current?.focus());
     }
 
 
@@ -107,11 +110,11 @@ export default function CountingProcess() {
         loadRows();
     }
 
-    function handleAddItem(item: Item) {
+    function handleAddItem(item: Item, unit: UnitType) {
         if (id == null) {
             return;
         }
-        addItem(id, item.code, item.barcode??"", binLocation?.entry)
+        addItem(id, item.code, item.barcode??"", binLocation?.entry, unit)
             .then((v) => {
                 if (v.errorMessage != null) {
                     setError(v.errorMessage);
@@ -121,6 +124,11 @@ export default function CountingProcess() {
                 setCurrentAlert({
                     lineID: v.lineID,
                     quantity: 1,
+                    unit: unit,
+                    packUnit: v.packUnit,
+                    packUnitMsr: v.packMsr,
+                    buyUnit: v.numIn,
+                    buyUnitMsr: v.unitMsr,
                     barcode: item.barcode,
                     itemCode: item.code,
                     severity: MessageStripDesign.Information,
@@ -141,7 +149,7 @@ export default function CountingProcess() {
         <ContentTheme title={title} icon="product">
             <div className="themeContentStyle">
                 <div className="containerStyle">
-                    {user?.binLocations && <BinLocationScanner onChanged={onBinChanged} onClear={onBinClear}/>}
+                    {user?.binLocations && <BinLocationScanner ref={binLocationRef} onChanged={onBinChanged} onClear={onBinClear}/>}
                     <ScrollableContentBox borderUp={user?.binLocations??false}>
                         {currentAlert && <ProcessAlert alert={currentAlert} onAction={(type) => processesRef?.current?.open(type)}/>}
                         {rows != null && rows.length > 0 &&
@@ -169,7 +177,7 @@ export default function CountingProcess() {
                             </div>
                         }
                     </ScrollableContentBox>
-                    <BarCodeScanner ref={barcodeRef} enabled={enable} onAddItem={handleAddItem}/>
+                    {enable && <BarCodeScanner ref={barcodeRef} enabled unit onAddItem={handleAddItem}/>}
                 </div>
             </div>
             {currentAlert && id && <Processes ref={processesRef} id={id} alert={currentAlert} reasonType={ReasonType.Counting} onCancel={handleCancel}
