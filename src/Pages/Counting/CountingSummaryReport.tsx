@@ -34,7 +34,9 @@ export default function CountingSummaryReport() {
         t("bin"),
         t("code"),
         t("description"),
-        t("quantity")
+        t("units"),
+        t("dozens"),
+        t("packs")
     ];
 
     function excelData() {
@@ -42,7 +44,9 @@ export default function CountingSummaryReport() {
             item.binCode,
             item.itemCode,
             item.itemName,
-            item.quantity
+            item.unit,
+            item.dozen,
+            item.pack
         ])??[];
     }
     return (

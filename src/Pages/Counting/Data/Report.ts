@@ -10,7 +10,9 @@ export type CountingSummaryReportLine = {
     itemCode: string;
     itemName: string;
     binCode: string;
-    quantity: number;
+    unit: number;
+    dozen: number;
+    pack: number;
 }
 
 export const fetchCountingSummaryReport = async (id: number): Promise<CountingSummaryReportData> => {
