@@ -3,7 +3,7 @@ import {useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {Label, MessageStrip, Table, TableCell, TableColumn, TableRow} from "@ui5/webcomponents-react";
+import {Label, MessageStrip, Table, TableCell, TableColumn, TableGroupRow, TableRow} from "@ui5/webcomponents-react";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
 import {BinLocation, Item, UnitType} from "../../Assets/Common";
 import {IsNumeric} from "../../Assets/Functions";
@@ -156,16 +156,23 @@ export default function CountingProcess() {
                             <Table
                                 columns={<>
                                     <TableColumn><Label>{t('code')}</Label></TableColumn>
-                                    <TableColumn><Label>{t('description')}</Label></TableColumn>
-                                    <TableColumn><Label>{t('quantity')}</Label></TableColumn>
+                                    <TableColumn><Label>{t('units')}</Label></TableColumn>
+                                    <TableColumn><Label>{t('dozens')}</Label></TableColumn>
+                                    <TableColumn><Label>{t('packs')}</Label></TableColumn>
                                 </>}
                             >
                                 {rows.map((row) => (
-                                    <TableRow key={row.code}>
-                                        <TableCell><Label>{row.code}</Label></TableCell>
-                                        <TableCell><Label>{row.name}</Label></TableCell>
-                                        <TableCell><Label>{row.quantity}</Label></TableCell>
-                                    </TableRow>
+                                    <>
+                                        <TableRow key={row.code}>
+                                            <TableCell><Label>{row.code}</Label></TableCell>
+                                            <TableCell><Label>{row.unit}</Label></TableCell>
+                                            <TableCell><Label>{row.dozen}</Label></TableCell>
+                                            <TableCell><Label>{row.pack}</Label></TableCell>
+                                        </TableRow>
+                                        <TableGroupRow>
+                                                <Label>{t('description')}: {row.name}</Label>
+                                        </TableGroupRow>
+                                    </>
                                 ))}
                             </Table>
                         }

@@ -25,4 +25,7 @@ export type CountingContent = {
     code: string;
     name: string;
     quantity: number;
+    unit?: number;
+    dozen?: number;
+    pack?: number;
 }

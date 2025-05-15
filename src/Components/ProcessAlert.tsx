@@ -118,13 +118,13 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
             }
             {alert.unit !== UnitType.Unit && alert.buyUnit &&
               <>
-                  <span><strong>{t('dozenQuantity')}: </strong>{alert.quantity! * alert.buyUnit!} {alert.buyUnitMsr}</span>
+                  <span><strong>{t('dozenUnit')}: </strong>{alert.buyUnit!} {alert.buyUnitMsr}</span>
                   <br/>
               </>
             }
             {alert.unit === UnitType.Pack && alert.packUnit &&
               <>
-                  <span><strong>{t('packageQuantity')}: </strong>{alert.quantity! * alert.packUnit!} {alert.packUnitMsr}</span>
+                  <span><strong>{t('packageUnit')}: </strong>{alert.packUnit!} {alert.packUnitMsr}</span>
                   <br/>
               </>
             }
