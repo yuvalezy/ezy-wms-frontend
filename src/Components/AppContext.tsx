@@ -58,6 +58,7 @@ interface CompanyInfo {
 export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     const [user, setUser] = useState<User | null>(null);
     const [config, setConfig] = useState<Config | null>(null);
+    const [waitForTokenValidation, setWaitForTokenValidation] = useState(true);
 
     useEffect(() => {
         const fetchConfig = async () => {
@@ -96,6 +97,36 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     }, []);
 
     // Call the login function after setting the mock token
+    useEffect(() => {
+        // ...existing code...
+
+        const token = localStorage.getItem("token");
+        const expiry = localStorage.getItem("token_expiry");
+        if (token && expiry && new Date().getTime() < Number(expiry)) {
+            // Fetch user info and set user state
+            const fetchUser = async () => {
+                try {
+                    const response = await axios.get<User>(
+                      `${config?.baseURL}/api/General/UserInfo`,
+                      {
+                          headers: {
+                              Authorization: `Bearer ${token}`,
+                          },
+                      }
+                    );
+                    setUser(response.data);
+                } catch (error) {
+                    // Token might be invalid, clear it
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("token_expiry");
+                    setUser(null);
+                }
+            };
+            if (config) fetchUser().finally(() => setWaitForTokenValidation(false));
+        } else {
+            setWaitForTokenValidation(false);
+        }
+    }, [config]);
 
 
     const login = async (username: string, password: string) => {
@@ -202,7 +233,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     };
 
     const isAuthenticated = Boolean(
-        localStorage.getItem("token") && user !== null
+        localStorage.getItem("token") && (waitForTokenValidation || user !== null)
     );
 
     const value = {
