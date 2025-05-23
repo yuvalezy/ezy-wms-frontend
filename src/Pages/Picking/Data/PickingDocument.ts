@@ -60,6 +60,7 @@ export type pickingsParameters = {
     entry?: number;
     detail?: boolean;
     availableBins?: boolean;
+    status?: PickStatus[];
 }
 
 export interface PickingAddItemResponse {

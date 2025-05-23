@@ -50,7 +50,7 @@ export default function PickingSupervisor() {
     return (
         <ContentTheme title={t("pickSupervisor")} icon="kpi-managing-my-area">
             {pickings.map((pick) => (
-                <PickingCard key={pick.entry} picking={pick} onAction={handleAction} onUpdatePick={handleUpdatePick}/>
+                <PickingCard key={pick.entry} picking={pick} supervisor={true} onAction={handleAction} onUpdatePick={handleUpdatePick}/>
             ))}
             {pickings.length === 0 &&
                 <div style={{padding: '10px'}}>

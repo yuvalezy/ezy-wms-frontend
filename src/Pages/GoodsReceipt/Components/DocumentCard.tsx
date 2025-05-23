@@ -1,5 +1,4 @@
 import React from "react";
-// import {useNavigate} from "react-router-dom";
 import {useAuth} from "../../../Components/AppContext";
 import {useTranslation} from "react-i18next";
 import {Card, CardHeader, Icon, List, StandardListItem, Button} from "@ui5/webcomponents-react";
@@ -14,7 +13,7 @@ import {useDateTimeFormat} from "../../../Assets/DateFormat";
 type DocumentCardProps = {
     doc: Document,
     supervisor?: boolean,
-    action: (docId: number, action: 'approve' | 'cancel' | 'qrcode') => void,
+    action?: (docId: number, action: 'approve' | 'cancel' | 'qrcode') => void,
     docDetails: (doc: Document) => void
 }
 
@@ -40,9 +39,6 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
                 <StandardListItem>
                     {handleOpenLink && (<a href="#" onClick={(e) => handleOpen(e, 'open', doc.id)}><strong>{t('number')}:</strong> {doc.id}</a>)}
                     {!handleOpenLink && (<><strong>{t('number')}:</strong> {doc.id}</>)}
-                    {/*<a style={{float: 'right'}} onClick={(e) => action(doc.id, 'qrcode')}>*/}
-                    {/*    <Icon name="qr-code"/>*/}
-                    {/*</a>*/}
                 </StandardListItem>
                 {doc.businessPartner &&
                     <StandardListItem>
@@ -82,10 +78,10 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
                         }
                         <StandardListItem>
                             {doc.status === Status.InProgress && (
-                                <Button style={{marginRight: '10px'}} color="primary" onClick={() => action(doc.id, 'approve')} icon="complete">
+                                <Button style={{marginRight: '10px'}} color="primary" onClick={() => action?.(doc.id, 'approve')} icon="complete">
                                     {t('finish')}
                                 </Button>)}
-                            <Button icon="cancel" onClick={() => action(doc.id, 'cancel')}>
+                            <Button icon="cancel" onClick={() => action?.(doc.id, 'cancel')}>
                                 {t('cancel')}
                             </Button>
                         </StandardListItem>
