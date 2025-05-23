@@ -18,6 +18,7 @@ export interface User {
 export interface ApplicationSettings {
     grpoModificationSupervisor: boolean;
     grpoCreateSupervisorRequired: boolean;
+    transferTargetItems: boolean;
 }
 
 export type Item = {

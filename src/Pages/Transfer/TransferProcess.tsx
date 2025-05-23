@@ -13,9 +13,11 @@ import {
 } from "@ui5/webcomponents-react";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {getProcessInfo, transferAction} from "./Data/TransferDocument";
+import {useAuth} from "../../Components/AppContext";
 
 export default function TransferProcess() {
   const {scanCode} = useParams();
+  const {user} = useAuth();
   const {t} = useTranslation();
   const [id, setID] = useState<number | null>();
   const [info, setInfo] = useState<{ isComplete: boolean, comments: string | null }>({
@@ -86,12 +88,13 @@ export default function TransferProcess() {
                           <span>{t("selectTransferTargetBins")}</span>
                       </div>
                   </Link>
-                {/*<Link to={`/transfer/${id}/targetItems`} key="1" className="homeMenuItemLink">*/}
-                {/*    <div className="homeMenuItem">*/}
-                {/*        <Icon design="NonInteractive" name="map" className="homeMenuItemIcon"/>*/}
-                {/*        <span>{t("selectTransferTargetItems")}</span>*/}
-                {/*    </div>*/}
-                {/*</Link>*/}
+                {user?.settings.transferTargetItems &&
+                    <Link to={`/transfer/${id}/targetItems`} key="1" className="homeMenuItemLink">
+                        <div className="homeMenuItem">
+                            <Icon design="NonInteractive" name="map" className="homeMenuItemIcon"/>
+                            <span>{t("selectTransferTargetItems")}</span>
+                        </div>
+                    </Link>}
                   <div onClick={() => finish()} key="btnFinish" className={finishButtonClasses()}
                        style={{cursor: info.isComplete ? 'pointer' : 'not-allowed'}}>
                       <div className="homeMenuItem">

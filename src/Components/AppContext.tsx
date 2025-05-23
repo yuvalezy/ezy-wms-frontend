@@ -219,7 +219,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
             ],
             settings: {
                 grpoModificationSupervisor: true,
-                grpoCreateSupervisorRequired: true
+                grpoCreateSupervisorRequired: true,
+                transferTargetItems: true,
             }
         };
 
