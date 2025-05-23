@@ -1,5 +1,5 @@
 import ContentTheme from "../../Components/ContentTheme";
-import {Link, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
@@ -24,6 +24,7 @@ export default function TransferProcess() {
   });
   const {setLoading, setAlert, setError} = useThemeContext();
   const title = `${t("transfer")} #${scanCode}`;
+  const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(true);
@@ -48,6 +49,7 @@ export default function TransferProcess() {
       transferAction(id, "approve")
         .then(() => {
           setAlert({message: t("transferApproved"), type: MessageStripDesign.Positive});
+          navigate(`/transfer`);
         })
         .catch((error) => {
           setError(error);
