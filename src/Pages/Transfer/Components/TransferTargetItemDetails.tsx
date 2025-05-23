@@ -3,7 +3,7 @@ import React, {forwardRef, useImperativeHandle, useRef, useState} from "react";
 import {useThemeContext} from "../../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {DetailUpdateParameters, Status} from "../../../Assets/Common";
-import {fetchTargetItemDetails, fetchTransfers, TargetItemDetail, TransferContent, TransferContentBin} from "../Data/Transfer";
+import {fetchTargetItemDetails, fetchTransfers, TargetItemDetail, TransferContent, TransferContentBin} from "../Data/TransferDocument";
 import {useDateTimeFormat} from "../../../Assets/DateFormat";
 
 export interface TransferTargetItemsDetailRef {

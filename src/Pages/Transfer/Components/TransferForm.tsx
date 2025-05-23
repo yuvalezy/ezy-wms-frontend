@@ -1,11 +1,11 @@
 import React, {useState} from "react";
 import {Button, Form, FormItem, Input, TextArea} from "@ui5/webcomponents-react";
 import {useTranslation} from "react-i18next";
-import {createTransfer, Transfer} from "../Data/Transfer";
+import {createTransfer, TransferDocument} from "../Data/TransferDocument";
 import {useThemeContext} from "../../../Components/ThemeContext";
 
 interface TransferFormProps {
-    onNewTransfer: (transfer: Transfer) => void;
+    onNewTransfer: (transfer: TransferDocument) => void;
 }
 
 const TransferForm: React.FC<TransferFormProps> = ({onNewTransfer,}) => {

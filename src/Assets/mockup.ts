@@ -4,7 +4,7 @@ import {PickingDocument, PickingDocumentDetail, PickingDocumentDetailItem, PickS
 import {DocumentAddItemResponse, ProcessResponse} from "./Document";
 import {Counting, CountingContent} from "./Counting";
 import {GoodsReceiptAllDetail} from "../Pages/GoodsReceipt/Data/Report";
-import {Transfer} from "../Pages/Transfer/Data/Transfer";
+import {TransferDocument} from "../Pages/Transfer/Data/TransferDocument";
 import {TransferAddItemResponse} from "../Pages/Transfer/Data/TransferProcess";
 
 enum UpdateLineReturnValue {
@@ -396,7 +396,7 @@ export const countProcessRows : CountingContent[] = [
     {code: "test18", name: "test18 name", quantity: 22},
     {code: "test19", name: "test19 name", quantity: 22},
 ]
-export const transferMockup : Transfer = {
+export const transferMockup : TransferDocument = {
     id: 1,
     date: "2023-11-03",
     employee: {

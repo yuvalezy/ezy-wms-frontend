@@ -10,7 +10,7 @@ interface TransferAddItemResponse {
     errorMessage?: string;
 }
 
-export type Transfer = {
+export type TransferDocument = {
     id: number;
     name?: string;
     date: string;
@@ -45,7 +45,7 @@ export enum TransfersOrderBy {
 export const createTransfer = async (
     name: string,
     comments: string,
-): Promise<Transfer> => {
+): Promise<TransferDocument> => {
     try {
         if (configUtils.isMockup) {
             console.log("Mockup data is being used.");
@@ -57,7 +57,7 @@ export const createTransfer = async (
         if (globalConfig.debug) await delay();
 
         const access_token = localStorage.getItem("token");
-        const response = await axios.post<Transfer>(
+        const response = await axios.post<TransferDocument>(
             `${globalConfig.baseURL}/api/Transfer/Create`, {name, comments},
             {
                 headers: {
@@ -109,7 +109,7 @@ export type TransferUpdateParameters = {
     desc?: boolean;
     progress?: boolean
 }
-export const fetchTransfers = async (params: TransferUpdateParameters): Promise<Transfer[]> => {
+export const fetchTransfers = async (params: TransferUpdateParameters): Promise<TransferDocument[]> => {
     if (params.statuses == null)
         params.statuses = params.id == null ? [Status.Open, Status.InProgress] : [];
     if (params.orderBy == null)
@@ -161,7 +161,7 @@ export const fetchTransfers = async (params: TransferUpdateParameters): Promise<
             globalConfig.baseURL
         }/api/Transfer/Transfers?${queryParams.toString()}`;
 
-        const response = await axios.get<Transfer[]>(url, {
+        const response = await axios.get<TransferDocument[]>(url, {
             headers: {
                 Authorization: `Bearer ${access_token}`,
             },

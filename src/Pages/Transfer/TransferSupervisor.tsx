@@ -3,7 +3,7 @@ import {useTranslation} from "react-i18next";
 import {MessageBox, MessageBoxActions, MessageStripDesign} from "@ui5/webcomponents-react";
 import React, {useEffect, useRef, useState} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
-import {fetchTransfers, Transfer, transferAction} from "./Data/Transfer";
+import {fetchTransfers, TransferDocument, transferAction} from "./Data/TransferDocument";
 import TransferCard from "./Components/TransferCard";
 import QRDialog, {QRDialogRef} from "../../Components/QRDialog";
 import {ObjectAction} from "../../Assets/Common";
@@ -14,7 +14,7 @@ export default function TransferSupervisor() {
     const qrRef = useRef<QRDialogRef>(null);
     const {t} = useTranslation();
     const {setLoading, setAlert, setError} = useThemeContext();
-    const [transfers, setTransfers] = useState<Transfer[]>([]);
+    const [transfers, setTransfers] = useState<TransferDocument[]>([]);
     const [selectedTransferId, setSelectedTransferId] = useState<number | null>(null);
     const [actionType, setActionType] = useState<ObjectAction | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -60,7 +60,7 @@ export default function TransferSupervisor() {
         <br/>
         <br/>
         {transfers.map((transfer, index) => (
-            <TransferCard key={transfer.id} doc={transfer} onAction={handleAction}/>
+            <TransferCard supervisor={true} key={transfer.id} doc={transfer} onAction={handleAction}/>
         ))}
         <MessageBox
             onClose={(e) => {

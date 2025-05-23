@@ -4,7 +4,7 @@ import {ScrollableContent, ScrollableContentBox} from "../../Components/Scrollab
 import BarCodeScanner, {BarCodeScannerRef} from "../../Components/BarCodeScanner";
 import React, {useEffect, useRef, useState} from "react";
 import {Item} from "../../Assets/Common";
-import {createRequest, TransferContent} from "./Data/Transfer";
+import {createRequest, TransferContent} from "./Data/TransferDocument";
 import {
     Button,
     Input,

@@ -5,7 +5,7 @@ import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {Grid, Icon, MessageStripDesign} from "@ui5/webcomponents-react";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
-import {checkIsComplete, transferAction} from "./Data/Transfer";
+import {checkIsComplete, transferAction} from "./Data/TransferDocument";
 import QRDialog, {QRDialogRef} from "../../Components/QRDialog";
 
 export default function TransferProcess() {

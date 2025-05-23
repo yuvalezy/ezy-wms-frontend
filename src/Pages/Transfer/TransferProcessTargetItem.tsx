@@ -6,7 +6,7 @@ import {useTranslation} from "react-i18next";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {useAuth} from "../../Components/AppContext";
 import {BinLocation, DetailUpdateParameters, SourceTarget} from "../../Assets/Common";
-import {addItem, fetchTransferContent, TransferContent, TransferContentBin, updateTransferTargetItem} from "./Data/Transfer";
+import {addItem, fetchTransferContent, TransferContent, TransferContentBin, updateTransferTargetItem} from "./Data/TransferDocument";
 import ProcessAlert, {ProcessAlertValue} from "../../Components/ProcessAlert";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
 import {ScrollableContent, ScrollableContentBox} from "../../Components/ScrollableContent";

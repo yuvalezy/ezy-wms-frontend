@@ -17,7 +17,7 @@ import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {useAuth} from "../../Components/AppContext";
 import {BinLocation, Item, SourceTarget} from "../../Assets/Common";
 import BarCodeScanner, {BarCodeScannerRef} from "../../Components/BarCodeScanner";
-import {addItem, fetchTransferContent, TransferContent} from "./Data/Transfer";
+import {addItem, fetchTransferContent, TransferContent} from "./Data/TransferDocument";
 import BinLocationScanner from "../../Components/BinLocationScanner";
 import {delay} from "../../Assets/GlobalConfig";
 import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";

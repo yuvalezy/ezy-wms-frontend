@@ -1,90 +1,30 @@
 import ContentTheme from "../../Components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "../../Components/ThemeContext";
-import React, {useEffect, useRef} from "react";
-import {useDocumentStatusToString} from "../../Assets/DocumentStatusString";
-import {Button, Form, FormItem, Input, InputDomRef, MessageStripDesign} from "@ui5/webcomponents-react";
-import {useNavigate} from "react-router-dom";
-import {IsNumeric, StringFormat} from "../../Assets/Functions";
-import {fetchTransfers} from "./Data/Transfer";
+import React, {useEffect, useRef, useState} from "react";
+import {fetchTransfers, TransferDocument} from "./Data/TransferDocument";
 import {Status} from "../../Assets/Common";
+import TransferCard from "./Components/TransferCard";
 
 export default function Transfer() {
-    const {setLoading, setAlert, setError} = useThemeContext();
-    const [scanCodeInput, setScanCodeInput] = React.useState("");
+    const {setLoading, setError} = useThemeContext();
     const {t} = useTranslation();
-    const documentStatusToString = useDocumentStatusToString();
-    const scanCodeInputRef = useRef<InputDomRef>(null);
+    const [transfers, setTransfers] = useState<TransferDocument[]>([]);
 
     useEffect(() => {
-        setTimeout(() => scanCodeInputRef?.current?.focus(), 1);
-    }, []);
-
-    const navigate = useNavigate();
-
-    function handleSubmit(e: React.FormEvent) {
-        e.preventDefault();
-        if (scanCodeInput.length === 0) {
-            setAlert({message: t("scanCodeRequired"), type: MessageStripDesign.Warning});
-            return;
-        }
-        let checkScan = scanCodeInput.split("_");
-        if (
-            checkScan.length !== 2 ||
-            (checkScan[0] !== "TRSF" && checkScan[0] !== "$TRSF") ||
-            !IsNumeric(checkScan[1])
-        ) {
-            setAlert({message: t("invalidScanCode"), type: MessageStripDesign.Warning});
-            return;
-        }
-        const id = parseInt(checkScan[1]);
         setLoading(true);
-        fetchTransfers({id})
-            .then((doc) => {
-                if (doc.length === 0) {
-                    setAlert({message: StringFormat(t("transferNotFound"), id), type: MessageStripDesign.Warning});
-                    return;
-                }
-                const status = doc[0].status;
-
-                if (status !== Status.Open && status !== Status.InProgress) {
-                    setAlert({message: StringFormat(
-                            t("transferStatusError"),
-                            id,
-                            documentStatusToString(status)
-                        ), type: MessageStripDesign.Warning});
-                    return;
-                }
-                navigate(`/transfer/${id}`);
-            })
+        fetchTransfers({statuses: [Status.Open, Status.InProgress]})
+            .then((data) => setTransfers(data))
             .catch((error) => setError(error))
             .finally(() => setLoading(false));
-    }
+    }, [setError, setLoading]);
 
     return (
         <ContentTheme title={t("transfer")} icon="move">
-            {ScanForm()}
+            {transfers.map((transfer, index) => (
+              <TransferCard key={transfer.id} doc={transfer}/>
+            ))}
         </ContentTheme>
     );
 
-    function ScanForm() {
-        return (
-            <Form onSubmit={handleSubmit}>
-                <FormItem label={t("code")}>
-                    <Input
-                        value={scanCodeInput}
-                        type="Password"
-                        ref={scanCodeInputRef}
-                        required
-                        onInput={(e) => setScanCodeInput(e.target.value as string)}
-                    />
-                </FormItem>
-                <FormItem>
-                    <Button type="Submit" icon="accept">
-                        {t("accept")}
-                    </Button>
-                </FormItem>
-            </Form>
-        )
-    }
 }
