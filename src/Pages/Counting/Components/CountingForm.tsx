@@ -16,10 +16,10 @@ const CountingForm: React.FC<CountingFormProps> = ({onNewCounting,}) => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (docNameInput === null || docNameInput === "") {
-            alert(t("idRequired"));
-            return;
-        }
+        // if (docNameInput === null || docNameInput === "") {
+        //     alert(t("idRequired"));
+        //     return;
+        // }
         setLoading(true);
         try {
             createCounting(docNameInput)

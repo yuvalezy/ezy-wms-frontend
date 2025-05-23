@@ -19,7 +19,7 @@ import GoodsReceiptSupervisor from "./Pages/GoodsReceipt/GoodsReceiptSupervisor"
 import GoodsReceiptReport from "./Pages/GoodsReceipt/GoodsReceiptReport";
 import GoodsReceiptVSExitReport from "./Pages/GoodsReceipt/GoodsReceiptVSExitReport";
 import GoodsReceiptAll from './Pages/GoodsReceipt/GoodsReceiptAll';
-import Counting from "./Pages/Counting/Counting";
+import CountingList from "./Pages/Counting/Counting";
 import CountingProcess from "./Pages/Counting/CountingProcess";
 import CountingSupervisor from "./Pages/Counting/CountingSupervisor";
 import {globalSettings} from "./Assets/GlobalConfig";
@@ -54,7 +54,7 @@ export default function App() {
                     <Route path="/binCheck" element={<ProtectedRoute authorizations={[Authorization.GOODS_RECEIPT_SUPERVISOR, Authorization.PICKING_SUPERVISOR, Authorization.COUNTING_SUPERVISOR, Authorization.TRANSFER_SUPERVISOR]} element={<BinCheck/>}/>}/>
                     <Route path="/itemCheck" element={<ProtectedRoute authorizations={[Authorization.GOODS_RECEIPT_SUPERVISOR, Authorization.PICKING_SUPERVISOR, Authorization.COUNTING_SUPERVISOR, Authorization.TRANSFER_SUPERVISOR]} element={<ItemCheck/>}/>}/>
                     {/*Counting*/}
-                    <Route path="/counting" element={<ProtectedRoute authorization={Authorization.COUNTING} element={<Counting/>}/>}/>
+                    <Route path="/counting" element={<ProtectedRoute authorization={Authorization.COUNTING} element={<CountingList/>}/>}/>
                     <Route path="/counting/:scanCode" element={<ProtectedRoute authorization={Authorization.COUNTING} element={<CountingProcess/>}/>}/>
                     <Route path="/countingSupervisor" element={<ProtectedRoute authorization={Authorization.COUNTING_SUPERVISOR} element={<CountingSupervisor/>}/>}/>
                     <Route path="/countingSummaryReport/:scanCode" element={<ProtectedRoute authorization={Authorization.COUNTING_SUPERVISOR} element={<CountingSummaryReport/>}/>}/>

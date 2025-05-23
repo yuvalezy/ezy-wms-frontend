@@ -68,7 +68,7 @@ export default function CountingSupervisor() {
             <br/>
             <br/>
             {countings.map((doc) => (
-                <CountingCard key={doc.id} doc={doc} handleAction={handleAction}/>
+                <CountingCard supervisor={true} key={doc.id} doc={doc} handleAction={handleAction}/>
             ))}
             <MessageBox
                 onClose={(e) => {
