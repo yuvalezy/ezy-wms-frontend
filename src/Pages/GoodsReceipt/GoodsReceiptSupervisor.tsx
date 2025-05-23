@@ -108,7 +108,7 @@ export default function GoodsReceiptSupervisor() {
                 )}
                 <br/> {t('actionCannotReverse')}
             </MessageBox>
-            <QRDialog ref={qrRef} prefix="GRPO" id={selectedDocumentId}/>
+            {/*<QRDialog ref={qrRef} prefix="GRPO" id={selectedDocumentId}/>*/}
             <DocumentListDialog ref={documentListDialogRef} doc={selectedDocument}/>
         </ContentTheme>
     );

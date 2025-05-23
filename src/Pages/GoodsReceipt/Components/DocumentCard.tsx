@@ -1,5 +1,5 @@
 import React from "react";
-import {useNavigate} from "react-router-dom";
+// import {useNavigate} from "react-router-dom";
 import {useAuth} from "../../../Components/AppContext";
 import {useTranslation} from "react-i18next";
 import {Card, CardHeader, Icon, List, StandardListItem, Button} from "@ui5/webcomponents-react";
@@ -13,12 +13,12 @@ import {useDateTimeFormat} from "../../../Assets/DateFormat";
 
 type DocumentCardProps = {
     doc: Document,
-    supervisor: boolean,
+    supervisor?: boolean,
     action: (docId: number, action: 'approve' | 'cancel' | 'qrcode') => void,
     docDetails: (doc: Document) => void
 }
 
-const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor, action, docDetails}) => {
+const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, action, docDetails}) => {
     const {t} = useTranslation();
     const o = useObjectName();
     const { dateFormat } = useDateTimeFormat();
@@ -35,14 +35,14 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor, action, doc
     }
 
     return (
-        <Card key={doc.id} header={<CardHeader titleText={`${t('id')} : ${doc.name}`}/>}>
+        <Card key={doc.id} header={doc.name ? <CardHeader titleText={`${t('id')} : ${doc.name}`}/> : undefined}>
             <List>
                 <StandardListItem>
                     {handleOpenLink && (<a href="#" onClick={(e) => handleOpen(e, 'open', doc.id)}><strong>{t('number')}:</strong> {doc.id}</a>)}
                     {!handleOpenLink && (<><strong>{t('number')}:</strong> {doc.id}</>)}
-                    <a style={{float: 'right'}} onClick={(e) => action(doc.id, 'qrcode')}>
-                        <Icon name="qr-code"/>
-                    </a>
+                    {/*<a style={{float: 'right'}} onClick={(e) => action(doc.id, 'qrcode')}>*/}
+                    {/*    <Icon name="qr-code"/>*/}
+                    {/*</a>*/}
                 </StandardListItem>
                 {doc.businessPartner &&
                     <StandardListItem>

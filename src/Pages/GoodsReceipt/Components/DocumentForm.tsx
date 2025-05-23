@@ -39,10 +39,10 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument,}) => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (docNameInput === null || docNameInput === "") {
-            alert(t("idRequired"));
-            return;
-        }
+        // if (docNameInput === null || docNameInput === "") {
+        //     alert(t("idRequired"));
+        //     return;
+        // }
         switch (selectedType) {
             case GoodsReceiptType.AutoConfirm:
                 // if (cardCodeInput.length === 0) {
