@@ -72,11 +72,11 @@ export const createTransfer = async (
         throw error;
     }
 };
-export const checkIsComplete = async (id: number): Promise<boolean> => {
+export const getProcessInfo = async (id: number): Promise<{isComplete: boolean, comments: string | null}> => {
     try {
         if (configUtils.isMockup) {
             console.log("Mockup data is being used.");
-            return true;
+            return {isComplete: true, comments: "test"};
         }
 
         if (!globalConfig) throw new Error("Config has not been initialized!");
@@ -84,8 +84,8 @@ export const checkIsComplete = async (id: number): Promise<boolean> => {
         if (globalConfig.debug) await delay();
 
         const access_token = localStorage.getItem("token");
-        const response = await axios.get<boolean>(
-            `${globalConfig.baseURL}/api/Transfer/IsComplete/${id}`,
+        const response = await axios.get<{isComplete: boolean, comments: string | null}>(
+            `${globalConfig.baseURL}/api/Transfer/ProcessInfo/${id}`,
             {
                 headers: {
                     Authorization: `Bearer ${access_token}`,

@@ -1,20 +1,25 @@
 import ContentTheme from "../../Components/ContentTheme";
 import {Link, useParams} from "react-router-dom";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {Grid, Icon, MessageStripDesign} from "@ui5/webcomponents-react";
+import {
+    FlexBox,
+    Icon,
+    MessageStrip,
+    MessageStripDesign,
+    FlexBoxDirection,
+    FlexBoxJustifyContent
+} from "@ui5/webcomponents-react";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
-import {checkIsComplete, transferAction} from "./Data/TransferDocument";
-import QRDialog, {QRDialogRef} from "../../Components/QRDialog";
+import {getProcessInfo, transferAction} from "./Data/TransferDocument";
 
 export default function TransferProcess() {
     const {scanCode} = useParams();
     const {t} = useTranslation();
     const [id, setID] = useState<number | null>();
-    const [enableFinish, setEnableFinish] = useState(false);
+    const [info, setInfo] = useState<{isComplete: boolean, comments: string | null}>({isComplete: false, comments: null});
     const {setLoading, setAlert, setError} = useThemeContext();
-    const qrRef = useRef<QRDialogRef>(null);
     const title = `${t("transfer")} #${scanCode}`;
 
     useEffect(() => {
@@ -25,15 +30,15 @@ export default function TransferProcess() {
         }
         let value = parseInt(scanCode);
         setID(value);
-        checkIsComplete(value)
-            .then((isComplete) => setEnableFinish(isComplete))
+        getProcessInfo(value)
+            .then((result) => setInfo(result))
             .catch((error) => setError(error))
             .finally(() => setLoading(false));
     }, []);
 
 
     function finish() {
-        if (!enableFinish || id == null)
+        if (!info.isComplete || id == null)
             return;
         if (window.confirm(StringFormat(t("createTransferConfirm"), id))) {
             setLoading(true);
@@ -50,49 +55,52 @@ export default function TransferProcess() {
 
     function finishButtonClasses(): string {
         let classNames = "homeMenuItemLink";
-        if (!enableFinish) {
+        if (!info.isComplete) {
             classNames += " disabled-div";
         }
         return classNames;
     }
 
-
     return (
         <ContentTheme title={title} icon="cause">
-            {id && <QRDialog ref={qrRef} prefix="TRSF" id={id}/>}
             {id &&
-                <Grid>
-                    <Link to={`/transfer/${id}/source`} key="0" className="homeMenuItemLink">
-                        <div className="homeMenuItem">
-                            <Icon design="NonInteractive" name="functional-location" className="homeMenuItemIcon"/>
-                            <span>{t("selectTransferSource")}</span>
-                        </div>
-                    </Link>
-                    <Link to={`/transfer/${id}/targetBins`} key="1" className="homeMenuItemLink">
-                        <div className="homeMenuItem">
-                            <Icon design="NonInteractive" name="map" className="homeMenuItemIcon"/>
-                            <span>{t("selectTransferTargetBins")}</span>
-                        </div>
-                    </Link>
-                    <Link to={`/transfer/${id}/targetItems`} key="1" className="homeMenuItemLink">
-                        <div className="homeMenuItem">
-                            <Icon design="NonInteractive" name="map" className="homeMenuItemIcon"/>
-                            <span>{t("selectTransferTargetItems")}</span>
-                        </div>
-                    </Link>
-                    <div onClick={() => qrRef?.current?.show(true)} key="btnQR" className="homeMenuItemLink" style={{cursor: 'pointer'}}>
-                        <div className="homeMenuItem">
-                            <Icon design="NonInteractive" name="qr-code" className="homeMenuItemIcon"/>
-                            <span>{t("qrCode")}</span>
-                        </div>
-                    </div>
-                    <div onClick={() => finish()} key="btnFinish" className={finishButtonClasses()} style={{cursor: 'pointer'}}>
-                        <div className="homeMenuItem">
-                            <Icon design="NonInteractive" name="accept" className="homeMenuItemIcon"/>
-                            <span>{t("finish")}</span>
-                        </div>
-                    </div>
-                </Grid>
+              <>
+                  <FlexBox direction={FlexBoxDirection.Column} justifyContent={FlexBoxJustifyContent.Start}
+                           style={{gap: '1rem'}}>
+                      <Link to={`/transfer/${id}/source`} key="0" style={{textDecoration: 'none'}}>
+                          <div className="homeMenuItem">
+                              <Icon design="NonInteractive" name="functional-location" className="homeMenuItemIcon"/>
+                              <span>{t("selectTransferSource")}</span>
+                          </div>
+                      </Link>
+                      <Link to={`/transfer/${id}/targetBins`} key="1" style={{textDecoration: 'none'}}>
+                          <div className="homeMenuItem">
+                              <Icon design="NonInteractive" name="map" className="homeMenuItemIcon"/>
+                              <span>{t("selectTransferTargetBins")}</span>
+                          </div>
+                      </Link>
+                      {/*<Link to={`/transfer/${id}/targetItems`} key="1" className="homeMenuItemLink">*/}
+                      {/*    <div className="homeMenuItem">*/}
+                      {/*        <Icon design="NonInteractive" name="map" className="homeMenuItemIcon"/>*/}
+                      {/*        <span>{t("selectTransferTargetItems")}</span>*/}
+                      {/*    </div>*/}
+                      {/*</Link>*/}
+                      <div onClick={() => finish()} key="btnFinish" className={finishButtonClasses()}
+                           style={{cursor: info.isComplete ? 'pointer' : 'not-allowed'}}>
+                          <div className="homeMenuItem">
+                              <Icon design="NonInteractive" name="accept" className="homeMenuItemIcon"/>
+                              <span>{t("finish")}</span>
+                          </div>
+                      </div>
+                  </FlexBox>
+                  {info.comments &&
+                    <MessageStrip
+                      design={MessageStripDesign.Information}
+                    >
+                        <strong>{t('comments')}: </strong>{info.comments}
+                    </MessageStrip>
+                  }
+              </>
             }
         </ContentTheme>
     );
