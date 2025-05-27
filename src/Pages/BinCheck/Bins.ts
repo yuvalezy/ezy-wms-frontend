@@ -5,8 +5,10 @@ export interface BinContentResponse {
     itemCode: string;
     itemName: string;
     onHand: number;
-    packUnit: number,
-    buyUnitMsr: string,
+    numInBuy: number;
+    buyUnitMsr: string;
+    purPackUn: number;
+    purPackMsr: string;
 }
 
 export const binCheck = async (

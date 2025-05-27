@@ -18,7 +18,6 @@ export default function BinCheck() {
   const binRef = useRef<BinLocationScannerRef>(null);
   const {user} = useAuth();
   const [binContent, setBinContent] = useState<BinContentResponse[] | null>(null);
-  const [displayPackage, setDisplayPackage] = useState(true);
 
   function onScan(bin: BinLocation) {
     try {
@@ -46,22 +45,20 @@ export default function BinCheck() {
   const excelHeaders = [
     t("code"),
     t("description"),
+    t("units"),
     t("quantity"),
+    t('packageQuantity')
   ];
-  if (displayPackage) {
-    excelHeaders.push(t('packageQuantity'));
-  }
 
   function excelData() {
     return binContent?.map((value) => {
-      let rowValue = [
+      const rowValue = [
         value.itemCode,
         value.itemName,
-        displayPackage ? value.onHand / value.packUnit : value.onHand,
+        value.onHand,
+        value.onHand / value.numInBuy,
+        value.onHand / value.numInBuy / value.purPackUn,
       ];
-      if (displayPackage) {
-        rowValue.push(`${value.onHand} ${value.buyUnitMsr}`)
-      }
       return rowValue;
     }) ?? [];
   }
@@ -72,23 +69,24 @@ export default function BinCheck() {
     <div className="themeContentStyle">
       <div className="containerStyle">
         {binContent &&
-            <><CheckBox text={t('packageQuantity')} checked={displayPackage}
-                        onChange={(e) => setDisplayPackage(e.target.checked)}/>
+            <>
                 <ScrollableContentBox>
                     <Table
                         columns={<>
                           <TableColumn><Label>{t('code')}</Label></TableColumn>
                           <TableColumn><Label>{t('description')}</Label></TableColumn>
+                          <TableColumn><Label>{t('units')}</Label></TableColumn>
                           <TableColumn><Label>{t('quantity')}</Label></TableColumn>
-                          {displayPackage && <TableColumn><Label>{t('packageQuantity')}</Label></TableColumn>}
+                          <TableColumn><Label>{t('packageQuantity')}</Label></TableColumn>
                         </>}
                     >
                       {binContent?.map((content) => (
                         <TableRow key={content.itemCode}>
                           <TableCell><Label>{content.itemCode}</Label></TableCell>
                           <TableCell><Label>{content.itemName}</Label></TableCell>
-                          <TableCell><Label>{displayPackage ? content.onHand / content.packUnit : content.onHand}</Label></TableCell>
-                          {displayPackage && <TableCell><Label>{content.onHand} {content.buyUnitMsr}</Label></TableCell>}
+                          <TableCell><Label>{content.onHand}</Label></TableCell>
+                          <TableCell><Label>{content.onHand / content.numInBuy}</Label></TableCell>
+                          <TableCell><Label>{content.onHand / content.numInBuy / content.purPackUn}</Label></TableCell>
                         </TableRow>
                       ))}
                     </Table>
