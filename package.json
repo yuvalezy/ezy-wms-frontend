@@ -2,6 +2,12 @@
   "name": "light_wms",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "start": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "@tailwindcss/cli": "^4.1.7",
     "@testing-library/jest-dom": "^5.17.0",
@@ -33,12 +39,6 @@
     "universal-cookie": "^6.1.1",
     "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5"
-  },
-  "scripts": {
-    "start": "vite",
-    "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
   },
   "eslintConfig": {
     "extends": [

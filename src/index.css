@@ -1,15 +1,558 @@
-@import "./tailwind.css";
+@import url('https://fonts.cdnfonts.com/css/ubuntu-titling') layer(base);
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import 'tailwindcss';
+
+@source '../node_modules/react-tailwindcss-select/dist/index.esm.js';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+    --color-border: hsl(var(--border));
+    --color-input: hsl(var(--input));
+    --color-ring: hsl(var(--ring));
+    --color-background: hsl(var(--background));
+    --color-foreground: hsl(var(--foreground));
+
+    --color-primary: hsl(var(--primary));
+    --color-primary-foreground: hsl(var(--primary-foreground));
+
+    --color-secondary: hsl(var(--secondary));
+    --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+    --color-tertiary: hsl(var(--tertiary));
+    --color-tertiary-foreground: hsl(var(--tertiary-foreground));
+
+    --color-quaternary: hsl(var(--quaternary));
+    --color-quaternary-foreground: hsl(var(--quaternary-foreground));
+
+    --color-destructive: hsl(var(--destructive));
+    --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+    --color-muted: hsl(var(--muted));
+    --color-muted-foreground: hsl(var(--muted-foreground));
+
+    --color-accent: hsl(var(--accent));
+    --color-accent-foreground: hsl(var(--accent-foreground));
+
+    --color-popover: hsl(var(--popover));
+    --color-popover-foreground: hsl(var(--popover-foreground));
+
+    --color-card: hsl(var(--card));
+    --color-card-foreground: hsl(var(--card-foreground));
+
+    --radius-lg: var(--radius);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-sm: calc(var(--radius) - 4px);
+
+    --animate-accordion-down: accordion-down 0.2s ease-out;
+    --animate-accordion-up: accordion-up 0.2s ease-out;
+    --animate-progress: progress 1s infinite linear;
+
+    --transform-origin-left-right: 0% 50%;
+
+    @keyframes accordion-down {
+        from {
+            height: 0;
+        }
+        to {
+            height: var(--radix-accordion-content-height);
+        }
+    }
+    @keyframes accordion-up {
+        from {
+            height: var(--radix-accordion-content-height);
+        }
+        to {
+            height: 0;
+        }
+    }
+    @keyframes progress {
+        0% {
+            transform: translateX(0) scaleX(0);
+        }
+        40% {
+            transform: translateX(0) scaleX(0.4);
+        }
+        100% {
+            transform: translateX(100%) scaleX(0.5);
+        }
+    }
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@utility container {
+    margin-inline: auto;
+    padding-inline: 2rem;
+    @media (width >= --theme(--breakpoint-sm)) {
+    max-width: none;
+}
+    @media (width >= 1400px) {
+        max-width: 1400px;
+    }
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
+    }
+}
+
+@utility external-link {
+    /* External link styling */
+    @apply text-primary hover:text-primary/80 transition-colors duration-200;
+}
+
+@utility table-cell {
+    /* Table cell styling */
+    @apply px-4 py-2;
+}
+
+@utility status-badge {
+    /* Status badge styling */
+    @apply px-3 py-1 rounded-full text-sm font-medium text-white;
+}
+
+@utility tenant-card {
+    /* Card view improvements */
+    @apply border border-border/50 hover:border-primary/30 transition-colors duration-200;
+}
+
+@utility dropdown-menu-item {
+    /* Dropdown menu styling */
+    @apply flex items-center px-3 py-2 text-sm cursor-pointer hover:bg-muted;
+}
+
+@utility action-button {
+    /* Action button styling */
+    @apply h-8 w-8 p-0 hover:bg-muted transition-colors duration-200;
+}
+
+@utility badge {
+    /* Badge styling */
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold;
+}
+
+@utility badge-primary {
+    @apply bg-primary/10 text-primary-foreground border border-primary/30;
+}
+
+@utility dialog-content {
+    /* Dialog styling improvements */
+    @apply p-6 rounded-lg shadow-lg border border-border;
+}
+
+@utility dialog-title {
+    @apply text-xl font-bold mb-4;
+}
+
+@utility card-cell-button {
+    /* Card cell button styling */
+    @apply text-xs font-medium transition-all duration-200;
+}
+
+@utility contact-card {
+    /* Contact card styling */
+    @apply border border-border/50 hover:border-primary/30 transition-colors duration-200;
+}
+
+@utility default-indicator {
+    /* Default contact indicator */
+    @apply bg-primary/10 text-primary border border-primary/30 px-2 py-0.5 rounded-full text-xs font-medium;
+}
+
+@layer utilities {
+    .dropdown-destructive-item {
+        @apply text-destructive focus:text-destructive hover:bg-destructive/10 dark:text-red-400 dark:focus:text-red-400 dark:hover:bg-destructive/20;
+    }
+}
+
+@layer base {
+    :root {
+        --background: 0 0% 100%;
+        --foreground: 222.2 84% 4.9%;
+
+        --card: 0 0% 100%;
+        --card-foreground: 222.2 84% 4.9%;
+
+        --popover: 0 0% 100%;
+        --popover-foreground: 222.2 84% 4.9%;
+
+        --primary: 25 100% 66%;
+        --primary-foreground: 0 0% 98%;
+
+        --secondary: 180 100% 10%;
+        --secondary-foreground: 0 0% 98%;
+
+        --tertiary: 120 50% 40%;
+        --tertiary-foreground: 0 0% 98%;
+
+        --quaternary: 80 60% 50%;
+        --quaternary-foreground: 0 0% 98%;
+
+        --muted: 210 40% 96.1%;
+        --muted-foreground: 215.4 16.3% 46.9%;
+
+        --accent: 210 40% 96.1%;
+        --accent-foreground: 222.2 47.4% 11.2%;
+
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 210 40% 98%;
+
+        --border: 214.3 31.8% 91.4%;
+        --input: 214.3 31.8% 91.4%;
+        --ring: 222.2 84% 4.9%;
+
+        --radius: 0.5rem;
+
+        --chart-1: 180 100% 10%; /* dark teal  */
+        --chart-2: 120 50% 40%; /* medium green  */
+        --chart-3: 25 100% 66%; /* orange color */
+        --chart-4: 80 60% 50%; /* yellowish-green */
+        --chart-5: 27 87% 67%; /* orange / amber */
+        --chart-6: 0 2% 95%; /* very light gray */
+        --chart-7: 0 80% 45%; /* red */
+    }
+
+    .dark {
+        --background: 222.2 84% 4.9%;
+        --foreground: 210 40% 98%;
+
+        --card: 222.2 84% 4.9%;
+        --card-foreground: 210 40% 98%;
+
+        --popover: 222.2 84% 4.9%;
+        --popover-foreground: 210 40% 98%;
+
+        --primary: 25 90% 30%;
+        --primary-foreground: 0 0% 98%;
+
+        --secondary: 217.2 32.6% 17.5%;
+        --secondary-foreground: 210 40% 98%;
+
+        --tertiary: 120 50% 40%;
+        --tertiary-foreground: 210 40% 98%;
+
+        --quaternary: 80 60% 50%;
+        --quaternary-foreground: 210 40% 98%;
+
+        --muted: 217.2 32.6% 17.5%;
+        --muted-foreground: 215 20.2% 65.1%;
+
+        --accent: 217.2 32.6% 17.5%;
+        --accent-foreground: 210 40% 98%;
+
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 210 40% 98%;
+
+        --border: 217.2 32.6% 17.5%;
+        --input: 217.2 32.6% 17.5%;
+        --ring: 212.7 26.8% 83.9%;
+    }
+
+    /* Table cell input styles */
+    .table-cell-input {
+        @apply transition-all duration-200;
+    }
+
+    .table-cell-input:focus {
+        @apply ring-1 ring-primary/30 border-primary/50;
+    }
+
+    .table-cell-button {
+        @apply transition-all duration-200 text-xs font-medium;
+    }
+
+    /* Table row hover effect */
+    .data-table-row {
+        @apply transition-colors duration-200;
+    }
+
+    .data-table-row:hover {
+        @apply bg-muted/50;
+    }
+
+    /* Table header styles */
+    .data-table-header {
+        @apply bg-muted/30 text-sm font-medium text-muted-foreground;
+    }
+
+    .form-panel {
+        @apply w-full rounded-lg border border-border p-4 bg-background shadow-sm space-y-4;
+    }
+}
+
+@layer utilities {
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    .animate-fadeIn {
+        animation: fadeIn 1s forwards;
+    }
+
+    .dark body {
+        background-color: hsl(var(--background));
+        color: hsl(var(--foreground));
+    }
+
+    ::-webkit-scrollbar {
+        width: 13px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: hsl(var(--primary));
+        border-radius: 20px;
+        border: 3px solid transparent;
+        background-clip: content-box;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: hsl(var(--primary) / 0.8);
+        cursor: pointer;
+    }
+
+    .dark .table-cell-input {
+        @apply bg-transparent text-foreground border-transparent;
+    }
+
+    .dark .table-cell-input:focus {
+        @apply bg-background border-primary ring-1 ring-primary/40;
+    }
+
+    .dark .table-cell-input[readonly] {
+        @apply bg-muted text-muted-foreground opacity-80;
+    }
+
+    .dark .data-table-row:hover {
+        @apply bg-muted/30;
+    }
+
+    .dark .data-table-header {
+        @apply bg-muted text-muted-foreground;
+    }
+
+    .dark input[type="date"]::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+    }
+
+    .dark input[readonly],
+    .dark textarea[readonly] {
+        @apply bg-muted text-muted-foreground opacity-90;
+    }
+
+    .spinner {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 5px solid #ccc;
+        border-top-color: hsl(25 100% 66%);
+        animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .rdp-vhidden {
+        @apply hidden;
+    }
+
+    .container {
+        --uib-size: 40px;
+        --uib-color: hsl(120 50% 40%);
+        --uib-speed: 1.3s;
+        --uib-dot-size: 25%;
+        position: relative;
+
+        width: var(--uib-size);
+        animation: spin var(--uib-speed) infinite linear;
+    }
+
+    .dot {
+        position: absolute;
+        left: calc(50% - var(--uib-dot-size) / 2);
+        height: 100%;
+        width: var(--uib-dot-size);
+    }
+
+    .dot:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 0%;
+        width: 100%;
+        padding-bottom: 100%;
+        background-color: var(--uib-color);
+        border-radius: 50%;
+        transition: background-color 0.3s ease;
+    }
+
+    .dot:nth-child(1) {
+        transform: rotate(120deg);
+    }
+
+    .dot:nth-child(1)::after {
+        animation: wobble var(--uib-speed) infinite ease-in-out;
+    }
+
+    .dot:nth-child(2) {
+        transform: rotate(-120deg);
+    }
+
+    .dot:nth-child(2)::after {
+        animation: wobble var(--uib-speed) infinite ease-in-out;
+    }
+
+    .dot:nth-child(3)::after {
+        animation: wobble var(--uib-speed) infinite ease-in-out;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes wobble {
+        0%,
+        100% {
+            transform: translateY(0%);
+        }
+        50% {
+            transform: translateY(65%);
+        }
+    }
+
+    .loader {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: inline-block;
+        position: relative;
+        border: 3px solid;
+        border-color: hsl(180 100% 10%) hsl(180 100% 10%) transparent;
+        box-sizing: border-box;
+        animation: rotation 1s linear infinite;
+    }
+
+    .loader::after {
+        content: '';
+        box-sizing: border-box;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        border: 3px solid;
+        border-color: transparent hsl(25, 96%, 70%) hsl(25, 96%, 70%);
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        animation: rotationBack 0.5s linear infinite;
+        transform-origin: center center;
+    }
+
+    /* small modifier */
+    .loader_smaller {
+        width: 24px;       /* half size */
+        height: 24px;
+        border-width: 2px; /* thinner border */
+    }
+    .loader_smaller::after {
+        width: 12px;
+        height: 12px;
+        border-width: 2px;
+    }
+
+    @keyframes rotation {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes rotationBack {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(-360deg);
+        }
+    }
+
+    @keyframes progress-bar {
+        from {
+            width: 0%;
+        }
+        to {
+            width: 100%;
+        }
+    }
+
+    .animate-progress-bar {
+        animation: progress-bar 3s linear forwards;
+    }
+
+    .external-link {
+        @apply text-primary hover:text-primary/80 transition-colors duration-200;
+    }
+
+    .table-cell-input {
+        @apply py-1 px-1 h-auto rounded-none border-t-transparent border-b-transparent border-l border-r
+        focus-visible:outline-hidden focus-visible:ring-0
+        focus-visible:outline-hidden! focus-visible:ring-0!
+        focus-visible:bg-orange-50
+        focus-visible:border-orange-400;
+    }
+
+    .table-cell-input[readonly] {
+        @apply text-gray-500 bg-gray-100;
+    }
+
+    .table-cell-button {
+        @apply py-1 px-2 h-auto border-t-0 border-b-0 items-center justify-center gap-2;
+    }
+
+    .card-cell-button {
+        @apply py-1 px-4 border-t-0 border-b-0 w-full items-center justify-center gap-2 flex-1 inline-flex;
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground overflow-hidden;
+        font-family: "Ubuntu Titling", sans-serif;
+    }
 }
