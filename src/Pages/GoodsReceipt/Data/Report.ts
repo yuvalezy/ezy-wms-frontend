@@ -5,7 +5,7 @@ import {
   GoodsReceiptMockup,
   goodsReceiptVSExitReportDataMockup
 } from "../../../Assets/mockup";
-import {DetailUpdateParameters} from "../../../Assets/Common";
+import {DetailUpdateParameters, UnitType} from "../../../Assets/Common";
 
 export type GoodsReceiptAll = {
   itemCode: string;
@@ -24,6 +24,7 @@ export type GoodsReceiptAllDetail = {
   employeeName: string;
   timeStamp: Date;
   quantity: number;
+  unit: UnitType;
 };
 
 export type GoodsReceiptVSExitReportData = {
@@ -125,11 +126,14 @@ export const fetchGoodsReceiptReportAllDetails = async (id: number, item: string
       },
     });
 
-    const goodsReceipts: GoodsReceiptAllDetail[] = response.data.map((item: any) => ({
+    const goodsReceipts: GoodsReceiptAllDetail[] = response.data.map((item: GoodsReceiptAllDetail) => ({
       lineID: item.lineID,
       employeeName: item.employeeName,
       timeStamp: new Date(item.timeStamp),
-      quantity: item.quantity
+      quantity: item.quantity,
+      unit: item.unit,
+      buyUnitMsr: "Doz",
+      purPackMsr: "Pack"
     }));
 
     return goodsReceipts;

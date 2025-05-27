@@ -12,12 +12,12 @@ import {
   TableRow,
   Title
 } from "@ui5/webcomponents-react";
-import React, {forwardRef, useEffect, useImperativeHandle, useRef, useState} from "react";
+import React, {forwardRef, useImperativeHandle, useRef, useState} from "react";
 import {useThemeContext} from "../../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {fetchGoodsReceiptReportAllDetails, GoodsReceiptAll, GoodsReceiptAllDetail} from "../Data/Report";
 import {fetchDocuments} from "../Data/Document";
-import {DetailUpdateParameters, Status} from "../../../Assets/Common";
+import {DetailUpdateParameters, Status, UnitType} from "../../../Assets/Common";
 import {useDateTimeFormat} from "../../../Assets/DateFormat";
 
 export interface GRPOAllDetailRef {
@@ -90,7 +90,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
   function handleQuantityChange(lineID: number, newValue: number) {
     setQuantityChanges(prevState => ({
       ...prevState,
-      [lineID]: newValue * currentData!.numInBuy,
+      [lineID]: newValue,
     }));
     setEnableUpdate(true);
   }
@@ -126,7 +126,6 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
       <Title level="H6">
         {currentData?.itemCode} - {currentData?.itemName}
       </Title>
-      <Label>{t('packageQuantity')}: {currentData?.numInBuy}</Label>
 
       {currentData && data &&
           <Table
@@ -136,12 +135,15 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                 <TableColumn><Label>{t('employee')}</Label></TableColumn>
                 <TableColumn><Label>{t('date')}</Label></TableColumn><TableColumn><Label>{t('time')}</Label></TableColumn>
                 <TableColumn><Label>{t('quantity')}</Label></TableColumn>
-                <TableColumn><Label>{t('packages')}</Label></TableColumn>
+                <TableColumn><Label>{t('unit')}</Label></TableColumn>
               </>}
           >
             {data.map((row) => {
-              const quantity = row.quantity / currentData.numInBuy;
-              const packageQuantity = quantityChanges[row.lineID] === undefined ? row.quantity : quantityChanges[row.lineID];
+              let quantity = row.quantity;
+              if (row.unit !== UnitType.Unit)
+                quantity /= currentData?.numInBuy;
+              if (row.unit === UnitType.Pack)
+                quantity /= currentData?.purPackUn;
               return (
                 <TableRow key={row.lineID}>
                   {enableUpdate && <TableCell><CheckBox checked={checkedRows[row.lineID]}
@@ -153,8 +155,12 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                       <Input type="Number" style={{textAlign: 'right', width: '100px'}}
                              value={quantity.toString()}
                              onChange={(e) => handleQuantityChange(row.lineID, parseInt(e.target.value ?? "0", 10))}/>}
-                    {!enableUpdate && row.quantity}</TableCell>
-                  <TableCell>{packageQuantity} {currentData.buyUnitMsr}</TableCell>
+                    {!enableUpdate && quantity}</TableCell>
+                  <TableCell>
+                    {row.unit === UnitType.Unit ? t('unit') :
+                    row.unit === UnitType.Dozen ? currentData.buyUnitMsr ?? t('purPackUn') :
+                    currentData.purPackMsr ?? t('packUn')}
+                  </TableCell>
                 </TableRow>
               );
             })}

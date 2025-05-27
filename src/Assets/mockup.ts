@@ -1,6 +1,11 @@
-import {BinLocation, ResponseStatus, Status} from "./Common";
+import {BinLocation, ResponseStatus, Status, UnitType} from "./Common";
 import {DeliveryOpenDocument} from "./Deliveries";
-import {PickingDocument, PickingDocumentDetail, PickingDocumentDetailItem, PickStatus} from "../Pages/Picking/Data/PickingDocument";
+import {
+    PickingDocument,
+    PickingDocumentDetail,
+    PickingDocumentDetailItem,
+    PickStatus
+} from "../Pages/Picking/Data/PickingDocument";
 import {DocumentAddItemResponse, ProcessResponse} from "./Document";
 import {Counting, CountingContent} from "./Counting";
 import {GoodsReceiptAll, GoodsReceiptAllDetail} from "../Pages/GoodsReceipt/Data/Report";
@@ -65,9 +70,9 @@ export const GoodsReceiptMockup : GoodsReceiptAll[] = [
 ];
 
 export const GoodsReceiptAllDetailMockup : GoodsReceiptAllDetail[] = [
-    {lineID: 1, timeStamp: new Date(), employeeName: "Test", quantity: 1},
-    {lineID: 2, timeStamp: new Date(), employeeName: "Test", quantity: 3},
-    {lineID: 3, timeStamp: new Date(), employeeName: "Test", quantity: 10},
+    {lineID: 1, timeStamp: new Date(), employeeName: "Test", quantity: 1, unit: UnitType.Unit},
+    {lineID: 2, timeStamp: new Date(), employeeName: "Test", quantity: 3, unit: UnitType.Dozen},
+    {lineID: 3, timeStamp: new Date(), employeeName: "Test", quantity: 10, unit: UnitType.Pack},
 ]
 
 export const goodsReceiptVSExitReportDataMockup = [
