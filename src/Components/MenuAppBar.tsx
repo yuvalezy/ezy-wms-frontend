@@ -76,31 +76,31 @@ const MenuAppBar: React.FC<MenuAppBarProps> = ({title, exportExcel, onExportExce
   };
 
   return (
-    <nav className="bg-gray-800 p-4 flex items-center justify-between relative z-20">
+    <nav className="bg-white p-4 flex items-center justify-between relative z-20 shadow-md">
       {/* Menu Toggle Button */}
-      <button onClick={toggleMenu} className="text-white focus:outline-none">
+      <button onClick={toggleMenu} className="text-gray-800 focus:outline-none cursor-pointer">
         <FontAwesomeIcon icon={faBars} size="lg" />
       </button>
 
       {/* Page Header */}
       <div className="flex-grow text-center">
-        <h1 className="text-white text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold truncate px-4">
+        <h1 className="text-gray-800 text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold truncate px-4">
           {title}
         </h1>
       </div>
 
       {/* Export to Excel Button */}
       {exportExcel && onExportExcel && (
-        <button onClick={onExportExcel} className="text-white focus:outline-none">
+        <button onClick={onExportExcel} className="text-gray-800 focus:outline-none cursor-pointer">
           <FontAwesomeIcon icon={faFileExcel} size="lg" />
         </button>
       )}
 
       {/* Sidebar Menu */}
-      <div className={`fixed top-0 left-0 h-full bg-gray-900 text-white w-64 transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out z-30 flex flex-col`}>
-        <div className="p-4 flex justify-between items-center"> {/* Removed md:hidden */}
+      <div className={`fixed top-0 left-0 h-full bg-white text-gray-800 w-64 transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out z-30 flex flex-col shadow-lg`}>
+        <div className="p-4 flex justify-between items-center">
           <h2 className="text-xl font-bold">Menu</h2>
-          <button onClick={toggleMenu} className="text-white focus:outline-none">
+          <button onClick={toggleMenu} className="text-gray-800 focus:outline-none cursor-pointer">
             <FontAwesomeIcon icon={faTimes} size="lg" />
           </button>
         </div>
@@ -109,7 +109,7 @@ const MenuAppBar: React.FC<MenuAppBarProps> = ({title, exportExcel, onExportExce
             <li key={index} className="mb-2">
               <button
                 onClick={() => handleMenuItemClick(item.Link)}
-                className={`flex items-center w-full text-left p-2 rounded hover:bg-gray-700 ${location.pathname === item.Link ? 'bg-gray-700' : ''}`}
+                className={`flex items-center w-full text-left p-2 rounded hover:bg-gray-200 ${location.pathname === item.Link ? 'bg-gray-200' : ''} cursor-pointer`}
               >
                 <FontAwesomeIcon icon={getFaIcon(item.Icon)} className="mr-3" />
                 {item.Text}
@@ -119,7 +119,7 @@ const MenuAppBar: React.FC<MenuAppBarProps> = ({title, exportExcel, onExportExce
           <li className="mb-2">
             <button
               onClick={handleLogout}
-              className="flex items-center w-full text-left p-2 rounded hover:bg-gray-700"
+              className="flex items-center w-full text-left p-2 rounded hover:bg-gray-200 cursor-pointer"
             >
               <FontAwesomeIcon icon={faSignOutAlt} className="mr-3" /> Logout
             </button>
@@ -129,7 +129,7 @@ const MenuAppBar: React.FC<MenuAppBarProps> = ({title, exportExcel, onExportExce
       {/* Overlay for mobile when menu is open */}
       {isMenuOpen && (
         <div
-          className="fixed inset-0 bg-black opacity-50 z-20" // Removed md:hidden
+          className="fixed inset-0 bg-black opacity-50 z-20"
           onClick={toggleMenu}
         ></div>
       )}
