@@ -8,7 +8,7 @@ import {
 } from "./Data/Report";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {CheckBox, MessageStrip, Panel, Title} from "@ui5/webcomponents-react";
+import { MessageStrip, Panel, Title} from "@ui5/webcomponents-react";
 import {useObjectName} from "../../Assets/ObjectName";
 import {IsNumeric} from "../../Assets/Functions";
 import GoodsReceiptProcessDifferenceTable from "./Components/GoodsReceiptProcessDifferenceTable";
@@ -22,7 +22,6 @@ export default function GoodsReceiptProcessDifferenceReport() {
     const {setLoading, setError} = useThemeContext();
     const [data, setData] = useState<GoodsReceiptValidateProcess[] | null>(null);
     const title = `${t("goodsReceipt")} - ${t("differencesReport")} #${scanCode}`;
-    const [displayPackage, setDisplayPackage] = useState(true);
 
     useEffect(() => {
         if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
@@ -52,9 +51,6 @@ export default function GoodsReceiptProcessDifferenceReport() {
             value.lines.forEach((line) => {
                 let itemCode = line.itemCode;
                 let quantity = line.quantity;
-                if (displayPackage) {
-                    quantity /= line.packUnit;
-                }
                 if (!itemMap[itemCode]) {
                     itemMap[itemCode] = [itemCode, line.itemName, quantity];
                 } else {
@@ -77,8 +73,6 @@ export default function GoodsReceiptProcessDifferenceReport() {
             <ExcelExporter name="DifferenceReport" headers={excelHeaders} getData={excelData}
                            fileName={`goods_receipt_differences_${id}`}/>
             <>
-                <CheckBox text={t('packageQuantity')} checked={displayPackage}
-                          onChange={(e) => setDisplayPackage(e.target.checked)}/>
                 {id && data?.map((value) => (
                     <Panel
                         className="break-before"
@@ -92,7 +86,7 @@ export default function GoodsReceiptProcessDifferenceReport() {
                             <strong>{t("supplierName")}: </strong>
                             {value.cardName}
                         </Title>
-                        <GoodsReceiptProcessDifferenceTable displayPackage={displayPackage} id={id} data={value}/>
+                        <GoodsReceiptProcessDifferenceTable id={id} data={value}/>
                     </Panel>
                 ))}
             </>

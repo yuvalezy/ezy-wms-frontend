@@ -15,14 +15,12 @@ import {formatValueByPack} from "../../../Assets/Quantities";
 interface GoodsReceiptProcessDifferenceTableProps {
   id: number,
   data: GoodsReceiptValidateProcess,
-  displayPackage: boolean
 }
 
 const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifferenceTableProps> = (
   {
     id,
     data,
-    displayPackage
   }) => {
   const {t} = useTranslation();
   const {dateFormat, timeFormat} = useDateTimeFormat();
@@ -118,8 +116,8 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
             <TableCell style={getRowStyle(row.lineStatus)}><Label>{row.lineNumber}</Label></TableCell>
             <TableCell style={getRowStyle(row.lineStatus)}><Label>{row.itemCode}</Label></TableCell>
             <TableCell style={getRowStyle(row.lineStatus)}><Label>{row.itemName}</Label></TableCell>
-            <TableCell style={getRowStyle(row.lineStatus)}><Label>{formatValueByPack(row.quantity, row.packUnit, displayPackage)}</Label></TableCell>
-            <TableCell style={getRowStyle(row.lineStatus)}><Label>{formatValueByPack(row.openInvQty, row.packUnit, displayPackage)}</Label></TableCell>
+            <TableCell style={getRowStyle(row.lineStatus)}><Label>{row.quantity}</Label></TableCell>
+            <TableCell style={getRowStyle(row.lineStatus)}><Label>{row.openInvQty}</Label></TableCell>
             <TableCell
               style={getRowStyle(row.lineStatus)}><Label>{getRowStatusLabel(row.lineStatus)}</Label></TableCell>
           </TableRow>

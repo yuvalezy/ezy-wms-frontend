@@ -58,8 +58,10 @@ export type GoodsReceiptValidateProcessLine = {
   quantity: number;
   baseLine: number;
   openInvQty: number;
-  packUnit: number;
+  numInBuy: number;
   buyUnitMsr: string;
+  purPackUn: number;
+  purPackMsr: string;
   lineStatus: ProcessLineStatus;
 }
 
