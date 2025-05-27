@@ -12,7 +12,7 @@ import { MessageStrip, Panel, Title} from "@ui5/webcomponents-react";
 import {useObjectName} from "../../Assets/ObjectName";
 import {IsNumeric} from "../../Assets/Functions";
 import GoodsReceiptProcessDifferenceTable from "./Components/GoodsReceiptProcessDifferenceTable";
-import ExcelExporter from "../../Components/ExcelExporter";
+import {exportToExcel} from "../../Utils/excelExport";
 
 export default function GoodsReceiptProcessDifferenceReport() {
     const [id, setID] = useState<number | null>();
@@ -65,13 +65,20 @@ export default function GoodsReceiptProcessDifferenceReport() {
         return Object.values(itemMap).filter((v) => issueFoundMap[v[0]]);
     }
 
+    const handleExportExcel = () => {
+        exportToExcel({
+            name: "DifferenceReport",
+            headers: excelHeaders,
+            getData: excelData,
+            fileName: `goods_receipt_differences_${id}`
+        });
+    };
+
     return (
-        <ContentTheme title={title} icon="manager-insight">
+        <ContentTheme title={title} exportExcel={true} onExportExcel={handleExportExcel}>
             <Title level="H1">
                 {t("goodsReceipt")} #{id}
             </Title>
-            <ExcelExporter name="DifferenceReport" headers={excelHeaders} getData={excelData}
-                           fileName={`goods_receipt_differences_${id}`}/>
             <>
                 {id && data?.map((value) => (
                     <Panel

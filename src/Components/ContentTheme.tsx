@@ -1,19 +1,21 @@
-import MenuAppBar, {MenuAppBarButton} from "./MenuAppBar";
+import MenuAppBar from "./MenuAppBar";
 import React from "react";
 import {ThemeProvider} from "@ui5/webcomponents-react";
 
 interface ContentThemeProps {
     title: string;
-    icon?: string;
-    back?: () => void
-    buttons?: MenuAppBarButton[],
+    icon?: string; // This icon prop is no longer used by MenuAppBar, but kept for compatibility if other components use it.
+    back?: () => void; // This back prop is no longer used by MenuAppBar.
+
+    exportExcel?: boolean; // New prop for export functionality
+    onExportExcel?: () => void; // New prop for export functionality
     children?: React.ReactNode;
 }
 
-const ContentTheme: React.FC<ContentThemeProps> = ({title, icon, children, back, buttons}) => {
+const ContentTheme: React.FC<ContentThemeProps> = ({title, children, exportExcel, onExportExcel}) => {
     return (
         <ThemeProvider>
-            <MenuAppBar title={title} icon={icon} buttons={buttons} back={back}></MenuAppBar>
+            <MenuAppBar title={title} exportExcel={exportExcel} onExportExcel={onExportExcel}></MenuAppBar>
             {children}
         </ThemeProvider>
     )

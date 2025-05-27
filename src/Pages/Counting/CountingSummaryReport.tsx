@@ -7,7 +7,7 @@ import {useParams} from "react-router-dom";
 import {IsNumeric} from "../../Assets/Functions";
 import {CountingSummaryReportData, fetchCountingSummaryReport} from "./Data/Report";
 import CountingSummaryReportTable from "./Components/CountingSummaryReportTable";
-import ExcelExporter from "../../Components/ExcelExporter";
+import {exportToExcel} from "../../Utils/excelExport";
 
 export default function CountingSummaryReport() {
     const [id, setID] = useState<number | null>();
@@ -39,7 +39,7 @@ export default function CountingSummaryReport() {
         t("packs")
     ];
 
-    function excelData() {
+    const excelData = () => {
         return data?.lines.map((item) => [
             item.binCode,
             item.itemCode,
@@ -48,13 +48,22 @@ export default function CountingSummaryReport() {
             item.dozen,
             item.pack
         ])??[];
-    }
+    };
+
+    const handleExportExcel = () => {
+        exportToExcel({
+            name: "CountingData",
+            headers: excelHeaders,
+            getData: excelData,
+            fileName: `counting_data_${id}`
+        });
+    };
+
     return (
-        <ContentTheme title={t("countingSummaryReport")} icon="manager-insight">
+        <ContentTheme title={t("countingSummaryReport")} exportExcel={true} onExportExcel={handleExportExcel}>
             <Title level="H1">
                 {t("counting")} #{id}
             </Title>
-            <ExcelExporter name="CountingData" headers={excelHeaders} getData={excelData} fileName={`counting_data_${id}`}/>
             <Title level="H2">
                 {t("id")} {data?.name}
             </Title>

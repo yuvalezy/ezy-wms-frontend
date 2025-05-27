@@ -13,7 +13,7 @@ import {IsNumeric} from "../../Assets/Functions";
 import {GRPOAllDetailRef} from "./Components/GoodsReceiptAllDetail";
 import GoodsReceiptAllDialog from "./Components/GoodsReceiptAllDetail";
 import {DetailUpdateParameters} from "../../Assets/Common";
-import ExcelExporter from "../../Components/ExcelExporter";
+import {exportToExcel} from "../../Utils/excelExport";
 
 export default function GoodsReceiptReportAll() {
   const {t} = useTranslation();
@@ -61,7 +61,7 @@ export default function GoodsReceiptReportAll() {
     t("packUn"),
   ];
 
-  function excelData() {
+  const excelData = () => {
     return data?.map((item) => [
       item.itemCode,
       item.itemName,
@@ -72,7 +72,16 @@ export default function GoodsReceiptReportAll() {
       item.numInBuy,
       item.purPackUn,
     ]) ?? [];
-  }
+  };
+
+  const handleExportExcel = () => {
+    exportToExcel({
+      name: "GoodsReceiptData",
+      headers: excelHeaders,
+      getData: excelData,
+      fileName: `goods_receipt_data_${id}`
+    });
+  };
 
   function openDetails(newData: GoodsReceiptAll) {
     detailRef?.current?.show(newData);
@@ -92,14 +101,10 @@ export default function GoodsReceiptReportAll() {
   }
 
   return (
-    <ContentTheme title={title} icon="manager-insight">
-      <div style={{position: "relative"}}>
-        <Title level="H1">
-          {t("goodsReceipt")} #{id}
-        </Title>
-        <ExcelExporter name="GoodsReceiptData" headers={excelHeaders} getData={excelData}
-                       fileName={`goods_receipt_data_${id}`}/>
-      </div>
+    <ContentTheme title={title} exportExcel={true} onExportExcel={handleExportExcel}>
+      <Title level="H1">
+        {t("goodsReceipt")} #{id}
+      </Title>
       {data && <>
           <GoodsReceiptAllReportTable onClick={openDetails} data={data}/>
         {data.length === 0 && (

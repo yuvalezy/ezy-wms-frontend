@@ -9,7 +9,7 @@ import {CheckBox, Label, MessageStrip, Table, TableCell, TableColumn, TableRow} 
 import {binCheck, BinContentResponse} from "./Bins";
 import {ScrollableContentBox} from "../../Components/ScrollableContent";
 import {delay} from "../../Assets/GlobalConfig";
-import ExcelExporter from "../../Components/ExcelExporter";
+import {exportToExcel} from "../../Utils/excelExport";
 import {formatValueByPack} from "../../Assets/Quantities";
 
 export default function BinCheck() {
@@ -50,7 +50,7 @@ export default function BinCheck() {
     t('packageQuantity')
   ];
 
-  function excelData() {
+  const excelData = () => {
     return binContent?.map((value) => {
       const rowValue = [
         value.itemCode,
@@ -61,11 +61,18 @@ export default function BinCheck() {
       ];
       return rowValue;
     }) ?? [];
-  }
+  };
 
-  return <ContentTheme title={t("binCheck")} icon="dimension">
-    {binContent && <ExcelExporter name="BinCheck" headers={excelHeaders} getData={excelData}
-                                  fileName={`bincheck_${binRef?.current?.getBin()}`}/>}
+  const handleExportExcel = () => {
+    exportToExcel({
+      name: "BinCheck",
+      headers: excelHeaders,
+      getData: excelData,
+      fileName: `bincheck_${binRef?.current?.getBin()}`
+    });
+  };
+
+  return <ContentTheme title={t("binCheck")} exportExcel={true} onExportExcel={handleExportExcel}>
     <div className="themeContentStyle">
       <div className="containerStyle">
         {binContent &&
