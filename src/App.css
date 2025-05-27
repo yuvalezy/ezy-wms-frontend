@@ -95,7 +95,7 @@
 .themeContentStyle {
     position: fixed;
     width: 100%;
-    top: 52px;
+    top: 72px; /* Adjusted to account for MenuAppBar height */
     bottom: 0;
 }
 

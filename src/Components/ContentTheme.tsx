@@ -1,11 +1,12 @@
 import MenuAppBar from "./MenuAppBar";
 import React from "react";
-import {ThemeProvider} from "@ui5/webcomponents-react";
+import { ScrollableContent } from "./ScrollableContent"; // Import ScrollableContent
+import { ThemeProvider } from "@ui5/webcomponents-react"; // Keep ThemeProvider if it's still needed for other UI5 components, otherwise remove.
 
 interface ContentThemeProps {
     title: string;
-    icon?: string; // This icon prop is no longer used by MenuAppBar, but kept for compatibility if other components use it.
-    back?: () => void; // This back prop is no longer used by MenuAppBar.
+    // icon?: string; // This icon prop is no longer used by MenuAppBar, but kept for compatibility if other components use it.
+    // back?: () => void; // This back prop is no longer used by MenuAppBar.
 
     exportExcel?: boolean; // New prop for export functionality
     onExportExcel?: () => void; // New prop for export functionality
@@ -14,9 +15,11 @@ interface ContentThemeProps {
 
 const ContentTheme: React.FC<ContentThemeProps> = ({title, children, exportExcel, onExportExcel}) => {
     return (
-        <ThemeProvider>
+        <ThemeProvider> {/* Keep ThemeProvider if it's still needed for other UI5 components, otherwise remove. */}
             <MenuAppBar title={title} exportExcel={exportExcel} onExportExcel={onExportExcel}></MenuAppBar>
-            {children}
+            <ScrollableContent>
+                {children}
+            </ScrollableContent>
         </ThemeProvider>
     )
 }
