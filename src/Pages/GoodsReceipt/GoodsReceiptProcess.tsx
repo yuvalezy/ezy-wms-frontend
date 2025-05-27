@@ -5,7 +5,7 @@ import BoxConfirmationDialog, {BoxConfirmationDialogRef} from "../../Components/
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {Button, Form, FormItem, Input, InputDomRef, MessageStrip} from "@ui5/webcomponents-react";
-import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
+import {MessageStripDesign} from "@ui5/webcomponents-react";
 import {addItem, updateLine, updateLineQuantity} from "./Data/GoodsReceiptProcess";
 import {
   AddItemResponseMultipleValue,

@@ -16,7 +16,7 @@ import {
     TableColumn,
     TableRow
 } from "@ui5/webcomponents-react";
-import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
+import {MessageStripDesign} from "@ui5/webcomponents-react";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {StringFormat} from "../../Assets/Functions";
 import {useNavigate} from "react-router-dom";

@@ -5,7 +5,7 @@ import BoxConfirmationDialog, {BoxConfirmationDialogRef} from "../../Components/
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {Title} from "@ui5/webcomponents-react";
-import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
+import {MessageStripDesign} from "@ui5/webcomponents-react";
 import {BinLocation, Item} from "../../Assets/Common";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {addItem, fetchPicking, PickingDocument, PickingDocumentDetail} from "./Data/PickingDocument";

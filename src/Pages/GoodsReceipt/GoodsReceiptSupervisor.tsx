@@ -68,7 +68,7 @@ export default function GoodsReceiptSupervisor() {
 
     function getTitle(): string {
         let title = t("goodsReceiptSupervisor");
-        if (!globalSettings?.grpoCreateSupervisorRequired ?? false) {
+      if (!globalSettings?.grpoCreateSupervisorRequired) {
             if (!supervisor) {
                 title = t("goodsReceiptCreation");
             }

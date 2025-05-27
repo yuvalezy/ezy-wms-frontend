@@ -8,7 +8,7 @@ import {useAuth} from "../../Components/AppContext";
 import {BinLocation, DetailUpdateParameters, SourceTarget} from "../../Assets/Common";
 import {addItem, fetchTransferContent, TransferContent, TransferContentBin, updateTransferTargetItem} from "./Data/TransferDocument";
 import ProcessAlert, {ProcessAlertValue} from "../../Components/ProcessAlert";
-import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
+import {MessageStripDesign} from "@ui5/webcomponents-react";
 import {ScrollableContent, ScrollableContentBox} from "../../Components/ScrollableContent";
 import {Label, Panel, Text, ProgressIndicator, Table, TableCell, TableColumn, TableRow, Title} from "@ui5/webcomponents-react";
 import BinLocationScanner, {BinLocationScannerRef} from "../../Components/BinLocationScanner";

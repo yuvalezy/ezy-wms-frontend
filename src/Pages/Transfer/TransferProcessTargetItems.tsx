@@ -40,7 +40,7 @@ export default function TransferProcessTarget() {
     const title = `${t("transfer")} #${scanCode} - ${t("selectTransferTargetItems")}`;
 
     useEffect(() => {
-        setEnable(!user?.binLocations ?? false);
+      setEnable(!user?.binLocations);
         if (enable) {
             setTimeout(() => barcodeRef.current?.focus(), 1);
         }

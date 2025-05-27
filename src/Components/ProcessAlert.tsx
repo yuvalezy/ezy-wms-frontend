@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
 import {Icon, MessageStrip, Title} from "@ui5/webcomponents-react";
-import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
+import {MessageStripDesign} from "@ui5/webcomponents-react";
 import {useSwipeable} from "react-swipeable";
 
 import {AddItemResponseMultipleValue, UnitType} from "../Assets/Common";

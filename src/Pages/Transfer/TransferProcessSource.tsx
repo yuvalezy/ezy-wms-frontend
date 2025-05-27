@@ -11,7 +11,7 @@ import BarCodeScanner, {BarCodeScannerRef} from "../../Components/BarCodeScanner
 import {addItem, fetchTransferContent, TransferContent} from "./Data/TransferDocument";
 import BinLocationScanner from "../../Components/BinLocationScanner";
 import {delay} from "../../Assets/GlobalConfig";
-import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
+import {MessageStripDesign} from "@ui5/webcomponents-react";
 import ProcessAlert, {ProcessAlertValue} from "../../Components/ProcessAlert";
 import {ScrollableContent, ScrollableContentBox} from "../../Components/ScrollableContent";
 import {ReasonType} from "../../Assets/Reasons";
@@ -42,8 +42,8 @@ export default function TransferProcessSource() {
     }
   }
 
-  useEffect(() => {
-    setEnable(!user?.binLocations ?? false);
+    useEffect(() => {
+      setEnable(!user?.binLocations);
     if (enable) {
       setTimeout(() => barcodeRef.current?.focus(), 1);
     }

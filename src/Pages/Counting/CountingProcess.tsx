@@ -4,7 +4,7 @@ import React, {useEffect, useRef, useState} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {Label, MessageStrip, Table, TableCell, TableColumn, TableGroupRow, TableRow} from "@ui5/webcomponents-react";
-import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
+import {MessageStripDesign} from "@ui5/webcomponents-react";
 import {BinLocation, Item, UnitType} from "../../Assets/Common";
 import {IsNumeric} from "../../Assets/Functions";
 import {delay} from "../../Assets/GlobalConfig";
@@ -38,7 +38,7 @@ export default function CountingProcess() {
     const title = `${t("counting")} #${scanCode}`;
 
     useEffect(() => {
-        setEnable(!user?.binLocations ?? false);
+        setEnable(!user?.binLocations);
         if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
             setID(null);
             return;

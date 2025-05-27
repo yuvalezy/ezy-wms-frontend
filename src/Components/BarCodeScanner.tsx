@@ -1,6 +1,6 @@
 import React, {forwardRef, useEffect, useImperativeHandle, useRef, useState} from 'react';
 import {Button, ComboBox, ComboBoxItem, Form, FormItem, Grid, Input, InputDomRef} from "@ui5/webcomponents-react";
-import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
+import {MessageStripDesign} from "@ui5/webcomponents-react";
 import {scanBarcode} from "../Assets/ScanBarcode";
 import {distinctItems, Item, UnitType} from "../Assets/Common";
 import {StringFormat} from "../Assets/Functions";
