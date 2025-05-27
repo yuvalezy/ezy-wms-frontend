@@ -55,7 +55,7 @@ export default function Home() {
                     {menuItems.map((menu, index) => (
                         <Link to={menu.Link} key={index} className="block">
                             <div className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center justify-center text-center hover:shadow-lg transition-shadow duration-300 h-full">
-                                <FontAwesomeIcon icon={getFaIcon(menu.Icon)} className="text-4xl text-gray-800 mb-4"/>
+                                <FontAwesomeIcon icon={getFaIcon(menu.Icon)} className="text-4xl text-secondary mb-4"/>
                                 <span className="text-lg font-semibold text-gray-800">{menu.Text}</span>
                             </div>
                         </Link>
@@ -64,7 +64,7 @@ export default function Home() {
             }
             {menuItems.length === 0 &&
                 <div className="p-4">
-                    <div className="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4" role="alert">
+                    <div className="bg-muted border-l-4 border-secondary text-secondary p-4" role="alert">
                         <p className="font-bold">{t("information")}</p>
                         <p>{t("noAuthorizationOptions")}</p>
                     </div>
