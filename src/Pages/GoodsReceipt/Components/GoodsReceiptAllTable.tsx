@@ -37,7 +37,7 @@ const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data, 
           <TableCell className="clickCell">{row.stock}</TableCell>
         </TableRow>
         <TableRow style={{cursor: 'pointer'}} onClick={() => onClick(row)} key={row.itemCode}>
-          <TableCell className="clickCell">{t('purPackUn')}</TableCell>
+          <TableCell className="clickCell">{row.buyUnitMsr ?? t('purPackUn')}</TableCell>
           <TableCell className="clickCell">{(row.quantity / row.numInBuy).toFixed(2)}</TableCell>
           <TableCell className="clickCell">{(row.delivery / row.numInBuy).toFixed(2)}</TableCell>
           <TableCell className="clickCell">{(row.showroom / row.numInBuy).toFixed(2)}</TableCell>
@@ -45,7 +45,7 @@ const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data, 
           <TableCell className="clickCell">{(row.stock / row.numInBuy).toFixed(2)}</TableCell>
         </TableRow>
         <TableRow style={{cursor: 'pointer'}} onClick={() => onClick(row)} key={row.itemCode}>
-          <TableCell className="clickCell">{t('packUn')}</TableCell>
+          <TableCell className="clickCell">{row.purPackMsr ??t('packUn')}</TableCell>
           <TableCell className="clickCell">{(row.quantity / row.numInBuy / row.purPackUn).toFixed(2)}</TableCell>
           <TableCell className="clickCell">{(row.delivery / row.numInBuy / row.purPackUn).toFixed(2)}</TableCell>
           <TableCell className="clickCell">{(row.showroom / row.numInBuy / row.purPackUn).toFixed(2)}</TableCell>
