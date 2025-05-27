@@ -30,10 +30,17 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
           <div className="w-full max-w-md bg-white shadow-md rounded-xl p-8">
-              <h2 className="text-2xl font-bold text-center text-gray-800 mb-1">
-                  {globalConfig?.companyName || 'UNIT_TEST'}
-              </h2>
-              <p className="text-center text-gray-500 mb-6">{t('login') || 'Login'}</p>
+              <div className="flex flex-col items-center mb-6">
+                  <img
+                    src="/images/ezy_wms.png"
+                    alt="Company Logo"
+                    className="w-auto h-20 mb-4 object-contain"
+                  />
+                  <h2 className="text-2xl font-bold text-center text-gray-800 mb-1">
+                      {globalConfig?.companyName || 'UNIT_TEST'}
+                  </h2>
+                  <p className="text-center text-gray-500">{t('login') || 'Login'}</p>
+              </div>
 
               <form onSubmit={onSubmit} className="space-y-5">
                   <div>
