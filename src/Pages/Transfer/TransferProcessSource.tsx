@@ -1,21 +1,21 @@
 import ContentTheme from "../../components/ContentTheme";
 import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
-import {useThemeContext} from "../../Components/ThemeContext";
+import {useThemeContext} from "../../components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {Label, MessageStrip, Table, TableCell, TableColumn, TableRow} from "@ui5/webcomponents-react";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
-import {useAuth} from "../../Components/AppContext";
+import {useAuth} from "../../components/AppContext";
 import {BinLocation, Item, SourceTarget} from "../../Assets/Common";
 import BarCodeScanner, {BarCodeScannerRef} from "../../components/BarCodeScanner";
 import {addItem, fetchTransferContent, TransferContent} from "./Data/TransferDocument";
 import BinLocationScanner from "../../components/BinLocationScanner";
 import {delay} from "../../Assets/GlobalConfig";
 import {MessageStripDesign} from "@ui5/webcomponents-react";
-import ProcessAlert, {ProcessAlertValue} from "../../Components/ProcessAlert";
+import ProcessAlert, {ProcessAlertValue} from "../../components/ProcessAlert";
 import {ScrollableContent, ScrollableContentBox} from "../../components/ScrollableContent";
 import {ReasonType} from "../../Assets/Reasons";
-import Processes, {ProcessesRef} from "../../Components/Processes";
+import Processes, {ProcessesRef} from "../../components/Processes";
 import {updateLine} from "./Data/TransferProcess";
 import {useDateTimeFormat} from "../../Assets/DateFormat";
 
@@ -148,7 +148,7 @@ export default function TransferProcessSource() {
   }
 
   return (
-    <ContentThemeSapUI5 title={getTitle()} icon="functional-location"
+    <ContentTheme title={getTitle()}
                         buttons={[{action: () => navigate(`/transfer/${id}/targetBins`), icon: "map"}]}
                         back={() => navigateBack()}>
       {id &&
@@ -195,6 +195,6 @@ export default function TransferProcessSource() {
           onUpdateLine={updateLine}
           onUpdateComplete={loadRows}
       />}
-    </ContentThemeSapUI5>
+    </ContentTheme>
   );
 }

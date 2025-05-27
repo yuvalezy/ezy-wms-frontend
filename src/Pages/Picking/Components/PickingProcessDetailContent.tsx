@@ -2,7 +2,7 @@ import {Label, Table, TableCell, TableColumn, TableRow} from "@ui5/webcomponents
 import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {PickingDocumentDetailItem} from "../Data/PickingDocument";
-import BinLocationQuantities from "../../../Components/BinLocationQuantities";
+import BinLocationQuantities from "../../../components/BinLocationQuantities";
 
 export interface PickingProcessDetailContentProps {
     items?: PickingDocumentDetailItem[];

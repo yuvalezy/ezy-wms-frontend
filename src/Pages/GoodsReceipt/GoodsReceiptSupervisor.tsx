@@ -1,16 +1,27 @@
 import React, {useEffect, useRef, useState} from "react";
 import {useAuth} from "../../components/AppContext";
-import DocumentForm from "./Components/DocumentForm";
+import DocumentForm from "./components/DocumentForm";
 import {documentAction, fetchDocuments,} from "./Data/Document";
-import DocumentCard from "./Components/DocumentCard";
+import DocumentCard from "./components/DocumentCard";
 import {useThemeContext} from "@/components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {MessageBox, MessageBoxActions, MessageStripDesign} from "@ui5/webcomponents-react";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { MessageStripDesign} from "@ui5/webcomponents-react"; // Keep for MessageStripDesign enum
 import {Document} from "@/Assets/Document";
 import {StringFormat} from "@/Assets/Functions";
 import {globalSettings} from "@/Assets/GlobalConfig";
 import {Authorization} from "@/Assets/Authorization";
-import DocumentListDialog, {DocumentListDialogRef} from "./Components/DocumentListDialog";
+import DocumentListDialog, {DocumentListDialogRef} from "./components/DocumentListDialog";
 import {ObjectAction, Status} from "@/Assets/Common";
 import ContentTheme from "@/components/ContentTheme";
 
@@ -76,7 +87,7 @@ export default function GoodsReceiptSupervisor() {
     }
 
     return (
-        <ContentTheme title={getTitle()} icon="kpi-managing-my-area">
+        <ContentTheme title={getTitle()}>
             <DocumentForm
                 onNewDocument={(newDocument) =>
                     setDocuments((prevDocs) => [newDocument, ...prevDocs])

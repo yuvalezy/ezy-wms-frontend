@@ -151,6 +151,7 @@
 
   "binCheck": "Revision de Ubicación",
   "scanBinLocation": "Escanear la Ubicación",
+  "changeBinLocation": "Cambiar Ubicación",
   "binLocationNotFound": "Ubicación del contenedor {0} no encontrada.",
   "showBinLocations": "Mostrar Ubicaciones",
   "transferItemNotFound": "No se pudo encontrar datos para el artículo {0}",

@@ -5,13 +5,15 @@ import {useParams} from "react-router-dom";
 import {
   fetchGoodsReceiptReportAll, GoodsReceiptAll, updateGoodsReceiptReport,
 } from "./Data/Report";
-import GoodsReceiptAllReportTable from "./Components/GoodsReceiptAllTable";
-import {useThemeContext} from "../../Components/ThemeContext";
+import GoodsReceiptAllReportTable from "./components/GoodsReceiptAllTable";
+import {useThemeContext} from "../../components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {CheckBox, MessageStrip, Title} from "@ui5/webcomponents-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {IsNumeric} from "../../Assets/Functions";
-import {GRPOAllDetailRef} from "./Components/GoodsReceiptAllDetail";
-import GoodsReceiptAllDialog from "./Components/GoodsReceiptAllDetail";
+import {GRPOAllDetailRef} from "./components/GoodsReceiptAllDetail";
+import GoodsReceiptAllDialog from "./components/GoodsReceiptAllDetail";
 import {DetailUpdateParameters} from "../../Assets/Common";
 import {exportToExcel} from "../../Utils/excelExport";
 
@@ -101,7 +103,7 @@ export default function GoodsReceiptReportAll() {
   }
 
   return (
-    <ContentThemeSapUI5 title={title} exportExcel={true} onExportExcel={handleExportExcel}>
+    <ContentTheme title={title} exportExcel={true} onExportExcel={handleExportExcel}>
       <Title level="H1">
         {t("goodsReceipt")} #{id}
       </Title>
@@ -112,6 +114,6 @@ export default function GoodsReceiptReportAll() {
         )}
         {id && <GoodsReceiptAllDialog ref={detailRef} id={id} onUpdate={onDetailUpdate}/>}
       </>}
-    </ContentThemeSapUI5>
+    </ContentTheme>
   );
 }

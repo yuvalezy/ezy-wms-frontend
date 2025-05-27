@@ -1,4 +1,4 @@
-import {Config} from "../Components/AppContext";
+import {Config} from "../components/AppContext";
 import {ApplicationSettings} from "./Common";
 
 export let globalConfig: Config | null = null;

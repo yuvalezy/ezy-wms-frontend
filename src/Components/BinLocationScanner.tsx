@@ -86,15 +86,14 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
     return (
         <div className="p-2">
             {binLocation &&
-                <Card className="text-center">
-                    <CardHeader>
-                        <CardTitle>
-                            <Button variant="link" onClick={() => clear()} className="text-lg">
-                                {t("bin")}: {binLocation.code} <FontAwesomeIcon icon={faTimes} className="ml-2" />
-                            </Button>
-                        </CardTitle>
-                    </CardHeader>
-                </Card>
+              <div className="flex items-center justify-between bg-gray-100 rounded-lg p-3">
+                  <span className="font-medium">{t("bin")}: {binLocation.code}</span>
+                  <div className="flex space-x-2">
+                      <Button variant="outline" size="sm" onClick={clear}>
+                          {t("changeBinLocation")}
+                      </Button>
+                  </div>
+              </div>
             }
             {!binLocation &&
                 <form onSubmit={handleSubmit} className="space-y-4">

@@ -2,7 +2,7 @@ import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import {useEffect, useRef, useState} from "react";
 import {fetchPickings, PickingDocument, processPicking} from "./Data/PickingDocument";
-import PickingCard from "./Components/PickingCard";
+import PickingCard from "./components/PickingCard";
 import {useThemeContext} from "@/components/ThemeContext";
 import {MessageStrip, MessageStripDesign} from "@ui5/webcomponents-react"; // Keep for MessageStripDesign enum
 import {StringFormat} from "@/Assets/Functions";
@@ -46,7 +46,7 @@ export default function PickingSupervisor() {
   }
 
   return (
-    <ContentTheme title={t("pickSupervisor")} icon="kpi-managing-my-area">
+    <ContentTheme title={t("pickSupervisor")}>
       {pickings.map((pick) => (
         <PickingCard key={pick.entry} picking={pick} supervisor={true} onAction={handleAction}
                      onUpdatePick={handleUpdatePick}/>

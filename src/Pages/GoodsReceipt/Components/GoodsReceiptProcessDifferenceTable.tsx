@@ -22,7 +22,7 @@ import {
   Text,
   Title
 } from '@ui5/webcomponents-react';
-import {useThemeContext} from "../../../Components/ThemeContext";
+import {useThemeContext} from "../../../components/ThemeContext";
 import {useDateTimeFormat} from "../../../Assets/DateFormat";
 import {UnitType} from "../../../Assets/Common";
 // import {formatValueByPack} from "../../../Assets/Quantities"; // Assuming this might be useful later or can be removed

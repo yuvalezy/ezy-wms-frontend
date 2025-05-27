@@ -1,11 +1,14 @@
 import ContentTheme from "../../components/ContentTheme";
 import {useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
-import BoxConfirmationDialog, {BoxConfirmationDialogRef} from "../../Components/BoxConfirmationDialog";
-import {useThemeContext} from "../../Components/ThemeContext";
+import BoxConfirmationDialog, {BoxConfirmationDialogRef} from "../../components/BoxConfirmationDialog";
+import {useThemeContext} from "../../components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {Button, Form, FormItem, Input, InputDomRef, MessageStrip} from "@ui5/webcomponents-react";
-import {MessageStripDesign} from "@ui5/webcomponents-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { MessageStripDesign} from "@ui5/webcomponents-react"; // Keep for MessageStripDesign enum
 import {addItem, updateLine, updateLineQuantity} from "./Data/GoodsReceiptProcess";
 import {
   AddItemResponseMultipleValue,
@@ -17,12 +20,12 @@ import {
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {configUtils, delay} from "../../Assets/GlobalConfig";
 import {scanBarcode} from "../../Assets/ScanBarcode";
-import ProcessAlert, {AlertActionType, ProcessAlertValue} from "../../Components/ProcessAlert";
+import ProcessAlert, {AlertActionType, ProcessAlertValue} from "../../components/ProcessAlert";
 import {ReasonType} from "../../Assets/Reasons";
 import {DocumentAddItemResponse} from "../../Assets/Document";
-import Processes, {ProcessesRef} from "../../Components/Processes";
+import Processes, {ProcessesRef} from "../../components/Processes";
 import {useDateTimeFormat} from "../../Assets/DateFormat";
-import BarCodeScanner, {BarCodeScannerRef} from "../../Components/BarCodeScanner";
+import BarCodeScanner, {BarCodeScannerRef} from "../../components/BarCodeScanner";
 
 export default function GoodsReceiptProcess() {
   const {scanCode} = useParams();
@@ -299,7 +302,7 @@ export default function GoodsReceiptProcess() {
   }
 
   return (
-    <ContentThemeSapUI5 title={title} icon="cause">
+    <ContentTheme title={title}>
       {id ? (
         <>
           {enable && (
@@ -345,6 +348,6 @@ export default function GoodsReceiptProcess() {
       ) : (
         <MessageStrip design="Negative">{t("invalidScanCode")}</MessageStrip>
       )}
-    </ContentThemeSapUI5>
+    </ContentTheme>
   );
 }

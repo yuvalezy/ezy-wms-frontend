@@ -1,7 +1,7 @@
 import ContentTheme from "../../components/ContentTheme";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
-import {useThemeContext} from "../../Components/ThemeContext";
+import {useThemeContext} from "../../components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -13,7 +13,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { MessageStripDesign } from "@ui5/webcomponents-react"; // Keep for MessageStripDesign enum
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {getProcessInfo, transferAction} from "./Data/TransferDocument";
-import {useAuth} from "../../Components/AppContext";
+import {useAuth} from "../../components/AppContext";
 
 export default function TransferProcess() {
   const {scanCode} = useParams();

@@ -13,7 +13,7 @@ import {
   Title
 } from "@ui5/webcomponents-react";
 import React, {forwardRef, useImperativeHandle, useRef, useState} from "react";
-import {useThemeContext} from "../../../Components/ThemeContext";
+import {useThemeContext} from "../../../components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {fetchGoodsReceiptReportAllDetails, GoodsReceiptAll, GoodsReceiptAllDetail} from "../Data/Report";
 import {fetchDocuments} from "../Data/Document";

@@ -16,10 +16,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { MessageStripDesign} from "@ui5/webcomponents-react"; // Keep for MessageStripDesign enum
 import {StringFormat} from "@/Assets/Functions";
-import CountingForm from "./Components/CountingForm";
+import CountingForm from "./components/CountingForm";
 import {countingAction, fetchCountings} from "./Data/Counting";
 import {Counting} from "@/Assets/Counting";
-import CountingCard from "./Components/CountingCard";
+import CountingCard from "./components/CountingCard";
 import {ObjectAction} from "@/Assets/Common";
 
 export default function CountingSupervisor() {
@@ -69,7 +69,7 @@ export default function CountingSupervisor() {
     };
 
     return (
-        <ContentTheme title={t("countingSupervisor")} icon="factory">
+        <ContentTheme title={t("countingSupervisor")}>
             <CountingForm
                 onNewCounting={(newCounting) =>
                     setCountings((prev) => [newCounting, ...prev])

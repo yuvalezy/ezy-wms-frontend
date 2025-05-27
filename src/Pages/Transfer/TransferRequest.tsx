@@ -1,7 +1,7 @@
 import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import {ScrollableContent, ScrollableContentBox} from "../../components/ScrollableContent";
-import BarCodeScanner, {BarCodeScannerRef} from "../../Components/BarCodeScanner";
+import BarCodeScanner, {BarCodeScannerRef} from "../../components/BarCodeScanner";
 import React, {useEffect, useRef, useState} from "react";
 import {Item} from "../../Assets/Common";
 import {createRequest, TransferContent} from "./Data/TransferDocument";
@@ -13,7 +13,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { MessageStripDesign} from "@ui5/webcomponents-react"; // Keep for MessageStripDesign enum
-import {useThemeContext} from "../../Components/ThemeContext";
+import {useThemeContext} from "../../components/ThemeContext";
 import {StringFormat} from "../../Assets/Functions";
 import {useNavigate} from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";

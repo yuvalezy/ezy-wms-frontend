@@ -1,5 +1,6 @@
 import axios from "axios";
-import {delay, globalConfig} from "../../Assets/GlobalConfig";
+import {configUtils, delay, globalConfig} from "../../Assets/GlobalConfig";
+import {binCheckMockup} from "@/Assets/mockup";
 
 export interface BinContentResponse {
     itemCode: string;
@@ -15,10 +16,9 @@ export const binCheck = async (
     binEntry: number
 ): Promise<BinContentResponse[]> => {
     try {
-        // if (configUtils.isMockup) {
-        //     console.log("Mockup data is being used.");
-        //     return itemMockup;
-        // }
+        if (configUtils.isMockup) {
+            return binCheckMockup;
+        }
 
         if (!globalConfig) throw new Error("Config has not been initialized!");
 

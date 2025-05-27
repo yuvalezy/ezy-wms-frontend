@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
 import ContentTheme from "../../components/ContentTheme";
-import {useThemeContext} from "../../Components/ThemeContext";
+import {useThemeContext} from "../../components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {useParams} from "react-router-dom";
 import {IsNumeric} from "../../Assets/Functions";
 import {CountingSummaryReportData, fetchCountingSummaryReport} from "./Data/Report";
-import CountingSummaryReportTable from "./Components/CountingSummaryReportTable";
+import CountingSummaryReportTable from "./components/CountingSummaryReportTable";
 import {exportToExcel} from "../../Utils/excelExport";
 
 export default function CountingSummaryReport() {
@@ -60,7 +60,7 @@ export default function CountingSummaryReport() {
     };
 
     return (
-        <ContentThemeSapUI5 title={t("countingSummaryReport")} exportExcel={true} onExportExcel={handleExportExcel}>
+        <ContentTheme title={t("countingSummaryReport")} exportExcel={true} onExportExcel={handleExportExcel}>
             <Title level="H1">
                 {t("counting")} #{id}
             </Title>
@@ -68,6 +68,6 @@ export default function CountingSummaryReport() {
                 {t("id")} {data?.name}
             </Title>
             {data && <CountingSummaryReportTable data={data.lines}></CountingSummaryReportTable>}
-        </ContentThemeSapUI5>
+        </ContentTheme>
     )
 }

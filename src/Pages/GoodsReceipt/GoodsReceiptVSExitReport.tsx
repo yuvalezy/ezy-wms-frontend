@@ -5,8 +5,8 @@ import {
   fetchGoodsReceiptVSExitReport,
   GoodsReceiptVSExitReportData,
 } from "./Data/Report";
-import GoodsReceiptVSExitReportTable from "./Components/GoodsReceiptVSExitReportTable";
-import { useThemeContext } from "../../Components/ThemeContext";
+import GoodsReceiptVSExitReportTable from "./components/GoodsReceiptVSExitReportTable";
+import { useThemeContext } from "../../components/ThemeContext";
 import { useTranslation } from "react-i18next";
 import {Panel, Title, Text, MessageStrip} from "@ui5/webcomponents-react";
 import {useObjectName} from "../../Assets/ObjectName";
@@ -35,7 +35,7 @@ export default function GoodsReceiptVSExitReport() {
       .finally(() => setLoading(false));
   }, []);
   return (
-    <ContentThemeSapUI5 title={title} icon="manager-insight">
+    <ContentTheme title={title}>
       <Title level="H1">
         {t("goodsReceipt")} #{id}
       </Title>
@@ -60,6 +60,6 @@ export default function GoodsReceiptVSExitReport() {
       {data && data.length === 0 && (
         <MessageStrip hideCloseButton design="Warning">{t("noExitData")}</MessageStrip>
       )}
-    </ContentThemeSapUI5>
+    </ContentTheme>
   );
 }

@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {createDocument, GoodsReceiptType,} from "../Data/Document";
-import {useThemeContext} from "../../../Components/ThemeContext";
+import {useThemeContext} from "../../../components/ThemeContext";
 import DocumentList, {DocumentListRef} from "./DocumentList";
 import {useTranslation} from "react-i18next";
 import {

@@ -2,11 +2,12 @@ import React, {useEffect, useRef, useState} from "react";
 import ContentTheme from "../../components/ContentTheme";
 import {fetchDocuments,} from "./Data/Document";
 import {useTranslation} from "react-i18next";
-import {useThemeContext} from "../../Components/ThemeContext";
+import {useThemeContext} from "../../components/ThemeContext";
 import {Status} from "../../Assets/Common";
 import {Document} from "../../Assets/Document";
-import DocumentCard from "./Components/DocumentCard";
-import DocumentListDialog, {DocumentListDialogRef} from "./Components/DocumentListDialog";
+import DocumentCard from "./components/DocumentCard";
+import DocumentListDialog, {DocumentListDialogRef} from "./components/DocumentListDialog";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function GoodsReceipt() {
   const {setLoading, setError} = useThemeContext();
@@ -29,11 +30,11 @@ export default function GoodsReceipt() {
   }
 
   return (
-    <ContentThemeSapUI5 title={t("goodsReceipt")} icon="cause">
+    <ContentTheme title={t("goodsReceipt")}>
       {documents.map((doc) => (
         <DocumentCard key={doc.id} doc={doc} docDetails={handleDocDetails}/>
       ))}
       <DocumentListDialog ref={documentListDialogRef} doc={selectedDocument}/>
-    </ContentThemeSapUI5>
+    </ContentTheme>
   );
 }

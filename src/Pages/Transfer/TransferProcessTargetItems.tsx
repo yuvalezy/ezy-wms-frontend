@@ -1,11 +1,11 @@
 import ContentTheme from "../../components/ContentTheme";
 import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
-import {useThemeContext} from "../../Components/ThemeContext";
+import {useThemeContext} from "../../components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {IsNumeric} from "../../Assets/Functions";
 import {useAuth} from "../../components/AppContext";
-import {BarCodeScannerRef} from "../../Components/BarCodeScanner";
+import {BarCodeScannerRef} from "../../components/BarCodeScanner";
 import {fetchTransferContent, TransferContent} from "./Data/TransferDocument";
 import {ScrollableContent} from "../../components/ScrollableContent";
 import {
@@ -73,7 +73,7 @@ export default function TransferProcessTarget() {
     }
 
     return (
-        <ContentThemeSapUI5 title={title} icon="functional-location" back={() => navigateBack()}>
+        <ContentTheme title={title} back={() => navigateBack()}>
             {rows &&
                 <ScrollableContent>
                     {/*{rows.map((row) => (<TransferProcessTargetItemsValue/>))}*/}
@@ -105,6 +105,6 @@ export default function TransferProcessTarget() {
                     </Table>
                 </ScrollableContent>
             }
-        </ContentThemeSapUI5>
+        </ContentTheme>
     );
 }

@@ -1,23 +1,26 @@
 import ContentTheme from "../../components/ContentTheme";
 import {useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
-import {useThemeContext} from "../../Components/ThemeContext";
+import {useThemeContext} from "../../components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {Label, MessageStrip, Table, TableCell, TableColumn, TableGroupRow, TableRow} from "@ui5/webcomponents-react";
-import {MessageStripDesign} from "@ui5/webcomponents-react";
+import { Label } from "@/components/ui/label";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Progress } from "@/components/ui/progress";
+import { MessageStripDesign} from "@ui5/webcomponents-react"; // Keep for MessageStripDesign enum
 import {BinLocation, Item, UnitType} from "../../Assets/Common";
 import {IsNumeric} from "../../Assets/Functions";
 import {delay} from "../../Assets/GlobalConfig";
-import {useAuth} from "../../Components/AppContext";
-import BarCodeScanner, {BarCodeScannerRef} from "../../Components/BarCodeScanner";
+import {useAuth} from "../../components/AppContext";
+import BarCodeScanner, {BarCodeScannerRef} from "../../components/BarCodeScanner";
 import {CountingContent} from "../../Assets/Counting";
-import BinLocationScanner, {BinLocationScannerRef} from "../../Components/BinLocationScanner";
+import BinLocationScanner, {BinLocationScannerRef} from "../../components/BinLocationScanner";
 import {addItem, updateLine} from "./Data/CountingProcess";
 import {fetchCountingContent} from "./Data/Counting";
-import ProcessAlert, {ProcessAlertValue} from "../../Components/ProcessAlert";
+import ProcessAlert, {ProcessAlertValue} from "../../components/ProcessAlert";
 import {ReasonType} from "../../Assets/Reasons";
-import Processes, {ProcessesRef} from "../../Components/Processes";
-import {ScrollableContentBox} from "../../Components/ScrollableContent";
+import Processes, {ProcessesRef} from "../../components/Processes";
+import {ScrollableContentBox} from "../../components/ScrollableContent";
 import {useDateTimeFormat} from "../../Assets/DateFormat";
 
 export default function CountingProcess() {
@@ -146,7 +149,7 @@ export default function CountingProcess() {
 
 
     return (
-        <ContentThemeSapUI5 title={title} icon="product">
+        <ContentTheme title={title}>
             <div className="themeContentStyle">
                 <div className="containerStyle">
                     {user?.binLocations && <BinLocationScanner ref={binLocationRef} onChanged={onBinChanged} onClear={onBinClear}/>}
@@ -189,6 +192,6 @@ export default function CountingProcess() {
             </div>
             {currentAlert && id && <Processes ref={processesRef} id={id} alert={currentAlert} reasonType={ReasonType.Counting} onCancel={handleCancel}
                                               onQuantityChanged={handleQuantityChanged} onUpdateLine={updateLine}/>}
-        </ContentThemeSapUI5>
+        </ContentTheme>
     );
 }

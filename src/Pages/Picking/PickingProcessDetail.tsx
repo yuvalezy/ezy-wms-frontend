@@ -2,7 +2,7 @@ import ContentTheme from "../../components/ContentTheme";
 import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
 import BoxConfirmationDialog, {BoxConfirmationDialogRef} from "../../components/BoxConfirmationDialog";
-import {useThemeContext} from "../../Components/ThemeContext";
+import {useThemeContext} from "../../components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,7 +15,7 @@ import {addItem, fetchPicking, PickingDocument, PickingDocumentDetail} from "./D
 import {useObjectName} from "../../Assets/ObjectName";
 import BarCodeScanner, {BarCodeScannerRef} from "../../components/BarCodeScanner";
 import {ScrollableContent} from "../../components/ScrollableContent";
-import PickingProcessDetailContent from "./Components/PickingProcessDetailContent";
+import PickingProcessDetailContent from "./components/PickingProcessDetailContent";
 import BinLocationScanner, {BinLocationScannerRef} from "../../components/BinLocationScanner";
 
 export default function PickingProcessDetail() {

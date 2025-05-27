@@ -1,7 +1,7 @@
 import ContentTheme from "../../components/ContentTheme";
 import {useNavigate, useParams} from "react-router-dom";
 import React, {CSSProperties, useEffect, useState} from "react";
-import {useThemeContext} from "../../Components/ThemeContext";
+import {useThemeContext} from "../../components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -58,7 +58,7 @@ export default function PickingProcess() {
     }
 
     return (
-        <ContentThemeSapUI5 title={title} icon="cause">
+        <ContentTheme title={title}>
             {picking?.detail?.map((item, index) => (
                 <Panel key={index} headerText={`${o(item.type)}# ${item.number}`} style={rowStyle(item)}>
                     <Title level="H5">
@@ -96,6 +96,6 @@ export default function PickingProcess() {
                     </div>
                 </Panel>
             ))}
-        </ContentThemeSapUI5>
+        </ContentTheme>
     );
 }

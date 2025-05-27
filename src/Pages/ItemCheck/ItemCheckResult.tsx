@@ -3,9 +3,9 @@ import {ItemCheckResponse} from "./Item";
 import {useTranslation} from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ItemDetailsList from "./Components/ItemDetailsList";
-import BarcodeTable from "./Components/BarcodeTable";
-import StockTable from "./Components/StockTable";
+import ItemDetailsList from "./components/ItemDetailsList";
+import BarcodeTable from "./components/BarcodeTable";
+import StockTable from "./components/StockTable";
 
 interface ItemCheckResultProps {
     result: ItemCheckResponse;

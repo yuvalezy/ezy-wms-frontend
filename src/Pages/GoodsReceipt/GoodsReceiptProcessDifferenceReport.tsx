@@ -6,12 +6,13 @@ import {
     GoodsReceiptValidateProcess,
     ProcessLineStatus,
 } from "./Data/Report";
-import {useThemeContext} from "../../Components/ThemeContext";
+import {useThemeContext} from "../../components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import { MessageStrip, Panel, Title} from "@ui5/webcomponents-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {useObjectName} from "../../Assets/ObjectName";
 import {IsNumeric} from "../../Assets/Functions";
-import GoodsReceiptProcessDifferenceTable from "./Components/GoodsReceiptProcessDifferenceTable";
+import GoodsReceiptProcessDifferenceTable from "./components/GoodsReceiptProcessDifferenceTable";
 import {exportToExcel} from "../../Utils/excelExport";
 
 export default function GoodsReceiptProcessDifferenceReport() {
@@ -75,7 +76,7 @@ export default function GoodsReceiptProcessDifferenceReport() {
     };
 
     return (
-        <ContentThemeSapUI5 title={title} exportExcel={true} onExportExcel={handleExportExcel}>
+        <ContentTheme title={title} exportExcel={true} onExportExcel={handleExportExcel}>
             <Title level="H1">
                 {t("goodsReceipt")} #{id}
             </Title>
@@ -100,6 +101,6 @@ export default function GoodsReceiptProcessDifferenceReport() {
             {data && <>
                 {data.length === 0 && (<MessageStrip hideCloseButton design="Warning">{t("nodata")}</MessageStrip>)}
             </>}
-        </ContentThemeSapUI5>
+        </ContentTheme>
     );
 }

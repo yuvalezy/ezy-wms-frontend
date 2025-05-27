@@ -1,6 +1,6 @@
 import {Bar, Button, CheckBox, Dialog, DialogDomRef, Input, Label, Table, TableCell, TableColumn, TableRow, Title} from "@ui5/webcomponents-react";
 import React, {forwardRef, useImperativeHandle, useRef, useState} from "react";
-import {useThemeContext} from "../../../Components/ThemeContext";
+import {useThemeContext} from "../../../components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {DetailUpdateParameters, Status} from "../../../Assets/Common";
 import {fetchTargetItemDetails, fetchTransfers, TargetItemDetail, TransferContent, TransferContentBin} from "../Data/TransferDocument";

@@ -1,22 +1,22 @@
 import ContentTheme from "../../components/ContentTheme";
 import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
-import {useThemeContext} from "../../Components/ThemeContext";
+import {useThemeContext} from "../../components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {useAuth} from "../../components/AppContext";
 import {BinLocation, DetailUpdateParameters, SourceTarget} from "../../Assets/Common";
 import {addItem, fetchTransferContent, TransferContent, TransferContentBin, updateTransferTargetItem} from "./Data/TransferDocument";
-import ProcessAlert, {ProcessAlertValue} from "../../Components/ProcessAlert";
+import ProcessAlert, {ProcessAlertValue} from "../../components/ProcessAlert";
 import {MessageStripDesign} from "@ui5/webcomponents-react";
 import {ScrollableContent, ScrollableContentBox} from "../../components/ScrollableContent";
 import {Label, Panel, Text, ProgressIndicator, Table, TableCell, TableColumn, TableRow, Title} from "@ui5/webcomponents-react";
-import BinLocationScanner, {BinLocationScannerRef} from "../../Components/BinLocationScanner";
+import BinLocationScanner, {BinLocationScannerRef} from "../../components/BinLocationScanner";
 import {delay} from "../../Assets/GlobalConfig";
-import Processes, {ProcessesRef} from "../../Components/Processes";
+import Processes, {ProcessesRef} from "../../components/Processes";
 import {ReasonType} from "../../Assets/Reasons";
 import {updateLine} from "./Data/TransferProcess";
-import TransferTargetItemsDetailsDialog, {TransferTargetItemsDetailRef} from "./Components/TransferTargetItemDetails";
+import TransferTargetItemsDetailsDialog, {TransferTargetItemsDetailRef} from "./components/TransferTargetItemDetails";
 import {Authorization} from "../../Assets/Authorization";
 import {useDateTimeFormat} from "../../Assets/DateFormat";
 
@@ -144,7 +144,7 @@ export default function TransferProcessTargetItem() {
     }
 
     return (
-        <ContentThemeSapUI5 title={title} icon="functional-location" back={() => navigateBack()}>
+        <ContentTheme title={title} back={() => navigateBack()}>
             {content &&
                 <ScrollableContent>
                     <Panel>
@@ -190,6 +190,6 @@ export default function TransferProcessTargetItem() {
                 onUpdateComplete={loadData}
             />}
             {id && <TransferTargetItemsDetailsDialog ref={detailDialogRef} id={id} onUpdate={onUpdate}/>}
-        </ContentThemeSapUI5>
+        </ContentTheme>
     );
 }

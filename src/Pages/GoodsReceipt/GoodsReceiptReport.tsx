@@ -1,12 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import ContentTheme from "../../components/ContentTheme";
-import ReportFilterForm from "./Components/ReportFilterForm";
+import ReportFilterForm from "./components/ReportFilterForm";
 import { fetchDocuments, GoodsReceiptReportFilter } from "./Data/Document";
-import DocumentReportCard from "./Components/DocumentReportCard";
-import { useThemeContext } from "../../Components/ThemeContext";
+import DocumentReportCard from "./components/DocumentReportCard";
+import { useThemeContext } from "../../components/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { Document } from "../../Assets/Document";
-import DocumentListDialog, { DocumentListDialogRef } from "./Components/DocumentListDialog";
+import DocumentListDialog, { DocumentListDialogRef } from "./components/DocumentListDialog";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFileExcel } from '@fortawesome/free-solid-svg-icons';
 
 export default function GoodsReceiptReport() {
     const { loading, setLoading, setError } = useThemeContext();
@@ -73,7 +77,7 @@ export default function GoodsReceiptReport() {
     };
 
     return (
-        <ContentThemeSapUI5 title={t("goodsReceiptReport")} icon="manager-insight">
+        <ContentTheme title={t("goodsReceiptReport")}>
             <ReportFilterForm
                 onSubmit={onSubmit}
                 onClear={() => setDocuments([])}
@@ -84,6 +88,6 @@ export default function GoodsReceiptReport() {
                 ))}
             </div>
             <DocumentListDialog ref={documentListDialogRef} doc={selectedDocument} />
-        </ContentThemeSapUI5>
+        </ContentTheme>
     );
 }

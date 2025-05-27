@@ -151,6 +151,7 @@
 
   "binCheck": "Bin Check",
   "scanBinLocation": "Scan Bin Location",
+  "changeBinLocation": "Change Bin Location",
   "binLocationNotFound": "Bin Location {0} not found.",
   "showBinLocations": "Show Bin Locations",
   "transferItemNotFound": "Could not find data for item {0}",

@@ -12,6 +12,7 @@ import {GoodsReceiptAll, GoodsReceiptAllDetail} from "@/Pages/GoodsReceipt/Data/
 import {TransferDocument} from "@/Pages/Transfer/Data/TransferDocument";
 import {TransferAddItemResponse} from "@/Pages/Transfer/Data/TransferProcess";
 import {ItemCheckResponse, ItemStockResponse} from "@/Pages/ItemCheck/Item";
+import {BinContentResponse} from "@/Pages/BinCheck/Bins";
 
 enum UpdateLineReturnValue {
     Status = "Status",
@@ -437,3 +438,52 @@ export const transferAddItemResponseMockup : TransferAddItemResponse = {
     closedTransfer: false,
     purPackUn: 5,
 };
+
+
+export const binCheckMockup: BinContentResponse[] = [
+  {
+    itemCode: "ITEM001",
+    itemName: "Computer Mouse",
+    onHand: 50,
+    numInBuy: 12,
+    buyUnitMsr: "Doz",
+    purPackUn: 4,
+    purPackMsr: "Box"
+  },
+  {
+    itemCode: "ITEM002",
+    itemName: "Keyboard",
+    onHand: 30,
+    numInBuy: 12,
+    buyUnitMsr: "Doz",
+    purPackUn: 4,
+    purPackMsr: "Box"
+  },
+  {
+    itemCode: "ITEM003",
+    itemName: "Monitor",
+    onHand: 15,
+    numInBuy: 12,
+    buyUnitMsr: "Doz",
+    purPackUn: 4,
+    purPackMsr: "Box"
+  },
+  {
+    itemCode: "ITEM004",
+    itemName: "Laptop",
+    onHand: 25,
+    numInBuy: 12,
+    buyUnitMsr: "Doz",
+    purPackUn: 4,
+    purPackMsr: "Box"
+  },
+  {
+    itemCode: "ITEM005",
+    itemName: "Printer",
+    onHand: 10,
+    numInBuy: 12,
+    buyUnitMsr: "Doz",
+    purPackUn: 4,
+    purPackMsr: "Box"
+  }
+]

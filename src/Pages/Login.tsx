@@ -3,7 +3,7 @@ import {useAuth} from "../components/AppContext";
 import {useState} from "react";
 import {Navigate} from "react-router-dom";
 import LoginForm from "./Login/LoginForm";
-import {useThemeContext} from "../Components/ThemeContext";
+import {useThemeContext} from "../components/ThemeContext";
 
 
 export default function Login() {

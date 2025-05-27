@@ -1,9 +1,9 @@
 import React, {useEffect} from "react";
 import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
-import {useThemeContext} from "../../Components/ThemeContext";
+import {useThemeContext} from "../../components/ThemeContext";
 import {fetchPickings, PickingDocument, PickStatus} from "./Data/PickingDocument";
-import PickingCard from "./Components/PickingCard";
+import PickingCard from "./components/PickingCard";
 
 export default function Picking() {
   const {setLoading, setError} = useThemeContext();

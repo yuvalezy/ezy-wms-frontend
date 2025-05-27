@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {useThemeContext} from "../../../Components/ThemeContext";
+import {useThemeContext} from "../../../components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {Button, Form, FormItem, Input,} from "@ui5/webcomponents-react";
 import {createCounting} from "../Data/Counting";

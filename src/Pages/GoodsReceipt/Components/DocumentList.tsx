@@ -1,7 +1,7 @@
 import React, {forwardRef, useImperativeHandle, useRef, useState} from 'react';
 import {useTranslation} from "react-i18next";
 import {Icon, ComboBox, ComboBoxItem, Input, Button, List, StandardListItem, MessageStripDesign} from "@ui5/webcomponents-react";
-import {useThemeContext} from "../../../Components/ThemeContext";
+import {useThemeContext} from "../../../components/ThemeContext";
 import {DocumentItem} from "../../../Assets/Document";
 import {useObjectName} from "../../../Assets/ObjectName";
 
