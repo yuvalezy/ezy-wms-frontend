@@ -1,6 +1,5 @@
-import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
+import ContentTheme from "../../components/ContentTheme";
 import React, {useEffect, useRef} from "react";
-import {useThemeContext} from "../../Components/ThemeContext";
 import {
     itemCheck,
     ItemCheckResponse,
@@ -9,15 +8,16 @@ import {
 import ItemCheckMultipleResult from "./ItemCheckMultipleResult";
 import ItemCheckResult from "./ItemCheckResult";
 import {useTranslation} from "react-i18next";
-import {
-    Button,
-    Form,
-    FormItem,
-    Input, InputDomRef,
-    MessageStrip, MessageStripDesign,
-} from "@ui5/webcomponents-react";
-import {ResponseStatus} from "../../Assets/Common";
-import {StringFormat} from "../../Assets/Functions";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import {ResponseStatus} from "@/Assets/Common";
+import {StringFormat} from "@/Assets/Functions";
+import {useThemeContext} from "@/components/ThemeContext";
 
 export default function ItemCheck() {
     const {t} = useTranslation();
@@ -25,7 +25,7 @@ export default function ItemCheck() {
     const [itemCodeInput, setItemCodeInput] = React.useState("");
     const [result, setResult] = React.useState<ItemCheckResponse[] | null>(null);
     const {setLoading, setAlert, setError} = useThemeContext();
-    const barcodeInputRef = useRef<InputDomRef>(null);
+    const barcodeInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         setTimeout(() => barcodeInputRef.current?.focus(), 1);
@@ -35,7 +35,7 @@ export default function ItemCheck() {
         let barcodeLength = barcodeInput.length === 0;
         let itemCodeLength = itemCodeInput.length === 0;
         if (barcodeLength && itemCodeLength) {
-            setAlert({message: t("barcodeOrItemRequired"), type: MessageStripDesign.Warning});
+            setAlert({message: t("barcodeOrItemRequired"), type: "warning"});
             return;
         }
 
@@ -117,40 +117,50 @@ export default function ItemCheck() {
     }
 
     return (
-        <ContentThemeSapUI5 title={t("itemCheck")} icon="complete" back={() => handleClear()}>
+        <ContentTheme title={t("itemCheck")}>
             {(result == null || result.length === 0) && (
-                <Form>
-                    <FormItem label={t("barcode")}>
-                        <Input
-                            required={itemCodeInput.length === 0}
-                            disabled={itemCodeInput.length > 0}
-                            value={barcodeInput}
-                            onChange={(e) => setBarcodeInput(e.target.value as string)}
-                            ref={barcodeInputRef}
-                        />
-                    </FormItem>
-                    <FormItem label={t("code")}>
-                        <Input
-                            required={barcodeInput.length === 0}
-                            disabled={barcodeInput.length > 0}
-                            value={itemCodeInput}
-                            onChange={(e) => setItemCodeInput(e.target.value as string)}
-                        />
-                    </FormItem>
-                    <FormItem>
-                        <Button onClick={() => handleCheckSubmit()} icon="accept">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>{t("itemCheck")}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="barcode">{t("barcode")}</Label>
+                            <Input
+                                id="barcode"
+                                required={itemCodeInput.length === 0}
+                                disabled={itemCodeInput.length > 0}
+                                value={barcodeInput}
+                                onChange={(e) => setBarcodeInput(e.target.value)}
+                                ref={barcodeInputRef}
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="code">{t("code")}</Label>
+                            <Input
+                                id="code"
+                                required={barcodeInput.length === 0}
+                                disabled={barcodeInput.length > 0}
+                                value={itemCodeInput}
+                                onChange={(e) => setItemCodeInput(e.target.value)}
+                            />
+                        </div>
+                        <Button onClick={() => handleCheckSubmit()} className="w-full">
+                            <FontAwesomeIcon icon={faCheck} className="mr-2" />
                             {t("accept")}
                         </Button>
-                    </FormItem>
-                </Form>
+                    </CardContent>
+                </Card>
             )}
             {result && (
-                <>
-                    <br/>
+                <div className="space-y-4">
                     {result.length === 0 && (
-                        <MessageStrip design="Negative" hideCloseButton>
-                            {t("noDataFound")}
-                        </MessageStrip>
+                        <Alert className="border-red-200 bg-red-50">
+                            <FontAwesomeIcon icon={faExclamationTriangle} className="h-4 w-4 text-red-600" />
+                            <AlertDescription>
+                                {t("noDataFound")}
+                            </AlertDescription>
+                        </Alert>
                     )}
                     {result.length === 1 && (
                         <ItemCheckResult
@@ -166,8 +176,8 @@ export default function ItemCheck() {
                             setBarcodeItem={handleSetBarcodeItem}
                         />
                     )}
-                </>
+                </div>
             )}
-        </ContentThemeSapUI5>
+        </ContentTheme>
     );
 }

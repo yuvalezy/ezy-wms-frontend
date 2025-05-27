@@ -1,10 +1,8 @@
 import React from "react";
 import {ItemCheckResponse} from "./Item";
 import {useTranslation} from "react-i18next";
-import {
-    Card,
-    CardHeader, Tab, TabContainer
-} from "@ui5/webcomponents-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ItemDetailsList from "./Components/ItemDetailsList";
 import BarcodeTable from "./Components/BarcodeTable";
 import StockTable from "./Components/StockTable";
@@ -18,16 +16,25 @@ const ItemCheckResult: React.FC<ItemCheckResultProps> = ({result, submit}) => {
     const {t} = useTranslation();
 
     return (
-        <Card header={<CardHeader titleText={`${t('code')}: ${result.itemCode}`}/>}>
-            <ItemDetailsList result={result}/>
-            <TabContainer>
-                <Tab text={t("barcodes")} selected>
-                    <BarcodeTable itemCode={result.itemCode} barcodes={result.barcodes} submit={submit}/>
-                </Tab>
-                <Tab text={t("stock")}>
-                    <StockTable result={result}/>
-                </Tab>
-            </TabContainer>
+        <Card>
+            <CardHeader>
+                <CardTitle>{t('code')}: {result.itemCode}</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <ItemDetailsList result={result}/>
+                <Tabs defaultValue="barcodes" className="mt-4">
+                    <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="barcodes">{t("barcodes")}</TabsTrigger>
+                        <TabsTrigger value="stock">{t("stock")}</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="barcodes" className="mt-4">
+                        <BarcodeTable itemCode={result.itemCode} barcodes={result.barcodes} submit={submit}/>
+                    </TabsContent>
+                    <TabsContent value="stock" className="mt-4">
+                        <StockTable result={result}/>
+                    </TabsContent>
+                </Tabs>
+            </CardContent>
         </Card>
     )
 }

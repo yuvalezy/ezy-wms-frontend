@@ -1,8 +1,8 @@
 import {useTranslation} from "react-i18next";
-import {Label, Table, TableCell, TableColumn, TableRow} from "@ui5/webcomponents-react";
 import React, {useEffect, useState} from "react";
 import {ItemCheckResponse, itemStock, ItemStockResponse} from "../Item";
 import {useThemeContext} from "../../../Components/ThemeContext";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 interface StockTableProps {
   result: ItemCheckResponse
@@ -22,27 +22,28 @@ const StockTable: React.FC<StockTableProps> = ({result}) => {
   }, []);
 
   return (
-    <>
-      <Table
-        columns={
-          <>
-            <TableColumn><Label>{t('bin')}</Label></TableColumn>
-            <TableColumn><Label>{t('quantity')}</Label></TableColumn>
-            <TableColumn><Label>{result.buyUnitMsr}</Label></TableColumn>
-            <TableColumn><Label>{result.purPackMsr}</Label></TableColumn>
-          </>
-        }
-      >
-        {data.map((value, index) => (
-          <TableRow key={index}>
-            <TableCell><Label>{value.binCode}</Label></TableCell>
-            <TableCell><Label>{value.quantity}</Label></TableCell>
-            <TableCell><Label>{value.quantity / result.numInBuy}</Label></TableCell>
-            <TableCell><Label>{value.quantity / result.numInBuy / result.purPackUn}</Label></TableCell>
+    <div className="space-y-4">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>{t('bin')}</TableHead>
+            <TableHead>{t('quantity')}</TableHead>
+            <TableHead>{result.buyUnitMsr}</TableHead>
+            <TableHead>{result.purPackMsr}</TableHead>
           </TableRow>
-        ))}
+        </TableHeader>
+        <TableBody>
+          {data.map((value, index) => (
+            <TableRow key={index}>
+              <TableCell>{value.binCode}</TableCell>
+              <TableCell>{value.quantity}</TableCell>
+              <TableCell>{value.quantity / result.numInBuy}</TableCell>
+              <TableCell>{value.quantity / result.numInBuy / result.purPackUn}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
       </Table>
-    </>
+    </div>
   );
 };
 export default StockTable;

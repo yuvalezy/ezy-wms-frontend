@@ -1,15 +1,11 @@
 import React from "react";
 import {ItemCheckResponse} from "./Item";
 import {useTranslation} from "react-i18next";
-import {
-    Label,
-    Button,
-    Table,
-    TableRow,
-    TableCell,
-    TableColumn,
-    MessageStrip
-} from "@ui5/webcomponents-react";
+import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExclamationTriangle, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 interface ItemCheckMultipleResultProps {
     barcode: string;
@@ -21,46 +17,46 @@ interface ItemCheckMultipleResultProps {
 const ItemCheckMultipleResult: React.FC<ItemCheckMultipleResultProps> = ({barcode, clear, result, setBarcodeItem}) => {
     const {t} = useTranslation();
     return (
-        <>
-            <div style={{margin: '5px'}}>
-                <MessageStrip design="Warning" hideCloseButton>
-                    <strong>
-                        {t('multipleItemsDetected')}
-                    </strong>
+        <div className="space-y-4">
+            <Alert className="border-yellow-200 bg-yellow-50">
+                <FontAwesomeIcon icon={faExclamationTriangle} className="h-4 w-4 text-yellow-600" />
+                <AlertDescription>
+                    <strong>{t('multipleItemsDetected')}</strong>
                     <br/>
                     {t('barcode')}: {barcode}
-                </MessageStrip>
-            </div>
-            <Table
-                columns={<>
-                    <TableColumn/>
-                    <TableColumn>
-                        <Label>{t('item')}</Label>
-                    </TableColumn>
-                    <TableColumn>
-                        <Label>{t('description')}</Label>
-                    </TableColumn>
-                </>}
-            >
-                {
-                    result.map((item, index) => (
+                </AlertDescription>
+            </Alert>
+            
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead className="w-24"></TableHead>
+                        <TableHead>{t('item')}</TableHead>
+                        <TableHead>{t('description')}</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {result.map((item, index) => (
                         <TableRow key={index}>
                             <TableCell>
-                                <Button design="Emphasized" onClick={() => setBarcodeItem(index)}>{t('select')}</Button>
+                                <Button onClick={() => setBarcodeItem(index)}>
+                                    {t('select')}
+                                </Button>
                             </TableCell>
-                            <TableCell><Label>{item.itemCode}</Label></TableCell>
-                            <TableCell><Label>{item.itemName}</Label></TableCell>
+                            <TableCell>{item.itemCode}</TableCell>
+                            <TableCell>{item.itemName}</TableCell>
                         </TableRow>
-                    ))
-                }
+                    ))}
+                </TableBody>
             </Table>
-            <br/>
-            <div style={{textAlign: 'center'}}>
-                <Button design="Attention" icon="cancel" onClick={() => clear()}>
+            
+            <div className="flex justify-center">
+                <Button variant="destructive" onClick={() => clear()}>
+                    <FontAwesomeIcon icon={faTimes} className="mr-2" />
                     {t('clear')}
                 </Button>
             </div>
-        </>
+        </div>
     )
 }
 export default ItemCheckMultipleResult;

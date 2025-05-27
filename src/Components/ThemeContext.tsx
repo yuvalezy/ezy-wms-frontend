@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
 import {BusyIndicator, MessageStripDesign} from "@ui5/webcomponents-react";
 import './ThemeContext.css';
-import ThemeProviderStatusAlert, {StatusAlert} from "./ThemeProviderStatusAlert";
+import ThemeProviderStatusAlert, {StatusAlert} from "@/components/ThemeProviderStatusAlert";
 
 const ThemeContext = createContext<{
     loading: boolean;

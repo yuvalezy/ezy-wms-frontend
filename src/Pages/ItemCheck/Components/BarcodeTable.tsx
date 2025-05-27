@@ -1,6 +1,12 @@
 import {useTranslation} from "react-i18next";
-import {Button, CheckBox, Grid, Input, Label, Table, TableCell, TableColumn, TableRow} from "@ui5/webcomponents-react";
 import React from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSave } from '@fortawesome/free-solid-svg-icons';
+import {Label} from "@/components/ui/label";
 
 interface BarcodeTableProps {
     itemCode: string;
@@ -27,46 +33,48 @@ const BarcodeTable: React.FC<BarcodeTableProps> = ({itemCode, barcodes, submit})
     }
 
     return (
-        <>
-            <Table
-                columns={
-                    <>
-                        <TableColumn><Label>{t('delete')}</Label></TableColumn>
-                        <TableColumn><Label>{t('barcode')}</Label></TableColumn>
-                    </>
-                }
-            >
-                {barcodes.map((barcode, index) => (
-                    <TableRow key={index}>
+        <div className="space-y-4">
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead className="w-16">{t('delete')}</TableHead>
+                        <TableHead>{t('barcode')}</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {barcodes.map((barcode, index) => (
+                        <TableRow key={index}>
+                            <TableCell>
+                                <Checkbox
+                                    checked={checkedBarcodes.includes(barcode)}
+                                    onCheckedChange={(checked: boolean) => handleCheckboxChange(barcode, checked)}
+                                />
+                            </TableCell>
+                            <TableCell><Label
+                              style={{cursor: 'pointer'}}
+                              onClick={() => handleCheckboxChange(barcode, !checkedBarcodes.includes(barcode))}>{barcode}</Label></TableCell>
+                        </TableRow>
+                    ))}
+                    <TableRow>
+                        <TableCell></TableCell>
                         <TableCell>
-                            <CheckBox
-                                checked={checkedBarcodes.includes(barcode)}
-                                onChange={(e) => handleCheckboxChange(barcode, e.target.checked ?? false)}
+                            <Input
+                                maxLength={254}
+                                placeholder={t('newBarcode')}
+                                value={newBarcodeInput}
+                                onChange={(e) => setNewBarcodeInput(e.target.value)}
                             />
                         </TableCell>
-                        <TableCell><Label>{barcode}</Label></TableCell>
                     </TableRow>
-                ))}
-                <TableRow>
-                    <TableCell></TableCell>
-                    <TableCell>
-                        <Input
-                            maxlength={254}
-                            placeholder={t('newBarcode')}
-                            value={newBarcodeInput}
-                            onChange={(e) => setNewBarcodeInput(e.target.value as string)}
-                        />
-                    </TableCell>
-                </TableRow>
+                </TableBody>
             </Table>
-            <Grid>
-                <div style={{textAlign: 'center', padding: '5px'}}>
-                    <Button icon="save" design="Attention" onClick={handleSubmit} color="warning">
-                        {t('update')}
-                    </Button>
-                </div>
-            </Grid>
-        </>
+            <div className="flex justify-center p-2">
+                <Button variant="destructive" onClick={handleSubmit}>
+                    <FontAwesomeIcon icon={faSave} className="mr-2" />
+                    {t('update')}
+                </Button>
+            </div>
+        </div>
     );
 };
 export default BarcodeTable;
