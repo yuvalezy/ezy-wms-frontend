@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {useAuth} from "../../Components/AppContext";
-import ContentTheme from "../../Components/ContentTheme";
+import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
 import DocumentForm from "./Components/DocumentForm";
 import {documentAction, fetchDocuments,} from "./Data/Document";
 import DocumentCard from "./Components/DocumentCard";
@@ -77,7 +77,7 @@ export default function GoodsReceiptSupervisor() {
     }
 
     return (
-        <ContentTheme title={getTitle()} icon="kpi-managing-my-area">
+        <ContentThemeSapUI5 title={getTitle()} icon="kpi-managing-my-area">
             <DocumentForm
                 onNewDocument={(newDocument) =>
                     setDocuments((prevDocs) => [newDocument, ...prevDocs])
@@ -110,6 +110,6 @@ export default function GoodsReceiptSupervisor() {
             </MessageBox>
             {/*<QRDialog ref={qrRef} prefix="GRPO" id={selectedDocumentId}/>*/}
             <DocumentListDialog ref={documentListDialogRef} doc={selectedDocument}/>
-        </ContentTheme>
+        </ContentThemeSapUI5>
     );
 }

@@ -1,4 +1,4 @@
-import ContentTheme from "../../Components/ContentTheme";
+import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
 import {useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
@@ -146,7 +146,7 @@ export default function CountingProcess() {
 
 
     return (
-        <ContentTheme title={title} icon="product">
+        <ContentThemeSapUI5 title={title} icon="product">
             <div className="themeContentStyle">
                 <div className="containerStyle">
                     {user?.binLocations && <BinLocationScanner ref={binLocationRef} onChanged={onBinChanged} onClear={onBinClear}/>}
@@ -189,6 +189,6 @@ export default function CountingProcess() {
             </div>
             {currentAlert && id && <Processes ref={processesRef} id={id} alert={currentAlert} reasonType={ReasonType.Counting} onCancel={handleCancel}
                                               onQuantityChanged={handleQuantityChanged} onUpdateLine={updateLine}/>}
-        </ContentTheme>
+        </ContentThemeSapUI5>
     );
 }

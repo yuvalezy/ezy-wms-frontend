@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {formatValueByPack} from "../../Assets/Quantities";
-import ContentTheme from "../../Components/ContentTheme";
+import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
 import {useParams} from "react-router-dom";
 import {
   fetchGoodsReceiptReportAll, GoodsReceiptAll, updateGoodsReceiptReport,
@@ -101,7 +101,7 @@ export default function GoodsReceiptReportAll() {
   }
 
   return (
-    <ContentTheme title={title} exportExcel={true} onExportExcel={handleExportExcel}>
+    <ContentThemeSapUI5 title={title} exportExcel={true} onExportExcel={handleExportExcel}>
       <Title level="H1">
         {t("goodsReceipt")} #{id}
       </Title>
@@ -112,6 +112,6 @@ export default function GoodsReceiptReportAll() {
         )}
         {id && <GoodsReceiptAllDialog ref={detailRef} id={id} onUpdate={onDetailUpdate}/>}
       </>}
-    </ContentTheme>
+    </ContentThemeSapUI5>
   );
 }

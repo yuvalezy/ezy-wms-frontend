@@ -1,4 +1,4 @@
-import ContentTheme from "../../Components/ContentTheme";
+import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "../../Components/ThemeContext";
 import React, {useEffect, useRef, useState} from "react";
@@ -20,11 +20,11 @@ export default function Transfer() {
     }, [setError, setLoading]);
 
     return (
-        <ContentTheme title={t("transfer")} icon="move">
+        <ContentThemeSapUI5 title={t("transfer")} icon="move">
             {transfers.map((transfer, index) => (
               <TransferCard key={transfer.id} doc={transfer}/>
             ))}
-        </ContentTheme>
+        </ContentThemeSapUI5>
     );
 
 }

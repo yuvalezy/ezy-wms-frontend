@@ -1,4 +1,4 @@
-import ContentTheme from "../../Components/ContentTheme";
+import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
 import {useTranslation} from "react-i18next";
 import {useEffect, useRef, useState} from "react";
 import {fetchPickings, PickingDocument, processPicking} from "./Data/PickingDocument";
@@ -48,7 +48,7 @@ export default function PickingSupervisor() {
     }
 
     return (
-        <ContentTheme title={t("pickSupervisor")} icon="kpi-managing-my-area">
+        <ContentThemeSapUI5 title={t("pickSupervisor")} icon="kpi-managing-my-area">
             {pickings.map((pick) => (
                 <PickingCard key={pick.entry} picking={pick} supervisor={true} onAction={handleAction} onUpdatePick={handleUpdatePick}/>
             ))}
@@ -60,6 +60,6 @@ export default function PickingSupervisor() {
                 </div>
             }
             <QRDialog ref={qrRef} prefix="PCK" id={selectedPickEntry}/>
-        </ContentTheme>
+        </ContentThemeSapUI5>
     );
 }

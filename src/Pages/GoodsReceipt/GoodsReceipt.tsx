@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import ContentTheme from "../../Components/ContentTheme";
+import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
 import {fetchDocuments,} from "./Data/Document";
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "../../Components/ThemeContext";
@@ -29,11 +29,11 @@ export default function GoodsReceipt() {
   }
 
   return (
-    <ContentTheme title={t("goodsReceipt")} icon="cause">
+    <ContentThemeSapUI5 title={t("goodsReceipt")} icon="cause">
       {documents.map((doc) => (
         <DocumentCard key={doc.id} doc={doc} docDetails={handleDocDetails}/>
       ))}
       <DocumentListDialog ref={documentListDialogRef} doc={selectedDocument}/>
-    </ContentTheme>
+    </ContentThemeSapUI5>
   );
 }

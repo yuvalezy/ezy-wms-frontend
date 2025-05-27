@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import ContentTheme from "../../Components/ContentTheme";
+import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {fetchCountings} from "./Data/Counting";
@@ -20,10 +20,10 @@ export default function CountingList() {
   }, [setError, setLoading]);
 
   return (
-    <ContentTheme title={t("counting")} icon="product">
+    <ContentThemeSapUI5 title={t("counting")} icon="product">
       {data.map((doc) => (
         <CountingCard key={doc.id} doc={doc}/>
       ))}
-    </ContentTheme>
+    </ContentThemeSapUI5>
   );
 }

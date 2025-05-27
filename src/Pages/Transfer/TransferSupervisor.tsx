@@ -1,4 +1,4 @@
-import ContentTheme from "../../Components/ContentTheme";
+import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
 import {useTranslation} from "react-i18next";
 import {MessageBox, MessageBoxActions, MessageStripDesign} from "@ui5/webcomponents-react";
 import React, {useEffect, useRef, useState} from "react";
@@ -55,7 +55,7 @@ export default function TransferSupervisor() {
         }
     }
 
-    return <ContentTheme title={t("transferSupervisor")} icon="journey-depart">
+    return <ContentThemeSapUI5 title={t("transferSupervisor")} icon="journey-depart">
         <TransferForm onNewTransfer={transfer => setTransfers((prevTransfers) => [transfer, ...prevTransfers])}/>
         <br/>
         <br/>
@@ -83,5 +83,5 @@ export default function TransferSupervisor() {
             <br/> {t('actionCannotReverse')}
         </MessageBox>
         <QRDialog ref={qrRef} prefix="TRSF" id={selectedTransferId}/>
-    </ContentTheme>
+    </ContentThemeSapUI5>
 }

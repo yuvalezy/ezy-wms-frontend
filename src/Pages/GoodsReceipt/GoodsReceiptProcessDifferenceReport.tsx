@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import ContentTheme from "../../Components/ContentTheme";
+import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
 import {useParams} from "react-router-dom";
 import {
     fetchGoodsReceiptValidateProcess,
@@ -75,7 +75,7 @@ export default function GoodsReceiptProcessDifferenceReport() {
     };
 
     return (
-        <ContentTheme title={title} exportExcel={true} onExportExcel={handleExportExcel}>
+        <ContentThemeSapUI5 title={title} exportExcel={true} onExportExcel={handleExportExcel}>
             <Title level="H1">
                 {t("goodsReceipt")} #{id}
             </Title>
@@ -100,6 +100,6 @@ export default function GoodsReceiptProcessDifferenceReport() {
             {data && <>
                 {data.length === 0 && (<MessageStrip hideCloseButton design="Warning">{t("nodata")}</MessageStrip>)}
             </>}
-        </ContentTheme>
+        </ContentThemeSapUI5>
     );
 }

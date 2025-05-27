@@ -1,5 +1,5 @@
 import React, {useRef, useState} from "react";
-import ContentTheme from "../../Components/ContentTheme";
+import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "../../Components/ThemeContext";
 import BinLocationScanner, {BinLocationScannerRef} from "../../Components/BinLocationScanner";
@@ -37,9 +37,9 @@ export default function BinCheck() {
   }
 
   if (!user?.binLocations) return (
-    <ContentTheme title={t("binCheck")} icon="dimension">
+    <ContentThemeSapUI5 title={t("binCheck")} icon="dimension">
       <MessageStrip design="Negative">You're not connected to a bin managed warehouse.</MessageStrip>
-    </ContentTheme>
+    </ContentThemeSapUI5>
   )
 
   const excelHeaders = [
@@ -72,7 +72,7 @@ export default function BinCheck() {
     });
   };
 
-  return <ContentTheme title={t("binCheck")} exportExcel={true} onExportExcel={handleExportExcel}>
+  return <ContentThemeSapUI5 title={t("binCheck")} exportExcel={true} onExportExcel={handleExportExcel}>
     <div className="themeContentStyle">
       <div className="containerStyle">
         {binContent &&
@@ -104,5 +104,5 @@ export default function BinCheck() {
         }} onClear={onBinClear}/>
       </div>
     </div>
-  </ContentTheme>
+  </ContentThemeSapUI5>
 }

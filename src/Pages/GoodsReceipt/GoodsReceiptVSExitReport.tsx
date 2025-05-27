@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ContentTheme from "../../Components/ContentTheme";
+import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
 import { useParams } from "react-router-dom";
 import {
   fetchGoodsReceiptVSExitReport,
@@ -35,7 +35,7 @@ export default function GoodsReceiptVSExitReport() {
       .finally(() => setLoading(false));
   }, []);
   return (
-    <ContentTheme title={title} icon="manager-insight">
+    <ContentThemeSapUI5 title={title} icon="manager-insight">
       <Title level="H1">
         {t("goodsReceipt")} #{id}
       </Title>
@@ -60,6 +60,6 @@ export default function GoodsReceiptVSExitReport() {
       {data && data.length === 0 && (
         <MessageStrip hideCloseButton design="Warning">{t("noExitData")}</MessageStrip>
       )}
-    </ContentTheme>
+    </ContentThemeSapUI5>
   );
 }

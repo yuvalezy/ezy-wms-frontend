@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {useAuth} from "../../Components/AppContext";
-import ContentTheme from "../../Components/ContentTheme";
+import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {MessageBox, MessageBoxActions, MessageStripDesign} from "@ui5/webcomponents-react";
@@ -59,7 +59,7 @@ export default function CountingSupervisor() {
     };
 
     return (
-        <ContentTheme title={t("countingSupervisor")} icon="factory">
+        <ContentThemeSapUI5 title={t("countingSupervisor")} icon="factory">
             <CountingForm
                 onNewCounting={(newCounting) =>
                     setCountings((prev) => [newCounting, ...prev])
@@ -91,6 +91,6 @@ export default function CountingSupervisor() {
                 <br /> {t('actionCannotReverse')}
             </MessageBox>
             <QRDialog ref={qrRef} prefix="CNT" id={selectedID}/>
-        </ContentTheme>
+        </ContentThemeSapUI5>
     );
 }

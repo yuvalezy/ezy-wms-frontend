@@ -1,4 +1,4 @@
-import ContentTheme from "../../Components/ContentTheme";
+import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
@@ -69,7 +69,7 @@ export default function TransferProcess() {
   }
 
   return (
-    <ContentTheme title={title} icon="cause">
+    <ContentThemeSapUI5 title={title} icon="cause">
       {id &&
           <>
               <FlexBox direction={FlexBoxDirection.Column} justifyContent={FlexBoxJustifyContent.Start}
@@ -115,6 +115,6 @@ export default function TransferProcess() {
               </FlexBox>
           </>
       }
-    </ContentTheme>
+    </ContentThemeSapUI5>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import ContentTheme from "../../Components/ContentTheme";
+import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
 import ReportFilterForm from "./Components/ReportFilterForm";
 import { fetchDocuments, GoodsReceiptReportFilter } from "./Data/Document";
 import DocumentReportCard from "./Components/DocumentReportCard";
@@ -73,7 +73,7 @@ export default function GoodsReceiptReport() {
     };
 
     return (
-        <ContentTheme title={t("goodsReceiptReport")} icon="manager-insight">
+        <ContentThemeSapUI5 title={t("goodsReceiptReport")} icon="manager-insight">
             <ReportFilterForm
                 onSubmit={onSubmit}
                 onClear={() => setDocuments([])}
@@ -84,6 +84,6 @@ export default function GoodsReceiptReport() {
                 ))}
             </div>
             <DocumentListDialog ref={documentListDialogRef} doc={selectedDocument} />
-        </ContentTheme>
+        </ContentThemeSapUI5>
     );
 }

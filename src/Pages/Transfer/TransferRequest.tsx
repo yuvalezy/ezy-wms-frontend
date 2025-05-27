@@ -1,4 +1,4 @@
-import ContentTheme from "../../Components/ContentTheme";
+import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
 import {useTranslation} from "react-i18next";
 import {ScrollableContent, ScrollableContentBox} from "../../Components/ScrollableContent";
 import BarCodeScanner, {BarCodeScannerRef} from "../../Components/BarCodeScanner";
@@ -97,7 +97,7 @@ export default function TransferRequest() {
     }
 
     return (
-        <ContentTheme title={t("transferRequest")} icon="request">
+        <ContentThemeSapUI5 title={t("transferRequest")} icon="request">
             <ScrollableContent>
                 <ScrollableContentBox borderUp={true}>
                     {rows != null && rows.length > 0 &&
@@ -138,6 +138,6 @@ export default function TransferRequest() {
                 </ScrollableContentBox>
                 <BarCodeScanner ref={barcodeRef} onAddItem={handleAddItem} item={true} enabled={true}/>
             </ScrollableContent>
-        </ContentTheme>
+        </ContentThemeSapUI5>
     )
 }

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import ContentTheme from "../../Components/ContentTheme";
+import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {Title} from "@ui5/webcomponents-react";
@@ -60,7 +60,7 @@ export default function CountingSummaryReport() {
     };
 
     return (
-        <ContentTheme title={t("countingSummaryReport")} exportExcel={true} onExportExcel={handleExportExcel}>
+        <ContentThemeSapUI5 title={t("countingSummaryReport")} exportExcel={true} onExportExcel={handleExportExcel}>
             <Title level="H1">
                 {t("counting")} #{id}
             </Title>
@@ -68,6 +68,6 @@ export default function CountingSummaryReport() {
                 {t("id")} {data?.name}
             </Title>
             {data && <CountingSummaryReportTable data={data.lines}></CountingSummaryReportTable>}
-        </ContentTheme>
+        </ContentThemeSapUI5>
     )
 }

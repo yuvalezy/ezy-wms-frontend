@@ -1,4 +1,4 @@
-import ContentTheme from "../../Components/ContentTheme";
+import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
 import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
 import BoxConfirmationDialog, {BoxConfirmationDialogRef} from "../../Components/BoxConfirmationDialog";
@@ -144,7 +144,7 @@ export default function PickingProcessDetail() {
     }
 
     return (
-        <ContentTheme title={title} icon="cause" back={() => navigateBack()}>
+        <ContentThemeSapUI5 title={title} icon="cause" back={() => navigateBack()}>
             {detail &&
                 <>
                     <ScrollableContent>
@@ -168,6 +168,6 @@ export default function PickingProcessDetail() {
                     </ScrollableContent>
                 </>
             }
-        </ContentTheme>
+        </ContentThemeSapUI5>
     );
 }

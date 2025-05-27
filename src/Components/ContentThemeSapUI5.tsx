@@ -13,7 +13,7 @@ interface ContentThemeProps {
     children?: React.ReactNode;
 }
 
-const ContentTheme: React.FC<ContentThemeProps> = ({title, children, exportExcel, onExportExcel}) => {
+const ContentThemeSapUI5: React.FC<ContentThemeProps> = ({title, children, exportExcel, onExportExcel}) => {
     return (
         <ThemeProvider> {/* Keep ThemeProvider if it's still needed for other UI5 components, otherwise remove. */}
             <MenuAppBar title={title} exportExcel={exportExcel} onExportExcel={onExportExcel}></MenuAppBar>
@@ -24,4 +24,4 @@ const ContentTheme: React.FC<ContentThemeProps> = ({title, children, exportExcel
     )
 }
 
-export default ContentTheme;
+export default ContentThemeSapUI5;

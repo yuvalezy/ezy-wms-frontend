@@ -1,4 +1,4 @@
-import ContentTheme from "../../Components/ContentTheme";
+import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
 import {useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
 import BoxConfirmationDialog, {BoxConfirmationDialogRef} from "../../Components/BoxConfirmationDialog";
@@ -299,7 +299,7 @@ export default function GoodsReceiptProcess() {
   }
 
   return (
-    <ContentTheme title={title} icon="cause">
+    <ContentThemeSapUI5 title={title} icon="cause">
       {id ? (
         <>
           {enable && (
@@ -345,6 +345,6 @@ export default function GoodsReceiptProcess() {
       ) : (
         <MessageStrip design="Negative">{t("invalidScanCode")}</MessageStrip>
       )}
-    </ContentTheme>
+    </ContentThemeSapUI5>
   );
 }

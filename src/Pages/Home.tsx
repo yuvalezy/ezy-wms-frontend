@@ -2,7 +2,7 @@ import React from "react";
 import {Link} from "react-router-dom";
 import {useAuth} from "../Components/AppContext";
 import {useTranslation} from "react-i18next";
-import ContentTheme from "../Components/ContentTheme";
+import ContentThemeSapUI5 from "../components/ContentThemeSapUI5";
 import {useMenus, MenuItem} from "../Assets/Menus";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -49,7 +49,7 @@ export default function Home() {
     const menuItems: MenuItem[] = menus.GetMenus(user?.authorizations);
 
     return (
-        <ContentTheme title={t('home')}>
+        <ContentThemeSapUI5 title={t('home')}>
             {menuItems.length > 0 &&
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 mt-4">
                     {menuItems.map((menu, index) => (
@@ -70,6 +70,6 @@ export default function Home() {
                     </div>
                 </div>
             }
-        </ContentTheme>
+        </ContentThemeSapUI5>
     );
 }

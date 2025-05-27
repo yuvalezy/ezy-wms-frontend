@@ -1,4 +1,4 @@
-import ContentTheme from "../../Components/ContentTheme";
+import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
 import React, {useEffect, useRef} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {
@@ -117,7 +117,7 @@ export default function ItemCheck() {
     }
 
     return (
-        <ContentTheme title={t("itemCheck")} icon="complete" back={() => handleClear()}>
+        <ContentThemeSapUI5 title={t("itemCheck")} icon="complete" back={() => handleClear()}>
             {(result == null || result.length === 0) && (
                 <Form>
                     <FormItem label={t("barcode")}>
@@ -168,6 +168,6 @@ export default function ItemCheck() {
                     )}
                 </>
             )}
-        </ContentTheme>
+        </ContentThemeSapUI5>
     );
 }

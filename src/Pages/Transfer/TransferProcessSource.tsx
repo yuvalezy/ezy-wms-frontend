@@ -1,4 +1,4 @@
-import ContentTheme from "../../Components/ContentTheme";
+import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
 import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
@@ -148,9 +148,9 @@ export default function TransferProcessSource() {
   }
 
   return (
-    <ContentTheme title={getTitle()} icon="functional-location"
-                  buttons={[{action: () => navigate(`/transfer/${id}/targetBins`), icon: "map"}]}
-                  back={() => navigateBack()}>
+    <ContentThemeSapUI5 title={getTitle()} icon="functional-location"
+                        buttons={[{action: () => navigate(`/transfer/${id}/targetBins`), icon: "map"}]}
+                        back={() => navigateBack()}>
       {id &&
           <ScrollableContent>
             {user?.binLocations && <BinLocationScanner onChanged={onBinChanged} onClear={onBinClear}/>}
@@ -195,6 +195,6 @@ export default function TransferProcessSource() {
           onUpdateLine={updateLine}
           onUpdateComplete={loadRows}
       />}
-    </ContentTheme>
+    </ContentThemeSapUI5>
   );
 }

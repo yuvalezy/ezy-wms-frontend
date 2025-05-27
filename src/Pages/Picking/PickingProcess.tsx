@@ -1,4 +1,4 @@
-import ContentTheme from "../../Components/ContentTheme";
+import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
 import {useNavigate, useParams} from "react-router-dom";
 import React, {CSSProperties, useEffect, useState} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
@@ -54,7 +54,7 @@ export default function PickingProcess() {
     }
 
     return (
-        <ContentTheme title={title} icon="cause">
+        <ContentThemeSapUI5 title={title} icon="cause">
             {picking?.detail?.map((item, index) => (
                 <Panel key={index} headerText={`${o(item.type)}# ${item.number}`} style={rowStyle(item)}>
                     <Title level="H5">
@@ -92,6 +92,6 @@ export default function PickingProcess() {
                     </div>
                 </Panel>
             ))}
-        </ContentTheme>
+        </ContentThemeSapUI5>
     );
 }

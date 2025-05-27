@@ -1,4 +1,4 @@
-import ContentTheme from "../../Components/ContentTheme";
+import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
 import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
@@ -144,7 +144,7 @@ export default function TransferProcessTargetItem() {
     }
 
     return (
-        <ContentTheme title={title} icon="functional-location" back={() => navigateBack()}>
+        <ContentThemeSapUI5 title={title} icon="functional-location" back={() => navigateBack()}>
             {content &&
                 <ScrollableContent>
                     <Panel>
@@ -190,6 +190,6 @@ export default function TransferProcessTargetItem() {
                 onUpdateComplete={loadData}
             />}
             {id && <TransferTargetItemsDetailsDialog ref={detailDialogRef} id={id} onUpdate={onUpdate}/>}
-        </ContentTheme>
+        </ContentThemeSapUI5>
     );
 }

@@ -1,4 +1,4 @@
-import ContentTheme from "../../Components/ContentTheme";
+import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
 import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
@@ -73,7 +73,7 @@ export default function TransferProcessTarget() {
     }
 
     return (
-        <ContentTheme title={title} icon="functional-location" back={() => navigateBack()}>
+        <ContentThemeSapUI5 title={title} icon="functional-location" back={() => navigateBack()}>
             {rows &&
                 <ScrollableContent>
                     {/*{rows.map((row) => (<TransferProcessTargetItemsValue/>))}*/}
@@ -105,6 +105,6 @@ export default function TransferProcessTarget() {
                     </Table>
                 </ScrollableContent>
             }
-        </ContentTheme>
+        </ContentThemeSapUI5>
     );
 }
