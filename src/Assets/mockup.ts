@@ -6,6 +6,7 @@ import {Counting, CountingContent} from "./Counting";
 import {GoodsReceiptAllDetail} from "../Pages/GoodsReceipt/Data/Report";
 import {TransferDocument} from "../Pages/Transfer/Data/TransferDocument";
 import {TransferAddItemResponse} from "../Pages/Transfer/Data/TransferProcess";
+import {ItemCheckResponse} from "../Pages/ItemCheck/Item";
 
 enum UpdateLineReturnValue {
     Status = "Status",
@@ -21,11 +22,14 @@ enum GoodsReceiptType {
     SpecificOrders = "SpecificOrders",
 }
 
-export const itemMockup = [
+export const itemMockup : ItemCheckResponse[] = [
     {
         itemCode: "exampleItemCode",
         itemName: "exampleItemName",
+        numInBuy: 11,
+        buyUnitMsr: "Doz",
         purPackUn: 5,
+        purPackMsr: "Box",
         barcodes: ["barcode1", "barcode2", "barcode3"],
     },
 ];

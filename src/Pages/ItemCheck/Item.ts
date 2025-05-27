@@ -6,7 +6,10 @@ import {ResponseStatus} from "../../Assets/Common";
 export interface ItemCheckResponse {
   itemCode: string;
   itemName: string;
+  numInBuy: number;
+  buyUnitMsr: string;
   purPackUn: number;
+  purPackMsr: string;
   barcodes: string[];
 }
 

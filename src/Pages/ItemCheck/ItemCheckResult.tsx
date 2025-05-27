@@ -25,7 +25,7 @@ const ItemCheckResult: React.FC<ItemCheckResultProps> = ({result, submit}) => {
                     <BarcodeTable itemCode={result.itemCode} barcodes={result.barcodes} submit={submit}/>
                 </Tab>
                 <Tab text={t("stock")}>
-                    <StockTable itemCode={result.itemCode}/>
+                    <StockTable result={result}/>
                 </Tab>
             </TabContainer>
         </Card>

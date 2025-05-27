@@ -126,6 +126,7 @@
   "supervisorCode": "Codigo de Supervisor",
   "reason": "Razón",
   "purPackUn": "Cantidad en Unidad",
+  "packUn": "Unidad de Empaque",
   "automatic": "Automático",
   "specificDocuments": "Documentos Específicos",
   "documentsList": "Lista de Documentos",

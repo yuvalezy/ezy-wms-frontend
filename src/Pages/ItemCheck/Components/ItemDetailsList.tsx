@@ -10,7 +10,8 @@ const ItemDetailsList : React.FC<ItemDetailsListProps> = ({result}) => {
     return (
         <List>
             <StandardListItem><strong>{t('description')}:</strong> {result.itemName}</StandardListItem>
-            <StandardListItem><strong>{t('purPackUn')}:</strong> {result.purPackUn}</StandardListItem>
+            <StandardListItem><strong>{t('purPackUn')}:</strong> {result.numInBuy} {result.buyUnitMsr}</StandardListItem>
+          <StandardListItem><strong>{t('packUn')}:</strong> {result.purPackUn} {result.purPackMsr}</StandardListItem>
         </List>
     );
 };
