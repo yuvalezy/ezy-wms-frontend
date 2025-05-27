@@ -1,4 +1,5 @@
 import {useTranslation} from 'react-i18next';
+import React, { useMemo } from 'react'; // Import useMemo
 import {Authorization} from "./Authorization";
 import "@ui5/webcomponents-icons/dist/qr-code.js"
 import "@ui5/webcomponents-icons/dist/complete.js"
@@ -170,5 +171,5 @@ export function useMenus() {
     }
 
     // It's common to return objects directly rather than an object with properties.
-    return {MenuItems, GetMenus};
+    return useMemo(() => ({MenuItems, GetMenus}), [t, globalSettings]);
 }

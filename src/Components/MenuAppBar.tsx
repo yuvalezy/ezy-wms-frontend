@@ -1,78 +1,139 @@
 import * as React from 'react';
 import {useAuth} from "./AppContext";
 import {useLocation, useNavigate} from "react-router-dom";
-import {Button, Icon, ShellBar, ShellBarItem, StandardListItem} from "@ui5/webcomponents-react";
 import {useEffect, useState} from "react";
-import {ShellBarDomRef} from "@ui5/webcomponents-react/dist/webComponents/ShellBar";
-import {
-  ShellBarMenuItemClickEventDetail,
-  ShellBarNotificationsClickEventDetail
-} from "@ui5/webcomponents-fiori/dist/ShellBar";
-import "@ui5/webcomponents-icons/dist/home.js"
 import {MenuItem, useMenus} from "../Assets/Menus";
-import type {Ui5CustomEvent} from "@ui5/webcomponents-react/dist/types";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faBars,
+  faTimes,
+  faFileExcel,
+  faSignOutAlt,
+  faCheckCircle, // complete
+  faCube, // dimension
+  faClipboardList, // cause
+  faChartBar, // kpi-managing-my-area
+  faChartLine, // manager-insight
+  faShoppingCart, // cart-2
+  faBox, // product
+  faIndustry, // factory
+  faArrowsAlt, // move
+  faTruckMoving, // journey-depart
+  faQuestionCircle, // request (fallback/generic)
+  faQuestion // general fallback
+} from '@fortawesome/free-solid-svg-icons';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
 interface MenuAppBarProps {
   title: string,
-  icon?: string,
-  buttons?: MenuAppBarButton[],
-  back?: () => void
+  exportExcel?: boolean,
+  onExportExcel?: () => void,
 }
 
-export interface MenuAppBarButton {
-  action: () => void,
-  icon: string,
-}
+const iconMap: { [key: string]: IconDefinition } = {
+  "complete": faCheckCircle,
+  "dimension": faCube,
+  "cause": faClipboardList,
+  "kpi-managing-my-area": faChartBar,
+  "manager-insight": faChartLine,
+  "cart-2": faShoppingCart,
+  "product": faBox,
+  "factory": faIndustry,
+  "move": faArrowsAlt,
+  "journey-depart": faTruckMoving,
+  "request": faQuestionCircle,
+  // Add more mappings as needed based on UI5 icons
+};
 
-const MenuAppBar: React.FC<MenuAppBarProps> = ({title, icon, buttons, back}) => {
+const getFaIcon = (iconName: string): IconDefinition => {
+  return iconMap[iconName] || faQuestion; // Fallback to a generic question mark icon
+};
+
+const MenuAppBar: React.FC<MenuAppBarProps> = ({title, exportExcel, onExportExcel}) => {
   const menus = useMenus();
   const [authorizedMenus, setAuthorizedMenus] = useState<MenuItem[]>([]);
   const navigate = useNavigate();
   const location = useLocation();
   const {logout, user} = useAuth();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     setAuthorizedMenus(menus.GetMenus(user?.authorizations));
-  }, []);
+  }, [user, menus]);
 
-  function handleMenuClicked(e: Ui5CustomEvent<ShellBarDomRef, ShellBarMenuItemClickEventDetail>) {
-    const dataKey = e.detail.item.getAttribute('data-key');
-    if (!dataKey)
-      return;
-    const index = parseInt(dataKey);
-    navigate(authorizedMenus[index].Link);
-  }
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
+  const handleMenuItemClick = (link: string) => {
+    navigate(link);
+    setIsMenuOpen(false); // Close menu after navigation
+  };
 
-  function handleBack() {
-    if (back != null) {
-      back();
-    }
-  }
+  const handleLogout = () => {
+    logout();
+    setIsMenuOpen(false); // Close menu after logout
+  };
 
   return (
-    <ShellBar
-      className="no-print"
-      logo={<Icon name={icon}/>}
-      onLogoClick={() => navigate('/')}
-      onMenuItemClick={handleMenuClicked}
-      menuItems={authorizedMenus.map((item, index) => (
-        <StandardListItem selected={location.pathname === item.Link} key={index} icon={item.Icon}
-                          data-key={index}>{item.Text}</StandardListItem>))}
-      primaryTitle={title}
-    >
-      {buttons?.map((b => <ShellBarItem icon={b.icon} onClick={b.action}/>))}
-      {back &&
-          <ShellBarItem
-              icon="nav-back"
-              onClick={() => handleBack()}
-          />
-      }
-      <ShellBarItem
-        icon="log"
-        onClick={() => logout()}
-      />
-    </ShellBar>
+    <nav className="bg-gray-800 p-4 flex items-center justify-between relative z-20">
+      {/* Menu Toggle Button */}
+      <button onClick={toggleMenu} className="text-white focus:outline-none">
+        <FontAwesomeIcon icon={faBars} size="lg" />
+      </button>
+
+      {/* Page Header */}
+      <div className="flex-grow text-center">
+        <h1 className="text-white text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold truncate px-4">
+          {title}
+        </h1>
+      </div>
+
+      {/* Export to Excel Button */}
+      {exportExcel && onExportExcel && (
+        <button onClick={onExportExcel} className="text-white focus:outline-none">
+          <FontAwesomeIcon icon={faFileExcel} size="lg" />
+        </button>
+      )}
+
+      {/* Sidebar Menu */}
+      <div className={`fixed top-0 left-0 h-full bg-gray-900 text-white w-64 transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out z-30 flex flex-col`}>
+        <div className="p-4 flex justify-between items-center"> {/* Removed md:hidden */}
+          <h2 className="text-xl font-bold">Menu</h2>
+          <button onClick={toggleMenu} className="text-white focus:outline-none">
+            <FontAwesomeIcon icon={faTimes} size="lg" />
+          </button>
+        </div>
+        <ul className="flex flex-col p-4">
+          {authorizedMenus.map((item, index) => (
+            <li key={index} className="mb-2">
+              <button
+                onClick={() => handleMenuItemClick(item.Link)}
+                className={`flex items-center w-full text-left p-2 rounded hover:bg-gray-700 ${location.pathname === item.Link ? 'bg-gray-700' : ''}`}
+              >
+                <FontAwesomeIcon icon={getFaIcon(item.Icon)} className="mr-3" />
+                {item.Text}
+              </button>
+            </li>
+          ))}
+          <li className="mb-2">
+            <button
+              onClick={handleLogout}
+              className="flex items-center w-full text-left p-2 rounded hover:bg-gray-700"
+            >
+              <FontAwesomeIcon icon={faSignOutAlt} className="mr-3" /> Logout
+            </button>
+          </li>
+        </ul>
+      </div>
+      {/* Overlay for mobile when menu is open */}
+      {isMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black opacity-50 z-20" // Removed md:hidden
+          onClick={toggleMenu}
+        ></div>
+      )}
+    </nav>
   );
 }
 
