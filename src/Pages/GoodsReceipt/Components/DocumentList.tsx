@@ -30,7 +30,7 @@ const DocumentList = forwardRef((props: DocumentListProps, ref) => {
     }))
     const handleAddClick = () => {
         if (docNum.length === 0) {
-            setAlert({message: t('documentRequired'), type: MessageStripDesign.Warning});
+            setAlert({message: t('documentRequired'), type: StatusAlertType.Warning});
             return;
         }
         let newDocument: DocumentItem = {
@@ -38,7 +38,7 @@ const DocumentList = forwardRef((props: DocumentListProps, ref) => {
             documentNumber: parseInt(docNum)
         };
         if (items.find(i => i.objectType === newDocument.objectType && i.documentNumber === newDocument.documentNumber)) {
-            setAlert({message: t('duplicateNotAllowed'), type: MessageStripDesign.Warning});
+            setAlert({message: t('duplicateNotAllowed'), type: StatusAlertType.Warning});
             return;
         }
         const newItems = items.concat(newDocument);

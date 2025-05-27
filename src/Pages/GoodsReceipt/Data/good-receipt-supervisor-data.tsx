@@ -4,11 +4,11 @@ import {useEffect, useRef, useState} from "react";
 import {useThemeContext} from "@/components/ThemeContext";
 import {Document} from "@/Assets/Document";
 import {ObjectAction, Status} from "@/Assets/Common";
-import {DocumentListDialogRef} from "@/Pages/GoodsReceipt/Components/DocumentListDialog";
+import {DocumentListDialogRef} from "../Components/DocumentListDialog";
 import {Authorization} from "@/Assets/Authorization";
 import {documentAction, fetchDocuments} from "@/Pages/GoodsReceipt/Data/Document";
-import {MessageStripDesign} from "@ui5/webcomponents-react";
 import {globalSettings} from "@/Assets/GlobalConfig";
+import {StatusAlertType} from "@/components/ThemeProviderStatusAlert";
 
 export const useGoodReceiptSupervisorData = () => {
   const {t} = useTranslation();
@@ -39,12 +39,7 @@ export const useGoodReceiptSupervisorData = () => {
   const handleAction = (docId: number, action: ObjectAction) => {
     setSelectedDocumentId(docId);
     setActionType(action);
-    if (action !== "qrcode") {
-      setDialogOpen(true);
-    } else {
-      console.error('qr discontinued');
-      // qrRef?.current?.show(true);
-    }
+    setDialogOpen(true);
   };
 
   const handleConfirmAction = () => {
@@ -57,7 +52,7 @@ export const useGoodReceiptSupervisorData = () => {
         );
         setAlert({
           message: actionType === "approve" ? t("approved") : t("cancelled"),
-          type: MessageStripDesign.Positive
+          type: StatusAlertType.Positive
         });
       })
       .catch((error) => setError(error))

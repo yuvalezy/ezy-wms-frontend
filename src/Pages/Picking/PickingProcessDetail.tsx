@@ -130,7 +130,7 @@ export default function PickingProcessDetail() {
                     return;
                 }
 
-                setAlert({message: StringFormat(t("pickingProcessSuccess"), barcode), type: MessageStripDesign.Positive})
+                setAlert({message: StringFormat(t("pickingProcessSuccess"), barcode), type: StatusAlertType.Positive})
                 loadData({reload: true, binEntry: binLocation.entry});
             })
             .catch((error) => {

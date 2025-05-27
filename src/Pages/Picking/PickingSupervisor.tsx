@@ -1,16 +1,16 @@
 import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import {fetchPickings, PickingDocument, processPicking} from "./Data/PickingDocument";
-import PickingCard from "./components/PickingCard";
 import {useThemeContext} from "@/components/ThemeContext";
-import {MessageStrip, MessageStripDesign} from "@ui5/webcomponents-react"; // Keep for MessageStripDesign enum
+import {MessageStrip} from "@ui5/webcomponents-react"; // Keep for MessageStripDesign enum
 import {StringFormat} from "@/Assets/Functions";
+import PickingCard from "@/Pages/Picking/Components/PickingCard";
+import {StatusAlertType} from "@/components/ThemeProviderStatusAlert";
 
 export default function PickingSupervisor() {
   const {t} = useTranslation();
   const [pickings, setPickings] = useState<PickingDocument[]>([]);
-  const [selectedPickEntry, setSelectedPickEntry] = useState<number>(-1);
   const {setLoading, setAlert, setError} = useThemeContext();
   useEffect(() => {
     loadData();
@@ -24,11 +24,6 @@ export default function PickingSupervisor() {
       .finally(() => setLoading(false));
   }
 
-  function handleAction(picking: PickingDocument, action: 'qrcode') {
-    setSelectedPickEntry(picking.entry);
-    // qrRef?.current?.show(true);
-  }
-
   function handleUpdatePick(picking: PickingDocument) {
     if (picking.openQuantity > 0 && !window.confirm(StringFormat(t('pickOpenQuantityAlert'), picking.entry) + '\n' + t('confirmContinue'))) {
       return;
@@ -36,7 +31,7 @@ export default function PickingSupervisor() {
     setLoading(true);
     processPicking(picking.entry)
       .then(() => {
-        setAlert({message: StringFormat(t("pickingUpdateSuccess"), picking.entry), type: MessageStripDesign.Positive})
+        setAlert({message: StringFormat(t("pickingUpdateSuccess"), picking.entry), type: StatusAlertType.Positive})
         loadData();
       })
       .catch((error) => {
@@ -48,12 +43,12 @@ export default function PickingSupervisor() {
   return (
     <ContentTheme title={t("pickSupervisor")}>
       {pickings.map((pick) => (
-        <PickingCard key={pick.entry} picking={pick} supervisor={true} onAction={handleAction}
+        <PickingCard key={pick.entry} picking={pick} supervisor={true}
                      onUpdatePick={handleUpdatePick}/>
       ))}
       {pickings.length === 0 &&
           <div style={{padding: '10px'}}>
-              <MessageStrip hideCloseButton design={MessageStripDesign.Information}>
+              <MessageStrip hideCloseButton design={StatusAlertType.Information}>
                 {t("nodata")}
               </MessageStrip>
           </div>

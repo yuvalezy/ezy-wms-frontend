@@ -114,7 +114,7 @@ export default function TransferProcessTargetBins() {
                     quantity: 1,
                     barcode: item.barcode,
                     itemCode: item.code,
-                    severity: MessageStripDesign.Information,
+                    severity: StatusAlertType.Information,
                     timeStamp: dateTimeFormat(date)
                 })
                 barcodeRef?.current?.clear();
@@ -188,7 +188,7 @@ export default function TransferProcessTargetBins() {
                         }
                         {rows != null && rows.length === 0 &&
                             <div style={{padding: '10px'}}>
-                                <MessageStrip hideCloseButton design={MessageStripDesign.Information}>
+                                <MessageStrip hideCloseButton design={StatusAlertType.Information}>
                                     {t("nodata")}
                                 </MessageStrip>
                             </div>

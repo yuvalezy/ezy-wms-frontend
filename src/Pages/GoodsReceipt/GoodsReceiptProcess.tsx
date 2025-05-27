@@ -76,7 +76,7 @@ export default function GoodsReceiptProcess() {
   //     alert({
   //       barcode: barcodeInput,
   //       message: StringFormat(t("barcodeNotFound"), barcodeInput),
-  //       severity: MessageStripDesign.Negative,
+  //       severity: StatusAlertType.Negative,
   //     });
   //     setBarcodeInput("");
   //     setLoading(false);
@@ -107,36 +107,36 @@ export default function GoodsReceiptProcess() {
             itemCode: item.code,
             quantity: data.quantity,
             message: `Error Mockup`,
-            severity: MessageStripDesign.Negative
+            severity: StatusAlertType.Negative
           });
         }
 
         let message: string = "";
-        let color: MessageStripDesign = MessageStripDesign.Information;
+        let color: MessageStripDesign = StatusAlertType.Information;
         let multiple: AddItemResponseMultipleValue[] = [];
         let totalErrors = (data.warehouse ? 1 : 0) + (data.fulfillment ? 1 : 0) + (data.showroom ? 1 : 0);
         if (totalErrors === 1) {
           if (data.warehouse) {
             message = t("scanConfirmStoreInWarehouse");
-            color = MessageStripDesign.Positive;
+            color = StatusAlertType.Positive;
           }
           if (data.fulfillment) {
             message = t("scanConfirmFulfillment");
-            color = MessageStripDesign.Warning;
+            color = StatusAlertType.Warning;
           }
           if (data.showroom) {
             message = t("scanConfirmShowroom");
-            color = MessageStripDesign.Information;
+            color = StatusAlertType.Information;
           }
         } else {
           if (data.warehouse) {
-            multiple.push({message: t("scanConfirmStoreInWarehouse"), severity: MessageStripDesign.Positive});
+            multiple.push({message: t("scanConfirmStoreInWarehouse"), severity: StatusAlertType.Positive});
           }
           if (data.fulfillment) {
-            multiple.push({message: t("scanConfirmFulfillment"), severity: MessageStripDesign.Warning});
+            multiple.push({message: t("scanConfirmFulfillment"), severity: StatusAlertType.Warning});
           }
           if (data.showroom) {
-            multiple.push({message: t("scanConfirmShowroom"), severity: MessageStripDesign.Information});
+            multiple.push({message: t("scanConfirmShowroom"), severity: StatusAlertType.Information});
           }
         }
 
@@ -158,7 +158,7 @@ export default function GoodsReceiptProcess() {
       .catch((error) => {
         console.error(`Error performing action: ${error}`);
         let errorMessage = error.response?.data["exceptionMessage"] ?? `Add Item Error: ${error}`;
-        alert({barcode: barcode, itemCode: item.code, message: errorMessage, severity: MessageStripDesign.Negative});
+        alert({barcode: barcode, itemCode: item.code, message: errorMessage, severity: StatusAlertType.Negative});
       })
       .finally(function () {
         setLoading(false);
@@ -175,7 +175,7 @@ export default function GoodsReceiptProcess() {
       barcode: barcode,
       itemCode: itemCode,
       message: StringFormat(t("goodsReceiptIsClosed"), id),
-      severity: MessageStripDesign.Negative,
+      severity: StatusAlertType.Negative,
       multiple: [],
       quantity: data.quantity
     });
@@ -244,31 +244,31 @@ export default function GoodsReceiptProcess() {
             response = data.returnValue;
             error = data.errorMessage;
             let message: string = "";
-            let color: MessageStripDesign = MessageStripDesign.Information;
+            let color: MessageStripDesign = StatusAlertType.Information;
             let multiple: AddItemResponseMultipleValue[] = [];
             let totalErrors = (data.warehouse ? 1 : 0) + (data.fulfillment ? 1 : 0) + (data.showroom ? 1 : 0);
             if (totalErrors === 1) {
               if (data.warehouse) {
                 message = t("scanConfirmStoreInWarehouse");
-                color = MessageStripDesign.Positive;
+                color = StatusAlertType.Positive;
               }
               if (data.fulfillment) {
                 message = t("scanConfirmFulfillment");
-                color = MessageStripDesign.Warning;
+                color = StatusAlertType.Warning;
               }
               if (data.showroom) {
                 message = t("scanConfirmShowroom");
-                color = MessageStripDesign.Information;
+                color = StatusAlertType.Information;
               }
             } else {
               if (data.warehouse) {
-                multiple.push({message: t("scanConfirmStoreInWarehouse"), severity: MessageStripDesign.Positive});
+                multiple.push({message: t("scanConfirmStoreInWarehouse"), severity: StatusAlertType.Positive});
               }
               if (data.fulfillment) {
-                multiple.push({message: t("scanConfirmFulfillment"), severity: MessageStripDesign.Warning});
+                multiple.push({message: t("scanConfirmFulfillment"), severity: StatusAlertType.Warning});
               }
               if (data.showroom) {
-                multiple.push({message: t("scanConfirmShowroom"), severity: MessageStripDesign.Information});
+                multiple.push({message: t("scanConfirmShowroom"), severity: StatusAlertType.Information});
               }
             }
             updatedAlert.quantity = parameters.quantity;

@@ -1,23 +1,23 @@
 import React from "react";
-import {useAuth} from "../../../components/AppContext";
+import {useAuth} from "@/components/AppContext";
 import {useTranslation} from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faTimes, faFileAlt, faTruckLoading, faExchangeAlt, faQrcode } from '@fortawesome/free-solid-svg-icons';
-import { Document } from "../../../Assets/Document";
-import { useObjectName } from "../../../Assets/ObjectName";
-import { Authorization } from "../../../Assets/Authorization";
-import { useDocumentStatusToString } from "../../../Assets/DocumentStatusString";
-import { Status } from "../../../Assets/Common";
+import { faCheck, faTimes, faFileAlt, faTruckLoading, faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
+import { Document } from "@/Assets/Document";
+import { useObjectName } from "@/Assets/ObjectName";
+import { Authorization } from "@/Assets/Authorization";
+import { useDocumentStatusToString } from "@/Assets/DocumentStatusString";
+import { Status } from "@/Assets/Common";
 import { activeStatuses, processStatuses, useHandleOpen } from "../Data/GoodsReceiptUtils";
-import { useDateTimeFormat } from "../../../Assets/DateFormat";
+import { useDateTimeFormat } from "@/Assets/DateFormat";
 import { Separator } from "@/components/ui/separator";
 
 type DocumentCardProps = {
     doc: Document,
     supervisor?: boolean,
-    action?: (docId: number, action: 'approve' | 'cancel' | 'qrcode') => void,
+    action?: (docId: number, action: 'approve' | 'cancel') => void,
     docDetails: (doc: Document) => void
 }
 
@@ -104,10 +104,6 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ doc, supervisor = false, ac
                                     {t('differencesReport')}
                                 </Button>
                             )}
-                            <Button variant="outline" className="w-full" onClick={() => action?.(doc.id, 'qrcode')}>
-                                <FontAwesomeIcon icon={faQrcode} className="mr-2" />
-                                {t('qrcode')}
-                            </Button>
                             {doc.status === Status.InProgress && (
                                 <Button className="w-full" onClick={() => action?.(doc.id, 'approve')}>
                                     <FontAwesomeIcon icon={faCheck} className="mr-2" />

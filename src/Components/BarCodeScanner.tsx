@@ -73,7 +73,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
     try {
       if (barcode.length === 0) {
         let message = !item ? t("barcodeRequired") : t("scanCodeRequired");
-        setAlert({message: message, type: MessageStripDesign.Warning});
+        setAlert({message: message, type: StatusAlertType.Warning});
         return;
       }
 

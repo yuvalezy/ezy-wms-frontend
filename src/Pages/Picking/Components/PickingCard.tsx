@@ -1,20 +1,19 @@
 import React from "react";
 import {useNavigate} from "react-router-dom";
-import {useAuth} from "../../../components/AppContext";
+import {useAuth} from "@/components/AppContext";
 import {useTranslation} from "react-i18next";
-import {Button, Card, CardHeader, Icon, List, ProgressIndicator, StandardListItem} from "@ui5/webcomponents-react";
-import {Authorization} from "../../../Assets/Authorization";
+import {Button, Card, CardHeader, List, ProgressIndicator, StandardListItem} from "@ui5/webcomponents-react";
+import {Authorization} from "@/Assets/Authorization";
 import {PickingDocument} from "../Data/PickingDocument";
-import {useDateTimeFormat} from "../../../Assets/DateFormat";
+import {useDateTimeFormat} from "@/Assets/DateFormat";
 
 type PickingCardProps = {
   picking: PickingDocument,
-  onAction?: (id: PickingDocument, action: 'qrcode') => void,
   onUpdatePick?: (picking: PickingDocument) => void,
   supervisor?: boolean
 }
 
-const PickingCard: React.FC<PickingCardProps> = ({picking, onAction, onUpdatePick, supervisor = false}) => {
+const PickingCard: React.FC<PickingCardProps> = ({picking, onUpdatePick, supervisor = false}) => {
   const {t} = useTranslation();
   const navigate = useNavigate();
   const {user} = useAuth();
@@ -35,9 +34,6 @@ const PickingCard: React.FC<PickingCardProps> = ({picking, onAction, onUpdatePic
             handleOpen(picking.entry)
           }}><strong>{t('number')}:</strong> {picking.entry}</a>)}
           {!handleOpenLink && (<><strong>{t('date')}:</strong> {dateFormat(new Date(picking.date))}</>)}
-          {/*<a style={{float: 'right'}} onClick={(e) => onAction(picking, 'qrcode')}>*/}
-          {/*    <Icon name="qr-code" />*/}
-          {/*</a>*/}
         </StandardListItem>
         {picking.salesOrders > 0 &&
             <StandardListItem>

@@ -80,7 +80,7 @@ export default function TransferProcessTargetItem() {
                     lineID: v.lineID,
                     quantity: 1,
                     itemCode: itemCode,
-                    severity: MessageStripDesign.Information,
+                    severity: StatusAlertType.Information,
                     timeStamp: dateTimeFormat(date)
                 })
                 binRef?.current?.clear();

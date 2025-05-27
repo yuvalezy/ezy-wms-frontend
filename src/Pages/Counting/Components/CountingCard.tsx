@@ -1,17 +1,17 @@
 import React from "react";
 import {useNavigate} from "react-router-dom";
-import {useAuth} from "../../../components/AppContext";
+import {useAuth} from "@/components/AppContext";
 import {useTranslation} from "react-i18next";
-import {Card, CardHeader, Icon, List, StandardListItem, Button} from "@ui5/webcomponents-react";
-import {Authorization} from "../../../Assets/Authorization";
-import {useDocumentStatusToString} from "../../../Assets/DocumentStatusString";
-import {Counting} from "../../../Assets/Counting";
-import {Status} from "../../../Assets/Common";
-import {useDateTimeFormat} from "../../../Assets/DateFormat";
+import {Card, CardHeader, List, StandardListItem, Button} from "@ui5/webcomponents-react";
+import {Authorization} from "@/Assets/Authorization";
+import {useDocumentStatusToString} from "@/Assets/DocumentStatusString";
+import {Counting} from "@/Assets/Counting";
+import {Status} from "@/Assets/Common";
+import {useDateTimeFormat} from "@/Assets/DateFormat";
 
 type CountingCardProps = {
   doc: Counting,
-  handleAction?: (docId: number, action: 'approve' | 'cancel' | 'qrcode') => void,
+  handleAction?: (docId: number, action: 'approve' | 'cancel') => void,
   supervisor?: boolean
 }
 

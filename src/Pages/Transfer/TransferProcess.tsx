@@ -50,7 +50,7 @@ export default function TransferProcess() {
       setLoading(true);
       transferAction(id, "approve")
         .then(() => {
-          setAlert({message: t("transferApproved"), type: MessageStripDesign.Positive});
+          setAlert({message: t("transferApproved"), type: StatusAlertType.Positive});
           navigate(`/transfer`);
         })
         .catch((error) => {

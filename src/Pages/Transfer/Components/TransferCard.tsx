@@ -1,17 +1,17 @@
 import React from "react";
 import {useNavigate} from "react-router-dom";
-import {useAuth} from "../../../components/AppContext";
+import {useAuth} from "@/components/AppContext";
 import {useTranslation} from "react-i18next";
 import {Card, CardHeader, List, StandardListItem, Button, ProgressIndicator} from "@ui5/webcomponents-react";
-import {Authorization} from "../../../Assets/Authorization";
-import {useDocumentStatusToString} from "../../../Assets/DocumentStatusString";
+import {Authorization} from "@/Assets/Authorization";
+import {useDocumentStatusToString} from "@/Assets/DocumentStatusString";
 import {TransferDocument} from "../Data/TransferDocument";
-import {Status} from "../../../Assets/Common";
-import {useDateTimeFormat} from "../../../Assets/DateFormat";
+import {Status} from "@/Assets/Common";
+import {useDateTimeFormat} from "@/Assets/DateFormat";
 
 type TransferCardProps = {
   doc: TransferDocument,
-  onAction?: (id: number, action: 'approve' | 'cancel' | 'qrcode') => void,
+  onAction?: (id: number, action: 'approve' | 'cancel') => void,
   supervisor?: boolean
 }
 

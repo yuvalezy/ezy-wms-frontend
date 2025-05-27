@@ -77,7 +77,7 @@ export type AddItemResponseMultipleValue = {
     message: string;
     severity: MessageStripDesign;
 };
-export type ObjectAction = "approve" | "cancel" | "qrcode";
+export type ObjectAction = "approve" | "cancel";
 
 export enum SourceTarget {
     Source = "Source",

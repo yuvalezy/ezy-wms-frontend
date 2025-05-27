@@ -1,7 +1,7 @@
 import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import { MessageStripDesign} from "@ui5/webcomponents-react"; // Keep for MessageStripDesign enum
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useThemeContext} from "../../components/ThemeContext";
 import {fetchTransfers, TransferDocument, transferAction} from "./Data/TransferDocument";
 import TransferCard from "./Components/TransferCard";
@@ -19,6 +19,7 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { StatusAlertType } from "@/components/ThemeProviderStatusAlert";
 
 export default function TransferSupervisor() {
     const {t} = useTranslation();
@@ -45,7 +46,7 @@ export default function TransferSupervisor() {
                 );
                 setAlert({
                     message: actionType === "approve" ? t("transferApproved") : t("transferCancelled"),
-                    type: MessageStripDesign.Positive
+                    type: StatusAlertType.Positive
                 });
             })
             .catch((error) => {
@@ -54,15 +55,10 @@ export default function TransferSupervisor() {
             .finally(() => setLoading(false));
     };
 
-    function handleAction(id: number, action: 'approve' | 'cancel' | 'qrcode') {
+    function handleAction(id: number, action: 'approve' | 'cancel') {
         setSelectedTransferId(id);
         setActionType(action);
-        if (action !== "qrcode") {
-            setDialogOpen(true);
-        } else {
-            console.error('qr discontinue');
-            // qrRef?.current?.show(true);
-        }
+        setDialogOpen(true);
     }
 
     return (
