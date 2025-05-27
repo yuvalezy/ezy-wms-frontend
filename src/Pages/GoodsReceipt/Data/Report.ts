@@ -70,6 +70,7 @@ export type GoodsReceiptValidateProcessLineDetails = {
   employee: string;
   quantity: number;
   scannedQuantity: number;
+  unit: UnitType;
 }
 
 export enum ProcessLineStatus {

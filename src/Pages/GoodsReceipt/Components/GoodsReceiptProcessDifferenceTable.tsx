@@ -1,29 +1,30 @@
 import * as React from 'react';
+import {CSSProperties, useState} from 'react';
 import {
-  fetchGoodsReceiptValidateProcessLineDetails, GoodsReceiptValidateProcess,
-  GoodsReceiptValidateProcessLine, GoodsReceiptValidateProcessLineDetails,
+  fetchGoodsReceiptValidateProcessLineDetails,
+  GoodsReceiptValidateProcess,
+  GoodsReceiptValidateProcessLine,
+  GoodsReceiptValidateProcessLineDetails,
   ProcessLineStatus,
 } from "../Data/Report";
 import {useTranslation} from "react-i18next";
 import {
-  Icon,
+  Bar,
+  Button,
+  Card,
+  CardHeader,
+  Dialog,
   Label,
   Table,
   TableCell,
   TableColumn,
   TableRow,
-  Card,
-  CardHeader,
   Text,
-  Button,
-  Dialog,
-  Bar,
-  Title,
-  ValueState
+  Title
 } from '@ui5/webcomponents-react';
-import {CSSProperties, useState} from "react";
 import {useThemeContext} from "../../../Components/ThemeContext";
 import {useDateTimeFormat} from "../../../Assets/DateFormat";
+import {UnitType} from "../../../Assets/Common";
 // import {formatValueByPack} from "../../../Assets/Quantities"; // Assuming this might be useful later or can be removed
 
 // Interface for the new quantity row structure
@@ -268,9 +269,12 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
           <div style={{padding: '1rem', minWidth: '500px'}}>
             <Title level="H5" style={{marginBottom: '0.5rem'}}>{selectedLineForDetail.itemName}</Title>
             
-            <Text style={{marginBottom: '1rem', display: 'block'}}>
-              {`${t('status')}: ${getRowStatusLabel(selectedLineForDetail.lineStatus)}`}
-            </Text>
+            <div style={{marginBottom: '1rem'}}>
+              <Text style={{fontWeight: 'bold'}}>{`${t('status')}: `}</Text>
+              <Text style={getStatusTextStyle(selectedLineForDetail.lineStatus)}>
+                {getRowStatusLabel(selectedLineForDetail.lineStatus)}
+              </Text>
+            </div>
 
             {detailDataForDialog && detailDataForDialog.length > 0 ? (
               <Table
@@ -284,12 +288,17 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
               >
                 {detailDataForDialog.map((detail) => {
                   const timeStamp = new Date(detail.timeStamp);
+                  let scannedQuantity = detail.scannedQuantity;
+                  if (detail.unit !== UnitType.Unit)
+                    scannedQuantity /= selectedLineForDetail.numInBuy;
+                  if (detail.unit === UnitType.Pack)
+                    scannedQuantity /= selectedLineForDetail.purPackUn;
                   return (
                     <TableRow key={detail.timeStamp + detail.employee}> {/* Added employee to key for more uniqueness */}
                       <TableCell><Text>{dateFormat(timeStamp)}</Text></TableCell>
                       <TableCell><Text>{timeFormat(timeStamp)}</Text></TableCell>
                       <TableCell><Text>{detail.employee}</Text></TableCell>
-                      <TableCell style={{textAlign: 'right'}}><Text>{detail.scannedQuantity}</Text></TableCell>
+                      <TableCell style={{textAlign: 'right'}}><Text>{scannedQuantity}</Text></TableCell>
                     </TableRow>
                   );
                 })}
