@@ -3,24 +3,14 @@ import {useAuth} from "@/components/AppContext";
 import ContentTheme from "../../components/ContentTheme";
 import {useThemeContext} from "@/components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 import { MessageStripDesign} from "@ui5/webcomponents-react"; // Keep for MessageStripDesign enum
 import {StringFormat} from "@/Assets/Functions";
-import CountingForm from "./components/CountingForm";
 import {countingAction, fetchCountings} from "./Data/Counting";
 import {Counting} from "@/Assets/Counting";
 import CountingCard from "./components/CountingCard";
 import {ObjectAction} from "@/Assets/Common";
+import {MessageBox} from "@/components/ui/message-box";
+import CountingForm from "@/Pages/Counting/Components/CountingForm";
 
 export default function CountingSupervisor() {
     const {user} = useAuth();
@@ -81,25 +71,19 @@ export default function CountingSupervisor() {
                 <CountingCard supervisor={true} key={doc.id} doc={doc} handleAction={handleAction}/>
             ))}
             <MessageBox
-                onClose={(e) => {
-                    if (e.detail.action === MessageBoxActions.OK) {
-                        handleConfirmAction();
-                        return;
-                    }
-                    setDialogOpen(false);
-                }}
+                onConfirm={handleConfirmAction}
+                onOpenChange={setDialogOpen}
                 open={dialogOpen}
-                type="Confirm"
-
-            >
-                {StringFormat(
-                    actionType === "approve"
-                        ? t("confirmFinishDocument")
-                        : t("confirmCancelDocument"),
-                    selectedID
+                type="confirm"
+                title={StringFormat(
+                  actionType === "approve"
+                    ? t("confirmFinishDocument")
+                    : t("confirmCancelDocument"),
+                  selectedID
                 )}
-                <br /> {t('actionCannotReverse')}
-            </MessageBox>
+                description={t('actionCannotReverse')}
+
+            />
         </ContentTheme>
     );
 }

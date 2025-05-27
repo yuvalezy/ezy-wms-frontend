@@ -1,9 +1,9 @@
 import React, {useState} from "react";
-import {useThemeContext} from "../../../components/ThemeContext";
+import {useThemeContext} from "@/components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {Button, Form, FormItem, Input,} from "@ui5/webcomponents-react";
 import {createCounting} from "../Data/Counting";
-import {Counting} from "../../../Assets/Counting";
+import {Counting} from "@/Assets/Counting";
 
 interface CountingFormProps {
     onNewCounting: (document: Counting) => void;
