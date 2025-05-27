@@ -36,8 +36,10 @@ export interface DocumentAddItemResponse {
   showroom: boolean;
   warehouse: boolean;
   quantity: number;
-  packUnit: number;
-  buyUnitMsr?: string | null;
+  numInBuy: number;
+  buyUnitMsr: string;
+  purPackUn: number;
+  purPackMsr: string;
   errorMessage?: string;
 }
 

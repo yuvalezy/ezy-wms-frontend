@@ -19,7 +19,6 @@ export default function GoodsReceiptReportAll() {
   const {t} = useTranslation();
   const [id, setID] = useState<number | null>();
   const {scanCode} = useParams();
-  const [displayPackage, setDisplayPackage] = useState(true);
   const {setLoading, setAlert, setError} = useThemeContext();
   const [data, setData] = useState<GoodsReceiptAll[] | null>(null);
   const title = `${t("goodsReceiptReport")} #${scanCode}`;
@@ -58,16 +57,20 @@ export default function GoodsReceiptReportAll() {
     t("delivery"),
     t("showroom"),
     t("stock"),
+    t("purPackUn"),
+    t("packUn"),
   ];
 
   function excelData() {
     return data?.map((item) => [
       item.itemCode,
       item.itemName,
-      formatValueByPack(item.quantity, item.packUnit, displayPackage),
-      formatValueByPack(item.delivery, item.packUnit, displayPackage),
-      formatValueByPack(item.showroom, item.packUnit, displayPackage),
-      formatValueByPack(item.stock, item.packUnit, displayPackage),
+      item.quantity,
+      item.delivery,
+      item.showroom,
+      item.stock,
+      item.numInBuy,
+      item.purPackUn,
     ]) ?? [];
   }
 
@@ -98,9 +101,7 @@ export default function GoodsReceiptReportAll() {
                        fileName={`goods_receipt_data_${id}`}/>
       </div>
       {data && <>
-          <CheckBox text={t('packageQuantity')} checked={displayPackage}
-                    onChange={(e) => setDisplayPackage(e.target.checked)}/>
-          <GoodsReceiptAllReportTable onClick={openDetails} data={data} displayPackage={displayPackage}/>
+          <GoodsReceiptAllReportTable onClick={openDetails} data={data}/>
         {data.length === 0 && (
           <MessageStrip hideCloseButton design="Warning">{t("noExitData")}</MessageStrip>
         )}

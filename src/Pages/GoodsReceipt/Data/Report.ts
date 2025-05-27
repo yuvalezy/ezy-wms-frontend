@@ -14,8 +14,10 @@ export type GoodsReceiptAll = {
   delivery: number;
   showroom: number;
   stock: number;
-  packUnit: number;
+  numInBuy: number;
   buyUnitMsr?: string | null;
+  purPackUn: number;
+  purPackMsr?: string | null;
 };
 export type GoodsReceiptAllDetail = {
   lineID: number;

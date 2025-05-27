@@ -90,7 +90,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
   function handleQuantityChange(lineID: number, newValue: number) {
     setQuantityChanges(prevState => ({
       ...prevState,
-      [lineID]: newValue * currentData!.packUnit,
+      [lineID]: newValue * currentData!.numInBuy,
     }));
     setEnableUpdate(true);
   }
@@ -126,7 +126,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
       <Title level="H6">
         {currentData?.itemCode} - {currentData?.itemName}
       </Title>
-      <Label>{t('packageQuantity')}: {currentData?.packUnit}</Label>
+      <Label>{t('packageQuantity')}: {currentData?.numInBuy}</Label>
 
       {currentData && data &&
           <Table
@@ -140,7 +140,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
               </>}
           >
             {data.map((row) => {
-              const quantity = row.quantity / currentData.packUnit;
+              const quantity = row.quantity / currentData.numInBuy;
               const packageQuantity = quantityChanges[row.lineID] === undefined ? row.quantity : quantityChanges[row.lineID];
               return (
                 <TableRow key={row.lineID}>

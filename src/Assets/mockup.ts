@@ -3,7 +3,7 @@ import {DeliveryOpenDocument} from "./Deliveries";
 import {PickingDocument, PickingDocumentDetail, PickingDocumentDetailItem, PickStatus} from "../Pages/Picking/Data/PickingDocument";
 import {DocumentAddItemResponse, ProcessResponse} from "./Document";
 import {Counting, CountingContent} from "./Counting";
-import {GoodsReceiptAllDetail} from "../Pages/GoodsReceipt/Data/Report";
+import {GoodsReceiptAll, GoodsReceiptAllDetail} from "../Pages/GoodsReceipt/Data/Report";
 import {TransferDocument} from "../Pages/Transfer/Data/TransferDocument";
 import {TransferAddItemResponse} from "../Pages/Transfer/Data/TransferProcess";
 import {ItemCheckResponse} from "../Pages/ItemCheck/Item";
@@ -49,7 +49,7 @@ export const updateItemBarMockup = {
     status: ResponseStatus.Ok,
 };
 
-export const GoodsReceiptMockup = [
+export const GoodsReceiptMockup : GoodsReceiptAll[] = [
     {
         itemCode: "ABC123",
         itemName: "Sample Item",
@@ -57,7 +57,10 @@ export const GoodsReceiptMockup = [
         delivery: 5,
         showroom: 3,
         stock: 2,
-        packUnit: 5
+        numInBuy: 12,
+        buyUnitMsr: "Doz",
+        purPackUn: 4,
+        purPackMsr: "Box"
     },
 ];
 
@@ -100,8 +103,10 @@ export const addItemResponseMockup : DocumentAddItemResponse = {
     showroom: false,
     warehouse: false,
     quantity: 1,
-    packUnit: 12,
-    buyUnitMsr: "DOZ"
+    numInBuy: 12,
+    buyUnitMsr: "DOZ",
+    purPackMsr: "Pack",
+    purPackUn: 4
 };
 
 export const UpdateLineReturnValueMockup: UpdateLineReturnValue =

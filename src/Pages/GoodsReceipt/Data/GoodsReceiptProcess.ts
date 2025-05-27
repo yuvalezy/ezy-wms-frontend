@@ -2,12 +2,13 @@ import axios from "axios";
 import {DocumentAddItemResponse, DocumentUpdateLineQuantityResponse} from "../../../Assets/Document";
 import {configUtils, delay, globalConfig} from "../../../Assets/GlobalConfig";
 import {addItemResponseMockup, UpdateLineReturnValueMockup} from "../../../Assets/mockup";
-import {UpdateLineReturnValue} from "../../../Assets/Common";
+import {UnitType, UpdateLineReturnValue} from "../../../Assets/Common";
 
 export const addItem = async (
   id: number,
   itemCode: string,
-  barcode: string
+  barcode: string,
+  unit: UnitType
 ): Promise<DocumentAddItemResponse> => {
   try {
     if (configUtils.isMockup) {
@@ -52,6 +53,7 @@ export const addItem = async (
         id: id,
         itemCode: itemCode,
         barcode: barcode,
+        unit: unit,
       },
       {
         headers: {

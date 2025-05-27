@@ -12,10 +12,10 @@ export interface ProcessAlertValue {
   itemCode?: string | null;
   quantity?: number,
   unit?: UnitType,
-  packUnit?: number,
-  packUnitMsr?: string,
-  buyUnit?: number | null,
+  numInBuy?: number | null,
   buyUnitMsr?: string | null,
+  purPackUn?: number,
+  purPackMsr?: string,
   timeStamp?: string;
   message?: string;
   severity: MessageStripDesign;
@@ -110,21 +110,21 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
               <br/>
               <span><strong>{t('quantity')}: </strong>{alert.quantity}{unitDesc()}</span>
               <br/>
-            {!alert.unit && alert.packUnit &&
+            {!alert.unit && alert.purPackUn &&
                 <>
-                    <span><strong>{t('packageQuantity')}: </strong>{alert.quantity! * alert.packUnit!} {alert.buyUnitMsr}</span>
+                    <span><strong>{t('packageQuantity')}: </strong>{alert.quantity! * alert.purPackUn!} {alert.buyUnitMsr}</span>
                     <br/>
                 </>
             }
-            {alert.unit !== UnitType.Unit && alert.buyUnit &&
+            {alert.unit !== UnitType.Unit && alert.numInBuy &&
               <>
-                  <span><strong>{t('dozenUnit')}: </strong>{alert.buyUnit!} {alert.buyUnitMsr}</span>
+                  <span><strong>{t('dozenUnit')}: </strong>{alert.numInBuy!} {alert.buyUnitMsr}</span>
                   <br/>
               </>
             }
-            {alert.unit === UnitType.Pack && alert.packUnit &&
+            {alert.unit === UnitType.Pack && alert.purPackUn &&
               <>
-                  <span><strong>{t('packageUnit')}: </strong>{alert.packUnit!} {alert.packUnitMsr}</span>
+                  <span><strong>{t('packageUnit')}: </strong>{alert.purPackUn!} {alert.purPackMsr}</span>
                   <br/>
               </>
             }
