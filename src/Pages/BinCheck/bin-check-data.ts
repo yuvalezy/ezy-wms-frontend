@@ -8,7 +8,7 @@ import {BinLocation} from "@/Assets/Common";
 import {delay} from "@/Assets/GlobalConfig";
 import {exportToExcel} from "@/Utils/excelExport";
 
-export const useBinCheckService = () => {
+export const useBinCheckData = () => {
   const {t} = useTranslation();
   const {setLoading, setAlert, setError} = useThemeContext();
   const binRef = useRef<BinLocationScannerRef>(null);

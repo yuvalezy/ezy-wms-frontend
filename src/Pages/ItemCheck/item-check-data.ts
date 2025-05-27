@@ -4,8 +4,9 @@ import {useThemeContext} from "@/components/ThemeContext";
 import {ResponseStatus} from "@/Assets/Common";
 import {StringFormat} from "@/Assets/Functions";
 import {useTranslation} from "react-i18next";
+import {StatusAlertType} from "@/components/ThemeProviderStatusAlert";
 
-export const useItemCheckService = () => {
+export const useItemCheckData = () => {
   const {t} = useTranslation();
   const [barcodeInput, setBarcodeInput] = React.useState("");
   const [itemCodeInput, setItemCodeInput] = React.useState("");
@@ -21,7 +22,7 @@ export const useItemCheckService = () => {
     let barcodeLength = barcodeInput.length === 0;
     let itemCodeLength = itemCodeInput.length === 0;
     if (barcodeLength && itemCodeLength) {
-      setAlert({message: t("barcodeOrItemRequired"), type: "warning"});
+      setAlert({message: t("barcodeOrItemRequired"), type: StatusAlertType.Warning});
       return;
     }
 

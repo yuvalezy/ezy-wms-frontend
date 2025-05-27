@@ -5,8 +5,8 @@ import {
     Dialog, DialogDomRef, List, StandardListItem,
 } from "@ui5/webcomponents-react";
 import {useTranslation} from "react-i18next";
-import {Document} from '../../../Assets/Document'
-import {useObjectName} from "../../../Assets/ObjectName";
+import {Document} from '@/Assets/Document'
+import {useObjectName} from "@/Assets/ObjectName";
 
 export interface DocumentListDialogRef {
     show: () => void;

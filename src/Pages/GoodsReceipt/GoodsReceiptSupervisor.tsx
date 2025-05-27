@@ -1,84 +1,30 @@
-import React, {useEffect, useRef, useState} from "react";
-import {useAuth} from "@/components/AppContext";
-import {documentAction, fetchDocuments,} from "./Data/Document";
+import React from "react";
 import DocumentCard from "./components/DocumentCard";
-import {useThemeContext} from "@/components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {MessageStripDesign} from "@ui5/webcomponents-react"; // Keep for MessageStripDesign enum
-import {Document} from "@/Assets/Document";
 import {StringFormat} from "@/Assets/Functions";
-import {globalSettings} from "@/Assets/GlobalConfig";
-import {Authorization} from "@/Assets/Authorization";
-import DocumentListDialog, {DocumentListDialogRef} from "./components/DocumentListDialog";
-import {ObjectAction, Status} from "@/Assets/Common";
+import DocumentListDialog from "./components/DocumentListDialog";
 import ContentTheme from "@/components/ContentTheme";
 import DocumentForm from "@/Pages/GoodsReceipt/Components/DocumentForm";
 import {MessageBox} from "@/components/ui/message-box";
+import {useGoodReceiptSupervisorData} from "@/Pages/GoodsReceipt/Data/good-receipt-supervisor-data";
 
 export default function GoodsReceiptSupervisor() {
-  const {user} = useAuth();
-  const [supervisor, setSupervisor] = useState(false);
   const {t} = useTranslation();
-  const {setLoading, setAlert, setError} = useThemeContext();
-  const [documents, setDocuments] = useState<Document[]>([]);
-  const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(null);
-  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
-  const [actionType, setActionType] = useState<ObjectAction | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const documentListDialogRef = useRef<DocumentListDialogRef>(null);
-
-  useEffect(() => {
-    setSupervisor(user?.authorizations.filter((v) => v === Authorization.GOODS_RECEIPT_SUPERVISOR).length === 1);
-    setLoading(true);
-    fetchDocuments({status: [Status.Open, Status.InProgress]})
-      .then((data) => setDocuments(data))
-      .catch((error) => setError(error))
-      .finally(() => setLoading(false));
-  }, []);
-
-  function handleDocDetails(doc: Document) {
-    setSelectedDocument(doc);
-    documentListDialogRef?.current?.show();
-  }
-
-  const handleAction = (docId: number, action: ObjectAction) => {
-    setSelectedDocumentId(docId);
-    setActionType(action);
-    if (action !== "qrcode") {
-      setDialogOpen(true);
-    } else {
-      console.error('qr discontinued');
-      // qrRef?.current?.show(true);
-    }
-  };
-
-  const handleConfirmAction = () => {
-    setLoading(true);
-    setDialogOpen(false);
-    documentAction(selectedDocumentId!, actionType!, user!)
-      .then(() => {
-        setDocuments((prevDocs) =>
-          prevDocs.filter((doc) => doc.id !== selectedDocumentId)
-        );
-        setAlert({
-          message: actionType === "approve" ? t("approved") : t("cancelled"),
-          type: MessageStripDesign.Positive
-        });
-      })
-      .catch((error) => setError(error))
-      .finally(() => setLoading(false));
-  };
-
-  function getTitle(): string {
-    let title = t("goodsReceiptSupervisor");
-    if (!globalSettings?.grpoCreateSupervisorRequired) {
-      if (!supervisor) {
-        title = t("goodsReceiptCreation");
-      }
-    }
-    return title;
-  }
-
+  const {
+    supervisor,
+    documents,
+    selectedDocument,
+    setDocuments,
+    selectedDocumentId,
+    actionType,
+    dialogOpen,
+    documentListDialogRef,
+    handleDocDetails,
+    handleAction,
+    handleConfirmAction,
+    setDialogOpen,
+    getTitle
+  } = useGoodReceiptSupervisorData();
   return (
     <ContentTheme title={getTitle()}>
       <DocumentForm

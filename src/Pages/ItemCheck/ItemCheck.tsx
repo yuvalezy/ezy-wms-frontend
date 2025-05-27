@@ -15,7 +15,7 @@ import {Alert, AlertDescription} from "@/components/ui/alert";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCheck, faExclamationTriangle} from '@fortawesome/free-solid-svg-icons';
-import {useItemCheckService} from "@/services/item-check.service";
+import {useItemCheckData} from "@/Pages/ItemCheck/item-check-data";
 
 export default function ItemCheck() {
   const {t} = useTranslation();
@@ -31,7 +31,7 @@ export default function ItemCheck() {
     handleUpdateSubmit,
     handleSetBarcodeItem,
     handleClear
-  } = useItemCheckService();
+  } = useItemCheckData();
 
   return (
     <ContentTheme title={t("itemCheck")}>

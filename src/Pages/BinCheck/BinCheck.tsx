@@ -7,7 +7,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent } from "@/components/ui/card";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import {useBinCheckService} from "@/services/bin-check.services";
+import {useBinCheckData} from "@/Pages/BinCheck/bin-check-data";
 
 export default function BinCheck() {
   const {t} = useTranslation();
@@ -18,7 +18,7 @@ export default function BinCheck() {
     onScan,
     onBinClear,
     handleExportExcel
-  } = useBinCheckService();
+  } = useBinCheckData();
 
   if (!user?.binLocations) return (
     <ContentTheme title={t("binCheck")}>

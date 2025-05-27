@@ -1,7 +1,6 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
-import {BusyIndicator, MessageStripDesign} from "@ui5/webcomponents-react";
-import './ThemeContext.css';
-import ThemeProviderStatusAlert, {StatusAlert} from "@/components/ThemeProviderStatusAlert";
+import React, {createContext, useCallback, useContext, useState} from "react";
+import { Loader2 } from "lucide-react"; // Import Loader2
+import ThemeProviderStatusAlert, {StatusAlert, StatusAlertType} from "@/components/ThemeProviderStatusAlert";
 
 const ThemeContext = createContext<{
     loading: boolean;
@@ -59,7 +58,7 @@ export const ThemeContextProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
         const newAlert: StatusAlert = {
             message: message,
-            type: MessageStripDesign.Negative
+            type: StatusAlertType.Negative
         };
         setAlert(newAlert);
     }, []);
@@ -68,8 +67,10 @@ export const ThemeContextProvider: React.FC<{ children: React.ReactNode }> = ({ 
         <ThemeContext.Provider value={{ loading, setLoading, alert, setAlert, setError }}>
             {children}
             {loading && (
-                <div className="loadingOverlay">
-                    <BusyIndicator active />
+                <div 
+                    className="fixed top-0 left-0 w-full h-full bg-white/50 flex justify-center items-center z-[1000]"
+                >
+                    <Loader2 className="h-12 w-12 animate-spin text-primary" /> {/* Added size and color */}
                 </div>
             )}
             {alert && <ThemeProviderStatusAlert onClose={() => setAlert(null)} alert={alert}/>}
