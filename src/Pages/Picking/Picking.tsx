@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
+import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {fetchPickings, PickingDocument, PickStatus} from "./Data/PickingDocument";
@@ -20,12 +20,14 @@ export default function Picking() {
   }, [setError, setLoading]);
 
 
-  return (
-    <ContentThemeSapUI5 title={t("picking")} icon="cause">
-      {pickings.map((pick) => (
-        <PickingCard key={pick.entry} picking={pick}/>
-      ))}
-    </ContentThemeSapUI5>
-  );
+    return (
+        <ContentTheme title={t("picking")}>
+            <div className="my-4">
+                {pickings.map((pick) => (
+                    <PickingCard key={pick.entry} picking={pick}/>
+                ))}
+            </div>
+        </ContentTheme>
+    );
 
 }

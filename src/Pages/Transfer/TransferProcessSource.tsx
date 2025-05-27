@@ -1,4 +1,4 @@
-import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
+import ContentTheme from "../../components/ContentTheme";
 import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
@@ -7,13 +7,13 @@ import {Label, MessageStrip, Table, TableCell, TableColumn, TableRow} from "@ui5
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {useAuth} from "../../Components/AppContext";
 import {BinLocation, Item, SourceTarget} from "../../Assets/Common";
-import BarCodeScanner, {BarCodeScannerRef} from "../../Components/BarCodeScanner";
+import BarCodeScanner, {BarCodeScannerRef} from "../../components/BarCodeScanner";
 import {addItem, fetchTransferContent, TransferContent} from "./Data/TransferDocument";
-import BinLocationScanner from "../../Components/BinLocationScanner";
+import BinLocationScanner from "../../components/BinLocationScanner";
 import {delay} from "../../Assets/GlobalConfig";
 import {MessageStripDesign} from "@ui5/webcomponents-react";
 import ProcessAlert, {ProcessAlertValue} from "../../Components/ProcessAlert";
-import {ScrollableContent, ScrollableContentBox} from "../../Components/ScrollableContent";
+import {ScrollableContent, ScrollableContentBox} from "../../components/ScrollableContent";
 import {ReasonType} from "../../Assets/Reasons";
 import Processes, {ProcessesRef} from "../../Components/Processes";
 import {updateLine} from "./Data/TransferProcess";

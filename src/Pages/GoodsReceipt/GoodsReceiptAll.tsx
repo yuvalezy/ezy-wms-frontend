@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {formatValueByPack} from "../../Assets/Quantities";
-import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
+import ContentTheme from "../../components/ContentTheme";
 import {useParams} from "react-router-dom";
 import {
   fetchGoodsReceiptReportAll, GoodsReceiptAll, updateGoodsReceiptReport,

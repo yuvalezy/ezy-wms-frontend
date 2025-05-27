@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
+import ContentTheme from "../../components/ContentTheme";
 import {fetchDocuments,} from "./Data/Document";
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "../../Components/ThemeContext";

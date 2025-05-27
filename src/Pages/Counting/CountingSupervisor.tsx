@@ -1,19 +1,28 @@
-import React, {useEffect, useRef, useState} from "react";
-import {useAuth} from "../../Components/AppContext";
-import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
-import {useThemeContext} from "../../Components/ThemeContext";
+import React, {useEffect, useState} from "react";
+import {useAuth} from "@/components/AppContext";
+import ContentTheme from "../../components/ContentTheme";
+import {useThemeContext} from "@/components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {MessageBox, MessageBoxActions, MessageStripDesign} from "@ui5/webcomponents-react";
-import {StringFormat} from "../../Assets/Functions";
-import QRDialog, {QRDialogRef} from "../../Components/QRDialog";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { MessageStripDesign} from "@ui5/webcomponents-react"; // Keep for MessageStripDesign enum
+import {StringFormat} from "@/Assets/Functions";
 import CountingForm from "./Components/CountingForm";
 import {countingAction, fetchCountings} from "./Data/Counting";
-import {Counting} from "../../Assets/Counting";
+import {Counting} from "@/Assets/Counting";
 import CountingCard from "./Components/CountingCard";
-import {ObjectAction} from "../../Assets/Common";
+import {ObjectAction} from "@/Assets/Common";
 
 export default function CountingSupervisor() {
-    const qrRef = useRef<QRDialogRef>(null);
     const {user} = useAuth();
     const {t} = useTranslation();
     const {setLoading, setAlert, setError} = useThemeContext();
@@ -40,7 +49,8 @@ export default function CountingSupervisor() {
         if (action !== "qrcode") {
             setDialogOpen(true);
         } else {
-            qrRef?.current?.show(true);
+          console.error('qr discontinued');
+            // qrRef?.current?.show(true);
         }
     };
 
@@ -59,7 +69,7 @@ export default function CountingSupervisor() {
     };
 
     return (
-        <ContentThemeSapUI5 title={t("countingSupervisor")} icon="factory">
+        <ContentTheme title={t("countingSupervisor")} icon="factory">
             <CountingForm
                 onNewCounting={(newCounting) =>
                     setCountings((prev) => [newCounting, ...prev])
@@ -90,7 +100,6 @@ export default function CountingSupervisor() {
                 )}
                 <br /> {t('actionCannotReverse')}
             </MessageBox>
-            <QRDialog ref={qrRef} prefix="CNT" id={selectedID}/>
-        </ContentThemeSapUI5>
+        </ContentTheme>
     );
 }

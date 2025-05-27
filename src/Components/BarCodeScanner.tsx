@@ -1,6 +1,19 @@
 import React, {forwardRef, useEffect, useImperativeHandle, useRef, useState} from 'react';
-import {Button, ComboBox, ComboBoxItem, Form, FormItem, Grid, Input, InputDomRef} from "@ui5/webcomponents-react";
-import {MessageStripDesign} from "@ui5/webcomponents-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { IconProp } from '@fortawesome/fontawesome-svg-core'; // Import IconProp
+import { MessageStripDesign } from "@ui5/webcomponents-react"; // Keep for MessageStripDesign enum
 import {scanBarcode} from "../Assets/ScanBarcode";
 import {distinctItems, Item, UnitType} from "../Assets/Common";
 import {StringFormat} from "../Assets/Functions";
@@ -14,7 +27,7 @@ export interface BarCodeScannerProps {
   onAddItem: (item: Item, unit: UnitType) => void;
   onAddAction?: () => void;
   addActionLabel?: string;
-  addActionIcon?: string;
+  addActionIcon?: IconProp; // Update type to IconProp
 }
 
 export interface BarCodeScannerRef {
@@ -33,7 +46,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
     addActionLabel,
     addActionIcon
   }, ref) => {
-  const barcodeRef = useRef<InputDomRef>(null);
+  const barcodeRef = useRef<HTMLInputElement>(null);
   const [barcodeInput, setBarcodeInput] = useState('');
   const {setLoading, setAlert, setError} = useThemeContext();
   const [selectedUnit, setSelectedUnit] = useState<UnitType>(UnitType.Pack);
@@ -125,7 +138,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
   ];
 
   const handleUnitChanged = (value: string) => {
-    const selected = units.find((unit) => unit.text === value);
+    const selected = units.find((unit) => unit.value.toString() === value);
     if (selected) {
       setSelectedUnit(selected.value);
     }
@@ -134,36 +147,56 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
   const selectedUnitTest = units.find((unit) => unit.value === selectedUnit);
 
   return (
-    <Form onSubmit={handleSubmit} style={{paddingBottom: '3px', paddingTop: '6px'}}>
-      <FormItem label={barcodeLabel}>
-        <Input required
-               value={barcodeInput}
-               ref={barcodeRef}
-               onInput={(e) => setBarcodeInput(e.target.value as string)}
-               disabled={!enabled}
-        ></Input>
-      </FormItem>
-      {unit && <FormItem label={t('unit')}>
-          <ComboBox
-              value={selectedUnitTest!.text!}
-              onChange={(e) => handleUnitChanged(e.target.value)}
-          >
-            {units.map((unit) => (<ComboBoxItem key={unit.value} text={unit.text} />))}
-          </ComboBox>
-      </FormItem>}
-      <FormItem>
-        {onAddAction == null && <Button type="Submit" disabled={!enabled}>Accept</Button>}
-        {onAddAction &&
-            <Grid>
-                <div>
-                    <Button type="Submit" disabled={!enabled}>Accept</Button>
-                </div>
-                <div>
-                    <Button color="secondary" icon={addActionIcon} onClick={onAddAction}>{addActionLabel}</Button>
-                </div>
-            </Grid>}
-      </FormItem>
-    </Form>
+    <form onSubmit={handleSubmit} className="space-y-4 p-2">
+      <div className="space-y-2">
+        <Label htmlFor="barcode-input">{barcodeLabel}</Label>
+        <Input
+          id="barcode-input"
+          required
+          value={barcodeInput}
+          ref={barcodeRef}
+          onChange={(e) => setBarcodeInput(e.target.value)}
+          disabled={!enabled}
+        />
+      </div>
+      {unit && (
+        <div className="space-y-2">
+          <Label htmlFor="unit-select">{t('unit')}</Label>
+          <Select onValueChange={handleUnitChanged} value={selectedUnit.toString()}>
+            <SelectTrigger id="unit-select">
+              <SelectValue placeholder={t('selectUnit')} />
+            </SelectTrigger>
+            <SelectContent>
+              {units.map((unit) => (
+                <SelectItem key={unit.value} value={unit.value.toString()}>
+                  {unit.text}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
+      <div className="flex space-x-2">
+        {onAddAction == null && (
+          <Button type="submit" disabled={!enabled} className="w-full">
+            <FontAwesomeIcon icon={faCheck} className="mr-2" />
+            Accept
+          </Button>
+        )}
+        {onAddAction && (
+          <>
+            <Button type="submit" disabled={!enabled} className="flex-1">
+              <FontAwesomeIcon icon={faCheck} className="mr-2" />
+              Accept
+            </Button>
+            <Button variant="secondary" onClick={onAddAction} className="flex-1">
+              {addActionIcon && <FontAwesomeIcon icon={addActionIcon} className="mr-2" />}
+              {addActionLabel}
+            </Button>
+          </>
+        )}
+      </div>
+    </form>
   );
 });
 

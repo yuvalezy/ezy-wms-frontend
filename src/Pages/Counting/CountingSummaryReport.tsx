@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
-import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
+import ContentTheme from "../../components/ContentTheme";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {Title} from "@ui5/webcomponents-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {useParams} from "react-router-dom";
 import {IsNumeric} from "../../Assets/Functions";
 import {CountingSummaryReportData, fetchCountingSummaryReport} from "./Data/Report";

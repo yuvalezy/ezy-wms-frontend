@@ -1,10 +1,15 @@
 import React, {forwardRef, useImperativeHandle, useRef, useState, useEffect} from 'react';
-import {Form, FormItem, Input, Button, InputDomRef, Title, Link} from "@ui5/webcomponents-react";
-import {BinLocation} from "../Assets/Common";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BinLocation } from "../Assets/Common";
 import {useTranslation} from "react-i18next";
 import {scanBinLocation} from "../Assets/ScanBinLocation";
 import {useThemeContext} from "./ThemeContext";
 import { StringFormat } from '../Assets/Functions';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 export interface BinLocationScannerProps {
     onScan?: (bin: BinLocation) => void;
@@ -21,7 +26,7 @@ export interface BinLocationScannerRef {
 const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerProps>(({onScan, onChanged, onClear}, ref) => {
     const {setLoading, setError} = useThemeContext();
     const {t} = useTranslation();
-    const binRef = useRef<InputDomRef>(null);
+    const binRef = useRef<HTMLInputElement>(null);
     const [binInput, setBinInput] = useState('');
     const [binLocation, setBinLocation] = useState<BinLocation | null>(null);
 
@@ -79,26 +84,35 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
     }
 
     return (
-        <div style={{paddingBottom: '3px'}}>
+        <div className="p-2">
             {binLocation &&
-                <Title level="H5" style={{textAlign: 'center'}}>
-                    <Link onClick={() => clear()}> {t("bin")}: {binLocation.code} </Link>
-                </Title>}
+                <Card className="text-center">
+                    <CardHeader>
+                        <CardTitle>
+                            <Button variant="link" onClick={() => clear()} className="text-lg">
+                                {t("bin")}: {binLocation.code} <FontAwesomeIcon icon={faTimes} className="ml-2" />
+                            </Button>
+                        </CardTitle>
+                    </CardHeader>
+                </Card>
+            }
             {!binLocation &&
-                <Form onSubmit={handleSubmit}>
-                    <FormItem label={t("bin")}>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="bin-input">{t("bin")}</Label>
                         <Input
+                            id="bin-input"
                             value={binInput}
                             ref={binRef}
-                            onInput={(e) => setBinInput(e.target.value as string)}
-                            placeholder={t("scanBinLocation")} maxlength={255}/>
-                    </FormItem>
-                    <FormItem>
-                        <Button type="Submit" icon="accept">
-                            {t("accept")}
-                        </Button>
-                    </FormItem>
-                </Form>
+                            onChange={(e) => setBinInput(e.target.value)}
+                            placeholder={t("scanBinLocation")} maxLength={255}
+                        />
+                    </div>
+                    <Button type="submit" className="w-full">
+                        <FontAwesomeIcon icon={faCheck} className="mr-2" />
+                        {t("accept")}
+                    </Button>
+                </form>
             }
         </div>
     );

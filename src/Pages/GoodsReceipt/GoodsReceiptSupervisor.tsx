@@ -1,22 +1,20 @@
 import React, {useEffect, useRef, useState} from "react";
-import {useAuth} from "../../Components/AppContext";
-import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
+import {useAuth} from "../../components/AppContext";
 import DocumentForm from "./Components/DocumentForm";
 import {documentAction, fetchDocuments,} from "./Data/Document";
 import DocumentCard from "./Components/DocumentCard";
-import {useThemeContext} from "../../Components/ThemeContext";
+import {useThemeContext} from "@/components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {MessageBox, MessageBoxActions, MessageStripDesign} from "@ui5/webcomponents-react";
-import {Document} from "../../Assets/Document";
-import {StringFormat} from "../../Assets/Functions";
-import QRDialog, {QRDialogRef} from "../../Components/QRDialog";
-import {globalSettings} from "../../Assets/GlobalConfig";
-import {Authorization} from "../../Assets/Authorization";
+import {Document} from "@/Assets/Document";
+import {StringFormat} from "@/Assets/Functions";
+import {globalSettings} from "@/Assets/GlobalConfig";
+import {Authorization} from "@/Assets/Authorization";
 import DocumentListDialog, {DocumentListDialogRef} from "./Components/DocumentListDialog";
-import {ObjectAction, Status} from "../../Assets/Common";
+import {ObjectAction, Status} from "@/Assets/Common";
+import ContentTheme from "@/components/ContentTheme";
 
 export default function GoodsReceiptSupervisor() {
-    const qrRef = useRef<QRDialogRef>(null);
     const {user} = useAuth();
     const [supervisor, setSupervisor] = useState(false);
     const {t} = useTranslation();
@@ -48,7 +46,8 @@ export default function GoodsReceiptSupervisor() {
         if (action !== "qrcode") {
             setDialogOpen(true);
         } else {
-            qrRef?.current?.show(true);
+          console.error('qr discontinued');
+            // qrRef?.current?.show(true);
         }
     };
 
@@ -77,7 +76,7 @@ export default function GoodsReceiptSupervisor() {
     }
 
     return (
-        <ContentThemeSapUI5 title={getTitle()} icon="kpi-managing-my-area">
+        <ContentTheme title={getTitle()} icon="kpi-managing-my-area">
             <DocumentForm
                 onNewDocument={(newDocument) =>
                     setDocuments((prevDocs) => [newDocument, ...prevDocs])
@@ -110,6 +109,6 @@ export default function GoodsReceiptSupervisor() {
             </MessageBox>
             {/*<QRDialog ref={qrRef} prefix="GRPO" id={selectedDocumentId}/>*/}
             <DocumentListDialog ref={documentListDialogRef} doc={selectedDocument}/>
-        </ContentThemeSapUI5>
+        </ContentTheme>
     );
 }

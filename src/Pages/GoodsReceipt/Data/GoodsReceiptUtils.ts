@@ -6,7 +6,7 @@ export const processStatuses = [Status.InProgress, Status.Processing];
 
 export const useHandleOpen = () => {
     const navigate = useNavigate();
-    return (e: React.MouseEvent<HTMLAnchorElement>, type: string, id: number) => {
+    return (e: React.MouseEvent<HTMLElement>, type: string, id: number) => {
         e.preventDefault();
         switch (type) {
             case 'open':

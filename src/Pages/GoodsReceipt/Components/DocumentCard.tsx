@@ -1,14 +1,18 @@
 import React from "react";
-import {useAuth} from "../../../Components/AppContext";
+import {useAuth} from "../../../components/AppContext";
 import {useTranslation} from "react-i18next";
-import {Card, CardHeader, Icon, List, StandardListItem, Button} from "@ui5/webcomponents-react";
-import {Document} from "../../../Assets/Document";
-import {useObjectName} from "../../../Assets/ObjectName";
-import {Authorization} from "../../../Assets/Authorization";
-import {useDocumentStatusToString} from "../../../Assets/DocumentStatusString";
-import {Status} from "../../../Assets/Common";
-import {activeStatuses, processStatuses, useHandleOpen} from "../Data/GoodsReceiptUtils";
-import {useDateTimeFormat} from "../../../Assets/DateFormat";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faTimes, faFileAlt, faTruckLoading, faExchangeAlt, faQrcode } from '@fortawesome/free-solid-svg-icons';
+import { Document } from "../../../Assets/Document";
+import { useObjectName } from "../../../Assets/ObjectName";
+import { Authorization } from "../../../Assets/Authorization";
+import { useDocumentStatusToString } from "../../../Assets/DocumentStatusString";
+import { Status } from "../../../Assets/Common";
+import { activeStatuses, processStatuses, useHandleOpen } from "../Data/GoodsReceiptUtils";
+import { useDateTimeFormat } from "../../../Assets/DateFormat";
+import { Separator } from "@/components/ui/separator";
 
 type DocumentCardProps = {
     doc: Document,
@@ -17,11 +21,11 @@ type DocumentCardProps = {
     docDetails: (doc: Document) => void
 }
 
-const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, action, docDetails}) => {
-    const {t} = useTranslation();
+const DocumentCard: React.FC<DocumentCardProps> = ({ doc, supervisor = false, action, docDetails }) => {
+    const { t } = useTranslation();
     const o = useObjectName();
     const { dateFormat } = useDateTimeFormat();
-    const {user} = useAuth();
+    const { user } = useAuth();
     const handleOpen = useHandleOpen();
 
     const handleOpenLink = user?.authorizations?.includes(Authorization.GOODS_RECEIPT);
@@ -34,60 +38,90 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
     }
 
     return (
-        <Card key={doc.id} header={doc.name ? <CardHeader titleText={`${t('id')} : ${doc.name}`}/> : undefined}>
-            <List>
-                <StandardListItem>
-                    {handleOpenLink && (<a href="#" onClick={(e) => handleOpen(e, 'open', doc.id)}><strong>{t('number')}:</strong> {doc.id}</a>)}
-                    {!handleOpenLink && (<><strong>{t('number')}:</strong> {doc.id}</>)}
-                </StandardListItem>
-                {doc.businessPartner &&
-                    <StandardListItem>
-                        <strong>{t('vendor')}</strong>: {doc.businessPartner?.name ?? doc.businessPartner?.code}
-                    </StandardListItem>
-                }
-                {doc.specificDocuments && doc.specificDocuments.length > 0 &&
-                    <StandardListItem><a href="#" onClick={documentDetailsClick}><strong>{t('documentsList')}: </strong>
-                        {
-                            doc.specificDocuments.map(
-                                (value) => {
-                                    let index = doc.specificDocuments?.indexOf(value) ?? -1;
-                                    return <span key={index}>
-                                    {index > 0 && ', '}
+        <Card className="mb-4 shadow-md">
+            <CardHeader className="pb-2">
+                <CardTitle className="text-lg font-bold">
+                    {doc.name ? `${t('id')} : ${doc.name}` : `${t('number')}: ${doc.id}`}
+                </CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm">
+                <div className="grid grid-cols-2 gap-2">
+                    <div>
+                        <strong>{t('number')}:</strong> {handleOpenLink ? (
+                            <a href="#" onClick={(e) => handleOpen(e, 'open', doc.id)} className="text-blue-600 hover:underline">
+                                {doc.id}
+                            </a>
+                        ) : (
+                            doc.id
+                        )}
+                    </div>
+                    {doc.businessPartner && (
+                        <div>
+                            <strong>{t('vendor')}:</strong> {doc.businessPartner?.name ?? doc.businessPartner?.code}
+                        </div>
+                    )}
+                    {doc.specificDocuments && doc.specificDocuments.length > 0 && (
+                        <div className="col-span-2">
+                            <strong>{t('documentsList')}:</strong>{' '}
+                            <a href="#" onClick={documentDetailsClick} className="text-blue-600 hover:underline">
+                                {doc.specificDocuments.map((value, index) => (
+                                    <React.Fragment key={index}>
+                                        {index > 0 && ', '}
                                         {o(value.objectType)} #{value.documentNumber}
-                                </span>;
-                                }
-                            )
-                        }</a></StandardListItem>}
-                <StandardListItem><strong>{t('docDate')}:</strong> {dateFormat(new Date(doc.date))}</StandardListItem>
-                <StandardListItem><strong>{t('createdBy')}:</strong> {doc.employee.name}</StandardListItem>
-                <StandardListItem><strong>{t('status')}:</strong> {documentStatusToString(doc.status)}</StandardListItem>
-                {supervisor &&
+                                    </React.Fragment>
+                                ))}
+                            </a>
+                        </div>
+                    )}
+                    <div>
+                        <strong>{t('docDate')}:</strong> {dateFormat(new Date(doc.date))}
+                    </div>
+                    <div>
+                        <strong>{t('createdBy')}:</strong> {doc.employee.name}
+                    </div>
+                    <div>
+                        <strong>{t('status')}:</strong> {documentStatusToString(doc.status)}
+                    </div>
+                </div>
+
+                {supervisor && (
                     <>
-                        <StandardListItem>
-                            <a href="#" onClick={e => handleOpen(e, 'all', doc.id)}>{t('goodsReceiptReport')}</a>
-                        </StandardListItem>
-                        {activeStatuses.includes(doc.status) &&
-                            <StandardListItem>
-                                <a href="#" onClick={e => handleOpen(e, 'vs', doc.id)}>{t('goodsReceiptVSExit')}</a>
-                            </StandardListItem>
-                        }
-                        {processStatuses.includes(doc.status) &&
-                            <StandardListItem>
-                                <a href="#" onClick={e => handleOpen(e, 'diff', doc.id)}>{t('differencesReport')}</a>
-                            </StandardListItem>
-                        }
-                        <StandardListItem>
+                        <Separator className="my-4" />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <Button variant="outline" className="w-full" onClick={e => handleOpen(e, 'all', doc.id)}>
+                                <FontAwesomeIcon icon={faFileAlt} className="mr-2" />
+                                {t('goodsReceiptReport')}
+                            </Button>
+                            {activeStatuses.includes(doc.status) && (
+                                <Button variant="outline" className="w-full" onClick={e => handleOpen(e, 'vs', doc.id)}>
+                                    <FontAwesomeIcon icon={faTruckLoading} className="mr-2" />
+                                    {t('goodsReceiptVSExit')}
+                                </Button>
+                            )}
+                            {processStatuses.includes(doc.status) && (
+                                <Button variant="outline" className="w-full" onClick={e => handleOpen(e, 'diff', doc.id)}>
+                                    <FontAwesomeIcon icon={faExchangeAlt} className="mr-2" />
+                                    {t('differencesReport')}
+                                </Button>
+                            )}
+                            <Button variant="outline" className="w-full" onClick={() => action?.(doc.id, 'qrcode')}>
+                                <FontAwesomeIcon icon={faQrcode} className="mr-2" />
+                                {t('qrcode')}
+                            </Button>
                             {doc.status === Status.InProgress && (
-                                <Button style={{marginRight: '10px'}} color="primary" onClick={() => action?.(doc.id, 'approve')} icon="complete">
+                                <Button className="w-full" onClick={() => action?.(doc.id, 'approve')}>
+                                    <FontAwesomeIcon icon={faCheck} className="mr-2" />
                                     {t('finish')}
-                                </Button>)}
-                            <Button icon="cancel" onClick={() => action?.(doc.id, 'cancel')}>
+                                </Button>
+                            )}
+                            <Button variant="destructive" className="w-full" onClick={() => action?.(doc.id, 'cancel')}>
+                                <FontAwesomeIcon icon={faTimes} className="mr-2" />
                                 {t('cancel')}
                             </Button>
-                        </StandardListItem>
+                        </div>
                     </>
-                }
-            </List>
+                )}
+            </CardContent>
         </Card>
     );
 }

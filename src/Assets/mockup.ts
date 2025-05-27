@@ -5,13 +5,13 @@ import {
     PickingDocumentDetail,
     PickingDocumentDetailItem,
     PickStatus
-} from "../Pages/Picking/Data/PickingDocument";
+} from "@/Pages/Picking/Data/PickingDocument";
 import {DocumentAddItemResponse, ProcessResponse} from "./Document";
 import {Counting, CountingContent} from "./Counting";
-import {GoodsReceiptAll, GoodsReceiptAllDetail} from "../Pages/GoodsReceipt/Data/Report";
-import {TransferDocument} from "../Pages/Transfer/Data/TransferDocument";
-import {TransferAddItemResponse} from "../Pages/Transfer/Data/TransferProcess";
-import {ItemCheckResponse} from "../Pages/ItemCheck/Item";
+import {GoodsReceiptAll, GoodsReceiptAllDetail} from "@/Pages/GoodsReceipt/Data/Report";
+import {TransferDocument} from "@/Pages/Transfer/Data/TransferDocument";
+import {TransferAddItemResponse} from "@/Pages/Transfer/Data/TransferProcess";
+import {ItemCheckResponse, ItemStockResponse} from "@/Pages/ItemCheck/Item";
 
 enum UpdateLineReturnValue {
     Status = "Status",
@@ -31,9 +31,9 @@ export const itemMockup : ItemCheckResponse[] = [
     {
         itemCode: "exampleItemCode",
         itemName: "exampleItemName",
-        numInBuy: 11,
+        numInBuy: 12,
         buyUnitMsr: "Doz",
-        purPackUn: 5,
+        purPackUn: 4,
         purPackMsr: "Box",
         barcodes: ["barcode1", "barcode2", "barcode3"],
     },
@@ -74,6 +74,14 @@ export const GoodsReceiptAllDetailMockup : GoodsReceiptAllDetail[] = [
     {lineID: 2, timeStamp: new Date(), employeeName: "Test", quantity: 3, unit: UnitType.Dozen},
     {lineID: 3, timeStamp: new Date(), employeeName: "Test", quantity: 10, unit: UnitType.Pack},
 ]
+
+export const itemStockMockup: ItemStockResponse[] = [
+    {binCode: "BIN-A01", quantity: 50},
+    {binCode: "BIN-A02", quantity: 25},
+    {binCode: "BIN-B01", quantity: 100},
+    {binCode: "BIN-B02", quantity: 75},
+    {binCode: "BIN-C01", quantity: 30},
+];
 
 export const goodsReceiptVSExitReportDataMockup = [
     {

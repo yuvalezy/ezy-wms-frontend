@@ -1,13 +1,13 @@
-import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
+import ContentTheme from "../../components/ContentTheme";
 import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {IsNumeric} from "../../Assets/Functions";
-import {useAuth} from "../../Components/AppContext";
+import {useAuth} from "../../components/AppContext";
 import {BarCodeScannerRef} from "../../Components/BarCodeScanner";
 import {fetchTransferContent, TransferContent} from "./Data/TransferDocument";
-import {ScrollableContent} from "../../Components/ScrollableContent";
+import {ScrollableContent} from "../../components/ScrollableContent";
 import {
     Button,
     Label,

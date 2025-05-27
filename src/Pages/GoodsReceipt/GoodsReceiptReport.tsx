@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
+import ContentTheme from "../../components/ContentTheme";
 import ReportFilterForm from "./Components/ReportFilterForm";
 import { fetchDocuments, GoodsReceiptReportFilter } from "./Data/Document";
 import DocumentReportCard from "./Components/DocumentReportCard";

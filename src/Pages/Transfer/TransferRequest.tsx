@@ -1,33 +1,40 @@
-import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
+import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
-import {ScrollableContent, ScrollableContentBox} from "../../Components/ScrollableContent";
+import {ScrollableContent, ScrollableContentBox} from "../../components/ScrollableContent";
 import BarCodeScanner, {BarCodeScannerRef} from "../../Components/BarCodeScanner";
 import React, {useEffect, useRef, useState} from "react";
 import {Item} from "../../Assets/Common";
 import {createRequest, TransferContent} from "./Data/TransferDocument";
-import {
-    Button,
-    Input,
-    InputDomRef,
-    Label,
-    MessageStrip,
-    Table,
-    TableCell,
-    TableColumn,
-    TableRow
-} from "@ui5/webcomponents-react";
-import {MessageStripDesign} from "@ui5/webcomponents-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { MessageStripDesign} from "@ui5/webcomponents-react"; // Keep for MessageStripDesign enum
 import {useThemeContext} from "../../Components/ThemeContext";
 import {StringFormat} from "../../Assets/Functions";
 import {useNavigate} from "react-router-dom";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription, // Add DialogDescription here
+} from "@/components/ui/dialog";
 
 export default function TransferRequest() {
     const {t} = useTranslation();
     const barcodeRef = useRef<BarCodeScannerRef>(null);
     const {setLoading, setAlert, setError} = useThemeContext();
     const [rows, setRows] = useState<TransferContent[]>([]);
-    const quantityRefs = useRef<(InputDomRef | null)[]>([]);
+    const quantityRefs = useRef<(HTMLInputElement | null)[]>([]);
     const navigate = useNavigate();
+    const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+    const [itemToRemoveIndex, setItemToRemoveIndex] = useState<number | null>(null);
 
     function handleAddItem(item: Item) {
         try {
@@ -69,16 +76,20 @@ export default function TransferRequest() {
         setRows(updatedRows);
     }
 
-    function removeRow(index: number) {
-        const message = StringFormat(t('confirmRemoveItem'), rows[index].code);
-        if (!window.confirm(message)) {
-            return;
-        }
+    function confirmRemoveRow(index: number) {
+        setItemToRemoveIndex(index);
+        setConfirmDialogOpen(true);
+    }
+
+    function executeRemoveRow() {
+        if (itemToRemoveIndex === null) return;
         setRows((currentRows) => {
             const rowsCopy = [...currentRows];
-            rowsCopy.splice(index, 1);
+            rowsCopy.splice(itemToRemoveIndex, 1);
             return rowsCopy;
         });
+        setConfirmDialogOpen(false);
+        setItemToRemoveIndex(null);
     }
 
     function create() {
@@ -86,7 +97,7 @@ export default function TransferRequest() {
             setLoading(true);
             createRequest(rows)
                 .then((v) => {
-                    window.alert(StringFormat(t('transferRequestCreated'), v))
+                    alert(StringFormat(t('transferRequestCreated'), v))
                     navigate('/');
                 })
                 .catch((e) => setError(e))
@@ -97,47 +108,79 @@ export default function TransferRequest() {
     }
 
     return (
-        <ContentThemeSapUI5 title={t("transferRequest")} icon="request">
-            <ScrollableContent>
-                <ScrollableContentBox borderUp={true}>
-                    {rows != null && rows.length > 0 &&
-                        <>
-                            <Table
-                                columns={<>
-                                    <TableColumn><Label>{t('code')}</Label></TableColumn>
-                                    <TableColumn><Label>{t('description')}</Label></TableColumn>
-                                    <TableColumn><Label>{t('quantity')}</Label></TableColumn>
-                                    <TableColumn><Label></Label></TableColumn>
-                                </>}
-                            >
+        <ContentTheme title={t("transferRequest")}>
+            <div className="space-y-4">
+                {rows.length > 0 && (
+                    <ScrollArea className="h-64 w-full rounded-md border">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>{t('code')}</TableHead>
+                                    <TableHead>{t('description')}</TableHead>
+                                    <TableHead className="w-24">{t('quantity')}</TableHead>
+                                    <TableHead className="w-16"></TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
                                 {rows.map((row, index) => (
                                     <TableRow key={index}>
-                                        <TableCell><Label>{row.code}</Label></TableCell>
-                                        <TableCell><Label>{row.name}</Label></TableCell>
-                                        <TableCell><Input type="Number" value={row.quantity.toString()}
-                                                          ref={el => quantityRefs.current[index] = el}
-                                                          onInput={(e) => handleQuantityChange(index, e.target.value)}
-                                        /></TableCell>
-                                        <TableCell><Button onClick={() => removeRow(index)} design="Negative"
-                                                           icon="cancel">Remove</Button></TableCell>
+                                        <TableCell>{row.code}</TableCell>
+                                        <TableCell>{row.name}</TableCell>
+                                        <TableCell>
+                                            <Input
+                                                type="number"
+                                                value={row.quantity.toString()}
+                                                ref={el => quantityRefs.current[index] = el}
+                                                onChange={(e) => handleQuantityChange(index, e.target.value)}
+                                            />
+                                        </TableCell>
+                                        <TableCell>
+                                            <Button variant="destructive" size="sm" onClick={() => confirmRemoveRow(index)}>
+                                                <FontAwesomeIcon icon={faTrash} />
+                                            </Button>
+                                        </TableCell>
                                     </TableRow>
                                 ))}
-                            </Table>
-                            <div style={{textAlign: 'center'}}>
-                                <Button onClick={() => create()}>{t('create')}</Button>
-                            </div>
-                        </>
-                    }
-                    {rows != null && rows.length === 0 &&
-                        <div style={{padding: '10px'}}>
-                            <MessageStrip hideCloseButton design={MessageStripDesign.Information}>
-                                {t("scanItemBarCodeStart")}
-                            </MessageStrip>
-                        </div>
-                    }
-                </ScrollableContentBox>
+                            </TableBody>
+                        </Table>
+                    </ScrollArea>
+                )}
+                {rows.length > 0 && (
+                    <div className="text-center">
+                        <Button onClick={() => create()}>
+                            <FontAwesomeIcon icon={faPlus} className="mr-2" />
+                            {t('create')}
+                        </Button>
+                    </div>
+                )}
+                {rows.length === 0 && (
+                    <Alert className="border-blue-200 bg-blue-50">
+                        <AlertDescription>
+                            {t("scanItemBarCodeStart")}
+                        </AlertDescription>
+                    </Alert>
+                )}
                 <BarCodeScanner ref={barcodeRef} onAddItem={handleAddItem} item={true} enabled={true}/>
-            </ScrollableContent>
-        </ContentThemeSapUI5>
+            </div>
+
+            <Dialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>{t("confirmRemove")}</DialogTitle>
+                        <DialogDescription>
+                            {StringFormat(t('confirmRemoveItem'), itemToRemoveIndex !== null ? rows[itemToRemoveIndex].code : '')}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setConfirmDialogOpen(false)}>
+                            {t("cancel")}
+                        </Button>
+                        <Button variant="destructive" onClick={executeRemoveRow}>
+                            {t("remove")}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        </ContentTheme>
     )
 }

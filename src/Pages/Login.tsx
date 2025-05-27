@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useAuth} from "../Components/AppContext";
+import {useAuth} from "../components/AppContext";
 import {useState} from "react";
 import {Navigate} from "react-router-dom";
 import LoginForm from "./Login/LoginForm";

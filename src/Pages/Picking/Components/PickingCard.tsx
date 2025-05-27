@@ -1,6 +1,6 @@
 import React from "react";
 import {useNavigate} from "react-router-dom";
-import {useAuth} from "../../../Components/AppContext";
+import {useAuth} from "../../../components/AppContext";
 import {useTranslation} from "react-i18next";
 import {Button, Card, CardHeader, Icon, List, ProgressIndicator, StandardListItem} from "@ui5/webcomponents-react";
 import {Authorization} from "../../../Assets/Authorization";

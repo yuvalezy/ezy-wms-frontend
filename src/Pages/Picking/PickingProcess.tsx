@@ -1,9 +1,13 @@
-import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
+import ContentTheme from "../../components/ContentTheme";
 import {useNavigate, useParams} from "react-router-dom";
 import React, {CSSProperties, useEffect, useState} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {Button, Panel, Title, Text, ProgressIndicator} from "@ui5/webcomponents-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlay, faChartBar } from '@fortawesome/free-solid-svg-icons';
 import {IsNumeric} from "../../Assets/Functions";
 import {fetchPicking, PickingDocument, PickingDocumentDetail} from "./Data/PickingDocument";
 import {useObjectName} from "../../Assets/ObjectName";

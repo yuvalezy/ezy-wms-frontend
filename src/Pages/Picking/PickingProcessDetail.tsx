@@ -1,19 +1,22 @@
-import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
+import ContentTheme from "../../components/ContentTheme";
 import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
-import BoxConfirmationDialog, {BoxConfirmationDialogRef} from "../../Components/BoxConfirmationDialog";
+import BoxConfirmationDialog, {BoxConfirmationDialogRef} from "../../components/BoxConfirmationDialog";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {Title} from "@ui5/webcomponents-react";
-import {MessageStripDesign} from "@ui5/webcomponents-react";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Progress } from "@/components/ui/progress";
+import { MessageStripDesign} from "@ui5/webcomponents-react"; // Keep for MessageStripDesign enum
 import {BinLocation, Item} from "../../Assets/Common";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {addItem, fetchPicking, PickingDocument, PickingDocumentDetail} from "./Data/PickingDocument";
 import {useObjectName} from "../../Assets/ObjectName";
-import BarCodeScanner, {BarCodeScannerRef} from "../../Components/BarCodeScanner";
-import {ScrollableContent} from "../../Components/ScrollableContent";
+import BarCodeScanner, {BarCodeScannerRef} from "../../components/BarCodeScanner";
+import {ScrollableContent} from "../../components/ScrollableContent";
 import PickingProcessDetailContent from "./Components/PickingProcessDetailContent";
-import BinLocationScanner, {BinLocationScannerRef} from "../../Components/BinLocationScanner";
+import BinLocationScanner, {BinLocationScannerRef} from "../../components/BinLocationScanner";
 
 export default function PickingProcessDetail() {
     const {idParam, typeParam, entryParam} = useParams();
@@ -100,9 +103,9 @@ export default function PickingProcessDetail() {
                         return;
                     }
                     if (params?.binEntry != null) {
-                        setTimeout(() => barcodeRef?.current?.focus(), 1);
+                        setTimeout(() => barcodeRef.current?.focus(), 1);
                     } else {
-                        setTimeout(() => binLocationRef?.current?.focus(), 1);
+                        setTimeout(() => binLocationRef.current?.focus(), 1);
                     }
                 }
                 setPicking(value);
@@ -144,30 +147,34 @@ export default function PickingProcessDetail() {
     }
 
     return (
-        <ContentThemeSapUI5 title={title} icon="cause" back={() => navigateBack()}>
+        <ContentTheme title={title}>
             {detail &&
-                <>
-                    <ScrollableContent>
-                        <div>
-                            <Title level="H5">
+                <div className="space-y-4 p-2">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>
                                 <strong>{t("customer")}: </strong>
                                 {detail.cardCode} - {detail.cardName}
-                            </Title>
-                        </div>
-                        <PickingProcessDetailContent items={detail.items}/>
-                        {detail.totalOpenItems > 0 && <>
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <PickingProcessDetailContent items={detail.items}/>
+                        </CardContent>
+                    </Card>
+                    {detail.totalOpenItems > 0 && (
+                        <>
                             {binLocation && <BarCodeScanner ref={barcodeRef} onAddItem={(item) => handleAddItem(item.code, item.barcode??"")} enabled={enable}/>}
                             <BinLocationScanner ref={binLocationRef} onChanged={onBinChanged} onClear={onBinClear}/>
-                        </>}
-                        <BoxConfirmationDialog
-                            onSelected={(itemCode: string) => handleAddItem(itemCode, barcodeRef?.current?.getValue() ?? "")}
-                            ref={boxConfirmationDialogRef}
-                            itemCode={boxItem}
-                            items={boxItems}
-                        />
-                    </ScrollableContent>
-                </>
+                        </>
+                    )}
+                    <BoxConfirmationDialog
+                        onSelected={(itemCode: string) => handleAddItem(itemCode, barcodeRef?.current?.getValue() ?? "")}
+                        ref={boxConfirmationDialogRef}
+                        itemCode={boxItem}
+                        items={boxItems}
+                    />
+                </div>
             }
-        </ContentThemeSapUI5>
+        </ContentTheme>
     );
 }

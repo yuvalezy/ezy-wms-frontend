@@ -1,9 +1,9 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {useAuth} from "../Components/AppContext";
+import {useAuth} from "../components/AppContext";
 import {useTranslation} from "react-i18next";
-import ContentThemeSapUI5 from "../components/ContentThemeSapUI5";
-import {useMenus, MenuItem} from "../Assets/Menus";
+import ContentTheme from "../components/ContentTheme";
+import {useMenus, MenuItem} from "@/Assets/Menus";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faCheckCircle, // complete
@@ -21,6 +21,7 @@ import {
     faHome // home icon for ContentTheme
 } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const iconMap: { [key: string]: IconDefinition } = {
     "complete": faCheckCircle,
@@ -49,13 +50,13 @@ export default function Home() {
     const menuItems: MenuItem[] = menus.GetMenus(user?.authorizations);
 
     return (
-        <ContentThemeSapUI5 title={t('home')}>
+        <ContentTheme title={t('home')}>
             {menuItems.length > 0 &&
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 mt-4">
                     {menuItems.map((menu, index) => (
                         <Link to={menu.Link} key={index} className="block">
                             <div className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center justify-center text-center hover:shadow-lg transition-shadow duration-300 h-full">
-                                <FontAwesomeIcon icon={getFaIcon(menu.Icon)} className="text-4xl text-secondary mb-4"/>
+                                <FontAwesomeIcon icon={getFaIcon(menu.Icon)} className="text-4xl text-blue-500 mb-4"/>
                                 <span className="text-lg font-semibold text-gray-800">{menu.Text}</span>
                             </div>
                         </Link>
@@ -64,12 +65,14 @@ export default function Home() {
             }
             {menuItems.length === 0 &&
                 <div className="p-4">
-                    <div className="bg-muted border-l-4 border-secondary text-secondary p-4" role="alert">
-                        <p className="font-bold">{t("information")}</p>
-                        <p>{t("noAuthorizationOptions")}</p>
-                    </div>
+                    <Alert className="border-blue-200 bg-blue-50">
+                        <AlertDescription>
+                            <p className="font-bold">{t("information")}</p>
+                            <p>{t("noAuthorizationOptions")}</p>
+                        </AlertDescription>
+                    </Alert>
                 </div>
             }
-        </ContentThemeSapUI5>
+        </ContentTheme>
     );
 }

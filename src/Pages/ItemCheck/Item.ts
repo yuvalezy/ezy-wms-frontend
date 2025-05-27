@@ -1,7 +1,7 @@
 import axios from "axios";
-import {itemMockup, updateItemBarMockup} from "../../Assets/mockup";
-import {configUtils, delay, globalConfig} from "../../Assets/GlobalConfig";
-import {ResponseStatus} from "../../Assets/Common";
+import {itemMockup, itemStockMockup, updateItemBarMockup} from "@/Assets/mockup";
+import {configUtils, delay, globalConfig} from "@/Assets/GlobalConfig";
+import {ResponseStatus} from "@/Assets/Common";
 
 export interface ItemCheckResponse {
   itemCode: string;
@@ -114,9 +114,7 @@ export const itemStock = async (
 ): Promise<ItemStockResponse[]> => {
   try {
     if (configUtils.isMockup) {
-      console.log("Mockup data is being used.");
-      //todo implement
-      throw new Error("Mockup data is not implemented.");
+      return itemStockMockup;
     }
 
     if (!globalConfig) throw new Error("Config has not been initialized!");

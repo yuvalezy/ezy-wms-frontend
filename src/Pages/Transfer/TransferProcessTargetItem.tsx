@@ -1,15 +1,15 @@
-import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
+import ContentTheme from "../../components/ContentTheme";
 import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
 import {useThemeContext} from "../../Components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
-import {useAuth} from "../../Components/AppContext";
+import {useAuth} from "../../components/AppContext";
 import {BinLocation, DetailUpdateParameters, SourceTarget} from "../../Assets/Common";
 import {addItem, fetchTransferContent, TransferContent, TransferContentBin, updateTransferTargetItem} from "./Data/TransferDocument";
 import ProcessAlert, {ProcessAlertValue} from "../../Components/ProcessAlert";
 import {MessageStripDesign} from "@ui5/webcomponents-react";
-import {ScrollableContent, ScrollableContentBox} from "../../Components/ScrollableContent";
+import {ScrollableContent, ScrollableContentBox} from "../../components/ScrollableContent";
 import {Label, Panel, Text, ProgressIndicator, Table, TableCell, TableColumn, TableRow, Title} from "@ui5/webcomponents-react";
 import BinLocationScanner, {BinLocationScannerRef} from "../../Components/BinLocationScanner";
 import {delay} from "../../Assets/GlobalConfig";

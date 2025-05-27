@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
+import ContentTheme from "../../components/ContentTheme";
 import {useParams} from "react-router-dom";
 import {
     fetchGoodsReceiptValidateProcess,

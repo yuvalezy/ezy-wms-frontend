@@ -1,17 +1,26 @@
-import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
+import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
-import {MessageBox, MessageBoxActions, MessageStripDesign} from "@ui5/webcomponents-react";
+import { MessageStripDesign} from "@ui5/webcomponents-react"; // Keep for MessageStripDesign enum
 import React, {useEffect, useRef, useState} from "react";
-import {useThemeContext} from "../../Components/ThemeContext";
+import {useThemeContext} from "@/components/ThemeContext";
 import {fetchTransfers, TransferDocument, transferAction} from "./Data/TransferDocument";
 import TransferCard from "./Components/TransferCard";
-import QRDialog, {QRDialogRef} from "../../Components/QRDialog";
-import {ObjectAction} from "../../Assets/Common";
-import {StringFormat} from "../../Assets/Functions";
+import {ObjectAction} from "@/Assets/Common";
+import {StringFormat} from "@/Assets/Functions";
 import TransferForm from "./Components/TransferForm";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 
 export default function TransferSupervisor() {
-    const qrRef = useRef<QRDialogRef>(null);
     const {t} = useTranslation();
     const {setLoading, setAlert, setError} = useThemeContext();
     const [transfers, setTransfers] = useState<TransferDocument[]>([]);
@@ -51,37 +60,43 @@ export default function TransferSupervisor() {
         if (action !== "qrcode") {
             setDialogOpen(true);
         } else {
-            qrRef?.current?.show(true);
+            console.error('qr discontinue');
+            // qrRef?.current?.show(true);
         }
     }
 
-    return <ContentThemeSapUI5 title={t("transferSupervisor")} icon="journey-depart">
-        <TransferForm onNewTransfer={transfer => setTransfers((prevTransfers) => [transfer, ...prevTransfers])}/>
-        <br/>
-        <br/>
-        {transfers.map((transfer, index) => (
-            <TransferCard supervisor={true} key={transfer.id} doc={transfer} onAction={handleAction}/>
-        ))}
-        <MessageBox
-            onClose={(e) => {
-                if (e.detail.action === MessageBoxActions.OK) {
-                    handleConfirmAction();
-                    return;
-                }
-                setDialogOpen(false);
-            }}
-            open={dialogOpen}
-            type="Confirm"
-
-        >
-            {StringFormat(
-                actionType === "approve"
-                    ? t("confirmFinishTransfer")
-                    : t("confirmCancelTransfer"),
-                selectedTransferId
-            )}
-            <br/> {t('actionCannotReverse')}
-        </MessageBox>
-        <QRDialog ref={qrRef} prefix="TRSF" id={selectedTransferId}/>
-    </ContentThemeSapUI5>
+    return (
+        <ContentTheme title={t("transferSupervisor")}>
+            <TransferForm onNewTransfer={transfer => setTransfers((prevTransfers) => [transfer, ...prevTransfers])}/>
+            <div className="my-4">
+                {transfers.map((transfer, index) => (
+                    <TransferCard supervisor={true} key={transfer.id} doc={transfer} onAction={handleAction}/>
+                ))}
+            </div>
+            <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>{t("confirmAction")}</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            {StringFormat(
+                                actionType === "approve"
+                                    ? t("confirmFinishTransfer")
+                                    : t("confirmCancelTransfer"),
+                                selectedTransferId
+                            )}
+                            <br/> {t('actionCannotReverse')}
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <Button variant="outline" onClick={() => setDialogOpen(false)}>
+                            {t("cancel")}
+                        </Button>
+                        <Button onClick={handleConfirmAction}>
+                            {t("ok")}
+                        </Button>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        </ContentTheme>
+    );
 }

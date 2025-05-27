@@ -1,13 +1,16 @@
 import React, {useRef, useState} from "react";
-import ContentThemeSapUI5 from "../../components/ContentThemeSapUI5";
+import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "../../Components/ThemeContext";
 import BinLocationScanner, {BinLocationScannerRef} from "../../Components/BinLocationScanner";
 import {BinLocation, SourceTarget} from "../../Assets/Common";
 import {useAuth} from "../../Components/AppContext";
-import {CheckBox, Label, MessageStrip, Table, TableCell, TableColumn, TableRow} from "@ui5/webcomponents-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card, CardContent } from "@/components/ui/card";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import {binCheck, BinContentResponse} from "./Bins";
-import {ScrollableContentBox} from "../../Components/ScrollableContent";
 import {delay} from "../../Assets/GlobalConfig";
 import {exportToExcel} from "../../Utils/excelExport";
 import {formatValueByPack} from "../../Assets/Quantities";
@@ -37,9 +40,14 @@ export default function BinCheck() {
   }
 
   if (!user?.binLocations) return (
-    <ContentThemeSapUI5 title={t("binCheck")} icon="dimension">
-      <MessageStrip design="Negative">You're not connected to a bin managed warehouse.</MessageStrip>
-    </ContentThemeSapUI5>
+    <ContentTheme title={t("binCheck")}>
+      <Alert className="border-red-200 bg-red-50">
+        <FontAwesomeIcon icon={faExclamationTriangle} className="h-4 w-4 text-red-600" />
+        <AlertDescription>
+          You're not connected to a bin managed warehouse.
+        </AlertDescription>
+      </Alert>
+    </ContentTheme>
   )
 
   const excelHeaders = [
@@ -72,37 +80,40 @@ export default function BinCheck() {
     });
   };
 
-  return <ContentThemeSapUI5 title={t("binCheck")} exportExcel={true} onExportExcel={handleExportExcel}>
-    <div className="themeContentStyle">
-      <div className="containerStyle">
-        {binContent &&
-            <>
-                <ScrollableContentBox>
-                    <Table
-                        columns={<>
-                          <TableColumn><Label>{t('code')}</Label></TableColumn>
-                          <TableColumn><Label>{t('description')}</Label></TableColumn>
-                          <TableColumn><Label>{t('units')}</Label></TableColumn>
-                          <TableColumn><Label>{t('quantity')}</Label></TableColumn>
-                          <TableColumn><Label>{t('packageQuantity')}</Label></TableColumn>
-                        </>}
-                    >
-                      {binContent?.map((content) => (
-                        <TableRow key={content.itemCode}>
-                          <TableCell><Label>{content.itemCode}</Label></TableCell>
-                          <TableCell><Label>{content.itemName}</Label></TableCell>
-                          <TableCell><Label>{content.onHand}</Label></TableCell>
-                          <TableCell><Label>{content.onHand / content.numInBuy}</Label></TableCell>
-                          <TableCell><Label>{content.onHand / content.numInBuy / content.purPackUn}</Label></TableCell>
-                        </TableRow>
-                      ))}
-                    </Table>
-                </ScrollableContentBox>
-            </>
-        }
-        <BinLocationScanner ref={binRef} onScan={onScan} onChanged={() => {
-        }} onClear={onBinClear}/>
-      </div>
+  return <ContentTheme title={t("binCheck")} exportExcel={true} onExportExcel={handleExportExcel}>
+    <div className="space-y-4">
+      {binContent && (
+        <Card>
+          <CardContent className="p-0">
+            <div className="max-h-96 overflow-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t('code')}</TableHead>
+                    <TableHead>{t('description')}</TableHead>
+                    <TableHead>{t('units')}</TableHead>
+                    <TableHead>{t('quantity')}</TableHead>
+                    <TableHead>{t('packageQuantity')}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {binContent?.map((content) => (
+                    <TableRow key={content.itemCode}>
+                      <TableCell>{content.itemCode}</TableCell>
+                      <TableCell>{content.itemName}</TableCell>
+                      <TableCell>{content.onHand}</TableCell>
+                      <TableCell>{Math.round((content.onHand / content.numInBuy) * 100) / 100}</TableCell>
+                      <TableCell>{Math.round((content.onHand / content.numInBuy / content.purPackUn) * 100) / 100}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+      <BinLocationScanner ref={binRef} onScan={onScan} onChanged={() => {
+      }} onClear={onBinClear}/>
     </div>
-  </ContentThemeSapUI5>
+  </ContentTheme>
 }

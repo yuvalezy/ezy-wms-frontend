@@ -37,8 +37,8 @@ const StockTable: React.FC<StockTableProps> = ({result}) => {
             <TableRow key={index}>
               <TableCell>{value.binCode}</TableCell>
               <TableCell>{value.quantity}</TableCell>
-              <TableCell>{value.quantity / result.numInBuy}</TableCell>
-              <TableCell>{value.quantity / result.numInBuy / result.purPackUn}</TableCell>
+              <TableCell>{(value.quantity / result.numInBuy).toFixed(2)}</TableCell>
+              <TableCell>{(value.quantity / result.numInBuy / result.purPackUn).toFixed(2)}</TableCell>
             </TableRow>
           ))}
         </TableBody>
