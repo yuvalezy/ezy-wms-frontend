@@ -1,31 +1,46 @@
-import React, {useEffect, useRef, useState} from "react";
-import {createDocument, GoodsReceiptType,} from "../Data/Document";
-import {useThemeContext} from "../../../components/ThemeContext";
-import DocumentList, {DocumentListRef} from "./DocumentList";
-import {useTranslation} from "react-i18next";
+import React, { useEffect, useRef, useState } from "react";
+import { createDocument, GoodsReceiptType } from "../Data/Document";
+import { useThemeContext } from "@/components/ThemeContext";
+import DocumentList, { DocumentListRef } from "./DocumentList"; // Assuming this is/will be shadcn compatible or handled separately
+import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
-    Button,
-    ComboBox,
-    ComboBoxItem,
-    Form,
-    FormItem, Input, Tab,
-    TabContainer,
-} from "@ui5/webcomponents-react";
-import {useObjectName} from "../../../Assets/ObjectName";
-import {Document, DocumentItem} from "../../../Assets/Document";
-import {BusinessPartner, fetchVendors} from "../../../Assets/Data";
-import {StringFormat} from "../../../Assets/Functions";
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import {
+    Tabs,
+    TabsContent,
+    TabsList,
+    TabsTrigger,
+} from "@/components/ui/tabs";
+import { PlusCircle } from "lucide-react"; // Icon for create button
+
+import { useObjectName } from "@/Assets/ObjectName";
+import { Document, DocumentItem } from "@/Assets/Document";
+import { BusinessPartner, fetchVendors } from "@/Assets/Data";
+import { StringFormat } from "@/Assets/Functions";
 
 interface DocumentFormProps {
     onNewDocument: (document: Document) => void;
 }
 
-const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument,}) => {
-    const {t} = useTranslation();
+const DocumentForm: React.FC<DocumentFormProps> = ({ onNewDocument }) => {
+    const { t } = useTranslation();
     const o = useObjectName();
-    const {setLoading, setError} = useThemeContext();
-    const documentListRef = useRef<DocumentListRef>();
-    const [selectedType, setSelectedType] = React.useState(GoodsReceiptType.AutoConfirm);
+    const { setLoading, setError } = useThemeContext();
+    const documentListRef = useRef<DocumentListRef>(null); // Keep as is for DocumentList
+    
+    // Use string values for TabsTrigger, matching GoodsReceiptType enum keys for clarity
+    const TAB_AUTOCONFIRM = GoodsReceiptType.AutoConfirm.toString();
+    const TAB_SPECIFICORDERS = GoodsReceiptType.SpecificOrders.toString();
+
+    const [activeTab, setActiveTab] = useState<string>(TAB_AUTOCONFIRM);
     const [items, setItems] = useState<DocumentItem[]>([]);
     const [cardCodeInput, setCardCodeInput] = useState<string>("");
     const [docNameInput, setDocNameInput] = useState<string>("");
@@ -35,44 +50,45 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument,}) => {
         fetchVendors()
             .then((data) => setVendors(data))
             .catch((error) => setError(error));
-    }, []);
+    }, [setError]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // if (docNameInput === null || docNameInput === "") {
-        //     alert(t("idRequired"));
+        const selectedType = activeTab === TAB_AUTOCONFIRM ? GoodsReceiptType.AutoConfirm : GoodsReceiptType.SpecificOrders;
+
+        // Validation logic (can be enhanced with react-hook-form later if needed)
+        // if (docNameInput.trim() === "") {
+        //     setError(t("idRequired")); // Example: use setError for alerts
         //     return;
         // }
         switch (selectedType) {
             case GoodsReceiptType.AutoConfirm:
-                // if (cardCodeInput.length === 0) {
-                //     alert(t("vendorRequired"));
+                // if (cardCodeInput.trim() === "") {
+                //     setError(t("vendorRequired"));
                 //     return;
                 // }
                 break;
             case GoodsReceiptType.SpecificOrders:
                 if (items.length === 0) {
-                    alert(t("documentRequired"));
+                    setError(t("documentRequired"));
                     return;
                 }
                 break;
         }
+
         setLoading(true);
-        try {
-            createDocument(
-                selectedType,
-                cardCodeInput,
-                docNameInput,
-                items
-            )
-                .then((response) => {
-                    if (!response.error) {
-                        onNewDocument(response);
-                        setDocNameInput("");
-                        documentListRef.current?.clearItems();
-                        return;
-                    }
+        createDocument(selectedType, cardCodeInput, docNameInput, items)
+            .then((response) => {
+                if (!response.error) {
+                    onNewDocument(response);
+                    setDocNameInput("");
+                    setCardCodeInput(""); // Reset vendor selection
+                    documentListRef.current?.clearItems();
+                    // Potentially switch back to the first tab or clear specific orders items
+                    setItems([]); 
+                } else {
                     let errorMessage: string = t("unknownError");
+                    // Error handling logic (remains largely the same)
                     switch (response.errorCode) {
                         case -1:
                             try {
@@ -80,104 +96,90 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument,}) => {
                                 if (errorParameters != null && errorParameters.length >= 3) {
                                     let errorObjType: number = errorParameters[0];
                                     let errorDocNum: number = errorParameters[1];
-                                    let errorType: string =
-                                        errorParameters[2] === "E"
-                                            ? t("doesNotExists")
-                                            : t("isNotOpen");
+                                    let errorType: string;
                                     switch (errorParameters[2]) {
-                                        case "E":
-                                            errorType = t("doesNotExists");
-                                            break;
-                                        case "R":
-                                            errorType = "Not Reserved";
-                                            break;
-                                        case "W":
-                                            errorType = "No lines for warehouse";
-                                            break;
-                                        default:
-                                            errorType = t("isNotOpen");
-                                            break;
+                                        case "E": errorType = t("doesNotExists"); break;
+                                        case "R": errorType = "Not Reserved"; break; // Consider translating
+                                        case "W": errorType = "No lines for warehouse"; break; // Consider translating
+                                        default: errorType = t("isNotOpen"); break;
                                     }
-                                    errorMessage = StringFormat(
-                                        t("badDocumentError"),
-                                        o(errorObjType),
-                                        errorDocNum,
-                                        errorType
-                                    );
+                                    errorMessage = StringFormat(t("badDocumentError"), o(errorObjType), errorDocNum, errorType);
                                 }
-                            } catch {
-                            }
+                            } catch {}
                             break;
                     }
                     setError(errorMessage);
-                })
-                .catch((e) => setError(e))
-                .finally(() => setLoading(false));
-        } catch (e: any) {
-            setError(e);
-        }
+                }
+            })
+            .catch((err) => setError(err))
+            .finally(() => setLoading(false));
     };
 
     return (
-        <TabContainer
-            onTabSelect={(e) =>
-                setSelectedType(
-                    e.detail.tabIndex === 0
-                        ? GoodsReceiptType.AutoConfirm
-                        : GoodsReceiptType.SpecificOrders
-                )
-            }
-        >
-            <Tab text={t("automatic")} selected>
-                <Form>
-                    <FormItem label={t("id")}>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value={TAB_AUTOCONFIRM}>{t("automatic")}</TabsTrigger>
+                <TabsTrigger value={TAB_SPECIFICORDERS}>{t("specificDocuments")}</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value={TAB_AUTOCONFIRM}>
+                <form onSubmit={handleSubmit} className="space-y-4 p-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="docNameAuto">{t("id")}</Label>
                         <Input
+                            id="docNameAuto"
                             value={docNameInput}
-                            onInput={(e) => setDocNameInput(e.target.value as string)}
-                            maxlength={50}
-                        ></Input>
-                    </FormItem>
-                    <FormItem label={t("selectVendor")}>
-                        <ComboBox
-                            onSelectionChange={(e) =>
-                                setCardCodeInput(
-                                    vendors[Array.from(e.target.children).indexOf(e.detail.item)]
-                                        .code
-                                )
-                            }
-                        >
-                            {vendors.map((vendor) => (
-                                <ComboBoxItem key={vendor.code} text={vendor.name}/>
-                            ))}
-                        </ComboBox>
-                    </FormItem>
-                    <FormItem>
-                        <Button color="primary" icon="create" onClick={handleSubmit}>
-                            {t("create")}
+                            onChange={(e) => setDocNameInput(e.target.value)}
+                            maxLength={50}
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="vendorSelect">{t("selectVendor")}</Label>
+                        <Select value={cardCodeInput} onValueChange={setCardCodeInput}>
+                            <SelectTrigger id="vendorSelect">
+                                <SelectValue placeholder={t("selectVendorPlaceholder")} />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {vendors.map((vendor) => (
+                                    <SelectItem key={vendor.code} value={vendor.code}>
+                                        {vendor.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div>
+                        <Button type="submit">
+                            <PlusCircle className="mr-2 h-4 w-4" /> {t("create")}
                         </Button>
-                    </FormItem>
-                </Form>
-            </Tab>
-            <Tab text={t("specificDocuments")}>
-                <Form>
-                    <FormItem label={t("id")}>
+                    </div>
+                </form>
+            </TabsContent>
+
+            <TabsContent value={TAB_SPECIFICORDERS}>
+                <form onSubmit={handleSubmit} className="space-y-4 p-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="docNameSpecific">{t("id")}</Label>
                         <Input
+                            id="docNameSpecific"
                             value={docNameInput}
-                            onInput={(e) => setDocNameInput(e.target.value as string)}
-                            maxlength={50}
-                        ></Input>
-                    </FormItem>
-                    <FormItem label={t("documentsList")}>
-                        <DocumentList ref={documentListRef} onItemsUpdate={setItems}/>
-                    </FormItem>
-                    <FormItem>
-                        <Button color="primary" icon="create" onClick={handleSubmit}>
-                            {t("create")}
+                            onChange={(e) => setDocNameInput(e.target.value)}
+                            maxLength={50}
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label>{t("documentsList")}</Label>
+                        {/* Assuming DocumentList is or will be shadcn compatible */}
+                        <DocumentList ref={documentListRef} onItemsUpdate={setItems} />
+                    </div>
+                    <div>
+                        <Button type="submit">
+                            <PlusCircle className="mr-2 h-4 w-4" /> {t("create")}
                         </Button>
-                    </FormItem>
-                </Form>
-            </Tab>
-        </TabContainer>
+                    </div>
+                </form>
+            </TabsContent>
+        </Tabs>
     );
 };
 

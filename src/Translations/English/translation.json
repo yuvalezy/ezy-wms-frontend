@@ -142,6 +142,7 @@
   "modifyValues": "Modify Values",
 
   "selectVendor": "Select Vendor",
+  "selectVendorPlaceholder": "Select a vendor",
   "selectBox": "Select Box",
   "selectTransferSource": "Choose Pickup Location",
   "selectItemsForTransfers": "Select Items for Transfer #{0}",
@@ -213,5 +214,11 @@
   "actionCannotReverse": "This action cannot be reversed",
   "confirmItemBarCode": "Are you sure that the code {1} belongs to the item {0}?",
   "confirmContinue": "Do you want to continue?",
-  "confirmRemoveItem": "Are you sure you want to remove item {0}?"
+  "confirmRemoveItem": "Are you sure you want to remove item {0}?",
+  "invalidDocumentNumber": "Invalid document number",
+  "noDocumentsAdded": "No documents added yet",
+  "documentType": "Document Type",
+  "selectDocumentType": "Select document type",
+  "enterDocumentNumber": "Enter document number",
+  "remove": "Remove"
 }

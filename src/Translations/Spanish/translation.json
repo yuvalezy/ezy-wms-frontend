@@ -142,6 +142,7 @@
   "modifyValues": "Modificar Values",
 
   "selectVendor": "Seleccione el Proveedor",
+  "selectVendorPlaceholder": "Seleccione un proveedor",
   "selectBox": "Seleccione la Caja",
   "selectTransferSource": "Elija la ubicación de recogida",
   "selectItemsForTransfers": "Seleccionar artículos para transferencia #{0}",
@@ -213,5 +214,11 @@
   "actionCannotReverse": "Esta acción no se puede revertir",
   "confirmItemBarCode": "¿Esta seguro que el codigo {1} le pertenece al articulo {0}?",
   "confirmContinue": "¿Está seguro que desea continuar?",
-  "confirmRemoveItem": "¿Está seguro de que quiere eliminar el artículo {0}?"
+  "confirmRemoveItem": "¿Está seguro de que quiere eliminar el artículo {0}?",
+  "invalidDocumentNumber": "Número de documento inválido",
+  "noDocumentsAdded": "No se han agregado documentos aún",
+  "documentType": "Tipo de Documento",
+  "selectDocumentType": "Seleccione el tipo de documento",
+  "enterDocumentNumber": "Ingrese el número de documento",
+  "remove": "Quitar"
 }
