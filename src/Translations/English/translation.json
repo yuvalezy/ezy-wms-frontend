@@ -142,6 +142,7 @@
   "closed": "Closed",
   "notReceived": "Not Received",
   "modifyValues": "Modify Values",
+  "supervisor": "Supervisor",
 
   "selectVendor": "Select Vendor",
   "selectVendorPlaceholder": "Select a vendor",

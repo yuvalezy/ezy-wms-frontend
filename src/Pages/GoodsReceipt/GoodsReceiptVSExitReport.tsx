@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import ContentTheme from "../../components/ContentTheme";
-import { useParams } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {
   fetchGoodsReceiptVSExitReport,
   GoodsReceiptVSExitReportData,
 } from "./Data/Report";
 import GoodsReceiptVSExitReportTable from "./components/GoodsReceiptVSExitReportTable"; // Corrected casing
-import { useThemeContext } from "../../components/ThemeContext";
+import { useThemeContext } from "@/components/ThemeContext";
 import { useTranslation } from "react-i18next";
-import {useObjectName} from "../../assets/ObjectName";
-import {IsNumeric} from "../../assets/Functions";
+import {useObjectName} from "@/assets/ObjectName";
+import {IsNumeric} from "@/assets/Functions";
 import {
     Accordion,
     AccordionContent,
@@ -17,7 +17,8 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"; // Using Card as an alternative to Panel for now
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage} from "@/components/ui/breadcrumb"; // Using Card as an alternative to Panel for now
 
 export default function GoodsReceiptVSExitReport() {
   const [id, setID] = useState<number | null>();
@@ -27,6 +28,7 @@ export default function GoodsReceiptVSExitReport() {
   const {setLoading, setError} = useThemeContext();
   const [data, setData] = useState<GoodsReceiptVSExitReportData[] | null>(null);
   const title = `${t("goodsReceiptVSExit")} #${scanCode}`;
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
@@ -43,9 +45,16 @@ export default function GoodsReceiptVSExitReport() {
   }, []);
   return (
     <ContentTheme title={title}>
-      <h1 className="text-2xl font-bold mb-4">
-        {t("goodsReceipt")} #{id}
-      </h1>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="#" onClick={() => navigate('/goodsReceiptSupervisor')}>{t('supervisor')}</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <BreadcrumbPage>{title}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <div className="space-y-4">
         {data?.map((value, index) => (
           <Accordion key={index} type="single" collapsible className="w-full">

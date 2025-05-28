@@ -94,6 +94,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                             type="number"
                             className="w-24 text-right"
                             value={currentQuantityValue.toString()}
+                            onFocus={(e) => e.target.select()}
                             onChange={(e) => handleQuantityChange(row.lineID, e.target.value)}
                           />
                         ) : (
@@ -105,8 +106,8 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                       {enableUpdate && (
                         <div className="flex items-center pt-2">
                           <Button
-                            variant="destructive"
-                            className={`w-full flex items-center space-x-2 ${checkedRows[row.lineID] ? 'bg-accent' : ''}`}
+                            variant={checkedRows[row.lineID] ? "outline" : "destructive"}
+                            className={`w-full flex items-center space-x-2 ${checkedRows[row.lineID] ? 'border-destructive text-destructive' : ''}`}
                             onClick={() => handleCheckboxChange(row.lineID, !checkedRows[row.lineID])}
                           >
                             <Checkbox
