@@ -245,8 +245,8 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
                         scannedQuantity /= selectedLineForDetail.purPackUn;
                       }
 
-                      const displayUnit = selectedLineForDetail.unit === UnitType.Unit ? t('unit') :
-                        selectedLineForDetail.unit === UnitType.Dozen ? (selectedLineForDetail?.buyUnitMsr || t('purPackUn')) :
+                      const displayUnit = unit === UnitType.Unit ? t('unit') :
+                        unit === UnitType.Dozen ? (selectedLineForDetail?.buyUnitMsr || t('purPackUn')) :
                           (selectedLineForDetail?.purPackMsr || t('packUn'));
                       return (
                         <Card key={`${detail.timeStamp}-${detail.employee}-${detail.scannedQuantity}`}> {/* Adjusted key for more uniqueness */}

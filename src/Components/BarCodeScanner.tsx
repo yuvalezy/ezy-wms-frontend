@@ -96,9 +96,6 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
   }
 
   function handleItems(items: Item[]) {
-    if (barcodeRef == null || barcodeRef.current == null) {
-      return;
-    }
     let barcode = barcodeInput;
     if (items.length === 0) {
       let template = !item ? t("barcodeNotFound") : t("codeNotFound");
@@ -116,13 +113,6 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
     }
     handleMultipleItems(items);
   }
-
-  useEffect(() => {
-    console.log(barcodeRef);
-    if (barcodeRef.current) {
-      barcodeRef.current.focus();
-    }
-  }, [barcodeRef]);
 
   function handleMultipleItems(items: Item[]) {
     const distinctCodes = distinctItems(items);
