@@ -4,11 +4,11 @@ import {useParams} from "react-router-dom";
 import {useThemeContext} from "@/components/ThemeContext";
 import {fetchGoodsReceiptReportAll, GoodsReceiptAll, updateGoodsReceiptReport} from "@/pages/GoodsReceipt/data/Report";
 import {IsNumeric} from "@/assets/Functions";
-import {exportToExcel} from "@/utils/excelExport";
 import {DetailUpdateParameters} from "@/assets/Common";
 import {GRPOAllDetailRef} from "@/pages/GoodsReceipt/data/goods-receipt-all-details-data";
+import {exportToExcel} from "@/utils/excelExport";
 
-export const useGoodsReceiptAllData = () => {
+export const useGoodsReceiptAllData = (confirm: boolean | undefined) => {
   const {t} = useTranslation();
   const [id, setID] = useState<number | null>();
   const {scanCode} = useParams();

@@ -28,7 +28,7 @@ export default function GoodsReceiptProcessDifferenceReport({confirm}: GoodsRece
     openReport,
   } = useGoodsReceiptProcessDifferenceReportData();
 
-  const title = `${t("goodsReceipt")} #${scanCode}`;
+  const title = `${!confirm ? t("goodsReceipt") : t("receiptConfirmation")} #${scanCode}`;
 
   if (!id)
     return null;
@@ -39,7 +39,7 @@ export default function GoodsReceiptProcessDifferenceReport({confirm}: GoodsRece
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="#"
-                            onClick={() => navigate('/goodsReceiptSupervisor')}>{t('supervisor')}</BreadcrumbLink>
+                            onClick={() => navigate(`/goodsReceipt${confirm ? 'Confirmation' : ''}Supervisor`)}>{t('supervisor')}</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbItem>
             {!report ?

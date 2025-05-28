@@ -25,7 +25,7 @@ export default function GoodsReceiptVSExitReport({confirm}: GoodsReceiptVSExitRe
   const {setLoading, setError} = useThemeContext();
   const [data, setData] = useState<GoodsReceiptVSExitReportData[] | null>(null);
   const [report, setReport] = useState<GoodsReceiptVSExitReportData | null>(null);
-  const title = `${t("goodsReceipt")} #${scanCode}`;
+  const title = `${!confirm ? t("goodsReceipt") : t("receiptConfirmation")} #${scanCode}`;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,13 +49,13 @@ export default function GoodsReceiptVSExitReport({confirm}: GoodsReceiptVSExitRe
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="#"
-                            onClick={() => navigate('/goodsReceiptSupervisor')}>{t('supervisor')}</BreadcrumbLink>
+                            onClick={() => navigate(`/goodsReceipt${confirm ? 'Confirmation' : ''}Supervisor`)}>{t('supervisor')}</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbItem>
             {!report ?
-              <BreadcrumbPage>{t("goodsReceiptVSExit")}</BreadcrumbPage> :
+              <BreadcrumbPage>{!confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}</BreadcrumbPage> :
               <BreadcrumbLink href="#"
-                              onClick={() => setReport(null)}>{t("goodsReceiptVSExit")}</BreadcrumbLink>
+                              onClick={() => setReport(null)}>{!confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}</BreadcrumbLink>
             }
 
           </BreadcrumbItem>

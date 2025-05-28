@@ -4,22 +4,23 @@ import { Status } from "@/assets";
 export const activeStatuses = [Status.InProgress, Status.Processing, Status.Finished];
 export const processStatuses = [Status.InProgress, Status.Processing];
 
-export const useHandleOpenOld = () => {
+export const useHandleOpen = (confirm: boolean = false) => {
     const navigate = useNavigate();
     return (e: React.MouseEvent<HTMLElement>, type: string, id: number) => {
         e.preventDefault();
+        const confirmation = confirm ? 'Confirmation' : '';
         switch (type) {
             case 'open':
-                navigate(`/goodsReceipt/${id}`);
+                navigate(`/goodsReceipt${confirmation}/${id}`);
                 break;
             case 'all':
-                navigate(`/goodsReceiptReportAll/${id}`);
+                navigate(`/goodsReceipt${confirmation}ReportAll/${id}`);
                 break;
             case 'vs':
-                navigate(`/goodsReceiptVSExitReport/${id}`);
+                navigate(`/goodsReceipt${confirmation}VSExitReport/${id}`);
                 break;
             case 'diff':
-                navigate(`/goodsReceiptProcessDifferenceReport/${id}`);
+                navigate(`/goodsReceipt${confirmation}ProcessDifferenceReport/${id}`);
                 break;
         }
     };

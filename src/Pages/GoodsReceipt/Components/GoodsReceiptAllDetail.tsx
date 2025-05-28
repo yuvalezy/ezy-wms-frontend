@@ -23,6 +23,7 @@ import {
 } from "@/pages/GoodsReceipt/data/goods-receipt-all-details-data";
 import {useDateTimeFormat} from "@/assets/DateFormat";
 import InfoBox, {InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
+import {Label} from "@/components";
 
 const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
   const {t} = useTranslation();
@@ -92,6 +93,8 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                             type="number"
                             className="w-24 text-right"
                             value={currentQuantityValue.toString()}
+                            min={1}
+                            step={1}
                             onFocus={(e) => e.target.select()}
                             onChange={(e) => handleQuantityChange(row.lineID, e.target.value)}
                           />
@@ -103,17 +106,16 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                       </SecondaryInfoBox>
                       {enableUpdate && (
                         <div className="flex items-center pt-2">
-                          <Button
-                            variant={checkedRows[row.lineID] ? "outline" : "destructive"}
-                            className={`w-full flex items-center space-x-2 ${checkedRows[row.lineID] ? 'border-destructive text-destructive' : ''}`}
-                            onClick={() => handleCheckboxChange(row.lineID, !checkedRows[row.lineID])}
+                          <Checkbox
+                            checked={checkedRows[row.lineID]}
+                            onCheckedChange={(checked) => handleCheckboxChange(row.lineID, !!checked)}
                           >
-                            <Checkbox
-                              checked={checkedRows[row.lineID]}
-                              onCheckedChange={(checked) => handleCheckboxChange(row.lineID, !!checked)}
-                            />
-                            <span>{t('remove')}</span>
-                          </Button>
+                            {t('delete')}
+                          </Checkbox>
+                          <Label className="cursor-pointer pl-2"
+                                 onClick={() => handleCheckboxChange(row.lineID, !checkedRows[row.lineID])}>
+                            {t('delete')}
+                          </Label>
                         </div>
                       )}
                     </CardContent>
@@ -121,6 +123,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                 );
               })}
             </div>
+
           </ScrollArea>
         )}
         {(!data || data.length === 0) &&

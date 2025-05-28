@@ -145,7 +145,7 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
   };
 
   return (
-    <div className="gap-2">
+    <div className="flex flex-col gap-2">
       {data.lines.map((row) => {
         const statusTextStyle = getStatusTextStyle(row.lineStatus);
 

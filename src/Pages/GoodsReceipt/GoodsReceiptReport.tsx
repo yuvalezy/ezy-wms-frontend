@@ -77,7 +77,7 @@ export default function GoodsReceiptReport({confirm}: GoodsReceiptReportProps) {
   };
 
   return (
-    <ContentTheme title={t("goodsReceiptReport")}>
+    <ContentTheme title={!confirm ? t('goodsReceiptReport') : t('confirmationReport')}>
       <ReportFilterForm
         onSubmit={onSubmit}
         onClear={() => setDocuments([])}

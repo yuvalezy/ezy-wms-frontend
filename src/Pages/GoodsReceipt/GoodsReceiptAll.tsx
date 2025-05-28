@@ -12,7 +12,7 @@ interface GoodsReceiptAllProps {
   confirm?: boolean
 }
 
-export default function GoodsReceiptReportAll({confirm}: GoodsReceiptAllProps) {
+export default function GoodsReceiptReportAll({confirm = false}: GoodsReceiptAllProps) {
   const {t} = useTranslation();
   const navigate = useNavigate();
   const {
@@ -22,18 +22,18 @@ export default function GoodsReceiptReportAll({confirm}: GoodsReceiptAllProps) {
     handleExportExcel,
     openDetails,
     onDetailUpdate,
-  } = useGoodsReceiptAllData();
+  } = useGoodsReceiptAllData(confirm);
 
   return (
-    <ContentTheme title={`${t("goodsReceiptSupervisor")} #${id}`} exportExcel={true} onExportExcel={handleExportExcel}>
+    <ContentTheme title={`${!confirm ? t("goodsReceiptSupervisor") : t("goodsReceiptConfirmationSupervisor")} #${id}`} exportExcel={true} onExportExcel={handleExportExcel}>
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="#"
-                            onClick={() => navigate('/goodsReceiptSupervisor')}>{t('supervisor')}</BreadcrumbLink>
+                            onClick={() => navigate(`/goodsReceipt${confirm ? 'Confirmation' : ''}Supervisor`)}>{t('supervisor')}</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <BreadcrumbPage>{t("goodsReceiptReport")}</BreadcrumbPage>
+            <BreadcrumbPage>{!confirm ? t("goodsReceiptReport") : t("confirmationReport")}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -41,11 +41,10 @@ export default function GoodsReceiptReportAll({confirm}: GoodsReceiptAllProps) {
           <GoodsReceiptAllReportTable onClick={openDetails} data={data}/>
         {data.length === 0 && (
           <Alert variant="default" className="mt-4 bg-yellow-100 border-yellow-400 text-yellow-700">
-            {/* <AlertTitle>{t("warning")}</AlertTitle> */}
             <AlertDescription>{t("noExitData")}</AlertDescription>
           </Alert>
         )}
-        {id && <GoodsReceiptAllDialog ref={detailRef} id={id} onUpdate={onDetailUpdate}/>}
+        {id && <GoodsReceiptAllDialog ref={detailRef} id={id} confirm={confirm} onUpdate={onDetailUpdate}/>}
       </>}
     </ContentTheme>
   );

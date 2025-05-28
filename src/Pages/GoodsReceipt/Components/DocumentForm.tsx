@@ -25,6 +25,7 @@ import {useObjectName} from "@/assets/ObjectName";
 import {Document, DocumentItem} from "@/assets/Document";
 import {BusinessPartner, fetchVendors} from "@/assets/Data";
 import {StringFormat} from "@/assets/Functions";
+import {Card} from "@/components";
 
 interface DocumentFormProps {
   onNewDocument: (document: Document) => void,
@@ -80,7 +81,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, confirm}) => 
     }
 
     setLoading(true);
-    createDocument(selectedType, cardCodeInput, docNameInput, items, confirm)
+    createDocument(selectedType, cardCodeInput, docNameInput, items)
       .then((response) => {
         if (!response.error) {
           onNewDocument(response);
@@ -127,10 +128,38 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, confirm}) => 
       .finally(() => setLoading(false));
   };
 
+  const renderSpecificOrders = () => {
+    return <form onSubmit={handleSubmit} className="space-y-4 pl-4 pr-4">
+      <div className="space-y-2">
+        <Label htmlFor="docNameSpecific">{t("id")}</Label>
+        <Input
+          id="docNameSpecific"
+          value={docNameInput}
+          onChange={(e) => setDocNameInput(e.target.value)}
+          maxLength={50}
+        />
+      </div>
+      <div className="space-y-2">
+        <Label>{t("documentsList")}</Label>
+        <DocumentList ref={documentListRef} confirm={confirm} onItemsUpdate={setItems}/>
+      </div>
+      <div>
+        <Button type="submit">
+          <PlusCircle className="mr-2 h-4 w-4"/> {t("create")}
+        </Button>
+      </div>
+    </form>
+  }
+
+  if (confirm)
+    return <Card>
+      {renderSpecificOrders()}
+    </Card>;
+
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
       <TabsList className="grid w-full grid-cols-2">
-        {!confirm && <TabsTrigger value={TAB_AUTOCONFIRM}>{t("automatic")}</TabsTrigger>}
+        <TabsTrigger value={TAB_AUTOCONFIRM}>{t("automatic")}</TabsTrigger>
         <TabsTrigger value={TAB_SPECIFICORDERS}>{t("specificDocuments")}</TabsTrigger>
       </TabsList>
 
@@ -169,26 +198,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, confirm}) => 
       </TabsContent>
 
       <TabsContent value={TAB_SPECIFICORDERS}>
-        <form onSubmit={handleSubmit} className="space-y-4 p-4">
-          <div className="space-y-2">
-            <Label htmlFor="docNameSpecific">{t("id")}</Label>
-            <Input
-              id="docNameSpecific"
-              value={docNameInput}
-              onChange={(e) => setDocNameInput(e.target.value)}
-              maxLength={50}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>{t("documentsList")}</Label>
-            <DocumentList ref={documentListRef} confirm={confirm} onItemsUpdate={setItems}/>
-          </div>
-          <div>
-            <Button type="submit">
-              <PlusCircle className="mr-2 h-4 w-4"/> {t("create")}
-            </Button>
-          </div>
-        </form>
+        {renderSpecificOrders()}
       </TabsContent>
     </Tabs>
   );

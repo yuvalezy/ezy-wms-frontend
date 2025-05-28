@@ -32,7 +32,7 @@ export const useGoodsReceiptAllDetailsData = (props: GRPOAllDetailProps) => {
     setEnableUpdate(false);
     setCheckedRows({})
     setQuantityChanges({})
-    fetchDocuments({id: props.id})
+    fetchDocuments({id: props.id, confirm: props.confirm})
       .then((doc) => {
         setEnableUpdate(doc[0].status === Status.InProgress);
         fetchGoodsReceiptReportAllDetails(props.id, data.itemCode)
@@ -87,6 +87,7 @@ export interface GRPOAllDetailRef {
 }
 
 export interface GRPOAllDetailProps {
-  id: number;
-  onUpdate: (data: DetailUpdateParameters) => void;
+  id: number,
+  onUpdate: (data: DetailUpdateParameters) => void,
+  confirm: boolean | undefined
 }

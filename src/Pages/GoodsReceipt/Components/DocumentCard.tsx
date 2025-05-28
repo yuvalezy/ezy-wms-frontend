@@ -10,7 +10,7 @@ import {useObjectName} from "@/assets/ObjectName";
 import {Authorization} from "@/assets/Authorization";
 import {useDocumentStatusToString} from "@/assets/DocumentStatusString";
 import {Status} from "@/assets/Common";
-import {activeStatuses, processStatuses, useHandleOpenOld} from "@/pages/GoodsReceipt/data/GoodsReceiptUtils";
+import {activeStatuses, processStatuses, useHandleOpen} from "@/pages/GoodsReceipt/data/GoodsReceiptUtils";
 import {useDateTimeFormat} from "@/assets/DateFormat";
 import {Separator} from "@/components/ui/separator";
 import InfoBox, {InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
@@ -29,7 +29,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
   const o = useObjectName();
   const {dateFormat} = useDateTimeFormat();
   const {user} = useAuth();
-  const handleOpen = useHandleOpenOld();
+  const handleOpen = useHandleOpen(confirm);
   const navigate = useNavigate();
 
   const handleOpenLink = !confirm ? user?.authorizations?.includes(Authorization.GOODS_RECEIPT) : user?.authorizations?.includes(Authorization.GOODS_RECEIPT_CONFIRMATION);

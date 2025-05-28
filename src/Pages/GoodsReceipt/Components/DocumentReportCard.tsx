@@ -2,7 +2,7 @@ import React from "react";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {useTranslation} from "react-i18next";
 import {Document, DocumentItem, useDocumentStatusToString, useObjectName, useDateTimeFormat} from "@/assets";
-import {activeStatuses, processStatuses, useHandleOpenOld} from "@/pages/GoodsReceipt/data/GoodsReceiptUtils";
+import {activeStatuses, processStatuses, useHandleOpen} from "@/pages/GoodsReceipt/data/GoodsReceiptUtils";
 import InfoBox, {InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
 import {Separator} from "@/components/ui/separator";
 import {Button} from "@/components/ui/button";
@@ -18,7 +18,7 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc, docDetails}
   const {t} = useTranslation();
   const {dateFormat} = useDateTimeFormat();
   const documentStatusToString = useDocumentStatusToString();
-  const handleOpen = useHandleOpenOld();
+  const handleOpen = useHandleOpen();
   const o = useObjectName();
 
   function documentDetailsClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
