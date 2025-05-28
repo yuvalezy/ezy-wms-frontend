@@ -36,11 +36,8 @@ export default function ItemCheck() {
   return (
     <ContentTheme title={t("itemCheck")}>
       {(result == null || result.length === 0) && (
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("itemCheck")}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label htmlFor="barcode">{t("barcode")}</Label>
               <Input
@@ -62,15 +59,15 @@ export default function ItemCheck() {
                 onChange={(e) => setItemCodeInput(e.target.value)}
               />
             </div>
-            <Button onClick={() => handleCheckSubmit()} className="w-full">
+            <Button onClick={() => handleCheckSubmit()} className="h-fit self-end">
               <FontAwesomeIcon icon={faCheck} className="mr-2"/>
               {t("accept")}
             </Button>
-          </CardContent>
-        </Card>
+          </div>
+        </>
       )}
       {result && (
-        <div className="space-y-4">
+        <>
           {result.length === 0 && (
             <Alert className="border-red-200 bg-red-50">
               <FontAwesomeIcon icon={faExclamationTriangle} className="h-4 w-4 text-red-600"/>
@@ -83,6 +80,7 @@ export default function ItemCheck() {
             <ItemCheckResult
               result={result[0]}
               submit={handleUpdateSubmit}
+              onClear={handleClear}
             />
           )}
           {result.length > 1 && (
@@ -93,7 +91,7 @@ export default function ItemCheck() {
               setBarcodeItem={handleSetBarcodeItem}
             />
           )}
-        </div>
+        </>
       )}
     </ContentTheme>
   );

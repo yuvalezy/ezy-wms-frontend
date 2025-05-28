@@ -1,7 +1,7 @@
 import {useTranslation} from "react-i18next";
 import React, {useEffect, useState} from "react";
 import {ItemCheckResponse, itemStock, ItemStockResponse} from "../Item";
-import {useThemeContext} from "../../../components/ThemeContext";
+import {useThemeContext} from "@/components/ThemeContext";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 interface StockTableProps {

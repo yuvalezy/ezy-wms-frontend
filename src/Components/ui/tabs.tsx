@@ -1,5 +1,3 @@
-"use client"
-
 import * as React from "react"
 import * as TabsPrimitive from "@radix-ui/react-tabs"
 
@@ -57,7 +55,11 @@ function TabsContent({
   return (
     <TabsPrimitive.Content
       data-slot="tabs-content"
-      className={cn("flex-1 outline-none", className)}
+      className={cn(
+        "flex-1 outline-none", // Original classes
+        "rounded-md border border-border bg-card p-6 text-card-foreground shadow-sm", // Added classes for boxing
+        className
+      )}
       {...props}
     />
   )

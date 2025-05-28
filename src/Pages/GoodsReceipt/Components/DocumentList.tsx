@@ -101,11 +101,12 @@ const DocumentList = forwardRef<DocumentListRef, DocumentListProps>((props, ref)
                 <p className="text-sm text-muted-foreground p-2 text-center">{t("noDocumentsAdded")}</p>
             )}
 
-            <div className="flex items-end space-x-2">
-                <div className="flex-grow">
-                    <Label htmlFor="docTypeSelect">{t("documentType")}</Label>
+            {/* Responsive layout for input fields and button */}
+            <div className="flex flex-col sm:flex-row sm:items-end sm:space-x-2 space-y-3 sm:space-y-0">
+                <div className="flex-grow sm:flex-1"> {/* Document Type */}
+                    <Label htmlFor="docTypeSelect" className="mb-1 block">{t("documentType")}</Label>
                     <Select value={objTypeString} onValueChange={setObjTypeString}>
-                        <SelectTrigger id="docTypeSelect">
+                        <SelectTrigger id="docTypeSelect" className="w-full">
                             <SelectValue placeholder={t("selectDocumentType")} />
                         </SelectTrigger>
                         <SelectContent>
@@ -114,21 +115,26 @@ const DocumentList = forwardRef<DocumentListRef, DocumentListProps>((props, ref)
                         </SelectContent>
                     </Select>
                 </div>
-                <div className="flex-grow">
-                    <Label htmlFor="docNumInput">{t("documentNumber")}</Label>
+                <div className="flex-grow sm:flex-1"> {/* Document Number */}
+                    <Label htmlFor="docNumInput" className="mb-1 block">{t("documentNumber")}</Label>
                     <Input
                         id="docNumInput"
                         ref={docNumInputRef}
                         value={docNum}
-                        type="number" // Use number type for better mobile experience
-                        placeholder={t('enterDocumentNumber')} // More descriptive placeholder
+                        type="number"
+                        placeholder={t('enterDocumentNumber')}
                         onChange={e => setDocNum(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleAddClick()} // Optional: Add on Enter
+                        onKeyDown={(e) => e.key === 'Enter' && handleAddClick()}
+                        className="w-full"
                     />
                 </div>
-                <Button onClick={handleAddClick} className="shrink-0">
-                    <PlusCircle className="mr-2 h-4 w-4" /> {t('add')}
-                </Button>
+                <div className="sm:flex-none pt-3 sm:pt-0"> {/* Add Button */}
+                     {/* On small screens, label might be redundant if button text is clear, or add margin if label is kept */}
+                     {/* <Label className="mb-1 block sm:hidden">&nbsp;</Label>  Optional: Spacer for alignment on small screens if labels are above */}
+                    <Button onClick={handleAddClick} className="w-full sm:w-auto">
+                        <PlusCircle className="mr-2 h-4 w-4" /> {t('add')}
+                    </Button>
+                </div>
             </div>
         </div>
     );
