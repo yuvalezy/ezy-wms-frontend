@@ -1,6 +1,5 @@
 import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
-import { MessageStripDesign} from "@ui5/webcomponents-react"; // Keep for MessageStripDesign enum
 import React, {useEffect, useState} from "react";
 import {useThemeContext} from "../../components/ThemeContext";
 import {fetchTransfers, TransferDocument, transferAction} from "./Data/TransferDocument";

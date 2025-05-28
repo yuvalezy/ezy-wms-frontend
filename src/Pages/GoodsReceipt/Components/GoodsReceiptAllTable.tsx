@@ -1,7 +1,9 @@
 import * as React from 'react';
 import {GoodsReceiptAll} from "../Data/Report";
 import {useTranslation} from "react-i18next";
-import {Card, CardHeader, Label, Title, Text, Button} from '@ui5/webcomponents-react';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label"; // Using shadcn Label
 
 interface GoodsReceiptAllTableProps {
   data: GoodsReceiptAll[]
@@ -18,25 +20,19 @@ interface MetricRowProps {
 }
 
 const MetricRow: React.FC<MetricRowProps> = ({label, values}) => (
-  <div className="metric-row" style={{
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '8px 0',
-    borderBottom: '1px solid #e0e0e0'
-  }}>
-    <div style={{flex: '0 0 30%', fontWeight: '500'}}>
-      <Text>{label}</Text>
+  <div className="metric-row flex justify-between items-center py-2 border-b border-gray-200">
+    <div className="w-[30%] font-medium">
+      <span>{label}</span>
     </div>
-    <div style={{flex: '1', display: 'flex', justifyContent: 'space-around', textAlign: 'center'}}>
-      <div style={{flex: '1'}}>
-        <Text>{values.units}</Text>
+    <div className="flex-1 flex justify-around text-center">
+      <div className="flex-1">
+        <span>{values.units}</span>
       </div>
-      <div style={{flex: '1'}}>
-        <Text>{values.buyUnits}</Text>
+      <div className="flex-1">
+        <span>{values.buyUnits}</span>
       </div>
-      <div style={{flex: '1'}}>
-        <Text>{values.packUnits}</Text>
+      <div className="flex-1">
+        <span>{values.packUnits}</span>
       </div>
     </div>
   </div>
@@ -46,46 +42,31 @@ const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data, 
   const {t} = useTranslation();
 
   return (
-    <div style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
+    <div className="flex flex-col gap-4">
       {data.map((row) => {
         const inWarehouse = row.quantity - row.delivery - row.showroom;
 
         return (
-          <Card
-            key={row.itemCode}
-            style={{width: '100%'}}
-            header={
-              <CardHeader titleText={`${t('code')}: ${row.itemCode}`}
-                          subtitleText={`${t('description')}: ${row.itemName}`}/>
-            }
-          >
-            <div style={{paddingLeft: '16px', paddingRight: '16px', paddingBottom: '16px'}}>
+          <Card key={row.itemCode} className="w-full shadow-lg">
+            <CardHeader>
+              <CardTitle>{`${t('code')}: ${row.itemCode}`}</CardTitle>
+              <CardDescription>{`${t('description')}: ${row.itemName}`}</CardDescription>
+            </CardHeader>
+            <CardContent className="pb-4">
               {/* Unit Headers */}
-              <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: '8px 0',
-                borderBottom: '2px solid #0070f3',
-                marginBottom: '8px',
-                fontWeight: 'bold'
-              }}>
-                <div style={{flex: '0 0 30%'}}>
-                  <Text style={{fontWeight: 'bold'}}>{t('unit')}</Text>
+              <div className="flex justify-between items-center py-2 border-b-2 border-primary mb-2 font-bold">
+                <div className="w-[30%]">
+                  <span>{t('unit')}</span>
                 </div>
-                <div style={{flex: '1', display: 'flex', justifyContent: 'space-around', textAlign: 'center'}}>
-                  <div style={{flex: '1'}}>
-                    <Text style={{fontWeight: 'bold', fontSize: '12px'}}>{t('units')}</Text>
+                <div className="flex-1 flex justify-around text-center">
+                  <div className="flex-1 text-xs">
+                    <span>{t('units')}</span>
                   </div>
-                  <div style={{flex: '1'}}>
-                    <Text style={{fontWeight: 'bold', fontSize: '12px'}}>
-                      {row.buyUnitMsr ?? t('purPackUn')}
-                    </Text>
+                  <div className="flex-1 text-xs">
+                    <span>{row.buyUnitMsr ?? t('purPackUn')}</span>
                   </div>
-                  <div style={{flex: '1'}}>
-                    <Text style={{fontWeight: 'bold', fontSize: '12px'}}>
-                      {row.purPackMsr ?? t('packUn')}
-                    </Text>
+                  <div className="flex-1 text-xs">
+                    <span>{row.purPackMsr ?? t('packUn')}</span>
                   </div>
                 </div>
               </div>
@@ -137,16 +118,16 @@ const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data, 
               />
 
               {/* Action Button */}
-              <div style={{marginTop: '16px', textAlign: 'center'}}>
-                <Button
-                  design="Emphasized"
-                  onClick={() => onClick(row)}
-                  style={{width: '100%'}}
-                >
-                  {t('modifyValues')}
-                </Button>
-              </div>
-            </div>
+            </CardContent>
+            <CardFooter className="mt-4 text-center border-t pt-4">
+              <Button
+                variant="default" /* or "secondary", "outline" etc. */
+                onClick={() => onClick(row)}
+                className="w-full"
+              >
+                {t('modifyValues')}
+              </Button>
+            </CardFooter>
           </Card>
         );
       })}

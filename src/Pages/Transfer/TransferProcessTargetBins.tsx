@@ -4,15 +4,16 @@ import React, {useEffect, useRef, useState} from "react";
 import {useThemeContext} from "../../components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {
-    Label,
-    MessageStrip,
-    ProgressIndicator,
-    Table,
-    TableCell,
-    TableColumn,
-    TableGroupRow,
-    TableRow
-} from "@ui5/webcomponents-react";
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Progress } from "@/components/ui/progress";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {useAuth} from "../../components/AppContext";
 import {BinLocation, Item, SourceTarget} from "../../Assets/Common";
@@ -20,10 +21,11 @@ import BarCodeScanner, {BarCodeScannerRef} from "../../components/BarCodeScanner
 import {addItem, fetchTransferContent, TransferContent} from "./Data/TransferDocument";
 import BinLocationScanner from "../../components/BinLocationScanner";
 import {delay} from "../../Assets/GlobalConfig";
-import {MessageStripDesign} from "@ui5/webcomponents-react";
+// Keep MessageStripDesign for ProcessAlertValue severity
+import { MessageStripDesign } from "@ui5/webcomponents-react"; 
 import ProcessAlert, {ProcessAlertValue} from "../../components/ProcessAlert";
 import {ScrollableContent, ScrollableContentBox} from "../../components/ScrollableContent";
-import {ReasonType} from "../../Assets/Reasons";
+import {ReasonType}from "../../Assets/Reasons";
 import Processes, {ProcessesRef} from "../../components/Processes";
 import {updateLine} from "./Data/TransferProcess";
 import {useDateTimeFormat} from "../../Assets/DateFormat";
@@ -111,13 +113,13 @@ export default function TransferProcessTargetBins() {
                 let date = new Date(Date.now());
                 setCurrentAlert({
                     lineID: v.lineID,
-                    quantity: 1,
-                    barcode: item.barcode,
-                    itemCode: item.code,
-                    severity: StatusAlertType.Information,
-                    timeStamp: dateTimeFormat(date)
-                })
-                barcodeRef?.current?.clear();
+          quantity: 1,
+          barcode: item.barcode,
+          itemCode: item.code,
+          severity: MessageStripDesign.Information, // For ProcessAlert
+          timeStamp: dateTimeFormat(date)
+        })
+        barcodeRef?.current?.clear();
                 loadRows();
                 barcodeRef?.current?.focus();
             })
@@ -155,42 +157,51 @@ export default function TransferProcessTargetBins() {
         navigate(`/transfer/${id}`);
     }
 
-    return (
-        <ContentTheme title={getTitle()} back={() => navigateBack()}>
-            {id &&
-                <ScrollableContent>
+  return (
+    <ContentTheme title={getTitle()} onBack={() => navigateBack()}>
+      {id &&
+          <ScrollableContent>
                     {user?.binLocations && <BinLocationScanner onChanged={onBinChanged} onClear={onBinClear}/>}
                     <ScrollableContentBox borderUp={user?.binLocations??false}>
                         {currentAlert && <ProcessAlert alert={currentAlert} onAction={(type) => processesRef?.current?.open(type)}/>}
-                        {rows != null && rows.length > 0 &&
-                            <Table
-                                columns={<>
-                                    <TableColumn><Label>{t('code')}</Label></TableColumn>
-                                    <TableColumn><Label>{t('description')}</Label></TableColumn>
-                                    <TableColumn><Label>{t('openQuantity')}</Label></TableColumn>
-                                    <TableColumn><Label>{t('binQuantity')}</Label></TableColumn>
-                                </>}
-                            >
-                                {rows.map((row) => (
-                                    <>
-                                        <TableRow key={row.code}>
-                                            <TableCell><Label>{row.code}</Label></TableCell>
-                                            <TableCell><Label>{row.name}</Label></TableCell>
-                                            <TableCell><Label>{row.openQuantity}</Label></TableCell>
-                                            <TableCell><Label>{row.binQuantity}</Label></TableCell>
+                        {rows != null && rows.length > 0 && (
+                            <div className="rounded-md border">
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead><Label>{t('code')}</Label></TableHead>
+                                            <TableHead><Label>{t('description')}</Label></TableHead>
+                                            <TableHead className="text-right"><Label>{t('openQuantity')}</Label></TableHead>
+                                            <TableHead className="text-right"><Label>{t('binQuantity')}</Label></TableHead>
                                         </TableRow>
-                                        <TableGroupRow key={`${row.code}_progress`}>
-                                            <ProgressIndicator value={row.progress}/>
-                                        </TableGroupRow>
-                                    </>
-                                ))}
-                            </Table>
-                        }
+                                    </TableHeader>
+                                    <TableBody>
+                                        {rows.map((row) => (
+                                            <React.Fragment key={row.code}>
+                                                <TableRow>
+                                                    <TableCell><Label>{row.code}</Label></TableCell>
+                                                    <TableCell><Label>{row.name}</Label></TableCell>
+                                                    <TableCell className="text-right"><Label>{row.openQuantity}</Label></TableCell>
+                                                    <TableCell className="text-right"><Label>{row.binQuantity}</Label></TableCell>
+                                                </TableRow>
+                                                <TableRow>
+                                                    <TableCell colSpan={4} className="p-1">
+                                                        <Progress value={row.progress ?? 0} className="w-full h-2" />
+                                                        <p className="text-xs text-muted-foreground text-center">{`${row.progress ?? 0}%`}</p>
+                                                    </TableCell>
+                                                </TableRow>
+                                            </React.Fragment>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </div>
+                        )}
                         {rows != null && rows.length === 0 &&
-                            <div style={{padding: '10px'}}>
-                                <MessageStrip hideCloseButton design={StatusAlertType.Information}>
-                                    {t("nodata")}
-                                </MessageStrip>
+                            <div className="p-4">
+                                <Alert variant="default" className="bg-blue-100 border-blue-400 text-blue-700">
+                                    {/* <AlertTitle>Information</AlertTitle> */}
+                                    <AlertDescription>{t("nodata")}</AlertDescription>
+                                </Alert>
                             </div>
                         }
                     </ScrollableContentBox>

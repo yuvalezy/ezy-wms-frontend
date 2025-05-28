@@ -8,16 +8,27 @@ import {useAuth} from "../../components/AppContext";
 import {BinLocation, DetailUpdateParameters, SourceTarget} from "../../Assets/Common";
 import {addItem, fetchTransferContent, TransferContent, TransferContentBin, updateTransferTargetItem} from "./Data/TransferDocument";
 import ProcessAlert, {ProcessAlertValue} from "../../components/ProcessAlert";
-import {MessageStripDesign} from "@ui5/webcomponents-react";
+// Keep MessageStripDesign for ProcessAlertValue severity
+import { MessageStripDesign } from "@ui5/webcomponents-react"; 
 import {ScrollableContent, ScrollableContentBox} from "../../components/ScrollableContent";
-import {Label, Panel, Text, ProgressIndicator, Table, TableCell, TableColumn, TableRow, Title} from "@ui5/webcomponents-react";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import BinLocationScanner, {BinLocationScannerRef} from "../../components/BinLocationScanner";
-import {delay} from "../../Assets/GlobalConfig";
+import {delay}from "../../Assets/GlobalConfig";
 import Processes, {ProcessesRef} from "../../components/Processes";
 import {ReasonType} from "../../Assets/Reasons";
 import {updateLine} from "./Data/TransferProcess";
-import TransferTargetItemsDetailsDialog, {TransferTargetItemsDetailRef} from "./components/TransferTargetItemDetails";
-import {Authorization} from "../../Assets/Authorization";
+import TransferTargetItemsDetailsDialog, {TransferTargetItemsDetailRef} from "./Components/TransferTargetItemDetails";
+import {Authorization}from "../../Assets/Authorization";
 import {useDateTimeFormat} from "../../Assets/DateFormat";
 
 export default function TransferProcessTargetItem() {
@@ -80,7 +91,7 @@ export default function TransferProcessTargetItem() {
                     lineID: v.lineID,
                     quantity: 1,
                     itemCode: itemCode,
-                    severity: StatusAlertType.Information,
+                    severity: MessageStripDesign.Information, // For ProcessAlert
                     timeStamp: dateTimeFormat(date)
                 })
                 binRef?.current?.clear();
@@ -144,37 +155,58 @@ export default function TransferProcessTargetItem() {
     }
 
     return (
-        <ContentTheme title={title} back={() => navigateBack()}>
+        <ContentTheme title={title} onBack={() => navigateBack()}>
             {content &&
                 <ScrollableContent>
-                    <Panel>
-                        <Title level="H5">
-                            <strong>{t("item")}: </strong>
-                            {content.code} - {content.name}
-                        </Title>
-                        <Text><strong>{t("quantity")}: </strong>{content.quantity}</Text><br/>
-                        <Text><strong>{t("openQuantity")}: </strong>{content.openQuantity}</Text>
-                        <ProgressIndicator value={content.progress ?? 0}/>
-                    </Panel>
+                    <Card className="mb-4">
+                        <CardHeader>
+                            <CardTitle>
+                                <strong>{t("item")}: </strong>
+                                {content.code} - {content.name}
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p><strong>{t("quantity")}: </strong>{content.quantity}</p>
+                            <p><strong>{t("openQuantity")}: </strong>{content.openQuantity}</p>
+                            <Progress value={content.progress ?? 0} className="mt-2 h-3" />
+                            <p className="text-xs text-muted-foreground text-center mt-1">{`${content.progress ?? 0}%`}</p>
+                        </CardContent>
+                    </Card>
                     <ScrollableContentBox>
                         {currentAlert && <ProcessAlert alert={currentAlert} onAction={(type) => processesRef?.current?.open(type)}/>}
-                        <Table
-                            columns={<>
-                                <TableColumn><Label>{t('bin')}</Label></TableColumn>
-                                <TableColumn><Label>{t('quantity')}</Label></TableColumn>
-                            </>}
-                        >
-                            {content?.bins?.map((bin) => (
-                                <TableRow key={bin.entry}>
-                                    <TableCell><Label>{bin.code}</Label></TableCell>
-                                    <TableCell>{supervisor && <a href="#" onClick={e => {
-                                        e.preventDefault();
-                                        handleClick(bin)
-                                    }}>{bin.quantity}</a>}
-                                        {!supervisor && bin.quantity}</TableCell>
-                                </TableRow>
-                            ))}
-                        </Table>
+                        {content?.bins && content.bins.length > 0 && (
+                            <div className="rounded-md border">
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead><Label>{t('bin')}</Label></TableHead>
+                                            <TableHead className="text-right"><Label>{t('quantity')}</Label></TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {content.bins.map((bin) => (
+                                            <TableRow key={bin.entry}>
+                                                <TableCell><Label>{bin.code}</Label></TableCell>
+                                                <TableCell className="text-right">
+                                                    {supervisor ? (
+                                                        <a href="#" onClick={e => { e.preventDefault(); handleClick(bin); }} className="text-blue-600 hover:underline">
+                                                            {bin.quantity}
+                                                        </a>
+                                                    ) : (
+                                                        bin.quantity
+                                                    )}
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </div>
+                        )}
+                         {(!content?.bins || content.bins.length === 0) && (
+                            <div className="p-4 text-center text-muted-foreground">
+                                {t("noBinsForItem")}
+                            </div>
+                        )}
                     </ScrollableContentBox>
                     {user?.binLocations && (content.progress ?? 0) < 100 && <BinLocationScanner ref={binRef} onScan={onScan}/>}
                 </ScrollableContent>

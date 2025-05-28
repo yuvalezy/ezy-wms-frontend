@@ -1,10 +1,29 @@
-import {Bar, Button, CheckBox, Dialog, DialogDomRef, Input, Label, Table, TableCell, TableColumn, TableRow, Title} from "@ui5/webcomponents-react";
 import React, {forwardRef, useImperativeHandle, useRef, useState} from "react";
 import {useThemeContext} from "../../../components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {DetailUpdateParameters, Status} from "../../../Assets/Common";
 import {fetchTargetItemDetails, fetchTransfers, TargetItemDetail, TransferContent, TransferContentBin} from "../Data/TransferDocument";
 import {useDateTimeFormat} from "../../../Assets/DateFormat";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
 
 export interface TransferTargetItemsDetailRef {
     show: (content: TransferContent, bin: TransferContentBin) => void;
@@ -20,7 +39,7 @@ const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsD
     const {t} = useTranslation();
     const { dateFormat, timeFormat } = useDateTimeFormat();
     const {setLoading, setError} = useThemeContext();
-    const dialogRef = useRef<DialogDomRef>(null);
+    const [isOpen, setIsOpen] = useState(false);
     const [content, setContent] = useState<TransferContent | null>(null);
     const [bin, setBin] = useState<TransferContentBin | null>(null);
     const [data, setData] = useState<TargetItemDetail[]>([]);
@@ -31,23 +50,24 @@ const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsD
     function update() {
         try {
             const removeRows = data?.filter(detail => checkedRows[detail.lineID]).map(detail => detail.lineID) ?? [];
+            setIsOpen(false); // Close dialog after update attempt
             props.onUpdate({id: props.id, removeRows: removeRows, quantityChanges: quantityChanges});
         } catch (e) {
             setError(e);
         }
     }
 
-    function loadDetails(content: TransferContent, bin: TransferContentBin) {
+    function loadDetails(contentArg: TransferContent, binArg: TransferContentBin) {
         setLoading(true);
         setEnableUpdate(false);
-        setCheckedRows({})
-        setQuantityChanges({})
+        setCheckedRows({});
+        setQuantityChanges({});
         fetchTransfers({id: props.id})
             .then((transfer) => {
                 setEnableUpdate(transfer[0].status === Status.InProgress);
-                fetchTargetItemDetails(props.id, content.code, bin.entry)
+                fetchTargetItemDetails(props.id, contentArg.code, binArg.entry)
                     .then((result) => {
-                        dialogRef?.current?.show();
+                        setIsOpen(true);
                         setData(result);
                     })
                     .catch((error) => setError(error))
@@ -60,87 +80,100 @@ const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsD
     }
 
     useImperativeHandle(ref, () => ({
-        show(content: TransferContent, bin: TransferContentBin) {
-            setContent(content)
-            setBin(bin);
-            loadDetails(content, bin);
+        show(contentArg: TransferContent, binArg: TransferContentBin) {
+            setContent(contentArg);
+            setBin(binArg);
+            loadDetails(contentArg, binArg);
         },
         hide() {
-            dialogRef?.current?.close();
+            setIsOpen(false);
         }
-    }))
+    }));
 
     function handleCheckboxChange(lineID: number, checked: boolean) {
         setCheckedRows(prevState => ({
             ...prevState,
             [lineID]: checked
         }));
-        setEnableUpdate(true);
+        // setEnableUpdate(true); // Consider if this is still needed or if update button is always active when dialog is open
     }
 
-    function handleQuantityChange(lineID: number, newValue: number) {
+    function handleQuantityChange(lineID: number, newValue: string) {
+        const numValue = parseInt(newValue, 10);
         setQuantityChanges(prevState => ({
             ...prevState,
-            [lineID]: newValue
+            [lineID]: isNaN(numValue) ? 0 : numValue,
         }));
-        setEnableUpdate(true);
+        // setEnableUpdate(true);
     }
-
-    function startContent() {
-        if (!enableUpdate) {
-            return null;
-        }
-        return <Button disabled={!enableUpdate} onClick={() => update()}>
-            {t("update")}
-        </Button>
-    }
-
+    
     return (
-        <Dialog
-            className="footerPartNoPadding"
-            ref={dialogRef}
-            footer={
-                <Bar
-                    design="Footer"
-                    startContent={startContent()}
-                    endContent={
-                        <Button design="Negative" onClick={() => dialogRef?.current?.close()}>
-                            {t("close")}
-                        </Button>
-                    }
-                />
-            }
-        >
-            <Title level="H5">
-                {t("detail")} - {bin?.code}
-            </Title>
-            <Title level="H6">
-                {content?.code} - {content?.name}
-            </Title>
-            {content && bin &&
-                <Table
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogContent className="sm:max-w-lg"> {/* Adjusted width */}
+                <DialogHeader>
+                    <DialogTitle>{t("detail")} - {bin?.code}</DialogTitle>
+                    <DialogDescription>
+                        {content?.code} - {content?.name}
+                    </DialogDescription>
+                </DialogHeader>
+                
+                {content && bin && data.length > 0 && (
+                    <div className="max-h-[60vh] overflow-y-auto py-4">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    {enableUpdate && <TableHead className="w-[50px]"><Label>{t('delete')}</Label></TableHead>}
+                                    <TableHead><Label>{t('employee')}</Label></TableHead>
+                                    <TableHead><Label>{t('date')}</Label></TableHead>
+                                    <TableHead><Label>{t('time')}</Label></TableHead>
+                                    <TableHead className="text-right"><Label>{t('quantity')}</Label></TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {data.map((row) => (
+                                    <TableRow key={row.lineID}>
+                                        {enableUpdate && (
+                                            <TableCell>
+                                                <Checkbox
+                                                    checked={!!checkedRows[row.lineID]}
+                                                    onCheckedChange={(checked) => handleCheckboxChange(row.lineID, !!checked)}
+                                                />
+                                            </TableCell>
+                                        )}
+                                        <TableCell>{row.employeeName}</TableCell>
+                                        <TableCell>{dateFormat(row.timeStamp)}</TableCell>
+                                        <TableCell>{timeFormat(row.timeStamp)}</TableCell>
+                                        <TableCell className="text-right">
+                                            {enableUpdate ? (
+                                                <Input
+                                                    type="number"
+                                                    className="w-20 text-right"
+                                                    value={(quantityChanges[row.lineID] ?? row.quantity).toString()}
+                                                    onChange={(e) => handleQuantityChange(row.lineID, e.target.value)}
+                                                />
+                                            ) : (
+                                                row.quantity
+                                            )}
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </div>
+                )}
+                {(!data || data.length === 0) && <p className="py-4 text-center text-muted-foreground">{t("noDetailsAvailable")}</p>}
 
-                    columns={<>
-                        {enableUpdate && <TableColumn><Label>{t('delete')}</Label></TableColumn>}
-                        <TableColumn><Label>{t('employee')}</Label></TableColumn>
-                        <TableColumn><Label>{t('date')}</Label></TableColumn>
-                        <TableColumn><Label>{t('time')}</Label></TableColumn>
-                        <TableColumn><Label>{t('quantity')}</Label></TableColumn>
-                    </>}
-                >
-                    {data.map((row) => (
-                        <TableRow key={row.lineID}>
-                            {enableUpdate && <TableCell><CheckBox checked={checkedRows[row.lineID]} onChange={(e) => handleCheckboxChange(row.lineID, e.target.checked ?? false)}/></TableCell>}
-                            <TableCell>{row.employeeName}</TableCell>
-                            <TableCell>{dateFormat(row.timeStamp)}</TableCell>
-                            <TableCell>{timeFormat(row.timeStamp)}</TableCell>
-                            <TableCell>{enableUpdate && <Input type="Number" style={{textAlign: 'right', width: '100px'}} value={row.quantity.toString()}
-                                              onChange={(e) => handleQuantityChange(row.lineID, parseInt(e.target.value ?? "0", 10))}/>}
-                                {!enableUpdate && row.quantity}</TableCell>
-                        </TableRow>
-                    ))}
-                </Table>
-            }
+                <DialogFooter>
+                    {enableUpdate && (
+                        <Button onClick={update}>
+                            {t("update")}
+                        </Button>
+                    )}
+                    <Button variant="outline" onClick={() => setIsOpen(false)}>
+                        {t("close")}
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
         </Dialog>
     );
 });

@@ -20,14 +20,24 @@ import {
   faArrowsAlt, // move
   faTruckMoving, // journey-depart
   faQuestionCircle, // request (fallback/generic)
-  faQuestion // general fallback
+  faQuestion, // general fallback
+  faArrowLeft, // for back button
+  faMapMarkedAlt // for map button
 } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
+export interface CustomActionButton {
+  iconName: string;
+  action: () => void;
+  label?: string;
+}
+
 interface MenuAppBarProps {
-  title: string,
-  exportExcel?: boolean,
-  onExportExcel?: () => void,
+  title: string;
+  exportExcel?: boolean;
+  onExportExcel?: () => void;
+  onBack?: () => void; // New prop for back navigation
+  customActionButtons?: CustomActionButton[]; // New prop for custom buttons
 }
 
 const iconMap: { [key: string]: IconDefinition } = {
@@ -42,6 +52,7 @@ const iconMap: { [key: string]: IconDefinition } = {
   "move": faArrowsAlt,
   "journey-depart": faTruckMoving,
   "request": faQuestionCircle,
+  "map": faMapMarkedAlt, // Added map icon
   // Add more mappings as needed based on UI5 icons
 };
 
@@ -49,7 +60,7 @@ const getFaIcon = (iconName: string): IconDefinition => {
   return iconMap[iconName] || faQuestion; // Fallback to a generic question mark icon
 };
 
-const MenuAppBar: React.FC<MenuAppBarProps> = ({title, exportExcel, onExportExcel}) => {
+const MenuAppBar: React.FC<MenuAppBarProps> = ({title, exportExcel, onExportExcel, onBack, customActionButtons}) => {
   const menus = useMenus();
   const [authorizedMenus, setAuthorizedMenus] = useState<MenuItem[]>([]);
   const navigate = useNavigate();
@@ -77,10 +88,18 @@ const MenuAppBar: React.FC<MenuAppBarProps> = ({title, exportExcel, onExportExce
 
   return (
     <nav className="bg-white p-4 flex items-center justify-between relative z-20 shadow-md">
-      {/* Menu Toggle Button */}
-      <button onClick={toggleMenu} className="text-gray-800 focus:outline-none cursor-pointer">
-        <FontAwesomeIcon icon={faBars} size="lg" />
-      </button>
+      {/* Left side: Back button or Menu Toggle Button */}
+      <div className="flex items-center">
+        {onBack ? (
+          <button onClick={onBack} className="text-gray-800 focus:outline-none cursor-pointer mr-3">
+            <FontAwesomeIcon icon={faArrowLeft} size="lg" />
+          </button>
+        ) : (
+          <button onClick={toggleMenu} className="text-gray-800 focus:outline-none cursor-pointer">
+            <FontAwesomeIcon icon={faBars} size="lg" />
+          </button>
+        )}
+      </div>
 
       {/* Page Header */}
       <div className="flex-grow text-center">
@@ -88,16 +107,25 @@ const MenuAppBar: React.FC<MenuAppBarProps> = ({title, exportExcel, onExportExce
           {title}
         </h1>
       </div>
+      
+      {/* Right side: Action Buttons */}
+      <div className="flex items-center space-x-3">
+        {customActionButtons && customActionButtons.map((btn, index) => (
+          <button key={index} onClick={btn.action} title={btn.label} className="text-gray-800 focus:outline-none cursor-pointer">
+            <FontAwesomeIcon icon={getFaIcon(btn.iconName)} size="lg" />
+          </button>
+        ))}
+        {exportExcel && onExportExcel && (
+          <button onClick={onExportExcel} title={"Export to Excel"} className="text-gray-800 focus:outline-none cursor-pointer">
+            <FontAwesomeIcon icon={faFileExcel} size="lg" />
+          </button>
+        )}
+      </div>
 
-      {/* Export to Excel Button */}
-      {exportExcel && onExportExcel && (
-        <button onClick={onExportExcel} className="text-gray-800 focus:outline-none cursor-pointer">
-          <FontAwesomeIcon icon={faFileExcel} size="lg" />
-        </button>
-      )}
-
-      {/* Sidebar Menu */}
-      <div className={`fixed top-0 left-0 h-full bg-white text-gray-800 w-64 transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out z-30 flex flex-col shadow-lg`}>
+      {/* Sidebar Menu (only if no back button) */}
+      {!onBack && (
+        <>
+          <div className={`fixed top-0 left-0 h-full bg-white text-gray-800 w-64 transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out z-30 flex flex-col shadow-lg`}>
         <div className="p-4 flex justify-between items-center">
           <h2 className="text-xl font-bold">Menu</h2>
           <button onClick={toggleMenu} className="text-gray-800 focus:outline-none cursor-pointer">
@@ -127,11 +155,13 @@ const MenuAppBar: React.FC<MenuAppBarProps> = ({title, exportExcel, onExportExce
         </ul>
       </div>
       {/* Overlay for mobile when menu is open */}
-      {isMenuOpen && (
+      {isMenuOpen && !onBack && (
         <div
           className="fixed inset-0 bg-black opacity-50 z-20"
           onClick={toggleMenu}
         ></div>
+      )}
+      </>
       )}
     </nav>
   );

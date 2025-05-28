@@ -3,7 +3,6 @@ import {useAuth} from "@/components/AppContext";
 import ContentTheme from "../../components/ContentTheme";
 import {useThemeContext} from "@/components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {MessageStripDesign} from "@ui5/webcomponents-react"; // Keep for MessageStripDesign enum
 import {StringFormat} from "@/Assets/Functions";
 import {countingAction, fetchCountings} from "./Data/Counting";
 import {Counting} from "@/Assets/Counting";

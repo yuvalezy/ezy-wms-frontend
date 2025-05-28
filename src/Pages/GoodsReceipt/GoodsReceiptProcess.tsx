@@ -7,8 +7,9 @@ import {useTranslation} from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { MessageStrip, MessageStripDesign} from "@ui5/webcomponents-react"; // Keep for MessageStripDesign enum
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"; // Added AlertTitle
+// MessageStripDesign is kept for ProcessAlertValue severity
+import { MessageStripDesign} from "@ui5/webcomponents-react"; 
 import {addItem, updateLine, updateLineQuantity} from "./Data/GoodsReceiptProcess";
 import {
   AddItemResponseMultipleValue,
@@ -346,7 +347,10 @@ export default function GoodsReceiptProcess() {
           {/*/>*/}
         </>
       ) : (
-        <MessageStrip design="Negative">{t("invalidScanCode")}</MessageStrip>
+        <Alert variant="destructive" className="mt-4">
+          {/* <AlertTitle>{t("error")}</AlertTitle> */}
+          <AlertDescription>{t("invalidScanCode")}</AlertDescription>
+        </Alert>
       )}
     </ContentTheme>
   );

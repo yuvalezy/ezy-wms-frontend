@@ -1,5 +1,5 @@
 import React from "react";
-import {Card, CardHeader, List, StandardListItem} from "@ui5/webcomponents-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {useTranslation} from "react-i18next";
 import {Document} from "../../../Assets/Document";
 import {useDocumentStatusToString} from "../../../Assets/DocumentStatusString";
@@ -24,51 +24,72 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc, docDetails}
         docDetails(doc);
     }
 
+    const listItemClasses = "py-2 px-1 flex justify-between items-center border-b last:border-b-0";
+    const linkClasses = "text-blue-600 hover:underline";
+
     return (
-        <Card key={doc.id}
-              header={<CardHeader titleText={`${t('id')}: ${doc.name}`}/>}
-        >
-            <List>
-                <StandardListItem><strong>{t('number')}:</strong> {doc.id}</StandardListItem>
-                {doc.businessPartner != null &&
-                <StandardListItem><strong>{t('vendor')}:</strong> {doc.businessPartner.name ?? doc.businessPartner.code}
-                </StandardListItem>
-                }
-                {doc.specificDocuments && doc.specificDocuments.length > 0 &&
-                    <StandardListItem><a href="#" onClick={documentDetailsClick}><strong>{t('documentsList')}: </strong>
-                        {
-                            doc.specificDocuments.map(
-                                (value) => {
-                                    let index = doc.specificDocuments?.indexOf(value) ?? -1;
-                                    return <span key={index}>
-                                    {index > 0 && ', '}
+        <Card key={doc.id} className="mb-4 shadow-lg">
+            <CardHeader>
+                <CardTitle>{`${t('id')}: ${doc.name}`}</CardTitle>
+            </CardHeader>
+            <CardContent className="py-2">
+                <ul className="space-y-1 text-sm">
+                    <li className={listItemClasses}>
+                        <span className="font-semibold">{t('number')}:</span>
+                        <span>{doc.id}</span>
+                    </li>
+                    {doc.businessPartner != null &&
+                        <li className={listItemClasses}>
+                            <span className="font-semibold">{t('vendor')}:</span>
+                            <span>{doc.businessPartner.name ?? doc.businessPartner.code}</span>
+                        </li>
+                    }
+                    {doc.specificDocuments && doc.specificDocuments.length > 0 &&
+                        <li className={listItemClasses}>
+                            <a href="#" onClick={documentDetailsClick} className={linkClasses}>
+                                <strong className="font-semibold">{t('documentsList')}: </strong>
+                                {doc.specificDocuments.map((value, index) => (
+                                    <span key={index}>
+                                        {index > 0 && ', '}
                                         {o(value.objectType)} #{value.documentNumber}
-                                </span>;
-                                }
-                            )
-                        }</a></StandardListItem>}
-                <StandardListItem><strong>{t('docDate')}:</strong> {dateFormat(new Date(doc.date))}
-                </StandardListItem>
-                <StandardListItem><strong>{t('createdBy')}:</strong> {doc.employee.name}</StandardListItem>
-                <StandardListItem><strong>{t('status')}:</strong> {documentStatusToString(doc.status)}
-                </StandardListItem>
-                {doc.statusDate &&
-                    <StandardListItem><strong>{t('statusDate')}:</strong> {dateFormat(new Date(doc.statusDate))}
-                    </StandardListItem>}
-                <StandardListItem>
-                    <a href="#" onClick={e => handleOpen(e, 'all', doc.id)}>{t('goodsReceiptReport')}</a>
-                </StandardListItem>
-                {activeStatuses.includes(doc.status) &&
-                    <StandardListItem>
-                        <a href="#" onClick={e => handleOpen(e, 'vs', doc.id)}>{t('goodsReceiptVSExit')}</a>
-                    </StandardListItem>
-                }
-                {processStatuses.includes(doc.status) &&
-                    <StandardListItem>
-                        <a href="#" onClick={e => handleOpen(e, 'diff', doc.id)}>{t('differencesReport')}</a>
-                    </StandardListItem>
-                }
-            </List>
+                                    </span>
+                                ))}
+                            </a>
+                        </li>
+                    }
+                    <li className={listItemClasses}>
+                        <span className="font-semibold">{t('docDate')}:</span>
+                        <span>{dateFormat(new Date(doc.date))}</span>
+                    </li>
+                    <li className={listItemClasses}>
+                        <span className="font-semibold">{t('createdBy')}:</span>
+                        <span>{doc.employee.name}</span>
+                    </li>
+                    <li className={listItemClasses}>
+                        <span className="font-semibold">{t('status')}:</span>
+                        <span>{documentStatusToString(doc.status)}</span>
+                    </li>
+                    {doc.statusDate &&
+                        <li className={listItemClasses}>
+                            <span className="font-semibold">{t('statusDate')}:</span>
+                            <span>{dateFormat(new Date(doc.statusDate))}</span>
+                        </li>
+                    }
+                     <li className={listItemClasses}>
+                        <a href="#" onClick={e => handleOpen(e, 'all', doc.id)} className={linkClasses}>{t('goodsReceiptReport')}</a>
+                    </li>
+                    {activeStatuses.includes(doc.status) &&
+                        <li className={listItemClasses}>
+                            <a href="#" onClick={e => handleOpen(e, 'vs', doc.id)} className={linkClasses}>{t('goodsReceiptVSExit')}</a>
+                        </li>
+                    }
+                    {processStatuses.includes(doc.status) &&
+                        <li className={listItemClasses}>
+                            <a href="#" onClick={e => handleOpen(e, 'diff', doc.id)} className={linkClasses}>{t('differencesReport')}</a>
+                        </li>
+                    }
+                </ul>
+            </CardContent>
         </Card>
     );
 }

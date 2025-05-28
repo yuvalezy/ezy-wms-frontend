@@ -5,12 +5,19 @@ import {
   fetchGoodsReceiptVSExitReport,
   GoodsReceiptVSExitReportData,
 } from "./Data/Report";
-import GoodsReceiptVSExitReportTable from "./components/GoodsReceiptVSExitReportTable";
+import GoodsReceiptVSExitReportTable from "./Components/GoodsReceiptVSExitReportTable"; // Corrected casing
 import { useThemeContext } from "../../components/ThemeContext";
 import { useTranslation } from "react-i18next";
-import {Panel, Title, Text, MessageStrip} from "@ui5/webcomponents-react";
 import {useObjectName} from "../../Assets/ObjectName";
 import {IsNumeric} from "../../Assets/Functions";
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"; // Using Card as an alternative to Panel for now
 
 export default function GoodsReceiptVSExitReport() {
   const [id, setID] = useState<number | null>();
@@ -36,29 +43,42 @@ export default function GoodsReceiptVSExitReport() {
   }, []);
   return (
     <ContentTheme title={title}>
-      <Title level="H1">
+      <h1 className="text-2xl font-bold mb-4">
         {t("goodsReceipt")} #{id}
-      </Title>
-      <div>
-        {data?.map((value) => (
-          <Panel
-              collapsed
-              headerText={`${o(value.objectType)}: ${value.number}`}
-          >
-            <Title level="H3">
-              <strong>{t("customer")}: </strong>
-              {value.cardName}
-            </Title>
-            <Text>
-              <strong>{t("address")}: </strong>
-              {value.address}
-            </Text>
-            <GoodsReceiptVSExitReportTable data={value.lines} />
-          </Panel>
+      </h1>
+      <div className="space-y-4">
+        {data?.map((value, index) => (
+          <Accordion key={index} type="single" collapsible className="w-full">
+            <AccordionItem value={`item-${index}`}>
+              <AccordionTrigger className="text-lg font-semibold hover:no-underline">
+                {`${o(value.objectType)}: ${value.number}`}
+              </AccordionTrigger>
+              <AccordionContent className="pt-2">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-md">
+                      <strong>{t("customer")}: </strong>
+                      {value.cardName}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm mb-2">
+                      <strong>{t("address")}: </strong>
+                      {value.address}
+                    </p>
+                    <GoodsReceiptVSExitReportTable data={value.lines} />
+                  </CardContent>
+                </Card>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         ))}
       </div>
       {data && data.length === 0 && (
-        <MessageStrip hideCloseButton design="Warning">{t("noExitData")}</MessageStrip>
+         <Alert variant="default" className="mt-4 bg-yellow-100 border-yellow-400 text-yellow-700">
+            {/* <AlertTitle>{t("warning")}</AlertTitle> */}
+            <AlertDescription>{t("noExitData")}</AlertDescription>
+          </Alert>
       )}
     </ContentTheme>
   );

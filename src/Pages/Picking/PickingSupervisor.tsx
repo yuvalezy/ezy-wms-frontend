@@ -3,7 +3,7 @@ import {useTranslation} from "react-i18next";
 import {useEffect, useState} from "react";
 import {fetchPickings, PickingDocument, processPicking} from "./Data/PickingDocument";
 import {useThemeContext} from "@/components/ThemeContext";
-import {MessageStrip, MessageStripDesign} from "@ui5/webcomponents-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {StringFormat} from "@/Assets/Functions";
 import PickingCard from "@/Pages/Picking/Components/PickingCard";
 import { toast } from "sonner";
@@ -47,10 +47,11 @@ export default function PickingSupervisor() {
                      onUpdatePick={handleUpdatePick}/>
       ))}
       {pickings.length === 0 &&
-          <div style={{padding: '10px'}}>
-              <MessageStrip hideCloseButton design={MessageStripDesign.Information}>
-                {t("nodata")}
-              </MessageStrip>
+          <div className="p-4">
+              <Alert variant="default" className="bg-blue-100 border-blue-400 text-blue-700">
+                {/* <AlertTitle>Information</AlertTitle> */}
+                <AlertDescription>{t("nodata")}</AlertDescription>
+              </Alert>
           </div>
       }
     </ContentTheme>

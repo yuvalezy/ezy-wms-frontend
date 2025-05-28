@@ -9,9 +9,8 @@ import GoodsReceiptAllReportTable from "./Components/GoodsReceiptAllTable";
 import {useThemeContext} from "../../components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"; // Added AlertTitle
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageStrip } from "@ui5/webcomponents-react";
 import {IsNumeric} from "../../Assets/Functions";
 import {GRPOAllDetailRef} from "./Components/GoodsReceiptAllDetail";
 import GoodsReceiptAllDialog from "./Components/GoodsReceiptAllDetail";
@@ -112,7 +111,10 @@ export default function GoodsReceiptReportAll() {
           {data && <>
             <GoodsReceiptAllReportTable onClick={openDetails} data={data}/>
             {data.length === 0 && (
-              <MessageStrip hideCloseButton design="Warning">{t("noExitData")}</MessageStrip>
+              <Alert variant="default" className="mt-4 bg-yellow-100 border-yellow-400 text-yellow-700">
+                {/* <AlertTitle>{t("warning")}</AlertTitle> */}
+                <AlertDescription>{t("noExitData")}</AlertDescription>
+              </Alert>
             )}
             {id && <GoodsReceiptAllDialog ref={detailRef} id={id} onUpdate={onDetailUpdate}/>}
           </>}

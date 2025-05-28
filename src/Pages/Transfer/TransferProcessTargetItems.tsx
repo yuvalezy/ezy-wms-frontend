@@ -8,25 +8,21 @@ import {useAuth} from "../../components/AppContext";
 import {BarCodeScannerRef} from "../../components/BarCodeScanner";
 import {fetchTransferContent, TransferContent} from "./Data/TransferDocument";
 import {ScrollableContent} from "../../components/ScrollableContent";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
 import {
-    Button,
-    Label,
-    ProgressIndicator,
-    Table,
-    TableCell,
-    TableColumn,
-    TableGroupRow,
-    TableRow
-} from "@ui5/webcomponents-react";
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {SourceTarget} from "../../Assets/Common";
+import { ArrowRightCircle } from "lucide-react"; // Icon for select/begin
 
-class TransferProcessTargetItemsValue extends React.Component {
-    render() {
-        return null;
-    }
-}
-
-export default function TransferProcessTarget() {
+export default function TransferProcessTargetItems() { // Renamed component
     const {scanCode} = useParams();
     const {t} = useTranslation();
     const [id, setID] = useState<number | null>();
@@ -73,36 +69,44 @@ export default function TransferProcessTarget() {
     }
 
     return (
-        <ContentTheme title={title} back={() => navigateBack()}>
+        <ContentTheme title={title} onBack={() => navigateBack()}>
             {rows &&
                 <ScrollableContent>
-                    {/*{rows.map((row) => (<TransferProcessTargetItemsValue/>))}*/}
-                    <Table
-                        columns={<>
-                            <TableColumn></TableColumn>
-                            <TableColumn><Label>{t('code')}</Label></TableColumn>
-                            <TableColumn><Label>{t('description')}</Label></TableColumn>
-                            <TableColumn><Label>{t('openQuantity')}</Label></TableColumn>
-                        </>}
-                    >
-                        {rows.map((row) => (
-                            <>
-                                <TableRow key={row.code}>
-                                    <TableCell>
-                                        <Button icon="begin" onClick={() => handleOpen(row.code)}>
-                                            {t("select")}
-                                        </Button>
-                                    </TableCell>
-                                    <TableCell><Label>{row.code}</Label></TableCell>
-                                    <TableCell><Label>{row.name}</Label></TableCell>
-                                    <TableCell><Label>{row.openQuantity}</Label></TableCell>
+                    <div className="rounded-md border">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead className="w-[100px]"></TableHead> {/* For Select Button */}
+                                    <TableHead><Label>{t('code')}</Label></TableHead>
+                                    <TableHead><Label>{t('description')}</Label></TableHead>
+                                    <TableHead className="text-right"><Label>{t('openQuantity')}</Label></TableHead>
                                 </TableRow>
-                                <TableGroupRow>
-                                    <ProgressIndicator value={row.progress}/>
-                                </TableGroupRow>
-                            </>
-                        ))}
-                    </Table>
+                            </TableHeader>
+                            <TableBody>
+                                {rows.map((row) => (
+                                    <React.Fragment key={row.code}>
+                                        <TableRow>
+                                            <TableCell>
+                                                <Button variant="outline" size="sm" onClick={() => handleOpen(row.code)}>
+                                                    <ArrowRightCircle className="mr-2 h-4 w-4" />
+                                                    {t("select")}
+                                                </Button>
+                                            </TableCell>
+                                            <TableCell><Label>{row.code}</Label></TableCell>
+                                            <TableCell><Label>{row.name}</Label></TableCell>
+                                            <TableCell className="text-right"><Label>{row.openQuantity}</Label></TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell colSpan={4} className="p-1">
+                                                <Progress value={row.progress ?? 0} className="w-full h-2" />
+                                                <p className="text-xs text-muted-foreground text-center">{`${row.progress ?? 0}%`}</p>
+                                            </TableCell>
+                                        </TableRow>
+                                    </React.Fragment>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </div>
                 </ScrollableContent>
             }
         </ContentTheme>

@@ -1,6 +1,14 @@
-import {Label, Table, TableCell, TableColumn, TableRow} from "@ui5/webcomponents-react";
 import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Label } from "@/components/ui/label";
 import {PickingDocumentDetailItem} from "../Data/PickingDocument";
 import BinLocationQuantities from "../../../components/BinLocationQuantities";
 
@@ -17,34 +25,41 @@ export const PickingProcessDetailContent: React.FC<PickingProcessDetailContentPr
     }, [items]);
 
     return (
-        <div className="contentStyle">
-            <Table
-                columns={<>
-                    <TableColumn><Label>{t('code')}</Label></TableColumn>
-                    <TableColumn><Label>{t('description')}</Label></TableColumn>
-                    <TableColumn><Label>{t('quantity')}</Label></TableColumn>
-                    <TableColumn><Label>{t('picked')}</Label></TableColumn>
-                    <TableColumn><Label>{t('pending')}</Label></TableColumn>
-                    {available && <TableColumn><Label>{t('available')}</Label></TableColumn>}
-                </>}
-            >
-                {items?.map((row) => (
-                    <>
-                        <TableRow key={row.itemCode} className={row.openQuantity === 0 ? 'completed-row' : ''}>
-                            <TableCell><Label>{row.itemCode}</Label></TableCell>
-                            <TableCell><Label>{row.itemName}</Label></TableCell>
-                            <TableCell><Label>{row.quantity}</Label></TableCell>
-                            <TableCell><Label>{row.picked}</Label></TableCell>
-                            <TableCell><Label>{row.openQuantity}</Label></TableCell>
-                            {available && <TableCell><Label>{row.available}</Label></TableCell>}
-                        </TableRow>
-                        {!available && row.openQuantity > 0 && <tr>
-                            <td colSpan={5} style={{textAlign: 'center'}}>
-                                {row.binQuantities && <BinLocationQuantities data={row.binQuantities}/>}
-                            </td>
-                        </tr>}
-                    </>
-                ))}
+        <div className="contentStyle rounded-md border">
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead><Label>{t('code')}</Label></TableHead>
+                        <TableHead><Label>{t('description')}</Label></TableHead>
+                        <TableHead className="text-right"><Label>{t('quantity')}</Label></TableHead>
+                        <TableHead className="text-right"><Label>{t('picked')}</Label></TableHead>
+                        <TableHead className="text-right"><Label>{t('pending')}</Label></TableHead>
+                        {available && <TableHead className="text-right"><Label>{t('available')}</Label></TableHead>}
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {items?.map((row) => (
+                        <React.Fragment key={row.itemCode}>
+                            <TableRow className={row.openQuantity === 0 ? 'bg-green-100' : ''}> {/* Example for completed row */}
+                                <TableCell><Label>{row.itemCode}</Label></TableCell>
+                                <TableCell><Label>{row.itemName}</Label></TableCell>
+                                <TableCell className="text-right"><Label>{row.quantity}</Label></TableCell>
+                                <TableCell className="text-right"><Label>{row.picked}</Label></TableCell>
+                                <TableCell className="text-right"><Label>{row.openQuantity}</Label></TableCell>
+                                {available && <TableCell className="text-right"><Label>{row.available}</Label></TableCell>}
+                            </TableRow>
+                            {!available && row.openQuantity > 0 && row.binQuantities && row.binQuantities.length > 0 && (
+                                <TableRow>
+                                    <TableCell colSpan={available ? 6 : 5} className="p-0"> {/* Adjusted colSpan */}
+                                        <div className="p-2 bg-slate-50">
+                                            <BinLocationQuantities data={row.binQuantities}/>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </React.Fragment>
+                    ))}
+                </TableBody>
             </Table>
         </div>
     )

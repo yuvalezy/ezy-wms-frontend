@@ -1,15 +1,19 @@
 import React, {useRef, useState, forwardRef, useImperativeHandle} from "react";
-import {
-    Bar,
-    Button,
-    Dialog, DialogDomRef,
-    Title,
-    Form, Input, InputDomRef, FormItem
-} from "@ui5/webcomponents-react";
-import {ProcessAlertValue} from "./ProcessAlert";
+import {ProcessAlertValue} from "../components/ProcessAlert"; // Corrected path
 import {useTranslation} from "react-i18next";
 import {UpdateLineParameters, UpdateLineReturnValue} from "../Assets/Common";
 import {useThemeContext} from "./ThemeContext";
+import { Button } from "@/components/ui/button";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export interface ProcessQuantityRef {
     show: (show: boolean) => void;
@@ -29,8 +33,8 @@ const ProcessQuantity = forwardRef((props: ProcessQuantityProps, ref) => {
     const {setLoading, setError} = useThemeContext();
     const [userName, setUserName] = useState("");
     const [quantity, setQuantity] = useState<number>(props.alert?.quantity ?? 1);
-    const QuantityRef = useRef<InputDomRef>(null);
-    const dialogRef = useRef<DialogDomRef>(null);
+    const quantityRef = useRef<HTMLInputElement>(null); // Changed to HTMLInputElement
+    const [isOpen, setIsOpen] = useState(false);
 
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
@@ -67,12 +71,12 @@ const ProcessQuantity = forwardRef((props: ProcessQuantityProps, ref) => {
                     setError(message);
                     setUserName("");
                     setLoading(false);
-                    setTimeout(() => QuantityRef.current?.focus(), 100);
+                    setTimeout(() => quantityRef.current?.focus(), 100);
                     return;
                 }
 
                 props.onAccept(quantity);
-                dialogRef?.current?.close();
+                setIsOpen(false);
                 if (props.updateComplete == null) {
                     setLoading(false);
                 } else {
@@ -86,75 +90,71 @@ const ProcessQuantity = forwardRef((props: ProcessQuantityProps, ref) => {
     }
 
     useImperativeHandle(ref, () => ({
-        show(show: boolean) {
-            setQuantity(props.alert?.quantity??1);
-            if (show) {
-                dialogRef?.current?.show();
-            } else {
-                dialogRef?.current?.close();
+        show(showFlag: boolean) {
+            setQuantity(props.alert?.quantity ?? 1);
+            setUserName(""); // Reset supervisor code
+            setIsOpen(showFlag);
+            if (showFlag) {
+                 setTimeout(() => quantityRef.current?.focus(), 0);
             }
         }
-    }))
+    }));
 
     return (
-        <Dialog
-            className="footerPartNoPadding"
-            ref={dialogRef}
-            footer={
-                <Bar
-                    design="Footer"
-                    startContent={
-                        <Button onClick={handleSubmit}>
-                            {t("accept")}
-                        </Button>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>{t("quantity")}</DialogTitle>
+                    {props.alert?.barcode &&
+                        <DialogDescription>
+                            <strong>{t("barcode")}: </strong>{props.alert?.barcode}
+                        </DialogDescription>
                     }
-                    endContent={
-                        <Button design="Negative" onClick={() => dialogRef?.current?.close()}>
-                            {t("cancel")}
-                        </Button>
+                     <DialogDescription>
+                        <strong>{t("item")}: </strong>{props.alert?.itemCode}
+                    </DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleSubmit} className="space-y-4 py-4">
+                    {props.supervisorPassword &&
+                        <div className="space-y-2">
+                            <Label htmlFor="supervisorCodeQty">{t("supervisorCode")}</Label>
+                            <Input
+                                required
+                                id="supervisorCodeQty"
+                                name="username"
+                                type="password"
+                                value={userName}
+                                onChange={(e) => setUserName(e.target.value)}
+                                className="w-full"
+                            />
+                        </div>
                     }
-                />
-            }
-        >
-            <Title level="H5">
-                {t("quantity")}
-            </Title>
-            <Title level="H6">
-                <strong>{t("barcode")}: </strong>
-                {props.alert?.barcode}
-            </Title>
-            <Title level="H6">
-                <strong>{t("item")}: </strong>
-                {props.alert?.itemCode}
-            </Title>
-            <Form onSubmit={handleSubmit}>
-                {props.supervisorPassword &&
-                    <FormItem label={t("supervisorCode")}>
+                    <div className="space-y-2">
+                        <Label htmlFor="quantityInput">{t("quantity")}</Label>
                         <Input
                             required
-                            name="username"
-                            type="Password"
-                            id="username"
-                            value={userName}
-                            onChange={(e) => setUserName(e.target.value as string)}
-                        ></Input>
-                    </FormItem>
-                }
-                <FormItem label={t("quantity")}>
-                    <Input
-                        required
-                        name="quantity"
-                        ref={QuantityRef}
-                        type="Number"
-                        id="quantity"
-                        value={quantity?.toString()}
-                        onChange={function (e) {
-                            let value = e.target.value as string;
-                            return setQuantity(value.length > 0 ? parseInt(value) : 1);
-                        }}
-                    ></Input>
-                </FormItem>
-            </Form>
+                            id="quantityInput"
+                            name="quantity"
+                            ref={quantityRef}
+                            type="number"
+                            value={quantity?.toString()}
+                            onChange={(e) => {
+                                const val = e.target.value;
+                                setQuantity(val === "" ? 0 : parseInt(val, 10));
+                            }}
+                            className="w-full"
+                        />
+                    </div>
+                    <DialogFooter>
+                        <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
+                            {t("cancel")}
+                        </Button>
+                        <Button type="submit">
+                            {t("accept")}
+                        </Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
         </Dialog>
     );
 });

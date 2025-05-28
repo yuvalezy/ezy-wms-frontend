@@ -3,7 +3,16 @@ import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
 import {useThemeContext} from "../../components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {Label, MessageStrip, Table, TableCell, TableColumn, TableRow} from "@ui5/webcomponents-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {useAuth} from "../../components/AppContext";
 import {BinLocation, Item, SourceTarget} from "../../Assets/Common";
@@ -11,10 +20,11 @@ import BarCodeScanner, {BarCodeScannerRef} from "../../components/BarCodeScanner
 import {addItem, fetchTransferContent, TransferContent} from "./Data/TransferDocument";
 import BinLocationScanner from "../../components/BinLocationScanner";
 import {delay} from "../../Assets/GlobalConfig";
-import {MessageStripDesign} from "@ui5/webcomponents-react";
+// Keep MessageStripDesign for ProcessAlertValue severity until ProcessAlert is fully decoupled
+import { MessageStripDesign } from "@ui5/webcomponents-react"; 
 import ProcessAlert, {ProcessAlertValue} from "../../components/ProcessAlert";
 import {ScrollableContent, ScrollableContentBox} from "../../components/ScrollableContent";
-import {ReasonType} from "../../Assets/Reasons";
+import {ReasonType}from "../../Assets/Reasons";
 import Processes, {ProcessesRef} from "../../components/Processes";
 import {updateLine} from "./Data/TransferProcess";
 import {useDateTimeFormat} from "../../Assets/DateFormat";
@@ -105,7 +115,7 @@ export default function TransferProcessSource() {
           quantity: 1,
           barcode: item.barcode,
           itemCode: item.code,
-          severity: StatusAlertType.Information,
+          severity: MessageStripDesign.Information, // For ProcessAlert
           timeStamp: dateTimeFormat(date)
         })
         barcodeRef?.current?.clear();
@@ -148,37 +158,49 @@ export default function TransferProcessSource() {
   }
 
   return (
-    <ContentTheme title={getTitle()}
-                        buttons={[{action: () => navigate(`/transfer/${id}/targetBins`), icon: "map"}]}
-                        back={() => navigateBack()}>
+    <ContentTheme 
+        title={getTitle()}
+        onBack={() => navigateBack()}
+        customActionButtons={[{
+            action: () => navigate(`/transfer/${id}/targetBins`), 
+            iconName: "map", 
+            label: t("selectTransferTargetBins") || "Select Target Bins" 
+        }]}
+    >
       {id &&
           <ScrollableContent>
             {user?.binLocations && <BinLocationScanner onChanged={onBinChanged} onClear={onBinClear}/>}
               <ScrollableContentBox borderUp={user?.binLocations ?? false}>
                 {currentAlert &&
                     <ProcessAlert alert={currentAlert} onAction={(type) => processesRef?.current?.open(type)}/>}
-                {rows != null && rows.length > 0 &&
-                    <Table
-                        columns={<>
-                          <TableColumn><Label>{t('code')}</Label></TableColumn>
-                          <TableColumn><Label>{t('description')}</Label></TableColumn>
-                          <TableColumn><Label>{t('quantity')}</Label></TableColumn>
-                        </>}
-                    >
-                      {rows.map((row) => (
-                        <TableRow key={row.code}>
-                          <TableCell><Label>{row.code}</Label></TableCell>
-                          <TableCell><Label>{row.name}</Label></TableCell>
-                          <TableCell><Label>{row.quantity}</Label></TableCell>
-                        </TableRow>
-                      ))}
-                    </Table>
-                }
+                {rows != null && rows.length > 0 && (
+                    <div className="rounded-md border">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead><Label>{t('code')}</Label></TableHead>
+                                    <TableHead><Label>{t('description')}</Label></TableHead>
+                                    <TableHead className="text-right"><Label>{t('quantity')}</Label></TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {rows.map((row) => (
+                                    <TableRow key={row.code}>
+                                        <TableCell><Label>{row.code}</Label></TableCell>
+                                        <TableCell><Label>{row.name}</Label></TableCell>
+                                        <TableCell className="text-right"><Label>{row.quantity}</Label></TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </div>
+                )}
                 {rows != null && rows.length === 0 &&
-                    <div style={{padding: '10px'}}>
-                        <MessageStrip hideCloseButton design={StatusAlertType.Information}>
-                          {t("nodata")}
-                        </MessageStrip>
+                    <div className="p-4">
+                        <Alert variant="default" className="bg-blue-100 border-blue-400 text-blue-700">
+                            {/* <AlertTitle>Information</AlertTitle> */}
+                            <AlertDescription>{t("nodata")}</AlertDescription>
+                        </Alert>
                     </div>
                 }
               </ScrollableContentBox>

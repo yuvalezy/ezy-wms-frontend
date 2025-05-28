@@ -2,12 +2,14 @@ import React from "react";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "@/components/AppContext";
 import {useTranslation} from "react-i18next";
-import {Card, CardHeader, List, StandardListItem, Button} from "@ui5/webcomponents-react";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {Authorization} from "@/Assets/Authorization";
 import {useDocumentStatusToString} from "@/Assets/DocumentStatusString";
 import {Counting} from "@/Assets/Counting";
 import {Status} from "@/Assets/Common";
 import {useDateTimeFormat} from "@/Assets/DateFormat";
+import { CheckCircle, XCircle, FileText } from "lucide-react";
 
 type CountingCardProps = {
   doc: Counting,
@@ -30,37 +32,57 @@ const CountingCard: React.FC<CountingCardProps> = ({doc, handleAction, superviso
   const documentStatusToString = useDocumentStatusToString();
 
   return (
-    <Card key={doc.id} header={doc.name ? <CardHeader titleText={`${t('id')} : ${doc.name}`}/> : undefined}>
-      <List>
-        <StandardListItem>
-          {handleOpenLink && (<a href="#" onClick={e => {
-            e.preventDefault();
-            handleOpen(doc.id)
-          }}><strong>{t('number')}:</strong> {doc.id}</a>)}
-          {!handleOpenLink && (<><strong>{t('number')}:</strong> {doc.id}</>)}
-        </StandardListItem>
-        <StandardListItem><strong>{t('docDate')}:</strong> {dateFormat(new Date(doc.date))}</StandardListItem>
-        <StandardListItem><strong>{t('createdBy')}:</strong> {doc.employee.name}</StandardListItem>
-        <StandardListItem><strong>{t('status')}:</strong> {documentStatusToString(doc.status)}</StandardListItem>
-        {supervisor && <>
-            <StandardListItem>
-                <a href="#" onClick={e => {
-                  e.preventDefault();
-                  navigate(`/countingSummaryReport/${doc.id}`)
-                }}>{t('countingSummaryReport')}</a>
-            </StandardListItem>
-            <StandardListItem>
-              {doc.status === Status.InProgress && (
-                <Button style={{marginRight: '10px'}} color="primary" onClick={() => handleAction?.(doc.id, 'approve')}
-                        icon="complete">
-                  {t('finish')}
-                </Button>)}
-                <Button icon="cancel" onClick={() => handleAction?.(doc.id, 'cancel')}>
-                  {t('cancel')}
-                </Button>
-            </StandardListItem>
-        </>}
-      </List>
+    <Card key={doc.id} className="mb-4 shadow-lg">
+      {doc.name && (
+        <CardHeader>
+          <CardTitle>{`${t('id')} : ${doc.name}`}</CardTitle>
+        </CardHeader>
+      )}
+      <CardContent className="py-4">
+        <ul className="space-y-2">
+          <li className="flex justify-between">
+            <span className="font-semibold">{t('number')}:</span>
+            {handleOpenLink ? (
+              <a href="#" onClick={e => { e.preventDefault(); handleOpen(doc.id); }} className="text-blue-600 hover:underline">
+                {doc.id}
+              </a>
+            ) : (
+              <span>{doc.id}</span>
+            )}
+          </li>
+          <li className="flex justify-between">
+            <span className="font-semibold">{t('docDate')}:</span>
+            <span>{dateFormat(new Date(doc.date))}</span>
+          </li>
+          <li className="flex justify-between">
+            <span className="font-semibold">{t('createdBy')}:</span>
+            <span>{doc.employee.name}</span>
+          </li>
+          <li className="flex justify-between">
+            <span className="font-semibold">{t('status')}:</span>
+            <span>{documentStatusToString(doc.status)}</span>
+          </li>
+          {supervisor && (
+            <li className="flex justify-between items-center pt-2 border-t mt-2">
+               <Button variant="link" className="p-0 h-auto text-blue-600 hover:underline" onClick={e => { e.preventDefault(); navigate(`/countingSummaryReport/${doc.id}`); }}>
+                 <FileText className="mr-2 h-4 w-4" />{t('countingSummaryReport')}
+               </Button>
+            </li>
+          )}
+        </ul>
+      </CardContent>
+      {supervisor && (
+        <CardFooter className="flex justify-end space-x-2 pt-4 border-t">
+          {doc.status === Status.InProgress && (
+            <Button variant="default" onClick={() => handleAction?.(doc.id, 'approve')} className="bg-green-500 hover:bg-green-600 text-white">
+              <CheckCircle className="mr-2 h-4 w-4" />{t('finish')}
+            </Button>
+          )}
+          <Button variant="destructive" onClick={() => handleAction?.(doc.id, 'cancel')}>
+            <XCircle className="mr-2 h-4 w-4" />{t('cancel')}
+          </Button>
+        </CardFooter>
+      )}
     </Card>
   );
 }

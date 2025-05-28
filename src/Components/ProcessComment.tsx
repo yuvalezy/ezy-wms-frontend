@@ -1,15 +1,19 @@
 import React, {useState, forwardRef, useImperativeHandle, useRef} from "react";
-import {
-    Bar,
-    Button,
-    Dialog, DialogDomRef,
-    Title,
-    TextArea
-} from "@ui5/webcomponents-react";
-import {ProcessAlertValue} from "./ProcessAlert";
+import {ProcessAlertValue} from "../components/ProcessAlert"; // Corrected path
 import {useThemeContext} from "./ThemeContext";
 import {useTranslation} from "react-i18next";
 import {UpdateLineParameters, UpdateLineReturnValue} from "../Assets/Common";
+import { Button } from "@/components/ui/button";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 
 export interface ProcessCommentRef {
     show: (show: boolean) => void;
@@ -26,9 +30,9 @@ export interface ProcessCommentProps {
 const ProcessComment = forwardRef((props: ProcessCommentProps, ref) => {
     const {t} = useTranslation();
     const {setError} =  useThemeContext();
-    const dialogRef = useRef<DialogDomRef>(null);
     const {setLoading} = useThemeContext();
     const [comment, setComment] = useState(props.alert?.comment || "");
+    const [isOpen, setIsOpen] = useState(false);
 
     const handleSave = () => {
         setLoading(true);
@@ -39,7 +43,7 @@ const ProcessComment = forwardRef((props: ProcessCommentProps, ref) => {
         })
             .then((_) => {
                 props.onAccept(comment);
-                dialogRef?.current?.close();
+                setIsOpen(false);
                 if (props.updateComplete == null) {
                     setLoading(false);
                 } else {
@@ -53,48 +57,42 @@ const ProcessComment = forwardRef((props: ProcessCommentProps, ref) => {
     };
 
     useImperativeHandle(ref, () => ({
-        show(show: boolean) {
-            if (show) {
-                dialogRef?.current?.show();
-            } else {
-                dialogRef?.current?.close();
-            }
+        show(showFlag: boolean) {
+            setComment(props.alert?.comment || ""); // Reset comment based on alert
+            setIsOpen(showFlag);
         }
-    }))
+    }));
 
     return (
-        <Dialog
-            className="footerPartNoPadding"
-            ref={dialogRef}
-            footer={
-                <Bar
-                    design="Footer"
-                    startContent={
-                        <Button design="Negative" onClick={() => dialogRef?.current?.close()}>
-                            {t("cancel")}
-                        </Button>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>{t("comment")}</DialogTitle>
+                    {props.alert?.barcode &&
+                        <DialogDescription>
+                            <strong>{t("barcode")}: </strong>{props.alert?.barcode}
+                        </DialogDescription>
                     }
-                    endContent={
-                        <Button onClick={() => handleSave()}>
-                            {t("accept")}
-                        </Button>
-                    }
-                />
-            }
-        >
-            <Title level="H5">
-                {t("comment")}
-            </Title>
-            <Title level="H6">
-                <strong>{t("barcode")}: </strong>
-                {props.alert?.barcode}
-            </Title>
-            <TextArea
-                style={{minHeight: "100px", width: "100%"}}
-                rows={10}
-                value={comment}
-                onInput={(e) => setComment(e.target.value as string)}
-            />
+                </DialogHeader>
+                <div className="space-y-2 py-4">
+                    <Label htmlFor="commentArea">{t("comment")}</Label>
+                    <Textarea
+                        id="commentArea"
+                        value={comment}
+                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setComment(e.target.value)}
+                        rows={5}
+                        className="w-full"
+                    />
+                </div>
+                <DialogFooter>
+                    <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
+                        {t("cancel")}
+                    </Button>
+                    <Button type="button" onClick={handleSave}>
+                        {t("accept")}
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
         </Dialog>
     );
 });

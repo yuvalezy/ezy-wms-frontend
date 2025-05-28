@@ -5,11 +5,13 @@ import {useThemeContext} from "../../components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription } from "@/components/ui/alert"; // shadcn Alert
 import { Progress } from "@/components/ui/progress";
-import { MessageStrip, MessageStripDesign } from "@ui5/webcomponents-react";
+// MessageStrip and MessageStripDesign will be removed if no longer used after this refactor
 import {BinLocation, Item, UnitType} from "../../Assets/Common";
 import {IsNumeric} from "../../Assets/Functions";
+// Keep MessageStripDesign for ProcessAlertValue severity until ProcessAlert is fully decoupled
+import { MessageStripDesign } from "@ui5/webcomponents-react";
 import {delay} from "../../Assets/GlobalConfig";
 import {useAuth} from "../../components/AppContext";
 import BarCodeScanner, {BarCodeScannerRef} from "../../components/BarCodeScanner";
@@ -183,10 +185,14 @@ export default function CountingProcess() {
                             </Table>
                         }
                         {rows != null && rows.length === 0 &&
-                            <div style={{padding: '10px'}}>
-                                <MessageStrip hideCloseButton design={MessageStripDesign.Information}>
-                                    {t("nodata")}
-                                </MessageStrip>
+                            <div className="p-4">
+                                <Alert variant="default"> {/* Using shadcn Alert, variant can be adjusted */}
+                                    {/* <AlertCircle className="h-4 w-4" /> Optionally add an icon */}
+                                    {/* <AlertTitle>Information</AlertTitle> */}
+                                    <AlertDescription>
+                                        {t("nodata")}
+                                    </AlertDescription>
+                                </Alert>
                             </div>
                         }
                     </ScrollableContentBox>

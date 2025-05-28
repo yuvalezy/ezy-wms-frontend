@@ -10,7 +10,6 @@ import {
   faClipboardList,
 } from '@fortawesome/free-solid-svg-icons';
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { MessageStripDesign } from "@ui5/webcomponents-react"; // Keep for MessageStripDesign enum
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {getProcessInfo, transferAction} from "./Data/TransferDocument";
 import {useAuth} from "../../components/AppContext";

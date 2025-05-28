@@ -2,12 +2,15 @@ import React from "react";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "@/components/AppContext";
 import {useTranslation} from "react-i18next";
-import {Card, CardHeader, List, StandardListItem, Button, ProgressIndicator} from "@ui5/webcomponents-react";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import {Authorization} from "@/Assets/Authorization";
 import {useDocumentStatusToString} from "@/Assets/DocumentStatusString";
 import {TransferDocument} from "../Data/TransferDocument";
 import {Status} from "@/Assets/Common";
 import {useDateTimeFormat} from "@/Assets/DateFormat";
+import { CheckCircle, XCircle } from "lucide-react";
 
 type TransferCardProps = {
   doc: TransferDocument,
@@ -28,35 +31,60 @@ const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = 
   let handleOpenLink = user?.authorizations?.includes(Authorization.TRANSFER);
 
   const documentStatusToString = useDocumentStatusToString();
+  const progressDisplayValue = doc.progress ?? 0;
 
   return (
-    <Card key={doc.id} header={doc.name ? <CardHeader titleText={`${t('id')} : ${doc.name}`}/>: undefined}>
-      <List>
-        <StandardListItem>
-          {handleOpenLink && (<a href="#" onClick={e => {
-            e.preventDefault();
-            handleOpen(doc.id)
-          }}><strong>{t('number')}:</strong> {doc.id}</a>)}
-          {!handleOpenLink && (<><strong>{t('number')}:</strong> {doc.id}</>)}
-        </StandardListItem>
-        <StandardListItem><strong>{t('docDate')}:</strong> {dateFormat(new Date(doc.date))}</StandardListItem>
-        <StandardListItem><strong>{t('createdBy')}:</strong> {doc.employee.name}</StandardListItem>
-        <StandardListItem><strong>{t('status')}:</strong> {documentStatusToString(doc.status)}</StandardListItem>
-        {doc.comments && <StandardListItem><strong>{t('comment')}:</strong> {doc.comments}</StandardListItem>}
-        <StandardListItem>
-          <ProgressIndicator value={doc.progress ?? 0}/>
-        </StandardListItem>
-        {supervisor && <StandardListItem>
+    <Card key={doc.id} className="mb-4 shadow-lg">
+      <CardHeader>
+        <CardTitle>{doc.name ? `${t('id')} : ${doc.name}` : `${t('transfer')} #${doc.id}`}</CardTitle>
+      </CardHeader>
+      <CardContent className="py-4">
+        <ul className="space-y-2 text-sm">
+          <li className="flex justify-between">
+            <span className="font-semibold">{t('number')}:</span>
+            {handleOpenLink ? (
+              <a href="#" onClick={e => { e.preventDefault(); handleOpen(doc.id); }} className="text-blue-600 hover:underline">
+                {doc.id}
+              </a>
+            ) : (
+              <span>{doc.id}</span>
+            )}
+          </li>
+          <li className="flex justify-between">
+            <span className="font-semibold">{t('docDate')}:</span>
+            <span>{dateFormat(new Date(doc.date))}</span>
+          </li>
+          <li className="flex justify-between">
+            <span className="font-semibold">{t('createdBy')}:</span>
+            <span>{doc.employee.name}</span>
+          </li>
+          <li className="flex justify-between">
+            <span className="font-semibold">{t('status')}:</span>
+            <span>{documentStatusToString(doc.status)}</span>
+          </li>
+          {doc.comments && (
+            <li className="pt-1">
+              <span className="font-semibold">{t('comment')}:</span> {doc.comments}
+            </li>
+          )}
+          <li className="pt-2">
+            <Progress value={progressDisplayValue} className="w-full" />
+             <p className="text-xs text-muted-foreground text-center mt-1">{progressDisplayValue.toFixed(0)}% {t('progress')}</p>
+          </li>
+        </ul>
+      </CardContent>
+      {supervisor && (
+        <CardFooter className="flex justify-end space-x-2 pt-4 border-t">
           {doc.status === Status.InProgress && doc.progress === 100 && (
-            <Button style={{marginRight: '10px'}} color="primary" onClick={() => onAction?.(doc.id, 'approve')}
-                    icon="complete">
-              {t('finish')}
-            </Button>)}
-          <Button icon="cancel" onClick={() => onAction?.(doc.id, 'cancel')}>
-            {t('cancel')}
+            <Button variant="default" onClick={() => onAction?.(doc.id, 'approve')} className="bg-green-500 hover:bg-green-600 text-white">
+              <CheckCircle className="mr-2 h-4 w-4" />{t('finish')}
+            </Button>
+          )}
+          <Button variant="destructive" onClick={() => onAction?.(doc.id, 'cancel')}>
+            <XCircle className="mr-2 h-4 w-4" />{t('cancel')}
           </Button>
-        </StandardListItem>}
-      </List>
+        </CardFooter>
+      )}
     </Card>
   );
 }

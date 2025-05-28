@@ -8,22 +8,13 @@ import {
   ProcessLineStatus,
 } from "../Data/Report";
 import {useTranslation} from "react-i18next";
-import {
-  Bar,
-  Button,
-  Card,
-  CardHeader,
-  Dialog,
-  Label,
-  Table,
-  TableCell,
-  TableColumn,
-  TableRow,
-  Text,
-  Title
-} from '@ui5/webcomponents-react';
 import {useThemeContext} from "../../../components/ThemeContext";
 import {useDateTimeFormat} from "../../../Assets/DateFormat";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"; // Added DialogDescription
+import { Label } from "@/components/ui/label";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {UnitType} from "../../../Assets/Common";
 // import {formatValueByPack} from "../../../Assets/Quantities"; // Assuming this might be useful later or can be removed
 
@@ -55,25 +46,19 @@ const QuantityDataRow: React.FC<QuantityRowProps> = ({
   const packUnitsDisplay = (numInBuy && numInBuy !== 0 && numInPurPack && numInPurPack !== 0) ? (baseQuantity / (numInBuy * numInPurPack)).toFixed(2) : "N/A";
 
   return (
-    <div className="metric-row" style={{
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      padding: '8px 0',
-      borderBottom: '1px solid #e0e0e0'
-    }}>
-      <div style={{flex: '0 0 30%', fontWeight: '500'}}>
-        <Text>{label}</Text>
+    <div className="metric-row flex justify-between items-center py-2 border-b border-gray-200">
+      <div className="w-[30%] font-medium">
+        <span>{label}</span>
       </div>
-      <div style={{flex: '1', display: 'flex', justifyContent: 'space-around', textAlign: 'center'}}>
-        <div style={{flex: '1'}}>
-          <Text>{baseQuantity.toFixed(2)}</Text>
+      <div className="flex-1 flex justify-around text-center">
+        <div className="flex-1">
+          <span>{baseQuantity.toFixed(2)}</span>
         </div>
-        <div style={{flex: '1'}}>
-          <Text>{buyUnitsDisplay}</Text>
+        <div className="flex-1">
+          <span>{buyUnitsDisplay}</span>
         </div>
-        <div style={{flex: '1'}}>
-          <Text>{packUnitsDisplay}</Text>
+        <div className="flex-1">
+          <span>{packUnitsDisplay}</span>
         </div>
       </div>
     </div>
@@ -161,57 +146,35 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
   };
 
   return (
-    <div style={{display: 'flex', flexDirection: 'column', gap: '16px', padding: '16px'}}>
+    <div className="flex flex-col gap-4 p-4">
       {data.lines.map((row) => {
-        // const cardStyle = getRowStyleProperties(row.lineStatus); // Card style removed based on feedback
-        // Assuming GoodsReceiptValidateProcessLine has these fields based on GoodsReceiptAllTable and prompt
-        // Fallback to 1 if undefined or zero to avoid division by zero, or handle more gracefully
-        const numInBuy = row.numInBuy || 1; // Default to 1 if 0 or undefined to prevent division by zero
-        const purPackUn = row.purPackUn || 1; // Default to 1
-
+        const numInBuy = row.numInBuy || 1;
+        const purPackUn = row.purPackUn || 1;
         const buyUnitMsrText = row.buyUnitMsr || t('buyUnit');
         const packUnitMsrText = row.purPackMsr || t('packUnit');
         const statusTextStyle = getStatusTextStyle(row.lineStatus);
 
-
         return (
-          <Card
-            key={row.lineNumber}
-            style={{width: '100%'}} // Removed ...cardStyle
-            header={
-              <CardHeader
-                titleText={`${t('code')}: ${row.itemCode}`}
-                subtitleText={`${t('description')}: ${row.itemName} (#${row.lineNumber})`}
-              />
-            }
-          >
-            <div style={{padding: '16px'}}>
+          <Card key={row.lineNumber} className="w-full shadow-lg">
+            <CardHeader>
+              <CardTitle>{`${t('code')}: ${row.itemCode}`}</CardTitle>
+              <CardDescription>{`${t('description')}: ${row.itemName} (#${row.lineNumber})`}</CardDescription>
+            </CardHeader>
+            <CardContent className="pb-4">
               {/* Unit Headers */}
-              <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: '8px 0',
-                borderBottom: '2px solid #0070f3', // Theme primary color or a fixed one
-                marginBottom: '8px',
-                fontWeight: 'bold'
-              }}>
-                <div style={{flex: '0 0 30%'}}>
-                  <Text style={{fontWeight: 'bold'}}>{t('unit')}</Text>
+              <div className="flex justify-between items-center py-2 border-b-2 border-primary mb-2 font-bold">
+                <div className="w-[30%]">
+                  <span>{t('unit')}</span>
                 </div>
-                <div style={{flex: '1', display: 'flex', justifyContent: 'space-around', textAlign: 'center'}}>
-                  <div style={{flex: '1'}}>
-                    <Text style={{fontWeight: 'bold', fontSize: '12px'}}>{t('units')}</Text>
+                <div className="flex-1 flex justify-around text-center">
+                  <div className="flex-1 text-xs">
+                    <span>{t('units')}</span>
                   </div>
-                  <div style={{flex: '1'}}>
-                    <Text style={{fontWeight: 'bold', fontSize: '12px'}}>
-                      {buyUnitMsrText}
-                    </Text>
+                  <div className="flex-1 text-xs">
+                    <span>{buyUnitMsrText}</span>
                   </div>
-                  <div style={{flex: '1'}}>
-                    <Text style={{fontWeight: 'bold', fontSize: '12px'}}>
-                      {packUnitMsrText}
-                    </Text>
+                  <div className="flex-1 text-xs">
+                    <span>{packUnitMsrText}</span>
                   </div>
                 </div>
               </div>
@@ -236,77 +199,80 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
                 packUnitMsrText={packUnitMsrText}
               />
 
-              <div style={{marginTop: '16px', marginBottom: '16px'}}>
-                <Text style={{fontWeight: 'bold'}}>{t('status')}: </Text>
-                <Text style={statusTextStyle}>{getRowStatusLabel(row.lineStatus)}</Text>
+              <div className="my-4">
+                <span className="font-bold">{t('status')}: </span>
+                <span style={statusTextStyle}>{getRowStatusLabel(row.lineStatus)}</span>
               </div>
-
+            </CardContent>
+            <CardFooter>
               <Button
-                design="Emphasized"
+                variant="default"
                 onClick={() => handleOpenDetailDialog(row)}
-                style={{width: '100%'}}
+                className="w-full"
               >
                 {t('details')}
               </Button>
-            </div>
+            </CardFooter>
           </Card>
         );
       })}
 
       {selectedLineForDetail && isDetailDialogOpen && (
-        <Dialog
-          open={isDetailDialogOpen}
-          onAfterClose={handleCloseDetailDialog}
-          header={
-            <Bar endContent={<Button icon="decline" design="Transparent" onClick={handleCloseDetailDialog}/>}>
-              <Title>{`${t('detailsFor')} ${selectedLineForDetail.itemCode} (#${selectedLineForDetail.lineNumber})`}</Title>
-            </Bar>
-          }
-          footer={
-            <Bar endContent={<Button onClick={handleCloseDetailDialog}>{t('close')}</Button>}/>
-          }
-        >
-          <div style={{padding: '1rem', minWidth: '500px'}}>
-            <Title level="H5" style={{marginBottom: '0.5rem'}}>{selectedLineForDetail.itemName}</Title>
-            
-            <div style={{marginBottom: '1rem'}}>
-              <Text style={{fontWeight: 'bold'}}>{`${t('status')}: `}</Text>
-              <Text style={getStatusTextStyle(selectedLineForDetail.lineStatus)}>
-                {getRowStatusLabel(selectedLineForDetail.lineStatus)}
-              </Text>
-            </div>
+        <Dialog open={isDetailDialogOpen} onOpenChange={setIsDetailDialogOpen}>
+          <DialogContent className="sm:max-w-2xl"> {/* Increased width for details table */}
+            <DialogHeader>
+              <DialogTitle>{`${t('detailsFor')} ${selectedLineForDetail.itemCode} (#${selectedLineForDetail.lineNumber})`}</DialogTitle>
+              <DialogDescription>{selectedLineForDetail.itemName}</DialogDescription>
+            </DialogHeader>
+            <div className="py-4">
+              <div className="mb-4">
+                <span className="font-bold">{`${t('status')}: `}</span>
+                <span style={getStatusTextStyle(selectedLineForDetail.lineStatus)}>
+                  {getRowStatusLabel(selectedLineForDetail.lineStatus)}
+                </span>
+              </div>
 
-            {detailDataForDialog && detailDataForDialog.length > 0 ? (
-              <Table
-                columns={<>
-                  <TableColumn style={{width: '25%'}}><Label>{t('date')}</Label></TableColumn>
-                  <TableColumn style={{width: '20%'}}><Label>{t('time')}</Label></TableColumn>
-                  <TableColumn style={{width: '30%'}}><Label>{t('employee')}</Label></TableColumn>
-                  <TableColumn style={{width: '25%', textAlign: 'right'}}><Label>{t('scannedQuantity')}</Label></TableColumn>
-                  {/* Original had 'quantity' and 'scannedQuantity', assuming 'scannedQuantity' from details is the relevant one */}
-                </>}
-              >
-                {detailDataForDialog.map((detail) => {
-                  const timeStamp = new Date(detail.timeStamp);
-                  let scannedQuantity = detail.scannedQuantity;
-                  if (detail.unit !== UnitType.Unit)
-                    scannedQuantity /= selectedLineForDetail.numInBuy;
-                  if (detail.unit === UnitType.Pack)
-                    scannedQuantity /= selectedLineForDetail.purPackUn;
-                  return (
-                    <TableRow key={detail.timeStamp + detail.employee}> {/* Added employee to key for more uniqueness */}
-                      <TableCell><Text>{dateFormat(timeStamp)}</Text></TableCell>
-                      <TableCell><Text>{timeFormat(timeStamp)}</Text></TableCell>
-                      <TableCell><Text>{detail.employee}</Text></TableCell>
-                      <TableCell style={{textAlign: 'right'}}><Text>{scannedQuantity}</Text></TableCell>
+              {detailDataForDialog && detailDataForDialog.length > 0 ? (
+                <div className="rounded-md border">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[25%]"><Label>{t('date')}</Label></TableHead>
+                      <TableHead className="w-[20%]"><Label>{t('time')}</Label></TableHead>
+                      <TableHead className="w-[30%]"><Label>{t('employee')}</Label></TableHead>
+                      <TableHead className="w-[25%] text-right"><Label>{t('scannedQuantity')}</Label></TableHead>
                     </TableRow>
-                  );
-                })}
-              </Table>
-            ) : (
-              <Text>{t('noDetailsAvailable')}</Text>
-            )}
-          </div>
+                  </TableHeader>
+                  <TableBody>
+                    {detailDataForDialog.map((detail) => {
+                      const timeStamp = new Date(detail.timeStamp);
+                      let scannedQuantity = detail.scannedQuantity;
+                      if (detail.unit !== UnitType.Unit && selectedLineForDetail.numInBuy) {
+                        scannedQuantity /= selectedLineForDetail.numInBuy;
+                      }
+                      if (detail.unit === UnitType.Pack && selectedLineForDetail.purPackUn) {
+                        scannedQuantity /= selectedLineForDetail.purPackUn;
+                      }
+                      return (
+                        <TableRow key={`${detail.timeStamp}-${detail.employee}`}>
+                          <TableCell><span>{dateFormat(timeStamp)}</span></TableCell>
+                          <TableCell><span>{timeFormat(timeStamp)}</span></TableCell>
+                          <TableCell><span>{detail.employee}</span></TableCell>
+                          <TableCell className="text-right"><span>{scannedQuantity.toFixed(2)}</span></TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+                </div>
+              ) : (
+                <p className="text-center text-muted-foreground">{t('noDetailsAvailable')}</p>
+              )}
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={handleCloseDetailDialog}>{t('close')}</Button>
+            </DialogFooter>
+          </DialogContent>
         </Dialog>
       )}
     </div>

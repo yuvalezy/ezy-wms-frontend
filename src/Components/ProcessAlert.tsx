@@ -1,10 +1,23 @@
 import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
-import {Icon, MessageStrip, Title} from "@ui5/webcomponents-react";
-import {MessageStripDesign} from "@ui5/webcomponents-react";
 import {useSwipeable} from "react-swipeable";
+import { Edit3, MessageCircle, XCircle } from "lucide-react"; // Using lucide-react for icons
 
 import {AddItemResponseMultipleValue, UnitType} from "../Assets/Common";
+
+// Mapping UI5 MessageStripDesign to a simpler status for styling
+type AlertSeverity = "Information" | "Positive" | "Negative" | "Warning";
+
+const mapSeverity = (design?: string): AlertSeverity => {
+  switch (design) {
+    case "Positive": return "Positive";
+    case "Negative": return "Negative";
+    case "Warning": return "Warning";
+    case "Information":
+    default:
+      return "Information";
+  }
+};
 
 export interface ProcessAlertValue {
   lineID?: number,
@@ -18,7 +31,7 @@ export interface ProcessAlertValue {
   purPackMsr?: string,
   timeStamp?: string;
   message?: string;
-  severity: MessageStripDesign;
+  severity: string; // Changed from MessageStripDesign
   comment?: string;
   canceled?: boolean;
   multiple?: AddItemResponseMultipleValue[];
@@ -51,23 +64,31 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
     },
     trackMouse: true
   });
-  const getAlertStyle = () => {
-    const style: React.CSSProperties = {
-      position: 'relative',
-      transition: 'transform 0.2s',
-      transform: swiped ? 'translateX(-100px)' : 'translateX(0)',
-    };
+
+  const alertSeverity = mapSeverity(alert.severity);
+
+  const getAlertClasses = () => {
+    let baseClasses = "p-4 rounded-md relative transition-transform duration-200";
+    if (swiped) baseClasses += " transform -translate-x-24";
 
     let cancelled = alert.canceled ?? false;
     if (cancelled || (alert.multiple != null && alert.multiple.length > 0)) {
-      style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
+      baseClasses += " bg-gray-300 opacity-60"; // Dimmed for cancelled or multiple
     }
     if (cancelled) {
-      style.textDecoration = 'line-through';
+      baseClasses += " line-through";
     }
 
-    return style;
+    switch (alertSeverity) {
+      case "Positive": return `${baseClasses} bg-green-100 border-green-400 text-green-700`;
+      case "Negative": return `${baseClasses} bg-red-100 border-red-400 text-red-700`;
+      case "Warning": return `${baseClasses} bg-yellow-100 border-yellow-400 text-yellow-700`;
+      case "Information":
+      default:
+        return `${baseClasses} bg-blue-100 border-blue-400 text-blue-700`;
+    }
   };
+
 
   const units = [
     {text: t("unit"), value: UnitType.Unit},
@@ -89,21 +110,13 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
   }
 
   return (
-    <div style={{position: 'relative', padding: '5px', borderRadius: '5px', overflow: 'hidden'}} {...handlers}>
-      {/* Red background for swipe */}
+    <div className="relative p-1 rounded-md overflow-hidden" {...handlers}>
       {swiped && (
-        <div style={{
-          background: 'red',
-          position: 'absolute',
-          top: 0, left: 0, right: 0, bottom: 0,
-          zIndex: 0,
-          transition: 'opacity 0.2s',
-          opacity: 0.7
-        }}/>
+        <div className="absolute top-0 left-0 right-0 bottom-0 bg-red-500 opacity-70 transition-opacity duration-200 z-0"/>
       )}
-      <div style={{position: 'relative', zIndex: 1}}>
-        <MessageStrip hideCloseButton design={alert.severity} style={getAlertStyle()}>
-          {alert.barcode && <Title level="H4"><strong>{t('barcode')}: </strong>{alert.barcode}</Title>}
+      <div className={`relative z-10 ${getAlertClasses()}`}>
+        {alert.barcode && <h4 className="font-bold text-lg mb-1"><strong>{t('barcode')}: </strong>{alert.barcode}</h4>}
+        <div className="text-sm">
           <strong>{t('time')}: </strong>{alert.timeStamp} <br/>
           {alert.itemCode && <>
               <span><strong>{t('item')}: </strong>{alert.itemCode}</span>
@@ -130,25 +143,25 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
             }
           </>}
           {alert.message && (<><strong>{t('message')}: </strong>{alert.message}</>)}
-          {alert.multiple != null && alert.multiple.length > 0 && (<><br/><strong>{t('messages')}: </strong>{
-            <>
-              {
-                alert.multiple.map(v => <MessageStrip hideCloseButton design={v.severity}>{v.message}</MessageStrip>)
+          {alert.multiple != null && alert.multiple.length > 0 && (
+            <div className="mt-2">
+              <strong>{t('messages')}: </strong>
+              {alert.multiple.map((v, index) => (
+                <div key={index} className={`p-2 my-1 rounded-sm text-xs ${mapSeverity(v.severity) === "Positive" ? "bg-green-50" : mapSeverity(v.severity) === "Negative" ? "bg-red-50" : mapSeverity(v.severity) === "Warning" ? "bg-yellow-50" : "bg-blue-50"}`}>
+                  {v.message}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        {!(alert.canceled ?? false) && alertSeverity !== 'Negative' && !swiped &&
+            <div className="absolute top-2 right-2 flex flex-col space-y-2">
+                <Edit3 className="h-5 w-5 cursor-pointer hover:text-blue-500" onClick={() => onAction(AlertActionType.Quantity)}/>
+              {enableComment &&
+                  <MessageCircle className="h-5 w-5 cursor-pointer hover:text-blue-500" onClick={() => onAction(AlertActionType.Comments)}/>
               }
-            </>
-          }</>)}
-          {!(alert.canceled ?? false) && alert.severity !== 'Negative' && !swiped &&
-              <div style={{position: 'absolute', top: '10px', right: '10px'}}>
-                  <Icon name="numbered-text" onClick={() => onAction(AlertActionType.Quantity)}/>
-                {enableComment &&
-                    <>
-                        <br/>
-                        <Icon name="comment" onClick={() => onAction(AlertActionType.Comments)}/>
-                    </>
-                }
-              </div>
-          }
-        </MessageStrip>
+            </div>
+        }
       </div>
     </div>
   );
