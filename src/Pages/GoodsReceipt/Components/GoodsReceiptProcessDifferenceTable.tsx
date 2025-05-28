@@ -37,39 +37,6 @@ interface GoodsReceiptProcessDifferenceTableProps {
   data: GoodsReceiptValidateProcess,
 }
 
-// New component for rendering a single row in the quantity table
-const QuantityDataRow: React.FC<QuantityRowProps> = ({
-  label,
-  baseQuantity,
-  numInBuy,
-  numInPurPack,
-  buyUnitMsrText,
-  packUnitMsrText,
-}) => {
-  const buyUnitsDisplay = (numInBuy && numInBuy !== 0) ? formatNumber(baseQuantity / numInBuy, 2) : "N/A";
-  const packUnitsDisplay = (numInBuy && numInBuy !== 0 && numInPurPack && numInPurPack !== 0) ? formatNumber(baseQuantity / (numInBuy * numInPurPack), 2) : "N/A";
-
-  return (
-    <div className="metric-row flex justify-between items-center py-2 border-b border-gray-200">
-      <div className="w-[30%] font-medium">
-        <span>{label}</span>
-      </div>
-      <div className="flex-1 flex justify-around text-center">
-        <div className="flex-1">
-          <span>{formatNumber(baseQuantity, 2)}</span>
-        </div>
-        <div className="flex-1">
-          <span>{buyUnitsDisplay}</span>
-        </div>
-        <div className="flex-1">
-          <span>{packUnitsDisplay}</span>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-
 const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifferenceTableProps> = (
   {
     id,
