@@ -6,7 +6,6 @@ import {Alert, AlertDescription} from "@/components/ui/alert"; // Added AlertTit
 import GoodsReceiptAllDialog from "./components/GoodsReceiptAllDetail";
 import {useGoodsReceiptAllData} from "@/pages/GoodsReceipt/Data/goods-receipt-all-data";
 import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage} from "@/components/ui/breadcrumb";
-import {useGoodsReceiptSupervisorData} from "@/pages/GoodsReceipt/Data/goods-receipt-supervisor-data";
 import {useNavigate} from "react-router-dom";
 
 export default function GoodsReceiptReportAll() {
@@ -23,14 +22,14 @@ export default function GoodsReceiptReportAll() {
   } = useGoodsReceiptAllData();
 
   return (
-    <ContentTheme title={title} exportExcel={true} onExportExcel={handleExportExcel}>
+    <ContentTheme title={`${t("goodsReceiptSupervisor")} #${id}`} exportExcel={true} onExportExcel={handleExportExcel}>
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="#" onClick={() => navigate('/goodsReceiptSupervisor')}>{t('supervisor')}</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <BreadcrumbPage>{title}</BreadcrumbPage>
+            <BreadcrumbPage>{t("goodsReceiptReport")}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

@@ -24,7 +24,7 @@ export default function GoodsReceiptProcessDifferenceReport() {
     openReport,
   } = useGoodsReceiptProcessDifferenceReportData();
 
-  const title = `${t("goodsReceipt")} - ${t("differencesReport")} #${scanCode}`;
+  const title = `${t("goodsReceipt")} #${scanCode}`;
 
   if (!id)
     return null;
@@ -39,9 +39,9 @@ export default function GoodsReceiptProcessDifferenceReport() {
           </BreadcrumbItem>
           <BreadcrumbItem>
             {!report ?
-              <BreadcrumbPage>{t("differencesReport")} #{scanCode}</BreadcrumbPage> :
+              <BreadcrumbPage>{t("differencesReport")}</BreadcrumbPage> :
               <BreadcrumbLink href="#"
-                              onClick={() => setReport(null)}>{t("differencesReport")} #{scanCode}</BreadcrumbLink>
+                              onClick={() => setReport(null)}>{t("differencesReport")}</BreadcrumbLink>
             }
           </BreadcrumbItem>
           {report && <BreadcrumbItem>

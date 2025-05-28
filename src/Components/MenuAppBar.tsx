@@ -90,15 +90,9 @@ const MenuAppBar: React.FC<MenuAppBarProps> = ({title, exportExcel, onExportExce
     <nav className="bg-white p-4 flex items-center justify-between relative z-20 shadow-md">
       {/* Left side: Back button or Menu Toggle Button */}
       <div className="flex items-center">
-        {onBack ? (
-          <button onClick={onBack} className="text-gray-800 focus:outline-none cursor-pointer mr-3">
-            <FontAwesomeIcon icon={faArrowLeft} size="lg" />
-          </button>
-        ) : (
-          <button onClick={toggleMenu} className="text-gray-800 focus:outline-none cursor-pointer">
-            <FontAwesomeIcon icon={faBars} size="lg" />
-          </button>
-        )}
+        <button onClick={toggleMenu} className="text-gray-800 focus:outline-none cursor-pointer">
+          <FontAwesomeIcon icon={faBars} size="lg" />
+        </button>
       </div>
 
       {/* Page Header */}

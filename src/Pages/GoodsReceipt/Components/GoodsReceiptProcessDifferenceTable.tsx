@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {UnitType} from "../../../assets/Common";
 import {formatNumber} from "@/lib/utils";
+import {MetricRow} from "@/components/MetricRow";
 // import {formatValueByPack} from "../../../assets/Quantities"; // Assuming this might be useful later or can be removed
 
 // Interface for the new quantity row structure
@@ -147,23 +148,19 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
   };
 
   return (
-    <div className="flex flex-col gap-4 p-4">
+    <div className="gap-2">
       {data.lines.map((row) => {
-        const numInBuy = row.numInBuy || 1;
-        const purPackUn = row.purPackUn || 1;
-        const buyUnitMsrText = row.buyUnitMsr || t('buyUnit');
-        const packUnitMsrText = row.purPackMsr || t('packUnit');
         const statusTextStyle = getStatusTextStyle(row.lineStatus);
 
         return (
-          <Card key={row.lineNumber} className="w-full shadow-lg">
+          <Card key={row.lineNumber}>
             <CardHeader>
               <CardTitle>{`${t('code')}: ${row.itemCode}`}</CardTitle>
               <CardDescription>{`${t('description')}: ${row.itemName} (#${row.lineNumber})`}</CardDescription>
             </CardHeader>
-            <CardContent className="pb-4">
+            <CardContent>
               {/* Unit Headers */}
-              <div className="flex justify-between items-center py-2 border-b-2 border-primary mb-2 font-bold">
+              <div className="flex justify-between items-center border-b-2 border-primary font-bold">
                 <div className="w-[30%]">
                   <span>{t('unit')}</span>
                 </div>
@@ -172,32 +169,32 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
                     <span>{t('units')}</span>
                   </div>
                   <div className="flex-1 text-xs">
-                    <span>{buyUnitMsrText}</span>
+                    <span>{row.buyUnitMsr ?? t('purPackUn')}</span>
                   </div>
                   <div className="flex-1 text-xs">
-                    <span>{packUnitMsrText}</span>
+                    <span>{row.purPackMsr ?? t('packUn')}</span>
                   </div>
                 </div>
               </div>
 
               {/* Scanned Quantity Row */}
-              <QuantityDataRow
+              <MetricRow
                 label={t('scannedQuantity')}
-                baseQuantity={row.quantity}
-                numInBuy={numInBuy}
-                numInPurPack={purPackUn}
-                buyUnitMsrText={buyUnitMsrText}
-                packUnitMsrText={packUnitMsrText}
+                values={{
+                  units: formatNumber(row.quantity, 0),
+                  buyUnits: formatNumber(row.quantity / row.numInBuy),
+                  packUnits: formatNumber(row.quantity / row.numInBuy / row.purPackUn)
+                }}
               />
 
               {/* Document Quantity Row */}
-              <QuantityDataRow
+              <MetricRow
                 label={t('documentQuantity')}
-                baseQuantity={row.openInvQty}
-                numInBuy={numInBuy}
-                numInPurPack={purPackUn}
-                buyUnitMsrText={buyUnitMsrText}
-                packUnitMsrText={packUnitMsrText}
+                values={{
+                  units: formatNumber(row.openInvQty, 0),
+                  buyUnits: formatNumber(row.openInvQty / row.numInBuy),
+                  packUnits: formatNumber(row.openInvQty / row.numInBuy / row.purPackUn)
+                }}
               />
 
               <div className="my-4">
