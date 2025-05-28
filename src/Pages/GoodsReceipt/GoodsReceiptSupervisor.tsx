@@ -32,8 +32,6 @@ export default function GoodsReceiptSupervisor() {
           setDocuments((prevDocs) => [newDocument, ...prevDocs])
         }
       />
-      <br/>
-      <br/>
       {documents.map((doc) => (
         <DocumentCard supervisor={supervisor} key={doc.id} doc={doc} action={handleAction}
                       docDetails={handleDocDetails}/>

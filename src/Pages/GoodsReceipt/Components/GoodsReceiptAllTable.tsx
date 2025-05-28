@@ -25,9 +25,9 @@ const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data, 
               <CardTitle>{`${t('code')}: ${row.itemCode}`}</CardTitle>
               <CardDescription>{`${t('description')}: ${row.itemName}`}</CardDescription>
             </CardHeader>
-            <CardContent className="pb-4">
+            <CardContent>
               {/* Unit Headers */}
-              <div className="flex justify-between items-center py-2 border-b-2 border-primary mb-2 font-bold">
+              <div className="flex justify-between items-center border-b-2 border-primary font-bold">
                 <div className="w-[30%]">
                   <span>{t('unit')}</span>
                 </div>
@@ -90,7 +90,7 @@ const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data, 
                 }}
               /> {/* Action Button */}
             </CardContent>
-            <CardFooter className="mt-4 text-center border-t pt-4">
+            <CardFooter className="text-center border-t pt-4">
               <Button
                 variant="default" /* or "secondary", "outline" etc. */
                 onClick={() => onClick(row)}
