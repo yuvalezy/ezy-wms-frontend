@@ -49,7 +49,7 @@ export default function App() {
     return (
         <AuthProvider>
             <BrowserRouter>
-                <Toaster />
+                <Toaster closeButton closeButtonPosition="top-right" />
                 <Routes>
                     <Route path="/login" element={<LoginPage/>}/>
                     <Route path="/unauthorized" element={<Unauthorized/>}/>

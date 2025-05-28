@@ -137,6 +137,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
     if (selected) {
       setSelectedUnit(selected.value);
     }
+    barcodeRef?.current?.focus();
   }
 
   const selectedUnitTest = units.find((unit) => unit.value === selectedUnit);
