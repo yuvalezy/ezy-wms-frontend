@@ -25,6 +25,8 @@ export type GoodsReceiptReportFilter = {
   grpo?: string;
   purchaseOrder?: string;
   reservedInvoice?: string;
+  goodsReceipt?: string;
+  purchaseInvoice?: string;
   status?: Status[] | null;
   date?: Date | null;
   dateFrom?: Date | null;

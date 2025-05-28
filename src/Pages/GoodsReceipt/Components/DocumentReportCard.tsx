@@ -10,24 +10,22 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faExchangeAlt, faFileAlt, faTruckLoading} from "@fortawesome/free-solid-svg-icons";
 
 type DocumentReportCardProps = {
-  doc: Document
-  docDetails: (doc: Document) => void
+  doc: Document,
+  docDetails: (doc: Document) => void,
+  confirm: boolean
 }
 
-const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc, docDetails}) => {
+const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc, docDetails, confirm}) => {
   const {t} = useTranslation();
   const {dateFormat} = useDateTimeFormat();
   const documentStatusToString = useDocumentStatusToString();
-  const handleOpen = useHandleOpen();
+  const handleOpen = useHandleOpen(confirm);
   const o = useObjectName();
 
   function documentDetailsClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
     e.preventDefault();
     docDetails(doc);
   }
-
-  const listItemClasses = "py-2 px-1 flex justify-between items-center border-b last:border-b-0";
-  const linkClasses = "text-blue-600 hover:underline";
 
   const formatDocumentsList = (documents: DocumentItem[]) => {
     return documents.map((value, index) => (
@@ -61,12 +59,12 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc, docDetails}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <Button variant="outline" className="w-full" onClick={e => handleOpen(e, 'all', doc.id)}>
             <FontAwesomeIcon icon={faFileAlt} className="mr-2"/>
-            {t('goodsReceiptReport')}
+            {!confirm ? t('goodsReceiptReport') : t('confirmationReport')}
           </Button>
           {activeStatuses.includes(doc.status) && (
             <Button variant="outline" className="w-full" onClick={e => handleOpen(e, 'vs', doc.id)}>
               <FontAwesomeIcon icon={faTruckLoading} className="mr-2"/>
-              {t('goodsReceiptVSExit')}
+              {!confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}
             </Button>
           )}
           {processStatuses.includes(doc.status) && (

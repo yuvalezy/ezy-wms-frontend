@@ -12,7 +12,7 @@ interface GoodsReceiptReportProps {
   confirm?: boolean
 }
 
-export default function GoodsReceiptReport({confirm}: GoodsReceiptReportProps) {
+export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReportProps) {
   const {loading, setLoading, setError} = useThemeContext();
   const {t} = useTranslation();
   const [documents, setDocuments] = useState<Document[]>([]);
@@ -81,10 +81,11 @@ export default function GoodsReceiptReport({confirm}: GoodsReceiptReportProps) {
       <ReportFilterForm
         onSubmit={onSubmit}
         onClear={() => setDocuments([])}
+        confirm={confirm}
       />
       <div className="flex flex-col gap-2">
         {documents.map((doc) => (
-          <DocumentReportCard key={doc.id} doc={doc} docDetails={handleDocDetails}/>
+          <DocumentReportCard key={doc.id} doc={doc} confirm={confirm} docDetails={handleDocDetails}/>
         ))}
       </div>
       <DocumentListDialog ref={documentListDialogRef} doc={selectedDocument}/>

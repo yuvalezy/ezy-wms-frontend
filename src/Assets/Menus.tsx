@@ -61,6 +61,12 @@ export function useMenus() {
             Icon: "kpi-managing-my-area",
         },
         {
+            Link: "/goodsReceiptConfirmationReport",
+            Text: t('confirmationReport'),
+            Authorization: Authorization.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR,
+            Icon: "manager-insight",
+        },
+        {
             Link: "/pick",
             Text: t('picking'),
             Authorization: Authorization.PICKING,
