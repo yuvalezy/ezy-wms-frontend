@@ -1,97 +1,87 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {useTranslation} from "react-i18next";
-import {Document} from "../../../assets/Document";
+import {Document, DocumentItem} from "../../../assets/Document";
 import {useDocumentStatusToString} from "../../../assets/DocumentStatusString";
 import {activeStatuses, processStatuses, useHandleOpenOld} from "../Data/GoodsReceiptUtils";
 import {useObjectName} from "../../../assets/ObjectName";
 import {useDateTimeFormat} from "../../../assets/DateFormat";
+import InfoBox, {InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
+import {Separator} from "@/components/ui/separator";
+import {Button} from "@/components/ui/button";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faExchangeAlt, faFileAlt, faTruckLoading} from "@fortawesome/free-solid-svg-icons";
 
 type DocumentReportCardProps = {
-    doc: Document
-    docDetails: (doc: Document) => void
+  doc: Document
+  docDetails: (doc: Document) => void
 }
 
 const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc, docDetails}) => {
-    const {t} = useTranslation();
-    const { dateFormat } = useDateTimeFormat();
-    const documentStatusToString = useDocumentStatusToString();
-    const handleOpen = useHandleOpenOld();
-    const o = useObjectName();
+  const {t} = useTranslation();
+  const {dateFormat} = useDateTimeFormat();
+  const documentStatusToString = useDocumentStatusToString();
+  const handleOpen = useHandleOpenOld();
+  const o = useObjectName();
 
-    function documentDetailsClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
-        e.preventDefault();
-        docDetails(doc);
-    }
+  function documentDetailsClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
+    e.preventDefault();
+    docDetails(doc);
+  }
 
-    const listItemClasses = "py-2 px-1 flex justify-between items-center border-b last:border-b-0";
-    const linkClasses = "text-blue-600 hover:underline";
+  const listItemClasses = "py-2 px-1 flex justify-between items-center border-b last:border-b-0";
+  const linkClasses = "text-blue-600 hover:underline";
 
-    return (
-        <Card key={doc.id} className="mb-4 shadow-lg">
-            <CardHeader>
-                <CardTitle>{`${t('id')}: ${doc.name}`}</CardTitle>
-            </CardHeader>
-            <CardContent className="py-2">
-                <ul className="space-y-1 text-sm">
-                    <li className={listItemClasses}>
-                        <span className="font-semibold">{t('number')}:</span>
-                        <span>{doc.id}</span>
-                    </li>
-                    {doc.businessPartner != null &&
-                        <li className={listItemClasses}>
-                            <span className="font-semibold">{t('vendor')}:</span>
-                            <span>{doc.businessPartner.name ?? doc.businessPartner.code}</span>
-                        </li>
-                    }
-                    {doc.specificDocuments && doc.specificDocuments.length > 0 &&
-                        <li className={listItemClasses}>
-                            <a href="#" onClick={documentDetailsClick} className={linkClasses}>
-                                <strong className="font-semibold">{t('documentsList')}: </strong>
-                                {doc.specificDocuments.map((value, index) => (
-                                    <span key={index}>
-                                        {index > 0 && ', '}
-                                        {o(value.objectType)} #{value.documentNumber}
-                                    </span>
-                                ))}
-                            </a>
-                        </li>
-                    }
-                    <li className={listItemClasses}>
-                        <span className="font-semibold">{t('docDate')}:</span>
-                        <span>{dateFormat(new Date(doc.date))}</span>
-                    </li>
-                    <li className={listItemClasses}>
-                        <span className="font-semibold">{t('createdBy')}:</span>
-                        <span>{doc.employee.name}</span>
-                    </li>
-                    <li className={listItemClasses}>
-                        <span className="font-semibold">{t('status')}:</span>
-                        <span>{documentStatusToString(doc.status)}</span>
-                    </li>
-                    {doc.statusDate &&
-                        <li className={listItemClasses}>
-                            <span className="font-semibold">{t('statusDate')}:</span>
-                            <span>{dateFormat(new Date(doc.statusDate))}</span>
-                        </li>
-                    }
-                     <li className={listItemClasses}>
-                        <a href="#" onClick={e => handleOpen(e, 'all', doc.id)} className={linkClasses}>{t('goodsReceiptReport')}</a>
-                    </li>
-                    {activeStatuses.includes(doc.status) &&
-                        <li className={listItemClasses}>
-                            <a href="#" onClick={e => handleOpen(e, 'vs', doc.id)} className={linkClasses}>{t('goodsReceiptVSExit')}</a>
-                        </li>
-                    }
-                    {processStatuses.includes(doc.status) &&
-                        <li className={listItemClasses}>
-                            <a href="#" onClick={e => handleOpen(e, 'diff', doc.id)} className={linkClasses}>{t('differencesReport')}</a>
-                        </li>
-                    }
-                </ul>
-            </CardContent>
-        </Card>
-    );
+  const formatDocumentsList = (documents: DocumentItem[]) => {
+    return documents.map((value, index) => (
+      `${index > 0 ? ', ' : ''}${o(value.objectType)} #${value.documentNumber}`
+    )).join('');
+  }
+
+  return (
+    <Card key={doc.id}>
+      <CardHeader>
+        <CardTitle>{`${t('number')}: ${doc.id}`}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <InfoBox>
+          {doc.name && <InfoBoxValue label={t('id')} value={doc.name}/>}
+          {doc.businessPartner &&
+              <InfoBoxValue label={t('vendor')} value={doc.businessPartner.name ?? doc.businessPartner.code}/>}
+          {doc.specificDocuments && doc.specificDocuments.length > 0 &&
+              <InfoBoxValue label={t('documentsList')} value={formatDocumentsList(doc.specificDocuments)}
+                            onClick={() => docDetails(doc)}/>
+          }
+        </InfoBox>
+        <SecondaryInfoBox>
+          <InfoBoxValue label={t('docDate')} value={dateFormat(new Date(doc.date))}/>
+          <InfoBoxValue label={t('createdBy')} value={doc.employee.name}/>
+          <InfoBoxValue label={t('status')} value={documentStatusToString(doc.status)}/>
+          {doc.statusDate &&
+              <InfoBoxValue label={t('statusDate')} value={dateFormat(new Date(doc.statusDate))}/>}
+        </SecondaryInfoBox>
+        <Separator className="my-4"/>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <Button variant="outline" className="w-full" onClick={e => handleOpen(e, 'all', doc.id)}>
+            <FontAwesomeIcon icon={faFileAlt} className="mr-2"/>
+            {t('goodsReceiptReport')}
+          </Button>
+          {activeStatuses.includes(doc.status) && (
+            <Button variant="outline" className="w-full" onClick={e => handleOpen(e, 'vs', doc.id)}>
+              <FontAwesomeIcon icon={faTruckLoading} className="mr-2"/>
+              {t('goodsReceiptVSExit')}
+            </Button>
+          )}
+          {processStatuses.includes(doc.status) && (
+            <Button variant="outline" className="w-full" onClick={e => handleOpen(e, 'diff', doc.id)}>
+              <FontAwesomeIcon icon={faExchangeAlt} className="mr-2"/>
+              {t('differencesReport')}
+            </Button>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
 }
 
 export default DocumentReportCard;

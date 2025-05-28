@@ -78,7 +78,7 @@ export default function GoodsReceiptReport() {
                 onSubmit={onSubmit}
                 onClear={() => setDocuments([])}
             />
-            <div style={{ margin: "5px" }}>
+            <div className="flex flex-col gap-2">
                 {documents.map((doc) => (
                     <DocumentReportCard key={doc.id} doc={doc} docDetails={handleDocDetails} />
                 ))}

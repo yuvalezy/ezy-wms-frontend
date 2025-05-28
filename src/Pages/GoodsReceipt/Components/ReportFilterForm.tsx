@@ -41,6 +41,8 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({onSubmit, onClear}) 
     const [isPanelOpen, setIsPanelOpen] = useState(true); // Control accordion state
     const [statusValue, setStatusValue] = useState<string>("");
     const [vendorName, setVendorName] = useState<string>("");
+    const [isDateFromPopoverOpen, setIsDateFromPopoverOpen] = useState(false);
+    const [isDateToPopoverOpen, setIsDateToPopoverOpen] = useState(false);
 
 
     useEffect(() => {
@@ -131,7 +133,7 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({onSubmit, onClear}) 
                             </div>
                             <div>
                                 <Label htmlFor="dateFrom">{`${t("status")} - ${t("fromDate")}`}</Label>
-                                <Popover>
+                                <Popover open={isDateFromPopoverOpen} onOpenChange={setIsDateFromPopoverOpen}>
                                     <PopoverTrigger asChild>
                                         <Button
                                             variant={"outline"}
@@ -145,7 +147,10 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({onSubmit, onClear}) 
                                         <Calendar
                                             mode="single"
                                             selected={filters.dateFrom || undefined}
-                                            onSelect={(date: Date | undefined) => setFilters(pf => ({...pf, dateFrom: date || null}))}
+                                            onSelect={(date: Date | undefined) => {
+                                                setFilters(pf => ({...pf, dateFrom: date || null}));
+                                                setIsDateFromPopoverOpen(false); // Close popover on date selection
+                                            }}
                                             initialFocus
                                         />
                                     </PopoverContent>
@@ -153,7 +158,7 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({onSubmit, onClear}) 
                             </div>
                             <div>
                                 <Label htmlFor="dateTo">{`${t("status")} - ${t("toDate")}`}</Label>
-                                 <Popover>
+                                 <Popover open={isDateToPopoverOpen} onOpenChange={setIsDateToPopoverOpen}>
                                     <PopoverTrigger asChild>
                                         <Button
                                             variant={"outline"}
@@ -167,7 +172,10 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({onSubmit, onClear}) 
                                         <Calendar
                                             mode="single"
                                             selected={filters.dateTo || undefined}
-                                            onSelect={(date: Date | undefined) => setFilters(pf => ({...pf, dateTo: date || null}))}
+                                            onSelect={(date: Date | undefined) => {
+                                                setFilters(pf => ({...pf, dateTo: date || null}));
+                                                setIsDateToPopoverOpen(false); // Close popover on date selection
+                                            }}
                                             initialFocus
                                         />
                                     </PopoverContent>
