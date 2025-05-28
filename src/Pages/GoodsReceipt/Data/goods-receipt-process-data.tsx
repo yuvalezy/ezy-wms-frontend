@@ -12,12 +12,11 @@ import {
   UpdateLineParameters,
   UpdateLineReturnValue
 } from "@/assets/Common";
-import {AlertActionType, ProcessAlertValue} from "@/components/ProcessAlert";
+import {AlertActionType, AlertSeverity, ProcessAlertValue} from "@/components/ProcessAlert";
 import {ProcessesRef} from "@/components/Processes";
 import {IsNumeric, StringFormat} from "@/assets/Functions";
 import {addItem, updateLine, updateLineQuantity} from "@/pages/GoodsReceipt/data/GoodsReceiptProcess";
 import {configUtils, delay} from "@/assets/GlobalConfig";
-import {MessageStripDesign} from "@ui5/webcomponents-react";
 import {DocumentAddItemResponse} from "@/assets/Document";
 
 export const useGoodsReceiptProcessData = () => {
@@ -98,36 +97,36 @@ export const useGoodsReceiptProcessData = () => {
             itemCode: item.code,
             quantity: data.quantity,
             message: `Error Mockup`,
-            severity: MessageStripDesign.Negative
+            severity: "Negative"
           });
         }
 
         let message: string = "";
-        let color: MessageStripDesign = MessageStripDesign.Information;
+        let color: AlertSeverity = "Information";
         let multiple: AddItemResponseMultipleValue[] = [];
         let totalErrors = (data.warehouse ? 1 : 0) + (data.fulfillment ? 1 : 0) + (data.showroom ? 1 : 0);
         if (totalErrors === 1) {
           if (data.warehouse) {
             message = t("scanConfirmStoreInWarehouse");
-            color = MessageStripDesign.Positive;
+            color = "Positive";
           }
           if (data.fulfillment) {
             message = t("scanConfirmFulfillment");
-            color = MessageStripDesign.Warning;
+            color = "Warning";
           }
           if (data.showroom) {
             message = t("scanConfirmShowroom");
-            color = MessageStripDesign.Information;
+            color = "Information";
           }
         } else {
           if (data.warehouse) {
-            multiple.push({message: t("scanConfirmStoreInWarehouse"), severity: MessageStripDesign.Positive});
+            multiple.push({message: t("scanConfirmStoreInWarehouse"), severity: "Positive"});
           }
           if (data.fulfillment) {
-            multiple.push({message: t("scanConfirmFulfillment"), severity: MessageStripDesign.Warning});
+            multiple.push({message: t("scanConfirmFulfillment"), severity: "Warning"});
           }
           if (data.showroom) {
-            multiple.push({message: t("scanConfirmShowroom"), severity: MessageStripDesign.Information});
+            multiple.push({message: t("scanConfirmShowroom"), severity: "Information"});
           }
         }
 
@@ -149,7 +148,7 @@ export const useGoodsReceiptProcessData = () => {
       .catch((error) => {
         console.error(`Error performing action: ${error}`);
         let errorMessage = error.response?.data["exceptionMessage"] ?? `Add Item Error: ${error}`;
-        alert({barcode: barcode, itemCode: item.code, message: errorMessage, severity: MessageStripDesign.Negative});
+        alert({barcode: barcode, itemCode: item.code, message: errorMessage, severity: "Negative"});
       })
       .finally(function () {
         setLoading(false);
@@ -166,7 +165,7 @@ export const useGoodsReceiptProcessData = () => {
       barcode: barcode,
       itemCode: itemCode,
       message: StringFormat(t("goodsReceiptIsClosed"), id),
-      severity: MessageStripDesign.Negative,
+      severity: "Negative",
       multiple: [],
       quantity: data.quantity
     });
@@ -235,31 +234,31 @@ export const useGoodsReceiptProcessData = () => {
             response = data.returnValue;
             error = data.errorMessage;
             let message: string = "";
-            let color: MessageStripDesign = MessageStripDesign.Information;
+            let color: AlertSeverity = "Information";
             let multiple: AddItemResponseMultipleValue[] = [];
             let totalErrors = (data.warehouse ? 1 : 0) + (data.fulfillment ? 1 : 0) + (data.showroom ? 1 : 0);
             if (totalErrors === 1) {
               if (data.warehouse) {
                 message = t("scanConfirmStoreInWarehouse");
-                color = MessageStripDesign.Positive;
+                color = "Positive";
               }
               if (data.fulfillment) {
                 message = t("scanConfirmFulfillment");
-                color = MessageStripDesign.Warning;
+                color = "Warning";
               }
               if (data.showroom) {
                 message = t("scanConfirmShowroom");
-                color = MessageStripDesign.Information;
+                color = "Information";
               }
             } else {
               if (data.warehouse) {
-                multiple.push({message: t("scanConfirmStoreInWarehouse"), severity: MessageStripDesign.Positive});
+                multiple.push({message: t("scanConfirmStoreInWarehouse"), severity: "Positive"});
               }
               if (data.fulfillment) {
-                multiple.push({message: t("scanConfirmFulfillment"), severity: MessageStripDesign.Warning});
+                multiple.push({message: t("scanConfirmFulfillment"), severity: "Warning"});
               }
               if (data.showroom) {
-                multiple.push({message: t("scanConfirmShowroom"), severity: MessageStripDesign.Information});
+                multiple.push({message: t("scanConfirmShowroom"), severity: "Information"});
               }
             }
             updatedAlert.quantity = parameters.quantity;

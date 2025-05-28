@@ -1,37 +1,6 @@
 import {useTranslation} from 'react-i18next';
-import React, { useMemo } from 'react'; // Import useMemo
+import { useMemo } from 'react'; // Import useMemo
 import {Authorization} from "./Authorization";
-import "@ui5/webcomponents-icons/dist/qr-code.js"
-import "@ui5/webcomponents-icons/dist/complete.js"
-import "@ui5/webcomponents-icons/dist/cause.js"
-import "@ui5/webcomponents-icons/dist/dimension.js"
-import "@ui5/webcomponents-icons/dist/cart-2.js"
-import "@ui5/webcomponents-icons/dist/kpi-managing-my-area.js"
-import "@ui5/webcomponents-icons/dist/product.js"
-import "@ui5/webcomponents-icons/dist/factory.js"
-import "@ui5/webcomponents-icons/dist/manager-insight.js"
-import "@ui5/webcomponents-icons/dist/add.js"
-import "@ui5/webcomponents-icons/dist/decline.js"
-import "@ui5/webcomponents-icons/dist/accept.js";
-import "@ui5/webcomponents-icons/dist/comment.js";
-import "@ui5/webcomponents-icons/dist/create.js";
-import "@ui5/webcomponents-icons/dist/clear-all.js";
-import "@ui5/webcomponents-icons/dist/bar-chart.js";
-import "@ui5/webcomponents-icons/dist/begin.js";
-import "@ui5/webcomponents-icons/dist/save.js"
-import "@ui5/webcomponents-icons/dist/cancel.js"
-import "@ui5/webcomponents-icons/dist/numbered-text.js"
-import "@ui5/webcomponents-icons/dist/save.js"
-import "@ui5/webcomponents-icons/dist/log.js"
-import "@ui5/webcomponents-icons/dist/nav-back.js"
-import "@ui5/webcomponents-icons/dist/move.js"
-import "@ui5/webcomponents-icons/dist/arrow-right.js"
-import "@ui5/webcomponents-icons/dist/arrow-bottom.js"
-import "@ui5/webcomponents-icons/dist/download.js"
-import "@ui5/webcomponents-icons/dist/functional-location.js"
-import "@ui5/webcomponents-icons/dist/map.js"
-import "@ui5/webcomponents-icons/dist/journey-depart.js"
-import "@ui5/webcomponents-icons/dist/request.js"
 import {globalSettings} from "./GlobalConfig";
 
 export interface MenuItem {

@@ -7,7 +7,6 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/c
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import {BinLocation, Item, UnitType} from "@/assets";
 import {IsNumeric} from "@/assets";
-import {MessageStripDesign} from "@ui5/webcomponents-react";
 import {delay} from "@/assets";
 import {useAuth} from "@/components";
 import BarCodeScanner, {BarCodeScannerRef} from "../../components/BarCodeScanner";
@@ -133,7 +132,7 @@ export default function CountingProcess() {
           buyUnitMsr: v.unitMsr,
           barcode: item.barcode,
           itemCode: item.code,
-          severity: MessageStripDesign.Information,
+          severity: "Information",
           timeStamp: dateTimeFormat(date)
         })
         barcodeRef?.current?.clear();

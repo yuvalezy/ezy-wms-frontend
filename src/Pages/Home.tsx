@@ -35,8 +35,7 @@ const iconMap: { [key: string]: IconDefinition } = {
     "move": faArrowsAlt,
     "journey-depart": faTruckMoving,
     "request": faQuestionCircle,
-    "home": faHome, // Add home icon mapping
-    // Add more mappings as needed based on UI5 icons
+    "home": faHome,
 };
 
 const getFaIcon = (iconName: string): IconDefinition => {

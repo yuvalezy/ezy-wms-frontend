@@ -4,8 +4,7 @@ import {useSwipeable} from "react-swipeable";
 import { Edit3, MessageCircle } from "lucide-react";
 import {AddItemResponseMultipleValue, UnitType} from "@/assets";
 
-// Mapping UI5 MessageStripDesign to a simpler status for styling
-type AlertSeverity = "Information" | "Positive" | "Negative" | "Warning";
+export type AlertSeverity = "Information" | "Positive" | "Negative" | "Warning";
 
 const mapSeverity = (design?: string): AlertSeverity => {
   switch (design) {
@@ -30,7 +29,7 @@ export interface ProcessAlertValue {
   purPackMsr?: string,
   timeStamp?: string;
   message?: string;
-  severity: string; // Changed from MessageStripDesign
+  severity: AlertSeverity;
   comment?: string;
   canceled?: boolean;
   multiple?: AddItemResponseMultipleValue[];

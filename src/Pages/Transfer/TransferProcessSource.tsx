@@ -20,7 +20,6 @@ import BarCodeScanner, {BarCodeScannerRef} from "../../components/BarCodeScanner
 import {addItem, fetchTransferContent, TransferContent} from "./Data/TransferDocument";
 import BinLocationScanner from "../../components/BinLocationScanner";
 import {delay} from "@/assets";
-import { MessageStripDesign } from "@ui5/webcomponents-react";
 import ProcessAlert, {ProcessAlertValue} from "../../components/ProcessAlert";
 import {ScrollableContent, ScrollableContentBox} from "@/components";
 import {ReasonType}from "@/assets";
@@ -114,7 +113,7 @@ export default function TransferProcessSource() {
           quantity: 1,
           barcode: item.barcode,
           itemCode: item.code,
-          severity: MessageStripDesign.Information, // For ProcessAlert
+          severity: "Information",
           timeStamp: dateTimeFormat(date)
         })
         barcodeRef?.current?.clear();

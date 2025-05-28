@@ -40,7 +40,7 @@ export const PickingProcessDetailContent: React.FC<PickingProcessDetailContentPr
                 <TableBody>
                     {items?.map((row) => (
                         <React.Fragment key={row.itemCode}>
-                            <TableRow className={row.openQuantity === 0 ? 'bg-green-100' : ''}> {/* Example for completed row */}
+                            <TableRow className={row.openQuantity === 0 ? 'bg-green-100' : ''}>
                                 <TableCell><Label>{row.itemCode}</Label></TableCell>
                                 <TableCell><Label>{row.itemName}</Label></TableCell>
                                 <TableCell className="text-right"><Label>{row.quantity}</Label></TableCell>

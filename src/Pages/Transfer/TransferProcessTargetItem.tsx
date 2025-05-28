@@ -8,10 +8,9 @@ import {useAuth} from "@/components";
 import {BinLocation, DetailUpdateParameters, SourceTarget} from "@/assets";
 import {addItem, fetchTransferContent, TransferContent, TransferContentBin, updateTransferTargetItem} from "./Data/TransferDocument";
 import ProcessAlert, {ProcessAlertValue} from "../../components/ProcessAlert";
-import { MessageStripDesign } from "@ui5/webcomponents-react";
 import {ScrollableContent, ScrollableContentBox} from "@/components";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import {
   Table,
@@ -90,7 +89,7 @@ export default function TransferProcessTargetItem() {
                     lineID: v.lineID,
                     quantity: 1,
                     itemCode: itemCode,
-                    severity: MessageStripDesign.Information, // For ProcessAlert
+                    severity: "Information", // For ProcessAlert
                     timeStamp: dateTimeFormat(date)
                 })
                 binRef?.current?.clear();

@@ -1,5 +1,5 @@
 import {Authorization} from "./Authorization";
-import {MessageStripDesign} from "@ui5/webcomponents-react/dist/enums";
+import {AlertSeverity} from "@/components";
 
 export interface AxiosErrorResponse {
     exceptionMessage: string;
@@ -75,7 +75,7 @@ export enum Status {
 
 export type AddItemResponseMultipleValue = {
     message: string;
-    severity: MessageStripDesign;
+    severity: AlertSeverity;
 };
 export type ObjectAction = "approve" | "cancel";
 
