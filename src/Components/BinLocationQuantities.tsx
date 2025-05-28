@@ -1,6 +1,5 @@
-import {BinLocation} from "../assets/Common";
+import {BinLocation} from "@/assets";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Label } from "@/components/ui/label";
 import React from "react";
 import {useTranslation} from "react-i18next";
 

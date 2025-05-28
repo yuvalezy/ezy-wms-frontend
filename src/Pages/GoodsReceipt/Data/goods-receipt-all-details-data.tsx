@@ -3,10 +3,10 @@ import {
   fetchGoodsReceiptReportAllDetails,
   GoodsReceiptAll,
   GoodsReceiptAllDetail
-} from "@/pages/GoodsReceipt/Data/Report";
+} from "@/pages/GoodsReceipt/data/Report";
 import {useThemeContext} from "@/components/ThemeContext";
 import {useState} from "react";
-import {fetchDocuments} from "@/pages/GoodsReceipt/Data/Document";
+import {fetchDocuments} from "@/pages/GoodsReceipt/data/Document";
 
 export const useGoodsReceiptAllDetailsData = (props: GRPOAllDetailProps) => {
   const {setLoading, setError} = useThemeContext();

@@ -2,7 +2,7 @@ import * as React from 'react';
 import {useAuth} from "./AppContext";
 import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {MenuItem, useMenus} from "../assets/Menus";
+import {MenuItem, useMenus} from "@/assets";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBars,

@@ -4,15 +4,15 @@ import {Link, useNavigate, useParams} from "react-router-dom";
 import {
   fetchGoodsReceiptVSExitReport,
   GoodsReceiptVSExitReportData,
-} from "./Data/Report";
-import GoodsReceiptVSExitReportTable from "./components/GoodsReceiptVSExitReportTable"; // Corrected casing
+} from "@/pages/GoodsReceipt/data/Report";
+import GoodsReceiptVSExitReportTable from "@/pages/GoodsReceipt/components/GoodsReceiptVSExitReportTable";
 import {useThemeContext} from "@/components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {useObjectName} from "@/assets/ObjectName";
 import {IsNumeric} from "@/assets/Functions";
-import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
+import {Alert, AlertDescription} from "@/components/ui/alert";
 import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage} from "@/components/ui/breadcrumb";
-import InfoBox, {InfoBoxValue} from "@/components/InfoBox"; // Using Card as an alternative to Panel for now
+import InfoBox, {InfoBoxValue} from "@/components/InfoBox";
 
 export default function GoodsReceiptVSExitReport() {
   const {scanCode} = useParams();

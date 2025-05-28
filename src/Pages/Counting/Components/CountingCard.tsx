@@ -10,6 +10,8 @@ import {Counting} from "@/assets/Counting";
 import {Status} from "@/assets/Common";
 import {useDateTimeFormat} from "@/assets/DateFormat";
 import { CheckCircle, XCircle, FileText } from "lucide-react";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faFileAlt} from "@fortawesome/free-solid-svg-icons";
 
 type CountingCardProps = {
   doc: Counting,
@@ -64,9 +66,10 @@ const CountingCard: React.FC<CountingCardProps> = ({doc, handleAction, superviso
           </li>
           {supervisor && (
             <li className="flex justify-between items-center pt-2 border-t mt-2">
-               <Button variant="link" className="p-0 h-auto text-blue-600 hover:underline" onClick={e => { e.preventDefault(); navigate(`/countingSummaryReport/${doc.id}`); }}>
-                 <FileText className="mr-2 h-4 w-4" />{t('countingSummaryReport')}
-               </Button>
+              <Button variant="outline" className="w-full" onClick={e => { e.preventDefault(); navigate(`/countingSummaryReport/${doc.id}`); }}>
+                <FontAwesomeIcon icon={faFileAlt} className="mr-2" />
+                {t('countingSummaryReport')}
+              </Button>
             </li>
           )}
         </ul>

@@ -1,12 +1,12 @@
 import React from "react";
-import DocumentCard from "./components/DocumentCard";
+import DocumentCard from "@/pages/GoodsReceipt/components/DocumentCard";
 import {useTranslation} from "react-i18next";
 import {StringFormat} from "@/assets/Functions";
-import DocumentListDialog from "./components/DocumentListDialog";
 import ContentTheme from "@/components/ContentTheme";
-import DocumentForm from "@/pages/GoodsReceipt/components/DocumentForm";
 import {MessageBox} from "@/components/ui/message-box";
-import {useGoodsReceiptSupervisorData} from "@/pages/GoodsReceipt/Data/goods-receipt-supervisor-data";
+import {useGoodsReceiptSupervisorData} from "@/pages/GoodsReceipt/data/goods-receipt-supervisor-data";
+import DocumentForm from "@/pages/GoodsReceipt/components/DocumentForm";
+import DocumentListDialog from "@/pages/GoodsReceipt/components/DocumentListDialog";
 
 export default function GoodsReceiptSupervisor() {
   const {t} = useTranslation();

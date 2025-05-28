@@ -210,6 +210,7 @@
   "pickingUpdateSuccess": "La actualización del Picking #{0} se realizó con éxito",
   "noAuthorizationOptions": "No tienes autorización para ver ninguna opción del menú.",
   "scanItemBarCodeStart": "Escanee un artículo o código de barras para comenzar",
+  "enterDocumentId": "Introduzca el ID del documento",
 
   "confirmAction": "Confirmar Acción",
   "confirmApproveDocument": "¿Está seguro que desea aprobar el documento #{0}?",

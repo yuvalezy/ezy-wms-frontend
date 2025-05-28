@@ -211,6 +211,7 @@
   "pickingUpdateSuccess": "Picking update #{0} was successfully",
   "noAuthorizationOptions": "You do not have authorization to view any menu options.",
   "scanItemBarCodeStart": "Scan an item or barcode to start",
+  "enterDocumentId": "Enter the document ID",
 
   "confirmAction": "Confirm Action",
   "confirmApproveDocument": "Are you sure you want to approve document #{0}?",

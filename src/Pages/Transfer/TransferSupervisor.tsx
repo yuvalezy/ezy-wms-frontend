@@ -1,12 +1,12 @@
 import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import React, {useEffect, useState} from "react";
-import {useThemeContext} from "../../components/ThemeContext";
+import {useThemeContext} from "@/components";
 import {fetchTransfers, TransferDocument, transferAction} from "./Data/TransferDocument";
-import TransferCard from "./components/TransferCard";
+import TransferCard from "@/pages/Transfer/components/TransferCard";
 import {ObjectAction} from "@/assets/Common";
 import {StringFormat} from "@/assets/Functions";
-import TransferForm from "./components/TransferForm";
+import TransferForm from "@/pages/Transfer/components/TransferForm";
 import {
     AlertDialog,
     AlertDialogAction,

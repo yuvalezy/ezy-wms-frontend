@@ -1,7 +1,7 @@
 import axios from "axios";
-import {configUtils, delay, globalConfig} from "../../../assets/GlobalConfig";
-import {transferAddItemResponseMockup, UpdateLineReturnValueMockup} from "../../../assets/mockup";
-import {UpdateLineParameters, UpdateLineReturnValue} from "../../../assets/Common";
+import {configUtils, delay, globalConfig} from "@/assets";
+import {transferAddItemResponseMockup, UpdateLineReturnValueMockup} from "@/assets";
+import {UpdateLineParameters, UpdateLineReturnValue} from "@/assets";
 
 export interface TransferAddItemResponse {
     lineID: number;

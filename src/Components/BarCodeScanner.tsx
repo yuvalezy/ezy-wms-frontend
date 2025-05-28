@@ -1,4 +1,4 @@
-import React, {forwardRef, useEffect, useImperativeHandle, useRef, useState} from 'react';
+import React, {forwardRef, useImperativeHandle, useRef, useState} from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,13 +9,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core'; // Import IconProp
-import {scanBarcode} from "../assets/ScanBarcode";
-import {distinctItems, Item, UnitType}from "../assets/Common";
-import {StringFormat} from "../assets/Functions";
+import {scanBarcode} from "@/assets";
+import {StringFormat, distinctItems, Item, UnitType} from "@/assets";
 import {useThemeContext} from "./ThemeContext";
 import {useTranslation} from "react-i18next";
 import { toast } from "sonner";

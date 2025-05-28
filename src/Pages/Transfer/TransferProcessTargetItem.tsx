@@ -1,16 +1,15 @@
 import ContentTheme from "../../components/ContentTheme";
 import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
-import {useThemeContext} from "../../components/ThemeContext";
+import {useThemeContext} from "@/components";
 import {useTranslation} from "react-i18next";
-import {IsNumeric, StringFormat} from "../../assets/Functions";
-import {useAuth} from "../../components/AppContext";
-import {BinLocation, DetailUpdateParameters, SourceTarget} from "../../assets/Common";
+import {IsNumeric, StringFormat} from "@/assets";
+import {useAuth} from "@/components";
+import {BinLocation, DetailUpdateParameters, SourceTarget} from "@/assets";
 import {addItem, fetchTransferContent, TransferContent, TransferContentBin, updateTransferTargetItem} from "./Data/TransferDocument";
 import ProcessAlert, {ProcessAlertValue} from "../../components/ProcessAlert";
-// Keep MessageStripDesign for ProcessAlertValue severity
-import { MessageStripDesign } from "@ui5/webcomponents-react"; 
-import {ScrollableContent, ScrollableContentBox} from "../../components/ScrollableContent";
+import { MessageStripDesign } from "@ui5/webcomponents-react";
+import {ScrollableContent, ScrollableContentBox} from "@/components";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -23,13 +22,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import BinLocationScanner, {BinLocationScannerRef} from "../../components/BinLocationScanner";
-import {delay}from "../../assets/GlobalConfig";
+import {delay}from "@/assets";
 import Processes, {ProcessesRef} from "../../components/Processes";
-import {ReasonType} from "../../assets/Reasons";
+import {ReasonType} from "@/assets";
 import {updateLine} from "./Data/TransferProcess";
-import TransferTargetItemsDetailsDialog, {TransferTargetItemsDetailRef} from "./components/TransferTargetItemDetails";
-import {Authorization}from "../../assets/Authorization";
-import {useDateTimeFormat} from "../../assets/DateFormat";
+import TransferTargetItemsDetailsDialog, {TransferTargetItemsDetailRef} from "@/pages/Transfer/components/TransferTargetItemDetails";
+import {Authorization}from "@/assets";
+import {useDateTimeFormat} from "@/assets";
 
 export default function TransferProcessTargetItem() {
     const {scanCode, itemCode} = useParams();

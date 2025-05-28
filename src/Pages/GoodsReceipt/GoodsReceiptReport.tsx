@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import ContentTheme from "../../components/ContentTheme";
-import ReportFilterForm from "./components/ReportFilterForm";
-import { fetchDocuments, GoodsReceiptReportFilter } from "./Data/Document";
-import DocumentReportCard from "./components/DocumentReportCard";
+import ReportFilterForm from "@/pages/GoodsReceipt/components/ReportFilterForm";
+import { fetchDocuments, GoodsReceiptReportFilter } from "@/pages/GoodsReceipt/data/Document";
+import DocumentReportCard from "@/pages/GoodsReceipt/components/DocumentReportCard";
 import { useThemeContext } from "@/components/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { Document } from "@/assets/Document";
-import DocumentListDialog, { DocumentListDialogRef } from "./components/DocumentListDialog";
+import DocumentListDialog, { DocumentListDialogRef } from "@/pages/GoodsReceipt/components/DocumentListDialog";
 
 export default function GoodsReceiptReport() {
     const { loading, setLoading, setError } = useThemeContext();

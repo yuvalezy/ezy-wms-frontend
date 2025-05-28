@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {ThemeContextProvider} from "./components/ThemeContext";
+import {ThemeContextProvider} from "@/components";
 import './i18n';
 import { ThemeProvider } from '@ui5/webcomponents-react';
 

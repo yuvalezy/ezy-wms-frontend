@@ -2,7 +2,7 @@ import logo from "../logo.svg";
 import React from "react";
 import { Link } from 'react-router-dom';
 import ContentTheme from "@/components/ContentTheme";
-import { AlertCircle } from "lucide-react"; // For an icon
+import { AlertCircle } from "lucide-react";
 
 export default function Unauthorized() {
     return (

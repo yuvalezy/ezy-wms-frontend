@@ -1,12 +1,12 @@
 import React, {useEffect, useRef, useState} from "react";
 import ContentTheme from "../../components/ContentTheme";
-import {fetchDocuments,} from "./Data/Document";
+import {fetchDocuments,} from "@/pages/GoodsReceipt/data/Document";
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "@/components/ThemeContext";
 import {Status} from "@/assets/Common";
 import {Document} from "@/assets/Document";
-import DocumentCard from "./components/DocumentCard";
-import DocumentListDialog, {DocumentListDialogRef} from "./components/DocumentListDialog";
+import DocumentListDialog, {DocumentListDialogRef} from "@/pages/GoodsReceipt/components/DocumentListDialog";
+import DocumentCard from "@/pages/GoodsReceipt/components/DocumentCard";
 
 export default function GoodsReceipt() {
   const {setLoading, setError} = useThemeContext();

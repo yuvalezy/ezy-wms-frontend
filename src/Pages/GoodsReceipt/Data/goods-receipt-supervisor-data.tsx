@@ -5,9 +5,9 @@ import {useThemeContext} from "@/components/ThemeContext";
 import { toast } from "sonner";
 import {Document} from "@/assets/Document";
 import {ObjectAction, Status} from "@/assets/Common";
-import {DocumentListDialogRef} from "../components/DocumentListDialog";
+import {DocumentListDialogRef} from "@/pages/GoodsReceipt/components/DocumentListDialog";
 import {Authorization} from "@/assets/Authorization";
-import {documentAction, fetchDocuments} from "@/pages/GoodsReceipt/Data/Document";
+import {documentAction, fetchDocuments} from "@/pages/GoodsReceipt/data/Document";
 import {globalSettings} from "@/assets/GlobalConfig";
 
 export const useGoodsReceiptSupervisorData = () => {

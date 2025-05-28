@@ -1,14 +1,14 @@
 import React from "react";
-import ContentTheme from "../../components/ContentTheme";
+import ContentTheme from "@/components/ContentTheme";
 import {Link, useNavigate} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {Alert, AlertDescription} from "@/components/ui/alert";
-import GoodsReceiptProcessDifferenceTable from "./components/GoodsReceiptProcessDifferenceTable";
+import GoodsReceiptProcessDifferenceTable from "@/pages/GoodsReceipt/components/GoodsReceiptProcessDifferenceTable";
 import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage} from "@/components/ui/breadcrumb";
 import InfoBox, {InfoBoxValue} from "@/components/InfoBox";
 import {
   useGoodsReceiptProcessDifferenceReportData
-} from "@/pages/GoodsReceipt/Data/goods-receipt-process-difference-report-data";
+} from "@/pages/GoodsReceipt/data/goods-receipt-process-difference-report-data";
 
 export default function GoodsReceiptProcessDifferenceReport() {
   const {t} = useTranslation();

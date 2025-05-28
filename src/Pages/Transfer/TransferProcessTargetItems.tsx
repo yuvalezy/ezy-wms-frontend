@@ -1,13 +1,13 @@
 import ContentTheme from "../../components/ContentTheme";
 import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
-import {useThemeContext} from "../../components/ThemeContext";
+import {useThemeContext} from "@/components";
 import {useTranslation} from "react-i18next";
-import {IsNumeric} from "../../assets/Functions";
-import {useAuth} from "../../components/AppContext";
-import {BarCodeScannerRef} from "../../components/BarCodeScanner";
+import {IsNumeric} from "@/assets";
+import {useAuth} from "@/components";
+import {BarCodeScannerRef} from "@/components";
 import {fetchTransferContent, TransferContent} from "./Data/TransferDocument";
-import {ScrollableContent} from "../../components/ScrollableContent";
+import {ScrollableContent} from "@/components";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
@@ -19,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {SourceTarget} from "../../assets/Common";
+import {SourceTarget} from "@/assets";
 import { ArrowRightCircle } from "lucide-react"; // Icon for select/begin
 
 export default function TransferProcessTargetItems() { // Renamed component

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import {GoodsReceiptAll} from "../Data/Report";
+import {GoodsReceiptAll} from "@/pages/GoodsReceipt/data/Report";
 import {useTranslation} from "react-i18next";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {MetricRow} from "@/components/MetricRow";
-import {formatNumber} from "@/lib/utils"; // Using shadcn Label
+import {formatNumber} from "@/lib/utils";
 
 interface GoodsReceiptAllTableProps {
   data: GoodsReceiptAll[]

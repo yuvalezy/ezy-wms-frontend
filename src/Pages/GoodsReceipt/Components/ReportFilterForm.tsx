@@ -1,7 +1,7 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {BusinessPartner, fetchVendors, useDocumentStatusOptions} from "@/assets/Data";
-import {GoodsReceiptReportFilter} from "../Data/Document";
+import {GoodsReceiptReportFilter} from "@/pages/GoodsReceipt/data/Document";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

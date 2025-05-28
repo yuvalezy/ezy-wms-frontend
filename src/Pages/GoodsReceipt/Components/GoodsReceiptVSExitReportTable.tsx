@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {GoodsReceiptVSExitReportDataLine} from "../Data/Report";
+import {GoodsReceiptVSExitReportDataLine} from "@/pages/GoodsReceipt/data/Report";
 import {useTranslation} from "react-i18next";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import {MetricRow} from "@/components/MetricRow";

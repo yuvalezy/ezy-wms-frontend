@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
-import ContentTheme from "../../components/ContentTheme";
+import ContentTheme from "@/components/ContentTheme";
 import {useTranslation} from "react-i18next";
-import {useThemeContext} from "../../components/ThemeContext";
-import {fetchCountings} from "./Data/Counting";
-import {Counting} from "../../assets/Counting";
-import CountingCard from "./components/CountingCard";
+import {useThemeContext} from "@/components/ThemeContext";
+import {fetchCountings} from "@/pages/Counting/data/Counting";
+import {Counting} from "@/assets/Counting";
+import CountingCard from "@/pages/Counting/components/CountingCard";
 
 export default function CountingList() {
   const {setLoading, setError} = useThemeContext();

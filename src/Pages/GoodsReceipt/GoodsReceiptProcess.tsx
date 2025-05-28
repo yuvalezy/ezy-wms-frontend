@@ -7,7 +7,7 @@ import ProcessAlert, {AlertActionType} from "../../components/ProcessAlert";
 import {ReasonType} from "@/assets/Reasons";
 import Processes from "../../components/Processes";
 import BarCodeScanner from "../../components/BarCodeScanner";
-import {useGoodsReceiptProcessData} from "@/pages/GoodsReceipt/Data/goods-receipt-process-data";
+import {useGoodsReceiptProcessData} from "@/pages/GoodsReceipt/data/goods-receipt-process-data";
 
 export default function GoodsReceiptProcess() {
   const {t} = useTranslation();

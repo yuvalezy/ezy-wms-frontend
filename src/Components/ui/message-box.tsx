@@ -10,7 +10,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import {Button, ButtonProps} from "@/components/ui/button";
+import {Button, buttonVariantTypes} from "@/components/ui/button";
 import { Info, AlertTriangle, CheckCircle, XCircle, HelpCircle, ShieldAlert } from "lucide-react"; // Assuming lucide-react is used
 
 type MessageBoxType = "info" | "warning" | "success" | "error" | "confirm" | "alert";
@@ -27,7 +27,7 @@ interface MessageBoxProps {
   onConfirm?: () => void;
   onCancel?: () => void;
   hideCancel?: boolean;
-  confirmButtonVariant?: ButtonProps["variant"];
+  confirmButtonVariant?: buttonVariantTypes;
   customActions?: React.ReactNode; // For more complex scenarios like "Error with custom action"
 }
 

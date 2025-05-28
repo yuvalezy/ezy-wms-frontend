@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Cookies from 'universal-cookie';
 import { useTranslation } from 'react-i18next';
-import { globalConfig } from '../../assets/GlobalConfig';
+import { globalConfig } from '@/assets';
 
 type LoginFormProps = {
     onSubmit: React.FormEventHandler<HTMLFormElement>;

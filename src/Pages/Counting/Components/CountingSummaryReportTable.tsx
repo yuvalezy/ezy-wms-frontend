@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {CountingSummaryReportLine} from "../Data/Report";
+import {CountingSummaryReportLine} from "@/pages/Counting/data/Report";
 import {useTranslation} from "react-i18next";
 import {
   Table,
@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Label } from "@/components/ui/label"; // Using shadcn Label
+import { Label } from "@/components/ui/label";
 
 interface CountingSummaryReportTableProps {
   data: CountingSummaryReportLine[]

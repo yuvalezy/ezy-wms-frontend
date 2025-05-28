@@ -7,7 +7,7 @@ import {
   fetchGoodsReceiptValidateProcess,
   GoodsReceiptValidateProcess,
   ProcessLineStatus
-} from "@/pages/GoodsReceipt/Data/Report";
+} from "@/pages/GoodsReceipt/data/Report";
 import {IsNumeric} from "@/assets/Functions";
 import {exportToExcel} from "@/utils/excelExport";
 

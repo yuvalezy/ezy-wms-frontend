@@ -11,18 +11,16 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {Input} from "@/components/ui/input";
-import {Label} from "@/components/ui/label";
-import {GoodsReceiptAll} from "../Data/Report";
+import {GoodsReceiptAll} from "@/pages/GoodsReceipt/data/Report";
 import {UnitType} from "@/assets/Common";
 import {formatNumber} from "@/lib/utils";
 import {Card, CardContent} from "@/components/ui/card";
 import {ScrollArea} from "@/components/ui/scroll-area";
-import {Separator} from "@/components/ui/separator";
 
 import {
   GRPOAllDetailProps,
   useGoodsReceiptAllDetailsData
-} from "@/pages/GoodsReceipt/Data/goods-receipt-all-details-data";
+} from "@/pages/GoodsReceipt/data/goods-receipt-all-details-data";
 import {useDateTimeFormat} from "@/assets/DateFormat";
 import InfoBox, {InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
 

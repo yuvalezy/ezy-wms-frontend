@@ -1,8 +1,8 @@
-import {Employee} from "../../../assets/Data";
-import {configUtils, delay, globalConfig} from "../../../assets/GlobalConfig";
-import {GoodsReceiptAllDetailMockup, transferMockup} from "../../../assets/mockup";
+import {Employee} from "@/assets";
+import {configUtils, delay, globalConfig} from "@/assets";
+import {GoodsReceiptAllDetailMockup, transferMockup} from "@/assets";
 import axios from "axios";
-import {DetailUpdateParameters, ObjectAction, SourceTarget, Status} from "../../../assets/Common";
+import {DetailUpdateParameters, ObjectAction, SourceTarget, Status} from "@/assets";
 
 interface TransferAddItemResponse {
     lineID?: number

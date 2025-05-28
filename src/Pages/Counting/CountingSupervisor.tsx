@@ -4,13 +4,13 @@ import ContentTheme from "../../components/ContentTheme";
 import {useThemeContext} from "@/components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {StringFormat} from "@/assets/Functions";
-import {countingAction, fetchCountings} from "./Data/Counting";
+import {countingAction, fetchCountings} from "@/pages/Counting/data/Counting";
 import {Counting} from "@/assets/Counting";
-import CountingCard from "./components/CountingCard";
+import CountingCard from "@/pages/Counting/components/CountingCard";
 import {ObjectAction} from "@/assets/Common";
 import {MessageBox} from "@/components/ui/message-box";
-import CountingForm from "@/pages/Counting/components/CountingForm";
 import { toast } from "sonner";
+import CountingForm from "@/pages/Counting/components/CountingForm";
 
 export default function CountingSupervisor() {
   const {user} = useAuth();

@@ -4,7 +4,7 @@ import {useTranslation} from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {createCounting} from "../Data/Counting";
+import {createCounting} from "@/pages/Counting/data/Counting";
 import {Counting} from "@/assets/Counting";
 import { PlusCircle } from "lucide-react";
 

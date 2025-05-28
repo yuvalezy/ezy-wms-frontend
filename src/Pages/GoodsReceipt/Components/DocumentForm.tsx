@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { createDocument, GoodsReceiptType } from "../Data/Document";
+import { createDocument, GoodsReceiptType } from "@/pages/GoodsReceipt/data/Document";
 import { useThemeContext } from "@/components/ThemeContext";
-import DocumentList, { DocumentListRef } from "./DocumentList";
+import DocumentList, { DocumentListRef } from "@/pages/GoodsReceipt/components/DocumentList";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

@@ -1,11 +1,8 @@
 import React from "react";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {useTranslation} from "react-i18next";
-import {Document, DocumentItem} from "../../../assets/Document";
-import {useDocumentStatusToString} from "../../../assets/DocumentStatusString";
-import {activeStatuses, processStatuses, useHandleOpenOld} from "../Data/GoodsReceiptUtils";
-import {useObjectName} from "../../../assets/ObjectName";
-import {useDateTimeFormat} from "../../../assets/DateFormat";
+import {Document, DocumentItem, useDocumentStatusToString, useObjectName, useDateTimeFormat} from "@/assets";
+import {activeStatuses, processStatuses, useHandleOpenOld} from "@/pages/GoodsReceipt/data/GoodsReceiptUtils";
 import InfoBox, {InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
 import {Separator} from "@/components/ui/separator";
 import {Button} from "@/components/ui/button";

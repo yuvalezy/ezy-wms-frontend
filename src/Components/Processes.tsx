@@ -1,9 +1,8 @@
-import {AlertActionType, ProcessAlertValue} from "../components/ProcessAlert";
+import {AlertActionType, ProcessAlertValue} from "@/components/ProcessAlert";
 import ProcessCancel, {ProcessCancelRef} from "../components/ProcessCancel";
-import {ReasonType} from "../assets/Reasons";
 import ProcessQuantity, {ProcessQuantityRef} from "../components/ProcessQuantity";
 import React, {forwardRef, useImperativeHandle, useRef} from "react";
-import {UpdateLineParameters, UpdateLineReturnValue} from "../assets/Common";
+import {ReasonType, UpdateLineParameters, UpdateLineReturnValue} from "@/assets";
 import ProcessComment, {ProcessCommentRef} from "../components/ProcessComment";
 
 export interface ProcessesRef {

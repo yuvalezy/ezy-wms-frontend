@@ -1,4 +1,4 @@
-import {CSSProperties} from "react";
+import React, {CSSProperties} from "react";
 
 export const ScrollableContent: React.FC<{ children: React.ReactNode }> = ({children}) => {
     return (

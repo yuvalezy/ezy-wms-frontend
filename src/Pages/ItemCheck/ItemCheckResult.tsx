@@ -2,9 +2,9 @@ import React from "react";
 import {ItemCheckResponse} from "./Item";
 import {useTranslation} from "react-i18next";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
-import ItemDetailsList from "./components/ItemDetailsList";
-import BarcodeTable from "./components/BarcodeTable";
-import StockTable from "./components/StockTable";
+import ItemDetailsList from "@/pages/ItemCheck/components/ItemDetailsList";
+import BarcodeTable from "@/pages/ItemCheck/components/BarcodeTable";
+import StockTable from "@/pages/ItemCheck/components/StockTable";
 import {
   Breadcrumb,
   BreadcrumbItem,

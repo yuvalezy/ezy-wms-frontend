@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Status } from "../../../assets/Common";
+import { Status } from "@/assets";
 
 export const activeStatuses = [Status.InProgress, Status.Processing, Status.Finished];
 export const processStatuses = [Status.InProgress, Status.Processing];

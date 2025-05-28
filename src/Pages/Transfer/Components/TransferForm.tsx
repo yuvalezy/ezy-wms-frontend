@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
 import {createTransfer, TransferDocument} from "../Data/TransferDocument";
-import {useThemeContext} from "../../../components/ThemeContext";
+import {useThemeContext} from "@/components";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

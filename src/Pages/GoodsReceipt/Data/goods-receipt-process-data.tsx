@@ -15,7 +15,7 @@ import {
 import {AlertActionType, ProcessAlertValue} from "@/components/ProcessAlert";
 import {ProcessesRef} from "@/components/Processes";
 import {IsNumeric, StringFormat} from "@/assets/Functions";
-import {addItem, updateLine, updateLineQuantity} from "@/pages/GoodsReceipt/Data/GoodsReceiptProcess";
+import {addItem, updateLine, updateLineQuantity} from "@/pages/GoodsReceipt/data/GoodsReceiptProcess";
 import {configUtils, delay} from "@/assets/GlobalConfig";
 import {MessageStripDesign} from "@ui5/webcomponents-react";
 import {DocumentAddItemResponse} from "@/assets/Document";

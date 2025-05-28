@@ -1,8 +1,15 @@
 import axios from "axios";
-import {DocumentAddItemResponse, DocumentUpdateLineQuantityResponse} from "../../../assets/Document";
-import {configUtils, delay, globalConfig} from "../../../assets/GlobalConfig";
-import {addItemResponseMockup, UpdateLineReturnValueMockup} from "../../../assets/mockup";
-import {UnitType, UpdateLineReturnValue} from "../../../assets/Common";
+import {
+  DocumentAddItemResponse,
+  DocumentUpdateLineQuantityResponse,
+  configUtils,
+  delay,
+  globalConfig,
+  addItemResponseMockup,
+  UpdateLineReturnValueMockup,
+  UnitType,
+  UpdateLineReturnValue
+} from "@/assets";
 
 export const addItem = async (
   id: number,
@@ -63,8 +70,7 @@ export const addItem = async (
     );
     if (response.data.errorMessage == null) {
       return response.data;
-    }
-    else {
+    } else {
       throw new Error(response.data.errorMessage);
     }
   } catch (error) {
@@ -73,13 +79,13 @@ export const addItem = async (
   }
 };
 export const updateLine = async ({
-  id,
-  lineID,
-  comment,
-  userName,
-  reason,
-  quantity,
-}: {
+                                   id,
+                                   lineID,
+                                   comment,
+                                   userName,
+                                   reason,
+                                   quantity,
+                                 }: {
   id: number;
   lineID: number;
   comment?: string;
@@ -125,11 +131,11 @@ export const updateLine = async ({
   }
 };
 export const updateLineQuantity = async ({
-                                   id,
-                                   lineID,
-                                   userName,
-                                   quantity,
-                                 }: {
+                                           id,
+                                           lineID,
+                                           userName,
+                                           quantity,
+                                         }: {
   id: number;
   lineID: number;
   userName?: string;
@@ -152,18 +158,18 @@ export const updateLineQuantity = async ({
     const url = `${globalConfig.baseURL}/api/GoodsReceipt/UpdateLineQuantity`;
 
     const response = await axios.post<DocumentUpdateLineQuantityResponse>(
-        url,
-        {
-          id: id,
-          lineID: lineID,
-          userName: userName,
-          quantity: quantity,
+      url,
+      {
+        id: id,
+        lineID: lineID,
+        userName: userName,
+        quantity: quantity,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        }
+      }
     );
 
     return response.data;

@@ -1,11 +1,11 @@
 import axios from "axios";
-import {configUtils, delay, globalConfig} from "../../../assets/GlobalConfig";
+import {configUtils, delay, globalConfig} from "@/assets";
 import {
   GoodsReceiptAllDetailMockup,
   GoodsReceiptMockup,
   goodsReceiptVSExitReportDataMockup
-} from "../../../assets/mockup";
-import {DetailUpdateParameters, UnitType} from "../../../assets/Common";
+} from "@/assets";
+import {DetailUpdateParameters, UnitType} from "@/assets";
 
 export type GoodsReceiptAll = {
   itemCode: string;

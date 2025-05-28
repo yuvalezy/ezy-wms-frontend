@@ -1,7 +1,7 @@
 import ContentTheme from "../../components/ContentTheme";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
-import {useThemeContext} from "../../components/ThemeContext";
+import {useThemeContext} from "@/components";
 import {useTranslation} from "react-i18next";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -10,9 +10,9 @@ import {
   faClipboardList,
 } from '@fortawesome/free-solid-svg-icons';
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import {IsNumeric, StringFormat} from "../../assets/Functions";
+import {IsNumeric, StringFormat} from "@/assets";
 import {getProcessInfo, transferAction} from "./Data/TransferDocument";
-import {useAuth} from "../../components/AppContext";
+import {useAuth} from "@/components";
 import { toast } from "sonner";
 
 export default function TransferProcess() {

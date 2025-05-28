@@ -1,6 +1,6 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {useAuth} from "../components/AppContext";
+import {useAuth} from "@/components";
 import {useTranslation} from "react-i18next";
 import ContentTheme from "../components/ContentTheme";
 import {useMenus, MenuItem} from "@/assets/Menus";

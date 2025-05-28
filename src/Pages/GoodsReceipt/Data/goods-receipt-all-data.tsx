@@ -2,12 +2,11 @@ import {useTranslation} from "react-i18next";
 import {useEffect, useRef, useState} from "react";
 import {useParams} from "react-router-dom";
 import {useThemeContext} from "@/components/ThemeContext";
-import {fetchGoodsReceiptReportAll, GoodsReceiptAll, updateGoodsReceiptReport} from "@/pages/GoodsReceipt/Data/Report";
+import {fetchGoodsReceiptReportAll, GoodsReceiptAll, updateGoodsReceiptReport} from "@/pages/GoodsReceipt/data/Report";
 import {IsNumeric} from "@/assets/Functions";
 import {exportToExcel} from "@/utils/excelExport";
 import {DetailUpdateParameters} from "@/assets/Common";
-
-import {GRPOAllDetailRef} from "@/pages/GoodsReceipt/Data/goods-receipt-all-details-data";
+import {GRPOAllDetailRef} from "@/pages/GoodsReceipt/data/goods-receipt-all-details-data";
 
 export const useGoodsReceiptAllData = () => {
   const {t} = useTranslation();

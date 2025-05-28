@@ -8,11 +8,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
+import { ScrollArea, Separator } from "@/components/ui";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import {Item} from "../assets/Common";
+import {Item} from "@/assets";
 
 export interface BoxConfirmationDialogRef {
     show: (show: boolean) => void;
@@ -71,7 +70,7 @@ const BoxConfirmationDialog = forwardRef((props: BoxConfirmationDialogProps, ref
                                             </span>
                                         </div>
                                     </div>
-                                    {i < (props.items.length - 1) && <Separator className="my-2" />}
+                                    {props.items && i < (props.items.length - 1) && <Separator className="my-2" />}
                                 </React.Fragment>
                             ))}
                         </div>

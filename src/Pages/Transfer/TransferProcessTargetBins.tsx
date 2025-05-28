@@ -1,7 +1,7 @@
 import ContentTheme from "../../components/ContentTheme";
 import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
-import {useThemeContext} from "../../components/ThemeContext";
+import {useThemeContext} from "@/components";
 import {useTranslation} from "react-i18next";
 import {
   Table,
@@ -12,23 +12,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Progress } from "@/components/ui/progress";
-import {IsNumeric, StringFormat} from "../../assets/Functions";
-import {useAuth} from "../../components/AppContext";
-import {BinLocation, Item, SourceTarget} from "../../assets/Common";
+import {IsNumeric, StringFormat} from "@/assets";
+import {useAuth} from "@/components";
+import {BinLocation, Item, SourceTarget} from "@/assets";
 import BarCodeScanner, {BarCodeScannerRef} from "../../components/BarCodeScanner";
 import {addItem, fetchTransferContent, TransferContent} from "./Data/TransferDocument";
 import BinLocationScanner from "../../components/BinLocationScanner";
-import {delay} from "../../assets/GlobalConfig";
-// Keep MessageStripDesign for ProcessAlertValue severity
-import { MessageStripDesign } from "@ui5/webcomponents-react"; 
+import {delay} from "@/assets";
+import { MessageStripDesign } from "@ui5/webcomponents-react";
 import ProcessAlert, {ProcessAlertValue} from "../../components/ProcessAlert";
-import {ScrollableContent, ScrollableContentBox} from "../../components/ScrollableContent";
-import {ReasonType}from "../../assets/Reasons";
+import {ScrollableContent, ScrollableContentBox} from "@/components";
+import {ReasonType}from "@/assets";
 import Processes, {ProcessesRef} from "../../components/Processes";
 import {updateLine} from "./Data/TransferProcess";
-import {useDateTimeFormat} from "../../assets/DateFormat";
+import {useDateTimeFormat} from "@/assets";
 
 export default function TransferProcessTargetBins() {
     const {scanCode} = useParams();

@@ -5,10 +5,10 @@ import {
     PickingDocumentDetail,
     PickingDocumentDetailItem,
     PickStatus
-} from "@/pages/Picking/Data/PickingDocument";
+} from "@/pages/Picking/data/PickingDocument";
 import {DocumentAddItemResponse, ProcessResponse} from "./Document";
 import {Counting, CountingContent} from "./Counting";
-import {GoodsReceiptAll, GoodsReceiptAllDetail} from "@/pages/GoodsReceipt/Data/Report";
+import {GoodsReceiptAll, GoodsReceiptAllDetail, GoodsReceiptVSExitReportData} from "@/pages/GoodsReceipt/data/Report";
 import {TransferDocument} from "@/pages/Transfer/Data/TransferDocument";
 import {TransferAddItemResponse} from "@/pages/Transfer/Data/TransferProcess";
 import {ItemCheckResponse, ItemStockResponse} from "@/pages/ItemCheck/Item";
@@ -84,7 +84,7 @@ export const itemStockMockup: ItemStockResponse[] = [
     {binCode: "BIN-C01", quantity: 30},
 ];
 
-export const goodsReceiptVSExitReportDataMockup = [
+export const goodsReceiptVSExitReportDataMockup : GoodsReceiptVSExitReportData[] = [
     {
         objectType: 1,
         number: 123,
@@ -96,12 +96,16 @@ export const goodsReceiptVSExitReportDataMockup = [
                 itemName: "Sample Item 1",
                 openQuantity: 10,
                 quantity: 5,
+                numInBuy: 12,
+                purPackUn: 4
             },
             {
                 itemCode: "DEF456",
                 itemName: "Sample Item 2",
                 openQuantity: 20,
                 quantity: 15,
+                numInBuy: 12,
+                purPackUn: 4
             },
         ],
     },

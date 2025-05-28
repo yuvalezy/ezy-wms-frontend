@@ -6,21 +6,25 @@ import {
   GoodsReceiptValidateProcessLine,
   GoodsReceiptValidateProcessLineDetails,
   ProcessLineStatus,
-} from "../Data/Report";
+} from "@/pages/GoodsReceipt/data/Report";
 import {useTranslation} from "react-i18next";
-import {useThemeContext} from "../../../components/ThemeContext";
-import {useDateTimeFormat} from "../../../assets/DateFormat";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"; // Added DialogDescription
-import { Label } from "@/components/ui/label";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import {UnitType} from "../../../assets/Common";
+import {useThemeContext} from "@/components/ThemeContext";
+import {useDateTimeFormat} from "@/assets/DateFormat";
+import {Button} from "@/components/ui/button";
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from "@/components/ui/dialog"; // Added DialogDescription
+import {ScrollArea} from "@/components/ui/scroll-area";
+import {UnitType} from "@/assets/Common";
 import {formatNumber} from "@/lib/utils";
 import {MetricRow} from "@/components/MetricRow";
 import InfoBox, {InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
-// import {formatValueByPack} from "../../../assets/Quantities"; // Assuming this might be useful later or can be removed
 
 // Interface for the new quantity row structure
 interface QuantityRowProps {
@@ -59,13 +63,37 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
     // Returns text style properties for the status label
     switch (status) {
       case ProcessLineStatus.OK:
-        return { color: '#155724', backgroundColor: '#d4edda', padding: '2px 6px', borderRadius: '4px', display: 'inline-block'}; // Green
+        return {
+          color: '#155724',
+          backgroundColor: '#d4edda',
+          padding: '2px 6px',
+          borderRadius: '4px',
+          display: 'inline-block'
+        }; // Green
       case ProcessLineStatus.LessScan: // More scanned than ordered
-        return { color: '#721c24', backgroundColor: '#f8d7da', padding: '2px 6px', borderRadius: '4px', display: 'inline-block'}; // Red
+        return {
+          color: '#721c24',
+          backgroundColor: '#f8d7da',
+          padding: '2px 6px',
+          borderRadius: '4px',
+          display: 'inline-block'
+        }; // Red
       case ProcessLineStatus.MoreScan: // Less scanned than ordered
-        return { color: '#856404', backgroundColor: '#fff3cd', padding: '2px 6px', borderRadius: '4px', display: 'inline-block'}; // Yellow
+        return {
+          color: '#856404',
+          backgroundColor: '#fff3cd',
+          padding: '2px 6px',
+          borderRadius: '4px',
+          display: 'inline-block'
+        }; // Yellow
       case ProcessLineStatus.ClosedLine:
-        return { color: '#0c5460', backgroundColor: '#d1ecf1', padding: '2px 6px', borderRadius: '4px', display: 'inline-block'}; // Light Blue
+        return {
+          color: '#0c5460',
+          backgroundColor: '#d1ecf1',
+          padding: '2px 6px',
+          borderRadius: '4px',
+          display: 'inline-block'
+        }; // Light Blue
       default:
         return {padding: '2px 6px', borderRadius: '4px', display: 'inline-block'}; // Default style
     }
@@ -212,20 +240,21 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
                         scannedQuantity /= selectedLineForDetail.purPackUn;
                       }
 
-                      const displayUnit = unit === UnitType.Unit ? t('unit') :
-                        unit === UnitType.Dozen ? (selectedLineForDetail?.buyUnitMsr || t('purPackUn')) :
+                      const displayUnit = selectedLineForDetail?.unit === UnitType.Unit ? t('unit') :
+                        selectedLineForDetail?.unit === UnitType.Dozen ? (selectedLineForDetail?.buyUnitMsr || t('purPackUn')) :
                           (selectedLineForDetail?.purPackMsr || t('packUn'));
                       return (
-                        <Card key={`${detail.timeStamp}-${detail.employee}-${detail.scannedQuantity}`}> {/* Adjusted key for more uniqueness */}
+                        <Card
+                          key={`${detail.timeStamp}-${detail.employee}-${detail.scannedQuantity}`}> {/* Adjusted key for more uniqueness */}
                           <CardContent>
                             <SecondaryInfoBox>
-                              <InfoBoxValue label={t('date')} value={dateFormat(timeStamp)} />
-                              <InfoBoxValue label={t('time')} value={timeFormat(timeStamp)} />
-                              <InfoBoxValue label={t('employee')} value={detail.employee} />
-                              <InfoBoxValue label={t('unit')} value={displayUnit} />
+                              <InfoBoxValue label={t('date')} value={dateFormat(timeStamp)}/>
+                              <InfoBoxValue label={t('time')} value={timeFormat(timeStamp)}/>
+                              <InfoBoxValue label={t('employee')} value={detail.employee}/>
+                              <InfoBoxValue label={t('unit')} value={displayUnit}/>
                             </SecondaryInfoBox>
                             <InfoBox>
-                              <InfoBoxValue label={t('scannedQuantity')} value={formatNumber(scannedQuantity, 2)} />
+                              <InfoBoxValue label={t('scannedQuantity')} value={formatNumber(scannedQuantity, 2)}/>
                             </InfoBox>
                           </CardContent>
                         </Card>

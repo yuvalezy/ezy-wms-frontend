@@ -1,7 +1,7 @@
 import React from "react";
 import {useAuth} from "@/components/AppContext";
 import {useTranslation} from "react-i18next";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes, faFileAlt, faTruckLoading, faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
@@ -10,7 +10,7 @@ import { useObjectName } from "@/assets/ObjectName";
 import { Authorization } from "@/assets/Authorization";
 import { useDocumentStatusToString } from "@/assets/DocumentStatusString";
 import { Status } from "@/assets/Common";
-import { activeStatuses, processStatuses, useHandleOpenOld } from "../Data/GoodsReceiptUtils";
+import { activeStatuses, processStatuses, useHandleOpenOld } from "@/pages/GoodsReceipt/data/GoodsReceiptUtils";
 import { useDateTimeFormat } from "@/assets/DateFormat";
 import { Separator } from "@/components/ui/separator";
 import InfoBox, {InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";

@@ -1,10 +1,10 @@
 import React from "react";
 import ContentTheme from "../../components/ContentTheme";
-import GoodsReceiptAllReportTable from "./components/GoodsReceiptAllTable";
+import GoodsReceiptAllReportTable from "@/pages/GoodsReceipt/components/GoodsReceiptAllTable";
 import {useTranslation} from "react-i18next";
 import {Alert, AlertDescription} from "@/components/ui/alert"; // Added AlertTitle
-import GoodsReceiptAllDialog from "./components/GoodsReceiptAllDetail";
-import {useGoodsReceiptAllData} from "@/pages/GoodsReceipt/Data/goods-receipt-all-data";
+import GoodsReceiptAllDialog from "@/pages/GoodsReceipt/components/GoodsReceiptAllDetail";
+import {useGoodsReceiptAllData} from "@/pages/GoodsReceipt/data/goods-receipt-all-data";
 import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage} from "@/components/ui/breadcrumb";
 import {useNavigate} from "react-router-dom";
 
@@ -13,7 +13,6 @@ export default function GoodsReceiptReportAll() {
   const navigate = useNavigate();
   const {
     data,
-    title,
     id,
     detailRef,
     handleExportExcel,

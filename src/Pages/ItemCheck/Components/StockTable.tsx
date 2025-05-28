@@ -4,7 +4,7 @@ import {ItemCheckResponse, itemStock, ItemStockResponse} from "../Item";
 import {useThemeContext} from "@/components/ThemeContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MetricRow } from "@/components/MetricRow";
-import {formatNumber} from "@/lib/utils"; // Assuming MetricRow is in this path
+import {formatNumber} from "@/lib/utils";
 
 interface StockTableProps {
   result: ItemCheckResponse

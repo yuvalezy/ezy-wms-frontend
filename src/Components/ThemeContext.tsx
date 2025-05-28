@@ -1,5 +1,5 @@
 import React, {createContext, useCallback, useContext, useState} from "react";
-import { Loader2 } from "lucide-react"; // Import Loader2
+import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 const ThemeContext = createContext<{

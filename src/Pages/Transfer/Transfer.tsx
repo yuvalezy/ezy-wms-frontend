@@ -1,10 +1,10 @@
 import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
-import {useThemeContext} from "../../components/ThemeContext";
-import React, {useEffect, useRef, useState} from "react";
+import {useThemeContext} from "@/components";
+import React, {useEffect, useState} from "react";
 import {fetchTransfers, TransferDocument} from "./Data/TransferDocument";
-import {Status} from "../../assets/Common";
-import TransferCard from "./components/TransferCard";
+import {Status} from "@/assets";
+import TransferCard from "@/pages/Transfer/components/TransferCard";
 
 export default function Transfer() {
     const {setLoading, setError} = useThemeContext();

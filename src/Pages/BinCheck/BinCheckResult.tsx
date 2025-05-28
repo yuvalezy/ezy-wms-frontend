@@ -1,15 +1,13 @@
 import React, {useEffect, useState} from "react";
 import {BinContentResponse} from "./Bins";
 import {useTranslation} from "react-i18next";
-import {useThemeContext} from "../../components/ThemeContext";
-import {Card, CardContent, CardHeader, CardTitle} from "../../components/ui/card";
-import {MetricRow} from "../../components/MetricRow";
-import {formatNumber, wd} from "../../lib/utils";
+import {Card, CardContent} from "@/components";
+import {MetricRow} from "@/components";
+import {formatNumber, wd} from "@/lib/utils";
 import InfoBox, {InfoBoxValue} from "@/components/InfoBox";
 
 export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({content}) => {
   const {t} = useTranslation();
-  const {setLoading, setError} = useThemeContext();
   const [data, setData] = useState<BinContentResponse[]>([]);
 
   useEffect(() => {
