@@ -3,10 +3,10 @@ import {useThemeContext} from "@/components/ThemeContext";
 import {useRef, useState} from "react";
 import {BinLocationScannerRef} from "@/components/BinLocationScanner";
 import {useAuth} from "@/components/AppContext";
-import {binCheck, BinContentResponse} from "@/Pages/BinCheck/Bins";
-import {BinLocation} from "@/Assets/Common";
-import {delay} from "@/Assets/GlobalConfig";
-import {exportToExcel} from "@/Utils/excelExport";
+import {binCheck, BinContentResponse} from "@/pages/BinCheck/Bins";
+import {BinLocation} from "@/assets/Common";
+import {delay} from "@/assets/GlobalConfig";
+import {exportToExcel} from "@/utils/excelExport";
 
 export const useBinCheckData = () => {
   const {t} = useTranslation();

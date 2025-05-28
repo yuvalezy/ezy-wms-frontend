@@ -8,9 +8,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faChartBar } from '@fortawesome/free-solid-svg-icons';
-import {IsNumeric} from "../../Assets/Functions";
+import {IsNumeric} from "../../assets/Functions";
 import {fetchPicking, PickingDocument, PickingDocumentDetail} from "./Data/PickingDocument";
-import {useObjectName} from "../../Assets/ObjectName";
+import {useObjectName} from "../../assets/ObjectName";
 
 export default function PickingProcess() {
     const {idParam} = useParams();

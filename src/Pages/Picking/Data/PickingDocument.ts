@@ -1,8 +1,8 @@
-import {configUtils, delay, globalConfig} from "../../../Assets/GlobalConfig";
-import {addItemResponseMockup, PickingDetailItemsMockup, PickingDetailsMockup, PickingMockup, processResponseMockup} from "../../../Assets/mockup";
+import {configUtils, delay, globalConfig} from "../../../assets/GlobalConfig";
+import {addItemResponseMockup, PickingDetailItemsMockup, PickingDetailsMockup, PickingMockup, processResponseMockup} from "../../../assets/mockup";
 import axios from "axios";
-import {ProcessResponse} from "../../../Assets/Document";
-import {BinLocation} from "../../../Assets/Common";
+import {ProcessResponse} from "../../../assets/Document";
+import {BinLocation} from "../../../assets/Common";
 
 export enum PickStatus {
     Released = "Released",

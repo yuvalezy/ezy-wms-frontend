@@ -10,7 +10,7 @@ import {
   faClipboardList,
 } from '@fortawesome/free-solid-svg-icons';
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import {IsNumeric, StringFormat} from "../../Assets/Functions";
+import {IsNumeric, StringFormat} from "../../assets/Functions";
 import {getProcessInfo, transferAction} from "./Data/TransferDocument";
 import {useAuth} from "../../components/AppContext";
 import { toast } from "sonner";

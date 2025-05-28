@@ -3,7 +3,7 @@ import {useTranslation} from "react-i18next";
 import {useThemeContext} from "../../components/ThemeContext";
 import React, {useEffect, useRef, useState} from "react";
 import {fetchTransfers, TransferDocument} from "./Data/TransferDocument";
-import {Status} from "../../Assets/Common";
+import {Status} from "../../assets/Common";
 import TransferCard from "./components/TransferCard";
 
 export default function Transfer() {

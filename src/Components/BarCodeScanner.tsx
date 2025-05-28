@@ -13,9 +13,9 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core'; // Import IconProp
-import {scanBarcode} from "../Assets/ScanBarcode";
-import {distinctItems, Item, UnitType}from "../Assets/Common";
-import {StringFormat} from "../Assets/Functions";
+import {scanBarcode} from "../assets/ScanBarcode";
+import {distinctItems, Item, UnitType}from "../assets/Common";
+import {StringFormat} from "../assets/Functions";
 import {useThemeContext} from "./ThemeContext";
 import {useTranslation} from "react-i18next";
 import { toast } from "sonner";

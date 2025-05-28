@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { Status } from "../../../Assets/Common";
+import { Status } from "../../../assets/Common";
 
 export const activeStatuses = [Status.InProgress, Status.Processing, Status.Finished];
 export const processStatuses = [Status.InProgress, Status.Processing];
 
-export const useHandleOpen = () => {
+export const useHandleOpenOld = () => {
     const navigate = useNavigate();
     return (e: React.MouseEvent<HTMLElement>, type: string, id: number) => {
         e.preventDefault();

@@ -1,7 +1,7 @@
-import {configUtils, delay, globalConfig} from "../../../Assets/GlobalConfig";
+import {configUtils, delay, globalConfig} from "../../../assets/GlobalConfig";
 import axios from "axios";
-import {UpdateLineReturnValueMockup} from "../../../Assets/mockup";
-import {UnitType, UpdateLineParameters, UpdateLineReturnValue} from "../../../Assets/Common";
+import {UpdateLineReturnValueMockup} from "../../../assets/mockup";
+import {UnitType, UpdateLineParameters, UpdateLineReturnValue} from "../../../assets/Common";
 
 export type Process = {
   hello: number

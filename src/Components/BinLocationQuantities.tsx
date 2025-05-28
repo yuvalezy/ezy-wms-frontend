@@ -1,4 +1,4 @@
-import {BinLocation} from "../Assets/Common";
+import {BinLocation} from "../assets/Common";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Label } from "@/components/ui/label";
 import React from "react";

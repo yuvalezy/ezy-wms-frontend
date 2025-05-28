@@ -10,10 +10,10 @@ import {useThemeContext} from "../../components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {useObjectName} from "../../Assets/ObjectName";
-import {IsNumeric} from "../../Assets/Functions";
+import {useObjectName} from "../../assets/ObjectName";
+import {IsNumeric} from "../../assets/Functions";
 import GoodsReceiptProcessDifferenceTable from "./components/GoodsReceiptProcessDifferenceTable";
-import {exportToExcel} from "../../Utils/excelExport";
+import {exportToExcel} from "../../utils/excelExport";
 
 export default function GoodsReceiptProcessDifferenceReport() {
     const [id, setID] = useState<number | null>();

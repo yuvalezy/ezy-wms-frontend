@@ -3,7 +3,7 @@ import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "../../components/ThemeContext";
 import {fetchCountings} from "./Data/Counting";
-import {Counting} from "../../Assets/Counting";
+import {Counting} from "../../assets/Counting";
 import CountingCard from "./components/CountingCard";
 
 export default function CountingList() {

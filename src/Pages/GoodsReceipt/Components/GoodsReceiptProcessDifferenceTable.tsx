@@ -9,15 +9,15 @@ import {
 } from "../Data/Report";
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "../../../components/ThemeContext";
-import {useDateTimeFormat} from "../../../Assets/DateFormat";
+import {useDateTimeFormat} from "../../../assets/DateFormat";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"; // Added DialogDescription
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import {UnitType} from "../../../Assets/Common";
+import {UnitType} from "../../../assets/Common";
 import {formatNumber} from "@/lib/utils";
-// import {formatValueByPack} from "../../../Assets/Quantities"; // Assuming this might be useful later or can be removed
+// import {formatValueByPack} from "../../../assets/Quantities"; // Assuming this might be useful later or can be removed
 
 // Interface for the new quantity row structure
 interface QuantityRowProps {

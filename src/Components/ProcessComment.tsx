@@ -2,7 +2,7 @@ import React, {useState, forwardRef, useImperativeHandle, useRef} from "react";
 import {ProcessAlertValue} from "../components/ProcessAlert"; // Corrected path
 import {useThemeContext} from "./ThemeContext";
 import {useTranslation} from "react-i18next";
-import {UpdateLineParameters, UpdateLineReturnValue} from "../Assets/Common";
+import {UpdateLineParameters, UpdateLineReturnValue} from "../assets/Common";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,

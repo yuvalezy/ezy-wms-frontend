@@ -9,7 +9,7 @@ import {Label} from "@/components/ui/label";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCheck, faExclamationTriangle} from '@fortawesome/free-solid-svg-icons';
-import {useItemCheckData} from "@/Pages/ItemCheck/item-check-data";
+import {useItemCheckData} from "@/pages/ItemCheck/item-check-data";
 
 export default function ItemCheck() {
   const {t} = useTranslation();

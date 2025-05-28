@@ -1,8 +1,8 @@
 import axios from "axios";
-import {DocumentAddItemResponse, DocumentUpdateLineQuantityResponse} from "../../../Assets/Document";
-import {configUtils, delay, globalConfig} from "../../../Assets/GlobalConfig";
-import {addItemResponseMockup, UpdateLineReturnValueMockup} from "../../../Assets/mockup";
-import {UnitType, UpdateLineReturnValue} from "../../../Assets/Common";
+import {DocumentAddItemResponse, DocumentUpdateLineQuantityResponse} from "../../../assets/Document";
+import {configUtils, delay, globalConfig} from "../../../assets/GlobalConfig";
+import {addItemResponseMockup, UpdateLineReturnValueMockup} from "../../../assets/mockup";
+import {UnitType, UpdateLineReturnValue} from "../../../assets/Common";
 
 export const addItem = async (
   id: number,

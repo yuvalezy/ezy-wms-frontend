@@ -5,11 +5,11 @@ import {
   fetchGoodsReceiptVSExitReport,
   GoodsReceiptVSExitReportData,
 } from "./Data/Report";
-import GoodsReceiptVSExitReportTable from "./Components/GoodsReceiptVSExitReportTable"; // Corrected casing
+import GoodsReceiptVSExitReportTable from "./components/GoodsReceiptVSExitReportTable"; // Corrected casing
 import { useThemeContext } from "../../components/ThemeContext";
 import { useTranslation } from "react-i18next";
-import {useObjectName} from "../../Assets/ObjectName";
-import {IsNumeric} from "../../Assets/Functions";
+import {useObjectName} from "../../assets/ObjectName";
+import {IsNumeric} from "../../assets/Functions";
 import {
     Accordion,
     AccordionContent,

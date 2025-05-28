@@ -10,8 +10,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useTranslation } from "react-i18next";
-import { Document } from '@/Assets/Document'; // Assuming this type is correct
-import { useObjectName } from "@/Assets/ObjectName";
+import { Document } from '@/assets/Document'; // Assuming this type is correct
+import { useObjectName } from "@/assets/ObjectName";
 
 export interface DocumentListDialogRef {
     show: () => void;

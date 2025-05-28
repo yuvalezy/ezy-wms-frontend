@@ -1,6 +1,6 @@
 import axios from "axios";
-import {configUtils, delay, globalConfig} from "../../Assets/GlobalConfig";
-import {binCheckMockup} from "@/Assets/mockup";
+import {configUtils, delay, globalConfig} from "../../assets/GlobalConfig";
+import {binCheckMockup} from "@/assets/mockup";
 
 export interface BinContentResponse {
     itemCode: string;

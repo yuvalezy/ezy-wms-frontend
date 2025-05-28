@@ -3,9 +3,9 @@ import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
 import {useThemeContext} from "../../components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {IsNumeric, StringFormat} from "../../Assets/Functions";
+import {IsNumeric, StringFormat} from "../../assets/Functions";
 import {useAuth} from "../../components/AppContext";
-import {BinLocation, DetailUpdateParameters, SourceTarget} from "../../Assets/Common";
+import {BinLocation, DetailUpdateParameters, SourceTarget} from "../../assets/Common";
 import {addItem, fetchTransferContent, TransferContent, TransferContentBin, updateTransferTargetItem} from "./Data/TransferDocument";
 import ProcessAlert, {ProcessAlertValue} from "../../components/ProcessAlert";
 // Keep MessageStripDesign for ProcessAlertValue severity
@@ -23,13 +23,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import BinLocationScanner, {BinLocationScannerRef} from "../../components/BinLocationScanner";
-import {delay}from "../../Assets/GlobalConfig";
+import {delay}from "../../assets/GlobalConfig";
 import Processes, {ProcessesRef} from "../../components/Processes";
-import {ReasonType} from "../../Assets/Reasons";
+import {ReasonType} from "../../assets/Reasons";
 import {updateLine} from "./Data/TransferProcess";
-import TransferTargetItemsDetailsDialog, {TransferTargetItemsDetailRef} from "./Components/TransferTargetItemDetails";
-import {Authorization}from "../../Assets/Authorization";
-import {useDateTimeFormat} from "../../Assets/DateFormat";
+import TransferTargetItemsDetailsDialog, {TransferTargetItemsDetailRef} from "./components/TransferTargetItemDetails";
+import {Authorization}from "../../assets/Authorization";
+import {useDateTimeFormat} from "../../assets/DateFormat";
 
 export default function TransferProcessTargetItem() {
     const {scanCode, itemCode} = useParams();

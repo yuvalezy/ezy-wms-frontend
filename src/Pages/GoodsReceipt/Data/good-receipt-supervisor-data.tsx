@@ -3,12 +3,12 @@ import {useAuth} from "@/components/AppContext";
 import {useEffect, useRef, useState} from "react";
 import {useThemeContext} from "@/components/ThemeContext";
 import { toast } from "sonner";
-import {Document} from "@/Assets/Document";
-import {ObjectAction, Status} from "@/Assets/Common";
+import {Document} from "@/assets/Document";
+import {ObjectAction, Status} from "@/assets/Common";
 import {DocumentListDialogRef} from "../components/DocumentListDialog";
-import {Authorization} from "@/Assets/Authorization";
-import {documentAction, fetchDocuments} from "@/Pages/GoodsReceipt/Data/Document";
-import {globalSettings} from "@/Assets/GlobalConfig";
+import {Authorization} from "@/assets/Authorization";
+import {documentAction, fetchDocuments} from "@/pages/GoodsReceipt/Data/Document";
+import {globalSettings} from "@/assets/GlobalConfig";
 
 export const useGoodReceiptSupervisorData = () => {
   const {t} = useTranslation();

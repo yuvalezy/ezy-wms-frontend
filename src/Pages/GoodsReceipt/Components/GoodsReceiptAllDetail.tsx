@@ -23,8 +23,8 @@ import {
 } from "@/components/ui/table";
 import {fetchGoodsReceiptReportAllDetails, GoodsReceiptAll, GoodsReceiptAllDetail} from "../Data/Report";
 import {fetchDocuments} from "../Data/Document";
-import {DetailUpdateParameters, Status, UnitType} from "../../../Assets/Common";
-import {useDateTimeFormat} from "../../../Assets/DateFormat";
+import {DetailUpdateParameters, Status, UnitType} from "../../../assets/Common";
+import {useDateTimeFormat} from "../../../assets/DateFormat";
 import {formatNumber} from "@/lib/utils";
 
 export interface GRPOAllDetailRef {

@@ -5,14 +5,14 @@ import {
     PickingDocumentDetail,
     PickingDocumentDetailItem,
     PickStatus
-} from "@/Pages/Picking/Data/PickingDocument";
+} from "@/pages/Picking/Data/PickingDocument";
 import {DocumentAddItemResponse, ProcessResponse} from "./Document";
 import {Counting, CountingContent} from "./Counting";
-import {GoodsReceiptAll, GoodsReceiptAllDetail} from "@/Pages/GoodsReceipt/Data/Report";
-import {TransferDocument} from "@/Pages/Transfer/Data/TransferDocument";
-import {TransferAddItemResponse} from "@/Pages/Transfer/Data/TransferProcess";
-import {ItemCheckResponse, ItemStockResponse} from "@/Pages/ItemCheck/Item";
-import {BinContentResponse} from "@/Pages/BinCheck/Bins";
+import {GoodsReceiptAll, GoodsReceiptAllDetail} from "@/pages/GoodsReceipt/Data/Report";
+import {TransferDocument} from "@/pages/Transfer/Data/TransferDocument";
+import {TransferAddItemResponse} from "@/pages/Transfer/Data/TransferProcess";
+import {ItemCheckResponse, ItemStockResponse} from "@/pages/ItemCheck/Item";
+import {BinContentResponse} from "@/pages/BinCheck/Bins";
 
 enum UpdateLineReturnValue {
     Status = "Status",

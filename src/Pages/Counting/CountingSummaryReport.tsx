@@ -4,10 +4,10 @@ import {useThemeContext} from "../../components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {useParams} from "react-router-dom";
-import {IsNumeric} from "../../Assets/Functions";
+import {IsNumeric} from "../../assets/Functions";
 import {CountingSummaryReportData, fetchCountingSummaryReport} from "./Data/Report";
 import CountingSummaryReportTable from "./components/CountingSummaryReportTable";
-import {exportToExcel} from "../../Utils/excelExport";
+import {exportToExcel} from "../../utils/excelExport";
 
 export default function CountingSummaryReport() {
     const [id, setID] = useState<number | null>();

@@ -5,7 +5,7 @@ import { fetchDocuments, GoodsReceiptReportFilter } from "./Data/Document";
 import DocumentReportCard from "./components/DocumentReportCard";
 import { useThemeContext } from "../../components/ThemeContext";
 import { useTranslation } from "react-i18next";
-import { Document } from "../../Assets/Document";
+import { Document } from "../../assets/Document";
 import DocumentListDialog, { DocumentListDialogRef } from "./components/DocumentListDialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

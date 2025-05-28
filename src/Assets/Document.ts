@@ -1,5 +1,5 @@
 import {BusinessPartner, Employee} from "./Data";
-import {GoodsReceiptType} from "../Pages/GoodsReceipt/Data/Document";
+import {GoodsReceiptType} from "../pages/GoodsReceipt/Data/Document";
 import {Status, UpdateLineReturnValue} from "./Common";
 
 export type Document = {

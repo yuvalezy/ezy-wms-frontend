@@ -1,8 +1,8 @@
-import {configUtils, delay, globalConfig} from "../../../Assets/GlobalConfig";
-import {countingMockup, documentMockup} from "../../../Assets/mockup";
+import {configUtils, delay, globalConfig} from "../../../assets/GlobalConfig";
+import {countingMockup, documentMockup} from "../../../assets/mockup";
 import axios from "axios";
-import {Counting, CountingContent, OrderBy} from "../../../Assets/Counting";
-import {ObjectAction, Status, User} from "../../../Assets/Common";
+import {Counting, CountingContent, OrderBy} from "../../../assets/Counting";
+import {ObjectAction, Status, User} from "../../../assets/Common";
 
 export const createCounting = async (
     name: string

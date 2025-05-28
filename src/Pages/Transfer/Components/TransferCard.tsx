@@ -5,11 +5,11 @@ import {useTranslation} from "react-i18next";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import {Authorization} from "@/Assets/Authorization";
-import {useDocumentStatusToString} from "@/Assets/DocumentStatusString";
+import {Authorization} from "@/assets/Authorization";
+import {useDocumentStatusToString} from "@/assets/DocumentStatusString";
 import {TransferDocument} from "../Data/TransferDocument";
-import {Status} from "@/Assets/Common";
-import {useDateTimeFormat} from "@/Assets/DateFormat";
+import {Status} from "@/assets/Common";
+import {useDateTimeFormat} from "@/assets/DateFormat";
 import { CheckCircle, XCircle } from "lucide-react";
 import {formatNumber} from "@/lib/utils";
 

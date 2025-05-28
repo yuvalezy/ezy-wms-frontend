@@ -5,14 +5,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes, faFileAlt, faTruckLoading, faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
-import { Document } from "@/Assets/Document";
-import { useObjectName } from "@/Assets/ObjectName";
-import { Authorization } from "@/Assets/Authorization";
-import { useDocumentStatusToString } from "@/Assets/DocumentStatusString";
-import { Status } from "@/Assets/Common";
-import { activeStatuses, processStatuses, useHandleOpen } from "../Data/GoodsReceiptUtils";
-import { useDateTimeFormat } from "@/Assets/DateFormat";
+import {Document, DocumentItem} from "@/assets/Document";
+import { useObjectName } from "@/assets/ObjectName";
+import { Authorization } from "@/assets/Authorization";
+import { useDocumentStatusToString } from "@/assets/DocumentStatusString";
+import { Status } from "@/assets/Common";
+import { activeStatuses, processStatuses, useHandleOpenOld } from "../Data/GoodsReceiptUtils";
+import { useDateTimeFormat } from "@/assets/DateFormat";
 import { Separator } from "@/components/ui/separator";
+import InfoBox, {InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
+import {useNavigate} from "react-router-dom";
 
 type DocumentCardProps = {
     doc: Document,
@@ -26,63 +28,38 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ doc, supervisor = false, ac
     const o = useObjectName();
     const { dateFormat } = useDateTimeFormat();
     const { user } = useAuth();
-    const handleOpen = useHandleOpen();
+    const handleOpen = useHandleOpenOld();
+    const navigate = useNavigate();
 
     const handleOpenLink = user?.authorizations?.includes(Authorization.GOODS_RECEIPT);
 
+    const openLink = () => navigate(`/goodsReceipt/${doc.id}`);
+
     const documentStatusToString = useDocumentStatusToString();
 
-    function documentDetailsClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
-        e.preventDefault();
-        docDetails(doc);
+    const formatDocumentsList = (documents: DocumentItem[]) => {
+        return documents.map((value, index) => (
+          `${index > 0 ? ', ' : ''}${o(value.objectType)} #${value.documentNumber}`
+        )).join('');
     }
-
     return (
-        <Card className="mb-4 shadow-md">
-            <CardHeader className="pb-2">
-                <CardTitle className="text-lg font-bold">
-                    {doc.name ? `${t('id')} : ${doc.name}` : `${t('number')}: ${doc.id}`}
-                </CardTitle>
-            </CardHeader>
+        <Card>
             <CardContent className="text-sm">
-                <div className="grid grid-cols-2 gap-2">
-                    <div>
-                        <strong>{t('number')}:</strong> {handleOpenLink ? (
-                            <a href="#" onClick={(e) => handleOpen(e, 'open', doc.id)} className="text-blue-600 hover:underline">
-                                {doc.id}
-                            </a>
-                        ) : (
-                            doc.id
-                        )}
-                    </div>
+                <InfoBox>
+                    {doc.name && <InfoBoxValue label={t('id')} value={doc.name}/>}
+                    <InfoBoxValue onClick={handleOpenLink ? openLink : undefined} label={t('number')} value={doc.id} />
                     {doc.businessPartner && (
-                        <div>
-                            <strong>{t('vendor')}:</strong> {doc.businessPartner?.name ?? doc.businessPartner?.code}
-                        </div>
+                        <InfoBoxValue label={t('vendor')} value={doc.businessPartner.name ?? doc.businessPartner.code} />
                     )}
-                    {doc.specificDocuments && doc.specificDocuments.length > 0 && (
-                        <div className="col-span-2">
-                            <strong>{t('documentsList')}:</strong>{' '}
-                            <a href="#" onClick={documentDetailsClick} className="text-blue-600 hover:underline">
-                                {doc.specificDocuments.map((value, index) => (
-                                    <React.Fragment key={index}>
-                                        {index > 0 && ', '}
-                                        {o(value.objectType)} #{value.documentNumber}
-                                    </React.Fragment>
-                                ))}
-                            </a>
-                        </div>
+                    {doc.specificDocuments && doc.specificDocuments?.length > 0 && (
+                      <InfoBoxValue label={t('documentsList')} value={formatDocumentsList(doc.specificDocuments)} onClick={() => docDetails(doc)}/>
                     )}
-                    <div>
-                        <strong>{t('docDate')}:</strong> {dateFormat(new Date(doc.date))}
-                    </div>
-                    <div>
-                        <strong>{t('createdBy')}:</strong> {doc.employee.name}
-                    </div>
-                    <div>
-                        <strong>{t('status')}:</strong> {documentStatusToString(doc.status)}
-                    </div>
-                </div>
+                </InfoBox>
+                <SecondaryInfoBox>
+                    <InfoBoxValue label={t('docDate')} value={dateFormat(new Date(doc.date))}/>
+                    <InfoBoxValue label={t('createdAt')} value={doc.employee.name}/>
+                    <InfoBoxValue label={t('createdBy')} value={documentStatusToString(doc.status)} />
+                </SecondaryInfoBox>
 
                 {supervisor && (
                     <>

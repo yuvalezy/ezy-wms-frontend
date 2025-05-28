@@ -4,8 +4,8 @@ import {useEffect, useState} from "react";
 import {fetchPickings, PickingDocument, processPicking} from "./Data/PickingDocument";
 import {useThemeContext} from "@/components/ThemeContext";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import {StringFormat} from "@/Assets/Functions";
-import PickingCard from "@/Pages/Picking/Components/PickingCard";
+import {StringFormat} from "@/assets/Functions";
+import PickingCard from "@/pages/Picking/components/PickingCard";
 import { toast } from "sonner";
 
 export default function PickingSupervisor() {

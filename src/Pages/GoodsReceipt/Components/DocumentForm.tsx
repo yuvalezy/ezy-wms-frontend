@@ -21,10 +21,10 @@ import {
 } from "@/components/ui/tabs";
 import { PlusCircle } from "lucide-react"; // Icon for create button
 
-import { useObjectName } from "@/Assets/ObjectName";
-import { Document, DocumentItem } from "@/Assets/Document";
-import { BusinessPartner, fetchVendors } from "@/Assets/Data";
-import { StringFormat } from "@/Assets/Functions";
+import { useObjectName } from "@/assets/ObjectName";
+import { Document, DocumentItem } from "@/assets/Document";
+import { BusinessPartner, fetchVendors } from "@/assets/Data";
+import { StringFormat } from "@/assets/Functions";
 
 interface DocumentFormProps {
     onNewDocument: (document: Document) => void;
@@ -137,13 +137,13 @@ const DocumentForm: React.FC<DocumentFormProps> = ({ onNewDocument }) => {
                         <Label htmlFor="vendorSelect">{t("selectVendor")}</Label>
                         <Select value={cardCodeInput} onValueChange={setCardCodeInput}>
                             <SelectTrigger id="vendorSelect">
-                                <SelectValue placeholder={t("selectVendorPlaceholder")} />
+                                <SelectValue placeholder={t("selectVendorPlaceholder")}/>
                             </SelectTrigger>
                             <SelectContent>
                                 {vendors.map((vendor) => (
-                                    <SelectItem key={vendor.code} value={vendor.code}>
-                                        {vendor.name}
-                                    </SelectItem>
+                                  <SelectItem key={vendor.code} value={vendor.code}>
+                                      {vendor.name}
+                                  </SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>

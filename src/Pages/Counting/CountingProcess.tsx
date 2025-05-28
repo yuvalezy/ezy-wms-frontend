@@ -8,22 +8,22 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Alert, AlertDescription } from "@/components/ui/alert"; // shadcn Alert
 import { Progress } from "@/components/ui/progress";
 // MessageStrip and MessageStripDesign will be removed if no longer used after this refactor
-import {BinLocation, Item, UnitType} from "../../Assets/Common";
-import {IsNumeric} from "../../Assets/Functions";
+import {BinLocation, Item, UnitType} from "../../assets/Common";
+import {IsNumeric} from "../../assets/Functions";
 // Keep MessageStripDesign for ProcessAlertValue severity until ProcessAlert is fully decoupled
 import { MessageStripDesign } from "@ui5/webcomponents-react";
-import {delay} from "../../Assets/GlobalConfig";
+import {delay} from "../../assets/GlobalConfig";
 import {useAuth} from "../../components/AppContext";
 import BarCodeScanner, {BarCodeScannerRef} from "../../components/BarCodeScanner";
-import {CountingContent} from "../../Assets/Counting";
+import {CountingContent} from "../../assets/Counting";
 import BinLocationScanner, {BinLocationScannerRef} from "../../components/BinLocationScanner";
 import {addItem, updateLine} from "./Data/CountingProcess";
 import {fetchCountingContent} from "./Data/Counting";
 import ProcessAlert, {ProcessAlertValue} from "../../components/ProcessAlert";
-import {ReasonType} from "../../Assets/Reasons";
+import {ReasonType} from "../../assets/Reasons";
 import Processes, {ProcessesRef} from "../../components/Processes";
 import {ScrollableContentBox} from "../../components/ScrollableContent";
-import {useDateTimeFormat} from "../../Assets/DateFormat";
+import {useDateTimeFormat} from "../../assets/DateFormat";
 
 export default function CountingProcess() {
     const {scanCode} = useParams();

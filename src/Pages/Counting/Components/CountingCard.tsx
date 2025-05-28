@@ -4,11 +4,11 @@ import {useAuth} from "@/components/AppContext";
 import {useTranslation} from "react-i18next";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {Authorization} from "@/Assets/Authorization";
-import {useDocumentStatusToString} from "@/Assets/DocumentStatusString";
-import {Counting} from "@/Assets/Counting";
-import {Status} from "@/Assets/Common";
-import {useDateTimeFormat} from "@/Assets/DateFormat";
+import {Authorization} from "@/assets/Authorization";
+import {useDocumentStatusToString} from "@/assets/DocumentStatusString";
+import {Counting} from "@/assets/Counting";
+import {Status} from "@/assets/Common";
+import {useDateTimeFormat} from "@/assets/DateFormat";
 import { CheckCircle, XCircle, FileText } from "lucide-react";
 
 type CountingCardProps = {

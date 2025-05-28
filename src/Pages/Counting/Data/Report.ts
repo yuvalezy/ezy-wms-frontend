@@ -1,4 +1,4 @@
-import {delay, globalConfig} from "../../../Assets/GlobalConfig";
+import {delay, globalConfig} from "../../../assets/GlobalConfig";
 import axios from "axios";
 
 export type CountingSummaryReportData = {

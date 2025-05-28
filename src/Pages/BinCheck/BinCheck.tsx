@@ -5,9 +5,9 @@ import BinLocationScanner from "../../components/BinLocationScanner";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faExclamationTriangle} from '@fortawesome/free-solid-svg-icons';
-import {useBinCheckData} from "@/Pages/BinCheck/bin-check-data";
+import {useBinCheckData} from "@/pages/BinCheck/bin-check-data";
 import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage} from "@/components/ui/breadcrumb";
-import {BinCheckResult} from "@/Pages/BinCheck/BinCheckResult";
+import {BinCheckResult} from "@/pages/BinCheck/BinCheckResult";
 
 export default function BinCheck() {
   const {t} = useTranslation();

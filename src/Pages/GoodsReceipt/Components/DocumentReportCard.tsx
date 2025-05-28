@@ -1,11 +1,11 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {useTranslation} from "react-i18next";
-import {Document} from "../../../Assets/Document";
-import {useDocumentStatusToString} from "../../../Assets/DocumentStatusString";
-import {activeStatuses, processStatuses, useHandleOpen} from "../Data/GoodsReceiptUtils";
-import {useObjectName} from "../../../Assets/ObjectName";
-import {useDateTimeFormat} from "../../../Assets/DateFormat";
+import {Document} from "../../../assets/Document";
+import {useDocumentStatusToString} from "../../../assets/DocumentStatusString";
+import {activeStatuses, processStatuses, useHandleOpenOld} from "../Data/GoodsReceiptUtils";
+import {useObjectName} from "../../../assets/ObjectName";
+import {useDateTimeFormat} from "../../../assets/DateFormat";
 
 type DocumentReportCardProps = {
     doc: Document
@@ -16,7 +16,7 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc, docDetails}
     const {t} = useTranslation();
     const { dateFormat } = useDateTimeFormat();
     const documentStatusToString = useDocumentStatusToString();
-    const handleOpen = useHandleOpen();
+    const handleOpen = useHandleOpenOld();
     const o = useObjectName();
 
     function documentDetailsClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {

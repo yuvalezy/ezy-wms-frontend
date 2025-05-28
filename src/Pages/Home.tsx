@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 import {useAuth} from "../components/AppContext";
 import {useTranslation} from "react-i18next";
 import ContentTheme from "../components/ContentTheme";
-import {useMenus, MenuItem} from "@/Assets/Menus";
+import {useMenus, MenuItem} from "@/assets/Menus";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faCheckCircle, // complete

@@ -3,7 +3,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
 import {useThemeContext} from "../../components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {IsNumeric} from "../../Assets/Functions";
+import {IsNumeric} from "../../assets/Functions";
 import {useAuth} from "../../components/AppContext";
 import {BarCodeScannerRef} from "../../components/BarCodeScanner";
 import {fetchTransferContent, TransferContent} from "./Data/TransferDocument";
@@ -19,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {SourceTarget} from "../../Assets/Common";
+import {SourceTarget} from "../../assets/Common";
 import { ArrowRightCircle } from "lucide-react"; // Icon for select/begin
 
 export default function TransferProcessTargetItems() { // Renamed component

@@ -14,21 +14,21 @@ import {
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Progress } from "@/components/ui/progress";
-import {IsNumeric, StringFormat} from "../../Assets/Functions";
+import {IsNumeric, StringFormat} from "../../assets/Functions";
 import {useAuth} from "../../components/AppContext";
-import {BinLocation, Item, SourceTarget} from "../../Assets/Common";
+import {BinLocation, Item, SourceTarget} from "../../assets/Common";
 import BarCodeScanner, {BarCodeScannerRef} from "../../components/BarCodeScanner";
 import {addItem, fetchTransferContent, TransferContent} from "./Data/TransferDocument";
 import BinLocationScanner from "../../components/BinLocationScanner";
-import {delay} from "../../Assets/GlobalConfig";
+import {delay} from "../../assets/GlobalConfig";
 // Keep MessageStripDesign for ProcessAlertValue severity
 import { MessageStripDesign } from "@ui5/webcomponents-react"; 
 import ProcessAlert, {ProcessAlertValue} from "../../components/ProcessAlert";
 import {ScrollableContent, ScrollableContentBox} from "../../components/ScrollableContent";
-import {ReasonType}from "../../Assets/Reasons";
+import {ReasonType}from "../../assets/Reasons";
 import Processes, {ProcessesRef} from "../../components/Processes";
 import {updateLine} from "./Data/TransferProcess";
-import {useDateTimeFormat} from "../../Assets/DateFormat";
+import {useDateTimeFormat} from "../../assets/DateFormat";
 
 export default function TransferProcessTargetBins() {
     const {scanCode} = useParams();

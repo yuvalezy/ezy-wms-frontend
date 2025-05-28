@@ -14,8 +14,8 @@ import { ScrollArea } from "@/components/ui/scroll-area"; // If list can be long
 import { X, PlusCircle } from "lucide-react"; // Icons
 
 import { useThemeContext } from "@/components/ThemeContext";
-import { DocumentItem } from "@/Assets/Document";
-import { useObjectName } from "@/Assets/ObjectName";
+import { DocumentItem } from "@/assets/Document";
+import { useObjectName } from "@/assets/ObjectName";
 import { toast } from "sonner";
 
 export interface DocumentListRef {
@@ -84,18 +84,16 @@ const DocumentList = forwardRef<DocumentListRef, DocumentListProps>((props, ref)
     return (
         <div className="border rounded-md p-3 space-y-3">
             {items.length > 0 && (
-                <ScrollArea className="h-[150px] w-full p-2 border rounded-md"> {/* Adjust height as needed */}
-                    <div className="space-y-2">
-                        {items.map((item, index) => (
-                            <div key={index} className="flex items-center justify-between p-2 border-b last:border-b-0">
-                                <span>{`${o(item.objectType)}: ${item.documentNumber}`}</span>
-                                <Button variant="ghost" size="icon" onClick={() => handleRemoveClick(index)} aria-label={t('remove')}>
-                                    <X className="h-4 w-4 text-red-500" />
-                                </Button>
-                            </div>
-                        ))}
+              <div className="border-b">
+                  {items.map((item, index) => (
+                    <div key={index} className="flex items-center justify-between border-b last:border-b-0">
+                        <span>{`${o(item.objectType)}: ${item.documentNumber}`}</span>
+                        <Button variant="ghost" size="icon" onClick={() => handleRemoveClick(index)} aria-label={t('remove')}>
+                            <X className="h-4 w-4 text-red-500" />
+                        </Button>
                     </div>
-                </ScrollArea>
+                  ))}
+              </div>
             )}
              {items.length === 0 && (
                 <p className="text-sm text-muted-foreground p-2 text-center">{t("noDocumentsAdded")}</p>
@@ -131,7 +129,7 @@ const DocumentList = forwardRef<DocumentListRef, DocumentListProps>((props, ref)
                 <div className="sm:flex-none pt-3 sm:pt-0"> {/* Add Button */}
                      {/* On small screens, label might be redundant if button text is clear, or add margin if label is kept */}
                      {/* <Label className="mb-1 block sm:hidden">&nbsp;</Label>  Optional: Spacer for alignment on small screens if labels are above */}
-                    <Button onClick={handleAddClick} className="w-full sm:w-auto">
+                    <Button type="button" onClick={handleAddClick} className="w-full sm:w-auto">
                         <PlusCircle className="mr-2 h-4 w-4" /> {t('add')}
                     </Button>
                 </div>

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {createCounting} from "../Data/Counting";
-import {Counting} from "@/Assets/Counting";
+import {Counting} from "@/assets/Counting";
 import { PlusCircle } from "lucide-react";
 
 interface CountingFormProps {

@@ -112,6 +112,8 @@
   "documentQuantity": "Document Quantity",
   "packageQuantity": "Package Quantity",
   "packageUnit": "Package Unit",
+  "buyUnit": "Pur. Unit",
+  "packUnit": "Pack. Unit",
   "dozenQuantity": "Dozen Quantity",
   "dozenUnit": "Dozen Unit",
   "packages": "Packages",

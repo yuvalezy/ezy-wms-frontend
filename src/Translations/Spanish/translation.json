@@ -112,6 +112,8 @@
   "documentQuantity": "Cantidad Documento",
   "packageQuantity": "Cantidad de Empaque",
   "packageUnit": "Unidad de Empaque",
+  "buyUnit": "Un. Compra",
+  "packUnit": "Un. Emp",
   "dozenQuantity": "Cantidad de Docenas",
   "dozenUnit": "Unidad de Docenas",
   "packages": "Paquetes",

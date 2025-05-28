@@ -3,11 +3,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BinLocation } from "../Assets/Common";
+import { BinLocation } from "../assets/Common";
 import {useTranslation} from "react-i18next";
-import {scanBinLocation} from "../Assets/ScanBinLocation";
+import {scanBinLocation} from "../assets/ScanBinLocation";
 import {useThemeContext} from "./ThemeContext";
-import { StringFormat } from '../Assets/Functions';
+import { StringFormat } from '../assets/Functions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 

@@ -4,9 +4,9 @@ import React, {useEffect, useState} from "react";
 import {useThemeContext} from "../../components/ThemeContext";
 import {fetchTransfers, TransferDocument, transferAction} from "./Data/TransferDocument";
 import TransferCard from "./components/TransferCard";
-import {ObjectAction} from "@/Assets/Common";
-import {StringFormat} from "@/Assets/Functions";
-import TransferForm from "./Components/TransferForm";
+import {ObjectAction} from "@/assets/Common";
+import {StringFormat} from "@/assets/Functions";
+import TransferForm from "./components/TransferForm";
 import {
     AlertDialog,
     AlertDialogAction,

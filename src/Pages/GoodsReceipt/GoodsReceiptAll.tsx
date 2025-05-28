@@ -1,21 +1,21 @@
 import React, {useEffect, useRef, useState} from "react";
-import {formatValueByPack} from "../../Assets/Quantities";
+import {formatValueByPack} from "../../assets/Quantities";
 import ContentTheme from "../../components/ContentTheme";
 import {useParams} from "react-router-dom";
 import {
   fetchGoodsReceiptReportAll, GoodsReceiptAll, updateGoodsReceiptReport,
 } from "./Data/Report";
-import GoodsReceiptAllReportTable from "./Components/GoodsReceiptAllTable";
+import GoodsReceiptAllReportTable from "./components/GoodsReceiptAllTable";
 import {useThemeContext} from "../../components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"; // Added AlertTitle
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {IsNumeric} from "../../Assets/Functions";
-import {GRPOAllDetailRef} from "./Components/GoodsReceiptAllDetail";
-import GoodsReceiptAllDialog from "./Components/GoodsReceiptAllDetail";
-import {DetailUpdateParameters} from "../../Assets/Common";
-import {exportToExcel} from "../../Utils/excelExport";
+import {IsNumeric} from "../../assets/Functions";
+import {GRPOAllDetailRef} from "./components/GoodsReceiptAllDetail";
+import GoodsReceiptAllDialog from "./components/GoodsReceiptAllDetail";
+import {DetailUpdateParameters} from "../../assets/Common";
+import {exportToExcel} from "../../utils/excelExport";
 
 export default function GoodsReceiptReportAll() {
   const {t} = useTranslation();

@@ -1,8 +1,8 @@
 import React, {useEffect, useRef} from "react";
-import {itemCheck, ItemCheckResponse, updateItemBarCode} from "@/Pages/ItemCheck/Item";
+import {itemCheck, ItemCheckResponse, updateItemBarCode} from "@/pages/ItemCheck/Item";
 import {useThemeContext} from "@/components/ThemeContext";
-import {ResponseStatus} from "@/Assets/Common";
-import {StringFormat} from "@/Assets/Functions";
+import {ResponseStatus} from "@/assets/Common";
+import {StringFormat} from "@/assets/Functions";
 import {useTranslation} from "react-i18next";
 import { toast } from "sonner";
 

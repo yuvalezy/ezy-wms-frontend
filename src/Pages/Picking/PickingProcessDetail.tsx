@@ -8,13 +8,13 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Progress } from "@/components/ui/progress";
-import {BinLocation, Item} from "../../Assets/Common";
-import {IsNumeric, StringFormat} from "../../Assets/Functions";
+import {BinLocation, Item} from "../../assets/Common";
+import {IsNumeric, StringFormat} from "../../assets/Functions";
 import {addItem, fetchPicking, PickingDocument, PickingDocumentDetail} from "./Data/PickingDocument";
-import {useObjectName} from "../../Assets/ObjectName";
+import {useObjectName} from "../../assets/ObjectName";
 import BarCodeScanner, {BarCodeScannerRef} from "../../components/BarCodeScanner";
 import {ScrollableContent} from "../../components/ScrollableContent";
-import PickingProcessDetailContent from "./Components/PickingProcessDetailContent";
+import PickingProcessDetailContent from "./components/PickingProcessDetailContent";
 import BinLocationScanner, {BinLocationScannerRef} from "../../components/BinLocationScanner";
 import { toast } from "sonner";
 

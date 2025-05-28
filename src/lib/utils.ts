@@ -20,3 +20,9 @@ export function formatNumber(
     maximumFractionDigits: decimals,
   });
 }
+
+export function wd(value: string | null | undefined, defaultValue: string): string {
+  if (value != null && value.trim().length != 0)
+    return value;
+  return defaultValue;
+}

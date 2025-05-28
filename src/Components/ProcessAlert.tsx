@@ -3,7 +3,7 @@ import {useTranslation} from "react-i18next";
 import {useSwipeable} from "react-swipeable";
 import { Edit3, MessageCircle, XCircle } from "lucide-react"; // Using lucide-react for icons
 
-import {AddItemResponseMultipleValue, UnitType} from "../Assets/Common";
+import {AddItemResponseMultipleValue, UnitType} from "../assets/Common";
 
 // Mapping UI5 MessageStripDesign to a simpler status for styling
 type AlertSeverity = "Information" | "Positive" | "Negative" | "Warning";

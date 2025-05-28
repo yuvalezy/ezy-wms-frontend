@@ -12,7 +12,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import {Item} from "../Assets/Common";
+import {Item} from "../assets/Common";
 
 export interface BoxConfirmationDialogRef {
     show: (show: boolean) => void;

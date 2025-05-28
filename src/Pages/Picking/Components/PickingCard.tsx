@@ -5,9 +5,9 @@ import {useTranslation} from "react-i18next";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import {Authorization} from "@/Assets/Authorization";
+import {Authorization} from "@/assets/Authorization";
 import {PickingDocument} from "../Data/PickingDocument";
-import {useDateTimeFormat} from "@/Assets/DateFormat";
+import {useDateTimeFormat} from "@/assets/DateFormat";
 import { CheckCircle } from "lucide-react";
 import {formatNumber} from "@/lib/utils";
 

@@ -17,15 +17,15 @@ import {
   Item, UnitType,
   UpdateLineParameters,
   UpdateLineReturnValue
-} from "../../Assets/Common";
-import {IsNumeric, StringFormat} from "../../Assets/Functions";
-import {configUtils, delay} from "../../Assets/GlobalConfig";
-import {scanBarcode} from "../../Assets/ScanBarcode";
+} from "../../assets/Common";
+import {IsNumeric, StringFormat} from "../../assets/Functions";
+import {configUtils, delay} from "../../assets/GlobalConfig";
+import {scanBarcode} from "../../assets/ScanBarcode";
 import ProcessAlert, {AlertActionType, ProcessAlertValue} from "../../components/ProcessAlert";
-import {ReasonType} from "../../Assets/Reasons";
-import {DocumentAddItemResponse} from "../../Assets/Document";
+import {ReasonType} from "../../assets/Reasons";
+import {DocumentAddItemResponse} from "../../assets/Document";
 import Processes, {ProcessesRef} from "../../components/Processes";
-import {useDateTimeFormat} from "../../Assets/DateFormat";
+import {useDateTimeFormat} from "../../assets/DateFormat";
 import BarCodeScanner, {BarCodeScannerRef} from "../../components/BarCodeScanner";
 
 export default function GoodsReceiptProcess() {

@@ -1,9 +1,9 @@
 import React, {forwardRef, useImperativeHandle, useRef, useState} from "react";
-import {ProcessAlertValue} from "../components/ProcessAlert"; // Changed to navigate out of assumed src/Components
+import {ProcessAlertValue} from "../components/ProcessAlert"; // Changed to navigate out of assumed src/components
 import {useThemeContext} from "./ThemeContext";
-import {fetchReasons, ReasonType, ReasonValue,} from "../Assets/Reasons";
+import {fetchReasons, ReasonType, ReasonValue,} from "../assets/Reasons";
 import {useTranslation} from "react-i18next";
-import {UpdateLineParameters, UpdateLineReturnValue} from "../Assets/Common";
+import {UpdateLineParameters, UpdateLineReturnValue} from "../assets/Common";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,

@@ -1,9 +1,9 @@
 import React, {forwardRef, useImperativeHandle, useRef, useState} from "react";
 import {useThemeContext} from "../../../components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {DetailUpdateParameters, Status} from "../../../Assets/Common";
+import {DetailUpdateParameters, Status} from "../../../assets/Common";
 import {fetchTargetItemDetails, fetchTransfers, TargetItemDetail, TransferContent, TransferContentBin} from "../Data/TransferDocument";
-import {useDateTimeFormat} from "../../../Assets/DateFormat";
+import {useDateTimeFormat} from "../../../assets/DateFormat";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
