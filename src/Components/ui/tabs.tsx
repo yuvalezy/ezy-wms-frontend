@@ -42,9 +42,9 @@ function TabsTrigger({
         "first:rounded-tl-lg last:rounded-tr-lg",             // round only the outer corners
         "hover:bg-muted/30 transition-colors",
         // when active: lift up, hide bottom border so panel connects
-        "data-[state=active]:bg-muted",
-        "data-[state=active]:text-foreground",
-        "data-[state=active]:border-b-transparent",
+        "data-[state=inactive]:bg-muted",
+        "data-[state=inactive]:text-foreground",
+        "data-[state=inactive]:border-b-transparent",
         className
       )}
       {...props}
@@ -60,7 +60,7 @@ function TabsContent({
     <TabsPrimitive.Content
       className={cn(
         // panel look
-        "border border-border border-t-0 rounded-b-lg bg-background p-6",
+        "border border-border border-t-0 rounded-b-lg bg-background p-2",
         className,   // ← keep anything the caller sends
         "!-mt-px"    // ← always last and with `!` so it overrides mt-4
       )}

@@ -16,6 +16,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {UnitType} from "../../../Assets/Common";
+import {formatNumber} from "@/lib/utils";
 // import {formatValueByPack} from "../../../Assets/Quantities"; // Assuming this might be useful later or can be removed
 
 // Interface for the new quantity row structure
@@ -42,8 +43,8 @@ const QuantityDataRow: React.FC<QuantityRowProps> = ({
   buyUnitMsrText,
   packUnitMsrText,
 }) => {
-  const buyUnitsDisplay = (numInBuy && numInBuy !== 0) ? (baseQuantity / numInBuy).toFixed(2) : "N/A";
-  const packUnitsDisplay = (numInBuy && numInBuy !== 0 && numInPurPack && numInPurPack !== 0) ? (baseQuantity / (numInBuy * numInPurPack)).toFixed(2) : "N/A";
+  const buyUnitsDisplay = (numInBuy && numInBuy !== 0) ? formatNumber(baseQuantity / numInBuy, 2) : "N/A";
+  const packUnitsDisplay = (numInBuy && numInBuy !== 0 && numInPurPack && numInPurPack !== 0) ? formatNumber(baseQuantity / (numInBuy * numInPurPack), 2) : "N/A";
 
   return (
     <div className="metric-row flex justify-between items-center py-2 border-b border-gray-200">
@@ -52,7 +53,7 @@ const QuantityDataRow: React.FC<QuantityRowProps> = ({
       </div>
       <div className="flex-1 flex justify-around text-center">
         <div className="flex-1">
-          <span>{baseQuantity.toFixed(2)}</span>
+          <span>{formatNumber(baseQuantity, 2)}</span>
         </div>
         <div className="flex-1">
           <span>{buyUnitsDisplay}</span>
@@ -258,7 +259,7 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
                           <TableCell><span>{dateFormat(timeStamp)}</span></TableCell>
                           <TableCell><span>{timeFormat(timeStamp)}</span></TableCell>
                           <TableCell><span>{detail.employee}</span></TableCell>
-                          <TableCell className="text-right"><span>{scannedQuantity.toFixed(2)}</span></TableCell>
+                          <TableCell className="text-right"><span>{formatNumber(scannedQuantity, 2)}</span></TableCell>
                         </TableRow>
                       );
                     })}

@@ -1,7 +1,6 @@
 import React from "react";
 import {ItemCheckResponse} from "./Item";
 import {useTranslation} from "react-i18next";
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import ItemDetailsList from "./components/ItemDetailsList";
 import BarcodeTable from "./components/BarcodeTable";
@@ -12,13 +11,7 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-  BreadcrumbSeparator
 } from "@/components/ui/breadcrumb";
-import {Label} from "@/components/ui/label";
-import {Input} from "@/components/ui/input";
-import {Button} from "@/components/ui/button";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCheck} from "@fortawesome/free-solid-svg-icons";
 
 interface ItemCheckResultProps {
   result: ItemCheckResponse;

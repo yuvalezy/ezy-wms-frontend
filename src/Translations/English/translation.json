@@ -148,7 +148,9 @@
   "selectItemsForTransfers": "Select Items for Transfer #{0}",
   "selectTransferTargetItems": "Choose Items for Destination",
   "selectTransferTargetBins": "Choose Bins for Destination",
+  "quantityInBin": "Quantity in Bin",
 
+  "noStockDataFound": "No se encontraron datos de inventario",
   "binCheck": "Bin Check",
   "scanBinLocation": "Scan Bin Location",
   "changeBinLocation": "Change Bin Location",

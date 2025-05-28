@@ -1,42 +1,15 @@
 import * as React from 'react';
 import {GoodsReceiptAll} from "../Data/Report";
 import {useTranslation} from "react-i18next";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label"; // Using shadcn Label
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import {Button} from "@/components/ui/button";
+import {MetricRow} from "@/components/MetricRow";
+import {formatNumber} from "@/lib/utils"; // Using shadcn Label
 
 interface GoodsReceiptAllTableProps {
   data: GoodsReceiptAll[]
   onClick: (data: GoodsReceiptAll) => void;
 }
-
-interface MetricRowProps {
-  label: string;
-  values: {
-    units: string | number;
-    buyUnits: string | number;
-    packUnits: string | number;
-  };
-}
-
-const MetricRow: React.FC<MetricRowProps> = ({label, values}) => (
-  <div className="metric-row flex justify-between items-center py-2 border-b border-gray-200">
-    <div className="w-[30%] font-medium">
-      <span>{label}</span>
-    </div>
-    <div className="flex-1 flex justify-around text-center">
-      <div className="flex-1">
-        <span>{values.units}</span>
-      </div>
-      <div className="flex-1">
-        <span>{values.buyUnits}</span>
-      </div>
-      <div className="flex-1">
-        <span>{values.packUnits}</span>
-      </div>
-    </div>
-  </div>
-);
 
 const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data, onClick}) => {
   const {t} = useTranslation();
@@ -75,49 +48,47 @@ const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data, 
               <MetricRow
                 label={t('quantity')}
                 values={{
-                  units: row.quantity,
-                  buyUnits: (row.quantity / row.numInBuy).toFixed(2),
-                  packUnits: (row.quantity / row.numInBuy / row.purPackUn).toFixed(2)
+                  units: formatNumber(row.quantity, 0),
+                  buyUnits: formatNumber(row.quantity / row.numInBuy),
+                  packUnits: formatNumber(row.quantity / row.numInBuy / row.purPackUn)
                 }}
               />
 
               <MetricRow
                 label={t('delivery')}
                 values={{
-                  units: row.delivery,
-                  buyUnits: (row.delivery / row.numInBuy).toFixed(2),
-                  packUnits: (row.delivery / row.numInBuy / row.purPackUn).toFixed(2)
+                  units: formatNumber(row.delivery, 0),
+                  buyUnits: formatNumber(row.delivery / row.numInBuy),
+                  packUnits: formatNumber(row.delivery / row.numInBuy / row.purPackUn)
                 }}
               />
 
               <MetricRow
                 label={t('showroom')}
                 values={{
-                  units: row.showroom,
-                  buyUnits: (row.showroom / row.numInBuy).toFixed(2),
-                  packUnits: (row.showroom / row.numInBuy / row.purPackUn).toFixed(2)
+                  units: formatNumber(row.showroom, 0),
+                  buyUnits: formatNumber(row.showroom / row.numInBuy),
+                  packUnits: formatNumber(row.showroom / row.numInBuy / row.purPackUn)
                 }}
               />
 
               <MetricRow
                 label={t('inWarehouse')}
                 values={{
-                  units: inWarehouse,
-                  buyUnits: (inWarehouse / row.numInBuy).toFixed(2),
-                  packUnits: (inWarehouse / row.numInBuy / row.purPackUn).toFixed(2)
+                  units: formatNumber(inWarehouse, 0),
+                  buyUnits: formatNumber(inWarehouse / row.numInBuy),
+                  packUnits: formatNumber(inWarehouse / row.numInBuy / row.purPackUn)
                 }}
               />
 
               <MetricRow
                 label={t('stock')}
                 values={{
-                  units: row.stock,
-                  buyUnits: (row.stock / row.numInBuy).toFixed(2),
-                  packUnits: (row.stock / row.numInBuy / row.purPackUn).toFixed(2)
+                  units: formatNumber(row.stock, 0),
+                  buyUnits: formatNumber(row.stock / row.numInBuy),
+                  packUnits: formatNumber(row.stock / row.numInBuy / row.purPackUn)
                 }}
-              />
-
-              {/* Action Button */}
+              /> {/* Action Button */}
             </CardContent>
             <CardFooter className="mt-4 text-center border-t pt-4">
               <Button

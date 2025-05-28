@@ -25,6 +25,7 @@ import {fetchGoodsReceiptReportAllDetails, GoodsReceiptAll, GoodsReceiptAllDetai
 import {fetchDocuments} from "../Data/Document";
 import {DetailUpdateParameters, Status, UnitType} from "../../../Assets/Common";
 import {useDateTimeFormat} from "../../../Assets/DateFormat";
+import {formatNumber} from "@/lib/utils";
 
 export interface GRPOAllDetailRef {
   show: (data: GoodsReceiptAll) => void;
@@ -162,7 +163,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                             onChange={(e) => handleQuantityChange(row.lineID, e.target.value)}
                           />
                         ) : (
-                          currentQuantityValue.toFixed(2) // Display formatted quantity if not updating
+                          formatNumber(currentQuantityValue, 2) // Display formatted quantity if not updating
                         )}
                       </TableCell>
                       <TableCell>

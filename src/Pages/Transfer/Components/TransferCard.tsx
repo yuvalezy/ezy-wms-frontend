@@ -11,6 +11,7 @@ import {TransferDocument} from "../Data/TransferDocument";
 import {Status} from "@/Assets/Common";
 import {useDateTimeFormat} from "@/Assets/DateFormat";
 import { CheckCircle, XCircle } from "lucide-react";
+import {formatNumber} from "@/lib/utils";
 
 type TransferCardProps = {
   doc: TransferDocument,
@@ -69,7 +70,7 @@ const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = 
           )}
           <li className="pt-2">
             <Progress value={progressDisplayValue} className="w-full" />
-             <p className="text-xs text-muted-foreground text-center mt-1">{progressDisplayValue.toFixed(0)}% {t('progress')}</p>
+             <p className="text-xs text-muted-foreground text-center mt-1">{formatNumber(progressDisplayValue, 0)}% {t('progress')}</p>
           </li>
         </ul>
       </CardContent>

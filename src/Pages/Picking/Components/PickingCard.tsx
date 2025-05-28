@@ -9,6 +9,7 @@ import {Authorization} from "@/Assets/Authorization";
 import {PickingDocument} from "../Data/PickingDocument";
 import {useDateTimeFormat} from "@/Assets/DateFormat";
 import { CheckCircle } from "lucide-react";
+import {formatNumber} from "@/lib/utils";
 
 type PickingCardProps = {
   picking: PickingDocument,
@@ -64,7 +65,7 @@ const PickingCard: React.FC<PickingCardProps> = ({picking, onUpdatePick, supervi
           }
           <li className="pt-2">
             <Progress value={progressValue} className="w-full" />
-            <p className="text-xs text-muted-foreground text-center mt-1">{progressValue.toFixed(0)}% {t('complete')}</p>
+            <p className="text-xs text-muted-foreground text-center mt-1">{formatNumber(progressValue, 0)}% {t('complete')}</p>
           </li>
           {picking.remarks &&
             <li className="pt-2 border-t mt-2">

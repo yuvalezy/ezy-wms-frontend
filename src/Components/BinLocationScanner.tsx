@@ -84,15 +84,16 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
     }
 
     return (
-        <div className="p-2">
+        <div>
             {binLocation &&
-              <div className="flex items-center justify-between bg-gray-100 rounded-lg p-3">
-                  <span className="font-medium">{t("bin")}: {binLocation.code}</span>
-                  <div className="flex space-x-2">
-                      <Button variant="outline" size="sm" onClick={clear}>
-                          {t("changeBinLocation")}
-                      </Button>
-                  </div>
+              // Responsive layout for displaying selected bin and change button
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 bg-slate-100 dark:bg-slate-800 rounded-lg p-3">
+                  <span className="font-medium text-sm text-slate-700 dark:text-slate-300 truncate">
+                      {t("bin")}: {binLocation.code}
+                  </span>
+                  <Button variant="outline" size="sm" onClick={clear} className="w-full sm:w-auto shrink-0">
+                      {t("changeBinLocation")}
+                  </Button>
               </div>
             }
             {!binLocation &&

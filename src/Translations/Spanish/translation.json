@@ -149,6 +149,7 @@
   "selectTransferTargetItems": "Elija artículos para el destino",
   "selectTransferTargetBins": "Elija ubicaciones para el destino",
 
+  "noStockDataFound": "No se encontraron datos de inventario",
   "binCheck": "Revision de Ubicación",
   "scanBinLocation": "Escanear la Ubicación",
   "changeBinLocation": "Cambiar Ubicación",

@@ -18,7 +18,7 @@ const ContentTheme: React.FC<ContentThemeProps> = ({title, children, exportExcel
         <div className="min-h-screen bg-background">
             <MenuAppBar title={title} exportExcel={exportExcel} onExportExcel={onExportExcel} onBack={onBack} customActionButtons={customActionButtons} />
             <ScrollableContent>
-                <div className="mx-auto pr-4 pl-4  pb-4 space-y-4">
+                <div className="mx-auto pr-2 pl-2 pb-2 space-y-4 w-full">
                     {children}
                 </div>
             </ScrollableContent>

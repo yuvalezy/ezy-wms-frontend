@@ -14,8 +14,10 @@ export const useBinCheckData = () => {
   const binRef = useRef<BinLocationScannerRef>(null);
   const {user} = useAuth();
   const [binContent, setBinContent] = useState<BinContentResponse[] | null>(null);
+  const [bin, setBin] = useState<BinLocation | null>(null);
 
   function onScan(bin: BinLocation) {
+    setBin(bin);
     try {
       binCheck(bin.entry)
         .then((v) => setBinContent(v))
@@ -28,6 +30,7 @@ export const useBinCheckData = () => {
   }
 
   function onBinClear() {
+    setBin(null);
     setBinContent(null);
     delay(1).then(() => binRef?.current?.focus());
   }
@@ -72,6 +75,7 @@ export const useBinCheckData = () => {
     onBinClear,
     excelData,
     excelHeaders,
-    handleExportExcel
+    handleExportExcel,
+    bin
   }
 }
