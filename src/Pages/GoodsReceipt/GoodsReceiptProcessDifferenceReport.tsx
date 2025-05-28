@@ -10,7 +10,11 @@ import {
   useGoodsReceiptProcessDifferenceReportData
 } from "@/pages/GoodsReceipt/data/goods-receipt-process-difference-report-data";
 
-export default function GoodsReceiptProcessDifferenceReport() {
+interface GoodsReceiptProcessDifferenceReportProps {
+  confirm?: boolean
+}
+
+export default function GoodsReceiptProcessDifferenceReport({confirm}: GoodsReceiptProcessDifferenceReportProps) {
   const {t} = useTranslation();
   const navigate = useNavigate();
   const {

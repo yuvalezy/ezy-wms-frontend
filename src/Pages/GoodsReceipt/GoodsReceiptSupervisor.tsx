@@ -8,7 +8,7 @@ import {useGoodsReceiptSupervisorData} from "@/pages/GoodsReceipt/data/goods-rec
 import DocumentForm from "@/pages/GoodsReceipt/components/DocumentForm";
 import DocumentListDialog from "@/pages/GoodsReceipt/components/DocumentListDialog";
 
-export default function GoodsReceiptSupervisor() {
+export default function GoodsReceiptSupervisor({confirm = false}: {confirm?: boolean}) {
   const {t} = useTranslation();
   const {
     supervisor,
@@ -28,13 +28,14 @@ export default function GoodsReceiptSupervisor() {
   return (
     <ContentTheme title={getTitle()}>
       <DocumentForm
+        confirm={confirm}
         onNewDocument={(newDocument) =>
           setDocuments((prevDocs) => [newDocument, ...prevDocs])
         }
       />
       {documents.map((doc) => (
         <DocumentCard supervisor={supervisor} key={doc.id} doc={doc} action={handleAction}
-                      docDetails={handleDocDetails}/>
+                      docDetails={handleDocDetails} confirm={confirm}/>
       ))}
       <MessageBox
         onConfirm={handleConfirmAction}

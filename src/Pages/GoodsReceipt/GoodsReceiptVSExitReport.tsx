@@ -14,7 +14,11 @@ import {Alert, AlertDescription} from "@/components/ui/alert";
 import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage} from "@/components/ui/breadcrumb";
 import InfoBox, {InfoBoxValue} from "@/components/InfoBox";
 
-export default function GoodsReceiptVSExitReport() {
+interface GoodsReceiptVSExitReportProps {
+  confirm?: boolean
+}
+
+export default function GoodsReceiptVSExitReport({confirm}: GoodsReceiptVSExitReportProps) {
   const {scanCode} = useParams();
   const {t} = useTranslation();
   const o = useObjectName();

@@ -8,7 +8,7 @@ import {Document} from "@/assets/Document";
 import DocumentListDialog, {DocumentListDialogRef} from "@/pages/GoodsReceipt/components/DocumentListDialog";
 import DocumentCard from "@/pages/GoodsReceipt/components/DocumentCard";
 
-export default function GoodsReceipt() {
+export default function GoodsReceipt({confirm = false}: { confirm?: boolean }) {
   const {setLoading, setError} = useThemeContext();
   const {t} = useTranslation();
   const documentListDialogRef = useRef<DocumentListDialogRef>(null);
@@ -17,7 +17,7 @@ export default function GoodsReceipt() {
 
   useEffect(() => {
     setLoading(true);
-    fetchDocuments({status: [Status.Open, Status.InProgress]})
+    fetchDocuments({status: [Status.Open, Status.InProgress], confirm})
       .then((data) => setDocuments(data))
       .catch((err) => setError(err))
       .finally(() => setLoading(false))
@@ -29,9 +29,9 @@ export default function GoodsReceipt() {
   }
 
   return (
-    <ContentTheme title={t("goodsReceipt")}>
+    <ContentTheme title={!confirm ? t("goodsReceipt") : t('receiptConfirmation')}>
       {documents.map((doc) => (
-        <DocumentCard key={doc.id} doc={doc} docDetails={handleDocDetails}/>
+        <DocumentCard key={doc.id} doc={doc} docDetails={handleDocDetails} confirm={confirm}/>
       ))}
       <DocumentListDialog ref={documentListDialogRef} doc={selectedDocument}/>
     </ContentTheme>

@@ -9,7 +9,7 @@ import Processes from "../../components/Processes";
 import BarCodeScanner from "../../components/BarCodeScanner";
 import {useGoodsReceiptProcessData} from "@/pages/GoodsReceipt/data/goods-receipt-process-data";
 
-export default function GoodsReceiptProcess() {
+export default function GoodsReceiptProcess({confirm = false}: { confirm?: boolean }) {
   const {t} = useTranslation();
   const {
     title,
@@ -23,7 +23,7 @@ export default function GoodsReceiptProcess() {
     alertAction,
     handleAlertActionAccept,
     handleUpdateLine
-  } = useGoodsReceiptProcessData();
+  } = useGoodsReceiptProcessData(confirm);
   return (
     <ContentTheme title={title}>
       {id ? (

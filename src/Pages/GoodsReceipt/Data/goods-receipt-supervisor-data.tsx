@@ -1,6 +1,7 @@
 import {useTranslation} from "react-i18next";
 import {useAuth} from "@/components/AppContext";
 import {useEffect, useRef, useState} from "react";
+import {useLocation} from "react-router-dom";
 import {useThemeContext} from "@/components/ThemeContext";
 import { toast } from "sonner";
 import {Document} from "@/assets/Document";
@@ -21,11 +22,17 @@ export const useGoodsReceiptSupervisorData = () => {
   const [actionType, setActionType] = useState<ObjectAction | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const documentListDialogRef = useRef<DocumentListDialogRef>(null);
+  const location = useLocation();
+  const confirmation = location.pathname.includes('goodsReceiptConfirmationSupervisor');
 
   useEffect(() => {
-    setSupervisor(user?.authorizations.filter((v) => v === Authorization.GOODS_RECEIPT_SUPERVISOR).length === 1);
+    if (!confirmation) {
+      setSupervisor(user?.authorizations.filter((v) => v === Authorization.GOODS_RECEIPT_SUPERVISOR).length === 1);
+    } else {
+      setSupervisor(user?.authorizations.filter((v) => v === Authorization.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR).length === 1);
+    }
     setLoading(true);
-    fetchDocuments({status: [Status.Open, Status.InProgress]})
+    fetchDocuments({status: [Status.Open, Status.InProgress], confirm: confirmation})
       .then((data) => setDocuments(data))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
@@ -57,13 +64,23 @@ export const useGoodsReceiptSupervisorData = () => {
   };
 
   function getTitle(): string {
-    let title = t("goodsReceiptSupervisor");
-    if (!globalSettings?.grpoCreateSupervisorRequired) {
-      if (!supervisor) {
-        title = t("goodsReceiptCreation");
+    if (!confirmation) {
+      let title = t("goodsReceiptSupervisor");
+      if (!globalSettings?.grpoCreateSupervisorRequired) {
+        if (!supervisor) {
+          title = t("goodsReceiptCreation");
+        }
       }
+      return title;
+    } else {
+      let title = t("goodsReceiptConfirmationSupervisor");
+      if (!globalSettings?.grpoCreateSupervisorRequired) {
+        if (!supervisor) {
+          title = t("goodsReceiptConfirmationCreation");
+        }
+      }
+      return title;
     }
-    return title;
   }
 
   return {
@@ -79,6 +96,7 @@ export const useGoodsReceiptSupervisorData = () => {
     handleAction,
     handleConfirmAction,
     setDialogOpen,
-    getTitle
+    getTitle,
+    confirmation
   }
 }

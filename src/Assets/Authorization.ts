@@ -1,6 +1,8 @@
 export enum Authorization {
     GOODS_RECEIPT = 'GoodsReceipt',
     GOODS_RECEIPT_SUPERVISOR = 'GoodsReceiptSupervisor',
+    GOODS_RECEIPT_CONFIRMATION = 'GoodsReceiptConfirmation',
+    GOODS_RECEIPT_CONFIRMATION_SUPERVISOR = 'GoodsReceiptConfirmationSupervisor',
     PICKING = 'Picking',
     PICKING_SUPERVISOR = 'PickingSupervisor',
     COUNTING = 'Counting',

@@ -15,6 +15,7 @@ import {
 export enum GoodsReceiptType {
   AutoConfirm = "AutoConfirm",
   SpecificOrders = "SpecificOrders",
+  SpecificReceipts = "SpecificReceipts"
 }
 
 export type GoodsReceiptReportFilter = {
@@ -33,14 +34,14 @@ export type GoodsReceiptReportFilter = {
   pageSize?: number | null;
   pageNumber?: number | null;
   lastID?: number | null;
+  confirm?: boolean;
 }
 
 export const createDocument = async (
   type: GoodsReceiptType,
   cardCode: string,
   name: string,
-  items: DocumentItem[]
-): Promise<Document> => {
+  items: DocumentItem[]): Promise<Document> => {
   try {
     if (configUtils.isMockup) {
       console.log("Mockup data is being used.");
@@ -57,8 +58,9 @@ export const createDocument = async (
       {
         cardCode: cardCode,
         name: name,
-        type: type,
+        type: !confirm ? type : GoodsReceiptType.SpecificReceipts,
         documents: items,
+        confirm
       },
       {
         headers: {

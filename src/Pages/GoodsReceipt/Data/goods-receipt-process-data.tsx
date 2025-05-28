@@ -19,7 +19,7 @@ import {addItem, updateLine, updateLineQuantity} from "@/pages/GoodsReceipt/data
 import {configUtils, delay} from "@/assets/GlobalConfig";
 import {DocumentAddItemResponse} from "@/assets/Document";
 
-export const useGoodsReceiptProcessData = () => {
+export const useGoodsReceiptProcessData = (confirm: boolean) => {
   const {scanCode} = useParams();
   const {t} = useTranslation();
   const {dateTimeFormat} = useDateTimeFormat();
@@ -32,7 +32,7 @@ export const useGoodsReceiptProcessData = () => {
   const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
   const processesRef = useRef<ProcessesRef>(null);
 
-  const title = `${t("goodsReceipt")} #${scanCode}`;
+  const title = `${!confirm ? t("goodsReceipt") : t("receiptConfirmation")} #${scanCode}`;
 
   useEffect(() => {
     setTimeout(() => barcodeRef.current?.focus(), 1);
@@ -50,7 +50,6 @@ export const useGoodsReceiptProcessData = () => {
   };
 
   function handleAddItem(item: Item, unit: UnitType) {
-    console.log(item, unit);
     addItemToDocument(item, unit);
     // setLoading(true);
     // scanBarcode(barcodeInput)

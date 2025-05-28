@@ -45,11 +45,19 @@ export default function App() {
         authorizations.push(Authorization.GOODS_RECEIPT)
         return authorizations;
     }
+    function getGoodsReceiptConfirmationSupervisorAuthorizations() {
+        let authorizations = [Authorization.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR];
+        if (globalSettings?.grpoCreateSupervisorRequired) {
+            return;
+        }
+        authorizations.push(Authorization.GOODS_RECEIPT_CONFIRMATION)
+        return authorizations;
+    }
 
     return (
         <AuthProvider>
             <BrowserRouter>
-                <Toaster closeButton closeButtonPosition="top-right" />
+                <Toaster closeButton />
                 <Routes>
                     <Route path="/login" element={<LoginPage/>}/>
                     <Route path="/unauthorized" element={<Unauthorized/>}/>
@@ -68,6 +76,14 @@ export default function App() {
                     <Route path="/goodsReceiptVSExitReport/:scanCode" element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT_SUPERVISOR} element={<GoodsReceiptVSExitReport/>}/>}/>
                     <Route path="/goodsReceiptProcessDifferenceReport/:scanCode" element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT_SUPERVISOR} element={<GoodsReceiptProcessDifferenceReport/>}/>}/>
                     <Route path="/goodsReceiptReportAll/:scanCode" element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT_SUPERVISOR} element={<GoodsReceiptAll/>}/>}/>
+                    {/*Goods Receipt Confirmation */}
+                    <Route path="/goodsReceiptConfirmation" element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT_CONFIRMATION} element={<GoodsReceipt confirm/>}/>}/>
+                    <Route path="/goodsReceiptConfirmation/:scanCode" element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT_CONFIRMATION} element={<GoodsReceiptProcess confirm/>}/>}/>
+                    <Route path="/goodsReceiptConfirmationSupervisor" element={<ProtectedRoute authorizations={getGoodsReceiptConfirmationSupervisorAuthorizations()} element={<GoodsReceiptSupervisor confirm/>}/>}/>
+                    <Route path="/goodsReceiptConfirmationReport" element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR} element={<GoodsReceiptReport confirm/>}/>}/>
+                    <Route path="/goodsReceiptConfirmationVSExitReport/:scanCode" element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR} element={<GoodsReceiptVSExitReport confirm/>}/>}/>
+                    <Route path="/goodsReceiptConfirmationProcessDifferenceReport/:scanCode" element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR} element={<GoodsReceiptProcessDifferenceReport confirm/>}/>}/>
+                    <Route path="/goodsReceiptConfirmationReportAll/:scanCode" element={<ProtectedRoute authorization={Authorization.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR} element={<GoodsReceiptAll confirm/>}/>}/>
                     {/*Pick*/}
                     <Route path="/pick" element={<ProtectedRoute authorization={Authorization.PICKING} element={<Picking/>}/>}/>
                     <Route path="/pick/:idParam" element={<ProtectedRoute authorization={Authorization.PICKING} element={<PickingProcess/>}/>}/>

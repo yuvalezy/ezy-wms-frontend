@@ -15,8 +15,9 @@ export function useMenus() {
     const {t} = useTranslation();
 
     const goodsReceiptSupervisorRoute = "/goodsReceiptSupervisor"
+    const goodsReceiptConfirmationSupervisorRoute = "/goodsReceiptConfirmationSupervisor"
 
-    const MenuItems: MenuItem[] = [ // Changed to an array of type MenuItem[]
+    const MenuItems: MenuItem[] = [
         {
             Link: "/itemCheck",
             Text: t('itemCheck'),
@@ -46,6 +47,18 @@ export function useMenus() {
             Text: t('goodsReceiptReport'),
             Authorization: Authorization.GOODS_RECEIPT_SUPERVISOR,
             Icon: "manager-insight",
+        },
+        {
+            Link: "/goodsReceiptConfirmation",
+            Text: t('receiptConfirmation'),
+            Authorization: Authorization.GOODS_RECEIPT_CONFIRMATION,
+            Icon: "cause",
+        },
+        {
+            Link: goodsReceiptConfirmationSupervisorRoute,
+            Text: t('goodsReceiptConfirmationSupervisor'),
+            Authorizations: [Authorization.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR],
+            Icon: "kpi-managing-my-area",
         },
         {
             Link: "/pick",
@@ -131,12 +144,21 @@ export function useMenus() {
         if (globalSettings?.grpoCreateSupervisorRequired) {
             return;
         }
+        // Goods Receipt Supervisor
         let menuItem = MenuItems.filter((v) => v.Link === goodsReceiptSupervisorRoute)[0];
         if (menuItem.Authorizations != null) {
             menuItem.Authorizations.push(Authorization.GOODS_RECEIPT)
         }
         let isSupervisor = authorizations.filter((v) => v === Authorization.GOODS_RECEIPT_SUPERVISOR).length === 1;
         menuItem.Text = !isSupervisor ? t('goodsReceiptCreation') : t('goodsReceiptSupervisor');
+
+        // Goods Receipt Confirmation Supervisor
+        menuItem = MenuItems.filter((v) => v.Link === goodsReceiptConfirmationSupervisorRoute)[0];
+        if (menuItem.Authorizations != null) {
+            menuItem.Authorizations.push(Authorization.GOODS_RECEIPT_CONFIRMATION);
+        }
+        isSupervisor = authorizations.filter((v) => v === Authorization.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR).length === 1;
+        menuItem.Text = !isSupervisor ? t('goodsReceiptConfirmationCreation') : t('goodsReceiptConfirmationSupervisor');
     }
 
     // It's common to return objects directly rather than an object with properties.

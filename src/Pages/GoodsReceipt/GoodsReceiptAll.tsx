@@ -8,7 +8,11 @@ import {useGoodsReceiptAllData} from "@/pages/GoodsReceipt/data/goods-receipt-al
 import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage} from "@/components/ui/breadcrumb";
 import {useNavigate} from "react-router-dom";
 
-export default function GoodsReceiptReportAll() {
+interface GoodsReceiptAllProps {
+  confirm?: boolean
+}
+
+export default function GoodsReceiptReportAll({confirm}: GoodsReceiptAllProps) {
   const {t} = useTranslation();
   const navigate = useNavigate();
   const {
@@ -25,7 +29,8 @@ export default function GoodsReceiptReportAll() {
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="#" onClick={() => navigate('/goodsReceiptSupervisor')}>{t('supervisor')}</BreadcrumbLink>
+            <BreadcrumbLink href="#"
+                            onClick={() => navigate('/goodsReceiptSupervisor')}>{t('supervisor')}</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbItem>
             <BreadcrumbPage>{t("goodsReceiptReport")}</BreadcrumbPage>
