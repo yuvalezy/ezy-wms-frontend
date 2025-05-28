@@ -12,16 +12,19 @@ import {
 } from "@/components/ui/dialog";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
 import {GoodsReceiptAll} from "../Data/Report";
 import {UnitType} from "@/assets/Common";
 import {formatNumber} from "@/lib/utils";
+import {Card, CardContent} from "@/components/ui/card";
+import {ScrollArea} from "@/components/ui/scroll-area";
+import {Separator} from "@/components/ui/separator";
 
 import {
   GRPOAllDetailProps,
   useGoodsReceiptAllDetailsData
 } from "@/pages/GoodsReceipt/Data/goods-receipt-all-details-data";
 import {useDateTimeFormat} from "@/assets/DateFormat";
+import InfoBox, {InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
 
 const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
   const {t} = useTranslation();
@@ -50,7 +53,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="sm:max-w-xl"> {/* Adjusted width */}
+      <DialogContent className="sm:max-w-xl">
         <DialogHeader>
           <DialogTitle>{t("detail")}</DialogTitle>
           <DialogDescription>
@@ -59,69 +62,67 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
         </DialogHeader>
 
         {currentData && data && data.length > 0 && (
-          <div className="max-h-[60vh] overflow-y-auto py-4"> {/* Scrollable area for table */}
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  {enableUpdate && <TableHead className="w-[50px]"><Label>{t('delete')}</Label></TableHead>}
-                  <TableHead><Label>{t('employee')}</Label></TableHead>
-                  <TableHead><Label>{t('date')}</Label></TableHead>
-                  <TableHead><Label>{t('time')}</Label></TableHead>
-                  <TableHead className="text-right"><Label>{t('quantity')}</Label></TableHead>
-                  <TableHead><Label>{t('unit')}</Label></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data.map((row) => {
-                  let displayQuantity = row.quantity;
-                  // Apply quantity adjustments based on unit type for display
-                  if (row.unit !== UnitType.Unit && currentData?.numInBuy) {
-                    displayQuantity /= currentData.numInBuy;
-                  }
-                  if (row.unit === UnitType.Pack && currentData?.purPackUn) {
-                    displayQuantity /= currentData.purPackUn;
-                  }
-                  // Use quantityChanges for the input value if it exists for this row
-                  const currentQuantityValue = quantityChanges[row.lineID] !== undefined
-                    ? quantityChanges[row.lineID]
-                    : displayQuantity;
+          <ScrollArea className="h-[60vh]">
+            <div className="grid grid-cols-1 gap-2">
+              {data.map((row) => {
+                let displayQuantity = row.quantity;
+                if (row.unit !== UnitType.Unit && currentData?.numInBuy) {
+                  displayQuantity /= currentData.numInBuy;
+                }
+                if (row.unit === UnitType.Pack && currentData?.purPackUn) {
+                  displayQuantity /= currentData.purPackUn;
+                }
+                const currentQuantityValue = quantityChanges[row.lineID] !== undefined
+                  ? quantityChanges[row.lineID]
+                  : displayQuantity;
+                const displayUnit = row.unit === UnitType.Unit ? t('unit') :
+                  row.unit === UnitType.Dozen ? (currentData?.buyUnitMsr || t('purPackUn')) :
+                    (currentData?.purPackMsr || t('packUn'));
 
-                  return (
-                    <TableRow key={row.lineID}>
-                      {enableUpdate && (
-                        <TableCell>
-                          <Checkbox
-                            checked={!!checkedRows[row.lineID]}
-                            onCheckedChange={(checked) => handleCheckboxChange(row.lineID, !!checked)}
-                          />
-                        </TableCell>
-                      )}
-                      <TableCell>{row.employeeName}</TableCell>
-                      <TableCell>{dateFormat(row.timeStamp)}</TableCell>
-                      <TableCell>{timeFormat(row.timeStamp)}</TableCell>
-                      <TableCell className="text-right">
-                        {enableUpdate ? (
+                return (
+                  <Card key={row.lineID}>
+                    <CardContent>
+                      <InfoBox>
+                        <InfoBoxValue label={t('employee')} value={row.employeeName}/>
+                      </InfoBox>
+                      <SecondaryInfoBox>
+                        <InfoBoxValue label={t('date')} value={dateFormat(row.timeStamp)}/>
+                        <InfoBoxValue label={t('time')} value={timeFormat(row.timeStamp)}/>
+                        <InfoBoxValue label={t('unit')} value={displayUnit}/>
+                        <InfoBoxValue label={t('quantity')} value={enableUpdate ? (
                           <Input
                             type="number"
-                            className="w-20 text-right"
+                            className="w-24 text-right"
                             value={currentQuantityValue.toString()}
                             onChange={(e) => handleQuantityChange(row.lineID, e.target.value)}
                           />
                         ) : (
-                          formatNumber(currentQuantityValue, 2) // Display formatted quantity if not updating
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {row.unit === UnitType.Unit ? t('unit') :
-                          row.unit === UnitType.Dozen ? (currentData?.buyUnitMsr || t('purPackUn')) :
-                            (currentData?.purPackMsr || t('packUn'))}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </div>
+                          <span className="text-right">
+                                {formatNumber(currentQuantityValue, 2)}
+                              </span>
+                        )}/>
+                      </SecondaryInfoBox>
+                      {enableUpdate && (
+                        <div className="flex items-center pt-2">
+                          <Button
+                            variant="destructive"
+                            className={`w-full flex items-center space-x-2 ${checkedRows[row.lineID] ? 'bg-accent' : ''}`}
+                            onClick={() => handleCheckboxChange(row.lineID, !checkedRows[row.lineID])}
+                          >
+                            <Checkbox
+                              checked={checkedRows[row.lineID]}
+                              onCheckedChange={(checked) => handleCheckboxChange(row.lineID, !!checked)}
+                            />
+                            <span>{t('remove')}</span>
+                          </Button>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </ScrollArea>
         )}
         {(!data || data.length === 0) &&
             <p className="py-4 text-center text-muted-foreground">{t("noDetailsAvailable")}</p>}
@@ -140,4 +141,5 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
     </Dialog>
   );
 });
+
 export default GoodsReceiptAllDialog;
