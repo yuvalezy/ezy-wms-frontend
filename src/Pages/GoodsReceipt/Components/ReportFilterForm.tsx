@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {useTranslation} from "react-i18next";
-import {BusinessPartner, fetchVendors, useDocumentStatusOptions} from "../../../assets/Data";
+import {BusinessPartner, fetchVendors, useDocumentStatusOptions} from "@/assets/Data";
 import {GoodsReceiptReportFilter} from "../Data/Document";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -97,7 +97,7 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({onSubmit, onClear}) 
                                 <Label htmlFor="vendor">{t("vendor")}</Label>
                                 <Select value={filters.businessPartner || ""} onValueChange={handleVendorChange}>
                                     <SelectTrigger id="vendor">
-                                        <SelectValue placeholder={t("selectVendor")} />
+                                        <SelectValue placeholder={t("selectVendorPlaceholder")} />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {vendors.map((vendor) => (
@@ -204,7 +204,7 @@ const ReportFilterForm: React.FC<ReportFilterFormProps> = ({onSubmit, onClear}) 
                                 <Label htmlFor="status">{t("status")}</Label>
                                 <Select value={filters.status && filters.status.length > 0 ? documentStatusOptions.find(opt => opt.status === filters.status![0])?.code || "" : ""} onValueChange={handleStatusChange}>
                                     <SelectTrigger id="status">
-                                        <SelectValue placeholder={t("selectStatus")} />
+                                        <SelectValue placeholder={t("selectStatusPlaceholder")} />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {documentStatusOptions.map((option) => (

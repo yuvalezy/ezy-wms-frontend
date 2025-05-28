@@ -146,11 +146,13 @@
 
   "selectVendor": "Select Vendor",
   "selectVendorPlaceholder": "Select a vendor",
+  "selectStatusPlaceholder": "Select a status",
   "selectBox": "Select Box",
   "selectTransferSource": "Choose Pickup Location",
   "selectItemsForTransfers": "Select Items for Transfer #{0}",
   "selectTransferTargetItems": "Choose Items for Destination",
   "selectTransferTargetBins": "Choose Bins for Destination",
+  "pickADate": "Pick a Date",
   "quantityInBin": "Quantity in Bin",
 
   "noStockDataFound": "No se encontraron datos de inventario",

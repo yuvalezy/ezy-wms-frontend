@@ -146,11 +146,13 @@
 
   "selectVendor": "Seleccione el Proveedor",
   "selectVendorPlaceholder": "Seleccione un proveedor",
+  "selectStatusPlaceholder": "Seleccione un estado",
   "selectBox": "Seleccione la Caja",
   "selectTransferSource": "Elija la ubicación de recogida",
   "selectItemsForTransfers": "Seleccionar artículos para transferencia #{0}",
   "selectTransferTargetItems": "Elija artículos para el destino",
   "selectTransferTargetBins": "Elija ubicaciones para el destino",
+  "pickADate": "Seleccione una fecha",
 
   "noStockDataFound": "No se encontraron datos de inventario",
   "binCheck": "Revision de Ubicación",
