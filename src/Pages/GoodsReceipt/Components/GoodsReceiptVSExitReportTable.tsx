@@ -1,47 +1,63 @@
 import * as React from 'react';
 import {GoodsReceiptVSExitReportDataLine} from "../Data/Report";
 import {useTranslation} from "react-i18next";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Label } from "@/components/ui/label";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {MetricRow} from "@/components/MetricRow";
+import {formatNumber} from "@/lib/utils";
 
 interface GoodsReceiptVSExitReportTableProps {
-    data: GoodsReceiptVSExitReportDataLine[]
+  data: GoodsReceiptVSExitReportDataLine[]
 }
 
 const GoodsReceiptVSExitReportTable: React.FC<GoodsReceiptVSExitReportTableProps> = ({data}) => {
-    const {t} = useTranslation();
+  const {t} = useTranslation();
 
-    return (
-        <div className="rounded-md border">
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead><Label>{t('code')}</Label></TableHead>
-                        <TableHead><Label>{t('description')}</Label></TableHead>
-                        <TableHead className="text-right"><Label>{t('openQuantity')}</Label></TableHead>
-                        <TableHead className="text-right"><Label>{t('Quantity')}</Label></TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {data.map((row) => (
-                        <TableRow key={row.itemCode}>
-                            <TableCell><Label>{row.itemCode}</Label></TableCell>
-                            <TableCell><Label>{row.itemName}</Label></TableCell>
-                            <TableCell className="text-right"><Label>{row.openQuantity}</Label></TableCell>
-                            <TableCell className="text-right"><Label>{row.quantity}</Label></TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </div>
-    );
+  return (
+    <div className="gap-2">
+      {data.map((row, index) => {
+        return <Card key={index}>
+          <CardHeader>
+            <CardTitle>{`${t('code')}: ${row.itemCode}`}</CardTitle>
+            <CardDescription>{`${t('description')}: ${row.itemName}`}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex justify-between items-center border-b-2 border-primary font-bold">
+              <div className="w-[30%]">
+                <span>{t('unit')}</span>
+              </div>
+              <div className="flex-1 flex justify-around text-center">
+                <div className="flex-1 text-xs">
+                  <span>{t('units')}</span>
+                </div>
+                <div className="flex-1 text-xs">
+                  <span>{row.buyUnitMsr ?? t('purPackUn')}</span>
+                </div>
+                <div className="flex-1 text-xs">
+                  <span>{row.purPackMsr ?? t('packUn')}</span>
+                </div>
+              </div>
+            </div>
+            <MetricRow
+              label={t('openQuantity')}
+              values={{
+                units: formatNumber(row.openQuantity, 0),
+                buyUnits: formatNumber(row.openQuantity / row.numInBuy),
+                packUnits: formatNumber(row.openQuantity / row.numInBuy / row.purPackUn)
+              }}
+            />
+            <MetricRow
+              label={t('quantity')}
+              values={{
+                units: formatNumber(row.quantity, 0),
+                buyUnits: formatNumber(row.quantity / row.numInBuy),
+                packUnits: formatNumber(row.quantity / row.numInBuy / row.purPackUn)
+              }}
+            />
+          </CardContent>
+        </Card>
+      })}
+    </div>
+  );
 }
 
 export default GoodsReceiptVSExitReportTable;

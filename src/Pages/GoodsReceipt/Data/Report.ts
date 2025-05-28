@@ -40,6 +40,10 @@ export type GoodsReceiptVSExitReportDataLine = {
   itemName: string;
   openQuantity: number;
   quantity: number;
+  numInBuy: number;
+  buyUnitMsr?: string | null;
+  purPackUn: number;
+  purPackMsr?: string | null;
 };
 
 export type GoodsReceiptValidateProcess = {
