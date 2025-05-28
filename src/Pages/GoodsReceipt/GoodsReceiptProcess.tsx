@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { MessageStripDesign} from "@ui5/webcomponents-react"; // Keep for MessageStripDesign enum
+import { MessageStrip, MessageStripDesign} from "@ui5/webcomponents-react"; // Keep for MessageStripDesign enum
 import {addItem, updateLine, updateLineQuantity} from "./Data/GoodsReceiptProcess";
 import {
   AddItemResponseMultipleValue,
@@ -35,7 +35,7 @@ export default function GoodsReceiptProcess() {
   const boxConfirmationDialogRef = useRef<BoxConfirmationDialogRef>(null);
   const [id, setID] = useState<number | null>();
   const [enable, setEnable] = useState(true);
-  const {setLoading, setAlert, setError} = useThemeContext();
+  const {setLoading, setError} = useThemeContext();
   const [barcodeInput, setBarcodeInput] = React.useState("");
   const [boxItem, setBoxItem] = useState("");
   const [boxItems, setBoxItems] = useState<Item[]>();
@@ -107,36 +107,36 @@ export default function GoodsReceiptProcess() {
             itemCode: item.code,
             quantity: data.quantity,
             message: `Error Mockup`,
-            severity: StatusAlertType.Negative
+            severity: MessageStripDesign.Negative
           });
         }
 
         let message: string = "";
-        let color: MessageStripDesign = StatusAlertType.Information;
+        let color: MessageStripDesign = MessageStripDesign.Information;
         let multiple: AddItemResponseMultipleValue[] = [];
         let totalErrors = (data.warehouse ? 1 : 0) + (data.fulfillment ? 1 : 0) + (data.showroom ? 1 : 0);
         if (totalErrors === 1) {
           if (data.warehouse) {
             message = t("scanConfirmStoreInWarehouse");
-            color = StatusAlertType.Positive;
+            color = MessageStripDesign.Positive;
           }
           if (data.fulfillment) {
             message = t("scanConfirmFulfillment");
-            color = StatusAlertType.Warning;
+            color = MessageStripDesign.Warning;
           }
           if (data.showroom) {
             message = t("scanConfirmShowroom");
-            color = StatusAlertType.Information;
+            color = MessageStripDesign.Information;
           }
         } else {
           if (data.warehouse) {
-            multiple.push({message: t("scanConfirmStoreInWarehouse"), severity: StatusAlertType.Positive});
+            multiple.push({message: t("scanConfirmStoreInWarehouse"), severity: MessageStripDesign.Positive});
           }
           if (data.fulfillment) {
-            multiple.push({message: t("scanConfirmFulfillment"), severity: StatusAlertType.Warning});
+            multiple.push({message: t("scanConfirmFulfillment"), severity: MessageStripDesign.Warning});
           }
           if (data.showroom) {
-            multiple.push({message: t("scanConfirmShowroom"), severity: StatusAlertType.Information});
+            multiple.push({message: t("scanConfirmShowroom"), severity: MessageStripDesign.Information});
           }
         }
 
@@ -158,7 +158,7 @@ export default function GoodsReceiptProcess() {
       .catch((error) => {
         console.error(`Error performing action: ${error}`);
         let errorMessage = error.response?.data["exceptionMessage"] ?? `Add Item Error: ${error}`;
-        alert({barcode: barcode, itemCode: item.code, message: errorMessage, severity: StatusAlertType.Negative});
+        alert({barcode: barcode, itemCode: item.code, message: errorMessage, severity: MessageStripDesign.Negative});
       })
       .finally(function () {
         setLoading(false);
@@ -175,7 +175,7 @@ export default function GoodsReceiptProcess() {
       barcode: barcode,
       itemCode: itemCode,
       message: StringFormat(t("goodsReceiptIsClosed"), id),
-      severity: StatusAlertType.Negative,
+      severity: MessageStripDesign.Negative,
       multiple: [],
       quantity: data.quantity
     });
@@ -244,31 +244,31 @@ export default function GoodsReceiptProcess() {
             response = data.returnValue;
             error = data.errorMessage;
             let message: string = "";
-            let color: MessageStripDesign = StatusAlertType.Information;
+            let color: MessageStripDesign = MessageStripDesign.Information;
             let multiple: AddItemResponseMultipleValue[] = [];
             let totalErrors = (data.warehouse ? 1 : 0) + (data.fulfillment ? 1 : 0) + (data.showroom ? 1 : 0);
             if (totalErrors === 1) {
               if (data.warehouse) {
                 message = t("scanConfirmStoreInWarehouse");
-                color = StatusAlertType.Positive;
+                color = MessageStripDesign.Positive;
               }
               if (data.fulfillment) {
                 message = t("scanConfirmFulfillment");
-                color = StatusAlertType.Warning;
+                color = MessageStripDesign.Warning;
               }
               if (data.showroom) {
                 message = t("scanConfirmShowroom");
-                color = StatusAlertType.Information;
+                color = MessageStripDesign.Information;
               }
             } else {
               if (data.warehouse) {
-                multiple.push({message: t("scanConfirmStoreInWarehouse"), severity: StatusAlertType.Positive});
+                multiple.push({message: t("scanConfirmStoreInWarehouse"), severity: MessageStripDesign.Positive});
               }
               if (data.fulfillment) {
-                multiple.push({message: t("scanConfirmFulfillment"), severity: StatusAlertType.Warning});
+                multiple.push({message: t("scanConfirmFulfillment"), severity: MessageStripDesign.Warning});
               }
               if (data.showroom) {
-                multiple.push({message: t("scanConfirmShowroom"), severity: StatusAlertType.Information});
+                multiple.push({message: t("scanConfirmShowroom"), severity: MessageStripDesign.Information});
               }
             }
             updatedAlert.quantity = parameters.quantity;

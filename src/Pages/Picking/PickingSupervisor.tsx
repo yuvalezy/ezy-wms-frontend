@@ -3,15 +3,15 @@ import {useTranslation} from "react-i18next";
 import {useEffect, useState} from "react";
 import {fetchPickings, PickingDocument, processPicking} from "./Data/PickingDocument";
 import {useThemeContext} from "@/components/ThemeContext";
-import {MessageStrip} from "@ui5/webcomponents-react"; // Keep for MessageStripDesign enum
+import {MessageStrip, MessageStripDesign} from "@ui5/webcomponents-react";
 import {StringFormat} from "@/Assets/Functions";
 import PickingCard from "@/Pages/Picking/Components/PickingCard";
-import {StatusAlertType} from "@/components/ThemeProviderStatusAlert";
+import { toast } from "sonner";
 
 export default function PickingSupervisor() {
   const {t} = useTranslation();
   const [pickings, setPickings] = useState<PickingDocument[]>([]);
-  const {setLoading, setAlert, setError} = useThemeContext();
+  const {setLoading, setError} = useThemeContext();
   useEffect(() => {
     loadData();
   }, []);
@@ -31,7 +31,7 @@ export default function PickingSupervisor() {
     setLoading(true);
     processPicking(picking.entry)
       .then(() => {
-        setAlert({message: StringFormat(t("pickingUpdateSuccess"), picking.entry), type: StatusAlertType.Positive})
+        toast.success(StringFormat(t("pickingUpdateSuccess"), picking.entry));
         loadData();
       })
       .catch((error) => {
@@ -48,7 +48,7 @@ export default function PickingSupervisor() {
       ))}
       {pickings.length === 0 &&
           <div style={{padding: '10px'}}>
-              <MessageStrip hideCloseButton design={StatusAlertType.Information}>
+              <MessageStrip hideCloseButton design={MessageStripDesign.Information}>
                 {t("nodata")}
               </MessageStrip>
           </div>

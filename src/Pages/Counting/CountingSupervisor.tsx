@@ -11,12 +11,12 @@ import CountingCard from "./components/CountingCard";
 import {ObjectAction} from "@/Assets/Common";
 import {MessageBox} from "@/components/ui/message-box";
 import CountingForm from "@/Pages/Counting/Components/CountingForm";
-import {StatusAlertType} from "@/components/ThemeProviderStatusAlert";
+import { toast } from "sonner";
 
 export default function CountingSupervisor() {
   const {user} = useAuth();
   const {t} = useTranslation();
-  const {setLoading, setAlert, setError} = useThemeContext();
+  const {setLoading, setError} = useThemeContext();
   const [countings, setCountings] = useState<Counting[]>([]);
   const [selectedID, setSelectedID] = useState<number | null>(
     null
@@ -48,7 +48,7 @@ export default function CountingSupervisor() {
         setCountings((prev) =>
           prev.filter((count) => count.id !== selectedID)
         );
-        setAlert({message: actionType === "approve" ? t("approved") : t("cancelled"), type: StatusAlertType.Positive});
+        toast.success(actionType === "approve" ? t("approved") : t("cancelled"));
       })
       .catch((error) => setError(error))
       .finally(() => setLoading(false));

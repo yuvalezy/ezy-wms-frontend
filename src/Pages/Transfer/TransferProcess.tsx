@@ -14,6 +14,7 @@ import { MessageStripDesign } from "@ui5/webcomponents-react"; // Keep for Messa
 import {IsNumeric, StringFormat} from "../../Assets/Functions";
 import {getProcessInfo, transferAction} from "./Data/TransferDocument";
 import {useAuth} from "../../components/AppContext";
+import { toast } from "sonner";
 
 export default function TransferProcess() {
   const {scanCode} = useParams();
@@ -24,7 +25,7 @@ export default function TransferProcess() {
     isComplete: false,
     comments: null
   });
-  const {setLoading, setAlert, setError} = useThemeContext();
+  const {setLoading, setError} = useThemeContext();
   const title = `${t("transfer")} #${scanCode}`;
   const navigate = useNavigate();
 
@@ -50,7 +51,7 @@ export default function TransferProcess() {
       setLoading(true);
       transferAction(id, "approve")
         .then(() => {
-          setAlert({message: t("transferApproved"), type: StatusAlertType.Positive});
+          toast.success(t("transferApproved"));
           navigate(`/transfer`);
         })
         .catch((error) => {

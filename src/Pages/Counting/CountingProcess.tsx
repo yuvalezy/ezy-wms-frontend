@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Progress } from "@/components/ui/progress";
-import { MessageStripDesign} from "@ui5/webcomponents-react"; // Keep for MessageStripDesign enum
+import { MessageStrip, MessageStripDesign } from "@ui5/webcomponents-react";
 import {BinLocation, Item, UnitType} from "../../Assets/Common";
 import {IsNumeric} from "../../Assets/Functions";
 import {delay} from "../../Assets/GlobalConfig";
@@ -31,7 +31,7 @@ export default function CountingProcess() {
     const [binLocation, setBinLocation] = useState<BinLocation | null>(null);
     const binLocationRef = useRef<BinLocationScannerRef>(null);
     const [enable, setEnable] = useState(false);
-    const {setLoading, setAlert, setError} = useThemeContext();
+    const {setLoading, setError} = useThemeContext();
     const {user} = useAuth();
     const barcodeRef = useRef<BarCodeScannerRef>(null);
     const [rows, setRows] = useState<CountingContent[] | null>(null);
@@ -134,7 +134,7 @@ export default function CountingProcess() {
                     buyUnitMsr: v.unitMsr,
                     barcode: item.barcode,
                     itemCode: item.code,
-                    severity: StatusAlertType.Information,
+                    severity: MessageStripDesign.Information,
                     timeStamp: dateTimeFormat(date)
                 })
                 barcodeRef?.current?.clear();
@@ -156,32 +156,35 @@ export default function CountingProcess() {
                     <ScrollableContentBox borderUp={user?.binLocations??false}>
                         {currentAlert && <ProcessAlert alert={currentAlert} onAction={(type) => processesRef?.current?.open(type)}/>}
                         {rows != null && rows.length > 0 &&
-                            <Table
-                                columns={<>
-                                    <TableColumn><Label>{t('code')}</Label></TableColumn>
-                                    <TableColumn><Label>{t('units')}</Label></TableColumn>
-                                    <TableColumn><Label>{t('dozens')}</Label></TableColumn>
-                                    <TableColumn><Label>{t('packs')}</Label></TableColumn>
-                                </>}
-                            >
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead><Label>{t('code')}</Label></TableHead>
+                                        <TableHead><Label>{t('units')}</Label></TableHead>
+                                        <TableHead><Label>{t('dozens')}</Label></TableHead>
+                                        <TableHead><Label>{t('packs')}</Label></TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
                                 {rows.map((row) => (
-                                    <>
-                                        <TableRow key={row.code}>
+                                    <React.Fragment key={row.code}>
+                                        <TableRow>
                                             <TableCell><Label>{row.code}</Label></TableCell>
                                             <TableCell><Label>{row.unit}</Label></TableCell>
                                             <TableCell><Label>{row.dozen}</Label></TableCell>
                                             <TableCell><Label>{row.pack}</Label></TableCell>
                                         </TableRow>
-                                        <TableGroupRow>
-                                                <Label>{t('description')}: {row.name}</Label>
-                                        </TableGroupRow>
-                                    </>
+                                        <TableRow>
+                                            <TableCell colSpan={4}><Label>{t('description')}: {row.name}</Label></TableCell>
+                                        </TableRow>
+                                    </React.Fragment>
                                 ))}
+                                </TableBody>
                             </Table>
                         }
                         {rows != null && rows.length === 0 &&
                             <div style={{padding: '10px'}}>
-                                <MessageStrip hideCloseButton design={StatusAlertType.Information}>
+                                <MessageStrip hideCloseButton design={MessageStripDesign.Information}>
                                     {t("nodata")}
                                 </MessageStrip>
                             </div>

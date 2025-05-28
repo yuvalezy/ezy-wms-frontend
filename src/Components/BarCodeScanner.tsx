@@ -19,6 +19,7 @@ import {distinctItems, Item, UnitType} from "../Assets/Common";
 import {StringFormat} from "../Assets/Functions";
 import {useThemeContext} from "./ThemeContext";
 import {useTranslation} from "react-i18next";
+import { toast } from "sonner";
 
 export interface BarCodeScannerProps {
   enabled: boolean;
@@ -48,7 +49,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
   }, ref) => {
   const barcodeRef = useRef<HTMLInputElement>(null);
   const [barcodeInput, setBarcodeInput] = useState('');
-  const {setLoading, setAlert, setError} = useThemeContext();
+  const {setLoading, setError} = useThemeContext();
   const [selectedUnit, setSelectedUnit] = useState<UnitType>(UnitType.Pack);
   const {t} = useTranslation();
 
@@ -73,7 +74,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
     try {
       if (barcode.length === 0) {
         let message = !item ? t("barcodeRequired") : t("scanCodeRequired");
-        setAlert({message: message, type: StatusAlertType.Warning});
+        toast.warning(message);
         return;
       }
 

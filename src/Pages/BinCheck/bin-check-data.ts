@@ -10,7 +10,7 @@ import {exportToExcel} from "@/Utils/excelExport";
 
 export const useBinCheckData = () => {
   const {t} = useTranslation();
-  const {setLoading, setAlert, setError} = useThemeContext();
+  const {setLoading, setError} = useThemeContext();
   const binRef = useRef<BinLocationScannerRef>(null);
   const {user} = useAuth();
   const [binContent, setBinContent] = useState<BinContentResponse[] | null>(null);
@@ -63,7 +63,6 @@ export const useBinCheckData = () => {
 
   return {
     setLoading,
-    setAlert,
     setError,
     binRef,
     user,

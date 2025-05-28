@@ -4,14 +4,14 @@ import {useThemeContext} from "@/components/ThemeContext";
 import {ResponseStatus} from "@/Assets/Common";
 import {StringFormat} from "@/Assets/Functions";
 import {useTranslation} from "react-i18next";
-import {StatusAlertType} from "@/components/ThemeProviderStatusAlert";
+import { toast } from "sonner";
 
 export const useItemCheckData = () => {
   const {t} = useTranslation();
   const [barcodeInput, setBarcodeInput] = React.useState("");
   const [itemCodeInput, setItemCodeInput] = React.useState("");
   const [result, setResult] = React.useState<ItemCheckResponse[] | null>(null);
-  const {setLoading, setAlert, setError} = useThemeContext();
+  const {setLoading, setError} = useThemeContext();
   const barcodeInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export const useItemCheckData = () => {
     let barcodeLength = barcodeInput.length === 0;
     let itemCodeLength = itemCodeInput.length === 0;
     if (barcodeLength && itemCodeLength) {
-      setAlert({message: t("barcodeOrItemRequired"), type: StatusAlertType.Warning});
+      toast.warning(t("barcodeOrItemRequired"));
       return;
     }
 

@@ -15,8 +15,9 @@ import {addItem, fetchPicking, PickingDocument, PickingDocumentDetail} from "./D
 import {useObjectName} from "../../Assets/ObjectName";
 import BarCodeScanner, {BarCodeScannerRef} from "../../components/BarCodeScanner";
 import {ScrollableContent} from "../../components/ScrollableContent";
-import PickingProcessDetailContent from "./components/PickingProcessDetailContent";
+import PickingProcessDetailContent from "./Components/PickingProcessDetailContent";
 import BinLocationScanner, {BinLocationScannerRef} from "../../components/BinLocationScanner";
+import { toast } from "sonner";
 
 export default function PickingProcessDetail() {
     const {idParam, typeParam, entryParam} = useParams();
@@ -27,7 +28,7 @@ export default function PickingProcessDetail() {
     const {t} = useTranslation();
     const boxConfirmationDialogRef = useRef<BoxConfirmationDialogRef>(null);
     const [enable, setEnable] = useState(true);
-    const {setLoading, setAlert, setError} = useThemeContext();
+    const {setLoading, setError} = useThemeContext();
     const [boxItem, setBoxItem] = useState("");
     const [boxItems, setBoxItems] = useState<Item[]>();
     const [, setPicking] = useState<PickingDocument | null>(null);
@@ -130,7 +131,7 @@ export default function PickingProcessDetail() {
                     return;
                 }
 
-                setAlert({message: StringFormat(t("pickingProcessSuccess"), barcode), type: StatusAlertType.Positive})
+                toast.success(StringFormat(t("pickingProcessSuccess"), barcode));
                 loadData({reload: true, binEntry: binLocation.entry});
             })
             .catch((error) => {

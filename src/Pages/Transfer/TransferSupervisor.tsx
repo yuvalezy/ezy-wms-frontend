@@ -4,7 +4,7 @@ import { MessageStripDesign} from "@ui5/webcomponents-react"; // Keep for Messag
 import React, {useEffect, useState} from "react";
 import {useThemeContext} from "../../components/ThemeContext";
 import {fetchTransfers, TransferDocument, transferAction} from "./Data/TransferDocument";
-import TransferCard from "./Components/TransferCard";
+import TransferCard from "./components/TransferCard";
 import {ObjectAction} from "@/Assets/Common";
 import {StringFormat} from "@/Assets/Functions";
 import TransferForm from "./Components/TransferForm";
@@ -19,11 +19,11 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { StatusAlertType } from "@/components/ThemeProviderStatusAlert";
+import { toast } from "sonner";
 
 export default function TransferSupervisor() {
     const {t} = useTranslation();
-    const {setLoading, setAlert, setError} = useThemeContext();
+    const {setLoading, setError} = useThemeContext();
     const [transfers, setTransfers] = useState<TransferDocument[]>([]);
     const [selectedTransferId, setSelectedTransferId] = useState<number | null>(null);
     const [actionType, setActionType] = useState<ObjectAction | null>(null);
@@ -44,10 +44,7 @@ export default function TransferSupervisor() {
                 setTransfers((prevTransfers) =>
                     prevTransfers.filter((transfer) => transfer.id !== selectedTransferId)
                 );
-                setAlert({
-                    message: actionType === "approve" ? t("transferApproved") : t("transferCancelled"),
-                    type: StatusAlertType.Positive
-                });
+                toast.success(actionType === "approve" ? t("transferApproved") : t("transferCancelled"));
             })
             .catch((error) => {
                 setError(error);

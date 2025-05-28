@@ -5,15 +5,16 @@ import {useParams} from "react-router-dom";
 import {
   fetchGoodsReceiptReportAll, GoodsReceiptAll, updateGoodsReceiptReport,
 } from "./Data/Report";
-import GoodsReceiptAllReportTable from "./components/GoodsReceiptAllTable";
+import GoodsReceiptAllReportTable from "./Components/GoodsReceiptAllTable";
 import {useThemeContext} from "../../components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { MessageStrip } from "@ui5/webcomponents-react";
 import {IsNumeric} from "../../Assets/Functions";
-import {GRPOAllDetailRef} from "./components/GoodsReceiptAllDetail";
-import GoodsReceiptAllDialog from "./components/GoodsReceiptAllDetail";
+import {GRPOAllDetailRef} from "./Components/GoodsReceiptAllDetail";
+import GoodsReceiptAllDialog from "./Components/GoodsReceiptAllDetail";
 import {DetailUpdateParameters} from "../../Assets/Common";
 import {exportToExcel} from "../../Utils/excelExport";
 
@@ -21,7 +22,7 @@ export default function GoodsReceiptReportAll() {
   const {t} = useTranslation();
   const [id, setID] = useState<number | null>();
   const {scanCode} = useParams();
-  const {setLoading, setAlert, setError} = useThemeContext();
+  const {setLoading, setError} = useThemeContext();
   const [data, setData] = useState<GoodsReceiptAll[] | null>(null);
   const title = `${t("goodsReceiptReport")} #${scanCode}`;
   const detailRef = useRef<GRPOAllDetailRef>();
@@ -41,7 +42,6 @@ export default function GoodsReceiptReportAll() {
     if (loadID == null && id == null) {
       return;
     }
-    setAlert(null);
     setData(null);
     setLoading(true);
     const fetchID = loadID ?? id ?? 0
@@ -104,16 +104,20 @@ export default function GoodsReceiptReportAll() {
 
   return (
     <ContentTheme title={title} exportExcel={true} onExportExcel={handleExportExcel}>
-      <Title level="H1">
-        {t("goodsReceipt")} #{id}
-      </Title>
-      {data && <>
-          <GoodsReceiptAllReportTable onClick={openDetails} data={data}/>
-        {data.length === 0 && (
-          <MessageStrip hideCloseButton design="Warning">{t("noExitData")}</MessageStrip>
-        )}
-        {id && <GoodsReceiptAllDialog ref={detailRef} id={id} onUpdate={onDetailUpdate}/>}
-      </>}
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("goodsReceipt")} #{id}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {data && <>
+            <GoodsReceiptAllReportTable onClick={openDetails} data={data}/>
+            {data.length === 0 && (
+              <MessageStrip hideCloseButton design="Warning">{t("noExitData")}</MessageStrip>
+            )}
+            {id && <GoodsReceiptAllDialog ref={detailRef} id={id} onUpdate={onDetailUpdate}/>}
+          </>}
+        </CardContent>
+      </Card>
     </ContentTheme>
   );
 }

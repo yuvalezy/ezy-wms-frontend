@@ -16,7 +16,7 @@ import { X, PlusCircle } from "lucide-react"; // Icons
 import { useThemeContext } from "@/components/ThemeContext";
 import { DocumentItem } from "@/Assets/Document";
 import { useObjectName } from "@/Assets/ObjectName";
-import { StatusAlertType } from '@/components/ThemeProviderStatusAlert'; // Ensure this path is correct
+import { toast } from "sonner";
 
 export interface DocumentListRef {
     clearItems: () => void;
@@ -28,7 +28,6 @@ type DocumentListProps = {
 
 const DocumentList = forwardRef<DocumentListRef, DocumentListProps>((props, ref) => {
     const { t } = useTranslation();
-    const { setAlert } = useThemeContext();
     const o = useObjectName();
     const docNumInputRef = useRef<HTMLInputElement>(null); // Ref for the input element
     const [items, setItems] = useState<DocumentItem[]>([]);
@@ -49,14 +48,14 @@ const DocumentList = forwardRef<DocumentListRef, DocumentListProps>((props, ref)
 
     const handleAddClick = () => {
         if (docNum.trim().length === 0) {
-            setAlert({ message: t('documentRequired'), type: StatusAlertType.Warning });
+            toast.warning(t('documentRequired'));
             return;
         }
         const currentObjectType = parseInt(objTypeString);
         const currentDocumentNumber = parseInt(docNum);
 
         if (isNaN(currentDocumentNumber)) {
-            setAlert({ message: t('invalidDocumentNumber'), type: StatusAlertType.Warning }); // Assuming translation exists
+            toast.warning(t('invalidDocumentNumber')); // Assuming translation exists
             return;
         }
 
@@ -66,7 +65,7 @@ const DocumentList = forwardRef<DocumentListRef, DocumentListProps>((props, ref)
         };
 
         if (items.find(i => i.objectType === newDocument.objectType && i.documentNumber === newDocument.documentNumber)) {
-            setAlert({ message: t('duplicateNotAllowed'), type: StatusAlertType.Warning });
+            toast.warning(t('duplicateNotAllowed'));
             return;
         }
         const newItems = [...items, newDocument];

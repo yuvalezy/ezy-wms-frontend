@@ -17,6 +17,7 @@ import {useThemeContext} from "../../components/ThemeContext";
 import {StringFormat} from "../../Assets/Functions";
 import {useNavigate} from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { toast } from "sonner";
 import {
     Dialog,
     DialogContent,
@@ -29,7 +30,7 @@ import {
 export default function TransferRequest() {
     const {t} = useTranslation();
     const barcodeRef = useRef<BarCodeScannerRef>(null);
-    const {setLoading, setAlert, setError} = useThemeContext();
+    const {setLoading, setError} = useThemeContext();
     const [rows, setRows] = useState<TransferContent[]>([]);
     const quantityRefs = useRef<(HTMLInputElement | null)[]>([]);
     const navigate = useNavigate();
@@ -97,7 +98,7 @@ export default function TransferRequest() {
             setLoading(true);
             createRequest(rows)
                 .then((v) => {
-                    alert(StringFormat(t('transferRequestCreated'), v))
+                    toast.success(StringFormat(t('transferRequestCreated'), v));
                     navigate('/');
                 })
                 .catch((e) => setError(e))
