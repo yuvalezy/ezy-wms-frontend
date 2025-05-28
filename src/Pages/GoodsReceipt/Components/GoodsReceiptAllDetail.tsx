@@ -1,83 +1,45 @@
-import React, {forwardRef, useImperativeHandle, useRef, useState} from "react";
-import {useThemeContext} from "../../../components/ThemeContext";
+import React, {forwardRef, useImperativeHandle} from "react";
 import {useTranslation} from "react-i18next";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import {Button} from "@/components/ui/button";
+import {Checkbox} from "@/components/ui/checkbox";
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
-import {fetchGoodsReceiptReportAllDetails, GoodsReceiptAll, GoodsReceiptAllDetail} from "../Data/Report";
-import {fetchDocuments} from "../Data/Document";
-import {DetailUpdateParameters, Status, UnitType} from "../../../assets/Common";
-import {useDateTimeFormat} from "../../../assets/DateFormat";
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
+import {GoodsReceiptAll} from "../Data/Report";
+import {UnitType} from "@/assets/Common";
 import {formatNumber} from "@/lib/utils";
 
-export interface GRPOAllDetailRef {
-  show: (data: GoodsReceiptAll) => void;
-}
-
-export interface GRPOAllDetailProps {
-  id: number;
-  onUpdate: (data: DetailUpdateParameters) => void;
-}
+import {
+  GRPOAllDetailProps,
+  useGoodsReceiptAllDetailsData
+} from "@/pages/GoodsReceipt/Data/goods-receipt-all-details-data";
+import {useDateTimeFormat} from "@/assets/DateFormat";
 
 const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
   const {t} = useTranslation();
   const {dateFormat, timeFormat} = useDateTimeFormat();
-  const {setLoading, setError} = useThemeContext();
-  const [isOpen, setIsOpen] = useState(false);
-  const [currentData, setCurrentData] = useState<GoodsReceiptAll | null>(null);
-  const [data, setData] = useState<GoodsReceiptAllDetail[] | null>([]);
-  const [enableUpdate, setEnableUpdate] = useState(false);
-  const [checkedRows, setCheckedRows] = useState<{ [key: number]: boolean }>({}); // State to store checked rows
-  const [quantityChanges, setQuantityChanges] = useState<{ [key: number]: number }>({}); // State to store quantity changes
-
-  function update() {
-    try {
-      const removeRows = data?.filter(detail => checkedRows[detail.lineID]).map(detail => detail.lineID) ?? [];
-      setIsOpen(false);
-      props.onUpdate({id: props.id, removeRows: removeRows, quantityChanges: quantityChanges});
-    } catch (e) {
-      setError(e);
-    }
-  }
-
-  function loadDetails(data: GoodsReceiptAll) {
-    setLoading(true);
-    setEnableUpdate(false);
-    setCheckedRows({})
-    setQuantityChanges({})
-    fetchDocuments({id: props.id})
-      .then((doc) => {
-        setEnableUpdate(doc[0].status === Status.InProgress);
-        fetchGoodsReceiptReportAllDetails(props.id, data.itemCode)
-          .then((result) => {
-            setIsOpen(true);
-            setData(result);
-          })
-          .catch((error) => setError(error))
-          .finally(() => setLoading(false));
-      })
-      .catch((error) => {
-        setError(error);
-        setLoading(false);
-      });
-  }
+  const {
+    isOpen,
+    currentData,
+    data,
+    enableUpdate,
+    checkedRows,
+    quantityChanges,
+    setCurrentData,
+    loadDetails,
+    update,
+    handleCheckboxChange,
+    handleQuantityChange,
+    setIsOpen
+  } = useGoodsReceiptAllDetailsData(props);
 
   useImperativeHandle(ref, () => ({
     show(data: GoodsReceiptAll) {
@@ -85,23 +47,6 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
       loadDetails(data);
     }
   }));
-
-  function handleCheckboxChange(lineID: number, checked: boolean) {
-    setCheckedRows(prevState => ({
-      ...prevState,
-      [lineID]: checked
-    }));
-    // setEnableUpdate(true); // This might not be needed if button is always enabled or logic changes
-  }
-
-  function handleQuantityChange(lineID: number, newValue: string) {
-    const numValue = parseInt(newValue, 10);
-    setQuantityChanges(prevState => ({
-      ...prevState,
-      [lineID]: isNaN(numValue) ? 0 : numValue,
-    }));
-     // setEnableUpdate(true); // This might not be needed
-  }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -112,7 +57,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
             {currentData?.itemCode} - {currentData?.itemName}
           </DialogDescription>
         </DialogHeader>
-        
+
         {currentData && data && data.length > 0 && (
           <div className="max-h-[60vh] overflow-y-auto py-4"> {/* Scrollable area for table */}
             <Table>
@@ -137,9 +82,9 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                     displayQuantity /= currentData.purPackUn;
                   }
                   // Use quantityChanges for the input value if it exists for this row
-                  const currentQuantityValue = quantityChanges[row.lineID] !== undefined 
-                                               ? quantityChanges[row.lineID] 
-                                               : displayQuantity;
+                  const currentQuantityValue = quantityChanges[row.lineID] !== undefined
+                    ? quantityChanges[row.lineID]
+                    : displayQuantity;
 
                   return (
                     <TableRow key={row.lineID}>
@@ -168,8 +113,8 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                       </TableCell>
                       <TableCell>
                         {row.unit === UnitType.Unit ? t('unit') :
-                         row.unit === UnitType.Dozen ? (currentData?.buyUnitMsr || t('purPackUn')) :
-                         (currentData?.purPackMsr || t('packUn'))}
+                          row.unit === UnitType.Dozen ? (currentData?.buyUnitMsr || t('purPackUn')) :
+                            (currentData?.purPackMsr || t('packUn'))}
                       </TableCell>
                     </TableRow>
                   );
@@ -178,7 +123,8 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
             </Table>
           </div>
         )}
-        {(!data || data.length === 0) && <p className="py-4 text-center text-muted-foreground">{t("noDetailsAvailable")}</p>}
+        {(!data || data.length === 0) &&
+            <p className="py-4 text-center text-muted-foreground">{t("noDetailsAvailable")}</p>}
 
         <DialogFooter>
           {enableUpdate && (

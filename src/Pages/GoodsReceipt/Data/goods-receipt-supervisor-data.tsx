@@ -10,7 +10,7 @@ import {Authorization} from "@/assets/Authorization";
 import {documentAction, fetchDocuments} from "@/pages/GoodsReceipt/Data/Document";
 import {globalSettings} from "@/assets/GlobalConfig";
 
-export const useGoodReceiptSupervisorData = () => {
+export const useGoodsReceiptSupervisorData = () => {
   const {t} = useTranslation();
   const {user} = useAuth();
   const [supervisor, setSupervisor] = useState(false);
@@ -69,8 +69,8 @@ export const useGoodReceiptSupervisorData = () => {
   return {
     supervisor,
     documents,
-    setDocuments,
     selectedDocument,
+    setDocuments,
     selectedDocumentId,
     actionType,
     dialogOpen,

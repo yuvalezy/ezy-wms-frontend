@@ -6,7 +6,7 @@ import DocumentListDialog from "./components/DocumentListDialog";
 import ContentTheme from "@/components/ContentTheme";
 import DocumentForm from "@/pages/GoodsReceipt/components/DocumentForm";
 import {MessageBox} from "@/components/ui/message-box";
-import {useGoodReceiptSupervisorData} from "@/pages/GoodsReceipt/Data/good-receipt-supervisor-data";
+import {useGoodsReceiptSupervisorData} from "@/pages/GoodsReceipt/Data/goods-receipt-supervisor-data";
 
 export default function GoodsReceiptSupervisor() {
   const {t} = useTranslation();
@@ -24,7 +24,7 @@ export default function GoodsReceiptSupervisor() {
     handleConfirmAction,
     setDialogOpen,
     getTitle
-  } = useGoodReceiptSupervisorData();
+  } = useGoodsReceiptSupervisorData();
   return (
     <ContentTheme title={getTitle()}>
       <DocumentForm
