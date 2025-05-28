@@ -117,6 +117,13 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
     handleMultipleItems(items);
   }
 
+  useEffect(() => {
+    console.log(barcodeRef);
+    if (barcodeRef.current) {
+      barcodeRef.current.focus();
+    }
+  }, [barcodeRef]);
+
   function handleMultipleItems(items: Item[]) {
     const distinctCodes = distinctItems(items);
     if (distinctCodes.length !== 1) {
