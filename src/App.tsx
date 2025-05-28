@@ -34,6 +34,7 @@ import BinCheck from "./Pages/BinCheck/BinCheck";
 import GoodsReceiptProcessDifferenceReport from "./Pages/GoodsReceipt/GoodsReceiptProcessDifferenceReport";
 import TransferProcessTargetBins from "./Pages/Transfer/TransferProcessTargetBins";
 import TransferRequest from "./Pages/Transfer/TransferRequest";
+import { Toaster } from 'sonner';
 
 export default function App() {
     function getGoodsReceiptSupervisorAuthorizations() {
@@ -48,6 +49,7 @@ export default function App() {
     return (
         <AuthProvider>
             <BrowserRouter>
+                <Toaster />
                 <Routes>
                     <Route path="/login" element={<LoginPage/>}/>
                     <Route path="/unauthorized" element={<Unauthorized/>}/>

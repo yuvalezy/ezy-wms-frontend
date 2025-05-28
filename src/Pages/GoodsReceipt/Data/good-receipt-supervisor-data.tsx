@@ -2,19 +2,19 @@ import {useTranslation} from "react-i18next";
 import {useAuth} from "@/components/AppContext";
 import {useEffect, useRef, useState} from "react";
 import {useThemeContext} from "@/components/ThemeContext";
+import { toast } from "sonner";
 import {Document} from "@/Assets/Document";
 import {ObjectAction, Status} from "@/Assets/Common";
-import {DocumentListDialogRef} from "../Components/DocumentListDialog";
+import {DocumentListDialogRef} from "../components/DocumentListDialog";
 import {Authorization} from "@/Assets/Authorization";
 import {documentAction, fetchDocuments} from "@/Pages/GoodsReceipt/Data/Document";
 import {globalSettings} from "@/Assets/GlobalConfig";
-import {StatusAlertType} from "@/components/ThemeProviderStatusAlert";
 
 export const useGoodReceiptSupervisorData = () => {
   const {t} = useTranslation();
   const {user} = useAuth();
   const [supervisor, setSupervisor] = useState(false);
-  const {setLoading, setAlert, setError} = useThemeContext();
+  const {setLoading, setError} = useThemeContext();
   const [documents, setDocuments] = useState<Document[]>([]);
   const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(null);
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
@@ -50,10 +50,7 @@ export const useGoodReceiptSupervisorData = () => {
         setDocuments((prevDocs) =>
           prevDocs.filter((doc) => doc.id !== selectedDocumentId)
         );
-        setAlert({
-          message: actionType === "approve" ? t("approved") : t("cancelled"),
-          type: StatusAlertType.Positive
-        });
+        toast.success(actionType === "approve" ? t("approved") : t("cancelled"));
       })
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
