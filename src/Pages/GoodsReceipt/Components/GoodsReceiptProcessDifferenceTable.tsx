@@ -14,10 +14,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"; // Added DialogDescription
 import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {UnitType} from "../../../assets/Common";
 import {formatNumber} from "@/lib/utils";
 import {MetricRow} from "@/components/MetricRow";
+import InfoBox, {InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
 // import {formatValueByPack} from "../../../assets/Quantities"; // Assuming this might be useful later or can be removed
 
 // Interface for the new quantity row structure
@@ -217,7 +219,7 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
 
       {selectedLineForDetail && isDetailDialogOpen && (
         <Dialog open={isDetailDialogOpen} onOpenChange={setIsDetailDialogOpen}>
-          <DialogContent className="sm:max-w-2xl"> {/* Increased width for details table */}
+          <DialogContent className="sm:max-w-xl">
             <DialogHeader>
               <DialogTitle>{`${t('detailsFor')} ${selectedLineForDetail.itemCode} (#${selectedLineForDetail.lineNumber})`}</DialogTitle>
               <DialogDescription>{selectedLineForDetail.itemName}</DialogDescription>
@@ -231,38 +233,39 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
               </div>
 
               {detailDataForDialog && detailDataForDialog.length > 0 ? (
-                <div className="rounded-md border">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-[25%]"><Label>{t('date')}</Label></TableHead>
-                      <TableHead className="w-[20%]"><Label>{t('time')}</Label></TableHead>
-                      <TableHead className="w-[30%]"><Label>{t('employee')}</Label></TableHead>
-                      <TableHead className="w-[25%] text-right"><Label>{t('scannedQuantity')}</Label></TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
+                <ScrollArea className="h-[40vh]">
+                  <div className="space-y-2">
                     {detailDataForDialog.map((detail) => {
                       const timeStamp = new Date(detail.timeStamp);
                       let scannedQuantity = detail.scannedQuantity;
-                      if (detail.unit !== UnitType.Unit && selectedLineForDetail.numInBuy) {
+                      if (selectedLineForDetail?.numInBuy && detail.unit !== UnitType.Unit && selectedLineForDetail.numInBuy !== 0) {
                         scannedQuantity /= selectedLineForDetail.numInBuy;
                       }
-                      if (detail.unit === UnitType.Pack && selectedLineForDetail.purPackUn) {
+                      if (selectedLineForDetail?.purPackUn && detail.unit === UnitType.Pack && selectedLineForDetail.purPackUn !== 0) {
                         scannedQuantity /= selectedLineForDetail.purPackUn;
                       }
+
+                      const displayUnit = selectedLineForDetail.unit === UnitType.Unit ? t('unit') :
+                        selectedLineForDetail.unit === UnitType.Dozen ? (selectedLineForDetail?.buyUnitMsr || t('purPackUn')) :
+                          (selectedLineForDetail?.purPackMsr || t('packUn'));
                       return (
-                        <TableRow key={`${detail.timeStamp}-${detail.employee}`}>
-                          <TableCell><span>{dateFormat(timeStamp)}</span></TableCell>
-                          <TableCell><span>{timeFormat(timeStamp)}</span></TableCell>
-                          <TableCell><span>{detail.employee}</span></TableCell>
-                          <TableCell className="text-right"><span>{formatNumber(scannedQuantity, 2)}</span></TableCell>
-                        </TableRow>
+                        <Card key={`${detail.timeStamp}-${detail.employee}-${detail.scannedQuantity}`}> {/* Adjusted key for more uniqueness */}
+                          <CardContent>
+                            <SecondaryInfoBox>
+                              <InfoBoxValue label={t('date')} value={dateFormat(timeStamp)} />
+                              <InfoBoxValue label={t('time')} value={timeFormat(timeStamp)} />
+                              <InfoBoxValue label={t('employee')} value={detail.employee} />
+                              <InfoBoxValue label={t('unit')} value={displayUnit} />
+                            </SecondaryInfoBox>
+                            <InfoBox>
+                              <InfoBoxValue label={t('scannedQuantity')} value={formatNumber(scannedQuantity, 2)} />
+                            </InfoBox>
+                          </CardContent>
+                        </Card>
                       );
                     })}
-                  </TableBody>
-                </Table>
-                </div>
+                  </div>
+                </ScrollArea>
               ) : (
                 <p className="text-center text-muted-foreground">{t('noDetailsAvailable')}</p>
               )}

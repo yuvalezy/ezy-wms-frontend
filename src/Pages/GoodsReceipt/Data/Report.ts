@@ -62,6 +62,7 @@ export type GoodsReceiptValidateProcessLine = {
   buyUnitMsr: string;
   purPackUn: number;
   purPackMsr: string;
+  unit: UnitType;
   lineStatus: ProcessLineStatus;
 }
 
