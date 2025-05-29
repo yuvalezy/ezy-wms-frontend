@@ -1,84 +1,164 @@
-import {Calendar, Home, Inbox, LogOutIcon, Plus, Search, Settings} from "lucide-react"
+import {LogOutIcon} from "lucide-react"
+import {useLocation, useNavigate} from "react-router-dom";
+import {useEffect, useState} from "react";
+import {MenuItem, useMenus} from "@/assets/Menus";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {
+  faCheckCircle, // complete
+  faCube, // dimension
+  faClipboardList, // cause
+  faChartBar, // kpi-managing-my-area
+  faChartLine, // manager-insight
+  faShoppingCart, // cart-2
+  faBox, // product
+  faIndustry, // factory
+  faArrowsAlt, // move
+  faTruckMoving, // journey-depart
+  faQuestionCircle, // request (fallback/generic)
+  faQuestion, // general fallback
+  faSignOutAlt,
+} from '@fortawesome/free-solid-svg-icons';
+import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
 
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup, SidebarGroupAction,
+  SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import {useAuth} from "@/components/AppContext";
+import {useTranslation} from "react-i18next";
 
-// Menu items.
-const items = [
-  {
-    title: "Home",
-    url: "#",
-    icon: Home,
-  },
-  {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
-  },
-  {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
-]
+const iconMap: { [key: string]: IconDefinition } = {
+  "complete": faCheckCircle,
+  "dimension": faCube,
+  "cause": faClipboardList,
+  "kpi-managing-my-area": faChartBar,
+  "manager-insight": faChartLine,
+  "cart-2": faShoppingCart,
+  "product": faBox,
+  "factory": faIndustry,
+  "move": faArrowsAlt,
+  "journey-depart": faTruckMoving,
+  "request": faQuestionCircle,
+};
+
+const getFaIcon = (iconName: string): IconDefinition => {
+  return iconMap[iconName] || faQuestion; // Fallback to a generic question mark icon
+};
 
 export function AppSidebar() {
+  const menus = useMenus();
+  const [authorizedMenus, setAuthorizedMenus] = useState<MenuItem[]>([]);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const {logout, user} = useAuth();
+  const {t} = useTranslation();
+
+  useEffect(() => {
+    setAuthorizedMenus(menus.GetMenus(user?.authorizations));
+  }, [user, menus]);
+
+  const handleMenuItemClick = (link: string) => {
+    navigate(link);
+  };
+
+  const handleLogout = () => {
+    logout();
+  };
+
+  // Define the grouping logic
+  const groupedMenus = authorizedMenus.reduce((acc, item) => {
+    let groupLabel = "Other"; // Default group
+
+    if (item.Link === "/binCheck" || item.Link === "/itemCheck") {
+      groupLabel = "Inventory Check";
+    } else if (
+      item.Link === "/goodsReceipt" ||
+      item.Link === "/goodsReceiptSupervisor" ||
+      item.Link === "/goodsReceiptReport" ||
+      item.Link === "/goodsReceiptConfirmation" ||
+      item.Link === "/goodsReceiptConfirmationSupervisor" ||
+      item.Link === "/goodsReceiptConfirmationReport"
+    ) {
+      groupLabel = "Goods Receipt";
+    } else if (item.Link === "/pick" || item.Link === "/pickSupervisor") {
+      groupLabel = "Picking";
+    } else if (item.Link === "/counting" || item.Link === "/countingSupervisor") {
+      groupLabel = "Counting";
+    } else if (
+      item.Link === "/transfer" ||
+      item.Link === "/transferSupervisor" ||
+      item.Link === "/transferRequest"
+    ) {
+      groupLabel = "Transfer";
+    }
+
+    if (!acc[groupLabel]) {
+      acc[groupLabel] = [];
+    }
+    acc[groupLabel].push(item);
+    return acc;
+  }, {} as Record<string, MenuItem[]>);
+
+  // Order the groups
+  const orderedGroupLabels = [
+    "Inventory Check",
+    "Goods Receipt",
+    "Picking",
+    "Counting",
+    "Transfer",
+    "Other",
+  ];
+
   return (
     <Sidebar>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item, index) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                  <SidebarMenuBadge>{index * 7}</SidebarMenuBadge>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
-          <SidebarGroupAction>
-            <Plus /> <span className="sr-only">Add Project</span>
-          </SidebarGroupAction>
-          <SidebarGroupContent></SidebarGroupContent>
-        </SidebarGroup>
+        {orderedGroupLabels.map((groupLabel) => {
+          const itemsInGroup = groupedMenus[groupLabel];
+          if (!itemsInGroup || itemsInGroup.length === 0) {
+            return null;
+          }
+          return (
+            <SidebarGroup key={groupLabel}>
+              <SidebarGroupLabel>{groupLabel}</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {itemsInGroup.map((item) => (
+                    <SidebarMenuItem key={item.Link}>
+                      <SidebarMenuButton asChild>
+                        <a
+                          href={item.Link}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleMenuItemClick(item.Link);
+                          }}
+                          className={location.pathname === item.Link ? 'bg-gray-200' : ''}
+                        >
+                          <FontAwesomeIcon icon={getFaIcon(item.Icon)}/>
+                          <span>{item.Text}</span>
+                        </a>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          );
+        })}
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <a href="#">
-                <LogOutIcon />
-                <span>Logout</span>
+              <a href="#" onClick={handleLogout}>
+                <LogOutIcon/>
+                <span>{t('logout')}</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>

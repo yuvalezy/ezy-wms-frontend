@@ -37,6 +37,16 @@ const ContentTheme: React.FC<ContentThemeProps> = (
   }) => {
   const navigate = useNavigate();
 
+  if (exportExcel) {
+    window.alert("Export to Excel is not implemented yet.");
+  }
+  if (onBack) {
+    window.alert("Back navigation is not implemented yet.");
+  }
+  if (customActionButtons) {
+    window.alert("Custom action buttons are not implemented yet.");
+  }
+
   return (
     <SidebarProvider>
       <div className="h-screen flex">
@@ -80,21 +90,3 @@ const ContentTheme: React.FC<ContentThemeProps> = (
 }
 
 export default ContentTheme;
-// {/*<div className="min-h-screen bg-background">*/
-// }
-// {/*  <MenuAppBar title={title} exportExcel={exportExcel} onExportExcel={onExportExcel} onBack={onBack}*/
-// }
-// {/*              customActionButtons={customActionButtons}/>*/
-// }
-// {/*  <ScrollableContent>*/
-// }
-// {/*    <div className="mx-auto pr-2 pl-2 pb-2 space-y-4 w-full">*/
-// }
-// {/*      {children}*/
-// }
-// {/*    </div>*/
-// }
-// {/*  </ScrollableContent>*/
-// }
-// {/*</div>*/
-// }
