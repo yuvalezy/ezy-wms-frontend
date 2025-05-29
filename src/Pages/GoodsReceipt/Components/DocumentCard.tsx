@@ -54,13 +54,6 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
         <SecondaryInfoBox>
           {doc.name && <InfoBoxValue label={t('id')} value={doc.name}/>}
           <InfoBoxValue onClick={handleOpenLink ? openLink : undefined} label={t('number')} value={doc.id}/>
-          {doc.businessPartner && (
-            <InfoBoxValue label={t('vendor')} value={doc.businessPartner.name ?? doc.businessPartner.code}/>
-          )}
-          {doc.specificDocuments && doc.specificDocuments?.length > 0 && (
-            <InfoBoxValue label={t('documentsList')} value={formatDocumentsList(doc.specificDocuments)}
-                          onClick={() => docDetails(doc)}/>
-          )}
           <InfoBoxValue label={t('docDate')} value={dateFormat(new Date(doc.date))}/>
           <InfoBoxValue label={t('createdBy')} value={doc.employee.name}/>
           <InfoBoxValue label={t('status')} value={documentStatusToString(doc.status)}/>

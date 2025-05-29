@@ -42,7 +42,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, confirm}) => 
   const TAB_AUTOCONFIRM = GoodsReceiptType.AutoConfirm.toString();
   const TAB_SPECIFICORDERS = GoodsReceiptType.SpecificOrders.toString();
 
-  const [activeTab, setActiveTab] = useState<string>(!confirm ? TAB_AUTOCONFIRM : TAB_SPECIFICORDERS);
+  const [activeTab, setActiveTab] = useState<string>(TAB_SPECIFICORDERS);
   const [items, setItems] = useState<DocumentItem[]>([]);
   const [cardCodeInput, setCardCodeInput] = useState<string>("");
   const [docNameInput, setDocNameInput] = useState<string>("");
@@ -159,8 +159,8 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, confirm}) => 
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
       <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value={TAB_AUTOCONFIRM}>{t("automatic")}</TabsTrigger>
         <TabsTrigger value={TAB_SPECIFICORDERS}>{t("specificDocuments")}</TabsTrigger>
+        <TabsTrigger value={TAB_AUTOCONFIRM}>{t("automatic")}</TabsTrigger>
       </TabsList>
 
       <TabsContent value={TAB_AUTOCONFIRM}>

@@ -5,6 +5,8 @@ import {useThemeContext} from "@/components/ThemeContext";
 import {fetchCountings} from "@/pages/Counting/data/Counting";
 import {Counting} from "@/assets/Counting";
 import CountingCard from "@/pages/Counting/components/CountingCard";
+import {Alert, AlertDescription} from "@/components";
+import {AlertCircle} from "lucide-react";
 
 export default function CountingList() {
   const {setLoading, setError} = useThemeContext();
@@ -21,9 +23,17 @@ export default function CountingList() {
 
   return (
     <ContentTheme title={t("counting")}>
-      {data.map((doc) => (
+      {data.length ?
+        data.map((doc) => (
         <CountingCard key={doc.id} doc={doc}/>
-      ))}
+      )) :
+        <Alert variant="information">
+          <AlertCircle className="h-4 w-4"/>
+          <AlertDescription>
+            {t("noCountingData")}
+          </AlertDescription>
+        </Alert>
+      }
     </ContentTheme>
   );
 }

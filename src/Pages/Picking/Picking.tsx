@@ -1,9 +1,10 @@
 import React, {useEffect} from "react";
 import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
-import {useThemeContext} from "@/components";
+import {Alert, AlertDescription, useThemeContext} from "@/components";
 import {fetchPickings, PickingDocument, PickStatus} from "@/pages/Picking/data/PickingDocument";
 import PickingCard from "@/pages/Picking/components/PickingCard";
+import {AlertCircle} from "lucide-react";
 
 export default function Picking() {
   const {setLoading, setError} = useThemeContext();
@@ -20,14 +21,21 @@ export default function Picking() {
   }, [setError, setLoading]);
 
 
-    return (
-        <ContentTheme title={t("picking")}>
-            <div className="my-4">
-                {pickings.map((pick) => (
-                    <PickingCard key={pick.entry} picking={pick}/>
-                ))}
-            </div>
-        </ContentTheme>
-    );
+  return (
+    <ContentTheme title={t("picking")}>
+      <div className="my-4">
+        {pickings.length
+          ? pickings.map((pick) => (
+            <PickingCard key={pick.entry} picking={pick}/>
+          )) :
+          <Alert variant="information">
+            <AlertCircle className="h-4 w-4"/>
+            <AlertDescription>
+              {t("noPickingData")}
+            </AlertDescription>
+          </Alert>}
+      </div>
+    </ContentTheme>
+  );
 
 }

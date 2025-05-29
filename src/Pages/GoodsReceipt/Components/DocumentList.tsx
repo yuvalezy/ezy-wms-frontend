@@ -1,6 +1,6 @@
 import React, {forwardRef, useImperativeHandle, useRef, useState} from 'react';
 import {useTranslation} from "react-i18next";
-import {Label, Button, Input} from "@/components";
+import {Label, Button, Input, Alert, AlertDescription} from "@/components";
 import {
   Select,
   SelectContent,
@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {X, PlusCircle} from "lucide-react"; // Icons
+import {X, PlusCircle, AlertCircle} from "lucide-react"; // Icons
 import {DocumentItem, useObjectName} from "@/assets";
 import {toast} from "sonner";
 
@@ -18,7 +18,7 @@ export interface DocumentListRef {
 
 type DocumentListProps = {
   onItemsUpdate: (newItems: DocumentItem[]) => void;
-  confirm?: boolean
+  confirm: boolean
 };
 
 const DocumentList = forwardRef<DocumentListRef, DocumentListProps>((props, ref) => {
@@ -31,7 +31,7 @@ const DocumentList = forwardRef<DocumentListRef, DocumentListProps>((props, ref)
   const PURCHASE_DELIVERY_NOTE = "20";
   const PURCHASE_ORDER_TYPE = "22";
   const RESERVED_INVOICE_TYPE = "18";
-  const [objTypeString, setObjTypeString] = useState<string>(!confirm ? PURCHASE_ORDER_TYPE : PURCHASE_DELIVERY_NOTE);
+  const [objTypeString, setObjTypeString] = useState<string>(!props.confirm ? PURCHASE_ORDER_TYPE : PURCHASE_DELIVERY_NOTE);
 
   const [docNum, setDocNum] = useState<string>('');
 
@@ -84,7 +84,7 @@ const DocumentList = forwardRef<DocumentListRef, DocumentListProps>((props, ref)
           {items.map((item, index) => (
             <div key={index} className="flex items-center justify-between border-b last:border-b-0">
               <span>{`${o(item.objectType)}: ${item.documentNumber}`}</span>
-              <Button variant="ghost" size="icon" onClick={() => handleRemoveClick(index)} aria-label={t('delete')}>
+              <Button type="button" variant="ghost" size="icon" onClick={() => handleRemoveClick(index)} aria-label={t('delete')}>
                 <X className="h-4 w-4 text-red-500"/>
               </Button>
             </div>
@@ -92,7 +92,12 @@ const DocumentList = forwardRef<DocumentListRef, DocumentListProps>((props, ref)
         </div>
       )}
       {items.length === 0 && (
-        <p className="text-sm text-muted-foreground p-2 text-center">{t("noDocumentsAdded")}</p>
+        <Alert variant="information">
+          <AlertCircle className="h-4 w-4"/>
+          <AlertDescription>
+            {t("noDocumentsAdded")}
+          </AlertDescription>
+        </Alert>
       )}
 
       {/* Responsive layout for input fields and button */}
@@ -104,9 +109,9 @@ const DocumentList = forwardRef<DocumentListRef, DocumentListProps>((props, ref)
               <SelectValue placeholder={t("selectDocumentType")}/>
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={PURCHASE_DELIVERY_NOTE}>{t('goodsReceipt')}</SelectItem>
-              {!confirm && <SelectItem value={PURCHASE_ORDER_TYPE}>{t('purchaseOrder')}</SelectItem>}
-              <SelectItem value={RESERVED_INVOICE_TYPE}>{!confirm ? t('reservedInvoice') : t('purchaseInvoice')}</SelectItem>
+              {props.confirm && <SelectItem value={PURCHASE_DELIVERY_NOTE}>{t('goodsReceipt')}</SelectItem>}
+              {!props.confirm && <SelectItem value={PURCHASE_ORDER_TYPE}>{t('purchaseOrder')}</SelectItem>}
+              <SelectItem value={RESERVED_INVOICE_TYPE}>{!props.confirm ? t('reservedInvoice') : t('purchaseInvoice')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
