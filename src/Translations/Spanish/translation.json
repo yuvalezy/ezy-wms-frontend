@@ -233,5 +233,6 @@
   "documentType": "Tipo de Documento",
   "selectDocumentType": "Seleccione el tipo de documento",
   "enterDocumentNumber": "Ingrese el número de documento",
-  "binCountItems": "En espera del conteo de artículos para esta ubicación."
+  "binCountItems": "En espera del conteo de artículos para esta ubicación.",
+  "counted": "Contado"
 }

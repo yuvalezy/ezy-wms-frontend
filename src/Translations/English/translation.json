@@ -234,5 +234,6 @@
   "documentType": "Document Type",
   "selectDocumentType": "Select document type",
   "enterDocumentNumber": "Enter document number",
-  "binCountItems": "Awaiting item count for this location."
+  "binCountItems": "Awaiting item count for this location.",
+  "counted": "Counted"
 }

@@ -1,15 +1,9 @@
 import * as React from 'react';
 import {CountingSummaryReportLine} from "@/pages/Counting/data/Report";
 import {useTranslation} from "react-i18next";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Label } from "@/components/ui/label";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {MetricRow} from "@/components/MetricRow";
+import {formatNumber} from "@/lib/utils";
 
 interface CountingSummaryReportTableProps {
   data: CountingSummaryReportLine[]
@@ -19,36 +13,44 @@ const CountingSummaryReportTable: React.FC<CountingSummaryReportTableProps> = ({
   const {t} = useTranslation();
 
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead><Label>{t('bin')}</Label></TableHead>
-            <TableHead><Label>{t('code')}</Label></TableHead>
-            <TableHead className="text-right"><Label>{t('units')}</Label></TableHead>
-            <TableHead className="text-right"><Label>{t('dozens')}</Label></TableHead>
-            <TableHead className="text-right"><Label>{t('packs')}</Label></TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data.map((row) => (
-            <React.Fragment key={`${row.itemCode}-${row.binCode}`}>
-              <TableRow>
-                <TableCell><Label>{row.binCode}</Label></TableCell>
-                <TableCell><Label>{row.itemCode}</Label></TableCell>
-                <TableCell className="text-right"><Label>{row.unit}</Label></TableCell>
-                <TableCell className="text-right"><Label>{row.dozen}</Label></TableCell>
-                <TableCell className="text-right"><Label>{row.pack}</Label></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell colSpan={5} className="py-1 px-2 text-sm text-muted-foreground">
-                  {t('description')}: {row.itemName}
-                </TableCell>
-              </TableRow>
-            </React.Fragment>
-          ))}
-        </TableBody>
-      </Table>
+    <div className="flex flex-col gap-4">
+      {data.map((row) => (
+        <Card key={`${row.itemCode}-${row.binCode}`} className="w-full shadow-lg">
+          <CardHeader>
+            <CardTitle>{`${t('bin')}: ${row.binCode}`}</CardTitle>
+            <CardDescription>{`${t('code')}: ${row.itemCode} - ${t('description')}: ${row.itemName}`}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {/* Unit Headers */}
+            <div className="flex justify-between items-center border-b-2 border-primary font-bold">
+              <div className="w-[30%]">
+                <span>{t('unit')}</span>
+              </div>
+              <div className="flex-1 flex justify-around text-center">
+                <div className="flex-1 text-xs">
+                  <span>{t('units')}</span>
+                </div>
+                <div className="flex-1 text-xs">
+                  <span>{t('dozens')}</span>
+                </div>
+                <div className="flex-1 text-xs">
+                  <span>{t('packs')}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Metrics */}
+            <MetricRow
+              label={t('counted')}
+              values={{
+                units: formatNumber(row.unit, 0),
+                buyUnits: formatNumber(row.dozen, 0), // Mapping dozen to buyUnits
+                packUnits: formatNumber(row.pack, 0) // Mapping pack to packUnits
+              }}
+            />
+          </CardContent>
+        </Card>
+      ))}
     </div>
   );
 }
