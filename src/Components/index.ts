@@ -18,3 +18,4 @@ export * from './ScrollableContent';
 export * from './ThemeContext';
 export * from './Unauthorized';
 export * from './ui';
+export {AppSidebar} from "@/components/AppSidebar";
