@@ -49,7 +49,7 @@ export default function Home() {
     const menuItems: MenuItem[] = menus.GetMenus(user?.authorizations);
 
     return (
-      <ContentTheme title={t('home')} footer={<div className="bg-red-500 h-10">Hello World test</div> }>
+      <ContentTheme title={t('home')}>
             {menuItems.length > 0 &&
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 mt-4">
                     {menuItems.map((menu, index) => (

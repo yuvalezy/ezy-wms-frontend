@@ -39,38 +39,62 @@ const ContentTheme: React.FC<ContentThemeProps> = (
 
   return (
     <SidebarProvider>
-      <AppSidebar/>
-      <main>
-        <SidebarTrigger/>
-        <Breadcrumb>
-          <BreadcrumbItem>
-            {!titleRoute ? <BreadcrumbPage>{title}</BreadcrumbPage> :
-              <BreadcrumbLink href="#" onClick={() => navigate(titleRoute)}>{title}</BreadcrumbLink>}
-          </BreadcrumbItem>
-        </Breadcrumb>
-        {children}
-        {footer && <div className="fixed bottom-0 left-0 right-0">{footer}</div>}
-      </main>
+      <div className="h-screen flex">
+        <AppSidebar/>
+
+        <div className="flex flex-col flex-1">
+          {/* Header: trigger + breadcrumb, fixed height */}
+          <header className="flex items-center px-4 py-2 bg-white shadow flex-shrink-0 z-10">
+            <SidebarTrigger className="mr-4"/>
+            <Breadcrumb>
+              <BreadcrumbItem>
+                {titleRoute
+                  ? <BreadcrumbLink onClick={() => navigate(titleRoute)}>{title}</BreadcrumbLink>
+                  : <BreadcrumbPage>{title}</BreadcrumbPage>}
+              </BreadcrumbItem>
+              {titleBreadcrumbs?.map((b, i) => (
+                <BreadcrumbItem key={i}>
+                  {b.route
+                    ? <BreadcrumbLink onClick={() => navigate(b.route)}>{b.label}</BreadcrumbLink>
+                    : <BreadcrumbPage>{b.label}</BreadcrumbPage>}
+                </BreadcrumbItem>
+              ))}
+            </Breadcrumb>
+          </header>
+
+          {/* Scrollable content */}
+          <main className="flex-1 overflow-auto p-4">
+            {children}
+          </main>
+
+          {/* Footer: fixed height */}
+          {footer && (
+            <footer className="flex-shrink-0 bg-white shadow">
+              {footer}
+            </footer>
+          )}
+        </div>
+      </div>
     </SidebarProvider>
-  )
-  // {/*<div className="min-h-screen bg-background">*/
-  // }
-  // {/*  <MenuAppBar title={title} exportExcel={exportExcel} onExportExcel={onExportExcel} onBack={onBack}*/
-  // }
-  // {/*              customActionButtons={customActionButtons}/>*/
-  // }
-  // {/*  <ScrollableContent>*/
-  // }
-  // {/*    <div className="mx-auto pr-2 pl-2 pb-2 space-y-4 w-full">*/
-  // }
-  // {/*      {children}*/
-  // }
-  // {/*    </div>*/
-  // }
-  // {/*  </ScrollableContent>*/
-  // }
-  // {/*</div>*/
-  // }
+  );
 }
 
 export default ContentTheme;
+// {/*<div className="min-h-screen bg-background">*/
+// }
+// {/*  <MenuAppBar title={title} exportExcel={exportExcel} onExportExcel={onExportExcel} onBack={onBack}*/
+// }
+// {/*              customActionButtons={customActionButtons}/>*/
+// }
+// {/*  <ScrollableContent>*/
+// }
+// {/*    <div className="mx-auto pr-2 pl-2 pb-2 space-y-4 w-full">*/
+// }
+// {/*      {children}*/
+// }
+// {/*    </div>*/
+// }
+// {/*  </ScrollableContent>*/
+// }
+// {/*</div>*/
+// }
