@@ -84,7 +84,7 @@ const DocumentList = forwardRef<DocumentListRef, DocumentListProps>((props, ref)
           {items.map((item, index) => (
             <div key={index} className="flex items-center justify-between border-b last:border-b-0">
               <span>{`${o(item.objectType)}: ${item.documentNumber}`}</span>
-              <Button variant="ghost" size="icon" onClick={() => handleRemoveClick(index)} aria-label={t('remove')}>
+              <Button variant="ghost" size="icon" onClick={() => handleRemoveClick(index)} aria-label={t('delete')}>
                 <X className="h-4 w-4 text-red-500"/>
               </Button>
             </div>

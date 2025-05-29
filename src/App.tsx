@@ -57,7 +57,7 @@ export default function App() {
     return (
         <AuthProvider>
             <BrowserRouter>
-                <Toaster closeButton />
+                <Toaster closeButton richColors={true} />
                 <Routes>
                     <Route path="/login" element={<LoginPage/>}/>
                     <Route path="/unauthorized" element={<Unauthorized/>}/>
