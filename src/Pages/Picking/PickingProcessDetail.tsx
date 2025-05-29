@@ -146,7 +146,7 @@ export default function PickingProcessDetail() {
         <ContentTheme title={title}>
             {detail &&
                 <div className="space-y-4 p-2">
-                    <Card>
+                    <Card className="mb-4 shadow-lg">
                         <CardHeader>
                             <CardTitle>
                                 <strong>{t("customer")}: </strong>

@@ -28,8 +28,6 @@ export default function PickingProcess() {
   const o = useObjectName();
   const navigate = useNavigate();
 
-  const title = `${t("picking")} #${idParam}`;
-
   useEffect(() => {
     if (idParam === null || idParam === undefined || !IsNumeric(idParam)) {
       setID(null);
@@ -65,7 +63,10 @@ export default function PickingProcess() {
   }
 
   return (
-    <ContentTheme title={title}>
+    <ContentTheme title={t("picking")}
+                  titleOnClick={() => navigate("/pick")}
+                  titleBreadcrumbs={[{label: `${idParam}`}]}
+    >
       {picking?.detail?.map((item, index) => (
         <Accordion type="single" collapsible key={index}>
           <AccordionItem value={`item-${index}`}>

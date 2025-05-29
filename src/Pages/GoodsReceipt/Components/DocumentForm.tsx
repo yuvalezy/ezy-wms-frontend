@@ -152,7 +152,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, confirm}) => 
   }
 
   if (confirm)
-    return <Card>
+    return <Card className="mb-4 shadow-lg">
       {renderSpecificOrders()}
     </Card>;
 

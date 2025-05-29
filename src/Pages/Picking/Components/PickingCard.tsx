@@ -32,9 +32,6 @@ const PickingCard: React.FC<PickingCardProps> = ({picking, onUpdatePick, supervi
 
   return (
     <Card key={picking.entry} className="mb-4 shadow-lg">
-      <CardHeader>
-        <CardTitle>{`${t('id')}`}</CardTitle>
-      </CardHeader>
       <CardContent className="py-4">
         <ul className="space-y-2 text-sm">
           <li className="flex justify-between">

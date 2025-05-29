@@ -56,7 +56,7 @@ export default function GoodsReceiptVSExitReport({confirm}: GoodsReceiptVSExitRe
                   titleBreadcrumbs={titleBreadcrumbs}>
       {!report && data?.map((value, index) => (
         <div key={index} className="mb-2">
-          <Card>
+          <Card className="mb-4 shadow-lg">
             <CardHeader>
               {`${o(value.objectType)}: ${value.number}`}
             </CardHeader>

@@ -49,7 +49,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
     )).join('');
   }
   return (
-    <Card>
+    <Card className="mb-4 shadow-lg">
       <CardContent className="grid text-sm gap-2">
         <SecondaryInfoBox>
           {doc.name && <InfoBoxValue label={t('id')} value={doc.name}/>}

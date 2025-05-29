@@ -48,7 +48,7 @@ export default function GoodsReceiptProcessDifferenceReport({confirm}: GoodsRece
     <ContentTheme title={title} titleOnClick={() => navigate(titleLink)} titleBreadcrumbs={titleBreadcrumbs} onExportExcel={handleExportExcel}>
       {!report && data?.map((value) => (
         <div key={value.documentNumber} className="mb-2">
-          <Card>
+          <Card className="mb-4 shadow-lg">
             <CardHeader>
               {`${o(value.baseType)}: ${value.documentNumber}`}
             </CardHeader>

@@ -12,7 +12,7 @@ import {useDateTimeFormat} from "@/assets/DateFormat";
 import {CheckCircle, XCircle, FileText, Info} from "lucide-react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFileAlt} from "@fortawesome/free-solid-svg-icons";
-import {InfoBoxValue, SecondaryInfoBox} from "@/components";
+import {InfoBoxValue, SecondaryInfoBox, Separator} from "@/components";
 
 type CountingCardProps = {
   doc: Counting,
@@ -43,38 +43,36 @@ const CountingCard: React.FC<CountingCardProps> = ({doc, handleAction, superviso
       )}
       <CardContent className="py-4">
         <SecondaryInfoBox>
-          <InfoBoxValue label={t('number')} value={doc.id} onClick={handleOpenLink ? () => handleOpen(doc.id) : undefined}/>
+          <InfoBoxValue label={t('number')} value={doc.id}
+                        onClick={handleOpenLink ? () => handleOpen(doc.id) : undefined}/>
           <InfoBoxValue label={t('docDate')} value={dateFormat(new Date(doc.date))}/>
           <InfoBoxValue label={t('createdBy')} value={doc.employee.name}/>
           <InfoBoxValue label={t('status')} value={documentStatusToString(doc.status)}/>
         </SecondaryInfoBox>
-        <ul className="space-y-2">
-          {supervisor && (
-            <li className="flex justify-between items-center pt-2 border-t mt-2">
-              <Button variant="outline" className="w-full" onClick={e => {
-                e.preventDefault();
-                navigate(`/countingSummaryReport/${doc.id}`);
-              }}>
-                <FontAwesomeIcon icon={faFileAlt} className="mr-2"/>
-                {t('countingSummaryReport')}
-              </Button>
-            </li>
-          )}
-        </ul>
+        {supervisor && (
+          <>
+            <Separator className="my-4"/>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <Button variant="outline" className="w-full" onClick={e => {
+                  e.preventDefault();
+                  navigate(`/countingSummaryReport/${doc.id}`);
+                }}>
+                  <FontAwesomeIcon icon={faFileAlt} className="mr-2"/>
+                  {t('countingSummaryReport')}
+                </Button>
+                {doc.status === Status.InProgress && (
+                  <Button variant="default" onClick={() => handleAction?.(doc.id, 'approve')}
+                          className="bg-green-500 hover:bg-green-600 text-white">
+                    <CheckCircle className="mr-2 h-4 w-4"/>{t('finish')}
+                  </Button>
+                )}
+                <Button variant="destructive" onClick={() => handleAction?.(doc.id, 'cancel')}>
+                  <XCircle className="mr-2 h-4 w-4"/>{t('cancel')}
+                </Button>
+            </div>
+          </>
+        )}
       </CardContent>
-      {supervisor && (
-        <CardFooter className="flex justify-end space-x-2 pt-4 border-t">
-          {doc.status === Status.InProgress && (
-            <Button variant="default" onClick={() => handleAction?.(doc.id, 'approve')}
-                    className="bg-green-500 hover:bg-green-600 text-white">
-              <CheckCircle className="mr-2 h-4 w-4"/>{t('finish')}
-            </Button>
-          )}
-          <Button variant="destructive" onClick={() => handleAction?.(doc.id, 'cancel')}>
-            <XCircle className="mr-2 h-4 w-4"/>{t('cancel')}
-          </Button>
-        </CardFooter>
-      )}
     </Card>
   );
 }
