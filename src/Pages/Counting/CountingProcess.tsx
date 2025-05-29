@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useRef} from "react";
 import {useTranslation} from "react-i18next";
 import {Label} from "@/components/ui/label";
 import {Alert, AlertDescription} from "@/components/ui/alert";
@@ -16,7 +16,6 @@ import {
   BreadcrumbItem, BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-  ScrollableContentBox
 } from "@/components";
 import ContentTheme from "@/components/ContentTheme";
 import {AlertCircle} from "lucide-react";
@@ -40,7 +39,9 @@ export default function CountingProcess() {
     handleQuantityChanged,
     handleCancel,
     handleAddItem,
+    processAlertRef
   } = useCountingProcessData();
+
 
   return (
     <ContentTheme title={title}>
@@ -57,9 +58,9 @@ export default function CountingProcess() {
       </Breadcrumb>
       {!binLocation && user?.binLocations &&
           <BinLocationScanner ref={binLocationRef} onChanged={onBinChanged} onClear={onBinClear}/>}
-      <ScrollableContentBox>
+      <div className="contentStyle">
         {currentAlert &&
-            <ProcessAlert alert={currentAlert} onAction={(type) => processesRef?.current?.open(type)}/>}
+            <div ref={processAlertRef}><ProcessAlert alert={currentAlert} onAction={(type) => processesRef?.current?.open(type)}/></div>}
         {rows != null && rows.length > 0 &&
             <div className="flex flex-col gap-4">
               {rows.map((row) => (
@@ -88,9 +89,9 @@ export default function CountingProcess() {
                     <MetricRow
                       label={t('quantity')}
                       values={{
-                      units: formatNumber(row.unit ?? 0, 0),
-                      buyUnits: formatNumber(row.dozen ?? 0, 0),
-                      packUnits: formatNumber(row.pack ?? 0, 0)
+                        units: formatNumber(row.unit ?? 0, 0),
+                        buyUnits: formatNumber(row.dozen ?? 0, 0),
+                        packUnits: formatNumber(row.pack ?? 0, 0)
                       }}
                     />
                   </CardContent>
@@ -106,8 +107,9 @@ export default function CountingProcess() {
                 </AlertDescription>
             </Alert>
         }
-      {enable && <BarCodeScanner fixed ref={barcodeRef} enabled unit onAddItem={handleAddItem}/>}
-      </ScrollableContentBox>
+        <div style={{height: '200px'}}></div>
+        {enable && <BarCodeScanner fixed ref={barcodeRef} enabled unit onAddItem={handleAddItem}/>}
+      </div>
       {currentAlert && id && <Processes ref={processesRef} id={id} alert={currentAlert} reasonType={ReasonType.Counting}
                                         onCancel={handleCancel}
                                         onQuantityChanged={handleQuantityChanged} onUpdateLine={updateLine}/>}

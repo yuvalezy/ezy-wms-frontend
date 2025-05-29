@@ -60,7 +60,7 @@ export const createDocument = async (
       {
         cardCode: cardCode,
         name: name,
-        type: !confirm ? type : GoodsReceiptType.SpecificReceipts,
+        type: type,
         documents: items,
         confirm
       },

@@ -27,6 +27,8 @@ export const useCountingProcessData = () => {
   const [rows, setRows] = useState<CountingContent[] | null>(null);
   const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
   const processesRef = useRef<ProcessesRef>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const processAlertRef = useRef<HTMLDivElement>(null);
 
   const title = `${t("counting")} #${scanCode}`;
 
@@ -130,6 +132,9 @@ export const useCountingProcessData = () => {
         barcodeRef?.current?.clear();
         loadRows();
         barcodeRef?.current?.focus();
+        setTimeout(() => {
+          processAlertRef?.current?.scrollIntoView({behavior: "smooth", block: "start"});
+        }, 100);
       })
       .catch((e) => {
         setError(e);
@@ -153,5 +158,7 @@ export const useCountingProcessData = () => {
     handleQuantityChanged,
     handleCancel,
     handleAddItem,
+    scrollRef,
+    processAlertRef
   }
 }

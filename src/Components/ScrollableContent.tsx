@@ -9,7 +9,13 @@ export const ScrollableContent: React.FC<{ children: React.ReactNode }> = ({chil
     </div>
   );
 }
-export const ScrollableContentBox: React.FC<{ children: React.ReactNode, borderUp?: boolean }> = (
+
+interface ScrollableContentBoxProps {
+  children: React.ReactNode,
+  borderUp?: boolean
+}
+
+export const ScrollableContentBox: React.FC<ScrollableContentBoxProps> = (
   {
     children,
     borderUp
