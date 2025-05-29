@@ -1,8 +1,10 @@
 import React from "react";
 import {useTranslation} from "react-i18next";
 import {Label} from "@/components/ui/label";
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Alert, AlertDescription} from "@/components/ui/alert";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {MetricRow} from "@/components/MetricRow";
+import {formatNumber} from "@/lib/utils";
 import BarCodeScanner from "../../components/BarCodeScanner";
 import BinLocationScanner from "../../components/BinLocationScanner";
 import {updateLine} from "@/pages/Counting/data/CountingProcess";
@@ -59,31 +61,42 @@ export default function CountingProcess() {
         {currentAlert &&
             <ProcessAlert alert={currentAlert} onAction={(type) => processesRef?.current?.open(type)}/>}
         {rows != null && rows.length > 0 &&
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead><Label>{t('code')}</Label></TableHead>
-                        <TableHead><Label>{t('units')}</Label></TableHead>
-                        <TableHead><Label>{t('dozens')}</Label></TableHead>
-                        <TableHead><Label>{t('boxes')}</Label></TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {rows.map((row) => (
-                    <React.Fragment key={row.code}>
-                      <TableRow>
-                        <TableCell><Label>{row.code}</Label></TableCell>
-                        <TableCell><Label>{row.unit}</Label></TableCell>
-                        <TableCell><Label>{row.dozen}</Label></TableCell>
-                        <TableCell><Label>{row.pack}</Label></TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell colSpan={4}><Label>{t('description')}: {row.name}</Label></TableCell>
-                      </TableRow>
-                    </React.Fragment>
-                  ))}
-                </TableBody>
-            </Table>
+            <div className="flex flex-col gap-4">
+              {rows.map((row) => (
+                <Card key={row.code} className="w-full shadow-lg">
+                  <CardHeader>
+                    <CardTitle>{`${t('code')}: ${row.code}`}</CardTitle>
+                    <CardDescription>{`${t('description')}: ${row.name}`}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex justify-between items-center border-b-2 border-primary font-bold">
+                      <div className="w-[30%]">
+                        <span>{t('unit')}</span>
+                      </div>
+                      <div className="flex-1 flex justify-around text-center">
+                        <div className="flex-1 text-xs">
+                          <span>{t('units')}</span>
+                        </div>
+                        <div className="flex-1 text-xs">
+                          <span>{t('dozens')}</span>
+                        </div>
+                        <div className="flex-1 text-xs">
+                          <span>{t('boxes')}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <MetricRow
+                      label={t('quantity')}
+                      values={{
+                      units: formatNumber(row.unit ?? 0, 0),
+                      buyUnits: formatNumber(row.dozen ?? 0, 0),
+                      packUnits: formatNumber(row.pack ?? 0, 0)
+                      }}
+                    />
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
         }
         {rows != null && rows.length === 0 &&
             <Alert variant="default">
