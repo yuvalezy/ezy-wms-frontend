@@ -30,7 +30,7 @@ import TransferProcessSource from "./pages/Transfer/TransferProcessSource";
 import TransferProcessTargetItems from "./pages/Transfer/TransferProcessTargetItems";
 import TransferProcessTargetItem from "./pages/Transfer/TransferProcessTargetItem";
 import CountingSummaryReport from "./pages/Counting/CountingSummaryReport";
-import BinCheck from "./pages/BinCheck/BinCheck";
+import {BinCheck} from "./pages/BinCheck/BinCheck";
 import GoodsReceiptProcessDifferenceReport from "./pages/GoodsReceipt/GoodsReceiptProcessDifferenceReport";
 import TransferProcessTargetBins from "./pages/Transfer/TransferProcessTargetBins";
 import TransferRequest from "./pages/Transfer/TransferRequest";

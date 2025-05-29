@@ -30,10 +30,8 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
         return (
           <Card key={index} className="w-full shadow-lg">
             <CardContent className="pb-4">
-              <InfoBox>
-                <InfoBoxValue label={t('item')} value={binContent.itemCode}/>
-                <InfoBoxValue label={t('description')} value={binContent.itemName}/>
-              </InfoBox>
+              <InfoBoxValue label={t('item')} value={binContent.itemCode}/>
+              <InfoBoxValue label={t('description')} value={binContent.itemName}/>
               {/* Unit Headers */}
               <div className="flex justify-between items-center py-2 border-b-2 border-primary mb-2 font-bold text-sm">
                 <div className="w-[30%]">

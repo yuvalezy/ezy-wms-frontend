@@ -27,9 +27,12 @@ export default function ItemCheck() {
     handleClear
   } = useItemCheckData();
 
+  const hasData = result && result.length > 0;
   return (
-    <ContentTheme title={t("itemCheck")}>
-      {(result == null || result.length === 0) && (
+    <ContentTheme title={t("itemCheck")}
+                  titleOnClick={hasData ? () => handleClear() : undefined}
+                  titleBreadcrumbs={hasData ? [{label: result[0].itemCode}] : undefined}>
+      {!hasData ? (
         <>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
@@ -59,8 +62,7 @@ export default function ItemCheck() {
             </Button>
           </div>
         </>
-      )}
-      {result && (
+      ): (
         <>
           {result.length === 0 && (
             <Alert className="border-red-200 bg-red-50">

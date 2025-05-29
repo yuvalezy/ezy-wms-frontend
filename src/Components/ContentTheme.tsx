@@ -2,12 +2,12 @@ import {CustomActionButton} from "./MenuAppBar";
 import React from "react";
 import {SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
 import {AppSidebar} from "@/components/AppSidebar";
-import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage} from "@/components/ui";
+import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage} from "@/components/ui";
 import {useNavigate} from "react-router-dom";
 
 interface ContentThemeProps {
   title: string;
-  titleRoute?: string; // Optional prop for title route
+  titleOnClick?: () => void; // Optional prop for title route
   titleBreadcrumbs?: titleBreadcrumb[]; // Optional prop for breadcrumbs
   exportExcel?: boolean;
   onExportExcel?: () => void;
@@ -20,13 +20,13 @@ interface ContentThemeProps {
 
 interface titleBreadcrumb {
   label: string;
-  route?: string; // Optional route for the breadcrumb
+  onClick?: () => void; // Optional route for the breadcrumb
 }
 
 const ContentTheme: React.FC<ContentThemeProps> = (
   {
     title,
-    titleRoute,
+    titleOnClick,
     titleBreadcrumbs,
     children,
     footer,
@@ -49,7 +49,7 @@ const ContentTheme: React.FC<ContentThemeProps> = (
 
   return (
     <SidebarProvider>
-      <div className="h-screen flex">
+      <div className="h-screen flex w-full">
         <AppSidebar/>
 
         <div className="flex flex-col flex-1">
@@ -57,18 +57,20 @@ const ContentTheme: React.FC<ContentThemeProps> = (
           <header className="flex items-center px-4 py-2 bg-white shadow flex-shrink-0 z-10">
             <SidebarTrigger className="mr-4"/>
             <Breadcrumb>
-              <BreadcrumbItem>
-                {titleRoute
-                  ? <BreadcrumbLink onClick={() => navigate(titleRoute)}>{title}</BreadcrumbLink>
-                  : <BreadcrumbPage>{title}</BreadcrumbPage>}
-              </BreadcrumbItem>
-              {titleBreadcrumbs?.map((b, i) => (
-                <BreadcrumbItem key={i}>
-                  {b.route
-                    ? <BreadcrumbLink onClick={() => navigate(b.route)}>{b.label}</BreadcrumbLink>
-                    : <BreadcrumbPage>{b.label}</BreadcrumbPage>}
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  {titleOnClick
+                    ? <BreadcrumbLink className="cursor-pointer" onClick={titleOnClick}>{title}</BreadcrumbLink>
+                    : <BreadcrumbPage>{title}</BreadcrumbPage>}
                 </BreadcrumbItem>
-              ))}
+                {titleBreadcrumbs?.map((b, i) => (
+                  <BreadcrumbItem key={i}>
+                    {b.onClick
+                      ? <BreadcrumbLink className="cursor-pointer" onClick={b.onClick}>{b.label}</BreadcrumbLink>
+                      : <BreadcrumbPage>{b.label}</BreadcrumbPage>}
+                  </BreadcrumbItem>
+                ))}
+              </BreadcrumbList>
             </Breadcrumb>
           </header>
 

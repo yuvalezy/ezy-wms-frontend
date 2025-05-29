@@ -24,27 +24,17 @@ const ItemCheckResult: React.FC<ItemCheckResultProps> = ({result, submit, onClea
 
   return (
     <>
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="#" onClick={onClear}>{t("itemCheck")}</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <BreadcrumbPage>{result.itemCode}</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
       <ItemDetailsList result={result}/>
-      <Tabs defaultValue="barcodes" className="mt-4">
+      <Tabs defaultValue="stock" className="mt-4">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="barcodes">{t("barcodes")}</TabsTrigger>
           <TabsTrigger value="stock">{t("stock")}</TabsTrigger>
+          <TabsTrigger value="barcodes">{t("barcodes")}</TabsTrigger>
         </TabsList>
-        <TabsContent value="barcodes" className="mt-4">
-          <BarcodeTable itemCode={result.itemCode} barcodes={result.barcodes} submit={submit}/>
-        </TabsContent>
         <TabsContent value="stock" className="mt-4">
           <StockTable result={result}/>
+        </TabsContent>
+        <TabsContent value="barcodes" className="mt-4">
+          <BarcodeTable itemCode={result.itemCode} barcodes={result.barcodes} submit={submit}/>
         </TabsContent>
       </Tabs>
     </>

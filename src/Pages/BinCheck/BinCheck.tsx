@@ -9,7 +9,7 @@ import {useBinCheckData} from "@/pages/BinCheck/bin-check-data";
 import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage} from "@/components/ui/breadcrumb";
 import {BinCheckResult} from "@/pages/BinCheck/BinCheckResult";
 
-export default function BinCheck() {
+export function BinCheck() {
   const {t} = useTranslation();
   const {
     bin,
@@ -32,23 +32,14 @@ export default function BinCheck() {
     </ContentTheme>
   )
 
-  return <ContentTheme title={t("binCheck")} exportExcel={binContent != null} onExportExcel={handleExportExcel}>
+  return <ContentTheme title={t("binCheck")}
+                       titleOnClick={binContent != null ? () => onBinClear() : undefined}
+                       titleBreadcrumbs={binContent ? [{label: bin!.code}] : undefined}
+                       exportExcel={binContent != null}
+                       onExportExcel={handleExportExcel}
+  >
     <div className="space-y-4">
-      {binContent && (
-        <>
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="#" onClick={onBinClear}>{t("binCheck")}</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbItem>
-                <BreadcrumbPage>{bin?.code}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-          <BinCheckResult content={binContent}/>
-        </>
-      )}
+      {binContent && <BinCheckResult content={binContent}/>}
       {!bin && <BinLocationScanner ref={binRef} onScan={onScan} onClear={onBinClear}/>}
     </div>
   </ContentTheme>

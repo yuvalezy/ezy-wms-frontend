@@ -188,6 +188,7 @@
   "barcodeNotFound": "No se encontró el código de barra \"{0}\"",
   "codeNotFound": "No se encontró el código \"{0}\"",
   "multipleItemsError": "Código retornó múltiples códigos de artículos:\n{0}.\nSolicite la corrección en el sistema e intente de nuevo.",
+  "noBinContentFound": "No se encontraron datos de ubicación",
   "noExitData": "No tiene salidas o transferencias pendientes.",
   "noPickingData": "No tiene picking pendientes.",
   "noGoodsReceiptData": "No tiene entradas pendientes.",

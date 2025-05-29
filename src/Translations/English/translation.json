@@ -189,6 +189,7 @@
   "barcodeNotFound": "Barcode \"{0}\" not found",
   "codeNotFound": "Code \"{0}\" not found",
   "multipleItemsError": "Code returns multiple item codes:\n{0}.\nRequest a correction in the system and try again.",
+  "noBinContentFound": "No content found for bin location",
   "noExitData": "You have no pending exits or transfers.",
   "noPickingData": "You have no pending pickings.",
   "noGoodsReceiptData": "You have no pending goods receipts.",
