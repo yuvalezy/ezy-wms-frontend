@@ -35,8 +35,7 @@ export function BinCheck() {
   return <ContentTheme title={t("binCheck")}
                        titleOnClick={binContent != null ? () => onBinClear() : undefined}
                        titleBreadcrumbs={binContent ? [{label: bin!.code}] : undefined}
-                       exportExcel={binContent != null}
-                       onExportExcel={handleExportExcel}
+                       onExportExcel={binContent != null ? handleExportExcel : undefined}
   >
     <div className="space-y-4">
       {binContent && <BinCheckResult content={binContent}/>}

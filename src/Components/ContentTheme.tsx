@@ -9,7 +9,6 @@ interface ContentThemeProps {
   title: string;
   titleOnClick?: () => void; // Optional prop for title route
   titleBreadcrumbs?: titleBreadcrumb[]; // Optional prop for breadcrumbs
-  exportExcel?: boolean;
   onExportExcel?: () => void;
   children?: React.ReactNode;
   footer?: React.ReactNode;
@@ -30,16 +29,12 @@ const ContentTheme: React.FC<ContentThemeProps> = (
     titleBreadcrumbs,
     children,
     footer,
-    exportExcel,
     onExportExcel,
     onBack,
     customActionButtons
   }) => {
   const navigate = useNavigate();
 
-  if (exportExcel) {
-    window.alert("Export to Excel is not implemented yet.");
-  }
   if (onBack) {
     window.alert("Back navigation is not implemented yet.");
   }
@@ -54,34 +49,44 @@ const ContentTheme: React.FC<ContentThemeProps> = (
 
         <div className="flex flex-col flex-1">
           {/* Header: trigger + breadcrumb, fixed height */}
-          <header className="flex items-center px-4 py-2 bg-white shadow flex-shrink-0 z-10">
-            <SidebarTrigger className="mr-4"/>
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  {titleOnClick
-                    ? <BreadcrumbLink className="cursor-pointer" onClick={titleOnClick}>{title}</BreadcrumbLink>
-                    : <BreadcrumbPage>{title}</BreadcrumbPage>}
-                </BreadcrumbItem>
-                {titleBreadcrumbs?.map((b, i) => (
-                  <BreadcrumbItem key={i}>
-                    {b.onClick
-                      ? <BreadcrumbLink className="cursor-pointer" onClick={b.onClick}>{b.label}</BreadcrumbLink>
-                      : <BreadcrumbPage>{b.label}</BreadcrumbPage>}
+          <header className="flex items-center justify-between py-2 bg-white shadow flex-shrink-0 z-10 w-full">
+            <div className="flex items-center">
+              <SidebarTrigger className="mr-4"/>
+              <Breadcrumb>
+                <BreadcrumbList>
+                  <BreadcrumbItem>
+                    {titleOnClick
+                      ? <BreadcrumbLink className="cursor-pointer" onClick={titleOnClick}>{title}</BreadcrumbLink>
+                      : <BreadcrumbPage>{title}</BreadcrumbPage>}
                   </BreadcrumbItem>
-                ))}
-              </BreadcrumbList>
-            </Breadcrumb>
+                  {titleBreadcrumbs?.map((b, i) => (
+                    <BreadcrumbItem key={i}>
+                      {b.onClick
+                        ? <BreadcrumbLink className="cursor-pointer" onClick={b.onClick}>{b.label}</BreadcrumbLink>
+                        : <BreadcrumbPage>{b.label}</BreadcrumbPage>}
+                    </BreadcrumbItem>
+                  ))}
+                </BreadcrumbList>
+              </Breadcrumb>
+            </div>
+            {onExportExcel && (
+              <img
+                src="/images/excel.jpg"
+                alt="Export to Excel"
+                className="h-6 w-6 cursor-pointer mr-2"
+                onClick={onExportExcel}
+              />
+            )}
           </header>
 
           {/* Scrollable content */}
-          <main className="flex-1 overflow-auto p-4">
+          <main className="flex-1 overflow-auto p-2 py-4 w-full">
             {children}
           </main>
 
           {/* Footer: fixed height */}
           {footer && (
-            <footer className="flex-shrink-0 bg-white shadow">
+            <footer className="flex-shrink-0 bg-white w-full">
               {footer}
             </footer>
           )}
