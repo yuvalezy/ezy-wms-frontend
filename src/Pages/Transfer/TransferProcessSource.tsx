@@ -1,7 +1,14 @@
 import ContentTheme from "../../components/ContentTheme";
 import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
-import {useThemeContext} from "@/components";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage, Button,
+  useThemeContext
+} from "@/components";
 import {useTranslation} from "react-i18next";
 import {
   Table,
@@ -11,8 +18,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import {Label} from "@/components/ui/label";
+import {Alert, AlertDescription} from "@/components/ui/alert";
 import {IsNumeric, StringFormat} from "@/assets";
 import {useAuth} from "@/components";
 import {BinLocation, Item, SourceTarget} from "@/assets";
@@ -21,11 +28,11 @@ import {addItem, fetchTransferContent, TransferContent} from "./Data/TransferDoc
 import BinLocationScanner from "../../components/BinLocationScanner";
 import {delay} from "@/assets";
 import ProcessAlert, {ProcessAlertValue} from "../../components/ProcessAlert";
-import {ScrollableContent, ScrollableContentBox} from "@/components";
-import {ReasonType}from "@/assets";
+import {ReasonType} from "@/assets";
 import Processes, {ProcessesRef} from "../../components/Processes";
 import {updateLine} from "./Data/TransferProcess";
 import {useDateTimeFormat} from "@/assets";
+import {AlertCircle} from "lucide-react";
 
 export default function TransferProcessSource() {
   const {scanCode} = useParams();
@@ -40,18 +47,19 @@ export default function TransferProcessSource() {
   const [rows, setRows] = useState<TransferContent[] | null>(null);
   const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
   const processesRef = useRef<ProcessesRef>(null);
+  const processAlertRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   function getTitle(): string {
     if (binLocation == null) {
-      return `${t("transfer")} #${scanCode} - ${t("selectTransferSource")}`;
+      return t("selectTransferSource");
     } else {
       return StringFormat(`${t("selectItemsForTransfers")}`, scanCode);
     }
   }
 
-    useEffect(() => {
-      setEnable(!user?.binLocations);
+  useEffect(() => {
+    setEnable(!user?.binLocations);
     if (enable) {
       setTimeout(() => barcodeRef.current?.focus(), 1);
     }
@@ -119,6 +127,9 @@ export default function TransferProcessSource() {
         barcodeRef?.current?.clear();
         loadRows();
         barcodeRef?.current?.focus();
+        setTimeout(() => {
+          processAlertRef?.current?.scrollIntoView({behavior: "smooth", block: "start"});
+        }, 100);
       })
       .catch((error) => {
         setError(error);
@@ -155,56 +166,67 @@ export default function TransferProcessSource() {
     navigate(`/transfer/${id}`);
   }
 
+  if (!id)
+    return null;
+
   return (
-    <ContentTheme 
-        title={getTitle()}
-        onBack={() => navigateBack()}
-        customActionButtons={[{
-            action: () => navigate(`/transfer/${id}/targetBins`), 
-            iconName: "map", 
-            label: t("selectTransferTargetBins") || "Select Target Bins" 
-        }]}
-    >
-      {id &&
-          <ScrollableContent>
-            {user?.binLocations && <BinLocationScanner onChanged={onBinChanged} onClear={onBinClear}/>}
-              <ScrollableContentBox borderUp={user?.binLocations ?? false}>
-                {currentAlert &&
-                    <ProcessAlert alert={currentAlert} onAction={(type) => processesRef?.current?.open(type)}/>}
-                {rows != null && rows.length > 0 && (
-                    <div className="rounded-md border">
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead><Label>{t('code')}</Label></TableHead>
-                                    <TableHead><Label>{t('description')}</Label></TableHead>
-                                    <TableHead className="text-right"><Label>{t('quantity')}</Label></TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {rows.map((row) => (
-                                    <TableRow key={row.code}>
-                                        <TableCell><Label>{row.code}</Label></TableCell>
-                                        <TableCell><Label>{row.name}</Label></TableCell>
-                                        <TableCell className="text-right"><Label>{row.quantity}</Label></TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </div>
-                )}
-                {rows != null && rows.length === 0 &&
-                    <div className="p-4">
-                        <Alert variant="default" className="bg-blue-100 border-blue-400 text-blue-700">
-                            {/* <AlertTitle>Information</AlertTitle> */}
-                            <AlertDescription>{t("nodata")}</AlertDescription>
-                        </Alert>
-                    </div>
-                }
-              </ScrollableContentBox>
-            {enable && <BarCodeScanner ref={barcodeRef} onAddItem={handleAddItem} enabled={enable}/>}
-          </ScrollableContent>
-      }
+    <ContentTheme title={getTitle()}>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="#" onClick={() => navigateBack()}>{t('transfer')} #{scanCode}</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            {!binLocation ?
+              <BreadcrumbPage>{t("selectTransferSource")}</BreadcrumbPage> :
+              <BreadcrumbLink href="#" onClick={onBinClear}>{t('selectTransferSource')}</BreadcrumbLink>}
+          </BreadcrumbItem>
+          {binLocation && <BreadcrumbItem>
+              <BreadcrumbPage>{binLocation?.code}</BreadcrumbPage>
+          </BreadcrumbItem>}
+        </BreadcrumbList>
+      </Breadcrumb>
+      {user?.binLocations && !binLocation && <BinLocationScanner onChanged={onBinChanged} onClear={onBinClear}/>}
+      <div className="contentStyle">
+        {currentAlert &&
+            <div ref={processAlertRef}><ProcessAlert alert={currentAlert}
+                                                     onAction={(type) => processesRef?.current?.open(type)}/></div>}
+        {rows != null && rows.length > 0 && (
+          <div className="flex flex-col gap-4">
+            <Button type="button" variant="default" onClick={() => navigate(`/transfer/${id}/targetBins`)}>
+              {t("selectTransferTargetBins") || "Select Target Bins"}
+            </Button>
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead><Label>{t('code')}</Label></TableHead>
+                    <TableHead><Label>{t('description')}</Label></TableHead>
+                    <TableHead className="text-right"><Label>{t('quantity')}</Label></TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {rows.map((row) => (
+                    <TableRow key={row.code}>
+                      <TableCell><Label>{row.code}</Label></TableCell>
+                      <TableCell><Label>{row.name}</Label></TableCell>
+                      <TableCell className="text-right"><Label>{row.quantity}</Label></TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+        )}
+        {rows != null && rows.length === 0 &&
+            <Alert variant="default">
+                <AlertCircle className="h-4 w-4"/>
+                <AlertDescription>{t("nodata")}</AlertDescription>
+            </Alert>
+        }
+        <div style={{height: '200px'}}></div>
+        {enable && <BarCodeScanner fixed unit ref={barcodeRef} onAddItem={handleAddItem} enabled={enable}/>}
+      </div>
       {currentAlert && id && <Processes
           ref={processesRef}
           id={id}

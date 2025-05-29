@@ -22,7 +22,6 @@
   "transfer": "Transfer",
   "transferSupervisor": "Transfer Supervisor",
   "transferReport": "Transfer Report",
-
   "login": "Login",
   "enter": "Enter",
   "username": "User Name",
@@ -67,13 +66,11 @@
   "totalOpenItems": "Total Open Items",
   "detail": "Detail",
   "employee": "Employee",
-
   "openStatus": "Open",
   "inProgressStatus": "In Progress",
   "finishedStatus": "Finished",
   "cancelledStatus": "Cancelled",
   "processingStatus": "Processing",
-
   "type": "Type",
   "bin": "Bin Location",
   "changeBin": "Change Bin",
@@ -149,7 +146,6 @@
   "notReceived": "Not Received",
   "modifyValues": "Modify Values",
   "supervisor": "Supervisor",
-
   "selectVendor": "Select Vendor",
   "selectVendorPlaceholder": "Select a vendor",
   "selectStatusPlaceholder": "Select a status",
@@ -160,7 +156,6 @@
   "selectTransferTargetBins": "Choose Bins for Destination",
   "pickADate": "Pick a Date",
   "quantityInBin": "Quantity in Bin",
-
   "noStockDataFound": "No se encontraron datos de inventario",
   "binCheck": "Bin Check",
   "scanBinLocation": "Scan Bin Location",
@@ -186,7 +181,7 @@
   "vendorRequired": "A vendor must be selected",
   "documentRequired": "A document number must be entered",
   "duplicateNotAllowed": "Duplicate values are not allowed.",
-  "duplicateItems":"Item with this code already exists.",
+  "duplicateItems": "Item with this code already exists.",
   "invalidID": "Invalid ID",
   "scanCodeRequired": "A code must be scanned",
   "barcodeRequired": "A barcode must be scanned",
@@ -195,6 +190,11 @@
   "codeNotFound": "Code \"{0}\" not found",
   "multipleItemsError": "Code returns multiple item codes:\n{0}.\nRequest a correction in the system and try again.",
   "noExitData": "You have no pending exits or transfers.",
+  "noPickingData": "You have no pending pickings.",
+  "noGoodsReceiptData": "You have no pending goods receipts.",
+  "noConfirmationData": "You have no pending confirmations.",
+  "noCountingData": "You have no pending inventory counting.",
+  "noTransferData": "You have no pending transfers.",
   "invalidScanCode": "Invalid Code",
   "scanConfirmStoreInWarehouse": "Store in Warehouse",
   "scanConfirmFulfillment": "Separate for Customer Delivery",
@@ -218,7 +218,6 @@
   "noAuthorizationOptions": "You do not have authorization to view any menu options.",
   "scanItemBarCodeStart": "Scan an item or barcode to start",
   "enterDocumentId": "Enter the document ID",
-
   "confirmAction": "Confirm Action",
   "confirmApproveDocument": "Are you sure you want to approve document #{0}?",
   "confirmCancelDocument": "Are you sure you want to cancel document #{0}?",
@@ -235,5 +234,6 @@
   "selectDocumentType": "Select document type",
   "enterDocumentNumber": "Enter document number",
   "binCountItems": "Awaiting item count for this location.",
-  "counted": "Counted"
+  "counted": "Counted",
+  "enterCommentsHere": "Enter comments here"
 }
