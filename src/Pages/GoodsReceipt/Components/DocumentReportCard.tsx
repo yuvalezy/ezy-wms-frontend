@@ -22,11 +22,6 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc, docDetails,
   const handleOpen = useHandleOpen(confirm);
   const o = useObjectName();
 
-  function documentDetailsClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
-    e.preventDefault();
-    docDetails(doc);
-  }
-
   const formatDocumentsList = (documents: DocumentItem[]) => {
     return documents.map((value, index) => (
       `${index > 0 ? ', ' : ''}${o(value.objectType)} #${value.documentNumber}`
@@ -39,22 +34,22 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc, docDetails,
         <CardTitle>{`${t('number')}: ${doc.id}`}</CardTitle>
       </CardHeader>
       <CardContent>
-        <InfoBox>
+        <div className="grid gap-2"><InfoBox>
           {doc.name && <InfoBoxValue label={t('id')} value={doc.name}/>}
           {doc.businessPartner &&
               <InfoBoxValue label={t('vendor')} value={doc.businessPartner.name ?? doc.businessPartner.code}/>}
+        </InfoBox>
           {doc.specificDocuments && doc.specificDocuments.length > 0 &&
               <InfoBoxValue label={t('documentsList')} value={formatDocumentsList(doc.specificDocuments)}
                             onClick={() => docDetails(doc)}/>
           }
-        </InfoBox>
-        <SecondaryInfoBox>
-          <InfoBoxValue label={t('docDate')} value={dateFormat(new Date(doc.date))}/>
-          <InfoBoxValue label={t('createdBy')} value={doc.employee.name}/>
-          <InfoBoxValue label={t('status')} value={documentStatusToString(doc.status)}/>
-          {doc.statusDate &&
-              <InfoBoxValue label={t('statusDate')} value={dateFormat(new Date(doc.statusDate))}/>}
-        </SecondaryInfoBox>
+          <SecondaryInfoBox>
+            <InfoBoxValue label={t('docDate')} value={dateFormat(new Date(doc.date))}/>
+            <InfoBoxValue label={t('createdBy')} value={doc.employee.name}/>
+            <InfoBoxValue label={t('status')} value={documentStatusToString(doc.status)}/>
+            {doc.statusDate &&
+                <InfoBoxValue label={t('statusDate')} value={dateFormat(new Date(doc.statusDate))}/>}
+          </SecondaryInfoBox></div>
         <Separator className="my-4"/>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <Button variant="outline" className="w-full" onClick={() => handleOpen('all', doc.id)}>

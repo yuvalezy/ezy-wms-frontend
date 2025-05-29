@@ -6,7 +6,7 @@ const InfoBox = ({children}: { children: React.ReactNode | React.ReactNode[] }) 
   </div>
 }
 export const FullInfoBox = ({children}: { children: React.ReactNode | React.ReactNode[] }) => {
-  return <div className="gap-4">
+  return <div className="gap-4 space-y-1 mb-4">
     {children}
   </div>
 }

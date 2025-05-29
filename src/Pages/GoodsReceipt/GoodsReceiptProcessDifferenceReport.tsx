@@ -63,10 +63,10 @@ export default function GoodsReceiptProcessDifferenceReport({confirm}: GoodsRece
         </div>
       ))}
       {report && <>
-          <div className="space-y-1 mb-4">
+          <FullInfoBox>
               <InfoBoxValue label={t("supplier")} value={report.cardCode}/>
               <InfoBoxValue label={t("supplierName")} value={report.cardName}/>
-          </div>
+          </FullInfoBox>
           <GoodsReceiptProcessDifferenceTable id={id} data={report}/>
       </>}
       {data && data.length === 0 && (

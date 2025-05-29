@@ -4,12 +4,14 @@ import {SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
 import {AppSidebar} from "@/components/AppSidebar";
 import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage} from "@/components/ui";
 import {useNavigate} from "react-router-dom";
+import {Filter} from "lucide-react";
 
 interface ContentThemeProps {
   title: string;
   titleOnClick?: () => void; // Optional prop for title route
   titleBreadcrumbs?: titleBreadcrumb[]; // Optional prop for breadcrumbs
   onExportExcel?: () => void;
+  onFilterClicked?: () => void; // Optional prop for filter toggle
   children?: React.ReactNode;
   footer?: React.ReactNode;
   onBack?: () => void; // New prop
@@ -30,6 +32,7 @@ const ContentTheme: React.FC<ContentThemeProps> = (
     children,
     footer,
     onExportExcel,
+    onFilterClicked,
     onBack,
     customActionButtons
   }) => {
@@ -69,14 +72,22 @@ const ContentTheme: React.FC<ContentThemeProps> = (
                 </BreadcrumbList>
               </Breadcrumb>
             </div>
-            {onExportExcel && (
-              <img
-                src="/images/excel.jpg"
-                alt="Export to Excel"
-                className="h-6 w-6 cursor-pointer mr-2"
-                onClick={onExportExcel}
-              />
-            )}
+            <div className="flex items-center">
+              {onFilterClicked && (
+                <Filter
+                  className="h-6 w-6 cursor-pointer mr-2"
+                  onClick={onFilterClicked}
+                />
+              )}
+              {onExportExcel && (
+                <img
+                  src="/images/excel.jpg"
+                  alt="Export to Excel"
+                  className="h-6 w-6 cursor-pointer mr-2"
+                  onClick={onExportExcel}
+                />
+              )}
+            </div>
           </header>
 
           {/* Scrollable content */}

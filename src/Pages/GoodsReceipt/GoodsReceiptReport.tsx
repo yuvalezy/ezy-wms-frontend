@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import ContentTheme from "../../components/ContentTheme";
-import ReportFilterForm from "@/pages/GoodsReceipt/components/ReportFilterForm";
+import ReportFilterForm, {ReportFilterFormRef} from "@/pages/GoodsReceipt/components/ReportFilterForm";
 import {fetchDocuments, GoodsReceiptReportFilter} from "@/pages/GoodsReceipt/data/Document";
 import DocumentReportCard from "@/pages/GoodsReceipt/components/DocumentReportCard";
 import {useThemeContext} from "@/components/ThemeContext";
@@ -21,6 +21,7 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
   const [stop, setStop] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
   const documentListDialogRef = useRef<DocumentListDialogRef>(null);
+  const reportFilterFormRef = useRef<ReportFilterFormRef>(null);
 
   const filtersRef = useRef<GoodsReceiptReportFilter | null>(filters);
   const lastIDRef = useRef<number>(lastID);
@@ -76,12 +77,21 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
     loadData(newFilters);
   };
 
+  const handleFilterToggle = () => {
+    reportFilterFormRef.current?.togglePanel();
+  };
+
   return (
-    <ContentTheme title={!confirm ? t('goodsReceiptReport') : t('confirmationReport')}>
+    <ContentTheme 
+      title={!confirm ? t('goodsReceiptReport') : t('confirmationReport')}
+      onFilterClicked={handleFilterToggle}
+    >
       <ReportFilterForm
+        ref={reportFilterFormRef}
         onSubmit={onSubmit}
         onClear={() => setDocuments([])}
         confirm={confirm}
+        showTrigger={false}
       />
       <div className="flex flex-col gap-2">
         {documents.map((doc) => (
