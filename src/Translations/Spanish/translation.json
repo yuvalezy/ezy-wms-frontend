@@ -1,6 +1,7 @@
 {
   "home": "Inicio",
   "itemCheck": "Revision de Articulo",
+  "inventoryCheck": "Revision de Inventario",
   "differencesReport": "Reporte de Diferencias",
   "goodsReceipt": "Entrada",
   "receiptConfirmation": "Confirmación de Entrada",
@@ -235,5 +236,6 @@
   "enterDocumentNumber": "Ingrese el número de documento",
   "binCountItems": "En espera del conteo de artículos para esta ubicación.",
   "counted": "Contado",
-  "enterCommentsHere": "Ingrese comentarios aquí"
+  "enterCommentsHere": "Ingrese comentarios aquí",
+  "logout": "Cerrar Sesión"
 }

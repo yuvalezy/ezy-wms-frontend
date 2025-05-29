@@ -30,7 +30,6 @@ export const useCountingProcessData = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const processAlertRef = useRef<HTMLDivElement>(null);
 
-  const title = `${t("counting")} #${scanCode}`;
 
   useEffect(() => {
     setEnable(!user?.binLocations);
@@ -143,7 +142,6 @@ export const useCountingProcessData = () => {
   }
 
   return {
-    title,
     id,
     binLocation,
     binLocationRef,

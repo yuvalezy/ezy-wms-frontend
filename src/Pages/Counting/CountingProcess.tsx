@@ -11,12 +11,6 @@ import {updateLine} from "@/pages/Counting/data/CountingProcess";
 import ProcessAlert from "../../components/ProcessAlert";
 import {ReasonType} from "@/assets";
 import Processes from "../../components/Processes";
-import {
-  Breadcrumb,
-  BreadcrumbItem, BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-} from "@/components";
 import ContentTheme from "@/components/ContentTheme";
 import {AlertCircle} from "lucide-react";
 import {useCountingProcessData} from "@/pages/Counting/data/counting-process-data";
@@ -24,7 +18,6 @@ import {useCountingProcessData} from "@/pages/Counting/data/counting-process-dat
 export default function CountingProcess() {
   const {t} = useTranslation();
   const {
-    title,
     id,
     binLocationRef,
     enable,
@@ -42,20 +35,16 @@ export default function CountingProcess() {
     processAlertRef
   } = useCountingProcessData();
 
+  const titleBreadcrumbs = [{label: `${id}`}];
+  if (binLocation){
+    titleBreadcrumbs.push({label: binLocation.code});
+  }
 
   return (
-    <ContentTheme title={title}>
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            {!binLocation ? <BreadcrumbPage>{t("counting")}</BreadcrumbPage> :
-              <BreadcrumbLink href="#" onClick={onBinClear}>{t("counting")}</BreadcrumbLink>}
-          </BreadcrumbItem>
-          {binLocation && <BreadcrumbItem>
-              <BreadcrumbPage>{binLocation?.code}</BreadcrumbPage>
-          </BreadcrumbItem>}
-        </BreadcrumbList>
-      </Breadcrumb>
+    <ContentTheme title={t("counting")}
+                  titleOnClick={binLocation ? () => onBinClear() : undefined}
+                  titleBreadcrumbs={titleBreadcrumbs}
+    >
       {!binLocation && user?.binLocations &&
           <BinLocationScanner ref={binLocationRef} onChanged={onBinChanged} onClear={onBinClear}/>}
       <div className="contentStyle">

@@ -1,6 +1,7 @@
 {
   "home": "Home",
   "itemCheck": "Item Check",
+  "inventoryCheck": "Inventory Check",
   "differencesReport": "Differences Report",
   "goodsReceipt": "Goods Receipt",
   "receiptConfirmation": "Receipt Confirmation",
@@ -236,5 +237,6 @@
   "enterDocumentNumber": "Enter document number",
   "binCountItems": "Awaiting item count for this location.",
   "counted": "Counted",
-  "enterCommentsHere": "Enter comments here"
+  "enterCommentsHere": "Enter comments here",
+  "logout": "Logout"
 }

@@ -74,10 +74,10 @@ export function AppSidebar() {
 
   // Define the grouping logic
   const groupedMenus = authorizedMenus.reduce((acc, item) => {
-    let groupLabel = "Other"; // Default group
+    let groupLabel = t('other'); // Default group
 
     if (item.Link === "/binCheck" || item.Link === "/itemCheck") {
-      groupLabel = "Inventory Check";
+      groupLabel = t("inventoryCheck");
     } else if (
       item.Link === "/goodsReceipt" ||
       item.Link === "/goodsReceiptSupervisor" ||
@@ -86,17 +86,17 @@ export function AppSidebar() {
       item.Link === "/goodsReceiptConfirmationSupervisor" ||
       item.Link === "/goodsReceiptConfirmationReport"
     ) {
-      groupLabel = "Goods Receipt";
+      groupLabel = t("goodsReceipt");
     } else if (item.Link === "/pick" || item.Link === "/pickSupervisor") {
-      groupLabel = "Picking";
+      groupLabel = t("picking");
     } else if (item.Link === "/counting" || item.Link === "/countingSupervisor") {
-      groupLabel = "Counting";
+      groupLabel = t("counting");
     } else if (
       item.Link === "/transfer" ||
       item.Link === "/transferSupervisor" ||
       item.Link === "/transferRequest"
     ) {
-      groupLabel = "Transfer";
+      groupLabel = t("transfer");
     }
 
     if (!acc[groupLabel]) {
@@ -108,12 +108,12 @@ export function AppSidebar() {
 
   // Order the groups
   const orderedGroupLabels = [
-    "Inventory Check",
-    "Goods Receipt",
-    "Picking",
-    "Counting",
-    "Transfer",
-    "Other",
+    t("inventoryCheck"),
+    t("goodsReceipt"),
+    t("picking"),
+    t("counting"),
+    t("transfer"),
+    t("other"),
   ];
 
   return (
