@@ -1,7 +1,7 @@
 import React, {forwardRef, useImperativeHandle, useRef, useState} from 'react';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -9,14 +9,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import { IconProp } from '@fortawesome/fontawesome-svg-core'; // Import IconProp
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faCheck} from '@fortawesome/free-solid-svg-icons';
+import {IconProp} from '@fortawesome/fontawesome-svg-core'; // Import IconProp
 import {scanBarcode} from "@/assets";
 import {StringFormat, distinctItems, Item, UnitType} from "@/assets";
 import {useThemeContext} from "./ThemeContext";
 import {useTranslation} from "react-i18next";
-import { toast } from "sonner";
+import {toast} from "sonner";
+import {cn} from "@/lib/utils";
 
 export interface BarCodeScannerProps {
   enabled: boolean;
@@ -26,6 +27,7 @@ export interface BarCodeScannerProps {
   onAddAction?: () => void;
   addActionLabel?: string;
   addActionIcon?: IconProp; // Update type to IconProp
+  fixed?: boolean
 }
 
 export interface BarCodeScannerRef {
@@ -42,7 +44,8 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
     onAddItem,
     onAddAction,
     addActionLabel,
-    addActionIcon
+    addActionIcon,
+    fixed
   }, ref) => {
   const barcodeRef = useRef<HTMLInputElement>(null);
   const [barcodeInput, setBarcodeInput] = useState('');
@@ -140,10 +143,8 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
     barcodeRef?.current?.focus();
   }
 
-  const selectedUnitTest = units.find((unit) => unit.value === selectedUnit);
-
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 p-2">
+    <form onSubmit={handleSubmit} className={cn("space-y-4 p-2", fixed ? "fixed bottom-0 left-0 right-0 bg-background z-50 border-t" : "")}>
       <div className="space-y-2">
         <Label htmlFor="barcode-input">{barcodeLabel}</Label>
         <Input
@@ -160,7 +161,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
           <Label htmlFor="unit-select">{t('unit')}</Label>
           <Select onValueChange={handleUnitChanged} value={selectedUnit.toString()}>
             <SelectTrigger id="unit-select">
-              <SelectValue placeholder={t('selectUnit')} />
+              <SelectValue placeholder={t('selectUnit')}/>
             </SelectTrigger>
             <SelectContent>
               {units.map((unit) => (
@@ -175,18 +176,18 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
       <div className="flex space-x-2">
         {onAddAction == null && (
           <Button type="submit" disabled={!enabled} className="w-full">
-            <FontAwesomeIcon icon={faCheck} className="mr-2" />
+            <FontAwesomeIcon icon={faCheck} className="mr-2"/>
             Accept
           </Button>
         )}
         {onAddAction && (
           <>
             <Button type="submit" disabled={!enabled} className="flex-1">
-              <FontAwesomeIcon icon={faCheck} className="mr-2" />
+              <FontAwesomeIcon icon={faCheck} className="mr-2"/>
               Accept
             </Button>
             <Button variant="secondary" onClick={onAddAction} className="flex-1">
-              {addActionIcon && <FontAwesomeIcon icon={addActionIcon} className="mr-2" />}
+              {addActionIcon && <FontAwesomeIcon icon={addActionIcon} className="mr-2"/>}
               {addActionLabel}
             </Button>
           </>

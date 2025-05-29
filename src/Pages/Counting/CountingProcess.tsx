@@ -106,8 +106,8 @@ export default function CountingProcess() {
                 </AlertDescription>
             </Alert>
         }
+      {enable && <BarCodeScanner fixed ref={barcodeRef} enabled unit onAddItem={handleAddItem}/>}
       </ScrollableContentBox>
-      {enable && <BarCodeScanner ref={barcodeRef} enabled unit onAddItem={handleAddItem}/>}
       {currentAlert && id && <Processes ref={processesRef} id={id} alert={currentAlert} reasonType={ReasonType.Counting}
                                         onCancel={handleCancel}
                                         onQuantityChanged={handleQuantityChanged} onUpdateLine={updateLine}/>}
