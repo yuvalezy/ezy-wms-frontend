@@ -5,6 +5,11 @@ const InfoBox = ({children}: { children: React.ReactNode | React.ReactNode[] }) 
     {children}
   </div>
 }
+export const FullInfoBox = ({children}: { children: React.ReactNode | React.ReactNode[] }) => {
+  return <div className="gap-4">
+    {children}
+  </div>
+}
 export const SecondaryInfoBox = ({children}: { children: React.ReactNode | React.ReactNode[] }) => {
   return <div className="grid grid-cols-2 gap-2">
     {children}

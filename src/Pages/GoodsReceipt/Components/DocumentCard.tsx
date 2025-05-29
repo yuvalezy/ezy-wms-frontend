@@ -13,7 +13,7 @@ import {Status} from "@/assets/Common";
 import {activeStatuses, processStatuses, useHandleOpen} from "@/pages/GoodsReceipt/data/GoodsReceiptUtils";
 import {useDateTimeFormat} from "@/assets/DateFormat";
 import {Separator} from "@/components/ui/separator";
-import InfoBox, {InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
+import InfoBox, {FullInfoBox, InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
 import {useNavigate} from "react-router-dom";
 
 type DocumentCardProps = {
@@ -35,10 +35,10 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
   const handleOpenLink = !confirm ? user?.authorizations?.includes(Authorization.GOODS_RECEIPT) : user?.authorizations?.includes(Authorization.GOODS_RECEIPT_CONFIRMATION);
 
   const openLink = () => {
-      if (!confirm)
-          navigate(`/goodsReceipt/${doc.id}`);
-      else
-          navigate(`/goodsReceiptConfirmation/${doc.id}`);
+    if (!confirm)
+      navigate(`/goodsReceipt/${doc.id}`);
+    else
+      navigate(`/goodsReceiptConfirmation/${doc.id}`);
   };
 
   const documentStatusToString = useDocumentStatusToString();
@@ -50,7 +50,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
   }
   return (
     <Card>
-      <CardContent className="text-sm">
+      <CardContent className="grid text-sm gap-2">
         <SecondaryInfoBox>
           {doc.name && <InfoBoxValue label={t('id')} value={doc.name}/>}
           <InfoBoxValue onClick={handleOpenLink ? openLink : undefined} label={t('number')} value={doc.id}/>
@@ -58,7 +58,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
           <InfoBoxValue label={t('createdBy')} value={doc.employee.name}/>
           <InfoBoxValue label={t('status')} value={documentStatusToString(doc.status)}/>
         </SecondaryInfoBox>
-        {(doc.businessPartner || doc.specificDocuments) && <InfoBox>
+        {(doc.businessPartner || doc.specificDocuments) && <FullInfoBox>
           {doc.businessPartner && (
             <InfoBoxValue label={t('vendor')} value={doc.businessPartner.name ?? doc.businessPartner.code}/>
           )}
@@ -66,24 +66,24 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
             <InfoBoxValue label={t('documentsList')} value={formatDocumentsList(doc.specificDocuments)}
                           onClick={() => docDetails(doc)}/>
           )}
-        </InfoBox>}
+        </FullInfoBox>}
 
         {supervisor && (
           <>
             <Separator className="my-4"/>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <Button variant="outline" className="w-full" onClick={e => handleOpen(e, 'all', doc.id)}>
+              <Button variant="outline" className="w-full" onClick={() => handleOpen('all', doc.id)}>
                 <FontAwesomeIcon icon={faFileAlt} className="mr-2"/>
                 {!confirm ? t('goodsReceiptReport') : t('confirmationReport')}
               </Button>
               {activeStatuses.includes(doc.status) && (
-                <Button variant="outline" className="w-full" onClick={e => handleOpen(e, 'vs', doc.id)}>
+                <Button variant="outline" className="w-full" onClick={() => handleOpen('vs', doc.id)}>
                   <FontAwesomeIcon icon={faTruckLoading} className="mr-2"/>
                   {!confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}
                 </Button>
               )}
               {processStatuses.includes(doc.status) && (
-                <Button variant="outline" className="w-full" onClick={e => handleOpen(e, 'diff', doc.id)}>
+                <Button variant="outline" className="w-full" onClick={() => handleOpen('diff', doc.id)}>
                   <FontAwesomeIcon icon={faExchangeAlt} className="mr-2"/>
                   {t('differencesReport')}
                 </Button>

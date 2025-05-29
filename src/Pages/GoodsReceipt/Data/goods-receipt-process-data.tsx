@@ -32,8 +32,6 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
   const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
   const processesRef = useRef<ProcessesRef>(null);
 
-  const title = `${!confirm ? t("goodsReceipt") : t("receiptConfirmation")} #${scanCode}`;
-
   useEffect(() => {
     setTimeout(() => barcodeRef.current?.focus(), 1);
     if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
@@ -291,7 +289,7 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
   }
 
   return {
-    title,
+    scanCode,
     id,
     enable,
     barcodeRef,

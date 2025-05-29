@@ -57,18 +57,18 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc, docDetails,
         </SecondaryInfoBox>
         <Separator className="my-4"/>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <Button variant="outline" className="w-full" onClick={e => handleOpen(e, 'all', doc.id)}>
+          <Button variant="outline" className="w-full" onClick={() => handleOpen('all', doc.id)}>
             <FontAwesomeIcon icon={faFileAlt} className="mr-2"/>
             {!confirm ? t('goodsReceiptReport') : t('confirmationReport')}
           </Button>
           {activeStatuses.includes(doc.status) && (
-            <Button variant="outline" className="w-full" onClick={e => handleOpen(e, 'vs', doc.id)}>
+            <Button variant="outline" className="w-full" onClick={() => handleOpen('vs', doc.id)}>
               <FontAwesomeIcon icon={faTruckLoading} className="mr-2"/>
               {!confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}
             </Button>
           )}
           {processStatuses.includes(doc.status) && (
-            <Button variant="outline" className="w-full" onClick={e => handleOpen(e, 'diff', doc.id)}>
+            <Button variant="outline" className="w-full" onClick={() => handleOpen('diff', doc.id)}>
               <FontAwesomeIcon icon={faExchangeAlt} className="mr-2"/>
               {t('differencesReport')}
             </Button>

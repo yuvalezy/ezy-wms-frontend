@@ -8,11 +8,12 @@ import {ReasonType} from "@/assets/Reasons";
 import Processes from "../../components/Processes";
 import BarCodeScanner from "../../components/BarCodeScanner";
 import {useGoodsReceiptProcessData} from "@/pages/GoodsReceipt/data/goods-receipt-process-data";
+import {useNavigate} from "react-router-dom";
 
 export default function GoodsReceiptProcess({confirm = false}: { confirm?: boolean }) {
   const {t} = useTranslation();
   const {
-    title,
+    scanCode,
     id,
     enable,
     barcodeRef,
@@ -24,28 +25,15 @@ export default function GoodsReceiptProcess({confirm = false}: { confirm?: boole
     handleAlertActionAccept,
     handleUpdateLine
   } = useGoodsReceiptProcessData(confirm);
+  const navigate = useNavigate();
+
+  const title = `${!confirm ? t("goodsReceipt") : t("receiptConfirmation")}`;
+
   return (
-    <ContentTheme title={title}>
+    <ContentTheme title={title} titleOnClick={() => navigate(`/goodsReceipt${confirm ? 'Confirmation' : ''}`)} titleBreadcrumbs={[{label: scanCode || ''}]}>
       {id ? (
         <>
-          {enable && (
-            // <Form onSubmit={handleSubmit}>
-            //     <FormItem label={t("barcode")}>
-            //         <Input required
-            //                value={barcodeInput}
-            //                onInput={(e) => setBarcodeInput(e.target.value as string)}
-            //                ref={barcodeRef}
-            //                disabled={!enable}
-            //         ></Input>
-            //     </FormItem>
-            //     <FormItem>
-            //         <Button type="Submit" icon="accept" disabled={!enable}>
-            //             {t("accept")}
-            //         </Button>
-            //     </FormItem>
-            // </Form>
-            <BarCodeScanner ref={barcodeRef} enabled unit onAddItem={handleAddItem}/>
-          )}
+          {enable && (<BarCodeScanner ref={barcodeRef} enabled unit onAddItem={handleAddItem}/>)}
           {acceptValues.map((alert) => (
             <ProcessAlert
               enableComment={true}

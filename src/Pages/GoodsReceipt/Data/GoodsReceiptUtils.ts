@@ -6,8 +6,7 @@ export const processStatuses = [Status.InProgress, Status.Processing];
 
 export const useHandleOpen = (confirm: boolean = false) => {
     const navigate = useNavigate();
-    return (e: React.MouseEvent<HTMLElement>, type: string, id: number) => {
-        e.preventDefault();
+    return (type: string, id: number) => {
         const confirmation = confirm ? 'Confirmation' : '';
         switch (type) {
             case 'open':
