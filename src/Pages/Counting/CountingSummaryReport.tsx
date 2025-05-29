@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {useThemeContext} from "@/components";
 import {useTranslation} from "react-i18next";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {IsNumeric} from "@/assets";
 import {CountingSummaryReportData, fetchCountingSummaryReport} from "@/pages/Counting/data/Report";
 import CountingSummaryReportTable from "@/pages/Counting/components/CountingSummaryReportTable";
@@ -14,6 +14,8 @@ export default function CountingSummaryReport() {
   const {setLoading, setError} = useThemeContext();
   const {t} = useTranslation();
   const [data, setData] = useState<CountingSummaryReportData | null>(null);
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
       setID(null);
@@ -59,18 +61,18 @@ export default function CountingSummaryReport() {
   };
 
   return (
-    <ContentTheme title={t("countingSummaryReport")} exportExcel={true} onExportExcel={handleExportExcel}>
+    <ContentTheme title={t("countingSupervisor")}
+                  titleOnClick={() => navigate('/countingSupervisor')}
+                  titleBreadcrumbs={[{label: `${id}`}, {label: t("countingSummaryReport")}]}
+                  onExportExcel={handleExportExcel}>
       <div className="space-y-4">
-        <div className="flex flex-col space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight">
-            {t("counting")} #{id}
-          </h1>
-          {data?.name && (
+        {data?.name && (
+          <div className="flex flex-col space-y-2">
             <h2 className="text-2xl font-semibold text-muted-foreground">
               {t("id")} {data?.name}
             </h2>
-          )}
-        </div>
+          </div>
+        )}
         {data && <CountingSummaryReportTable data={data.lines}/>}
       </div>
     </ContentTheme>

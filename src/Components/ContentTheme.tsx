@@ -97,7 +97,7 @@ const ContentTheme: React.FC<ContentThemeProps> = (
 
           {/* Footer: fixed height */}
           {footer && (
-            <footer className="flex-shrink-0 bg-white w-full">
+            <footer className="flex-shrink-0 bg-white w-full border-t-1">
               {footer}
             </footer>
           )}

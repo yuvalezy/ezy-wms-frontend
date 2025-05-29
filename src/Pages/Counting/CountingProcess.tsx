@@ -14,6 +14,7 @@ import Processes from "../../components/Processes";
 import ContentTheme from "@/components/ContentTheme";
 import {AlertCircle} from "lucide-react";
 import {useCountingProcessData} from "@/pages/Counting/data/counting-process-data";
+import {useNavigate} from "react-router-dom";
 
 export default function CountingProcess() {
   const {t} = useTranslation();
@@ -35,21 +36,25 @@ export default function CountingProcess() {
     processAlertRef
   } = useCountingProcessData();
 
-  const titleBreadcrumbs = [{label: `${id}`}];
-  if (binLocation){
+  const navigate = useNavigate();
+
+  const titleBreadcrumbs = [{label: `${id}`, onClick: binLocation ? () => onBinClear() : undefined}];
+  if (binLocation) {
     titleBreadcrumbs.push({label: binLocation.code});
   }
 
   return (
     <ContentTheme title={t("counting")}
-                  titleOnClick={binLocation ? () => onBinClear() : undefined}
+                  titleOnClick={() => navigate('/counting')}
                   titleBreadcrumbs={titleBreadcrumbs}
+                  footer={binLocation && <BarCodeScanner ref={barcodeRef} enabled unit onAddItem={handleAddItem}/>}
     >
       {!binLocation && user?.binLocations &&
           <BinLocationScanner ref={binLocationRef} onChanged={onBinChanged} onClear={onBinClear}/>}
       <div className="contentStyle">
         {currentAlert &&
-            <div ref={processAlertRef}><ProcessAlert alert={currentAlert} onAction={(type) => processesRef?.current?.open(type)}/></div>}
+            <div ref={processAlertRef}><ProcessAlert alert={currentAlert}
+                                                     onAction={(type) => processesRef?.current?.open(type)}/></div>}
         {rows != null && rows.length > 0 &&
             <div className="flex flex-col gap-4">
               {rows.map((row) => (
@@ -96,8 +101,6 @@ export default function CountingProcess() {
                 </AlertDescription>
             </Alert>
         }
-        <div style={{height: '200px'}}></div>
-        {enable && <BarCodeScanner fixed ref={barcodeRef} enabled unit onAddItem={handleAddItem}/>}
       </div>
       {currentAlert && id && <Processes ref={processesRef} id={id} alert={currentAlert} reasonType={ReasonType.Counting}
                                         onCancel={handleCancel}
