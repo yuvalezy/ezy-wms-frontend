@@ -12,7 +12,8 @@ import {useObjectName} from "@/assets/ObjectName";
 import {IsNumeric} from "@/assets/Functions";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage} from "@/components/ui/breadcrumb";
-import InfoBox, {InfoBoxValue} from "@/components/InfoBox";
+import InfoBox, {FullInfoBox, InfoBoxValue} from "@/components/InfoBox";
+import {Button, Card, CardContent, CardHeader} from "@/components";
 
 interface GoodsReceiptVSExitReportProps {
   confirm?: boolean
@@ -25,7 +26,6 @@ export default function GoodsReceiptVSExitReport({confirm}: GoodsReceiptVSExitRe
   const {setLoading, setError} = useThemeContext();
   const [data, setData] = useState<GoodsReceiptVSExitReportData[] | null>(null);
   const [report, setReport] = useState<GoodsReceiptVSExitReportData | null>(null);
-  const title = `${!confirm ? t("goodsReceipt") : t("receiptConfirmation")} #${scanCode}`;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,48 +39,42 @@ export default function GoodsReceiptVSExitReport({confirm}: GoodsReceiptVSExitRe
       .finally(() => setLoading(false));
   }, []);
 
-  const openReport = (e: React.MouseEvent<HTMLAnchorElement>, value: GoodsReceiptVSExitReportData) => {
-    e.preventDefault();
-    setReport(value);
-  }
-  return (
-    <ContentTheme title={title}>
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="#"
-                            onClick={() => navigate(`/goodsReceipt${confirm ? 'Confirmation' : ''}Supervisor`)}>{t('supervisor')}</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            {!report ?
-              <BreadcrumbPage>{!confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}</BreadcrumbPage> :
-              <BreadcrumbLink href="#"
-                              onClick={() => setReport(null)}>{!confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}</BreadcrumbLink>
-            }
+  const title = `${!confirm ? t("goodsReceiptSupervisor") : t("goodsReceiptConfirmationSupervisor")}`;
+  const titleLink = `/goodsReceipt${confirm ? 'Confirmation' : ''}Supervisor`;
+  const subTitle = !confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit');
+  const titleBreadcrumbs = [
+    {label: `${scanCode}`},
+    {label: subTitle, onClick: report ? () => setReport(null) : undefined}
+  ];
 
-          </BreadcrumbItem>
-          {report && <BreadcrumbItem>
-              <BreadcrumbPage>{`${o(report.objectType)}: ${report.number}`}</BreadcrumbPage>
-          </BreadcrumbItem>}
-        </BreadcrumbList>
-      </Breadcrumb>
+  if (report) {
+    titleBreadcrumbs.push({label: `${o(report.objectType)}: ${report.number}`});
+  }
+
+  return (
+    <ContentTheme title={title} titleOnClick={() => navigate(titleLink)}
+                  titleBreadcrumbs={titleBreadcrumbs}>
       {!report && data?.map((value, index) => (
         <div key={index} className="mb-2">
-          <Link to="#"
-                className="flex items-center text-blue-600 hover:text-blue-800"
-                onClick={(e) => openReport(e, value)}>
-            <svg className="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/>
-            </svg>
-            {`${o(value.objectType)}: ${value.number}`}
-          </Link>
+          <Card>
+            <CardHeader>
+              {`${o(value.objectType)}: ${value.number}`}
+            </CardHeader>
+            <CardContent>
+              <FullInfoBox>
+                <InfoBoxValue label={t("customer")} value={value.cardName}/>
+                {value.address && <InfoBoxValue label={t("address")} value={value.address}/>}
+              </FullInfoBox>
+              <Button className="w-full" type="button" onClick={() => setReport(value)}>{t('details')}</Button>
+            </CardContent>
+          </Card>
         </div>
       ))}
       {report && <>
-          <InfoBox>
+          <FullInfoBox>
               <InfoBoxValue label={t("customer")} value={report.cardName}/>
             {report.address && <InfoBoxValue label={t("address")} value={report.address}/>}
-          </InfoBox>
+          </FullInfoBox>
           <GoodsReceiptVSExitReportTable data={report.lines}/>
       </>}
       {data && data.length === 0 && (

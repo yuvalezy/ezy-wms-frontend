@@ -5,10 +5,11 @@ import {useTranslation} from "react-i18next";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import GoodsReceiptProcessDifferenceTable from "@/pages/GoodsReceipt/components/GoodsReceiptProcessDifferenceTable";
 import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage} from "@/components/ui/breadcrumb";
-import InfoBox, {InfoBoxValue} from "@/components/InfoBox";
+import InfoBox, {FullInfoBox, InfoBoxValue} from "@/components/InfoBox";
 import {
   useGoodsReceiptProcessDifferenceReportData
 } from "@/pages/GoodsReceipt/data/goods-receipt-process-difference-report-data";
+import {Button, Card, CardContent, CardHeader} from "@/components";
 
 interface GoodsReceiptProcessDifferenceReportProps {
   confirm?: boolean
@@ -28,48 +29,44 @@ export default function GoodsReceiptProcessDifferenceReport({confirm}: GoodsRece
     openReport,
   } = useGoodsReceiptProcessDifferenceReportData();
 
-  const title = `${!confirm ? t("goodsReceipt") : t("receiptConfirmation")} #${scanCode}`;
-
   if (!id)
     return null;
 
+  const title = `${!confirm ? t("goodsReceiptSupervisor") : t("goodsReceiptConfirmationSupervisor")}`;
+  const titleLink = `/goodsReceipt${confirm ? 'Confirmation' : ''}Supervisor`;
+  const subTitle = !confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit');
+  const titleBreadcrumbs = [
+    {label: `${scanCode}`},
+    {label: subTitle, onClick: report ? () => setReport(null) : undefined}
+  ];
+
+  if (report) {
+    titleBreadcrumbs.push({label: `${o(report.baseType)}: ${report.documentNumber}`});
+  }
+
   return (
-    <ContentTheme title={title} exportExcel={true} onExportExcel={handleExportExcel}>
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="#"
-                            onClick={() => navigate(`/goodsReceipt${confirm ? 'Confirmation' : ''}Supervisor`)}>{t('supervisor')}</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            {!report ?
-              <BreadcrumbPage>{t("differencesReport")}</BreadcrumbPage> :
-              <BreadcrumbLink href="#"
-                              onClick={() => setReport(null)}>{t("differencesReport")}</BreadcrumbLink>
-            }
-          </BreadcrumbItem>
-          {report && <BreadcrumbItem>
-              <BreadcrumbPage>{`${o(report.baseType)}: ${report.documentNumber}`}</BreadcrumbPage>
-          </BreadcrumbItem>}
-        </BreadcrumbList>
-      </Breadcrumb>
+    <ContentTheme title={title} titleOnClick={() => navigate(titleLink)} titleBreadcrumbs={titleBreadcrumbs} onExportExcel={handleExportExcel}>
       {!report && data?.map((value) => (
         <div key={value.documentNumber} className="mb-2">
-          <Link to="#"
-                className="flex items-center text-blue-600 hover:text-blue-800"
-                onClick={(e) => openReport(e, value)}>
-            <svg className="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/>
-            </svg>
-            {`${o(value.baseType)}: ${value.documentNumber}`}
-          </Link>
+          <Card>
+            <CardHeader>
+              {`${o(value.baseType)}: ${value.documentNumber}`}
+            </CardHeader>
+            <CardContent>
+              <FullInfoBox>
+                <InfoBoxValue label={t("supplier")} value={value.cardCode}/>
+                <InfoBoxValue label={t("supplierName")} value={value.cardName}/>
+              </FullInfoBox>
+              <Button className="w-full" type="button" onClick={() => setReport(value)}>{t('details')}</Button>
+            </CardContent>
+          </Card>
         </div>
       ))}
       {report && <>
-          <InfoBox>
+          <FullInfoBox>
               <InfoBoxValue label={t("supplier")} value={report.cardCode}/>
               <InfoBoxValue label={t("supplierName")} value={report.cardName}/>
-          </InfoBox>
+          </FullInfoBox>
           <GoodsReceiptProcessDifferenceTable id={id} data={report}/>
       </>}
       {data && data.length === 0 && (

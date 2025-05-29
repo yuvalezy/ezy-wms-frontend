@@ -24,19 +24,18 @@ export default function GoodsReceiptReportAll({confirm = false}: GoodsReceiptAll
     onDetailUpdate,
   } = useGoodsReceiptAllData(confirm);
 
+  const title = `${!confirm ? t("goodsReceiptSupervisor") : t("goodsReceiptConfirmationSupervisor")}`;
+  const titleLink = `/goodsReceipt${confirm ? 'Confirmation' : ''}Supervisor`;
+  const subTitle = !confirm ? t("goodsReceiptReport") : t("confirmationReport");
+
   return (
-    <ContentTheme title={`${!confirm ? t("goodsReceiptSupervisor") : t("goodsReceiptConfirmationSupervisor")} #${id}`} exportExcel={true} onExportExcel={handleExportExcel}>
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="#"
-                            onClick={() => navigate(`/goodsReceipt${confirm ? 'Confirmation' : ''}Supervisor`)}>{t('supervisor')}</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <BreadcrumbPage>{!confirm ? t("goodsReceiptReport") : t("confirmationReport")}</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+    <ContentTheme title={title}
+                  titleOnClick={() => navigate(titleLink)}
+                  onExportExcel={handleExportExcel}
+                  titleBreadcrumbs={[
+                    {label: `${id}`},
+                    {label: subTitle}
+                  ]}>
       {data && <>
           <GoodsReceiptAllReportTable onClick={openDetails} data={data}/>
         {data.length === 0 && (
