@@ -7,7 +7,7 @@ import {Button} from "@/components/ui/button";
 import {Progress} from "@/components/ui/progress";
 import {Authorization} from "@/assets/Authorization";
 import {useDocumentStatusToString} from "@/assets/DocumentStatusString";
-import {TransferDocument} from "../Data/TransferDocument";
+import {TransferDocument} from "@/pages/Transfer/data/transfer-document";
 import {Status} from "@/assets/Common";
 import {useDateTimeFormat} from "@/assets/DateFormat";
 import {CheckCircle, XCircle} from "lucide-react";

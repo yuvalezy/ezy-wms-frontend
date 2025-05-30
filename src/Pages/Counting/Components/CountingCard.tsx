@@ -53,10 +53,7 @@ const CountingCard: React.FC<CountingCardProps> = ({doc, handleAction, superviso
           <>
             <Separator className="my-4"/>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <Button variant="outline" className="w-full" onClick={e => {
-                  e.preventDefault();
-                  navigate(`/countingSummaryReport/${doc.id}`);
-                }}>
+                <Button variant="outline" className="w-full" onClick={() => navigate(`/countingSummaryReport/${doc.id}`)}>
                   <FontAwesomeIcon icon={faFileAlt} className="mr-2"/>
                   {t('countingSummaryReport')}
                 </Button>

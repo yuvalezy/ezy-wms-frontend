@@ -1,72 +1,24 @@
-import ContentTheme from "../../components/ContentTheme";
-import {Link, useNavigate, useParams} from "react-router-dom";
-import React, {useEffect, useState} from "react";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-  BreadcrumbPage,
-  Button,
-  Card, CardContent,
-  CardHeader,
-  useThemeContext
-} from "@/components";
+import ContentTheme from "@/components/ContentTheme";
+import {Link, useNavigate} from "react-router-dom";
+import {Button, Card, CardContent} from "@/components";
 import {useTranslation} from "react-i18next";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {
-  faMap,
-  faCheck,
-  faClipboardList,
-} from '@fortawesome/free-solid-svg-icons';
-import {Alert, AlertDescription} from "@/components/ui/alert";
-import {IsNumeric, StringFormat} from "@/assets";
-import {getProcessInfo, transferAction, TransferDocument} from "./Data/TransferDocument";
-import {useAuth} from "@/components";
-import {toast} from "sonner";
+import {faMap, faCheck,} from '@fortawesome/free-solid-svg-icons';
 import BinLocationScanner from "@/components/BinLocationScanner";
-import TransferCard from "@/pages/Transfer/components/TransferCard";
+import TransferCard from "@/pages/Transfer/components/transfer-card";
 import {cn} from "@/lib/utils";
+import {useTransferProcessData} from "@/pages/Transfer/data/transfer-process-data";
 
 export default function TransferProcess() {
-  const {scanCode} = useParams();
-  const {user} = useAuth();
   const {t} = useTranslation();
-  const [id, setID] = useState<number | null>();
-  const [info, setInfo] = useState<TransferDocument | null>(null);
-  const {setLoading, setError} = useThemeContext();
+  const {
+    id,
+    info,
+    finish,
+    scanCode,
+    user
+  } = useTransferProcessData();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    setLoading(true);
-    if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
-      setID(null);
-      return;
-    }
-    let value = parseInt(scanCode);
-    setID(value);
-    getProcessInfo(value)
-      .then((result) => setInfo(result))
-      .catch((error) => setError(error))
-      .finally(() => setLoading(false));
-  }, []);
-
-
-  function finish() {
-    if (!info?.isComplete || id == null)
-      return;
-    if (window.confirm(StringFormat(t("createTransferConfirm"), id))) {
-      setLoading(true);
-      transferAction(id, "approve")
-        .then(() => {
-          toast.success(t("transferApproved"));
-          navigate(`/transfer`);
-        })
-        .catch((error) => {
-          setError(error);
-        })
-        .finally(() => setLoading(false));
-    }
-  }
 
   return (
     <ContentTheme title={t("transfer")} titleOnClick={() => navigate(`/transfer`)}

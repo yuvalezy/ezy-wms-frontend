@@ -30,7 +30,7 @@ const GoodsReceiptVSExitReportTable: React.FC<GoodsReceiptVSExitReportTableProps
                   <span>{t('units')}</span>
                 </div>
                 <div className="flex-1 text-xs">
-                  <span>{row.buyUnitMsr ?? t('purPackUn')}</span>
+                  <span>{row.buyUnitMsr ?? t("qtyInUn")}</span>
                 </div>
                 <div className="flex-1 text-xs">
                   <span>{row.purPackMsr ?? t('packUn')}</span>

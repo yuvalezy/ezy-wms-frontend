@@ -49,7 +49,7 @@ export const useGoodsReceiptAllData = (confirm: boolean | undefined) => {
     t("delivery"),
     t("showroom"),
     t("stock"),
-    t("purPackUn"),
+    t("qtyInUn"),
     t("packUn"),
   ];
 

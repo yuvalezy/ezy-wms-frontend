@@ -11,7 +11,7 @@ const ItemDetailsList : React.FC<ItemDetailsListProps> = ({result}) => {
     return <InfoBox>
       <InfoBoxValue label={t("code")} value={result.itemCode}/>
       <InfoBoxValue label={t("description")} value={result.itemName}/>
-      <InfoBoxValue label={t("purPackUn")} value={`${result.numInBuy} ${result.buyUnitMsr}`}/>
+      <InfoBoxValue label={t("qtyInUn")} value={`${result.numInBuy} ${result.buyUnitMsr}`}/>
       <InfoBoxValue label={t("packUn")} value={`${result.purPackUn} ${result.purPackMsr}`}/>
     </InfoBox>
 };

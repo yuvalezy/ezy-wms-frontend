@@ -6,7 +6,7 @@ import {useTranslation} from "react-i18next";
 import {IsNumeric} from "@/assets";
 import {useAuth} from "@/components";
 import {BarCodeScannerRef} from "@/components";
-import {fetchTransferContent, TransferContent} from "./Data/TransferDocument";
+import {fetchTransferContent, TransferContent} from "@/pages/Transfer/data/transfer-document";
 import {ScrollableContent} from "@/components";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";

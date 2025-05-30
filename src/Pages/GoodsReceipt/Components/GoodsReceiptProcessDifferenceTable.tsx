@@ -166,7 +166,7 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
                     <span>{t('units')}</span>
                   </div>
                   <div className="flex-1 text-xs">
-                    <span>{row.buyUnitMsr ?? t('purPackUn')}</span>
+                    <span>{row.buyUnitMsr ?? t("qtyInUn")}</span>
                   </div>
                   <div className="flex-1 text-xs">
                     <span>{row.purPackMsr ?? t('packUn')}</span>
@@ -241,7 +241,7 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
                       }
 
                       const displayUnit = selectedLineForDetail?.unit === UnitType.Unit ? t('unit') :
-                        selectedLineForDetail?.unit === UnitType.Dozen ? (selectedLineForDetail?.buyUnitMsr || t('purPackUn')) :
+                        selectedLineForDetail?.unit === UnitType.Dozen ? (selectedLineForDetail?.buyUnitMsr || t("qtyInUn")) :
                           (selectedLineForDetail?.purPackMsr || t('packUn'));
                       return (
                         <Card

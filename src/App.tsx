@@ -23,17 +23,17 @@ import CountingList from "./pages/Counting/Counting";
 import CountingProcess from "./pages/Counting/CountingProcess";
 import CountingSupervisor from "./pages/Counting/CountingSupervisor";
 import {globalSettings} from "@/assets";
-import Transfer from "./pages/Transfer/Transfer";
-import TransferSupervisor from "./pages/Transfer/TransferSupervisor";
-import TransferProcess from "./pages/Transfer/TransferProcess";
-import TransferProcessSource from "./pages/Transfer/TransferProcessSource";
-import TransferProcessTargetItems from "./pages/Transfer/TransferProcessTargetItems";
-import TransferProcessTargetItem from "./pages/Transfer/TransferProcessTargetItem";
+import Transfer from "./pages/Transfer/transfer";
+import TransferSupervisor from "./pages/Transfer/transfer-supervisor";
+import TransferProcess from "./pages/Transfer/transfer-process";
+import TransferProcessSource from "./pages/Transfer/transfer-process-source";
+import TransferProcessTargetItems from "./pages/Transfer/transfer-process-target-items";
+import TransferProcessTargetItem from "./pages/Transfer/transfer-process-target-item";
 import CountingSummaryReport from "./pages/Counting/CountingSummaryReport";
 import {BinCheck} from "./pages/BinCheck/BinCheck";
 import GoodsReceiptProcessDifferenceReport from "./pages/GoodsReceipt/GoodsReceiptProcessDifferenceReport";
-import TransferProcessTargetBins from "./pages/Transfer/TransferProcessTargetBins";
-import TransferRequest from "./pages/Transfer/TransferRequest";
+import TransferProcessTargetBins from "./pages/Transfer/transfer-process-target-bins";
+import TransferRequest from "./pages/Transfer/transfer-request";
 import { Toaster } from 'sonner';
 
 export default function App() {

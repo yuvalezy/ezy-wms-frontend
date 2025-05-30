@@ -100,7 +100,7 @@ const ProcessQuantity = forwardRef((props: ProcessQuantityProps, ref) => {
     }
   }));
   const displayUnit = props.alert?.unit === UnitType.Unit ? t('unit') :
-    props.alert?.unit === UnitType.Dozen ? (props.alert?.buyUnitMsr || t('purPackUn')) :
+    props.alert?.unit === UnitType.Dozen ? (props.alert?.buyUnitMsr || t("qtyInUn")) :
       (props.alert?.purPackMsr || t('packUn'));
 
   return (

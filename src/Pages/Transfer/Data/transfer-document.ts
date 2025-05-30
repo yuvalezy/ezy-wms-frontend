@@ -1,4 +1,4 @@
-import {Employee} from "@/assets";
+import {Employee, UnitType} from "@/assets";
 import {configUtils, delay, globalConfig} from "@/assets";
 import {GoodsReceiptAllDetailMockup, transferMockup} from "@/assets";
 import axios from "axios";
@@ -8,6 +8,10 @@ interface TransferAddItemResponse {
   lineID?: number
   closedTransfer: boolean;
   errorMessage?: string;
+  unitMsr: string;
+  numIn: number;
+  packMsr: string;
+  packUnit: number;
 }
 
 export type TransferDocument = {
@@ -27,6 +31,11 @@ export type TransferContent = {
   code: string;
   name: string;
   quantity: number;
+  unit: UnitType;
+  numInBuy: number;
+  buyUnitMsr: string;
+  purPackUn: number;
+  purPackMsr: string;
   openQuantity: number;
   binQuantity?: number;
   progress?: number;
@@ -184,6 +193,7 @@ export type addItemParameters = {
   type: SourceTarget,
   binEntry?: number,
   quantity?: number,
+  unit: UnitType,
 }
 
 export const addItem = async (params: addItemParameters): Promise<TransferAddItemResponse> => {

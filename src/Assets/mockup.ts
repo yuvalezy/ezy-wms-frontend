@@ -9,8 +9,8 @@ import {
 import {DocumentAddItemResponse, ProcessResponse} from "./Document";
 import {Counting, CountingContent} from "./Counting";
 import {GoodsReceiptAll, GoodsReceiptAllDetail, GoodsReceiptVSExitReportData} from "@/pages/GoodsReceipt/data/Report";
-import {TransferDocument} from "@/pages/Transfer/Data/TransferDocument";
-import {TransferAddItemResponse} from "@/pages/Transfer/Data/TransferProcess";
+import {TransferDocument} from "@/pages/Transfer/data/transfer-document";
+import {TransferAddItemResponse} from "@/pages/Transfer/data/transfer-process";
 import {ItemCheckResponse, ItemStockResponse} from "@/pages/ItemCheck/Item";
 import {BinContentResponse} from "@/pages/BinCheck/Bins";
 

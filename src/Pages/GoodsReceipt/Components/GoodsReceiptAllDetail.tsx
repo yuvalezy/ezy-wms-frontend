@@ -75,7 +75,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                   ? quantityChanges[row.lineID]
                   : displayQuantity;
                 const displayUnit = row.unit === UnitType.Unit ? t('unit') :
-                  row.unit === UnitType.Dozen ? (currentData?.buyUnitMsr || t('purPackUn')) :
+                  row.unit === UnitType.Dozen ? (currentData?.buyUnitMsr || t("qtyInUn")) :
                     (currentData?.purPackMsr || t('packUn'));
 
                 return (

@@ -2,9 +2,9 @@ import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import {Alert, AlertDescription, useThemeContext} from "@/components";
 import React, {useEffect, useState} from "react";
-import {fetchTransfers, TransferDocument} from "./Data/TransferDocument";
+import {fetchTransfers, TransferDocument} from "@/pages/Transfer/data/transfer-document";
 import {Status} from "@/assets";
-import TransferCard from "@/pages/Transfer/components/TransferCard";
+import TransferCard from "@/pages/Transfer/components/transfer-card";
 import {AlertCircle} from "lucide-react";
 
 export default function Transfer() {

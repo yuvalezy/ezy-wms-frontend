@@ -6,7 +6,7 @@ import {useTranslation} from "react-i18next";
 import {IsNumeric, StringFormat} from "@/assets";
 import {useAuth} from "@/components";
 import {BinLocation, DetailUpdateParameters, SourceTarget} from "@/assets";
-import {addItem, fetchTransferContent, TransferContent, TransferContentBin, updateTransferTargetItem} from "./Data/TransferDocument";
+import {addItem, fetchTransferContent, TransferContent, TransferContentBin, updateTransferTargetItem} from "@/pages/Transfer/data/transfer-document";
 import ProcessAlert, {ProcessAlertValue} from "../../components/ProcessAlert";
 import {ScrollableContent, ScrollableContentBox} from "@/components";
 import { Label } from "@/components/ui/label";
@@ -24,8 +24,8 @@ import BinLocationScanner, {BinLocationScannerRef} from "../../components/BinLoc
 import {delay}from "@/assets";
 import Processes, {ProcessesRef} from "../../components/Processes";
 import {ReasonType} from "@/assets";
-import {updateLine} from "./Data/TransferProcess";
-import TransferTargetItemsDetailsDialog, {TransferTargetItemsDetailRef} from "@/pages/Transfer/components/TransferTargetItemDetails";
+import {updateLine} from "@/pages/Transfer/data/transfer-process";
+import TransferTargetItemsDetailsDialog, {TransferTargetItemsDetailRef} from "@/pages/Transfer/components/transfer-target-item-details";
 import {Authorization}from "@/assets";
 import {useDateTimeFormat} from "@/assets";
 
