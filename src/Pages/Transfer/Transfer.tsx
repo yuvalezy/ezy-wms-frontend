@@ -14,7 +14,7 @@ export default function Transfer() {
 
   useEffect(() => {
     setLoading(true);
-    fetchTransfers({statuses: [Status.Open, Status.InProgress]})
+    fetchTransfers({statuses: [Status.Open, Status.InProgress], progress: true})
       .then((data) => setTransfers(data))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
