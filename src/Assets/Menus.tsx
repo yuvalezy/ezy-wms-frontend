@@ -19,11 +19,6 @@ export function useMenus() {
 
     const MenuItems: MenuItem[] = [
         {
-            Link: "/home",
-            Text: t('home'),
-            Icon: "home",
-        },
-        {
             Link: "/itemCheck",
             Text: t('itemCheck'),
             Authorizations: [Authorization.GOODS_RECEIPT_SUPERVISOR, Authorization.PICKING_SUPERVISOR],

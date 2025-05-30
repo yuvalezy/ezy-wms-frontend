@@ -76,36 +76,42 @@ export function AppSidebar() {
   const groupedMenus = authorizedMenus.reduce((acc, item) => {
     let groupLabel = t('other'); // Default group
 
-    if (item.Link === "/binCheck" || item.Link === "/itemCheck") {
-      groupLabel = t("inventoryCheck");
-    } else if (
-      item.Link === "/goodsReceipt" ||
-      item.Link === "/goodsReceiptSupervisor" ||
-      item.Link === "/goodsReceiptReport" ||
-      item.Link === "/goodsReceiptConfirmation" ||
-      item.Link === "/goodsReceiptConfirmationSupervisor" ||
-      item.Link === "/goodsReceiptConfirmationReport"
-    ) {
-      groupLabel = t("goodsReceipt");
-    } else if (item.Link === "/pick" || item.Link === "/pickSupervisor") {
-      groupLabel = t("picking");
-    } else if (item.Link === "/counting" || item.Link === "/countingSupervisor") {
-      groupLabel = t("counting");
-    } else if (
-      item.Link === "/transfer" ||
-      item.Link === "/transferSupervisor" ||
-      item.Link === "/transferRequest"
-    ) {
-      groupLabel = t("transfer");
+    switch (item.Link) {
+      case "/binCheck":
+      case "/itemCheck":
+        groupLabel = t("inventoryCheck");
+        break;
+      case "/goodsReceipt":
+      case "/goodsReceiptSupervisor":
+      case "/goodsReceiptReport":
+      case "/goodsReceiptConfirmation":
+      case "/goodsReceiptConfirmationSupervisor":
+      case "/goodsReceiptConfirmationReport":
+        groupLabel = t("goodsReceipt");
+        break;
+      case "/pick":
+      case "/pickSupervisor":
+        groupLabel = t("picking");
+        break;
+      case "/counting":
+      case "/countingSupervisor":
+        groupLabel = t("counting");
+        break;
+      case "/transfer":
+      case "/transferSupervisor":
+      case "/transferRequest":
+        groupLabel = t("transfer");
+        break;
+      default:
+        groupLabel = t('other');
+        break;
     }
-
     if (!acc[groupLabel]) {
       acc[groupLabel] = [];
     }
     acc[groupLabel].push(item);
     return acc;
   }, {} as Record<string, MenuItem[]>);
-
   // Order the groups
   const orderedGroupLabels = [
     t("inventoryCheck"),
@@ -119,6 +125,21 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarContent>
+        <SidebarGroup>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <a href="/" onClick={(e) => {
+                  e.preventDefault();
+                  handleMenuItemClick("/");
+                }} className={location.pathname === "/home" ? 'bg-gray-200' : ''}>
+                  <FontAwesomeIcon icon={faIndustry}/>
+                  <span>{t('home')}</span>
+                </a>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroup>
         {orderedGroupLabels.map((groupLabel) => {
           const itemsInGroup = groupedMenus[groupLabel];
           if (!itemsInGroup || itemsInGroup.length === 0) {
