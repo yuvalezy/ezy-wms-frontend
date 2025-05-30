@@ -242,5 +242,10 @@
   "counted": "Counted",
   "enterCommentsHere": "Enter comments here",
   "logout": "Logout",
-  "pickingCompletedFor": "Picking completed for {{type}} #{{number}}"
+  "pickingCompletedFor": "Picking completed for {{type}} #{{number}}",
+  "unauthorized": "Unauthorized",
+  "unauthorizedMessage": "Oops! You're not authorized to view this page.",
+  "returnToHome": "Return to Home",
+  "notFound": "Page Not Found",
+  "notFoundMessage": "Oops! Page not found."
 }

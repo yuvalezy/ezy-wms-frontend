@@ -2,19 +2,27 @@ import logo from "../logo.svg";
 import React from "react";
 import { Link } from 'react-router-dom';
 import ContentTheme from "@/components/ContentTheme";
-import { AlertCircle } from "lucide-react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useTranslation } from "react-i18next";
 
 export default function Unauthorized() {
+    const { t } = useTranslation();
     return (
-        <ContentTheme title="Unauthorized">
-            <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md shadow-md flex flex-col items-center text-center" role="alert">
-                <AlertCircle className="h-12 w-12 text-red-500 mb-3" />
-                <img src={logo} className="App-logo h-20 w-20 mb-4" alt="logo"/> {/* Adjusted size */}
-                <p className="font-semibold text-lg mb-2">
-                    Oops! You're not authorized to view this page.
-                </p>
-                <Link className="App-link text-red-700 hover:text-red-900 font-medium underline" to="/">Return to Home</Link>
-            </div>
+        <ContentTheme title={t("unauthorized")}>
+            <Alert className="border-red-200 bg-red-50 text-center">
+                <FontAwesomeIcon icon={faExclamationTriangle} className="h-4 w-4 text-red-600 mx-auto mb-2" />
+                <AlertDescription>
+                    <img src={logo} className="App-logo mx-auto" alt="logo"/>
+                    <p className="mb-2">
+                        {t("unauthorizedMessage")}
+                    </p>
+                    <Link className="text-blue-600 hover:underline" to="/">
+                        {t("returnToHome")}
+                    </Link>
+                </AlertDescription>
+            </Alert>
         </ContentTheme>
     )
 }

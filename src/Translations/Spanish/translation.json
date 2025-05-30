@@ -241,5 +241,10 @@
   "counted": "Contado",
   "enterCommentsHere": "Ingrese comentarios aquí",
   "logout": "Cerrar Sesión",
-  "pickingCompletedFor": "Picking completado para el artículo {{type}} #{{number}}"
+  "pickingCompletedFor": "Picking completado para el artículo {{type}} #{{number}}",
+  "unauthorized": "No Autorizado",
+  "unauthorizedMessage": "¡Oops! No estás autorizado para ver esta página.",
+  "returnToHome": "Regresar a Inicio",
+  "notFound": "Página no Encontrada",
+  "notFoundMessage": "¡Oops! Página no encontrada."
 }
