@@ -1,9 +1,7 @@
-import {CustomActionButton} from "./MenuAppBar";
 import React from "react";
 import {SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
 import {AppSidebar} from "@/components/AppSidebar";
 import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage} from "@/components/ui";
-import {useNavigate} from "react-router-dom";
 import {Filter} from "lucide-react";
 
 interface ContentThemeProps {
@@ -14,9 +12,6 @@ interface ContentThemeProps {
   onFilterClicked?: () => void; // Optional prop for filter toggle
   children?: React.ReactNode;
   footer?: React.ReactNode;
-  onBack?: () => void; // New prop
-  customActionButtons?: CustomActionButton[]; // New prop
-  // The 'back' prop that was previously passed from TransferProcessSource is effectively 'onBack' now
 }
 
 interface titleBreadcrumb {
@@ -33,17 +28,7 @@ const ContentTheme: React.FC<ContentThemeProps> = (
     footer,
     onExportExcel,
     onFilterClicked,
-    onBack,
-    customActionButtons
   }) => {
-  const navigate = useNavigate();
-
-  if (onBack) {
-    window.alert("Back navigation is not implemented yet.");
-  }
-  if (customActionButtons) {
-    window.alert("Custom action buttons are not implemented yet.");
-  }
 
   return (
     <SidebarProvider>

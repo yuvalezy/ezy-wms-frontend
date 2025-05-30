@@ -153,7 +153,7 @@ export default function TransferProcessTargetItem() {
     }
 
     return (
-        <ContentTheme title={title} onBack={() => navigateBack()}>
+        <ContentTheme title={title}>
             {content &&
                 <ScrollableContent>
                     <Card className="mb-4">

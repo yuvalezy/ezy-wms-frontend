@@ -5,7 +5,6 @@ export * from './BinLocationScanner';
 export * from './BoxConfirmationDialog';
 export * from './ContentTheme';
 export * from './InfoBox';
-export * from './MenuAppBar';
 export * from './MetricRow';
 export * from './NotFound';
 export * from './ProcessAlert';

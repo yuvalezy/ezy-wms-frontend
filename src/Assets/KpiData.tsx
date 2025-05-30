@@ -8,6 +8,7 @@ import {
   faArrowsAlt,
   faIndustry
 } from '@fortawesome/free-solid-svg-icons';
+import {HomeInfo} from "@/assets/HomeInfo";
 
 export interface KpiItem {
   id: string;
@@ -84,7 +85,7 @@ export const kpiItems: KpiItem[] = [
 ];
 
 // Function to filter KPI items based on user authorizations
-export function getKpiItems(userAuthorizations: Authorization[] | undefined): KpiItem[] {
+export function getKpiItems(userAuthorizations: Authorization[] | undefined, info: HomeInfo): KpiItem[] {
   if (!userAuthorizations) {
     return [];
   }
@@ -96,5 +97,33 @@ export function getKpiItems(userAuthorizations: Authorization[] | undefined): Kp
       }
     }
     return false;
+  }).map((item) => {
+    let value: number;
+    switch (item.id) {
+      case 'item-check':
+        value = info.itemCheck;
+        break;
+      case 'bin-check':
+        value = info.binCheck;
+        break;
+      case 'goods-receipt':
+        value = info.goodsReceipt;
+        break;
+      case 'receipt-confirmation':
+        value = info.receiptConfirmation;
+        break;
+      case 'picking':
+        value = info.picking;
+        break;
+      case 'counting':
+        value = info.counting;
+        break;
+      case 'transfer':
+        value = info.transfers;
+        break;
+      default:
+        value = 0; // Default to 0 if no match
+    }
+    return {...item, value}
   });
 }

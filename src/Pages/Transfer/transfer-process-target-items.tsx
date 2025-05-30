@@ -69,7 +69,7 @@ export default function TransferProcessTargetItems() { // Renamed component
     }
 
     return (
-        <ContentTheme title={title} onBack={() => navigateBack()}>
+        <ContentTheme title={title}>
             {rows &&
                 <ScrollableContent>
                     <div className="rounded-md border">
