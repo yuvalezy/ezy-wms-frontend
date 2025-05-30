@@ -2,7 +2,7 @@ import ContentTheme from "../../components/ContentTheme";
 import {useNavigate, useParams} from "react-router-dom";
 import React, {CSSProperties, useEffect, useState} from "react";
 import {
-  Card, CardContent, CardFooter, CardHeader,
+  Card, CardContent, CardFooter, CardHeader, FullInfoBox,
   InfoBoxValue,
   Progress, SecondaryInfoBox,
   useThemeContext
@@ -52,14 +52,6 @@ export default function PickingProcess() {
     navigate(`/pick/${id}/${detail.type}/${detail.entry}`);
   }
 
-  function rowStyle(item: PickingDocumentDetail): CSSProperties {
-    let properties = {} as CSSProperties;
-    if (item.totalOpenItems === 0) {
-      properties.textDecoration = 'line-through';
-    }
-    return properties;
-  }
-
   return (
     <ContentTheme title={t("picking")}
                   titleOnClick={() => navigate("/pick")}
@@ -75,9 +67,9 @@ export default function PickingProcess() {
                   {`${o(item.type)}# ${item.number}`}
                 </CardHeader>
                 <CardContent>
-                  <InfoBox>
+                  <FullInfoBox>
                     <InfoBoxValue label={t("customer")} value={`${item.cardCode} - ${item.cardName}`}></InfoBoxValue>
-                  </InfoBox>
+                  </FullInfoBox>
                   <SecondaryInfoBox>
                     <InfoBoxValue label={t("totalItems")} value={item.totalItems}></InfoBoxValue>
                     <InfoBoxValue label={t("totalOpenItems")} value={item.totalOpenItems}></InfoBoxValue>

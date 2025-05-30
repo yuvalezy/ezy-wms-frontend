@@ -2,7 +2,7 @@ import * as React from 'react';
 import {useAuth} from "@/components";
 import {useState} from "react";
 import {Navigate} from "react-router-dom";
-import LoginForm from "./Login/LoginForm";
+import LoginForm from "./login-form";
 import {useThemeContext} from "@/components";
 
 

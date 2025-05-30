@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import LoginPage from "./pages/Login";
+import LoginPage from "./pages/login/login";
 import HomePage from "./pages/Home";
 import {AuthProvider} from "@/components";
 import ProtectedRoute from "./components/ProtectedRoute";
