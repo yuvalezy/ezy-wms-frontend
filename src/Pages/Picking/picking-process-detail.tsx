@@ -7,10 +7,10 @@ import {useTranslation} from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {BinLocation, Item} from "@/assets";
 import {IsNumeric, StringFormat} from "@/assets";
-import {addItem, fetchPicking, PickingDocument, PickingDocumentDetail} from "@/pages/Picking/data/PickingDocument";
+import {addItem, fetchPicking, PickingDocument, PickingDocumentDetail} from "@/pages/picking/data/picking-document";
 import {useObjectName} from "@/assets";
 import BarCodeScanner, {BarCodeScannerRef} from "../../components/BarCodeScanner";
-import PickingProcessDetailContent from "@/pages/Picking/components/PickingProcessDetailContent";
+import PickingProcessDetailContent from "@/pages/picking/components/picking-process-detail-content";
 import BinLocationScanner, {BinLocationScannerRef} from "../../components/BinLocationScanner";
 import { toast } from "sonner";
 

@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Label } from "@/components/ui/label";
-import {PickingDocumentDetailItem} from "@/pages/Picking/data/PickingDocument";
+import {PickingDocumentDetailItem} from "@/pages/picking/data/picking-document";
 import BinLocationQuantities from "../../../components/BinLocationQuantities";
 
 export interface PickingProcessDetailContentProps {

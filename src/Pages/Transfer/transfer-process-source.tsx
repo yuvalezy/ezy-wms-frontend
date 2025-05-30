@@ -10,9 +10,9 @@ import BinLocationScanner from "@/components/BinLocationScanner";
 import ProcessAlert from "@/components/ProcessAlert";
 import {ReasonType, UnitType} from "@/assets";
 import Processes from "@/components/Processes";
-import {updateLine} from "@/pages/Transfer/data/transfer-process";
+import {updateLine} from "@/pages/transfer/data/transfer-process";
 import {AlertCircle} from "lucide-react";
-import {useTransferProcessSourceData} from "@/pages/Transfer/data/transfer-process-source-data";
+import {useTransferProcessSourceData} from "@/pages/transfer/data/transfer-process-source-data";
 
 export default function TransferProcessSource() {
   const {t} = useTranslation();

@@ -1,12 +1,12 @@
 import ContentTheme from "@/components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import {useEffect, useState} from "react";
-import {fetchPickings, PickingDocument, processPicking} from "@/pages/Picking/data/PickingDocument";
+import {fetchPickings, PickingDocument, processPicking} from "@/pages/picking/data/picking-document";
 import {useThemeContext} from "@/components/ThemeContext";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {StringFormat} from "@/assets/Functions";
 import { toast } from "sonner";
-import PickingCard from "@/pages/Picking/components/PickingCard";
+import PickingCard from "@/pages/picking/components/picking-card";
 
 export default function PickingSupervisor() {
   const {t} = useTranslation();

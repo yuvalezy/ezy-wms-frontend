@@ -1,7 +1,7 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {useAuth, useThemeContext} from "@/components";
 import {useEffect, useState} from "react";
-import {getProcessInfo, transferAction, TransferDocument} from "@/pages/Transfer/data/transfer-document";
+import {getProcessInfo, transferAction, TransferDocument} from "@/pages/transfer/data/transfer-document";
 import {IsNumeric, StringFormat} from "@/assets";
 import {toast} from "sonner";
 import {useTranslation} from "react-i18next";

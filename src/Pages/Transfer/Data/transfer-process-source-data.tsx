@@ -2,7 +2,7 @@ import {useParams} from "react-router-dom";
 import {BinLocation, delay, IsNumeric, Item, SourceTarget, UnitType, useDateTimeFormat} from "@/assets";
 import {useEffect, useRef, useState} from "react";
 import {BarCodeScannerRef, ProcessAlertValue, ProcessesRef, useAuth, useThemeContext} from "@/components";
-import {addItem, fetchTransferContent, TransferContent} from "@/pages/Transfer/data/transfer-document";
+import {addItem, fetchTransferContent, TransferContent} from "@/pages/transfer/data/transfer-document";
 
 export const useTransferProcessSourceData = () => {
   const {scanCode} = useParams();

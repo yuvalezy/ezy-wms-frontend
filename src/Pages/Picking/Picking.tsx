@@ -2,8 +2,8 @@ import React, {useEffect} from "react";
 import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import {Alert, AlertDescription, useThemeContext} from "@/components";
-import {fetchPickings, PickingDocument, PickStatus} from "@/pages/Picking/data/PickingDocument";
-import PickingCard from "@/pages/Picking/components/PickingCard";
+import {fetchPickings, PickingDocument, PickStatus} from "@/pages/picking/data/picking-document";
+import PickingCard from "@/pages/picking/components/picking-card";
 import {AlertCircle} from "lucide-react";
 
 export default function Picking() {

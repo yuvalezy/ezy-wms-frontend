@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
-import {createTransfer, TransferDocument} from "@/pages/Transfer/data/transfer-document";
+import {createTransfer, TransferDocument} from "@/pages/transfer/data/transfer-document";
 import {useThemeContext} from "@/components";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

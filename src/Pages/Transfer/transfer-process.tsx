@@ -5,9 +5,9 @@ import {useTranslation} from "react-i18next";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faMap, faCheck,} from '@fortawesome/free-solid-svg-icons';
 import BinLocationScanner from "@/components/BinLocationScanner";
-import TransferCard from "@/pages/Transfer/components/transfer-card";
+import TransferCard from "@/pages/transfer/components/transfer-card";
 import {cn} from "@/lib/utils";
-import {useTransferProcessData} from "@/pages/Transfer/data/transfer-process-data";
+import {useTransferProcessData} from "@/pages/transfer/data/transfer-process-data";
 
 export default function TransferProcess() {
   const {t} = useTranslation();

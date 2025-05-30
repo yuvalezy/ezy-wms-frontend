@@ -5,12 +5,12 @@ import {
     PickingDocumentDetail,
     PickingDocumentDetailItem,
     PickStatus
-} from "@/pages/Picking/data/PickingDocument";
+} from "@/pages/picking/data/picking-document";
 import {DocumentAddItemResponse, ProcessResponse} from "./Document";
 import {Counting, CountingContent} from "./Counting";
 import {GoodsReceiptAll, GoodsReceiptAllDetail, GoodsReceiptVSExitReportData} from "@/pages/GoodsReceipt/data/Report";
-import {TransferDocument} from "@/pages/Transfer/data/transfer-document";
-import {TransferAddItemResponse} from "@/pages/Transfer/data/transfer-process";
+import {TransferDocument} from "@/pages/transfer/data/transfer-document";
+import {TransferAddItemResponse} from "@/pages/transfer/data/transfer-process";
 import {ItemCheckResponse, ItemStockResponse} from "@/pages/ItemCheck/Item";
 import {BinContentResponse} from "@/pages/BinCheck/Bins";
 

@@ -6,7 +6,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {Authorization} from "@/assets/Authorization";
-import {PickingDocument} from "@/pages/Picking/data/PickingDocument";
+import {PickingDocument} from "@/pages/picking/data/picking-document";
 import {useDateTimeFormat} from "@/assets/DateFormat";
 import { CheckCircle } from "lucide-react";
 import {formatNumber} from "@/lib/utils";

@@ -40,7 +40,7 @@ export default function CountingProcess() {
 
   const titleBreadcrumbs = [{label: `${id}`, onClick: binLocation ? () => onBinClear() : undefined}];
   if (binLocation) {
-    titleBreadcrumbs.push({label: binLocation.code});
+    titleBreadcrumbs.push({label: binLocation.code, onClick: undefined});
   }
 
   return (
