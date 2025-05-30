@@ -18,10 +18,11 @@ import InfoBox from "@/components/InfoBox";
 type TransferCardProps = {
   doc: TransferDocument,
   onAction?: (id: number, action: 'approve' | 'cancel') => void,
-  supervisor?: boolean
+  supervisor?: boolean,
+  header?: boolean
 }
 
-const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = false}) => {
+const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = false, header = true}) => {
   const {t} = useTranslation();
   const navigate = useNavigate();
   const {user} = useAuth();
@@ -37,21 +38,22 @@ const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = 
   const progressDisplayValue = doc.progress ?? 0;
 
   return (
-    <Card key={doc.id} className="mb-4 shadow-lg">
-      <CardHeader>
+    <Card key={doc.id} className={header ? "mb-4 shadow-lg" : "shadow-lg"}>
+      {header && <CardHeader>
         <CardTitle>{doc.name ? `${t('id')} : ${doc.name}` : `${t('transfer')} #${doc.id}`}</CardTitle>
-      </CardHeader>
+      </CardHeader>}
       <CardContent className="py-4">
         <SecondaryInfoBox>
-          <InfoBoxValue label={t('number')} value={doc.id} onClick={handleOpenLink ? () => handleOpen(doc.id) : undefined}/>
+          <InfoBoxValue label={t('number')} value={doc.id}
+                        onClick={handleOpenLink ? () => handleOpen(doc.id) : undefined}/>
           <InfoBoxValue label={t('docDate')} value={dateFormat(new Date(doc.date))}/>
           <InfoBoxValue label={t('createdBy')} value={doc.employee.name}/>
           <InfoBoxValue label={t('status')} value={documentStatusToString(doc.status)}/>
         </SecondaryInfoBox>
         {doc.comments &&
             <InfoBox>
-            <InfoBoxValue label={t('comment')} value={doc.comments}/>
-        </InfoBox>}
+                <InfoBoxValue label={t('comment')} value={doc.comments}/>
+            </InfoBox>}
         <ul className="space-y-2 text-sm">
           <li className="pt-2">
             <Progress value={progressDisplayValue} className="w-full"/>

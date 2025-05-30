@@ -51,14 +51,6 @@ export default function TransferProcessTargetBins() {
   const navigate = useNavigate();
   const processAlertRef = useRef<HTMLDivElement>(null);
 
-  function getTitle(): string {
-    if (binLocation == null) {
-      return t("selectTransferTargetBins");
-    } else {
-      return StringFormat(`${t("selectItemsForTransfers")}`, scanCode);
-    }
-  }
-
   useEffect(() => {
     setEnable(!user?.binLocations);
     if (enable) {
@@ -70,6 +62,23 @@ export default function TransferProcessTargetBins() {
     }
     setID(parseInt(scanCode));
   }, []);
+
+  useEffect(() => {
+    if (!id)
+      return;
+    const params = new URLSearchParams(window.location.search);
+    const binParam = params.get('bin');
+    if (binParam) {
+      try {
+        const bin = JSON.parse(binParam);
+        onBinChanged(bin);
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, '', newUrl);
+      } catch (e) {
+        setError(e);
+      }
+    }
+  }, [id]);
 
   function onBinChanged(bin: BinLocation) {
     try {
@@ -167,23 +176,20 @@ export default function TransferProcessTargetBins() {
   if (!id)
     return null;
 
+  const titleBreadcrumbs = [
+    {label: scanCode ?? '', onClick: () => navigate(`/transfer/${scanCode}`)},
+    {label: t("selectTransferTargetBins"), onClick: binLocation ? onBinClear : undefined}
+  ];
+  if (binLocation) {
+    titleBreadcrumbs.push({label: binLocation.code, onClick: undefined});
+  }
+
   return (
-    <ContentTheme title={getTitle()} onBack={() => navigateBack()}>
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="#" onClick={() => navigateBack()}>{t('transfer')} #{scanCode}</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            {!binLocation ?
-              <BreadcrumbPage>{t("selectTransferTargetBins")}</BreadcrumbPage> :
-              <BreadcrumbLink href="#" onClick={onBinClear}>{t('selectTransferTargetBins')}</BreadcrumbLink>}
-          </BreadcrumbItem>
-          {binLocation && <BreadcrumbItem>
-              <BreadcrumbPage>{binLocation?.code}</BreadcrumbPage>
-          </BreadcrumbItem>}
-        </BreadcrumbList>
-      </Breadcrumb>
+    <ContentTheme title={t("transfer")} titleOnClick={() => navigate(`/transfer`)}
+                  titleBreadcrumbs={titleBreadcrumbs}
+                  footer={binLocation &&
+                      <BarCodeScanner unit ref={barcodeRef} onAddItem={handleAddItem} enabled={enable}/>}
+    >
       {user?.binLocations && !binLocation && <BinLocationScanner onChanged={onBinChanged} onClear={onBinClear}/>}
       <div className="contentStyle">
         {currentAlert &&
@@ -231,8 +237,6 @@ export default function TransferProcessTargetBins() {
                 </Alert>
             </div>
         }
-        <div style={{height: '200px'}}></div>
-        {enable && <BarCodeScanner fixed ref={barcodeRef} onAddItem={handleAddItem} enabled={enable}/>}
       </div>
       {currentAlert && id && <Processes
           ref={processesRef}

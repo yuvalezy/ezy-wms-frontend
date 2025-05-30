@@ -20,6 +20,7 @@ export type TransferDocument = {
   statusEmployee: Employee;
   progress?: number;
   comments?: string;
+  isComplete?: boolean;
 }
 
 export type TransferContent = {
@@ -72,11 +73,13 @@ export const createTransfer = async (
     throw error;
   }
 };
-export const getProcessInfo = async (id: number): Promise<{ isComplete: boolean, comments: string | null }> => {
+export const getProcessInfo = async (id: number): Promise<TransferDocument> => {
   try {
     if (configUtils.isMockup) {
       console.log("Mockup data is being used.");
-      return {isComplete: true, comments: "test"};
+      const mockup = transferMockup;
+      mockup.isComplete = true;
+      return mockup;
     }
 
     if (!globalConfig) throw new Error("Config has not been initialized!");
@@ -84,7 +87,7 @@ export const getProcessInfo = async (id: number): Promise<{ isComplete: boolean,
     if (globalConfig.debug) await delay();
 
     const access_token = localStorage.getItem("token");
-    const response = await axios.get<{ isComplete: boolean, comments: string | null }>(
+    const response = await axios.get<TransferDocument>(
       `${globalConfig.baseURL}/api/Transfer/ProcessInfo/${id}`,
       {
         headers: {

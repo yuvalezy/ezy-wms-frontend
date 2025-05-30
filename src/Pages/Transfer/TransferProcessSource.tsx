@@ -181,7 +181,7 @@ export default function TransferProcessSource() {
     {label: t("selectTransferSource"), onClick: binLocation ? onBinClear : undefined}
   ];
   if (binLocation) {
-    titleBreadcrumbs.push({label: binLocation.code!});
+    titleBreadcrumbs.push({label: binLocation.code, onClick: undefined});
   }
   return (
     <ContentTheme title={t("transfer")} titleOnClick={() => navigate(`/transfer`)}
