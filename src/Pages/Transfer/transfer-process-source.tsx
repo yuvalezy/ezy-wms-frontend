@@ -20,7 +20,6 @@ export default function TransferProcessSource() {
   const {
     id,
     binLocation,
-    enable,
     barcodeRef,
     rows,
     currentAlert,

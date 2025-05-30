@@ -84,7 +84,7 @@ export default function TransferSupervisor() {
                             {t("cancel")}
                         </Button>
                         <Button onClick={handleConfirmAction}>
-                            {t("ok")}
+                            {t("accept")}
                         </Button>
                     </AlertDialogFooter>
                 </AlertDialogContent>
