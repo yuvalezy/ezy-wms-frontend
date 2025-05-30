@@ -34,6 +34,7 @@ export default function Home() {
                             icon={item.icon}
                             backgroundColor={kpiColors[index % kpiColors.length].background}
                             iconColor={kpiColors[index % kpiColors.length].icon}
+                            route={item.route}
                         />
                     ))}
                 </div>
