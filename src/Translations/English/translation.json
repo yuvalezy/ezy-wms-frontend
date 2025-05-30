@@ -151,6 +151,8 @@
   "selectVendorPlaceholder": "Select a vendor",
   "selectStatusPlaceholder": "Select a status",
   "selectBox": "Select Box",
+  "scanTransferSourceBin": "Scan pickup bin location",
+  "scanTransferTargetBin": "Scan destination bin location",
   "selectTransferSource": "Choose Pickup Location",
   "selectItemsForTransfers": "Select Items for Transfer #{0}",
   "selectTransferTargetItems": "Choose Items for Destination",

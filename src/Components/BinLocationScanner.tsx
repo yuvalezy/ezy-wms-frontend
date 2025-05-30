@@ -9,6 +9,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCheck} from '@fortawesome/free-solid-svg-icons';
 
 export interface BinLocationScannerProps {
+  label?: string | boolean;
+  showLabel?: boolean
   onScan?: (bin: BinLocation) => void;
   onChanged?: (bin: BinLocation) => void;
   onClear?: () => void;
@@ -20,11 +22,14 @@ export interface BinLocationScannerRef {
   getBin: () => string;
 }
 
-const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerProps>(({
-                                                                                         onScan,
-                                                                                         onChanged,
-                                                                                         onClear
-                                                                                       }, ref) => {
+const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerProps>((
+  {
+    onScan,
+    onChanged,
+    onClear,
+    label,
+    showLabel = true
+  }, ref) => {
   const {setLoading, setError} = useThemeContext();
   const {t} = useTranslation();
   const binRef = useRef<HTMLInputElement>(null);
@@ -101,7 +106,7 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
       {!binLocation &&
           <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                  <Label htmlFor="bin-input">{t("bin")}</Label>
+                {showLabel && <Label htmlFor="bin-input">{label ?? t("bin")}</Label>}
                   <Input
                       id="bin-input"
                       value={binInput}
