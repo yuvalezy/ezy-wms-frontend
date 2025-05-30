@@ -240,5 +240,6 @@
   "binCountItems": "En espera del conteo de artículos para esta ubicación.",
   "counted": "Contado",
   "enterCommentsHere": "Ingrese comentarios aquí",
-  "logout": "Cerrar Sesión"
+  "logout": "Cerrar Sesión",
+  "pickingCompletedFor": "Picking completado para el artículo {{type}} #{{number}}"
 }

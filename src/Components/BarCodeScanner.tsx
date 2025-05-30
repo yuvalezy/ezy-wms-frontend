@@ -27,7 +27,6 @@ export interface BarCodeScannerProps {
   onAddAction?: () => void;
   addActionLabel?: string;
   addActionIcon?: IconProp; // Update type to IconProp
-  fixed?: boolean
 }
 
 export interface BarCodeScannerRef {
@@ -45,7 +44,6 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
     onAddAction,
     addActionLabel,
     addActionIcon,
-    fixed
   }, ref) => {
   const barcodeRef = useRef<HTMLInputElement>(null);
   const [barcodeInput, setBarcodeInput] = useState('');
@@ -144,7 +142,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
   }
 
   return (
-    <form onSubmit={handleSubmit} className={cn("space-y-4 p-2", fixed ? "fixed bottom-0 left-0 right-0 bg-background z-50 border-t" : "")}>
+    <form onSubmit={handleSubmit} className="space-y-4 p-2">
       <div className="space-y-2">
         <Label htmlFor="barcode-input">{barcodeLabel}</Label>
         <Input

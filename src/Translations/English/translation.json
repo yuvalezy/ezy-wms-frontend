@@ -241,5 +241,6 @@
   "binCountItems": "Awaiting item count for this location.",
   "counted": "Counted",
   "enterCommentsHere": "Enter comments here",
-  "logout": "Logout"
+  "logout": "Logout",
+  "pickingCompletedFor": "Picking completed for {{type}} #{{number}}"
 }

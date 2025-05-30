@@ -1,4 +1,4 @@
-import {configUtils, delay, globalConfig} from "@/assets";
+import {configUtils, delay, globalConfig, UnitType} from "@/assets";
 import {addItemResponseMockup, PickingDetailItemsMockup, PickingDetailsMockup, PickingMockup, processResponseMockup} from "@/assets";
 import axios from "axios";
 import {ProcessResponse} from "@/assets";
@@ -40,6 +40,10 @@ export type PickingDocumentDetailItem = {
     itemCode: string;
     itemName: string;
     quantity: number;
+    numInBuy: number;
+    buyUnitMsr: string;
+    purPackUn: number;
+    purPackMsr: string;
     picked: number;
     openQuantity: number;
     available?: number;
@@ -194,7 +198,15 @@ export interface addItemParameters {
     quantity: number,
     binEntry: number,
 }
-export const addItem = async (params: addItemParameters): Promise<PickingAddItemResponse> => {
+export const addItem = async (params: {
+    id: number;
+    type: number;
+    entry: number;
+    itemCode: string;
+    quantity: number;
+    binEntry: number;
+    unit: UnitType
+}): Promise<PickingAddItemResponse> => {
     try {
         if (configUtils.isMockup) {
             return {
