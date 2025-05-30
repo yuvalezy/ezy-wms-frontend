@@ -11,7 +11,7 @@ import {Counting, CountingContent} from "./Counting";
 import {GoodsReceiptAll, GoodsReceiptAllDetail, GoodsReceiptVSExitReportData} from "@/pages/GoodsReceipt/data/Report";
 import {TransferDocument} from "@/pages/transfer/data/transfer-document";
 import {TransferAddItemResponse} from "@/pages/transfer/data/transfer-process";
-import {ItemCheckResponse, ItemStockResponse} from "@/pages/ItemCheck/Item";
+import {ItemCheckResponse, ItemStockResponse} from "@/pages/item-check/item";
 import {BinContentResponse} from "@/pages/BinCheck/Bins";
 
 enum UpdateLineReturnValue {
@@ -278,31 +278,260 @@ export const PickingDetailsMockup: PickingDocumentDetail[] = [
 ]
 
 export const PickingDetailItemsMockup: PickingDocumentDetailItem[] = [
-    {itemCode: "ABC123", itemName: "Sample Item", quantity: 10, picked: 0, openQuantity: 10,},
-    {itemCode: "ABC555", itemName: "Sample Item 5", quantity: 5, picked: 2, openQuantity: 3,},
-    {itemCode: "ABC222", itemName: "Sample Item 2", quantity: 30, picked: 10, openQuantity: 20,},
-    {itemCode: "XYZ101", itemName: "Item 101", quantity: 15, picked: 0, openQuantity: 15},
-    {itemCode: "XYZ102", itemName: "Item 102", quantity: 20, picked: 2, openQuantity: 18},
-    {itemCode: "XYZ103", itemName: "Item 103", quantity: 25, picked: 15, openQuantity: 10},
-    {itemCode: "XYZ104", itemName: "Item 104", quantity: 12, picked: 0, openQuantity: 12},
-    {itemCode: "XYZ105", itemName: "Item 105", quantity: 30, picked: 5, openQuantity: 25},
-    {itemCode: "XYZ106", itemName: "Item 106", quantity: 8, picked: 3, openQuantity: 5},
-    {itemCode: "XYZ107", itemName: "Item 107", quantity: 18, picked: 8, openQuantity: 10},
-    {itemCode: "XYZ108", itemName: "Item 108", quantity: 22, picked: 2, openQuantity: 20},
-    {itemCode: "XYZ109", itemName: "Item 109", quantity: 17, picked: 2, openQuantity: 15},
-    {itemCode: "XYZ110", itemName: "Item 110", quantity: 19, picked: 0, openQuantity: 19},
-    {itemCode: "XYZ111", itemName: "Item 111", quantity: 13, picked: 6, openQuantity: 7},
-    {itemCode: "XYZ112", itemName: "Item 112", quantity: 21, picked: 0, openQuantity: 21},
-    {itemCode: "XYZ113", itemName: "Item 113", quantity: 16, picked: 2, openQuantity: 14},
-    {itemCode: "XYZ114", itemName: "Item 114", quantity: 14, picked: 5, openQuantity: 9},
-    {itemCode: "XYZ115", itemName: "Item 115", quantity: 11, picked: 0, openQuantity: 11},
-    {itemCode: "XYZ116", itemName: "Item 116", quantity: 9, picked: 3, openQuantity: 6},
-    {itemCode: "XYZ117", itemName: "Item 117", quantity: 7, picked: 4, openQuantity: 3},
-    {itemCode: "XYZ118", itemName: "Item 118", quantity: 23, picked: 5, openQuantity: 18},
-    {itemCode: "XYZ119", itemName: "Item 119", quantity: 26, picked: 0, openQuantity: 26},
-    {itemCode: "XYZ120", itemName: "Item 120", quantity: 29, picked: 5, openQuantity: 24},
+    {
+        itemCode: "ABC123",
+        itemName: "Sample Item",
+        quantity: 10,
+        picked: 0,
+        openQuantity: 10,
+        numInBuy: 12,
+        buyUnitMsr: "Doz",
+        purPackUn: 4,
+        purPackMsr: "Box"
+    },
+    {
+        itemCode: "ABC555",
+        itemName: "Sample Item 5",
+        quantity: 5,
+        picked: 2,
+        openQuantity: 3,
+        numInBuy: 12,
+        buyUnitMsr: "Doz",
+        purPackUn: 4,
+        purPackMsr: "Box"
+    },
+    {
+        itemCode: "ABC222",
+        itemName: "Sample Item 2",
+        quantity: 30,
+        picked: 10,
+        openQuantity: 20,
+        numInBuy: 12,
+        buyUnitMsr: "Doz",
+        purPackUn: 4,
+        purPackMsr: "Box"
+    },
+    {
+        itemCode: "XYZ101",
+        itemName: "Item 101",
+        quantity: 15,
+        picked: 0,
+        openQuantity: 15,
+        numInBuy: 12,
+        buyUnitMsr: "Doz",
+        purPackUn: 4,
+        purPackMsr: "Box"
+    },
+    {
+        itemCode: "XYZ102",
+        itemName: "Item 102",
+        quantity: 20,
+        picked: 2,
+        openQuantity: 18,
+        numInBuy: 12,
+        buyUnitMsr: "Doz",
+        purPackUn: 4,
+        purPackMsr: "Box"
+    },
+    {
+        itemCode: "XYZ103",
+        itemName: "Item 103",
+        quantity: 25,
+        picked: 15,
+        openQuantity: 10,
+        numInBuy: 12,
+        buyUnitMsr: "Doz",
+        purPackUn: 4,
+        purPackMsr: "Box"
+    },
+    {
+        itemCode: "XYZ104",
+        itemName: "Item 104",
+        quantity: 12,
+        picked: 0,
+        openQuantity: 12,
+        numInBuy: 12,
+        buyUnitMsr: "Doz",
+        purPackUn: 4,
+        purPackMsr: "Box"
+    },
+    {
+        itemCode: "XYZ105",
+        itemName: "Item 105",
+        quantity: 30,
+        picked: 5,
+        openQuantity: 25,
+        numInBuy: 12,
+        buyUnitMsr: "Doz",
+        purPackUn: 4,
+        purPackMsr: "Box"
+    },
+    {
+        itemCode: "XYZ106",
+        itemName: "Item 106",
+        quantity: 8,
+        picked: 3,
+        openQuantity: 5,
+        numInBuy: 12,
+        buyUnitMsr: "Doz",
+        purPackUn: 4,
+        purPackMsr: "Box"
+    },
+    {
+        itemCode: "XYZ107",
+        itemName: "Item 107",
+        quantity: 18,
+        picked: 8,
+        openQuantity: 10,
+        numInBuy: 12,
+        buyUnitMsr: "Doz",
+        purPackUn: 4,
+        purPackMsr: "Box"
+    },
+    {
+        itemCode: "XYZ108",
+        itemName: "Item 108",
+        quantity: 22,
+        picked: 2,
+        openQuantity: 20,
+        numInBuy: 12,
+        buyUnitMsr: "Doz",
+        purPackUn: 4,
+        purPackMsr: "Box"
+    },
+    {
+        itemCode: "XYZ109",
+        itemName: "Item 109",
+        quantity: 17,
+        picked: 2,
+        openQuantity: 15,
+        numInBuy: 12,
+        buyUnitMsr: "Doz",
+        purPackUn: 4,
+        purPackMsr: "Box"
+    },
+    {
+        itemCode: "XYZ110",
+        itemName: "Item 110",
+        quantity: 19,
+        picked: 0,
+        openQuantity: 19,
+        numInBuy: 12,
+        buyUnitMsr: "Doz",
+        purPackUn: 4,
+        purPackMsr: "Box"
+    },
+    {
+        itemCode: "XYZ111",
+        itemName: "Item 111",
+        quantity: 13,
+        picked: 6,
+        openQuantity: 7,
+        numInBuy: 12,
+        buyUnitMsr: "Doz",
+        purPackUn: 4,
+        purPackMsr: "Box"
+    },
+    {
+        itemCode: "XYZ112",
+        itemName: "Item 112",
+        quantity: 21,
+        picked: 0,
+        openQuantity: 21,
+        numInBuy: 12,
+        buyUnitMsr: "Doz",
+        purPackUn: 4,
+        purPackMsr: "Box"
+    },
+    {
+        itemCode: "XYZ113",
+        itemName: "Item 113",
+        quantity: 16,
+        picked: 2,
+        openQuantity: 14,
+        numInBuy: 12,
+        buyUnitMsr: "Doz",
+        purPackUn: 4,
+        purPackMsr: "Box"
+    },
+    {
+        itemCode: "XYZ114",
+        itemName: "Item 114",
+        quantity: 14,
+        picked: 5,
+        openQuantity: 9,
+        numInBuy: 12,
+        buyUnitMsr: "Doz",
+        purPackUn: 4,
+        purPackMsr: "Box"
+    },
+    {
+        itemCode: "XYZ115",
+        itemName: "Item 115",
+        quantity: 11,
+        picked: 0,
+        openQuantity: 11,
+        numInBuy: 12,
+        buyUnitMsr: "Doz",
+        purPackUn: 4,
+        purPackMsr: "Box"
+    },
+    {
+        itemCode: "XYZ116",
+        itemName: "Item 116",
+        quantity: 9,
+        picked: 3,
+        openQuantity: 6,
+        numInBuy: 12,
+        buyUnitMsr: "Doz",
+        purPackUn: 4,
+        purPackMsr: "Box"
+    },
+    {
+        itemCode: "XYZ117",
+        itemName: "Item 117",
+        quantity: 7,
+        picked: 4,
+        openQuantity: 3,
+        numInBuy: 12,
+        buyUnitMsr: "Doz",
+        purPackUn: 4,
+        purPackMsr: "Box"
+    },
+    {
+        itemCode: "XYZ118",
+        itemName: "Item 118",
+        quantity: 23,
+        picked: 5,
+        openQuantity: 18,
+        numInBuy: 12,
+        buyUnitMsr: "Doz",
+        purPackUn: 4,
+        purPackMsr: "Box"
+    },
+    {
+        itemCode: "XYZ119",
+        itemName: "Item 119",
+        quantity: 26,
+        picked: 0,
+        openQuantity: 26,
+        numInBuy: 12,
+        buyUnitMsr: "Doz",
+        purPackUn: 4,
+        purPackMsr: "Box"
+    },
+    {
+        itemCode: "XYZ120",
+        itemName: "Item 120",
+        quantity: 29,
+        picked: 5,
+        openQuantity: 24,
+        numInBuy: 12,
+        buyUnitMsr: "Doz",
+        purPackUn: 4,
+        purPackMsr: "Box"
+    },
 ]
-
 
 export const DeliveryOpenDocuments: DeliveryOpenDocument[] = [
     {

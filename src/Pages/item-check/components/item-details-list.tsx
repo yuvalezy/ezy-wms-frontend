@@ -1,4 +1,4 @@
-import {ItemCheckResponse} from "../Item";
+import {ItemCheckResponse} from "../item";
 import {useTranslation} from "react-i18next";
 import React from "react";
 import InfoBox, {InfoBoxValue} from "@/components/InfoBox";

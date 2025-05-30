@@ -2,7 +2,7 @@ import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import BarCodeScanner, {BarCodeScannerRef} from "../../components/BarCodeScanner";
 import React, {useEffect, useRef, useState} from "react";
-import {Item} from "@/assets";
+import {Item, UnitType} from "@/assets";
 import {createRequest, TransferContent} from "@/pages/transfer/data/transfer-document";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,7 +34,7 @@ export default function TransferRequest() {
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
     const [itemToRemoveIndex, setItemToRemoveIndex] = useState<number | null>(null);
 
-    function handleAddItem(item: Item) {
+    function handleAddItem(item: Item, unit: UnitType) {
         try {
             const duplicateItem = rows.find(row => row.code === item.code);
 
@@ -47,6 +47,11 @@ export default function TransferRequest() {
                 code: item.code,
                 quantity: 1,
                 openQuantity: 0,
+                numInBuy: 1,
+                purPackMsr: "N/A",
+                buyUnitMsr:"N/A",
+                purPackUn: 1,
+                unit: unit,
                 name: item.name,
             }
             setRows((prevRows) => [...prevRows, newRow]);

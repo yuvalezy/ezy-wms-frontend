@@ -1,17 +1,10 @@
 import React from "react";
-import {ItemCheckResponse} from "./Item";
+import {ItemCheckResponse} from "./item";
 import {useTranslation} from "react-i18next";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
-import ItemDetailsList from "@/pages/ItemCheck/components/item-details-list";
-import BarcodeTable from "@/pages/ItemCheck/components/barcode-table";
-import StockTable from "@/pages/ItemCheck/components/stock-table";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-} from "@/components/ui/breadcrumb";
+import ItemDetailsList from "@/pages/item-check/components/item-details-list";
+import BarcodeTable from "@/pages/item-check/components/barcode-table";
+import StockTable from "@/pages/item-check/components/stock-table";
 
 interface ItemCheckResultProps {
   result: ItemCheckResponse;

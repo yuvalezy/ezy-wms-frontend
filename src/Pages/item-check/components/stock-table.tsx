@@ -1,6 +1,6 @@
 import {useTranslation} from "react-i18next";
 import React, {useEffect, useState} from "react";
-import {ItemCheckResponse, itemStock, ItemStockResponse} from "../Item";
+import {ItemCheckResponse, itemStock, ItemStockResponse} from "../item";
 import {useThemeContext} from "@/components/ThemeContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MetricRow } from "@/components/MetricRow";

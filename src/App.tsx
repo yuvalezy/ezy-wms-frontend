@@ -2,12 +2,12 @@ import React from 'react';
 import './App.css';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import LoginPage from "./pages/login/login";
-import HomePage from "./pages/Home";
+import HomePage from "./pages/home";
 import {AuthProvider} from "@/components";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Unauthorized from "./components/Unauthorized";
 import NotFound from "./components/NotFound";
-import ItemCheck from "./pages/ItemCheck/ItemCheck";
+import ItemCheck from "@/pages/item-check/ItemCheck";
 import {Authorization} from "@/assets";
 import PickingSupervisor from "./pages/picking/picking-supervisor";
 import Picking from "./pages/picking/picking";
@@ -27,8 +27,8 @@ import Transfer from "./pages/transfer/transfer";
 import TransferSupervisor from "./pages/transfer/transfer-supervisor";
 import TransferProcess from "./pages/transfer/transfer-process";
 import TransferProcessSource from "./pages/transfer/transfer-process-source";
-import TransferProcessTargetItems from "./pages/transfer/transfer-process-target-items";
-import TransferProcessTargetItem from "./pages/transfer/transfer-process-target-item";
+// import TransferProcessTargetItems from "./pages/transfer/transfer-process-target-items";
+// import TransferProcessTargetItem from "./pages/transfer/transfer-process-target-item";
 import CountingSummaryReport from "./pages/Counting/CountingSummaryReport";
 import {BinCheck} from "./pages/BinCheck/BinCheck";
 import GoodsReceiptProcessDifferenceReport from "./pages/GoodsReceipt/GoodsReceiptProcessDifferenceReport";
@@ -95,8 +95,8 @@ export default function App() {
                     <Route path="/transfer/:scanCode" element={<ProtectedRoute authorization={Authorization.TRANSFER} element={<TransferProcess/>}/>}/>
                     <Route path="/transfer/:scanCode/source" element={<ProtectedRoute authorization={Authorization.TRANSFER} element={<TransferProcessSource/>}/>}/>
                     <Route path="/transfer/:scanCode/targetBins" element={<ProtectedRoute authorization={Authorization.TRANSFER} element={<TransferProcessTargetBins/>}/>}/>
-                    <Route path="/transfer/:scanCode/targetItems" element={<ProtectedRoute authorization={Authorization.TRANSFER} element={<TransferProcessTargetItems/>}/>}/>
-                    <Route path="/transfer/:scanCode/targetItems/:itemCode" element={<ProtectedRoute authorization={Authorization.TRANSFER} element={<TransferProcessTargetItem/>}/>}/>
+                    {/*<Route path="/transfer/:scanCode/targetItems" element={<ProtectedRoute authorization={Authorization.TRANSFER} element={<TransferProcessTargetItems/>}/>}/>*/}
+                    {/*<Route path="/transfer/:scanCode/targetItems/:itemCode" element={<ProtectedRoute authorization={Authorization.TRANSFER} element={<TransferProcessTargetItem/>}/>}/>*/}
                     <Route path="/transferSupervisor" element={<ProtectedRoute authorization={Authorization.TRANSFER_SUPERVISOR} element={<TransferSupervisor/>}/>}/>
                     <Route path="/transferRequest" element={<ProtectedRoute authorization={Authorization.TRANSFER_REQUEST} element={<TransferRequest/>}/>}/>
                     <Route path="/" element={<ProtectedRoute element={<HomePage/>}/>}/>

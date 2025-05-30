@@ -1,5 +1,5 @@
 import React from "react";
-import {ItemCheckResponse} from "./Item";
+import {ItemCheckResponse} from "./item";
 import {useTranslation} from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
