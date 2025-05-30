@@ -16,10 +16,13 @@ import {Progress} from "@/components/ui/progress";
 import BarCodeScanner from "@/components/BarCodeScanner";
 import BinLocationScanner from "@/components/BinLocationScanner";
 import ProcessAlert from "@/components/ProcessAlert";
-import {ReasonType} from "@/assets";
+import {ReasonType, UnitType} from "@/assets";
 import Processes from "@/components/Processes";
 import {updateLine} from "@/pages/Transfer/data/transfer-process";
 import {useTransferProcessTargetBinsData} from "@/pages/Transfer/data/transfer-process-target-bins-data";
+import {Card, CardContent, FullInfoBox, InfoBoxValue, MetricRow, SecondaryInfoBox} from "@/components";
+import {formatNumber} from "@/lib/utils";
+import {AlertCircle} from "lucide-react";
 
 export default function TransferProcessTargetBins() {
   const {t} = useTranslation();
@@ -58,7 +61,7 @@ export default function TransferProcessTargetBins() {
     <ContentTheme title={t("transfer")} titleOnClick={() => navigate(`/transfer`)}
                   titleBreadcrumbs={titleBreadcrumbs}
                   footer={binLocation &&
-                      <BarCodeScanner unit ref={barcodeRef} onAddItem={handleAddItem} enabled={enable}/>}
+                      <BarCodeScanner unit ref={barcodeRef} onAddItem={handleAddItem} enabled/>}
     >
       {user?.binLocations && !binLocation && <BinLocationScanner onChanged={onBinChanged} onClear={onBinClear}/>}
       <div className="contentStyle">
@@ -67,45 +70,62 @@ export default function TransferProcessTargetBins() {
                                                      onAction={(type) => processesRef?.current?.open(type)}/></div>}
         {rows != null && rows.length > 0 && (
           <div className="flex flex-col gap-4">
-            <div className="rounded-md border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead><Label>{t('code')}</Label></TableHead>
-                    <TableHead><Label>{t('description')}</Label></TableHead>
-                    <TableHead className="text-right"><Label>{t('openQuantity')}</Label></TableHead>
-                    <TableHead className="text-right"><Label>{t('binQuantity')}</Label></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {rows.map((row) => (
-                    <React.Fragment key={row.code}>
-                      <TableRow>
-                        <TableCell><Label>{row.code}</Label></TableCell>
-                        <TableCell><Label>{row.name}</Label></TableCell>
-                        <TableCell className="text-right"><Label>{row.openQuantity}</Label></TableCell>
-                        <TableCell className="text-right"><Label>{row.binQuantity}</Label></TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell colSpan={4} className="p-1">
-                          <Progress value={row.progress ?? 0} className="w-full h-2"/>
-                          <p className="text-xs text-muted-foreground text-center">{`${row.progress ?? 0}%`}</p>
-                        </TableCell>
-                      </TableRow>
-                    </React.Fragment>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+            {rows.map((row) => {
+              let openQuantity = row.openQuantity ?? 0;
+              let binQuantity = row.binQuantity ?? 0;
+              return <Card>
+                <CardContent className="flex flex-col gap-2">
+                  <SecondaryInfoBox>
+                    <InfoBoxValue label={t('code')} value={row.code}/>
+                    <InfoBoxValue label={t('qtyInUn')} value={row.numInBuy.toString()}/>
+                    <InfoBoxValue label={t('qtyInPack')} value={row.purPackUn.toString()}/>
+                  </SecondaryInfoBox>
+                  <div className="flex justify-between items-center border-b-2 border-primary font-bold">
+                    <div className="w-[30%]">
+                      <span>{t('unit')}</span>
+                    </div>
+                    <div className="flex-1 flex justify-around text-center">
+                      <div className="flex-1 text-xs">
+                        <span>{t('units')}</span>
+                      </div>
+                      <div className="flex-1 text-xs">
+                        <span>{t('dozens')}</span>
+                      </div>
+                      <div className="flex-1 text-xs">
+                        <span>{t('boxes')}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <MetricRow
+                    label={t('openQuantity')}
+                    values={{
+                      units: formatNumber(openQuantity, 0),
+                      buyUnits: formatNumber(openQuantity / row.numInBuy, 2),
+                      packUnits: formatNumber(openQuantity / row.numInBuy / row.purPackUn, 2)
+                    }}
+                  />
+                  <MetricRow
+                    label={t('binQuantity')}
+                    values={{
+                      units: formatNumber(binQuantity, 0),
+                      buyUnits: formatNumber(binQuantity / row.numInBuy, 2),
+                      packUnits: formatNumber(binQuantity / row.numInBuy / row.purPackUn, 2)
+                    }}
+                  />
+                  <Progress value={row.progress ?? 0} className="w-full h-2"/>
+                  <p className="text-xs text-muted-foreground text-center">{`${row.progress ?? 0}%`}</p>
+                </CardContent>
+              </Card>
+            })}
           </div>
         )}
         {rows != null && rows.length === 0 &&
-            <div className="p-4">
-                <Alert variant="default" className="bg-blue-100 border-blue-400 text-blue-700">
-                  {/* <AlertTitle>Information</AlertTitle> */}
-                    <AlertDescription>{t("nodata")}</AlertDescription>
-                </Alert>
-            </div>
+            <Alert variant="information">
+                <AlertCircle className="h-4 w-4"/>
+                <AlertDescription>
+                  {t("nodata")}
+                </AlertDescription>
+            </Alert>
         }
       </div>
       {currentAlert && id && <Processes

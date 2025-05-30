@@ -1,5 +1,5 @@
 import {useParams} from "react-router-dom";
-import {BinLocation, delay, IsNumeric, Item, SourceTarget, useDateTimeFormat} from "@/assets";
+import {BinLocation, delay, IsNumeric, Item, SourceTarget, UnitType, useDateTimeFormat} from "@/assets";
 import {useEffect, useRef, useState} from "react";
 import {BarCodeScannerRef, ProcessAlertValue, ProcessesRef, useAuth, useThemeContext} from "@/components";
 import {addItem, fetchTransferContent, TransferContent} from "@/pages/Transfer/data/transfer-document";
@@ -82,11 +82,11 @@ export const useTransferProcessTargetBinsData = () => {
       .finally(() => setLoading(false));
   }
 
-  function handleAddItem(item: Item) {
+  function handleAddItem(item: Item, unit: UnitType) {
     if (id == null) {
       return;
     }
-    addItem({id, itemCode: item.code, barcode: item.barcode, type: SourceTarget.Target, binEntry: binLocation?.entry})
+    addItem({id, itemCode: item.code, barcode: item.barcode, type: SourceTarget.Target, binEntry: binLocation?.entry, unit})
       .then((v) => {
         if (v.errorMessage != null) {
           setError(v.errorMessage);
@@ -96,6 +96,11 @@ export const useTransferProcessTargetBinsData = () => {
         setCurrentAlert({
           lineID: v.lineID,
           quantity: 1,
+          unit: unit,
+          purPackUn: v.packUnit,
+          purPackMsr: v.packMsr,
+          numInBuy: v.numIn,
+          buyUnitMsr: v.unitMsr,
           barcode: item.barcode,
           itemCode: item.code,
           severity: "Information",
