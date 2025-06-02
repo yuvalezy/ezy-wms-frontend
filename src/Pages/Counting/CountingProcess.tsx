@@ -15,6 +15,7 @@ import ContentTheme from "@/components/ContentTheme";
 import {AlertCircle} from "lucide-react";
 import {useCountingProcessData} from "@/pages/Counting/data/counting-process-data";
 import {useNavigate} from "react-router-dom";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 
 export default function CountingProcess() {
   const {t} = useTranslation();
@@ -56,42 +57,71 @@ export default function CountingProcess() {
             <div ref={processAlertRef}><ProcessAlert alert={currentAlert}
                                                      onAction={(type) => processesRef?.current?.open(type)}/></div>}
         {rows != null && rows.length > 0 &&
-            <div className="flex flex-col gap-4">
-              {rows.map((row) => (
-                <Card key={row.code} className="w-full shadow-lg">
-                  <CardHeader>
-                    <CardTitle>{`${t('code')}: ${row.code}`}</CardTitle>
-                    <CardDescription>{`${t('description')}: ${row.name}`}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex justify-between items-center border-b-2 border-primary font-bold">
-                      <div className="w-[30%]">
-                        <span>{t('unit')}</span>
+            <>
+              {/* Mobile view - Cards */}
+              <div className="block sm:hidden flex flex-col gap-4">
+                {rows.map((row) => (
+                  <Card key={row.code} className="w-full shadow-lg">
+                    <CardHeader>
+                      <CardTitle>{`${t('code')}: ${row.code}`}</CardTitle>
+                      <CardDescription>{`${t('description')}: ${row.name}`}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex justify-between items-center border-b-2 border-primary font-bold">
+                        <div className="w-[30%]">
+                          <span>{t('unit')}</span>
+                        </div>
+                        <div className="flex-1 flex justify-around text-center">
+                          <div className="flex-1 text-xs">
+                            <span>{t('units')}</span>
+                          </div>
+                          <div className="flex-1 text-xs">
+                            <span>{t('dozens')}</span>
+                          </div>
+                          <div className="flex-1 text-xs">
+                            <span>{t('boxes')}</span>
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex-1 flex justify-around text-center">
-                        <div className="flex-1 text-xs">
-                          <span>{t('units')}</span>
-                        </div>
-                        <div className="flex-1 text-xs">
-                          <span>{t('dozens')}</span>
-                        </div>
-                        <div className="flex-1 text-xs">
-                          <span>{t('boxes')}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <MetricRow
-                      label={t('quantity')}
-                      values={{
-                        units: formatNumber(row.unit ?? 0, 0),
-                        buyUnits: formatNumber(row.dozen ?? 0, 0),
-                        packUnits: formatNumber(row.pack ?? 0, 0)
-                      }}
-                    />
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                      <MetricRow
+                        label={t('quantity')}
+                        values={{
+                          units: formatNumber(row.unit ?? 0, 0),
+                          buyUnits: formatNumber(row.dozen ?? 0, 0),
+                          packUnits: formatNumber(row.pack ?? 0, 0)
+                        }}
+                      />
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+              
+              {/* Desktop view - Table */}
+              <div className="hidden sm:block">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{t('code')}</TableHead>
+                      <TableHead>{t('description')}</TableHead>
+                      <TableHead className="text-right">{t('units')}</TableHead>
+                      <TableHead className="text-right">{t('dozens')}</TableHead>
+                      <TableHead className="text-right">{t('boxes')}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {rows.map((row) => (
+                      <TableRow key={row.code}>
+                        <TableCell className="font-medium">{row.code}</TableCell>
+                        <TableCell>{row.name}</TableCell>
+                        <TableCell className="text-right">{formatNumber(row.unit ?? 0, 0)}</TableCell>
+                        <TableCell className="text-right">{formatNumber(row.dozen ?? 0, 0)}</TableCell>
+                        <TableCell className="text-right">{formatNumber(row.pack ?? 0, 0)}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </>
         }
         {rows != null && rows.length === 0 &&
             <Alert variant="default">

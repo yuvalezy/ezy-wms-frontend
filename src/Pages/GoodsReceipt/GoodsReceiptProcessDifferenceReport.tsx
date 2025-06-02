@@ -10,6 +10,7 @@ import {
   useGoodsReceiptProcessDifferenceReportData
 } from "@/pages/GoodsReceipt/data/goods-receipt-process-difference-report-data";
 import {Button, Card, CardContent, CardHeader} from "@/components";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 
 interface GoodsReceiptProcessDifferenceReportProps {
   confirm?: boolean
@@ -46,22 +47,55 @@ export default function GoodsReceiptProcessDifferenceReport({confirm}: GoodsRece
 
   return (
     <ContentTheme title={title} titleOnClick={() => navigate(titleLink)} titleBreadcrumbs={titleBreadcrumbs} onExportExcel={handleExportExcel}>
-      {!report && data?.map((value) => (
-        <div key={value.documentNumber} className="mb-2">
-          <Card className="mb-4 shadow-lg">
-            <CardHeader>
-              {`${o(value.baseType)}: ${value.documentNumber}`}
-            </CardHeader>
-            <CardContent>
-              <FullInfoBox>
-                <InfoBoxValue label={t("supplier")} value={value.cardCode}/>
-                <InfoBoxValue label={t("supplierName")} value={value.cardName}/>
-              </FullInfoBox>
-              <Button className="w-full" type="button" onClick={() => setReport(value)}>{t('details')}</Button>
-            </CardContent>
-          </Card>
-        </div>
-      ))}
+      {!report && (
+        <>
+          {/* Mobile view - Cards */}
+          <div className="block sm:hidden">
+            {data?.map((value) => (
+              <div key={value.documentNumber} className="mb-2">
+                <Card className="mb-4 shadow-lg">
+                  <CardHeader>
+                    {`${o(value.baseType)}: ${value.documentNumber}`}
+                  </CardHeader>
+                  <CardContent>
+                    <FullInfoBox>
+                      <InfoBoxValue label={t("supplier")} value={value.cardCode}/>
+                      <InfoBoxValue label={t("supplierName")} value={value.cardName}/>
+                    </FullInfoBox>
+                    <Button className="w-full" type="button" onClick={() => setReport(value)}>{t('details')}</Button>
+                  </CardContent>
+                </Card>
+              </div>
+            ))}
+          </div>
+          
+          {/* Desktop view - Table */}
+          <div className="hidden sm:block">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t('document')}</TableHead>
+                  <TableHead>{t('supplier')}</TableHead>
+                  <TableHead>{t('supplierName')}</TableHead>
+                  <TableHead className="text-right"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {data?.map((value) => (
+                  <TableRow key={value.documentNumber}>
+                    <TableCell>{`${o(value.baseType)}: ${value.documentNumber}`}</TableCell>
+                    <TableCell>{value.cardCode}</TableCell>
+                    <TableCell>{value.cardName}</TableCell>
+                    <TableCell className="text-right">
+                      <Button variant="outline" size="sm" onClick={() => setReport(value)}>{t('details')}</Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </>
+      )}
       {report && <>
           <FullInfoBox>
               <InfoBoxValue label={t("supplier")} value={report.cardCode}/>

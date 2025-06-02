@@ -61,24 +61,60 @@ export default function TransferProcessSource() {
             <Button type="button" variant="default" onClick={() => navigate(`/transfer/${id}/targetBins`)}>
               {t("selectTransferTargetBins") || "Select Target Bins"}
             </Button>
-            {rows.map((row) => {
-              return <Card>
-                <CardContent className="flex flex-col gap-2">
-                  <SecondaryInfoBox>
-                    <InfoBoxValue label={t('code')} value={row.code} />
-                    <InfoBoxValue label={t('quantity')} value={row.quantity} />
-                    <InfoBoxValue label={t('unit')} value={row.unit === UnitType.Unit ? t('unit') :
-                    row.unit === UnitType.Dozen ? row.buyUnitMsr ?? t('buyUnit') :
-                    row.purPackMsr ?? t('packUnit')} />
-                    {row.unit !== UnitType.Unit && <InfoBoxValue label={t('qtyInUn')} value={row.numInBuy.toString()}/>}
-                    {row.unit === UnitType.Pack && <InfoBoxValue label={t('qtyInPack')} value={row.purPackUn.toString()}/>}
-                  </SecondaryInfoBox>
-                  <FullInfoBox>
-                    <InfoBoxValue label={t('description')} value={row.name} />
-                  </FullInfoBox>
-                </CardContent>
-              </Card>
-            })}
+            
+            {/* Mobile view - Cards */}
+            <div className="block sm:hidden">
+              {rows.map((row) => {
+                return <Card key={row.code}>
+                  <CardContent className="flex flex-col gap-2">
+                    <SecondaryInfoBox>
+                      <InfoBoxValue label={t('code')} value={row.code} />
+                      <InfoBoxValue label={t('quantity')} value={row.quantity} />
+                      <InfoBoxValue label={t('unit')} value={row.unit === UnitType.Unit ? t('unit') :
+                      row.unit === UnitType.Dozen ? row.buyUnitMsr ?? t('buyUnit') :
+                      row.purPackMsr ?? t('packUnit')} />
+                      {row.unit !== UnitType.Unit && <InfoBoxValue label={t('qtyInUn')} value={row.numInBuy.toString()}/>}
+                      {row.unit === UnitType.Pack && <InfoBoxValue label={t('qtyInPack')} value={row.purPackUn.toString()}/>}
+                    </SecondaryInfoBox>
+                    <FullInfoBox>
+                      <InfoBoxValue label={t('description')} value={row.name} />
+                    </FullInfoBox>
+                  </CardContent>
+                </Card>
+              })}
+            </div>
+            
+            {/* Desktop view - Table */}
+            <div className="hidden sm:block">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t('code')}</TableHead>
+                    <TableHead>{t('description')}</TableHead>
+                    <TableHead>{t('quantity')}</TableHead>
+                    <TableHead>{t('unit')}</TableHead>
+                    <TableHead>{t('qtyInUn')}</TableHead>
+                    <TableHead>{t('qtyInPack')}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {rows.map((row) => (
+                    <TableRow key={row.code}>
+                      <TableCell>{row.code}</TableCell>
+                      <TableCell>{row.name}</TableCell>
+                      <TableCell>{row.quantity}</TableCell>
+                      <TableCell>
+                        {row.unit === UnitType.Unit ? t('unit') :
+                         row.unit === UnitType.Dozen ? row.buyUnitMsr ?? t('buyUnit') :
+                         row.purPackMsr ?? t('packUnit')}
+                      </TableCell>
+                      <TableCell>{row.unit !== UnitType.Unit ? row.numInBuy.toString() : '-'}</TableCell>
+                      <TableCell>{row.unit === UnitType.Pack ? row.purPackUn.toString() : '-'}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </div>
         )}
         {rows != null && rows.length === 0 &&

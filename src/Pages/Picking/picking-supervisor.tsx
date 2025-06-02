@@ -7,11 +7,29 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import {StringFormat} from "@/assets/Functions";
 import { toast } from "sonner";
 import PickingCard from "@/pages/picking/components/picking-card";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
+import {Button} from "@/components/ui/button";
+import {Progress} from "@/components/ui/progress";
+import {CheckCircle} from "lucide-react";
+import {useNavigate} from "react-router-dom";
+import {useAuth} from "@/components/AppContext";
+import {Authorization} from "@/assets/Authorization";
+import {useDateTimeFormat} from "@/assets/DateFormat";
+import {formatNumber} from "@/lib/utils";
 
 export default function PickingSupervisor() {
   const {t} = useTranslation();
   const [pickings, setPickings] = useState<PickingDocument[]>([]);
   const {setLoading, setError} = useThemeContext();
+  const navigate = useNavigate();
+  const {user} = useAuth();
+  const {dateFormat} = useDateTimeFormat();
+  
+  function handleOpen(id: number) {
+    navigate(`/pick/${id}`);
+  }
+
+  let handleOpenLink = user?.authorizations?.includes(Authorization.PICKING);
   useEffect(() => {
     loadData();
   }, []);
@@ -42,18 +60,77 @@ export default function PickingSupervisor() {
 
   return (
     <ContentTheme title={t("pickSupervisor")}>
-      {pickings.map((pick) => (
-        <PickingCard key={pick.entry} picking={pick} supervisor={true}
-                     onUpdatePick={handleUpdatePick}/>
-      ))}
-      {pickings.length === 0 &&
-          <div className="p-4">
-              <Alert variant="default" className="bg-blue-100 border-blue-400 text-blue-700">
-                {/* <AlertTitle>Information</AlertTitle> */}
-                <AlertDescription>{t("nodata")}</AlertDescription>
-              </Alert>
+      {pickings.length > 0 ? (
+        <>
+          {/* Mobile view - Cards */}
+          <div className="block sm:hidden">
+            {pickings.map((pick) => (
+              <PickingCard key={pick.entry} picking={pick} supervisor={true}
+                           onUpdatePick={handleUpdatePick}/>
+            ))}
           </div>
-      }
+          
+          {/* Desktop view - Table */}
+          <div className="hidden sm:block">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t('number')}</TableHead>
+                  <TableHead>{t('date')}</TableHead>
+                  <TableHead>{t('salesOrders')}</TableHead>
+                  <TableHead>{t('invoices')}</TableHead>
+                  <TableHead>{t('transferRequests')}</TableHead>
+                  <TableHead>{t('progress')}</TableHead>
+                  <TableHead>{t('comment')}</TableHead>
+                  <TableHead className="text-right"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {pickings.map((pick) => {
+                  const progressValue = pick.quantity > 0 ? 100 - (pick.openQuantity * 100 / pick.quantity) : 0;
+                  return (
+                    <TableRow key={pick.entry}>
+                      <TableCell>
+                        {handleOpenLink ? (
+                          <a href="#" onClick={(e) => { e.preventDefault(); handleOpen(pick.entry); }} className="text-blue-600 hover:underline">
+                            {pick.entry}
+                          </a>
+                        ) : (
+                          pick.entry
+                        )}
+                      </TableCell>
+                      <TableCell>{dateFormat(new Date(pick.date))}</TableCell>
+                      <TableCell>{pick.salesOrders || '-'}</TableCell>
+                      <TableCell>{pick.invoices || '-'}</TableCell>
+                      <TableCell>{pick.transfers || '-'}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center space-x-2">
+                          <Progress value={progressValue} className="w-20" />
+                          <span className="text-xs">{formatNumber(progressValue, 0)}%</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>{pick.remarks || '-'}</TableCell>
+                      <TableCell className="text-right">
+                        {pick.updateQuantity > 0 && (
+                          <Button size="sm" onClick={() => handleUpdatePick?.(pick)}>
+                            <CheckCircle className="mr-1 h-3 w-3" />{t("update")}
+                          </Button>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </div>
+        </>
+      ) : (
+        <div className="p-4">
+          <Alert variant="default" className="bg-blue-100 border-blue-400 text-blue-700">
+            <AlertDescription>{t("nodata")}</AlertDescription>
+          </Alert>
+        </div>
+      )}
     </ContentTheme>
   );
 }

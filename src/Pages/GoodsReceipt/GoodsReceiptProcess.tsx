@@ -31,10 +31,12 @@ export default function GoodsReceiptProcess({confirm = false}: { confirm?: boole
   const title = `${!confirm ? t("goodsReceipt") : t("receiptConfirmation")}`;
 
   return (
-    <ContentTheme title={title} titleOnClick={() => navigate(`/goodsReceipt${confirm ? 'Confirmation' : ''}`)} titleBreadcrumbs={[{label: scanCode || ''}]}>
+    <ContentTheme title={title} titleOnClick={() => navigate(`/goodsReceipt${confirm ? 'Confirmation' : ''}`)}
+                  titleBreadcrumbs={[{label: scanCode || ''}]}
+                  footer={enable && (<BarCodeScanner ref={barcodeRef} enabled unit onAddItem={handleAddItem}/>)}
+    >
       {id ? (
         <>
-          {enable && (<BarCodeScanner ref={barcodeRef} enabled unit onAddItem={handleAddItem}/>)}
           {acceptValues.map((alert) => (
             <ProcessAlert
               enableComment={true}

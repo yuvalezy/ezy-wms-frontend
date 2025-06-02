@@ -256,5 +256,6 @@
   "unauthorizedMessage": "¡Oops! No estás autorizado para ver esta página.",
   "returnToHome": "Regresar a Inicio",
   "notFound": "Página no Encontrada",
-  "notFoundMessage": "¡Oops! Página no encontrada."
+  "notFoundMessage": "¡Oops! Página no encontrada.",
+  "lineNumber": "Número de Línea"
 }

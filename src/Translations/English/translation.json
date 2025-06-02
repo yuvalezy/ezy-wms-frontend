@@ -257,5 +257,6 @@
   "unauthorizedMessage": "Oops! You're not authorized to view this page.",
   "returnToHome": "Return to Home",
   "notFound": "Page Not Found",
-  "notFoundMessage": "Oops! Page not found."
+  "notFoundMessage": "Oops! Page not found.",
+  "lineNumber": "Line Number"
 }

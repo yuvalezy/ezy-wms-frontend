@@ -7,10 +7,25 @@ import {StringFormat} from "@/assets/Functions";
 import {countingAction, fetchCountings} from "@/pages/Counting/data/Counting";
 import {Counting} from "@/assets/Counting";
 import CountingCard from "@/pages/Counting/components/CountingCard";
-import {ObjectAction} from "@/assets/Common";
+import {ObjectAction, Status} from "@/assets/Common";
 import {MessageBox} from "@/components/ui/message-box";
 import { toast } from "sonner";
 import CountingForm from "@/pages/Counting/components/CountingForm";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
+import {Button} from "@/components/ui/button";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faFileAlt, faEllipsisV} from '@fortawesome/free-solid-svg-icons';
+import {CheckCircle, XCircle} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {useNavigate} from "react-router-dom";
+import {Authorization} from "@/assets/Authorization";
+import {useDocumentStatusToString} from "@/assets/DocumentStatusString";
+import {useDateTimeFormat} from "@/assets/DateFormat";
 
 export default function CountingSupervisor() {
   const {user} = useAuth();
@@ -22,6 +37,15 @@ export default function CountingSupervisor() {
   );
   const [actionType, setActionType] = useState<ObjectAction | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const navigate = useNavigate();
+  const {dateFormat} = useDateTimeFormat();
+  const documentStatusToString = useDocumentStatusToString();
+  
+  function handleOpen(id: number) {
+    navigate(`/counting/${id}`);
+  }
+
+  let handleOpenLink = user?.authorizations?.includes(Authorization.COUNTING);
 
   useEffect(() => {
     setLoading(true);
@@ -61,9 +85,75 @@ export default function CountingSupervisor() {
         }
       />
       <br/>
-      {countings.map((doc) => (
-        <CountingCard supervisor={true} key={doc.id} doc={doc} handleAction={handleAction}/>
-      ))}
+      {/* Mobile view - Cards */}
+      <div className="block sm:hidden">
+        {countings.map((doc) => (
+          <CountingCard supervisor={true} key={doc.id} doc={doc} handleAction={handleAction}/>
+        ))}
+      </div>
+      
+      {/* Desktop view - Table */}
+      <div className="hidden sm:block">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>{t('id')}</TableHead>
+              <TableHead>{t('number')}</TableHead>
+              <TableHead>{t('docDate')}</TableHead>
+              <TableHead>{t('createdBy')}</TableHead>
+              <TableHead>{t('status')}</TableHead>
+              <TableHead className="text-right"></TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {countings.map((doc) => (
+              <TableRow key={doc.id}>
+                <TableCell>{doc.name || '-'}</TableCell>
+                <TableCell>
+                  {handleOpenLink ? (
+                    <a href="#" onClick={(e) => { e.preventDefault(); handleOpen(doc.id); }} className="text-blue-600 hover:underline">
+                      {doc.id}
+                    </a>
+                  ) : (
+                    doc.id
+                  )}
+                </TableCell>
+                <TableCell>{dateFormat(new Date(doc.date))}</TableCell>
+                <TableCell>{doc.employee.name}</TableCell>
+                <TableCell>{documentStatusToString(doc.status)}</TableCell>
+                <TableCell className="text-right">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                        <FontAwesomeIcon icon={faEllipsisV} className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => navigate(`/countingSummaryReport/${doc.id}`)}>
+                        <FontAwesomeIcon icon={faFileAlt} className="mr-2 h-4 w-4" />
+                        {t('countingSummaryReport')}
+                      </DropdownMenuItem>
+                      {doc.status === Status.InProgress && (
+                        <DropdownMenuItem onClick={() => handleAction?.(doc.id, 'approve')}>
+                          <CheckCircle className="mr-2 h-4 w-4" />
+                          {t('finish')}
+                        </DropdownMenuItem>
+                      )}
+                      <DropdownMenuItem 
+                        onClick={() => handleAction?.(doc.id, 'cancel')}
+                        className="text-destructive"
+                      >
+                        <XCircle className="mr-2 h-4 w-4" />
+                        {t('cancel')}
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
       <MessageBox
         onConfirm={handleConfirmAction}
         onOpenChange={setDialogOpen}
