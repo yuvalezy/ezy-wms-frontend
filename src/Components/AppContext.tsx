@@ -15,14 +15,14 @@ interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
   companyName?: string | null;
-  login: (username: string, password: string) => Promise<void>;
+  login: (username: string, password: string, warehouse?: string) => Promise<void>;
   logout: () => void;
 }
 
 const AuthContextDefaultValues: AuthContextType = {
   isAuthenticated: false,
   user: null,
-  login: async (username: string, password: string) => {
+  login: async (username: string, password: string, warehouse?: string) => {
     console.warn("Login method not implemented yet!");
   },
   logout: () => {
@@ -98,10 +98,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   }, []);
 
 
-  const login = async (username: string, password: string) => {
+  const login = async (username: string, password: string, warehouse?: string) => {
     try {
       if (!Mockup) {
-        return await loginExecute(username, password);
+        return await loginExecute(username, password, warehouse);
       } else {
         return mockupLogin();
       }
@@ -112,29 +112,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       const data = axiosError.response?.data as ErrorResponse;
       const error_description = data?.error_description;
       console.error(error);
-      alert(`Failed to login: ${error_description || axiosError.message}`);
+      // Re-throw the error so the login component can handle warehouse selection
+      throw error;
     }
   };
 
-  async function loginExecute(username: string, password: string) {
-    const response = await axiosInstance.post(`authentication/login`,
-      {password: username},
-      {withCredentials: true});
-    if (response.data && response.data.access_token) {
-      const {access_token, expires_in} = response.data;
+  async function loginExecute(username: string, password: string, warehouse?: string) {
+    const loginData: any = {password: username};
+    if (warehouse) {
+      loginData.warehouse = warehouse;
+    }
 
-      localStorage.setItem("token", access_token);
-      const expiryTime = new Date().getTime() + expires_in * 1000;
-      localStorage.setItem("token_expiry", expiryTime.toString());
-
-      setTimeout(logout, expires_in * 1000);
-
+    const response = await axiosInstance.post(`authentication/login`, loginData);
+    if (response.status === 200) {
       const userInfoResponse = await axiosInstance.get<User>(`General/UserInfo`);
 
       let data = userInfoResponse.data;
       console.log(data);
       if (data) {
-        let settings = data.settings;
         setUser(data);
       }
     }
