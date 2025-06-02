@@ -5,6 +5,7 @@ import {useThemeContext} from "@/components/ThemeContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MetricRow } from "@/components/MetricRow";
 import {formatNumber} from "@/lib/utils";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 
 interface StockTableProps {
   result: ItemCheckResponse
@@ -34,47 +35,77 @@ const StockTable: React.FC<StockTableProps> = ({result}) => {
   const purPackUn = result.purPackUn || 1;
 
   return (
-    <div className="space-y-4">
+    <>
       {data.length === 0 && (
         <p className="text-center text-muted-foreground">{t('noStockDataFound')}</p>
       )}
-      {data.map((binStock, index) => (
-        <Card key={index} className="w-full shadow-lg">
-          <CardHeader>
-            <CardTitle>{t('bin')}: {binStock.binCode}</CardTitle>
-          </CardHeader>
-          <CardContent className="pb-4">
-            {/* Unit Headers */}
-            <div className="flex justify-between items-center py-2 border-b-2 border-primary mb-2 font-bold text-sm">
-              <div className="w-[30%]">
-                {/* This column is for the MetricRow label, so no header text needed here explicitly unless desired */}
+      
+      {/* Mobile view - Cards */}
+      <div className="block sm:hidden space-y-4">
+        {data.map((binStock, index) => (
+          <Card key={index} className="w-full shadow-lg">
+            <CardHeader>
+              <CardTitle>{t('bin')}: {binStock.binCode}</CardTitle>
+            </CardHeader>
+            <CardContent className="pb-4">
+              {/* Unit Headers */}
+              <div className="flex justify-between items-center py-2 border-b-2 border-primary mb-2 font-bold text-sm">
+                <div className="w-[30%]">
+                  {/* This column is for the MetricRow label, so no header text needed here explicitly unless desired */}
+                </div>
+                <div className="flex-1 flex justify-around text-center">
+                  <div className="flex-1 text-xs">
+                    <span>{t('units')}</span>
+                  </div>
+                  <div className="flex-1 text-xs">
+                    <span>{result.buyUnitMsr ?? t('buyUnit')}</span>
+                  </div>
+                  <div className="flex-1 text-xs">
+                    <span>{result.purPackMsr ?? t('packUnit')}</span>
+                  </div>
+                </div>
               </div>
-              <div className="flex-1 flex justify-around text-center">
-                <div className="flex-1 text-xs">
-                  <span>{t('units')}</span>
-                </div>
-                <div className="flex-1 text-xs">
-                  <span>{result.buyUnitMsr ?? t('buyUnit')}</span>
-                </div>
-                <div className="flex-1 text-xs">
-                  <span>{result.purPackMsr ?? t('packUnit')}</span>
-                </div>
-              </div>
-            </div>
 
-            {/* Metrics */}
-            <MetricRow
-              label={t('stock')}
-              values={{
-                units: formatNumber(binStock.quantity),
-                buyUnits: formatNumber(binStock.quantity / numInBuy, 2),
-                packUnits: formatNumber(binStock.quantity / (numInBuy * purPackUn), 2)
-              }}
-            />
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+              {/* Metrics */}
+              <MetricRow
+                label={t('stock')}
+                values={{
+                  units: formatNumber(binStock.quantity),
+                  buyUnits: formatNumber(binStock.quantity / numInBuy, 2),
+                  packUnits: formatNumber(binStock.quantity / (numInBuy * purPackUn), 2)
+                }}
+              />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+      
+      {/* Desktop view - Table */}
+      {data.length > 0 && (
+        <div className="hidden sm:block">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t('bin')}</TableHead>
+                <TableHead className="text-right">{t('units')}</TableHead>
+                <TableHead className="text-right">{result.buyUnitMsr ?? t('buyUnit')}</TableHead>
+                <TableHead className="text-right">{result.purPackMsr ?? t('packUnit')}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {data.map((binStock, index) => (
+                <TableRow key={index}>
+                  <TableCell className="font-medium">{binStock.binCode}</TableCell>
+                  <TableCell className="text-right">{formatNumber(binStock.quantity)}</TableCell>
+                  <TableCell className="text-right">{formatNumber(binStock.quantity / numInBuy, 2)}</TableCell>
+                  <TableCell className="text-right">{formatNumber(binStock.quantity / (numInBuy * purPackUn), 2)}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
+    </>
   );
 };
 export default StockTable;
