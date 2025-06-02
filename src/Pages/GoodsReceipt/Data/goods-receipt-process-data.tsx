@@ -16,8 +16,8 @@ import {AlertActionType, AlertSeverity, ProcessAlertValue} from "@/components/Pr
 import {ProcessesRef} from "@/components/Processes";
 import {IsNumeric, StringFormat} from "@/assets/Functions";
 import {addItem, updateLine, updateLineQuantity} from "@/pages/GoodsReceipt/data/GoodsReceiptProcess";
-import {configUtils, delay} from "@/assets/GlobalConfig";
 import {DocumentAddItemResponse} from "@/assets/Document";
+import {Mockup} from "@/utils/axios-instance";
 
 export const useGoodsReceiptProcessData = (confirm: boolean) => {
   const {scanCode} = useParams();
@@ -88,7 +88,7 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
           return;
         }
 
-        if (configUtils.isMockup && !data.fulfillment && !data.warehouse && !data.showroom) {
+        if (Mockup && !data.fulfillment && !data.warehouse && !data.showroom) {
           return alert({
             barcode: barcode,
             itemCode: item.code,
@@ -172,7 +172,9 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
 
   function alertAction(alert: ProcessAlertValue, type: AlertActionType) {
     setCurrentAlert(alert);
-    delay(1).then(() => processesRef?.current?.open(type));
+    setTimeout(() => {
+      processesRef?.current?.open(type);
+    }, 1);
   }
 
   function handleAlertActionAccept(type: AlertActionType, value?: string | number, cancel?: boolean): void {

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Cookies from 'universal-cookie';
 import { useTranslation } from 'react-i18next';
-import { globalConfig } from '@/assets';
+import {useAuth} from "@/components";
 
 type LoginFormProps = {
     onSubmit: React.FormEventHandler<HTMLFormElement>;
@@ -10,6 +10,7 @@ type LoginFormProps = {
 export default function LoginForm({ onSubmit }: LoginFormProps) {
     const { t, i18n } = useTranslation();
     const cookies = new Cookies();
+    const {companyName} = useAuth();
 
     useEffect(() => {
         const savedLang = cookies.get('userLanguage');
@@ -37,7 +38,7 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
                     className="w-auto h-20 mb-4 object-contain"
                   />
                   <h2 className="text-2xl font-bold text-center text-gray-800 mb-1">
-                      {globalConfig?.companyName || 'UNIT_TEST'}
+                      {companyName || 'COMPANY NAME'}
                   </h2>
                   <p className="text-center text-gray-500">{t('login') || 'Login'}</p>
               </div>

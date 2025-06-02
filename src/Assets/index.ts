@@ -7,7 +7,6 @@ export * from './Deliveries';
 export * from './Document';
 export * from './DocumentStatusString';
 export * from './Functions';
-export * from './GlobalConfig';
 export * from './Menus';
 export * from './mockup';
 export * from './ObjectName';

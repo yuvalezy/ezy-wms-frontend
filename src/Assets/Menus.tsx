@@ -1,7 +1,7 @@
 import {useTranslation} from 'react-i18next';
 import { useMemo } from 'react'; // Import useMemo
 import {Authorization} from "./Authorization";
-import {globalSettings} from "./GlobalConfig";
+import {useAuth} from "@/components";
 
 export interface MenuItem {
     Link: string;
@@ -13,6 +13,7 @@ export interface MenuItem {
 
 export function useMenus() {
     const {t} = useTranslation();
+    const {user} = useAuth();
 
     const goodsReceiptSupervisorRoute = "/goodsReceiptSupervisor"
     const goodsReceiptConfirmationSupervisorRoute = "/goodsReceiptConfirmationSupervisor"
@@ -147,7 +148,7 @@ export function useMenus() {
     };
 
     function applySettings(authorizations: Authorization[]) {
-        if (globalSettings?.grpoCreateSupervisorRequired) {
+        if (user?.settings?.grpoCreateSupervisorRequired) {
             return;
         }
         // Goods Receipt Supervisor
@@ -168,5 +169,5 @@ export function useMenus() {
     }
 
     // It's common to return objects directly rather than an object with properties.
-    return useMemo(() => ({MenuItems, GetMenus}), [t, globalSettings]);
+    return useMemo(() => ({MenuItems, GetMenus}), [t, user]);
 }

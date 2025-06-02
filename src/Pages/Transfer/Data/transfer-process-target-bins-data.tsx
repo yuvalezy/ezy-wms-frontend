@@ -1,5 +1,5 @@
 import {useParams} from "react-router-dom";
-import {BinLocation, delay, IsNumeric, Item, SourceTarget, UnitType, useDateTimeFormat} from "@/assets";
+import {BinLocation, IsNumeric, Item, SourceTarget, UnitType, useDateTimeFormat} from "@/assets";
 import {useEffect, useRef, useState} from "react";
 import {BarCodeScannerRef, ProcessAlertValue, ProcessesRef, useAuth, useThemeContext} from "@/components";
 import {addItem, fetchTransferContent, TransferContent} from "@/pages/transfer/data/transfer-document";
@@ -52,7 +52,9 @@ export const useTransferProcessTargetBinsData = () => {
       setBinLocation(bin);
       setEnable(true);
       loadRows(bin.entry);
-      delay(1).then(() => barcodeRef?.current?.focus());
+      setTimeout(() => {
+        barcodeRef?.current?.focus();
+      }, 1);
     } catch (e) {
       setError(e);
       setLoading(false);

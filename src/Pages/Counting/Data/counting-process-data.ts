@@ -1,6 +1,6 @@
 import {useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import {BinLocation, CountingContent, delay, IsNumeric, Item, UnitType, useDateTimeFormat} from "@/assets";
+import {BinLocation, CountingContent, IsNumeric, Item, UnitType, useDateTimeFormat} from "@/assets";
 import {useEffect, useRef, useState} from "react";
 import {
   BarCodeScannerRef,
@@ -37,10 +37,10 @@ export const useCountingProcessData = () => {
       setID(null);
       return;
     }
-    delay(1).then(() => {
+    setTimeout(() => {
       barcodeRef.current?.focus();
       binLocationRef.current?.focus();
-    });
+    }, 1);
     setID(parseInt(scanCode));
   }, [scanCode, user?.binLocations]);
 
@@ -49,7 +49,9 @@ export const useCountingProcessData = () => {
       setBinLocation(bin);
       setEnable(true);
       loadRows(bin.entry);
-      delay(1).then(() => barcodeRef?.current?.focus());
+      setTimeout(() => {
+        barcodeRef?.current?.focus()
+      }, 1);
     } catch (e) {
       setError(e);
       setLoading(false);
@@ -61,7 +63,9 @@ export const useCountingProcessData = () => {
     setRows(null);
     setEnable(false);
     setCurrentAlert(null);
-    delay(1).then(() => binLocationRef?.current?.focus());
+    setTimeout(() => {
+      binLocationRef?.current?.focus();
+    }, 1);
   }
 
 

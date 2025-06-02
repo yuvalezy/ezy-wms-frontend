@@ -5,7 +5,6 @@ import {BinLocationScannerRef} from "@/components/BinLocationScanner";
 import {useAuth} from "@/components/AppContext";
 import {binCheck, BinContentResponse} from "@/pages/BinCheck/Bins";
 import {BinLocation} from "@/assets/Common";
-import {delay} from "@/assets/GlobalConfig";
 import {exportToExcel} from "@/utils/excelExport";
 
 export const useBinCheckData = () => {
@@ -32,7 +31,9 @@ export const useBinCheckData = () => {
   function onBinClear() {
     setBin(null);
     setBinContent(null);
-    delay(1).then(() => binRef?.current?.focus());
+    setTimeout(() => {
+      binRef?.current?.focus();
+    }, 1)
   }
   const excelData = () => {
     return binContent?.map((value) => {

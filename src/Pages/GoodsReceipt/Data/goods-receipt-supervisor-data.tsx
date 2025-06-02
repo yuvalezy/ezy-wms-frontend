@@ -9,7 +9,6 @@ import {ObjectAction, Status} from "@/assets/Common";
 import {DocumentListDialogRef} from "@/pages/GoodsReceipt/components/DocumentListDialog";
 import {Authorization} from "@/assets/Authorization";
 import {documentAction, fetchDocuments} from "@/pages/GoodsReceipt/data/Document";
-import {globalSettings} from "@/assets/GlobalConfig";
 
 export const useGoodsReceiptSupervisorData = () => {
   const {t} = useTranslation();
@@ -66,7 +65,7 @@ export const useGoodsReceiptSupervisorData = () => {
   function getTitle(): string {
     if (!confirmation) {
       let title = t("goodsReceiptSupervisor");
-      if (!globalSettings?.grpoCreateSupervisorRequired) {
+      if (!user?.settings?.grpoCreateSupervisorRequired) {
         if (!supervisor) {
           title = t("goodsReceiptCreation");
         }
@@ -74,7 +73,7 @@ export const useGoodsReceiptSupervisorData = () => {
       return title;
     } else {
       let title = t("goodsReceiptConfirmationSupervisor");
-      if (!globalSettings?.grpoCreateSupervisorRequired) {
+      if (!user?.settings?.grpoCreateSupervisorRequired) {
         if (!supervisor) {
           title = t("goodsReceiptConfirmationCreation");
         }
