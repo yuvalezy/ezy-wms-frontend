@@ -1,16 +1,13 @@
-import axios from "axios";
 import {
   Document,
   DocumentItem,
   DocumentOrderBy,
-  configUtils,
-  delay,
-  globalConfig,
   documentMockup,
   ObjectAction,
   Status,
   User
 } from "@/assets";
+import {axiosInstance, Mockup} from "@/utils/axios-instance";
 
 export enum GoodsReceiptType {
   AutoConfirm = "AutoConfirm",
@@ -45,18 +42,13 @@ export const createDocument = async (
   name: string,
   items: DocumentItem[]): Promise<Document> => {
   try {
-    if (configUtils.isMockup) {
+    if (Mockup) {
       console.log("Mockup data is being used.");
       return documentMockup;
     }
 
-    if (!globalConfig) throw new Error("Config has not been initialized!");
-
-    if (globalConfig.debug) await delay();
-
-    const access_token = localStorage.getItem("token");
-    const response = await axios.post<Document>(
-      `${globalConfig.baseURL}/api/GoodsReceipt/Create`,
+    const response = await axiosInstance.post<Document>(
+      `GoodsReceipt/Create`,
       {
         cardCode: cardCode,
         name: name,
@@ -64,11 +56,7 @@ export const createDocument = async (
         documents: items,
         confirm
       },
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
+      
     );
 
     return response.data;
@@ -83,7 +71,7 @@ export const documentAction = async (
   user: User
 ): Promise<boolean> => {
   try {
-    if (configUtils.isMockup) {
+    if (Mockup) {
       if (action === "approve") {
         documentMockup.status = Status.Finished;
         return true;
@@ -92,23 +80,19 @@ export const documentAction = async (
       return true;
     }
 
-    if (!globalConfig) throw new Error("Config has not been initialized!");
+    
 
-    if (globalConfig.debug) await delay();
+    
 
-    const access_token = localStorage.getItem("token");
-    const response = await axios.post<boolean>(
-      `${globalConfig.baseURL}/api/GoodsReceipt/${
+    
+    const response = await axiosInstance.post<boolean>(
+      `GoodsReceipt/${
         action === "approve" ? "Process" : "Cancel"
       }`,
       {
         ID: id,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
+      
     );
     return response.data;
   } catch (error) {
@@ -123,18 +107,14 @@ export const fetchDocuments = async (
   desc: boolean = true
 ): Promise<Document[]> => {
   try {
-    if (configUtils.isMockup) {
+    if (Mockup) {
       console.log("Mockup data is being used.");
       return [documentMockup];
     }
 
-    if (!globalConfig)
-      throw new Error("Config has not been initialized!");
 
-    if (globalConfig.debug)
-      await delay();
 
-    const access_token = localStorage.getItem("token");
+    
 
     // const queryParams = new URLSearchParams();
     // queryParams.append("OrderBy", orderBy.toString());
@@ -169,15 +149,9 @@ export const fetchDocuments = async (
     // const url = `${
     //     globalConfig.baseURL
     // }/api/GoodsReceipt/Documents?${queryParams.toString()}`;
-    const url = `${
-      globalConfig.baseURL
-    }/api/GoodsReceipt/Documents`;
+    const url = `GoodsReceipt/Documents`;
 
-    const response = await axios.post<Document[]>(url, filters, {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
+    const response = await axiosInstance.post<Document[]>(url, filters, );
 
     return response.data;
   } catch (error) {

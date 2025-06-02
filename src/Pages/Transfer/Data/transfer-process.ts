@@ -1,7 +1,7 @@
 import axios from "axios";
-import {configUtils, delay, globalConfig} from "@/assets";
 import {transferAddItemResponseMockup, UpdateLineReturnValueMockup} from "@/assets";
 import {UpdateLineParameters, UpdateLineReturnValue} from "@/assets";
+import { axiosInstance, Mockup } from "@/utils/axios-instance";
 
 export interface TransferAddItemResponse {
   lineID: number;
@@ -16,7 +16,7 @@ export const addItem = async (
   barcode: string
 ): Promise<TransferAddItemResponse> => {
   try {
-    if (configUtils.isMockup) {
+    if (Mockup) {
       switch (barcode) {
         case "cancel": {
           return {...transferAddItemResponseMockup, closedTransfer: true};
@@ -32,26 +32,22 @@ export const addItem = async (
       }
     }
 
-    if (!globalConfig) throw new Error("Config has not been initialized!");
+    
 
-    if (globalConfig.debug) await delay();
+    
 
-    const access_token = localStorage.getItem("token");
+    
 
-    const url = `${globalConfig.baseURL}/api/Transfer/AddItem`;
+    const url = `Transfer/AddItem`;
 
-    const response = await axios.post<TransferAddItemResponse>(
+    const response = await axiosInstance.post<TransferAddItemResponse>(
       url,
       {
         id: id,
         itemCode: itemCode,
         barcode: barcode,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
+      
     );
     if (response.data.errorMessage == null) {
       return response.data;
@@ -70,7 +66,7 @@ export const updateLine = async ({
                                    reason,
                                    quantity,
                                  }: UpdateLineParameters): Promise<UpdateLineReturnValue> => {
-  if (configUtils.isMockup) {
+  if (Mockup) {
     console.log("Mockup data is being used.");
     return UpdateLineReturnValueMockup;
   }
@@ -79,15 +75,15 @@ export const updateLine = async ({
     return await updateLineQuantity(id, lineID, quantity);
   }
   try {
-    if (!globalConfig) throw new Error("Config has not been initialized!");
+    
 
-    if (globalConfig.debug) await delay();
+    
 
-    const access_token = localStorage.getItem("token");
+    
 
-    const url = `${globalConfig.baseURL}/api/Transfer/UpdateLine`;
+    const url = `Transfer/UpdateLine`;
 
-    const response = await axios.post<UpdateLineReturnValue>(
+    const response = await axiosInstance.post<UpdateLineReturnValue>(
       url,
       {
         id: id,
@@ -96,11 +92,7 @@ export const updateLine = async ({
         closeReason: reason,
         quantity: quantity,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
+      
     );
 
     return response.data;
@@ -111,18 +103,17 @@ export const updateLine = async ({
 };
 const updateLineQuantity = async (id: number, lineID: number, quantity: number): Promise<UpdateLineReturnValue> => {
   try {
-    if (!globalConfig) throw new Error("Config has not been initialized!");
+    
 
-    if (globalConfig.debug) await delay();
+    
 
-    const access_token = localStorage.getItem("token");
+    
 
-    const url = `${globalConfig.baseURL}/api/Transfer/UpdateLineQuantity`;
+    const url = `Transfer/UpdateLineQuantity`;
 
-    const response = await axios.post<UpdateLineReturnValue>(
+    const response = await axiosInstance.post<UpdateLineReturnValue>(
       url,
-      {id: id, lineID: lineID, quantity: quantity,},
-      {headers: {Authorization: `Bearer ${access_token}`,},}
+      {id: id, lineID: lineID, quantity: quantity,}
     );
 
     return response.data;

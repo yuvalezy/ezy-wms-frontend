@@ -1,13 +1,10 @@
 import {
-  configUtils,
-  delay,
-  globalConfig,
   UpdateLineReturnValueMockup,
   UnitType,
   UpdateLineParameters,
   UpdateLineReturnValue
 } from "@/assets";
-import axios from "axios";
+import {axiosInstance, Mockup} from "@/utils/axios-instance";
 
 export type Process = {
   hello: number
@@ -32,20 +29,14 @@ export const updateLine = async ({
                                    quantity
                                  }: UpdateLineParameters): Promise<UpdateLineReturnValue> => {
   try {
-    if (configUtils.isMockup) {
+    if (Mockup) {
       console.log("Mockup data is being used.");
       return UpdateLineReturnValueMockup;
     }
 
-    if (!globalConfig) throw new Error("Config has not been initialized!");
+    const url = `Counting/UpdateLine`;
 
-    if (globalConfig.debug) await delay();
-
-    const access_token = localStorage.getItem("token");
-
-    const url = `${globalConfig.baseURL}/api/Counting/UpdateLine`;
-
-    const response = await axios.post<UpdateLineReturnValue>(
+    const response = await axiosInstance.post<UpdateLineReturnValue>(
       url,
       {
         id: id,
@@ -54,11 +45,7 @@ export const updateLine = async ({
         closeReason: reason,
         quantity: quantity,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
+      
     );
 
     return response.data;
@@ -76,19 +63,19 @@ export const addItem = async (
   binEntry: number | undefined,
   unit: UnitType): Promise<CountingAddItemResponse> => {
   try {
-    if (configUtils.isMockup) {
+    if (Mockup) {
       //todo mockup
     }
 
-    if (!globalConfig) throw new Error("Config has not been initialized!");
+    
 
-    if (globalConfig.debug) await delay();
+    
 
-    const access_token = localStorage.getItem("token");
+    
 
-    const url = `${globalConfig.baseURL}/api/Counting/AddItem`;
+    const url = `Counting/AddItem`;
 
-    const response = await axios.post<CountingAddItemResponse>(
+    const response = await axiosInstance.post<CountingAddItemResponse>(
       url,
       {
         id: id,
@@ -98,11 +85,7 @@ export const addItem = async (
         quantity: 1,
         unit: unit
       },
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
+      
     );
     if (response.data.errorMessage == null) {
       return response.data;

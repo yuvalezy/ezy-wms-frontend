@@ -1,29 +1,18 @@
-import {configUtils, delay, globalConfig} from "./GlobalConfig";
-import axios from "axios";
 import {BinLocation} from "./Common";
 import {binMockup} from "./mockup";
+import {axiosInstance, Mockup} from "@/utils/axios-instance";
 
 export const scanBinLocation = async (
     bin: string
 ): Promise<BinLocation> => {
     try {
-        if (configUtils.isMockup) {
+        if (Mockup) {
             console.log("Mockup data is being used.");
             return binMockup;
         }
-        if (!globalConfig) throw new Error("Config has not been initialized!");
+        const url = `General/ScanBinLocation?bin=${bin}`;
 
-        if (globalConfig.debug) await delay();
-
-        const access_token = localStorage.getItem("token");
-
-        const url = `${globalConfig.baseURL}/api/General/ScanBinLocation?bin=${bin}`;
-
-        const response = await axios.get<BinLocation>(url, {
-            headers: {
-                Authorization: `Bearer ${access_token}`,
-            },
-        });
+        const response = await axiosInstance.get<BinLocation>(url);
 
         return response.data;
     } catch (error) {

@@ -1,5 +1,4 @@
-import {delay, globalConfig} from "@/assets";
-import axios from "axios";
+import {axiosInstance} from "@/utils/axios-instance";
 
 export type CountingSummaryReportData = {
     name: string;
@@ -17,24 +16,14 @@ export type CountingSummaryReportLine = {
 
 export const fetchCountingSummaryReport = async (id: number): Promise<CountingSummaryReportData> => {
     try {
-        if (!globalConfig)
-            throw new Error("Config has not been initialized!");
-        if (globalConfig.debug)
-            await delay();
-        // if (configUtils.isMockup) {
+        // if (Mockup) {
         //     console.log("Mockup data is being used.");
         //     return GoodsReceiptMockup;
         // }
 
-        const access_token = localStorage.getItem("token");
+        const url = `Counting/CountingSummaryReport/${id}`;
 
-        const url = `${globalConfig.baseURL}/api/Counting/CountingSummaryReport/${id}`;
-
-        const response = await axios.get<CountingSummaryReportData>(url, {
-            headers: {
-                Authorization: `Bearer ${access_token}`,
-            },
-        });
+        const response = await axiosInstance.get<CountingSummaryReportData>(url);
 
         return response.data;
     } catch (error) {

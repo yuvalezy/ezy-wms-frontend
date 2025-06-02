@@ -1,8 +1,8 @@
 import {Employee, UnitType} from "@/assets";
-import {configUtils, delay, globalConfig} from "@/assets";
 import {GoodsReceiptAllDetailMockup, transferMockup} from "@/assets";
 import axios from "axios";
 import {DetailUpdateParameters, ObjectAction, SourceTarget, Status} from "@/assets";
+import { axiosInstance, Mockup } from "@/utils/axios-instance";
 
 interface TransferAddItemResponse {
   lineID?: number
@@ -57,23 +57,19 @@ export const createTransfer = async (
   comments: string,
 ): Promise<TransferDocument> => {
   try {
-    if (configUtils.isMockup) {
+    if (Mockup) {
       console.log("Mockup data is being used.");
       return transferMockup;
     }
 
-    if (!globalConfig) throw new Error("Config has not been initialized!");
+    
 
-    if (globalConfig.debug) await delay();
+    
 
-    const access_token = localStorage.getItem("token");
-    const response = await axios.post<TransferDocument>(
-      `${globalConfig.baseURL}/api/Transfer/Create`, {name, comments},
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
+    
+    const response = await axiosInstance.post<TransferDocument>(
+      `Transfer/Create`, {name, comments},
+      
     );
 
     return response.data;
@@ -84,25 +80,21 @@ export const createTransfer = async (
 };
 export const getProcessInfo = async (id: number): Promise<TransferDocument> => {
   try {
-    if (configUtils.isMockup) {
+    if (Mockup) {
       console.log("Mockup data is being used.");
       const mockup = transferMockup;
       mockup.isComplete = true;
       return mockup;
     }
 
-    if (!globalConfig) throw new Error("Config has not been initialized!");
+    
 
-    if (globalConfig.debug) await delay();
+    
 
-    const access_token = localStorage.getItem("token");
-    const response = await axios.get<TransferDocument>(
-      `${globalConfig.baseURL}/api/Transfer/ProcessInfo/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
+    
+    const response = await axiosInstance.get<TransferDocument>(
+      `Transfer/ProcessInfo/${id}`,
+      
     );
 
     return response.data;
@@ -132,18 +124,14 @@ export const fetchTransfers = async (params: TransferUpdateParameters): Promise<
     params.progress = false;
 
   try {
-    if (configUtils.isMockup) {
+    if (Mockup) {
       console.log("Mockup data is being used.");
       return [transferMockup];
     }
 
-    if (!globalConfig)
-      throw new Error("Config has not been initialized!");
 
-    if (globalConfig.debug)
-      await delay();
 
-    const access_token = localStorage.getItem("token");
+    
 
     const queryParams = new URLSearchParams();
     queryParams.append("OrderBy", params.orderBy.toString());
@@ -169,15 +157,9 @@ export const fetchTransfers = async (params: TransferUpdateParameters): Promise<
       queryParams.append("Progress", params.progress.toString());
     }
 
-    const url = `${
-      globalConfig.baseURL
-    }/api/Transfer/Transfers?${queryParams.toString()}`;
+    const url = `Transfer/Transfers?${queryParams.toString()}`;
 
-    const response = await axios.get<TransferDocument[]>(url, {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
+    const response = await axiosInstance.get<TransferDocument[]>(url, );
 
     return response.data;
   } catch (error) {
@@ -199,26 +181,22 @@ export type addItemParameters = {
 export const addItem = async (params: addItemParameters): Promise<TransferAddItemResponse> => {
   try {
     params.quantity ??= 1;
-    if (configUtils.isMockup) {
+    if (Mockup) {
       //todo mockup
     }
 
-    if (!globalConfig) throw new Error("Config has not been initialized!");
+    
 
-    if (globalConfig.debug) await delay();
+    
 
-    const access_token = localStorage.getItem("token");
+    
 
-    const url = `${globalConfig.baseURL}/api/Transfer/AddItem`;
+    const url = `Transfer/AddItem`;
 
-    const response = await axios.post<TransferAddItemResponse>(
+    const response = await axiosInstance.post<TransferAddItemResponse>(
       url,
       params,
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
+      
     );
     if (response.data.errorMessage == null) {
       return response.data;
@@ -241,29 +219,21 @@ export type transferContentParameters = {
 }
 export const fetchTransferContent = async (params: transferContentParameters): Promise<TransferContent[]> => {
   try {
-    if (configUtils.isMockup) {
+    if (Mockup) {
       console.log("Mockup data is being used.");
       //todo return mockup
     }
 
-    if (!globalConfig)
-      throw new Error("Config has not been initialized!");
 
-    if (globalConfig.debug)
-      await delay();
 
-    const access_token = localStorage.getItem("token");
+    
 
-    const url = `${globalConfig.baseURL}/api/Transfer/TransferContent`;
+    const url = `Transfer/TransferContent`;
 
-    const response = await axios.post<TransferContent[]>(
+    const response = await axiosInstance.post<TransferContent[]>(
       url,
       params,
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
+      
     );
 
     return response.data;
@@ -280,28 +250,20 @@ export type TargetItemDetail = {
 };
 export const fetchTargetItemDetails = async (id: number, item: string, binEntry: number): Promise<TargetItemDetail[]> => {
   try {
-    if (!globalConfig)
-      throw new Error("Config has not been initialized!");
-    if (globalConfig.debug)
-      await delay();
-    if (configUtils.isMockup) {
+    if (Mockup) {
       console.log("Mockup data is being used.");
       return GoodsReceiptAllDetailMockup;
     }
 
-    const access_token = localStorage.getItem("token");
+    
 
-    const url = `${globalConfig.baseURL}/api/Transfer/TransferContentTargetDetail`;
+    const url = `Transfer/TransferContentTargetDetail`;
 
-    const response = await axios.post<any[]>(url, {
+    const response = await axiosInstance.post<any[]>(url, {
       id: id,
       itemCode: item,
       binEntry: binEntry
-    }, {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
+    }, );
 
     const details: TargetItemDetail[] = response.data.map((item: any) => ({
       lineID: item.lineID,
@@ -318,23 +280,19 @@ export const fetchTargetItemDetails = async (id: number, item: string, binEntry:
 };
 export const updateTransferTargetItem = async (data: DetailUpdateParameters) => {
   try {
-    if (configUtils.isMockup) {
+    if (Mockup) {
       return;
     }
 
-    if (!globalConfig) throw new Error("Config has not been initialized!");
+    
 
-    if (globalConfig.debug) await delay();
+    
 
-    const access_token = localStorage.getItem("token");
+    
 
-    const url = `${globalConfig.baseURL}/api/Transfer/UpdateContentTargetDetail`;
+    const url = `Transfer/UpdateContentTargetDetail`;
 
-    const response = await axios.post(url, data, {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
+    const response = await axiosInstance.post(url, data, );
 
     return response.data;
   } catch (error) {
@@ -347,7 +305,7 @@ export const transferAction = async (
   action: ObjectAction,
 ): Promise<boolean> => {
   try {
-    if (configUtils.isMockup) {
+    if (Mockup) {
       if (action === "approve") {
         //todo
         return true;
@@ -356,23 +314,19 @@ export const transferAction = async (
       return true;
     }
 
-    if (!globalConfig) throw new Error("Config has not been initialized!");
+    
 
-    if (globalConfig.debug) await delay();
+    
 
-    const access_token = localStorage.getItem("token");
-    const response = await axios.post<boolean>(
-      `${globalConfig.baseURL}/api/Transfer/${
+    
+    const response = await axiosInstance.post<boolean>(
+      `Transfer/${
         action === "approve" ? "Process" : "Cancel"
       }`,
       {
         ID: id,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
+      
     );
     return response.data;
   } catch (error) {
@@ -383,23 +337,19 @@ export const transferAction = async (
 
 export const createRequest = async (contents: TransferContent[]): Promise<number> => {
   try {
-    // if (configUtils.isMockup) {
+    // if (Mockup) {
     //     ...
     // }
 
-    if (!globalConfig) throw new Error("Config has not been initialized!");
+    
 
-    if (globalConfig.debug) await delay();
+    
 
-    const access_token = localStorage.getItem("token");
-    const response = await axios.post<number>(
-      `${globalConfig.baseURL}/api/Transfer/CreateTransferRequest`,
+    
+    const response = await axiosInstance.post<number>(
+      `Transfer/CreateTransferRequest`,
       contents,
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
+      
     );
     return response.data;
   } catch (error) {

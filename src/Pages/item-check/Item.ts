@@ -1,7 +1,6 @@
-import axios from "axios";
 import {itemMockup, itemStockMockup, updateItemBarMockup} from "@/assets/mockup";
-import {configUtils, delay, globalConfig} from "@/assets/GlobalConfig";
 import {ResponseStatus} from "@/assets/Common";
+import {axiosInstance, Mockup } from "@/utils/axios-instance";
 
 export interface ItemCheckResponse {
   itemCode: string;
@@ -29,31 +28,21 @@ export const itemCheck = async (
   barcode?: string
 ): Promise<ItemCheckResponse[]> => {
   try {
-    if (configUtils.isMockup) {
+    if (Mockup) {
       console.log("Mockup data is being used.");
       return itemMockup;
     }
+    
 
-    if (!globalConfig) throw new Error("Config has not been initialized!");
+    const url = `General/ItemCheck`;
 
-    if (globalConfig.debug)
-      await delay();
-
-    const access_token = localStorage.getItem("token");
-
-    const url = `${globalConfig.baseURL}/api/General/ItemCheck`;
-
-    const response = await axios.post<ItemCheckResponse[]>(
+    const response = await axiosInstance.post<ItemCheckResponse[]>(
       url,
       {
         itemCode: itemCode,
         barcode: barcode,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
+      
     );
 
     return response.data;
@@ -69,7 +58,7 @@ export const updateItemBarCode = async (
   addBarcode: string
 ): Promise<UpdateItemBarCodeResponse> => {
   try {
-    if (configUtils.isMockup) {
+    if (Mockup) {
       if (addBarcode) {
         itemMockup[0].barcodes.push(addBarcode);
       }
@@ -81,26 +70,18 @@ export const updateItemBarCode = async (
       return updateItemBarMockup;
     }
 
-    if (!globalConfig) throw new Error("Config has not been initialized!");
+    
 
-    if (globalConfig.debug) await delay();
+    const url = `General/UpdateItemBarCode`;
 
-    const access_token = localStorage.getItem("token");
-
-    const url = `${globalConfig.baseURL}/api/General/UpdateItemBarCode`;
-
-    const response = await axios.post<UpdateItemBarCodeResponse>(
+    const response = await axiosInstance.post<UpdateItemBarCodeResponse>(
       url,
       {
         itemCode: itemCode,
         removeBarcodes: removeBarcodes,
         addBarcodes: addBarcode.length > 0 ? [addBarcode] : [],
       },
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
+      
     );
 
     return response.data;
@@ -113,28 +94,18 @@ export const itemStock = async (
     itemCode: string,
 ): Promise<ItemStockResponse[]> => {
   try {
-    if (configUtils.isMockup) {
+    if (Mockup) {
       return itemStockMockup;
     }
 
-    if (!globalConfig) throw new Error("Config has not been initialized!");
+    
 
-    if (globalConfig.debug)
-      await delay();
+    const url = `General/ItemStock`;
 
-    const access_token = localStorage.getItem("token");
-
-    const url = `${globalConfig.baseURL}/api/General/ItemStock`;
-
-    const response = await axios.post<ItemStockResponse[]>(
+    const response = await axiosInstance.post<ItemStockResponse[]>(
         url,
         {
           itemCode: itemCode,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
         }
     );
 

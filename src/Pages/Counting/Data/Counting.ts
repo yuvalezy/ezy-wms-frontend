@@ -2,40 +2,26 @@ import {
   Counting,
   CountingContent,
   OrderBy,
-  configUtils,
-  delay,
-  globalConfig,
   countingMockup,
   documentMockup,
   ObjectAction,
   Status,
   User
 } from "@/assets";
-import axios from "axios";
+import {axiosInstance, Mockup} from "@/utils/axios-instance";
 
 export const createCounting = async (
   name: string
 ): Promise<Counting> => {
   try {
-    if (configUtils.isMockup) {
+    if (Mockup) {
       console.log("Mockup data is being used.");
       return countingMockup;
     }
-
-    if (!globalConfig) throw new Error("Config has not been initialized!");
-
-    if (globalConfig.debug) await delay();
-    const access_token = localStorage.getItem("token");
-    const response = await axios.post<Counting>(
-      `${globalConfig.baseURL}/api/Counting/Create`,
+    const response = await axiosInstance.post<Counting>(`Counting/Create`,
       {
         name: name,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
     );
 
     return response.data;
@@ -50,7 +36,7 @@ export const countingAction = async (
   user: User
 ): Promise<boolean> => {
   try {
-    if (configUtils.isMockup) {
+    if (Mockup) {
       if (action === "approve") {
         documentMockup.status = Status.Finished;
         return true;
@@ -59,23 +45,14 @@ export const countingAction = async (
       return true;
     }
 
-    if (!globalConfig) throw new Error("Config has not been initialized!");
 
-    if (globalConfig.debug) await delay();
-
-    const access_token = localStorage.getItem("token");
-    const response = await axios.post<boolean>(
-      `${globalConfig.baseURL}/api/Counting/${
+    const response = await axiosInstance.post<boolean>(
+      `Counting/${
         action === "approve" ? "Process" : "Cancel"
       }`,
       {
         ID: id,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
     );
     return response.data;
   } catch (error) {
@@ -92,18 +69,10 @@ export const fetchCountings = async (
   desc: boolean = true
 ): Promise<Counting[]> => {
   try {
-    if (configUtils.isMockup) {
+    if (Mockup) {
       console.log("Mockup data is being used.");
       return [countingMockup];
     }
-
-    if (!globalConfig)
-      throw new Error("Config has not been initialized!");
-
-    if (globalConfig.debug)
-      await delay();
-
-    const access_token = localStorage.getItem("token");
 
     const queryParams = new URLSearchParams();
     queryParams.append("OrderBy", orderBy.toString());
@@ -127,15 +96,9 @@ export const fetchCountings = async (
       queryParams.append("Date", date.toISOString());
     }
 
-    const url = `${
-      globalConfig.baseURL
-    }/api/Counting/Countings?${queryParams.toString()}`;
+    const url = `Counting/Countings?${queryParams.toString()}`;
 
-    const response = await axios.get<Counting[]>(url, {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
+    const response = await axiosInstance.get<Counting[]>(url, );
 
     return response.data;
   } catch (error) {
@@ -146,32 +109,22 @@ export const fetchCountings = async (
 
 export const fetchCountingContent = async (id: number, binEntry?: number): Promise<CountingContent[]> => {
   try {
-    if (configUtils.isMockup) {
+    if (Mockup) {
       console.log("Mockup data is being used.");
       //todo return mockup
     }
 
-    if (!globalConfig)
-      throw new Error("Config has not been initialized!");
 
-    if (globalConfig.debug)
-      await delay();
 
-    const access_token = localStorage.getItem("token");
 
-    const url = `${globalConfig.baseURL}/api/Counting/CountingContent`;
+    const url = `Counting/CountingContent`;
 
-    const response = await axios.post<CountingContent[]>(
+    const response = await axiosInstance.post<CountingContent[]>(
       url,
       {
         id: id,
         binEntry: binEntry
       },
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
     );
 
     return response.data;

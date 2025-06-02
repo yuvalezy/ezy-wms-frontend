@@ -3,7 +3,7 @@ import './App.css';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import LoginPage from "./pages/login/login";
 import HomePage from "./pages/home";
-import {AuthProvider} from "@/components";
+import {AuthProvider, useAuth} from "@/components";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Unauthorized from "./components/Unauthorized";
 import NotFound from "./components/NotFound";
@@ -22,7 +22,6 @@ import GoodsReceiptAll from './pages/GoodsReceipt/GoodsReceiptAll';
 import CountingList from "./pages/Counting/Counting";
 import CountingProcess from "./pages/Counting/CountingProcess";
 import CountingSupervisor from "./pages/Counting/CountingSupervisor";
-import {globalSettings} from "@/assets";
 import Transfer from "./pages/transfer/transfer";
 import TransferSupervisor from "./pages/transfer/transfer-supervisor";
 import TransferProcess from "./pages/transfer/transfer-process";
@@ -37,9 +36,10 @@ import TransferRequest from "./pages/transfer/transfer-request";
 import { Toaster } from 'sonner';
 
 export default function App() {
+    const {user} = useAuth();
     function getGoodsReceiptSupervisorAuthorizations() {
         let authorizations = [Authorization.GOODS_RECEIPT_SUPERVISOR];
-        if (globalSettings?.grpoCreateSupervisorRequired) {
+        if (user?.settings?.grpoCreateSupervisorRequired) {
             return;
         }
         authorizations.push(Authorization.GOODS_RECEIPT)
@@ -47,7 +47,7 @@ export default function App() {
     }
     function getGoodsReceiptConfirmationSupervisorAuthorizations() {
         let authorizations = [Authorization.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR];
-        if (globalSettings?.grpoCreateSupervisorRequired) {
+        if (user?.settings?.grpoCreateSupervisorRequired) {
             return;
         }
         authorizations.push(Authorization.GOODS_RECEIPT_CONFIRMATION)
