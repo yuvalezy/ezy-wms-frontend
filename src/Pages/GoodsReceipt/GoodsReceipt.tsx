@@ -7,6 +7,7 @@ import {Status} from "@/assets/Common";
 import {Document} from "@/assets/Document";
 import DocumentListDialog, {DocumentListDialogRef} from "@/pages/GoodsReceipt/components/DocumentListDialog";
 import DocumentCard from "@/pages/GoodsReceipt/components/DocumentCard";
+import DocumentTable from "@/pages/GoodsReceipt/components/DocumentTable";
 import {Alert, AlertDescription} from "@/components";
 import {AlertCircle} from "lucide-react";
 
@@ -32,17 +33,28 @@ export default function GoodsReceipt({confirm = false}: { confirm?: boolean }) {
 
   return (
     <ContentTheme title={!confirm ? t("goodsReceipt") : t('receiptConfirmation')}>
-      {documents.length > 0 ?
-        documents.map((doc) => (
-        <DocumentCard key={doc.id} doc={doc} docDetails={handleDocDetails} confirm={confirm}/>
-      )) :
+      {documents.length > 0 ? (
+        <>
+          {/* Mobile view - Cards */}
+          <div className="block sm:hidden">
+            {documents.map((doc) => (
+              <DocumentCard key={doc.id} doc={doc} docDetails={handleDocDetails} confirm={confirm}/>
+            ))}
+          </div>
+          
+          {/* Desktop view - Table */}
+          <div className="hidden sm:block">
+            <DocumentTable documents={documents} docDetails={handleDocDetails} confirm={confirm} supervisor={false} />
+          </div>
+        </>
+      ) : (
         <Alert variant="information">
           <AlertCircle className="h-4 w-4"/>
           <AlertDescription>
             {!confirm ? t("noGoodsReceiptData") : t("noConfirmationData")}
           </AlertDescription>
         </Alert>
-      }
+      )}
       <DocumentListDialog ref={documentListDialogRef} doc={selectedDocument}/>
     </ContentTheme>
   );
