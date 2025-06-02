@@ -119,7 +119,7 @@ const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data, 
               <TableHead className="text-center border-l" colSpan={3}>{t('showroom')}</TableHead>
               <TableHead className="text-center border-l" colSpan={3}>{t('inWarehouse')}</TableHead>
               <TableHead className="text-center border-l" colSpan={3}>{t('stock')}</TableHead>
-              <TableHead className="border-l">{t('actions')}</TableHead>
+              <TableHead className="border-l"></TableHead>
             </TableRow>
             <TableRow>
               <TableHead></TableHead>
