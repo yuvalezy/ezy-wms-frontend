@@ -116,7 +116,7 @@ export default function PickingProcess() {
                     <TableHead className="text-right">{t('totalItems')}</TableHead>
                     <TableHead className="text-right">{t('totalOpenItems')}</TableHead>
                     <TableHead>{t('progress')}</TableHead>
-                    <TableHead className="text-right">{t('actions')}</TableHead>
+                    <TableHead className="text-right"></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

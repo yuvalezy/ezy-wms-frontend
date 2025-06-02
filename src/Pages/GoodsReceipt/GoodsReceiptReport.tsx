@@ -10,9 +10,16 @@ import DocumentListDialog, {DocumentListDialogRef} from "@/pages/GoodsReceipt/co
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Button} from "@/components/ui/button";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faExchangeAlt, faFileAlt, faTruckLoading} from '@fortawesome/free-solid-svg-icons';
+import {faEllipsisV, faExchangeAlt, faFileAlt, faTruckLoading} from '@fortawesome/free-solid-svg-icons';
 import {useDocumentStatusToString, useObjectName, useDateTimeFormat} from "@/assets";
 import {activeStatuses, processStatuses, useHandleOpen} from "@/pages/GoodsReceipt/data/GoodsReceiptUtils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { MoreHorizontal } from "lucide-react";
 
 interface GoodsReceiptReportProps {
   confirm?: boolean
@@ -156,24 +163,31 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
                     <TableCell>{documentStatusToString(doc.status)}</TableCell>
                     <TableCell>{doc.statusDate ? dateFormat(new Date(doc.statusDate)) : '-'}</TableCell>
                     <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button variant="outline" size="sm" onClick={() => handleOpen('all', doc.id)}>
-                          <FontAwesomeIcon icon={faFileAlt} className="mr-1"/>
-                          {!confirm ? t('goodsReceiptReport') : t('confirmationReport')}
-                        </Button>
-                        {activeStatuses.includes(doc.status) && (
-                          <Button variant="outline" size="sm" onClick={() => handleOpen('vs', doc.id)}>
-                            <FontAwesomeIcon icon={faTruckLoading} className="mr-1"/>
-                            {!confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                            <FontAwesomeIcon icon={faEllipsisV} className="h-4 w-4" />
                           </Button>
-                        )}
-                        {processStatuses.includes(doc.status) && (
-                          <Button variant="outline" size="sm" onClick={() => handleOpen('diff', doc.id)}>
-                            <FontAwesomeIcon icon={faExchangeAlt} className="mr-1"/>
-                            {t('differencesReport')}
-                          </Button>
-                        )}
-                      </div>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => handleOpen('all', doc.id)}>
+                            <FontAwesomeIcon icon={faFileAlt} className="mr-2 h-4 w-4" />
+                            {!confirm ? t('goodsReceiptReport') : t('confirmationReport')}
+                          </DropdownMenuItem>
+                          {activeStatuses.includes(doc.status) && (
+                            <DropdownMenuItem onClick={() => handleOpen('vs', doc.id)}>
+                              <FontAwesomeIcon icon={faTruckLoading} className="mr-2 h-4 w-4" />
+                              {!confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}
+                            </DropdownMenuItem>
+                          )}
+                          {processStatuses.includes(doc.status) && (
+                            <DropdownMenuItem onClick={() => handleOpen('diff', doc.id)}>
+                              <FontAwesomeIcon icon={faExchangeAlt} className="mr-2 h-4 w-4" />
+                              {t('differencesReport')}
+                            </DropdownMenuItem>
+                          )}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </TableCell>
                   </TableRow>
                 ))}

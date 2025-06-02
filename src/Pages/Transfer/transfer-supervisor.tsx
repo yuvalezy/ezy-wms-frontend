@@ -99,7 +99,7 @@ export default function TransferSupervisor() {
                                 <TableHead>{t('status')}</TableHead>
                                 <TableHead>{t('progress')}</TableHead>
                                 <TableHead>{t('comment')}</TableHead>
-                                <TableHead className="text-right">{t('actions')}</TableHead>
+                                <TableHead className="text-right"></TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>

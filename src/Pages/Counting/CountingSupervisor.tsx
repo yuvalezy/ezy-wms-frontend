@@ -96,7 +96,7 @@ export default function CountingSupervisor() {
               <TableHead>{t('docDate')}</TableHead>
               <TableHead>{t('createdBy')}</TableHead>
               <TableHead>{t('status')}</TableHead>
-              <TableHead className="text-right">{t('actions')}</TableHead>
+              <TableHead className="text-right"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
