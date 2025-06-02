@@ -2,12 +2,21 @@ import React, { useEffect } from 'react';
 import Cookies from 'universal-cookie';
 import { useTranslation } from 'react-i18next';
 import {useAuth} from "@/components";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
+
+type Warehouse = {
+    id: string;
+    name: string;
+};
 
 type LoginFormProps = {
     onSubmit: React.FormEventHandler<HTMLFormElement>;
+    warehouses?: Warehouse[];
+    requiresWarehouse?: boolean;
 };
 
-export default function LoginForm({ onSubmit }: LoginFormProps) {
+export default function LoginForm({ onSubmit, warehouses, requiresWarehouse }: LoginFormProps) {
     const { t, i18n } = useTranslation();
     const cookies = new Cookies();
     const {companyName} = useAuth();
@@ -72,6 +81,39 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
                           <option value="es">Español</option>
                       </select>
                   </div>
+
+                  {requiresWarehouse && warehouses && (
+                    <>
+                      <Alert className="bg-blue-50 border-blue-200">
+                        <AlertCircle className="h-4 w-4 text-blue-600" />
+                        <AlertDescription className="text-blue-800">
+                          {t('multipleWarehousesAvailable') || 'Multiple warehouses available. Please select one to continue.'}
+                        </AlertDescription>
+                      </Alert>
+                      
+                      <div>
+                          <label htmlFor="warehouse" className="block text-sm font-medium text-gray-700 mb-1">
+                              {t('warehouse') || 'Warehouse'}
+                          </label>
+                          <select
+                            name="warehouse"
+                            id="warehouse"
+                            required
+                            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            defaultValue=""
+                          >
+                              <option value="" disabled>
+                                  {t('selectWarehouse') || 'Select a warehouse'}
+                              </option>
+                              {warehouses.map((warehouse) => (
+                                <option key={warehouse.id} value={warehouse.id}>
+                                    {warehouse.name}
+                                </option>
+                              ))}
+                          </select>
+                      </div>
+                    </>
+                  )}
 
                   <button
                     type="submit"
