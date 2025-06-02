@@ -22,6 +22,14 @@ import { toast } from "sonner";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Progress} from "@/components/ui/progress";
 import {CheckCircle, XCircle} from "lucide-react";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faEllipsisV} from '@fortawesome/free-solid-svg-icons';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "@/components/AppContext";
 import {Authorization} from "@/assets/Authorization";
@@ -128,17 +136,28 @@ export default function TransferSupervisor() {
                                         </TableCell>
                                         <TableCell>{doc.comments || '-'}</TableCell>
                                         <TableCell className="text-right">
-                                            <div className="flex justify-end gap-2">
-                                                {doc.status === Status.InProgress && doc.progress === 100 && (
-                                                    <Button variant="default" size="sm" onClick={() => handleAction?.(doc.id, 'approve')}
-                                                            className="bg-green-500 hover:bg-green-600 text-white">
-                                                        <CheckCircle className="mr-1 h-3 w-3"/>{t('finish')}
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                                        <FontAwesomeIcon icon={faEllipsisV} className="h-4 w-4" />
                                                     </Button>
-                                                )}
-                                                <Button variant="destructive" size="sm" onClick={() => handleAction?.(doc.id, 'cancel')}>
-                                                    <XCircle className="mr-1 h-3 w-3"/>{t('cancel')}
-                                                </Button>
-                                            </div>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end">
+                                                    {doc.status === Status.InProgress && doc.progress === 100 && (
+                                                        <DropdownMenuItem onClick={() => handleAction?.(doc.id, 'approve')}>
+                                                            <CheckCircle className="mr-2 h-4 w-4" />
+                                                            {t('finish')}
+                                                        </DropdownMenuItem>
+                                                    )}
+                                                    <DropdownMenuItem 
+                                                        onClick={() => handleAction?.(doc.id, 'cancel')}
+                                                        className="text-destructive"
+                                                    >
+                                                        <XCircle className="mr-2 h-4 w-4" />
+                                                        {t('cancel')}
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
                                         </TableCell>
                                     </TableRow>
                                 );
