@@ -6,17 +6,17 @@ import {Filter} from "lucide-react";
 
 interface ContentThemeProps {
   title: string;
-  titleOnClick?: () => void; // Optional prop for title route
-  titleBreadcrumbs?: titleBreadcrumb[]; // Optional prop for breadcrumbs
+  titleOnClick?: () => void;
+  titleBreadcrumbs?: titleBreadcrumb[];
   onExportExcel?: () => void;
-  onFilterClicked?: () => void; // Optional prop for filter toggle
+  onFilterClicked?: () => void;
   children?: React.ReactNode;
   footer?: React.ReactNode;
 }
 
 interface titleBreadcrumb {
   label: string;
-  onClick?: () => void; // Optional route for the breadcrumb
+  onClick?: () => void;
 }
 
 const ContentTheme: React.FC<ContentThemeProps> = (
@@ -35,12 +35,12 @@ const ContentTheme: React.FC<ContentThemeProps> = (
       <div className="h-screen flex w-full">
         <AppSidebar/>
 
-        <div className="flex flex-col flex-1">
+        <div className="flex flex-col flex-1 min-w-0">
           {/* Header: trigger + breadcrumb, fixed height */}
           <header className="flex items-center justify-between py-2 bg-white shadow flex-shrink-0 z-10 w-full">
-            <div className="flex items-center">
-              <SidebarTrigger className="mr-4"/>
-              <Breadcrumb>
+            <div className="flex items-center min-w-0">
+              <SidebarTrigger className="mr-4 flex-shrink-0"/>
+              <Breadcrumb className="min-w-0">
                 <BreadcrumbList>
                   <BreadcrumbItem>
                     {titleOnClick
@@ -57,7 +57,7 @@ const ContentTheme: React.FC<ContentThemeProps> = (
                 </BreadcrumbList>
               </Breadcrumb>
             </div>
-            <div className="flex items-center">
+            <div className="flex items-center flex-shrink-0">
               {onFilterClicked && (
                 <Filter
                   className="h-6 w-6 cursor-pointer mr-2"
@@ -76,8 +76,10 @@ const ContentTheme: React.FC<ContentThemeProps> = (
           </header>
 
           {/* Scrollable content */}
-          <main className="flex-1 overflow-auto p-2 py-4 w-full">
-            {children}
+          <main className="flex-1 overflow-auto p-2 py-4 w-full min-w-0">
+            <div className="w-full min-w-0">
+              {children}
+            </div>
           </main>
 
           {/* Footer: fixed height */}
