@@ -129,21 +129,21 @@ export default function TransferProcessTargetBins() {
                     <TableHead>{t('code')}</TableHead>
                     <TableHead>{t('qtyInUn')}</TableHead>
                     <TableHead>{t('qtyInPack')}</TableHead>
-                    <TableHead className="text-center" colSpan={3}>{t('openQuantity')}</TableHead>
-                    <TableHead className="text-center" colSpan={3}>{t('binQuantity')}</TableHead>
-                    <TableHead>{t('progress')}</TableHead>
+                    <TableHead className="text-center border-l" colSpan={3}>{t('openQuantity')}</TableHead>
+                    <TableHead className="text-center border-l" colSpan={3}>{t('binQuantity')}</TableHead>
+                    <TableHead className="border-l">{t('progress')}</TableHead>
                   </TableRow>
                   <TableRow>
                     <TableHead></TableHead>
                     <TableHead></TableHead>
                     <TableHead></TableHead>
-                    <TableHead className="text-center">{t('units')}</TableHead>
+                    <TableHead className="text-center border-l">{t('units')}</TableHead>
                     <TableHead className="text-center">{t('dozens')}</TableHead>
-                    <TableHead className="text-center">{t('boxes')}</TableHead>
-                    <TableHead className="text-center">{t('units')}</TableHead>
+                    <TableHead className="text-center border-r">{t('boxes')}</TableHead>
+                    <TableHead className="text-center border-l">{t('units')}</TableHead>
                     <TableHead className="text-center">{t('dozens')}</TableHead>
-                    <TableHead className="text-center">{t('boxes')}</TableHead>
-                    <TableHead></TableHead>
+                    <TableHead className="text-center border-r">{t('boxes')}</TableHead>
+                    <TableHead className="border-l"></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -155,13 +155,13 @@ export default function TransferProcessTargetBins() {
                         <TableCell>{row.code}</TableCell>
                         <TableCell>{row.numInBuy}</TableCell>
                         <TableCell>{row.purPackUn}</TableCell>
-                        <TableCell className="text-center">{formatNumber(openQuantity, 0)}</TableCell>
+                        <TableCell className="text-center border-l">{formatNumber(openQuantity, 0)}</TableCell>
                         <TableCell className="text-center">{formatNumber(openQuantity / row.numInBuy, 2)}</TableCell>
-                        <TableCell className="text-center">{formatNumber(openQuantity / row.numInBuy / row.purPackUn, 2)}</TableCell>
-                        <TableCell className="text-center">{formatNumber(binQuantity, 0)}</TableCell>
+                        <TableCell className="text-center border-r">{formatNumber(openQuantity / row.numInBuy / row.purPackUn, 2)}</TableCell>
+                        <TableCell className="text-center border-l">{formatNumber(binQuantity, 0)}</TableCell>
                         <TableCell className="text-center">{formatNumber(binQuantity / row.numInBuy, 2)}</TableCell>
-                        <TableCell className="text-center">{formatNumber(binQuantity / row.numInBuy / row.purPackUn, 2)}</TableCell>
-                        <TableCell>
+                        <TableCell className="text-center border-r">{formatNumber(binQuantity / row.numInBuy / row.purPackUn, 2)}</TableCell>
+                        <TableCell className="border-l">
                           <div className="flex items-center gap-2">
                             <Progress value={row.progress ?? 0} className="w-20" />
                             <span className="text-xs">{row.progress ?? 0}%</span>
