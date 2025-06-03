@@ -11,6 +11,12 @@ export const axiosInstance = axios.create({
   withCredentials: true
 })
 
+// Set token from localStorage on initialization
+const token = localStorage.getItem('authToken');
+if (token) {
+  axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+}
+
 // Add a request interceptor to include the token
 axiosInstance.interceptors.request.use(
   config => {
@@ -30,7 +36,7 @@ axiosInstance.interceptors.response.use(
   response => {
     response.data = convertUTCStringsToDates(response.data);
     return response;
-  }, // Pass through successful responses
+  },
   error => {
     const response = error.response;
     if (response) {
@@ -39,10 +45,12 @@ axiosInstance.interceptors.response.use(
         // Clear tokens on authentication failure
         localStorage.removeItem('authToken');
         localStorage.removeItem('tokenExpiration');
+        // Clear default header
+        delete axiosInstance.defaults.headers.common['Authorization'];
         // Handle the error, e.g., redirect to login page
         window.location.replace('/');
       }
     }
-    return Promise.reject(error); // Reject the promise to propagate the error
+    return Promise.reject(error);
   }
 );
