@@ -14,14 +14,14 @@ interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
   companyName?: string | null;
-  login: (username: string, password: string, warehouse?: string) => Promise<void>;
+  login: (password: string, warehouse?: string) => Promise<void>;
   logout: () => void;
 }
 
 const AuthContextDefaultValues: AuthContextType = {
   isAuthenticated: false,
   user: null,
-  login: async (username: string, password: string, warehouse?: string) => {
+  login: async (password: string, warehouse?: string) => {
     console.warn("Login method not implemented yet!");
   },
   logout: () => {
@@ -75,10 +75,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   }, []);
 
 
-  const login = async (username: string, password: string, warehouse?: string) => {
+  const login = async (password: string, warehouse?: string) => {
     try {
       if (!Mockup) {
-        return await loginExecute(username, password, warehouse);
+        return await loginExecute(password, warehouse);
       } else {
         return mockupLogin();
       }
@@ -94,8 +94,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     }
   };
 
-  async function loginExecute(username: string, password: string, warehouse?: string) {
-    const loginData: any = {password: username};
+  async function loginExecute(password: string, warehouse?: string) {
+    const loginData: any = {password: password};
     if (warehouse) {
       loginData.warehouse = warehouse;
     }

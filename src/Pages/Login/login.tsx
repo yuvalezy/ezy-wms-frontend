@@ -21,13 +21,13 @@ export default function Login() {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        const username = data.get('username') as string;
+        const password = data.get('password') as string;
         const warehouse = data.get('warehouse') as string | null;
 
         setLoading(true);
 
         try {
-            await login(username, "", warehouse || undefined);
+            await login(password, warehouse || undefined);
             setRedirectToHome(true);
         } catch (error: any) {
             // Check if it's a warehouse selection error
