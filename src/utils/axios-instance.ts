@@ -11,6 +11,20 @@ export const axiosInstance = axios.create({
   withCredentials: true
 })
 
+// Add a request interceptor to include the token
+axiosInstance.interceptors.request.use(
+  config => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
+
 // Add a response interceptor
 axiosInstance.interceptors.response.use(
   response => {
@@ -22,6 +36,9 @@ axiosInstance.interceptors.response.use(
     if (response) {
       const status = response.status;
       if (status === 401 || status == 403) {
+        // Clear tokens on authentication failure
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('tokenExpiration');
         // Handle the error, e.g., redirect to login page
         window.location.replace('/');
       }
