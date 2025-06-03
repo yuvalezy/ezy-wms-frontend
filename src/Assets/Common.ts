@@ -1,4 +1,4 @@
-import {Authorization} from "./Authorization";
+import {RoleType} from "./RoleType";
 import {AlertSeverity} from "@/components";
 
 export interface AxiosErrorResponse {
@@ -7,17 +7,26 @@ export interface AxiosErrorResponse {
     message: string;
 }
 export interface User {
-    id: number;
+    id: string;
     name: string;
-    branch: string;
+    roles: RoleType[];
+    warehouses: Warehouse[];
+    currentWarehouse: string;
     binLocations: boolean;
-    authorizations: Authorization[];
     settings: ApplicationSettings;
+    superUser: boolean;
+}
+
+export interface Warehouse {
+    id: string;
+    name: string;
+    enableBinLocations: boolean;
 }
 
 export interface ApplicationSettings {
-    grpoModificationSupervisor: boolean;
-    grpoCreateSupervisorRequired: boolean;
+    goodsReceiptDraft: boolean;
+    goodsReceiptModificationSupervisor: boolean;
+    goodsReceiptCreateSupervisorRequired: boolean;
     transferTargetItems: boolean;
 }
 

@@ -13,7 +13,7 @@ import {Progress} from "@/components/ui/progress";
 import {CheckCircle} from "lucide-react";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "@/components/AppContext";
-import {Authorization} from "@/assets/Authorization";
+import {RoleType} from "@/assets/RoleType";
 import {useDateTimeFormat} from "@/assets/DateFormat";
 import {formatNumber} from "@/lib/utils";
 
@@ -29,7 +29,7 @@ export default function PickingSupervisor() {
     navigate(`/pick/${id}`);
   }
 
-  let handleOpenLink = user?.authorizations?.includes(Authorization.PICKING);
+  let handleOpenLink = user?.roles?.includes(RoleType.PICKING);
   useEffect(() => {
     loadData();
   }, []);

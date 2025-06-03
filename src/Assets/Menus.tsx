@@ -1,13 +1,13 @@
 import {useTranslation} from 'react-i18next';
 import { useMemo } from 'react'; // Import useMemo
-import {Authorization} from "./Authorization";
+import {RoleType} from "./RoleType";
 import {useAuth} from "@/components";
 
 export interface MenuItem {
     Link: string;
     Text: string;
-    Authorization?: Authorization;
-    Authorizations?: Authorization[];
+    Authorization?: RoleType;
+    Authorizations?: RoleType[];
     Icon: string;
 }
 
@@ -22,61 +22,61 @@ export function useMenus() {
         {
             Link: "/itemCheck",
             Text: t('itemCheck'),
-            Authorizations: [Authorization.GOODS_RECEIPT_SUPERVISOR, Authorization.PICKING_SUPERVISOR],
+            Authorizations: [RoleType.GOODS_RECEIPT_SUPERVISOR, RoleType.PICKING_SUPERVISOR],
             Icon: "complete",
         },
         {
             Link: "/binCheck",
             Text: t('binCheck'),
-            Authorizations: [Authorization.GOODS_RECEIPT_SUPERVISOR, Authorization.PICKING_SUPERVISOR, Authorization.COUNTING_SUPERVISOR, Authorization.TRANSFER_SUPERVISOR],
+            Authorizations: [RoleType.GOODS_RECEIPT_SUPERVISOR, RoleType.PICKING_SUPERVISOR, RoleType.COUNTING_SUPERVISOR, RoleType.TRANSFER_SUPERVISOR],
             Icon: "dimension",
         },
         {
             Link: "/goodsReceipt",
             Text: t('goodsReceipt'),
-            Authorization: Authorization.GOODS_RECEIPT,
+            Authorization: RoleType.GOODS_RECEIPT,
             Icon: "cause",
         },
         {
             Link: goodsReceiptSupervisorRoute,
             Text: t('goodsReceiptSupervisor'),
-            Authorizations: [Authorization.GOODS_RECEIPT_SUPERVISOR],
+            Authorizations: [RoleType.GOODS_RECEIPT_SUPERVISOR],
             Icon: "kpi-managing-my-area",
         },
         {
             Link: "/goodsReceiptReport",
             Text: t('goodsReceiptReport'),
-            Authorization: Authorization.GOODS_RECEIPT_SUPERVISOR,
+            Authorization: RoleType.GOODS_RECEIPT_SUPERVISOR,
             Icon: "manager-insight",
         },
         {
             Link: "/goodsReceiptConfirmation",
             Text: t('receiptConfirmation'),
-            Authorization: Authorization.GOODS_RECEIPT_CONFIRMATION,
+            Authorization: RoleType.GOODS_RECEIPT_CONFIRMATION,
             Icon: "cause",
         },
         {
             Link: goodsReceiptConfirmationSupervisorRoute,
             Text: t('goodsReceiptConfirmationSupervisor'),
-            Authorizations: [Authorization.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR],
+            Authorizations: [RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR],
             Icon: "kpi-managing-my-area",
         },
         {
             Link: "/goodsReceiptConfirmationReport",
             Text: t('confirmationReport'),
-            Authorization: Authorization.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR,
+            Authorization: RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR,
             Icon: "manager-insight",
         },
         {
             Link: "/pick",
             Text: t('picking'),
-            Authorization: Authorization.PICKING,
+            Authorization: RoleType.PICKING,
             Icon: "cart-2",
         },
         {
             Link: "/pickSupervisor",
             Text: t('pickSupervisor'),
-            Authorization: Authorization.PICKING_SUPERVISOR,
+            Authorization: RoleType.PICKING_SUPERVISOR,
             Icon: "kpi-managing-my-area",
         },
         // {
@@ -88,13 +88,13 @@ export function useMenus() {
         {
             Link: "/counting",
             Text: t('counting'),
-            Authorization: Authorization.COUNTING,
+            Authorization: RoleType.COUNTING,
             Icon: "product",
         },
         {
             Link: "/countingSupervisor",
             Text: t('countingSupervisor'),
-            Authorization: Authorization.COUNTING_SUPERVISOR,
+            Authorization: RoleType.COUNTING_SUPERVISOR,
             Icon: "factory",
         },
         // {
@@ -106,24 +106,24 @@ export function useMenus() {
         {
             Link: "/transfer",
             Text: t('transfer'),
-            Authorization: Authorization.TRANSFER,
+            Authorization: RoleType.TRANSFER,
             Icon: "move",
         },
         {
             Link: "/transferSupervisor",
             Text: t('transferSupervisor'),
-            Authorization: Authorization.TRANSFER_SUPERVISOR,
+            Authorization: RoleType.TRANSFER_SUPERVISOR,
             Icon: "journey-depart",
         },
         {
             Link: "/transferRequest",
             Text: t('transferRequest'),
-            Authorization: Authorization.TRANSFER_REQUEST,
+            Authorization: RoleType.TRANSFER_REQUEST,
             Icon: "request",
         },
     ];
 
-    const GetMenus = (authorizations: Authorization[] | undefined) => {
+    const GetMenus = (authorizations: RoleType[] | undefined) => {
         if (authorizations !== undefined) {
             applySettings(authorizations);
         }
@@ -147,24 +147,24 @@ export function useMenus() {
         });
     };
 
-    function applySettings(authorizations: Authorization[]) {
-        if (user?.settings?.grpoCreateSupervisorRequired) {
+    function applySettings(authorizations: RoleType[]) {
+        if (user?.settings?.goodsReceiptCreateSupervisorRequired) {
             return;
         }
         // Goods Receipt Supervisor
         let menuItem = MenuItems.filter((v) => v.Link === goodsReceiptSupervisorRoute)[0];
         if (menuItem.Authorizations != null) {
-            menuItem.Authorizations.push(Authorization.GOODS_RECEIPT)
+            menuItem.Authorizations.push(RoleType.GOODS_RECEIPT)
         }
-        let isSupervisor = authorizations.filter((v) => v === Authorization.GOODS_RECEIPT_SUPERVISOR).length === 1;
+        let isSupervisor = authorizations.filter((v) => v === RoleType.GOODS_RECEIPT_SUPERVISOR).length === 1;
         menuItem.Text = !isSupervisor ? t('goodsReceiptCreation') : t('goodsReceiptSupervisor');
 
         // Goods Receipt Confirmation Supervisor
         menuItem = MenuItems.filter((v) => v.Link === goodsReceiptConfirmationSupervisorRoute)[0];
         if (menuItem.Authorizations != null) {
-            menuItem.Authorizations.push(Authorization.GOODS_RECEIPT_CONFIRMATION);
+            menuItem.Authorizations.push(RoleType.GOODS_RECEIPT_CONFIRMATION);
         }
-        isSupervisor = authorizations.filter((v) => v === Authorization.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR).length === 1;
+        isSupervisor = authorizations.filter((v) => v === RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR).length === 1;
         menuItem.Text = !isSupervisor ? t('goodsReceiptConfirmationCreation') : t('goodsReceiptConfirmationSupervisor');
     }
 

@@ -4,7 +4,7 @@ import {useAuth} from "@/components/AppContext";
 import {useTranslation} from "react-i18next";
 import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
-import {Authorization} from "@/assets/Authorization";
+import {RoleType} from "@/assets/RoleType";
 import {useDocumentStatusToString} from "@/assets/DocumentStatusString";
 import {Counting} from "@/assets/Counting";
 import {Status} from "@/assets/Common";
@@ -30,7 +30,7 @@ const CountingCard: React.FC<CountingCardProps> = ({doc, handleAction, superviso
     navigate(`/counting/${id}`);
   }
 
-  let handleOpenLink = user?.authorizations?.includes(Authorization.COUNTING);
+  let handleOpenLink = user?.roles?.includes(RoleType.COUNTING);
 
   const documentStatusToString = useDocumentStatusToString();
 

@@ -23,7 +23,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {useNavigate} from "react-router-dom";
-import {Authorization} from "@/assets/Authorization";
+import {RoleType} from "@/assets/RoleType";
 import {useDocumentStatusToString} from "@/assets/DocumentStatusString";
 import {useDateTimeFormat} from "@/assets/DateFormat";
 
@@ -45,7 +45,7 @@ export default function CountingSupervisor() {
     navigate(`/counting/${id}`);
   }
 
-  let handleOpenLink = user?.authorizations?.includes(Authorization.COUNTING);
+  let handleOpenLink = user?.roles?.includes(RoleType.COUNTING);
 
   useEffect(() => {
     setLoading(true);

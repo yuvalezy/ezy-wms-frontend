@@ -5,7 +5,7 @@ import {useTranslation} from "react-i18next";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import {Authorization} from "@/assets/Authorization";
+import {RoleType} from "@/assets/RoleType";
 import {PickingDocument} from "@/pages/picking/data/picking-document";
 import {useDateTimeFormat} from "@/assets/DateFormat";
 import { CheckCircle } from "lucide-react";
@@ -27,7 +27,7 @@ const PickingCard: React.FC<PickingCardProps> = ({picking, onUpdatePick, supervi
     navigate(`/pick/${id}`);
   }
 
-  let handleOpenLink = user?.authorizations?.includes(Authorization.PICKING);
+  let handleOpenLink = user?.roles?.includes(RoleType.PICKING);
   const progressValue = picking.quantity > 0 ? 100 - (picking.openQuantity * 100 / picking.quantity) : 0;
 
   return (

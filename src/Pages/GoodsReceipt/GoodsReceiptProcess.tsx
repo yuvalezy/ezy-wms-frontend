@@ -50,7 +50,7 @@ export default function GoodsReceiptProcess({confirm = false}: { confirm?: boole
                          onCancel={(comment, cancel) => handleAlertActionAccept(AlertActionType.Cancel, comment, cancel)}
                          onCommentsChanged={(comment) => handleAlertActionAccept(AlertActionType.Comments, comment)}
                          onQuantityChanged={(quantity) => handleAlertActionAccept(AlertActionType.Quantity, quantity)}
-                         supervisorPassword={user?.settings?.grpoModificationSupervisor}
+                         supervisorPassword={user?.settings?.goodsReceiptModificationSupervisor}
                          onUpdateLine={handleUpdateLine}/>}
           {/*<BoxConfirmationDialog*/}
           {/*  onSelected={(v: string) => addItemToDocument(v)}*/}

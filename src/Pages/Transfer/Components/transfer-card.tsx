@@ -5,7 +5,7 @@ import {useTranslation} from "react-i18next";
 import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {Progress} from "@/components/ui/progress";
-import {Authorization} from "@/assets/Authorization";
+import {RoleType} from "@/assets/RoleType";
 import {useDocumentStatusToString} from "@/assets/DocumentStatusString";
 import {TransferDocument} from "@/pages/transfer/data/transfer-document";
 import {Status} from "@/assets/Common";
@@ -32,7 +32,7 @@ const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = 
     navigate(`/transfer/${id}`);
   }
 
-  let handleOpenLink = user?.authorizations?.includes(Authorization.TRANSFER);
+  let handleOpenLink = user?.roles?.includes(RoleType.TRANSFER);
 
   const documentStatusToString = useDocumentStatusToString();
   const progressDisplayValue = doc.progress ?? 0;

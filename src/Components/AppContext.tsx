@@ -1,4 +1,3 @@
-// AuthContext.tsx
 import React, {
   createContext,
   useContext,
@@ -7,7 +6,7 @@ import React, {
   useEffect,
 } from "react";
 import {AxiosError} from "axios";
-import {Authorization, User} from "@/assets";
+import {RoleType, User} from "@/assets";
 import {axiosInstance, Mockup} from "@/utils/axios-instance";
 
 // Define the shape of the context
@@ -45,7 +44,6 @@ interface ErrorResponse {
 export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   const [user, setUser] = useState<User | null>(null);
   const [companyName, setCompanyName] = useState<string | null>(null);
-  const [waitForTokenValidation, setWaitForTokenValidation] = useState(true);
 
   useEffect(() => {
     const fetchConfig = async () => {
@@ -58,43 +56,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     };
 
     fetchConfig();
-
-    const expiry = localStorage.getItem("token_expiry");
-    if (expiry && new Date().getTime() > Number(expiry)) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("token_expiry");
-      setUser(null);
-    }
   }, []);
 
   // Call the login function after setting the mock token
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const expiry = localStorage.getItem("token_expiry");
-    if (token && expiry && new Date().getTime() < Number(expiry)) {
-      // Fetch user info and set user state
-      const fetchUser = async () => {
-        try {
-          const response = await axiosInstance.get<User>(
-            `General/UserInfo`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          setUser(response.data);
-        } catch (error) {
-          // Token might be invalid, clear it
-          localStorage.removeItem("token");
-          localStorage.removeItem("token_expiry");
-          setUser(null);
-        }
-      };
-      fetchUser().finally(() => setWaitForTokenValidation(false));
-    } else {
-      setWaitForTokenValidation(false);
-    }
+    const fetchUser = async () => {
+      try {
+        const response = await axiosInstance.get<User>(`General/UserInfo`,);
+        setUser(response.data);
+      } catch (error) {
+        // Token might be invalid, clear it
+        localStorage.removeItem("token");
+        localStorage.removeItem("token_expiry");
+        setUser(null);
+      }
+    };
+    fetchUser()
   }, []);
 
 
@@ -111,7 +88,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       const axiosError = error as AxiosError;
       const data = axiosError.response?.data as ErrorResponse;
       const error_description = data?.error_description;
-      console.error(error);
+      console.error(error_description ?? error);
       // Re-throw the error so the login component can handle warehouse selection
       throw error;
     }
@@ -136,31 +113,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   }
 
   function mockupLogin() {
-    const access_token = "juanse";
-    const expires_in = 3600;
-
-    localStorage.setItem("token", access_token);
-    const expiryTime = new Date().getTime() + expires_in * 1000;
-    localStorage.setItem("token_expiry", expiryTime.toString());
-
-    setTimeout(logout, expires_in * 1000);
-
-    const userInfoResponse = {
-      id: 1,
+    const userInfoResponse: User = {
+      id: "00000000-0000-0000-0000-000000000000",
       name: "mockUser",
-      branch: "branch",
+      currentWarehouse: "branch",
       binLocations: true,
-      authorizations: [
-        Authorization.GOODS_RECEIPT,
-        Authorization.GOODS_RECEIPT_SUPERVISOR,
-        Authorization.PICKING,
-        Authorization.PICKING_SUPERVISOR,
-        Authorization.COUNTING,
-        Authorization.COUNTING_SUPERVISOR,
+      superUser: true,
+      warehouses: [
+        {id: "branch", name: "Branch Warehouse", enableBinLocations: true}
+      ],
+      roles: [
+        RoleType.GOODS_RECEIPT,
+        RoleType.GOODS_RECEIPT_SUPERVISOR,
+        RoleType.PICKING,
+        RoleType.PICKING_SUPERVISOR,
+        RoleType.COUNTING,
+        RoleType.COUNTING_SUPERVISOR,
       ],
       settings: {
-        grpoModificationSupervisor: true,
-        grpoCreateSupervisorRequired: true,
+        goodsReceiptDraft: false,
+        goodsReceiptModificationSupervisor: true,
+        goodsReceiptCreateSupervisorRequired: true,
         transferTargetItems: true,
       }
     };
@@ -168,15 +141,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     return setUser(userInfoResponse);
   }
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("token_expiry");
+  const logout = async () => {
+    try {
+      await axiosInstance.post(`authentication/logout`);
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
     setUser(null);
   };
 
-  const isAuthenticated = Boolean(
-    localStorage.getItem("token") && (waitForTokenValidation || user !== null)
-  );
+  const isAuthenticated = user !== null;
 
   const value = {
     isAuthenticated,

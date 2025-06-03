@@ -10,7 +10,7 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/c
 import {Progress} from "@/components/ui/progress";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "@/components/AppContext";
-import {Authorization} from "@/assets/Authorization";
+import {RoleType} from "@/assets/RoleType";
 import {useDateTimeFormat} from "@/assets/DateFormat";
 import {useDocumentStatusToString} from "@/assets/DocumentStatusString";
 import {formatNumber} from "@/lib/utils";
@@ -36,7 +36,7 @@ export default function Transfer() {
     navigate(`/transfer/${id}`);
   }
 
-  let handleOpenLink = user?.authorizations?.includes(Authorization.TRANSFER);
+  let handleOpenLink = user?.roles?.includes(RoleType.TRANSFER);
 
   return (
     <ContentTheme title={t("transfer")}>

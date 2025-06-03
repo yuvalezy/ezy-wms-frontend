@@ -10,7 +10,7 @@ import {AlertCircle} from "lucide-react";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "@/components/AppContext";
-import {Authorization} from "@/assets/Authorization";
+import {RoleType} from "@/assets/RoleType";
 import {useDocumentStatusToString} from "@/assets/DocumentStatusString";
 import {useDateTimeFormat} from "@/assets/DateFormat";
 
@@ -35,7 +35,7 @@ export default function CountingList() {
     navigate(`/counting/${id}`);
   }
 
-  let handleOpenLink = user?.authorizations?.includes(Authorization.COUNTING);
+  let handleOpenLink = user?.roles?.includes(RoleType.COUNTING);
 
   return (
     <ContentTheme title={t("counting")}>

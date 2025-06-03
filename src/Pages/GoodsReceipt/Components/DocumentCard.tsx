@@ -7,7 +7,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCheck, faTimes, faFileAlt, faTruckLoading, faExchangeAlt} from '@fortawesome/free-solid-svg-icons';
 import {Document, DocumentItem} from "@/assets/Document";
 import {useObjectName} from "@/assets/ObjectName";
-import {Authorization} from "@/assets/Authorization";
+import {RoleType} from "@/assets/RoleType";
 import {useDocumentStatusToString} from "@/assets/DocumentStatusString";
 import {Status} from "@/assets/Common";
 import {activeStatuses, processStatuses, useHandleOpen} from "@/pages/GoodsReceipt/data/GoodsReceiptUtils";
@@ -32,7 +32,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
   const handleOpen = useHandleOpen(confirm);
   const navigate = useNavigate();
 
-  const handleOpenLink = !confirm ? user?.authorizations?.includes(Authorization.GOODS_RECEIPT) : user?.authorizations?.includes(Authorization.GOODS_RECEIPT_CONFIRMATION);
+  const handleOpenLink = !confirm ? user?.roles?.includes(RoleType.GOODS_RECEIPT) : user?.roles?.includes(RoleType.GOODS_RECEIPT_CONFIRMATION);
 
   const openLink = () => {
     if (!confirm)

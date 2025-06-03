@@ -1,4 +1,4 @@
-export * from './Authorization';
+export * from './RoleType';
 export * from './Common';
 export * from './Counting';
 export * from './Data';

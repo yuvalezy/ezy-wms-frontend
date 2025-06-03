@@ -61,7 +61,7 @@ export function AppSidebar() {
   const {t} = useTranslation();
 
   useEffect(() => {
-    setAuthorizedMenus(menus.GetMenus(user?.authorizations));
+    setAuthorizedMenus(menus.GetMenus(user?.roles));
   }, [user, menus]);
 
   const handleMenuItemClick = (link: string) => {

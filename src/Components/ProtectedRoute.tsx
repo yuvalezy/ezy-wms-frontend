@@ -1,12 +1,12 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth} from "./AppContext";
-import {Authorization} from "@/assets";
+import {RoleType} from "@/assets";
 
 interface ProtectedRouteProps {
     element: React.ReactElement;
-    authorization?: Authorization;
-    authorizations?: Authorization[];
+    authorization?: RoleType;
+    authorizations?: RoleType[];
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element, authorization, authorizations, ...rest }) => {
@@ -16,8 +16,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element, authorization,
         // If not authenticated, return a Navigate component to redirect to the login page
         return <Navigate to="/login"/>;
     } else if (
-        (authorization !== undefined && !user?.authorizations.includes(authorization)) ||
-        (authorizations !== undefined && !authorizations.some(auth => user?.authorizations.includes(auth)))
+        (authorization !== undefined && !user?.roles.includes(authorization)) ||
+        (authorizations !== undefined && !authorizations.some(auth => user?.roles.includes(auth)))
     ) {
         // If not authenticated, return a Navigate component to redirect to the login page
         return <Navigate to="/unauthorized"/>;

@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import {Document} from "@/assets/Document";
 import {ObjectAction, Status} from "@/assets/Common";
 import {DocumentListDialogRef} from "@/pages/GoodsReceipt/components/DocumentListDialog";
-import {Authorization} from "@/assets/Authorization";
+import {RoleType} from "@/assets/RoleType";
 import {documentAction, fetchDocuments} from "@/pages/GoodsReceipt/data/Document";
 
 export const useGoodsReceiptSupervisorData = () => {
@@ -26,9 +26,9 @@ export const useGoodsReceiptSupervisorData = () => {
 
   useEffect(() => {
     if (!confirmation) {
-      setSupervisor(user?.authorizations.filter((v) => v === Authorization.GOODS_RECEIPT_SUPERVISOR).length === 1);
+      setSupervisor(user?.roles.filter((v) => v === RoleType.GOODS_RECEIPT_SUPERVISOR).length === 1);
     } else {
-      setSupervisor(user?.authorizations.filter((v) => v === Authorization.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR).length === 1);
+      setSupervisor(user?.roles.filter((v) => v === RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR).length === 1);
     }
     setLoading(true);
     fetchDocuments({status: [Status.Open, Status.InProgress], confirm: confirmation})
@@ -65,7 +65,7 @@ export const useGoodsReceiptSupervisorData = () => {
   function getTitle(): string {
     if (!confirmation) {
       let title = t("goodsReceiptSupervisor");
-      if (!user?.settings?.grpoCreateSupervisorRequired) {
+      if (!user?.settings?.goodsReceiptCreateSupervisorRequired) {
         if (!supervisor) {
           title = t("goodsReceiptCreation");
         }
@@ -73,7 +73,7 @@ export const useGoodsReceiptSupervisorData = () => {
       return title;
     } else {
       let title = t("goodsReceiptConfirmationSupervisor");
-      if (!user?.settings?.grpoCreateSupervisorRequired) {
+      if (!user?.settings?.goodsReceiptCreateSupervisorRequired) {
         if (!supervisor) {
           title = t("goodsReceiptConfirmationCreation");
         }
