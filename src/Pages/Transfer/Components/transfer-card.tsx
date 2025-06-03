@@ -17,7 +17,7 @@ import InfoBox from "@/components/InfoBox";
 
 type TransferCardProps = {
   doc: TransferDocument,
-  onAction?: (id: number, action: 'approve' | 'cancel') => void,
+  onAction?: (id: string, action: 'approve' | 'cancel') => void,
   supervisor?: boolean,
   header?: boolean
 }
@@ -28,7 +28,7 @@ const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = 
   const {user} = useAuth();
   const {dateFormat} = useDateTimeFormat();
 
-  function handleOpen(id: number) {
+  function handleOpen(id: string) {
     navigate(`/transfer/${id}`);
   }
 
@@ -46,8 +46,8 @@ const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = 
         <SecondaryInfoBox>
           <InfoBoxValue label={t('number')} value={doc.id}
                         onClick={handleOpenLink ? () => handleOpen(doc.id) : undefined}/>
-          <InfoBoxValue label={t('docDate')} value={dateFormat(new Date(doc.date))}/>
-          <InfoBoxValue label={t('createdBy')} value={doc.employee.name}/>
+          <InfoBoxValue label={t('docDate')} value={dateFormat(doc.date)}/>
+          <InfoBoxValue label={t('createdBy')} value={doc.createdBy?.name}/>
           <InfoBoxValue label={t('status')} value={documentStatusToString(doc.status)}/>
         </SecondaryInfoBox>
         {doc.comments &&

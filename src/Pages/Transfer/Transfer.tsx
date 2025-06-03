@@ -80,7 +80,7 @@ export default function Transfer() {
                           )}
                         </TableCell>
                         <TableCell>{dateFormat(new Date(doc.date))}</TableCell>
-                        <TableCell>{doc.employee.name}</TableCell>
+                        <TableCell>{doc.createdBy.name}</TableCell>
                         <TableCell>{documentStatusToString(doc.status)}</TableCell>
                         <TableCell>
                           <div className="flex items-center space-x-2">

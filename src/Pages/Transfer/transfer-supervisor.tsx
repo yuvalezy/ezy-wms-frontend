@@ -9,8 +9,6 @@ import {StringFormat} from "@/assets/Functions";
 import TransferForm from "@/pages/transfer/components/transfer-form";
 import {
     AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
     AlertDialogFooter,
@@ -41,7 +39,7 @@ export default function TransferSupervisor() {
     const {t} = useTranslation();
     const {setLoading, setError} = useThemeContext();
     const [transfers, setTransfers] = useState<TransferDocument[]>([]);
-    const [selectedTransferId, setSelectedTransferId] = useState<number | null>(null);
+    const [selectedTransferId, setSelectedTransferId] = useState<string | null>(null);
     const [actionType, setActionType] = useState<ObjectAction | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
     const navigate = useNavigate();
@@ -49,7 +47,7 @@ export default function TransferSupervisor() {
     const {dateFormat} = useDateTimeFormat();
     const documentStatusToString = useDocumentStatusToString();
     
-    function handleOpen(id: number) {
+    function handleOpen(id: string) {
         navigate(`/transfer/${id}`);
     }
 
@@ -78,7 +76,7 @@ export default function TransferSupervisor() {
             .finally(() => setLoading(false));
     };
 
-    function handleAction(id: number, action: 'approve' | 'cancel') {
+    function handleAction(id: string, action: 'approve' | 'cancel') {
         setSelectedTransferId(id);
         setActionType(action);
         setDialogOpen(true);
@@ -119,14 +117,14 @@ export default function TransferSupervisor() {
                                         <TableCell>
                                             {handleOpenLink ? (
                                                 <a href="#" onClick={(e) => { e.preventDefault(); handleOpen(doc.id); }} className="text-blue-600 hover:underline">
-                                                    {doc.id}
+                                                    {doc.number}
                                                 </a>
                                             ) : (
-                                                doc.id
+                                                doc.number
                                             )}
                                         </TableCell>
-                                        <TableCell>{dateFormat(new Date(doc.date))}</TableCell>
-                                        <TableCell>{doc.employee.name}</TableCell>
+                                        <TableCell>{dateFormat(doc.date)}</TableCell>
+                                        <TableCell>{doc.createdBy?.name}</TableCell>
                                         <TableCell>{documentStatusToString(doc.status)}</TableCell>
                                         <TableCell>
                                             <div className="flex items-center space-x-2">

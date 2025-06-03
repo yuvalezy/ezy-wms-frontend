@@ -1,5 +1,15 @@
 import {RoleType} from "./RoleType";
 import {AlertSeverity} from "@/components";
+import {Employee} from "@/assets/Data";
+export interface BaseEntity {
+    id: string;
+    createdAt?: Date;
+    createdBy?: User;
+    updatedAt?: Date;
+    updatedBy?: User;
+    deleted: boolean;
+    deletedAt?: Date;
+}
 
 export interface AxiosErrorResponse {
     exceptionMessage: string;
@@ -94,9 +104,9 @@ export enum SourceTarget {
 }
 
 export type DetailUpdateParameters = {
-    id: number;
-    removeRows: number[];
-    quantityChanges: { [key: number]: number }
+    id: string;
+    removeRows: string[];
+    quantityChanges: { [key: string]: number }
 };
 
 export enum UnitType {

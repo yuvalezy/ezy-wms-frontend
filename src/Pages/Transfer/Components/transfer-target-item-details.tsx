@@ -31,7 +31,7 @@ export interface TransferTargetItemsDetailRef {
 }
 
 export interface TransferTargetItemsDetailProps {
-    id: number;
+    id: string;
     onUpdate: (data: DetailUpdateParameters) => void;
 }
 
@@ -44,8 +44,8 @@ const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsD
     const [bin, setBin] = useState<TransferContentBin | null>(null);
     const [data, setData] = useState<TargetItemDetail[]>([]);
     const [enableUpdate, setEnableUpdate] = useState(false);
-    const [checkedRows, setCheckedRows] = useState<{ [key: number]: boolean }>({}); // State to store checked rows
-    const [quantityChanges, setQuantityChanges] = useState<{ [key: number]: number }>({}); // State to store quantity changes
+    const [checkedRows, setCheckedRows] = useState<{ [key: string]: boolean }>({}); // State to store checked rows
+    const [quantityChanges, setQuantityChanges] = useState<{ [key: string]: number }>({}); // State to store quantity changes
 
     function update() {
         try {
@@ -90,7 +90,7 @@ const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsD
         }
     }));
 
-    function handleCheckboxChange(lineID: number, checked: boolean) {
+    function handleCheckboxChange(lineID: string, checked: boolean) {
         setCheckedRows(prevState => ({
             ...prevState,
             [lineID]: checked
@@ -98,7 +98,7 @@ const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsD
         // setEnableUpdate(true); // Consider if this is still needed or if update button is always active when dialog is open
     }
 
-    function handleQuantityChange(lineID: number, newValue: string) {
+    function handleQuantityChange(lineID: string, newValue: string) {
         const numValue = parseInt(newValue, 10);
         setQuantityChanges(prevState => ({
             ...prevState,
