@@ -69,7 +69,11 @@ const BarcodeTable: React.FC<BarcodeTableProps> = ({itemCode, barcodes, submit})
                 </TableBody>
             </Table>
             <div className="flex justify-center p-2">
-                <Button variant="destructive" onClick={handleSubmit}>
+                <Button 
+                    variant="destructive" 
+                    onClick={handleSubmit}
+                    disabled={checkedBarcodes.length === 0 && newBarcodeInput.trim() === ''}
+                >
                     <FontAwesomeIcon icon={faSave} className="mr-2" />
                     {t('update')}
                 </Button>

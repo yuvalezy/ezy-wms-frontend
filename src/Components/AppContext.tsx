@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import axios, {AxiosError} from "axios";
 import {RoleType, User} from "@/assets";
-import {Mockup, ServerUrl} from "@/utils/axios-instance";
+import {axiosInstance, Mockup, ServerUrl} from "@/utils/axios-instance";
 
 // Define the shape of the context
 interface AuthContextType {
@@ -63,10 +63,31 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get<User>(`${baseUrl}General/UserInfo`, {withCredentials: true});
-        setUser(response.data);
+        // Check if token exists and is not expired
+        const token = localStorage.getItem('authToken');
+        const expiration = localStorage.getItem('tokenExpiration');
+        
+        if (token && expiration) {
+          const expirationDate = new Date(expiration);
+          const now = new Date();
+          
+          if (expirationDate > now) {
+            // Token is valid, fetch user info
+            const response = await axiosInstance.get<User>(`General/UserInfo`);
+            setUser(response.data);
+          } else {
+            // Token expired, clear it
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('tokenExpiration');
+            setUser(null);
+          }
+        } else {
+          setUser(null);
+        }
       } catch (error) {
         // Token might be invalid, clear it
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('tokenExpiration');
         setUser(null);
       }
     };
@@ -101,10 +122,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
 
     const response = await axios.post(`${baseUrl}authentication/login`, loginData, {withCredentials: true});
     if (response.status === 200) {
+      const loginResponse = response.data;
+      
+      // Save token and expiration to localStorage
+      if (loginResponse.token) {
+        localStorage.setItem('authToken', loginResponse.token);
+        localStorage.setItem('tokenExpiration', loginResponse.expiresAt);
+      }
+      
       // Add a small delay to ensure cookie is set
       await new Promise(resolve => setTimeout(resolve, 100));
       
-      const userInfoResponse = await axios.get<User>(`${baseUrl}general/userInfo`, {withCredentials: true});
+      const userInfoResponse = await axiosInstance.get<User>(`general/userInfo`);
 
       let data = userInfoResponse.data;
       console.log(data);
@@ -145,10 +174,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
 
   const logout = async () => {
     try {
-      await axios.post(`${baseUrl}authentication/logout`, null, {withCredentials: true});
+      await axiosInstance.post(`authentication/logout`);
     } catch (error) {
       console.error("Logout failed:", error);
     }
+    // Clear token from localStorage
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('tokenExpiration');
     setUser(null);
   };
 
