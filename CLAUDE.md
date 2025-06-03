@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 npm start
 ```
-Runs the Vite development server on http://localhost:3000
+Runs the Vite development server on http://localhost:5001
 
 **Build for Production**
 ```bash
