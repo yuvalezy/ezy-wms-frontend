@@ -6,13 +6,13 @@ import React, {
   useEffect,
 } from "react";
 import axios, {AxiosError} from "axios";
-import {RoleType, User} from "@/assets";
+import {RoleType, UserInfo} from "@/assets";
 import {axiosInstance, Mockup, ServerUrl} from "@/utils/axios-instance";
 
 // Define the shape of the context
 interface AuthContextType {
   isAuthenticated: boolean;
-  user: User | null;
+  user: UserInfo | null;
   companyName?: string | null;
   login: (password: string, warehouse?: string) => Promise<void>;
   logout: () => void;
@@ -42,7 +42,7 @@ interface ErrorResponse {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserInfo | null>(null);
   const [companyName, setCompanyName] = useState<string | null>(null);
   const baseUrl = `${ServerUrl}/api/`;
 
@@ -73,7 +73,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
           
           if (expirationDate > now) {
             // Token is valid, fetch user info
-            const response = await axiosInstance.get<User>(`General/UserInfo`);
+            const response = await axiosInstance.get<UserInfo>(`General/UserInfo`);
             setUser(response.data);
           } else {
             // Token expired, clear it
@@ -85,10 +85,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
           setUser(null);
         }
       } catch (error) {
-        // Token might be invalid, clear it
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('tokenExpiration');
-        setUser(null);
+        console.error('Error fetching user info:', error);
+        // Only clear tokens if we get a 401/403 error
+        if (axios.isAxiosError(error) && error.response && (error.response.status === 401 || error.response.status === 403)) {
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('tokenExpiration');
+          setUser(null);
+        }
+        // For other errors, don't clear the token - might be a network issue
       }
     };
     fetchUser()
@@ -128,12 +132,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       if (loginResponse.token) {
         localStorage.setItem('authToken', loginResponse.token);
         localStorage.setItem('tokenExpiration', loginResponse.expiresAt);
+        // Also set it in axios defaults immediately
+        axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${loginResponse.token}`;
       }
       
       // Add a small delay to ensure cookie is set
       await new Promise(resolve => setTimeout(resolve, 100));
       
-      const userInfoResponse = await axiosInstance.get<User>(`general/userInfo`);
+      const userInfoResponse = await axiosInstance.get<UserInfo>(`general/userInfo`);
 
       let data = userInfoResponse.data;
       console.log(data);
@@ -144,7 +150,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   }
 
   function mockupLogin() {
-    const userInfoResponse: User = {
+    const userInfoResponse: UserInfo = {
       id: "00000000-0000-0000-0000-000000000000",
       name: "mockUser",
       currentWarehouse: "branch",

@@ -6,7 +6,7 @@ import {
   documentMockup,
   ObjectAction,
   Status,
-  User
+  UserInfo
 } from "@/assets";
 import {axiosInstance, Mockup} from "@/utils/axios-instance";
 
@@ -33,7 +33,7 @@ export const createCounting = async (
 export const countingAction = async (
   id: number,
   action: ObjectAction,
-  user: User
+  user: UserInfo
 ): Promise<boolean> => {
   try {
     if (Mockup) {

@@ -5,7 +5,7 @@ import {
   documentMockup,
   ObjectAction,
   Status,
-  User
+  UserInfo
 } from "@/assets";
 import {axiosInstance, Mockup} from "@/utils/axios-instance";
 
@@ -68,7 +68,7 @@ export const createDocument = async (
 export const documentAction = async (
   id: number,
   action: ObjectAction,
-  user: User
+  user: UserInfo
 ): Promise<boolean> => {
   try {
     if (Mockup) {
