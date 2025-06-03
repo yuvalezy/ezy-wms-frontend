@@ -1,4 +1,3 @@
-import axios from "axios";
 import {transferAddItemResponseMockup, UpdateLineReturnValueMockup} from "@/assets";
 import {UpdateLineParameters, UpdateLineReturnValue} from "@/assets";
 import { axiosInstance, Mockup } from "@/utils/axios-instance";
@@ -32,13 +31,7 @@ export const addItem = async (
       }
     }
 
-    
-
-    
-
-    
-
-    const url = `Transfer/AddItem`;
+    const url = `transfer/addItem`;
 
     const response = await axiosInstance.post<TransferAddItemResponse>(
       url,
@@ -75,13 +68,7 @@ export const updateLine = async ({
     return await updateLineQuantity(id, lineID, quantity);
   }
   try {
-    
-
-    
-
-    
-
-    const url = `Transfer/UpdateLine`;
+    const url = `transfer/updateLine`;
 
     const response = await axiosInstance.post<UpdateLineReturnValue>(
       url,
@@ -103,13 +90,7 @@ export const updateLine = async ({
 };
 const updateLineQuantity = async (id: number, lineID: number, quantity: number): Promise<UpdateLineReturnValue> => {
   try {
-    
-
-    
-
-    
-
-    const url = `Transfer/UpdateLineQuantity`;
+    const url = `transfer/updateLineQuantity`;
 
     const response = await axiosInstance.post<UpdateLineReturnValue>(
       url,
@@ -122,4 +103,3 @@ const updateLineQuantity = async (id: number, lineID: number, quantity: number):
     throw error;
   }
 }
-
