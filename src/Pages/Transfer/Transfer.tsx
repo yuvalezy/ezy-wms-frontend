@@ -73,14 +73,14 @@ export default function Transfer() {
                         <TableCell>
                           {handleOpenLink ? (
                             <a href="#" onClick={(e) => { e.preventDefault(); handleOpen(doc.id); }} className="text-blue-600 hover:underline">
-                              {doc.id}
+                              {doc.number}
                             </a>
                           ) : (
-                            doc.id
+                            doc.number
                           )}
                         </TableCell>
-                        <TableCell>{dateFormat(new Date(doc.date))}</TableCell>
-                        <TableCell>{doc.createdBy.name}</TableCell>
+                        <TableCell>{dateFormat(doc.date)}</TableCell>
+                        <TableCell>{doc.createdByUser?.name}</TableCell>
                         <TableCell>{documentStatusToString(doc.status)}</TableCell>
                         <TableCell>
                           <div className="flex items-center space-x-2">

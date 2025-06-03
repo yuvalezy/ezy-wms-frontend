@@ -47,7 +47,7 @@ const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = 
           <InfoBoxValue label={t('number')} value={doc.id}
                         onClick={handleOpenLink ? () => handleOpen(doc.id) : undefined}/>
           <InfoBoxValue label={t('docDate')} value={dateFormat(doc.date)}/>
-          <InfoBoxValue label={t('createdBy')} value={doc.createdBy?.name}/>
+          <InfoBoxValue label={t('createdBy')} value={doc.createdByUser?.name}/>
           <InfoBoxValue label={t('status')} value={documentStatusToString(doc.status)}/>
         </SecondaryInfoBox>
         {doc.comments &&

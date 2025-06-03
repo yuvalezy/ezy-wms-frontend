@@ -4,9 +4,9 @@ import {Employee} from "@/assets/Data";
 export interface BaseEntity {
     id: string;
     createdAt?: Date;
-    createdBy?: User;
+    createdByUser?: User;
     updatedAt?: Date;
-    updatedBy?: User;
+    updatedByUser?: User;
     deleted: boolean;
     deletedAt?: Date;
 }
@@ -16,7 +16,26 @@ export interface AxiosErrorResponse {
     exceptionType: string;
     message: string;
 }
-export interface User {
+export interface User extends BaseEntity {
+    fullName: string;
+    password: string;
+    email?: string;
+    position?: string;
+    superUser: boolean;
+    active: boolean;
+    warehouses: string[];
+    externalId?: string;
+    authorizationGroupId?: string;
+    authorizationGroup?: AuthorizationGroup;
+}
+
+export interface AuthorizationGroup extends BaseEntity {
+    name: string;
+    description?: string;
+    roles: RoleType[];
+}
+
+export interface UserInfo {
     id: string;
     name: string;
     roles: RoleType[];

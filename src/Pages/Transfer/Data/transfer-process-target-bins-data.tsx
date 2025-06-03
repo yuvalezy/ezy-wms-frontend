@@ -7,7 +7,7 @@ import {addItem, fetchTransferContent, TransferContent} from "@/pages/transfer/d
 export const useTransferProcessTargetBinsData = () => {
   const {scanCode} = useParams();
   const {dateTimeFormat} = useDateTimeFormat();
-  const [id, setID] = useState<number | null>();
+  const [id, setID] = useState<string | null>();
   const [binLocation, setBinLocation] = useState<BinLocation | null>(null);
   const [enable, setEnable] = useState(false);
   const {setLoading, setError} = useThemeContext();

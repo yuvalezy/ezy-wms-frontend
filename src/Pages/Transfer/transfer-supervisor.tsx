@@ -124,7 +124,7 @@ export default function TransferSupervisor() {
                                             )}
                                         </TableCell>
                                         <TableCell>{dateFormat(doc.date)}</TableCell>
-                                        <TableCell>{doc.createdBy?.name}</TableCell>
+                                        <TableCell>{doc.createdByUser?.name}</TableCell>
                                         <TableCell>{documentStatusToString(doc.status)}</TableCell>
                                         <TableCell>
                                             <div className="flex items-center space-x-2">

@@ -7,7 +7,7 @@ import {addItem, fetchTransferContent, TransferContent} from "@/pages/transfer/d
 export const useTransferProcessSourceData = () => {
   const {scanCode} = useParams();
   const {dateTimeFormat} = useDateTimeFormat();
-  const [id, setID] = useState<number | null>();
+  const [id, setID] = useState<string | null>();
   const [binLocation, setBinLocation] = useState<BinLocation | null>(null);
   const [enable, setEnable] = useState(false);
   const {setLoading, setError} = useThemeContext();
@@ -95,7 +95,7 @@ export const useTransferProcessSourceData = () => {
           setError(v.errorMessage);
           return;
         }
-        let date = new Date(Date.now());
+        const date = new Date(Date.now());
         setCurrentAlert({
           lineID: v.lineID,
           quantity: 1,

@@ -1,4 +1,4 @@
-import {BinLocation, ResponseStatus, Status, UnitType, User} from "./Common";
+import {BinLocation, ResponseStatus, Status, UnitType, UserInfo} from "./Common";
 import {DeliveryOpenDocument} from "./Deliveries";
 import {
   PickingDocument,
@@ -652,7 +652,7 @@ export const countProcessRows: CountingContent[] = [
   {code: "test18", name: "test18 name", quantity: 22},
   {code: "test19", name: "test19 name", quantity: 22},
 ]
-export const userMock: User = {
+export const userMock: UserInfo = {
   id: "00000-0000",
   name: "John Doe",
   roles: [],
@@ -670,10 +670,10 @@ export const userMock: User = {
 export const transferMockup: TransferDocument = {
   id: "0000000",
   date: new Date("2023-11-03"),
-  createdBy: userMock,
+  createdByUser: userMock,
   createdAt: new Date("2023-11-03"),
   updatedAt: new Date("2023-11-03"),
-  updatedBy: userMock,
+  updatedByUser: userMock,
   status: Status.InProgress,
 };
 export const transferAddItemResponseMockup: TransferAddItemResponse = {
