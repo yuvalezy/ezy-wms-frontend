@@ -5,9 +5,9 @@ import React, {
   ReactNode,
   useEffect,
 } from "react";
-import {AxiosError} from "axios";
+import axios, {AxiosError} from "axios";
 import {RoleType, User} from "@/assets";
-import {axiosInstance, Mockup} from "@/utils/axios-instance";
+import {Mockup, ServerUrl} from "@/utils/axios-instance";
 
 // Define the shape of the context
 interface AuthContextType {
@@ -44,11 +44,12 @@ interface ErrorResponse {
 export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   const [user, setUser] = useState<User | null>(null);
   const [companyName, setCompanyName] = useState<string | null>(null);
+  const baseUrl = `${ServerUrl}/api/`;
 
   useEffect(() => {
     const fetchConfig = async () => {
       try {
-        const response = await axiosInstance.get<string>(`Authentication/CompanyName`);
+        const response = await axios.get<string>(`${baseUrl}Authentication/CompanyName`);
         setCompanyName(response.data)
       } catch (error) {
         console.log(`Failed to load company name: ${error}`);
@@ -62,12 +63,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axiosInstance.get<User>(`General/UserInfo`,);
+        const response = await axios.get<User>(`${baseUrl}General/UserInfo`, {withCredentials: true});
         setUser(response.data);
       } catch (error) {
         // Token might be invalid, clear it
-        localStorage.removeItem("token");
-        localStorage.removeItem("token_expiry");
         setUser(null);
       }
     };
@@ -100,9 +99,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       loginData.warehouse = warehouse;
     }
 
-    const response = await axiosInstance.post(`authentication/login`, loginData);
+    const response = await axios.post(`${baseUrl}authentication/login`, loginData, {withCredentials: true});
     if (response.status === 200) {
-      const userInfoResponse = await axiosInstance.get<User>(`General/UserInfo`);
+      // Add a small delay to ensure cookie is set
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      const userInfoResponse = await axios.get<User>(`${baseUrl}general/userInfo`, {withCredentials: true});
 
       let data = userInfoResponse.data;
       console.log(data);
@@ -143,7 +145,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
 
   const logout = async () => {
     try {
-      await axiosInstance.post(`authentication/logout`);
+      await axios.post(`${baseUrl}authentication/logout`, null, {withCredentials: true});
     } catch (error) {
       console.error("Logout failed:", error);
     }
