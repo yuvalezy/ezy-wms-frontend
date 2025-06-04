@@ -317,6 +317,7 @@
   "selectExternalUser": "Seleccionar usuario externo",
   "createManually": "Crear manualmente",
   "externalId": "ID Externo",
+  "externalUser": "Usuario Externo",
   "externalUserId": "ID de Usuario Externo",
   "atLeastOneWarehouseRequired": "Al menos un almacén debe ser seleccionado",
   "searchAuthorizationGroups": "Buscar grupos de autorización...",
@@ -339,5 +340,6 @@
   "enterGroupName": "Ingrese el nombre del grupo",
   "enterGroupDescription": "Ingrese la descripción del grupo",
   "selectAll": "Seleccionar Todo",
-  "atLeastOneAuthorizationRequired": "Al menos una autorización debe ser seleccionada"
+  "atLeastOneAuthorizationRequired": "Al menos una autorización debe ser seleccionada",
+  "email": "Correo electrónico"
 }

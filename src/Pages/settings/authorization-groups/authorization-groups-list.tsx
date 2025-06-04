@@ -128,19 +128,19 @@ const AuthorizationGroupsList: React.FC = () => {
       <div className="space-y-4">
         <Card>
           <CardContent>
-            <div className="flex gap-4 mb-4">
-              <div className="flex-1">
-                <div className="relative">
-                  <FontAwesomeIcon icon={faSearch}
-                                   className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"/>
-                  <Input
-                    placeholder={t('searchAuthorizationGroups')}
-                    className="pl-10"
-                    onChange={(e) => handleSearch(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
+            {/*<div className="flex gap-4 mb-4">*/}
+            {/*  <div className="flex-1">*/}
+            {/*    <div className="relative">*/}
+            {/*      <FontAwesomeIcon icon={faSearch}*/}
+            {/*                       className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"/>*/}
+            {/*      <Input*/}
+            {/*        placeholder={t('searchAuthorizationGroups')}*/}
+            {/*        className="pl-10"*/}
+            {/*        onChange={(e) => handleSearch(e.target.value)}*/}
+            {/*      />*/}
+            {/*    </div>*/}
+            {/*  </div>*/}
+            {/*</div>*/}
 
             <Table>
               <TableHeader>

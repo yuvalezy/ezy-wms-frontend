@@ -318,6 +318,7 @@
   "selectExternalUser": "Select external user",
   "createManually": "Create manually",
   "externalId": "External ID",
+  "externalUser": "External User",
   "externalUserId": "External User ID",
   "atLeastOneWarehouseRequired": "At least one warehouse must be selected",
   "searchAuthorizationGroups": "Search authorization groups...",
@@ -340,5 +341,6 @@
   "enterGroupName": "Enter group name",
   "enterGroupDescription": "Enter group description",
   "selectAll": "Select All",
-  "atLeastOneAuthorizationRequired": "At least one authorization must be selected"
+  "atLeastOneAuthorizationRequired": "At least one authorization must be selected",
+  "email": "Email address"
 }
