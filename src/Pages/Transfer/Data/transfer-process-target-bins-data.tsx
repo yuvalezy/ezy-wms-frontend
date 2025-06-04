@@ -8,6 +8,7 @@ import {
   TransferContent,
   TransferDocument
 } from "@/pages/transfer/data/transfer-document";
+import {useTranslation} from "react-i18next";
 
 export const useTransferProcessTargetBinsData = () => {
   const {scanCode} = useParams();
@@ -23,6 +24,7 @@ export const useTransferProcessTargetBinsData = () => {
   const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
   const processesRef = useRef<ProcessesRef>(null);
   const processAlertRef = useRef<HTMLDivElement>(null);
+  const {t} = useTranslation();
 
   useEffect(() => {
     setEnable(!user?.binLocations);
@@ -98,7 +100,8 @@ export const useTransferProcessTargetBinsData = () => {
     if (id == null) {
       return;
     }
-    addItem({id, itemCode: item.code, barcode: item.barcode, type: SourceTarget.Target, binEntry: binLocation?.entry, unit})
+    const params = {id, itemCode: item.code, barcode: item.barcode, type: SourceTarget.Target, binEntry: binLocation?.entry, unit};
+    addItem(params, t)
       .then((v) => {
         if (v.errorMessage != null) {
           setError(v.errorMessage);

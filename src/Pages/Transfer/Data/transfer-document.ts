@@ -1,6 +1,14 @@
-import {BaseEntity, UnitType} from "@/assets";
-import {DetailUpdateParameters, ObjectAction, SourceTarget, Status} from "@/assets";
+import {
+  AddItemReturnValueType,
+  BaseEntity,
+  DetailUpdateParameters,
+  ObjectAction,
+  SourceTarget,
+  Status,
+  UnitType
+} from "@/assets";
 import {axiosInstance, Mockup} from "@/utils/axios-instance";
+import axios from "axios";
 
 interface TransferAddItemResponse {
   lineID?: number
@@ -157,13 +165,9 @@ export type addItemParameters = {
   unit: UnitType,
 }
 
-export const addItem = async (params: addItemParameters): Promise<TransferAddItemResponse> => {
+export const addItem = async (params: addItemParameters, t: (key: string) => string): Promise<TransferAddItemResponse> => {
   try {
     params.quantity ??= 1;
-    if (Mockup) {
-      //todo mockup
-    }
-
 
     const url = `Transfer/AddItem`;
 
@@ -177,6 +181,47 @@ export const addItem = async (params: addItemParameters): Promise<TransferAddIte
       throw new Error(response.data.errorMessage);
     }
   } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.data) {
+      if (error.response.data.ErrorId) {
+
+        const errorType = error.response.data.ErrorId as AddItemReturnValueType;
+        const errorData = error.response.data.ErrorData;
+        let errorMessage: string = error.message;
+        switch (errorType) {
+          case AddItemReturnValueType.ItemCodeNotFound:
+            errorMessage = t('itemCodeNotFoundError', errorData);
+            break;
+          case AddItemReturnValueType.ItemCodeBarCodeMismatch:
+            errorMessage = t('itemCodeBarCodeMismatchError', errorData);
+            break;
+          case AddItemReturnValueType.TransactionIDNotExists:
+            errorMessage = t('transactionIDNotExistsError', errorData);
+            break;
+          case AddItemReturnValueType.NotStockItem:
+            errorMessage = t('notStockItemError', errorData);
+            break;
+          case AddItemReturnValueType.ItemNotInWarehouse:
+            errorMessage = t('itemNotInWarehouseError', errorData);
+            break;
+          case AddItemReturnValueType.BinNotExists:
+            errorMessage = t('binNotExistsError', errorData);
+            break;
+          case AddItemReturnValueType.BinNotInWarehouse:
+            errorMessage = t('binNotInWarehouseError', errorData);
+            break;
+          case AddItemReturnValueType.BinMissing:
+            errorMessage = t('binMissingError', errorData);
+            break;
+          case AddItemReturnValueType.QuantityMoreAvailable:
+            errorMessage = t('quantityMoreAvailableError', errorData);
+            break;
+        }
+        return {
+          closedTransfer: false, lineID: 0, numIn: 0, packMsr: "", packUnit: 0, unitMsr: "",
+          errorMessage: errorMessage
+        }
+      }
+    }
     console.error("Error adding item:", error);
     throw error;
   }
