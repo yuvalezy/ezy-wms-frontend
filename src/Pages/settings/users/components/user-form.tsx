@@ -9,7 +9,6 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/c
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSave, faTimes, faEye, faEyeSlash} from "@fortawesome/free-solid-svg-icons";
 import {useThemeContext} from "@/components";
-import ContentTheme from "@/components/ContentTheme";
 import {User, UserFormData, AuthorizationGroup, Warehouse, ExternalUser} from "../data/user";
 import {userService} from "../data/user-service";
 import {None} from "@/utils/axios-instance";
@@ -27,16 +26,15 @@ const UserForm: React.FC<UserFormProps> = ({user, authorizationGroups, warehouse
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [externalUsers, setExternalUsers] = useState<ExternalUser[]>([]);
-  const [selectedExternalUser, setSelectedExternalUser] = useState<ExternalUser | null>(null);
 
   const form = useForm<UserFormData>({
     defaultValues: {
       fullName: user?.fullName || "",
       password: "",
-      email: user?.email || "",
+      email: user?.email,
       position: user?.position || "",
       superUser: user?.superUser || false,
-      warehouses: user?.warehouses,
+      warehouses: user?.warehouses || [],
       externalId: user?.externalId || None,
       authorizationGroupId: user?.authorizationGroupId || None,
     },
@@ -57,27 +55,13 @@ const UserForm: React.FC<UserFormProps> = ({user, authorizationGroups, warehouse
     }
   };
 
-  const handleExternalUserSelect = (externalUserId: string) => {
-    const externalUser = externalUsers.find(u => u.id === externalUserId);
-    if (externalUser) {
-      setSelectedExternalUser(externalUser);
-      form.setValue("fullName", externalUser.fullName);
-      form.setValue("email", externalUser.email || "");
-      form.setValue("position", externalUser.position || "");
-      form.setValue("externalId", externalUser.id);
-    } else {
-      setSelectedExternalUser(null);
-      form.setValue("externalId", "");
-    }
-  };
-
   const onSubmit = async (data: UserFormData) => {
     try {
       setIsSubmitting(true);
       setLoading(true);
 
       // Validate that at least one warehouse is selected
-      if (data.warehouses.length === 0) {
+      if (!data.superUser && data.warehouses.length === 0) {
         setError(t('atLeastOneWarehouseRequired'));
         return;
       }
@@ -114,7 +98,7 @@ const UserForm: React.FC<UserFormProps> = ({user, authorizationGroups, warehouse
   };
 
   const handleWarehouseChange = (warehouseId: string, checked: boolean) => {
-    const currentWarehouses = form.getValues("warehouses")??[];
+    const currentWarehouses = form.getValues("warehouses") ?? [];
     if (checked) {
       form.setValue("warehouses", [...currentWarehouses, warehouseId]);
     } else {
@@ -307,48 +291,31 @@ const UserForm: React.FC<UserFormProps> = ({user, authorizationGroups, warehouse
                   )}
                 />
 
-                {selectedExternalUser && (
-                  <FormField
-                    control={form.control}
-                    name="externalId"
-                    render={({field}) => (
-                      <FormItem>
-                        <FormLabel>{t('externalId')}</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder={t('externalUserId')}
-                            {...field}
-                            readOnly
-                          />
-                        </FormControl>
-                        <FormMessage/>
-                      </FormItem>
-                    )}
-                  />
-                )}
+                <FormField
+                  control={form.control}
+                  name="externalId"
+                  render={({field}) => (
+                    <FormItem>
+                      <FormLabel>{t('externalUser')}</FormLabel>
+                      <Select value={field.value} onValueChange={field.onChange}>
+                        <SelectTrigger>
+                          <SelectValue placeholder={t('selectExternalUser')}/>
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value={None}>{t('none')}</SelectItem>
+                          {externalUsers.map(extUser => (
+                            <SelectItem key={extUser.id} value={extUser.id}>
+                              {extUser.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
               </div>
 
             </div>
-            {/*External User Selection*/}
-            {!isEditing && (
-              <div className="space-y-2">
-                <label className="text-sm font-medium">{t('externalUser')}</label>
-                <Select onValueChange={handleExternalUserSelect}>
-                  <SelectTrigger>
-                    <SelectValue placeholder={t('selectExternalUser')}/>
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={None}>{t('none')}</SelectItem>
-                    {externalUsers.map(extUser => (
-                      <SelectItem key={extUser.id} value={extUser.id}>
-                        {extUser.fullName} ({extUser.email})
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-
 
             <div className="flex gap-4 pt-6">
               <Button

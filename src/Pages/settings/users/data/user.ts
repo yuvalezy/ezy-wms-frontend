@@ -35,10 +35,7 @@ export interface UserFilters {
 
 export interface ExternalUser {
   id: string;
-  fullName: string;
-  email?: string;
-  position?: string;
-  department?: string;
+  name: string;
 }
 
 export interface AuthorizationGroup {

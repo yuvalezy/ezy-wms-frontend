@@ -1,15 +1,15 @@
-import React, {useState, useEffect, useContext} from "react";
+import React, {useState, useEffect} from "react";
 import {useTranslation} from "react-i18next";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardContent} from "@/components/ui/card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Badge} from "@/components/ui/badge";
 import {Checkbox} from "@/components/ui/checkbox";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPlus, faEdit, faTrash, faSearch, faUserSlash, faUserCheck} from "@fortawesome/free-solid-svg-icons";
-import {useThemeContext} from "@/components";
+import {faEdit, faTrash, faSearch, faUserSlash, faUserCheck} from "@fortawesome/free-solid-svg-icons";
+import {useAuth, useThemeContext} from "@/components";
 import {User, UserFilters, AuthorizationGroup, Warehouse} from "./data/user";
 import {userService} from "./data/user-service";
 import UserForm from "./components/user-form";
@@ -27,6 +27,7 @@ import ContentTheme from "@/components/ContentTheme";
 
 const UsersList: React.FC = () => {
   const {t} = useTranslation();
+  const {user} = useAuth();
   const {setLoading, setError} = useThemeContext();
 
   const [users, setUsers] = useState<User[]>([]);
@@ -158,55 +159,55 @@ const UsersList: React.FC = () => {
       <div className="space-y-4">
         <Card>
           <CardContent>
-            <div className="flex gap-4 mb-4 flex-wrap">
-              <div className="flex-1 min-w-64">
-                <div className="relative">
-                  <FontAwesomeIcon icon={faSearch}
-                                   className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"/>
-                  <Input
-                    placeholder={t('searchUsers')}
-                    className="pl-10"
-                    onChange={(e) => handleSearch(e.target.value)}
-                  />
-                </div>
-              </div>
-              <Select onValueChange={handleWarehouseFilter} defaultValue="all">
-                <SelectTrigger className="w-48">
-                  <SelectValue placeholder={t('warehouse')}/>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('allWarehouses')}</SelectItem>
-                  {warehouses.map(warehouse => (
-                    <SelectItem key={warehouse.id} value={warehouse.id}>
-                      {warehouse.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Select onValueChange={handleAuthGroupFilter} defaultValue="all">
-                <SelectTrigger className="w-48">
-                  <SelectValue placeholder={t('authorizationGroup')}/>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('allAuthorizationGroups')}</SelectItem>
-                  {authorizationGroups.map(group => (
-                    <SelectItem key={group.id} value={group.id}>
-                      {group.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="includeInactive"
-                  checked={filters.includeInactive}
-                  onCheckedChange={handleIncludeInactive}
-                />
-                <label htmlFor="includeInactive" className="text-sm font-medium">
-                  {t('includeInactive')}
-                </label>
-              </div>
-            </div>
+            {/*<div className="flex gap-4 mb-4 flex-wrap">*/}
+            {/*  <div className="flex-1 min-w-64">*/}
+            {/*    <div className="relative">*/}
+            {/*      <FontAwesomeIcon icon={faSearch}*/}
+            {/*                       className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"/>*/}
+            {/*      <Input*/}
+            {/*        placeholder={t('searchUsers')}*/}
+            {/*        className="pl-10"*/}
+            {/*        onChange={(e) => handleSearch(e.target.value)}*/}
+            {/*      />*/}
+            {/*    </div>*/}
+            {/*  </div>*/}
+            {/*  <Select onValueChange={handleWarehouseFilter} defaultValue="all">*/}
+            {/*    <SelectTrigger className="w-48">*/}
+            {/*      <SelectValue placeholder={t('warehouse')}/>*/}
+            {/*    </SelectTrigger>*/}
+            {/*    <SelectContent>*/}
+            {/*      <SelectItem value="all">{t('allWarehouses')}</SelectItem>*/}
+            {/*      {warehouses.map(warehouse => (*/}
+            {/*        <SelectItem key={warehouse.id} value={warehouse.id}>*/}
+            {/*          {warehouse.name}*/}
+            {/*        </SelectItem>*/}
+            {/*      ))}*/}
+            {/*    </SelectContent>*/}
+            {/*  </Select>*/}
+            {/*  <Select onValueChange={handleAuthGroupFilter} defaultValue="all">*/}
+            {/*    <SelectTrigger className="w-48">*/}
+            {/*      <SelectValue placeholder={t('authorizationGroup')}/>*/}
+            {/*    </SelectTrigger>*/}
+            {/*    <SelectContent>*/}
+            {/*      <SelectItem value="all">{t('allAuthorizationGroups')}</SelectItem>*/}
+            {/*      {authorizationGroups.map(group => (*/}
+            {/*        <SelectItem key={group.id} value={group.id}>*/}
+            {/*          {group.name}*/}
+            {/*        </SelectItem>*/}
+            {/*      ))}*/}
+            {/*    </SelectContent>*/}
+            {/*  </Select>*/}
+            {/*  <div className="flex items-center space-x-2">*/}
+            {/*    <Checkbox*/}
+            {/*      id="includeInactive"*/}
+            {/*      checked={filters.includeInactive}*/}
+            {/*      onCheckedChange={handleIncludeInactive}*/}
+            {/*    />*/}
+            {/*    <label htmlFor="includeInactive" className="text-sm font-medium">*/}
+            {/*      {t('includeInactive')}*/}
+            {/*    </label>*/}
+            {/*  </div>*/}
+            {/*</div>*/}
 
             <Table>
               <TableHeader>
@@ -221,14 +222,14 @@ const UsersList: React.FC = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {users?.map((user) => (
-                  <TableRow key={user.id}>
-                    <TableCell className="font-medium"> {user.fullName} </TableCell>
-                    <TableCell>{user.email || '-'}</TableCell>
-                    <TableCell>{user.position || '-'}</TableCell>
+                {users?.map((u) => (
+                  <TableRow key={u.id}>
+                    <TableCell className="font-medium"> {u.fullName} </TableCell>
+                    <TableCell>{u.email || '-'}</TableCell>
+                    <TableCell>{u.position || '-'}</TableCell>
                     <TableCell>{
-                      !user.superUser ?
-                        user.authorizationGroupName || '-' : (
+                      !u.superUser ?
+                        u.authorizationGroupName || '-' : (
                         <Badge variant="destructive" className="text-xs">
                           {t('superUser')}
                         </Badge>
@@ -236,22 +237,22 @@ const UsersList: React.FC = () => {
                     }</TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
-                        {user.warehouses.length > 0 &&
-                          warehouses.filter(warehouse => user.warehouses.includes(warehouse.id)).map(warehouse => (
+                        {u.warehouses.length > 0 &&
+                          warehouses.filter(warehouse => u.warehouses.includes(warehouse.id)).map(warehouse => (
                             <Badge key={warehouse.id} variant="outline" className="text-xs">
                               {warehouse.name}
                             </Badge>
                           ))}
-                        {user.warehouses.length > 2 && (
+                        {u.warehouses.length > 2 && (
                           <Badge variant="outline" className="text-xs">
-                            +{user.warehouses.length - 2}
+                            +{u.warehouses.length - 2}
                           </Badge>
                         )}
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={user.active ? "default" : "secondary"}>
-                        {user.active ? t('active') : t('inactive')}
+                      <Badge variant={u.active ? "default" : "secondary"}>
+                        {u.active ? t('active') : t('inactive')}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
@@ -259,23 +260,24 @@ const UsersList: React.FC = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => handleEdit(user)}
+                          onClick={() => handleEdit(u)}
                         >
                           <FontAwesomeIcon icon={faEdit} className="mr-1"/>
                           {t('edit')}
                         </Button>
                         <Button
-                          variant={user.active ? "secondary" : "default"}
+                          variant={u.active ? "secondary" : "default"}
+                          disabled={u.id === user?.id}
                           size="sm"
-                          onClick={() => handleToggleStatus(user)}
+                          onClick={() => handleToggleStatus(u)}
                         >
-                          <FontAwesomeIcon icon={user.active ? faUserSlash : faUserCheck} className="mr-1"/>
-                          {user.active ? t('disable') : t('enable')}
+                          <FontAwesomeIcon icon={u.active ? faUserSlash : faUserCheck} className="mr-1"/>
+                          {u.active ? t('disable') : t('enable')}
                         </Button>
                         <Button
                           variant="destructive"
                           size="sm"
-                          onClick={() => handleDelete(user)}
+                          onClick={() => handleDelete(u)}
                         >
                           <FontAwesomeIcon icon={faTrash} className="mr-1"/>
                           {t('delete')}
