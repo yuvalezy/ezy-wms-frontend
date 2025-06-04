@@ -8,6 +8,7 @@ export interface MenuItem {
     Text: string;
     Authorization?: RoleType;
     Authorizations?: RoleType[];
+    SuperUser?: boolean;
     Icon: string;
 }
 
@@ -121,17 +122,37 @@ export function useMenus() {
             Authorization: RoleType.TRANSFER_REQUEST,
             Icon: "request",
         },
+        {
+            Link: "/settings/cancelReasons",
+            Text: t('cancellationReasons'),
+            SuperUser: true,
+            Icon: "settings",
+        },
+        {
+            Link: "/settings/users",
+            Text: t('users'),
+            SuperUser: true,
+            Icon: "settings",
+        },
+        {
+            Link: "/settings/authorizationGroups",
+            Text: t('authorizationGroups'),
+            SuperUser: true,
+            Icon: "settings",
+        },
     ];
 
-    const GetMenus = (authorizations: RoleType[] | undefined) => {
+    const GetMenus = (authorizations: RoleType[] | undefined, superUser: boolean | undefined) => {
         if (authorizations !== undefined) {
             applySettings(authorizations);
         }
         return MenuItems.filter(item => {
-            if (item.Authorization === undefined && item.Authorizations === undefined) {
+            if (item.Authorization === undefined && item.Authorizations === undefined && user?.superUser) {
                 return true;
             }
             if (authorizations) {
+                if (item.SuperUser && !user?.superUser)
+                    return false;
                 if (item.Authorization !== undefined) {
                     return authorizations.includes(item.Authorization);
                 }

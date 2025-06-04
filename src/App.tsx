@@ -37,6 +37,7 @@ import { Toaster } from 'sonner';
 import CancellationReasonsList from "@/pages/settings/cancellation-reasons/cancellation-reasons-list";
 import UsersList from "@/pages/settings/users/users-list";
 import AuthorizationGroupsList from "@/pages/settings/authorization-groups/authorization-groups-list";
+import AuthorizationGroupForm from "@/pages/settings/authorization-groups/components/authorization-group-form";
 
 export default function App() {
     const {user} = useAuth();
@@ -106,6 +107,8 @@ export default function App() {
                     <Route path="/settings/cancelReasons" element={<ProtectedRoute superUser element={<CancellationReasonsList/>}/>}/>
                     <Route path="/settings/users" element={<ProtectedRoute superUser element={<UsersList/>}/>}/>
                     <Route path="/settings/authorizationGroups" element={<ProtectedRoute superUser element={<AuthorizationGroupsList/>}/>}/>
+                    <Route path="/settings/authorizationGroups/add" element={<ProtectedRoute superUser element={<AuthorizationGroupForm/>}/>}/>
+                    <Route path="/settings/authorizationGroups/:id" element={<ProtectedRoute superUser element={<AuthorizationGroupForm/>}/>}/>
                     <Route path="/" element={<ProtectedRoute element={<HomePage/>}/>}/>
                     <Route path="*" element={<NotFound/>}/>
                 </Routes>

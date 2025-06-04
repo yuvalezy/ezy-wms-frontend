@@ -1,4 +1,4 @@
-import {LogOutIcon} from "lucide-react"
+import {LogOutIcon, SettingsIcon} from "lucide-react"
 import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {MenuItem, useMenus} from "@/assets/Menus";
@@ -61,7 +61,7 @@ export function AppSidebar() {
   const {t} = useTranslation();
 
   useEffect(() => {
-    setAuthorizedMenus(menus.GetMenus(user?.roles));
+    setAuthorizedMenus(menus.GetMenus(user?.roles, user?.superUser));
   }, [user, menus]);
 
   const handleMenuItemClick = (link: string) => {
@@ -102,6 +102,11 @@ export function AppSidebar() {
       case "/transferRequest":
         groupLabel = t("transfer");
         break;
+      case "/settings/cancelReasons":
+      case "/settings/users":
+      case "/settings/authorizationGroups":
+        groupLabel = t("settings");
+        break;
       default:
         groupLabel = t('other');
         break;
@@ -119,6 +124,7 @@ export function AppSidebar() {
     t("picking"),
     t("counting"),
     t("transfer"),
+    t("settings"),
     t("other"),
   ];
 
