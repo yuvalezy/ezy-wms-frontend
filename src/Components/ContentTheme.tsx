@@ -1,8 +1,11 @@
 import React from "react";
 import {SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
 import {AppSidebar} from "@/components/AppSidebar";
-import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage} from "@/components/ui";
+import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, Button} from "@/components/ui";
 import {Filter} from "lucide-react";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faPlus} from "@fortawesome/free-solid-svg-icons";
+import {useTranslation} from "react-i18next";
 
 interface ContentThemeProps {
   title: string;
@@ -10,6 +13,7 @@ interface ContentThemeProps {
   titleBreadcrumbs?: titleBreadcrumb[];
   onExportExcel?: () => void;
   onFilterClicked?: () => void;
+  onAdd?: () => void;
   children?: React.ReactNode;
   footer?: React.ReactNode;
 }
@@ -27,8 +31,10 @@ const ContentTheme: React.FC<ContentThemeProps> = (
     children,
     footer,
     onExportExcel,
+    onAdd,
     onFilterClicked,
   }) => {
+  const {t} = useTranslation();
 
   return (
     <SidebarProvider>
@@ -63,6 +69,12 @@ const ContentTheme: React.FC<ContentThemeProps> = (
                   className="h-6 w-6 cursor-pointer mr-2"
                   onClick={onFilterClicked}
                 />
+              )}
+              {onAdd && (
+                <Button type="button" variant="outline" size="sm" onClick={onAdd} className="mr-2">
+                  <FontAwesomeIcon icon={faPlus}/>
+                  {t('add')}
+                </Button>
               )}
               {onExportExcel && (
                 <img
