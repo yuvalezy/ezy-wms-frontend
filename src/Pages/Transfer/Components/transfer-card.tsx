@@ -39,13 +39,11 @@ const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = 
 
   return (
     <Card key={doc.id} className={header ? "mb-4 shadow-lg" : "shadow-lg"}>
-      {header && <CardHeader>
-        <CardTitle>{doc.name ? `${t('id')} : ${doc.name}` : `${t('transfer')} #${doc.id}`}</CardTitle>
-      </CardHeader>}
       <CardContent className="py-4">
         <SecondaryInfoBox>
-          <InfoBoxValue label={t('number')} value={doc.id}
+          <InfoBoxValue label={t('number')} value={doc.number}
                         onClick={handleOpenLink ? () => handleOpen(doc.id) : undefined}/>
+          {doc.name && <InfoBoxValue label={t('id')} value={doc.name}/>}
           <InfoBoxValue label={t('docDate')} value={dateFormat(doc.date)}/>
           <InfoBoxValue label={t('createdBy')} value={doc.createdByUser?.fullName}/>
           <InfoBoxValue label={t('status')} value={documentStatusToString(doc.status)}/>
