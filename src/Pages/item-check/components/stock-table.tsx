@@ -3,41 +3,7 @@ import React, {useEffect, useState} from "react";
 import {ItemCheckResponse, itemStock, ItemStockResponse} from "../item";
 import {useThemeContext} from "@/components/ThemeContext";
 import {Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow} from "@/components";
-
-export interface StockInfoParams {
-  quantity: number;
-  numInBuy: number;
-  buyUnitMsr: string;
-  purPackUn: number;
-  purPackMsr: string;
-}
-
-export const useStockInfo = () => {
-  const {t} = useTranslation();
-  return (params: StockInfoParams) => {
-    const packages = Math.floor(params.quantity / (params.numInBuy * params.purPackUn));
-    const remainingForDozens = params.quantity % (params.numInBuy * params.purPackUn);
-    const dozens = Math.floor(remainingForDozens / params.numInBuy);
-    const units = remainingForDozens % params.numInBuy;
-    let response = '';
-    if (packages > 0) {
-      response = `${packages} ${params.purPackMsr.length > 0 ? params.purPackMsr : t('packUnit')} `;
-    }
-
-    if (dozens > 0) {
-      if (response.length > 0)
-        response += ', ';
-      response += `${dozens} ${params.buyUnitMsr.length > 0 ? params.buyUnitMsr : t('buyUnit')} `;
-    }
-
-    if (units > 0) {
-      if (response.length > 0)
-        response += ', ';
-      response += `${units} ${t('units')}`;
-    }
-    return response;
-  };
-}
+import {useStockInfo} from "@/utils/stock-info";
 
 interface StockTableProps {
   result: ItemCheckResponse
