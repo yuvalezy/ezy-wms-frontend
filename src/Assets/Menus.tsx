@@ -126,19 +126,19 @@ export function useMenus() {
             Link: "/settings/cancelReasons",
             Text: t('cancellationReasons'),
             SuperUser: true,
-            Icon: "settings",
+            Icon: "cancel-reasons",
         },
         {
             Link: "/settings/users",
             Text: t('users'),
             SuperUser: true,
-            Icon: "settings",
+            Icon: "users",
         },
         {
             Link: "/settings/authorizationGroups",
             Text: t('authorizationGroups'),
             SuperUser: true,
-            Icon: "settings",
+            Icon: "authorization-groups",
         },
     ];
 

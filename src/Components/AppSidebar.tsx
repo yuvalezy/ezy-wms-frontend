@@ -17,6 +17,9 @@ import {
   faQuestionCircle, // request (fallback/generic)
   faQuestion, // general fallback
   faSignOutAlt,
+  faBan, // cancel-reasons
+  faUsers, // users
+  faUserShield, // authorization-groups
 } from '@fortawesome/free-solid-svg-icons';
 import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
 
@@ -46,6 +49,9 @@ const iconMap: { [key: string]: IconDefinition } = {
   "move": faArrowsAlt,
   "journey-depart": faTruckMoving,
   "request": faQuestionCircle,
+  "cancel-reasons": faBan,
+  "users": faUsers,
+  "authorization-groups": faUserShield,
 };
 
 const getFaIcon = (iconName: string): IconDefinition => {
