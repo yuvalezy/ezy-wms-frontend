@@ -102,18 +102,9 @@ const CancellationReasonsList: React.FC = () => {
   };
 
   return (
-    <ContentTheme title={t("settings")} titleBreadcrumbs={[{label: t("cancellationReasons")}]}>
+    <ContentTheme title={t("settings")} titleBreadcrumbs={[{label: t("cancellationReasons")}]} onAdd={handleCreate}>
       <div className="space-y-4">
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <span>&nbsp;</span>
-              <Button onClick={handleCreate}>
-                <FontAwesomeIcon icon={faPlus} className="mr-2"/>
-                {t('add')}
-              </Button>
-            </CardTitle>
-          </CardHeader>
           <CardContent>
             <div className="flex gap-4 mb-4">
               <div className="flex-1">
