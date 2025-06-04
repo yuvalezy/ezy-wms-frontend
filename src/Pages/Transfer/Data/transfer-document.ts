@@ -4,7 +4,7 @@ import {
   DetailUpdateParameters,
   ObjectAction,
   SourceTarget,
-  Status,
+  Status, StringFormat,
   UnitType
 } from "@/assets";
 import {axiosInstance, Mockup} from "@/utils/axios-instance";
@@ -189,31 +189,31 @@ export const addItem = async (params: addItemParameters, t: (key: string) => str
         let errorMessage: string = error.message;
         switch (errorType) {
           case AddItemReturnValueType.ItemCodeNotFound:
-            errorMessage = t('itemCodeNotFoundError', errorData);
+            errorMessage = StringFormat(t('itemCodeNotFound'), errorData.ItemCode);
             break;
           case AddItemReturnValueType.ItemCodeBarCodeMismatch:
-            errorMessage = t('itemCodeBarCodeMismatchError', errorData);
+            errorMessage = StringFormat(t('itemCodeBarCodeMismatch'), errorData.BarCode, errorData.itemCode);
             break;
           case AddItemReturnValueType.TransactionIDNotExists:
-            errorMessage = t('transactionIDNotExistsError', errorData);
+            errorMessage = StringFormat(t('transactionIDNotExists'), errorData.ID);
             break;
           case AddItemReturnValueType.NotStockItem:
-            errorMessage = t('notStockItemError', errorData);
+            errorMessage = StringFormat(t('notStockItem'), errorData.ItemCode, errorData.BarCode);
             break;
           case AddItemReturnValueType.ItemNotInWarehouse:
-            errorMessage = t('itemNotInWarehouseError', errorData);
+            errorMessage = StringFormat(t('itemNotInWarehouse'), errorData.ItemCode, errorData.BarCode);
             break;
           case AddItemReturnValueType.BinNotExists:
-            errorMessage = t('binNotExistsError', errorData);
+            errorMessage = StringFormat(t('binNotExists'), errorData.BinEntry);
             break;
           case AddItemReturnValueType.BinNotInWarehouse:
-            errorMessage = t('binNotInWarehouseError', errorData);
+            errorMessage = StringFormat(t('binNotInWarehouse'), errorData.BinCode);
             break;
           case AddItemReturnValueType.BinMissing:
-            errorMessage = t('binMissingError', errorData);
+            errorMessage = t('binMissing');
             break;
           case AddItemReturnValueType.QuantityMoreAvailable:
-            errorMessage = t('quantityMoreAvailableError', errorData);
+            errorMessage = StringFormat(t('quantityMoreAvailable'), errorData.ItemCode);
             break;
         }
         return {
