@@ -1,18 +1,22 @@
-import {ItemCheckResponse} from "../item";
+import {ItemCheckResponse, ItemDetails} from "../item";
 import {useTranslation} from "react-i18next";
 import React from "react";
-import InfoBox, {InfoBoxValue} from "@/components/InfoBox";
+import InfoBox, {InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
+import {Card, CardContent} from "@/components";
 
-interface ItemDetailsListProps {
-    result: ItemCheckResponse;
-}
-const ItemDetailsList : React.FC<ItemDetailsListProps> = ({result}) => {
-    const { t } = useTranslation();
-    return <InfoBox>
-      <InfoBoxValue label={t("code")} value={result.itemCode}/>
-      <InfoBoxValue label={t("description")} value={result.itemName}/>
-      <InfoBoxValue label={t("qtyInUn")} value={`${result.numInBuy} ${result.buyUnitMsr}`}/>
-      <InfoBoxValue label={t("packUn")} value={`${result.purPackUn} ${result.purPackMsr}`}/>
-    </InfoBox>
+const ItemDetailsList = ({details}: { details: ItemDetails }) => {
+  const {t} = useTranslation();
+  const unitMeasure = details.buyUnitMsr.length > 0 ? details.buyUnitMsr : t("qtyInUn");
+  const packMeasure = details.purPackMsr.length > 0 ? details.purPackMsr : t("packUn")
+  return <Card>
+    <CardContent>
+      <SecondaryInfoBox>
+        <InfoBoxValue label={t("code")} value={details.itemCode}/>
+        <InfoBoxValue label={t("description")} value={details.itemName}/>
+        <InfoBoxValue label={unitMeasure} value={`${details.numInBuy}`}/>
+        <InfoBoxValue label={packMeasure} value={`${details.purPackUn}`}/>
+      </SecondaryInfoBox>
+    </CardContent>
+  </Card>
 };
 export default ItemDetailsList;

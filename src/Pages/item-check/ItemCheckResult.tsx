@@ -17,7 +17,7 @@ const ItemCheckResult: React.FC<ItemCheckResultProps> = ({result, submit, onClea
 
   return (
     <>
-      <ItemDetailsList result={result}/>
+      <ItemDetailsList details={result}/>
       <Tabs defaultValue="stock" className="mt-4">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="stock">{t("stock")}</TabsTrigger>

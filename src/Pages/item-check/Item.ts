@@ -2,13 +2,17 @@ import {itemMockup, itemStockMockup, updateItemBarMockup} from "@/assets/mockup"
 import {ResponseStatus} from "@/assets/Common";
 import {axiosInstance, Mockup } from "@/utils/axios-instance";
 
-export interface ItemCheckResponse {
+
+export interface ItemDetails {
   itemCode: string;
   itemName: string;
   numInBuy: number;
   buyUnitMsr: string;
   purPackUn: number;
   purPackMsr: string;
+}
+
+export interface ItemCheckResponse extends ItemDetails{
   barcodes: string[];
 }
 
