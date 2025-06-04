@@ -16,7 +16,7 @@ import {InfoBoxValue, SecondaryInfoBox, Separator} from "@/components";
 
 type CountingCardProps = {
   doc: Counting,
-  handleAction?: (docId: number, action: 'approve' | 'cancel') => void,
+  handleAction?: (docId: string, action: 'approve' | 'cancel') => void,
   supervisor?: boolean
 }
 
@@ -26,7 +26,7 @@ const CountingCard: React.FC<CountingCardProps> = ({doc, handleAction, superviso
   const navigate = useNavigate();
   const {user} = useAuth();
 
-  function handleOpen(id: number) {
+  function handleOpen(id: string) {
     navigate(`/counting/${id}`);
   }
 
@@ -43,10 +43,10 @@ const CountingCard: React.FC<CountingCardProps> = ({doc, handleAction, superviso
       )}
       <CardContent className="py-4">
         <SecondaryInfoBox>
-          <InfoBoxValue label={t('number')} value={doc.id}
+          <InfoBoxValue label={t('number')} value={doc.number}
                         onClick={handleOpenLink ? () => handleOpen(doc.id) : undefined}/>
-          <InfoBoxValue label={t('docDate')} value={dateFormat(new Date(doc.date))}/>
-          <InfoBoxValue label={t('createdBy')} value={doc.employee.name}/>
+          <InfoBoxValue label={t('docDate')} value={dateFormat(doc.date)}/>
+          <InfoBoxValue label={t('createdBy')} value={doc.createdByUser?.fullName}/>
           <InfoBoxValue label={t('status')} value={documentStatusToString(doc.status)}/>
         </SecondaryInfoBox>
         {supervisor && (

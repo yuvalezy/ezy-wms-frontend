@@ -30,11 +30,19 @@ export const createCounting = async (
     throw error; // Re-throwing so that the calling function can decide what to do with the error
   }
 }
+interface CountingActionResponse {
+  success: boolean;
+  externalEntry: string | null;
+  externalNumber: string | null;
+  errorMessage: string;
+  status: string;
+}
+
 export const countingAction = async (
-  id: number,
+  id: string,
   action: ObjectAction,
   user: UserInfo
-): Promise<boolean> => {
+): Promise<boolean | CountingActionResponse> => {
   try {
     if (Mockup) {
       if (action === "approve") {
@@ -45,19 +53,31 @@ export const countingAction = async (
       return true;
     }
 
-
-    const response = await axiosInstance.post<boolean>(
-      `Counting/${
-        action === "approve" ? "Process" : "Cancel"
-      }`,
-      {
-        ID: id,
-      },
-    );
-    return response.data;
+    if (action === "cancel") {
+      const response = await axiosInstance.post<boolean>(
+        `Counting/Cancel`,
+        {
+          ID: id,
+        },
+      );
+      return response.data;
+    } else {
+      const response = await axiosInstance.post<CountingActionResponse>(
+        `Counting/Process`,
+        {
+          ID: id,
+        },
+      );
+      
+      if (!response.data.success) {
+        throw new Error(response.data.errorMessage);
+      }
+      
+      return response.data;
+    }
   } catch (error) {
-    console.error("Error creating counting: ", error);
-    throw error; // Re-throwing so that the calling function can decide what to do with the error
+    console.error("Error processing counting: ", error);
+    throw error;
   }
 };
 export const fetchCountings = async (
@@ -96,7 +116,7 @@ export const fetchCountings = async (
       queryParams.append("Date", date.toISOString());
     }
 
-    const url = `Counting/Countings?${queryParams.toString()}`;
+    const url = `Counting?${queryParams.toString()}`;
 
     const response = await axiosInstance.get<Counting[]>(url, );
 

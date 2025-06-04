@@ -67,14 +67,14 @@ export default function CountingList() {
                     <TableCell>
                       {handleOpenLink ? (
                         <a href="#" onClick={(e) => { e.preventDefault(); handleOpen(doc.id); }} className="text-blue-600 hover:underline">
-                          {doc.id}
+                          {doc.number}
                         </a>
                       ) : (
-                        doc.id
+                        doc.number
                       )}
                     </TableCell>
-                    <TableCell>{dateFormat(new Date(doc.date))}</TableCell>
-                    <TableCell>{doc.employee.name}</TableCell>
+                    <TableCell>{dateFormat(doc.date)}</TableCell>
+                    <TableCell>{doc.createdByUser?.fullName}</TableCell>
                     <TableCell>{documentStatusToString(doc.status)}</TableCell>
                   </TableRow>
                 ))}

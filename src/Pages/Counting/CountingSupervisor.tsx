@@ -32,7 +32,7 @@ export default function CountingSupervisor() {
   const {t} = useTranslation();
   const {setLoading, setError} = useThemeContext();
   const [countings, setCountings] = useState<Counting[]>([]);
-  const [selectedID, setSelectedID] = useState<number | null>(
+  const [selectedID, setSelectedID] = useState<string | null>(
     null
   );
   const [actionType, setActionType] = useState<ObjectAction | null>(null);
@@ -57,7 +57,7 @@ export default function CountingSupervisor() {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleAction = (docId: number, action: ObjectAction) => {
+  const handleAction = (docId: string, action: ObjectAction) => {
     setSelectedID(docId);
     setActionType(action);
     setDialogOpen(true);
@@ -67,11 +67,13 @@ export default function CountingSupervisor() {
     setLoading(true);
     setDialogOpen(false);
     countingAction(selectedID!, actionType!, user!)
-      .then(() => {
-        setCountings((prev) =>
-          prev.filter((count) => count.id !== selectedID)
-        );
-        toast.success(actionType === "approve" ? t("approved") : t("cancelled"));
+      .then((result) => {
+        if (typeof result === "boolean" || result.success) {
+          setCountings((prev) =>
+            prev.filter((count) => count.id !== selectedID)
+          );
+          toast.success(actionType === "approve" ? t("approved") : t("cancelled"));
+        }
       })
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
@@ -112,14 +114,14 @@ export default function CountingSupervisor() {
                 <TableCell>
                   {handleOpenLink ? (
                     <a href="#" onClick={(e) => { e.preventDefault(); handleOpen(doc.id); }} className="text-blue-600 hover:underline">
-                      {doc.id}
+                      {doc.number}
                     </a>
                   ) : (
-                    doc.id
+                    doc.number
                   )}
                 </TableCell>
-                <TableCell>{dateFormat(new Date(doc.date))}</TableCell>
-                <TableCell>{doc.employee.name}</TableCell>
+                <TableCell>{dateFormat(doc.date)}</TableCell>
+                <TableCell>{doc.createdByUser?.fullName}</TableCell>
                 <TableCell>{documentStatusToString(doc.status)}</TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>
