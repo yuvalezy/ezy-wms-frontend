@@ -5,23 +5,14 @@ import {useThemeContext} from "@/components/ThemeContext";
 import {fetchCountings} from "@/pages/Counting/data/Counting";
 import {Counting} from "@/assets/Counting";
 import CountingCard from "@/pages/Counting/components/CountingCard";
+import CountingTable from "@/pages/Counting/components/CountingTable";
 import {Alert, AlertDescription} from "@/components";
 import {AlertCircle} from "lucide-react";
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import {useNavigate} from "react-router-dom";
-import {useAuth} from "@/components/AppContext";
-import {RoleType} from "@/assets/RoleType";
-import {useDocumentStatusToString} from "@/assets/DocumentStatusString";
-import {useDateTimeFormat} from "@/assets/DateFormat";
 
 export default function CountingList() {
   const {setLoading, setError} = useThemeContext();
   const {t} = useTranslation();
   const [data, setData] = useState<Counting[]>([]);
-  const navigate = useNavigate();
-  const {user} = useAuth();
-  const {dateFormat} = useDateTimeFormat();
-  const documentStatusToString = useDocumentStatusToString();
 
   useEffect(() => {
     setLoading(true);
@@ -31,11 +22,6 @@ export default function CountingList() {
       .finally(() => setLoading(false));
   }, [setError, setLoading]);
 
-  function handleOpen(id: number) {
-    navigate(`/counting/${id}`);
-  }
-
-  let handleOpenLink = user?.roles?.includes(RoleType.COUNTING);
 
   return (
     <ContentTheme title={t("counting")}>
@@ -50,36 +36,7 @@ export default function CountingList() {
           
           {/* Desktop view - Table */}
           <div className="hidden sm:block">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('id')}</TableHead>
-                  <TableHead>{t('number')}</TableHead>
-                  <TableHead>{t('docDate')}</TableHead>
-                  <TableHead>{t('createdBy')}</TableHead>
-                  <TableHead>{t('status')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data.map((doc) => (
-                  <TableRow key={doc.id}>
-                    <TableCell>{doc.name || '-'}</TableCell>
-                    <TableCell>
-                      {handleOpenLink ? (
-                        <a href="#" onClick={(e) => { e.preventDefault(); handleOpen(doc.id); }} className="text-blue-600 hover:underline">
-                          {doc.number}
-                        </a>
-                      ) : (
-                        doc.number
-                      )}
-                    </TableCell>
-                    <TableCell>{dateFormat(doc.date)}</TableCell>
-                    <TableCell>{doc.createdByUser?.fullName}</TableCell>
-                    <TableCell>{documentStatusToString(doc.status)}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            <CountingTable countings={data} />
           </div>
         </>
       ) : (

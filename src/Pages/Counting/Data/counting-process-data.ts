@@ -1,6 +1,6 @@
 import {useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import {BinLocation, CountingContent, IsNumeric, Item, UnitType, useDateTimeFormat} from "@/assets";
+import {BinLocation, Counting, CountingContent, IsNumeric, Item, UnitType, useDateTimeFormat} from "@/assets";
 import {useEffect, useRef, useState} from "react";
 import {
   BarCodeScannerRef,
@@ -10,14 +10,14 @@ import {
   useAuth,
   useThemeContext
 } from "@/components";
-import {fetchCountingContent} from "@/pages/Counting/data/Counting";
+import {fetchCounting, fetchCountingContent} from "@/pages/Counting/data/Counting";
 import {addItem} from "@/pages/Counting/data/CountingProcess";
+import {getProcessInfo, TransferDocument} from "@/pages/transfer/data/transfer-document";
 
 export const useCountingProcessData = () => {
   const {scanCode} = useParams();
-  const {t} = useTranslation();
   const {dateTimeFormat} = useDateTimeFormat();
-  const [id, setID] = useState<number | null>();
+  const [id, setID] = useState<string | null>();
   const [binLocation, setBinLocation] = useState<BinLocation | null>(null);
   const binLocationRef = useRef<BinLocationScannerRef>(null);
   const [enable, setEnable] = useState(false);
@@ -29,6 +29,7 @@ export const useCountingProcessData = () => {
   const processesRef = useRef<ProcessesRef>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const processAlertRef = useRef<HTMLDivElement>(null);
+  const [info, setInfo] = useState<Counting | null>(null);
 
 
   useEffect(() => {
@@ -42,6 +43,10 @@ export const useCountingProcessData = () => {
       binLocationRef.current?.focus();
     }, 1);
     setID(scanCode);
+    fetchCounting(scanCode)
+      .then((result) => setInfo(result))
+      .catch((error) => setError(error))
+      .finally(() => setLoading(false));
   }, [scanCode, user?.binLocations]);
 
   function onBinChanged(bin: BinLocation) {
@@ -161,6 +166,7 @@ export const useCountingProcessData = () => {
     handleCancel,
     handleAddItem,
     scrollRef,
-    processAlertRef
+    processAlertRef,
+    info
   }
 }

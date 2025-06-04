@@ -11,17 +11,7 @@ import {ObjectAction, Status} from "@/assets/Common";
 import {MessageBox} from "@/components/ui/message-box";
 import { toast } from "sonner";
 import CountingForm from "@/pages/Counting/components/CountingForm";
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import {Button} from "@/components/ui/button";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faFileAlt, faEllipsisV} from '@fortawesome/free-solid-svg-icons';
-import {CheckCircle, XCircle} from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import CountingTable from "@/pages/Counting/components/CountingTable";
 import {useNavigate} from "react-router-dom";
 import {RoleType} from "@/assets/RoleType";
 import {useDocumentStatusToString} from "@/assets/DocumentStatusString";
@@ -96,65 +86,11 @@ export default function CountingSupervisor() {
       
       {/* Desktop view - Table */}
       <div className="hidden sm:block">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>{t('id')}</TableHead>
-              <TableHead>{t('number')}</TableHead>
-              <TableHead>{t('docDate')}</TableHead>
-              <TableHead>{t('createdBy')}</TableHead>
-              <TableHead>{t('status')}</TableHead>
-              <TableHead className="text-right"></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {countings.map((doc) => (
-              <TableRow key={doc.id}>
-                <TableCell>{doc.name || '-'}</TableCell>
-                <TableCell>
-                  {handleOpenLink ? (
-                    <a href="#" onClick={(e) => { e.preventDefault(); handleOpen(doc.id); }} className="text-blue-600 hover:underline">
-                      {doc.number}
-                    </a>
-                  ) : (
-                    doc.number
-                  )}
-                </TableCell>
-                <TableCell>{dateFormat(doc.date)}</TableCell>
-                <TableCell>{doc.createdByUser?.fullName}</TableCell>
-                <TableCell>{documentStatusToString(doc.status)}</TableCell>
-                <TableCell className="text-right">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                        <FontAwesomeIcon icon={faEllipsisV} className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => navigate(`/countingSummaryReport/${doc.id}`)}>
-                        <FontAwesomeIcon icon={faFileAlt} className="mr-2 h-4 w-4" />
-                        {t('countingSummaryReport')}
-                      </DropdownMenuItem>
-                      {doc.status === Status.InProgress && (
-                        <DropdownMenuItem onClick={() => handleAction?.(doc.id, 'approve')}>
-                          <CheckCircle className="mr-2 h-4 w-4" />
-                          {t('finish')}
-                        </DropdownMenuItem>
-                      )}
-                      <DropdownMenuItem 
-                        onClick={() => handleAction?.(doc.id, 'cancel')}
-                        className="text-destructive"
-                      >
-                        <XCircle className="mr-2 h-4 w-4" />
-                        {t('cancel')}
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <CountingTable 
+          countings={countings} 
+          supervisor={true} 
+          onAction={handleAction} 
+        />
       </div>
       <MessageBox
         onConfirm={handleConfirmAction}

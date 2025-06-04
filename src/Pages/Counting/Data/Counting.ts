@@ -127,16 +127,28 @@ export const fetchCountings = async (
   }
 };
 
-export const fetchCountingContent = async (id: number, binEntry?: number): Promise<CountingContent[]> => {
+
+export const fetchCounting = async (id: string): Promise<Counting> => {
+  try {
+    if (Mockup) {
+      console.log("Mockup data is being used.");
+      return countingMockup;
+    }
+
+    const response = await axiosInstance.get<Counting>(`Counting/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching counting:", error);
+    throw error;
+  }
+}
+
+export const fetchCountingContent = async (id: string, binEntry?: number): Promise<CountingContent[]> => {
   try {
     if (Mockup) {
       console.log("Mockup data is being used.");
       //todo return mockup
     }
-
-
-
-
     const url = `Counting/CountingContent`;
 
     const response = await axiosInstance.post<CountingContent[]>(
