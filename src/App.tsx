@@ -34,6 +34,9 @@ import GoodsReceiptProcessDifferenceReport from "./pages/GoodsReceipt/GoodsRecei
 import TransferProcessTargetBins from "./pages/transfer/transfer-process-target-bins";
 import TransferRequest from "./pages/transfer/transfer-request";
 import { Toaster } from 'sonner';
+import CancellationReasonsList from "@/pages/settings/cancellation-reasons/cancellation-reasons-list";
+import UsersList from "@/pages/settings/users/users-list";
+import AuthorizationGroupsList from "@/pages/settings/authorization-groups/authorization-groups-list";
 
 export default function App() {
     const {user} = useAuth();
@@ -99,6 +102,10 @@ export default function App() {
                     {/*<Route path="/transfer/:scanCode/targetItems/:itemCode" element={<ProtectedRoute authorization={Authorization.TRANSFER} element={<TransferProcessTargetItem/>}/>}/>*/}
                     <Route path="/transferSupervisor" element={<ProtectedRoute authorization={RoleType.TRANSFER_SUPERVISOR} element={<TransferSupervisor/>}/>}/>
                     <Route path="/transferRequest" element={<ProtectedRoute authorization={RoleType.TRANSFER_REQUEST} element={<TransferRequest/>}/>}/>
+                    {/*Settings*/}
+                    <Route path="/settings/cancelReasons" element={<ProtectedRoute superUser element={<CancellationReasonsList/>}/>}/>
+                    <Route path="/settings/users" element={<ProtectedRoute superUser element={<UsersList/>}/>}/>
+                    <Route path="/settings/authorizationGroups" element={<ProtectedRoute superUser element={<AuthorizationGroupsList/>}/>}/>
                     <Route path="/" element={<ProtectedRoute element={<HomePage/>}/>}/>
                     <Route path="*" element={<NotFound/>}/>
                 </Routes>

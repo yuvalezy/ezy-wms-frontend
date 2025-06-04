@@ -16,6 +16,7 @@ interface AuthContextType {
   companyName?: string | null;
   login: (password: string, warehouse?: string) => Promise<void>;
   logout: () => void;
+  isLoading: boolean; // Add loading state
 }
 
 const AuthContextDefaultValues: AuthContextType = {
@@ -26,6 +27,7 @@ const AuthContextDefaultValues: AuthContextType = {
   },
   logout: () => {
   },
+  isLoading: true, // Default to loading
 };
 
 export const AuthContext = createContext<AuthContextType>(
@@ -44,6 +46,7 @@ interface ErrorResponse {
 export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   const [user, setUser] = useState<UserInfo | null>(null);
   const [companyName, setCompanyName] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true); // Add loading state
   const baseUrl = `${ServerUrl}/api/`;
 
   useEffect(() => {
@@ -66,11 +69,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         // Check if token exists and is not expired
         const token = localStorage.getItem('authToken');
         const expiration = localStorage.getItem('tokenExpiration');
-        
+
         if (token && expiration) {
           const expirationDate = new Date(expiration);
           const now = new Date();
-          
+
           if (expirationDate > now) {
             // Token is valid, fetch user info
             const response = await axiosInstance.get<UserInfo>(`General/UserInfo`);
@@ -93,6 +96,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
           setUser(null);
         }
         // For other errors, don't clear the token - might be a network issue
+      } finally {
+        setIsLoading(false); // Always set loading to false
       }
     };
     fetchUser()
@@ -127,18 +132,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     const response = await axios.post(`${baseUrl}authentication/login`, loginData, {withCredentials: true});
     if (response.status === 200) {
       const loginResponse = response.data;
-      
+
       // Save token and expiration to localStorage
       if (loginResponse.token) {
         localStorage.setItem('authToken', loginResponse.token);
         localStorage.setItem('tokenExpiration', loginResponse.expiresAt);
-        // Also set it in axios defaults immediately
-        axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${loginResponse.token}`;
       }
-      
+
       // Add a small delay to ensure cookie is set
       await new Promise(resolve => setTimeout(resolve, 100));
-      
+
       const userInfoResponse = await axiosInstance.get<UserInfo>(`general/userInfo`);
 
       let data = userInfoResponse.data;
@@ -166,6 +169,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         RoleType.PICKING_SUPERVISOR,
         RoleType.COUNTING,
         RoleType.COUNTING_SUPERVISOR,
+        RoleType.SETTINGS,
       ],
       settings: {
         goodsReceiptDraft: false,
@@ -175,6 +179,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       }
     };
 
+    setIsLoading(false);
     return setUser(userInfoResponse);
   }
 
@@ -198,6 +203,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     companyName,
     login,
     logout,
+    isLoading,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
