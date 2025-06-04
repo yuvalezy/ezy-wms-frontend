@@ -141,9 +141,6 @@ export const fetchPickings = async (params?: pickingsParameters): Promise<Pickin
         }
 
 
-
-        
-
         const queryParams = new URLSearchParams();
         if (params != null) {
             if (params.id !== undefined) {
@@ -158,7 +155,7 @@ export const fetchPickings = async (params?: pickingsParameters): Promise<Pickin
             }
         }
 
-        const url = `Picking/Pickings?${queryParams.toString()}`;
+        const url = `Picking?${queryParams.toString()}`;
 
         const response = await axiosInstance.get<PickingDocument[]>(url);
 
