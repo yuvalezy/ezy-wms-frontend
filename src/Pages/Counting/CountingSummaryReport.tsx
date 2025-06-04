@@ -9,7 +9,6 @@ import {exportToExcel} from "@/utils/excelExport";
 import ContentTheme from "@/components/ContentTheme";
 
 export default function CountingSummaryReport() {
-  const [id, setID] = useState<number | null>();
   const {scanCode} = useParams();
   const {setLoading, setError} = useThemeContext();
   const {t} = useTranslation();
@@ -18,26 +17,21 @@ export default function CountingSummaryReport() {
 
   useEffect(() => {
     if (scanCode === null || scanCode === undefined) {
-      setID(null);
       return;
     }
-    let number = parseInt(scanCode);
-    setID(number);
-
     setLoading(true);
-    fetchCountingSummaryReport(number)
+    fetchCountingSummaryReport(scanCode)
       .then((result) => setData(result))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
   }, []);
 
+
   const excelHeaders = [
     t("bin"),
     t("code"),
     t("description"),
-    t("units"),
-    t("dozens"),
-    t("packs")
+    t("quantity"),
   ];
 
   const excelData = () => {
@@ -45,9 +39,7 @@ export default function CountingSummaryReport() {
       item.binCode,
       item.itemCode,
       item.itemName,
-      item.unit,
-      item.dozen,
-      item.pack
+      item.quantity,
     ]) ?? [];
   };
 
@@ -56,20 +48,20 @@ export default function CountingSummaryReport() {
       name: "CountingData",
       headers: excelHeaders,
       getData: excelData,
-      fileName: `counting_data_${id}`
+      fileName: `counting_data_${data?.number}`
     });
   };
 
   return (
     <ContentTheme title={t("countingSupervisor")}
                   titleOnClick={() => navigate('/countingSupervisor')}
-                  titleBreadcrumbs={[{label: `${id}`}, {label: t("countingSummaryReport")}]}
+                  titleBreadcrumbs={[{label: `${data?.number}`}, {label: t("countingSummaryReport")}]}
                   onExportExcel={handleExportExcel}>
       <div className="space-y-4">
         {data?.name && (
           <div className="flex flex-col space-y-2">
             <h2 className="text-2xl font-semibold text-muted-foreground">
-              {t("id")} {data?.name}
+              {t("id")}: {data?.name}
             </h2>
           </div>
         )}
