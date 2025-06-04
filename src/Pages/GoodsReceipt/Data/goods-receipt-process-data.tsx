@@ -34,11 +34,11 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
 
   useEffect(() => {
     setTimeout(() => barcodeRef.current?.focus(), 1);
-    if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
+    if (scanCode === null || scanCode === undefined) {
       setID(null);
       return;
     }
-    setID(parseInt(scanCode));
+    setID(scanCode);
   }, []);
 
   const alert = (alert: ProcessAlertValue) => {

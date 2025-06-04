@@ -23,7 +23,7 @@ export default function TransferSupervisor() {
     const {t} = useTranslation();
     const {setLoading, setError} = useThemeContext();
     const [transfers, setTransfers] = useState<TransferDocument[]>([]);
-    const [selectedTransferId, setSelectedTransferId] = useState<string | null>(null);
+    const [selectedTransfer, setSelectedTransfer] = useState<TransferDocument | null>(null);
     const [actionType, setActionType] = useState<ObjectAction | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -37,10 +37,11 @@ export default function TransferSupervisor() {
     const handleConfirmAction = () => {
         setLoading(true);
         setDialogOpen(false);
-        transferAction(selectedTransferId!, actionType!)
+        const id = selectedTransfer?.id!;
+        transferAction(id, actionType!)
             .then(() => {
                 setTransfers((prevTransfers) =>
-                    prevTransfers.filter((transfer) => transfer.id !== selectedTransferId)
+                    prevTransfers.filter((transfer) => transfer.id !== id)
                 );
                 toast.success(actionType === "approve" ? t("transferApproved") : t("transferCancelled"));
             })
@@ -50,8 +51,8 @@ export default function TransferSupervisor() {
             .finally(() => setLoading(false));
     };
 
-    function handleAction(id: string, action: 'approve' | 'cancel') {
-        setSelectedTransferId(id);
+    function handleAction(transfer: TransferDocument, action: 'approve' | 'cancel') {
+        setSelectedTransfer(transfer);
         setActionType(action);
         setDialogOpen(true);
     }
@@ -85,7 +86,7 @@ export default function TransferSupervisor() {
                                 actionType === "approve"
                                     ? t("confirmFinishTransfer")
                                     : t("confirmCancelTransfer"),
-                                selectedTransferId
+                                selectedTransfer?.number
                             )}
                             <br/> {t('actionCannotReverse')}
                         </AlertDialogDescription>

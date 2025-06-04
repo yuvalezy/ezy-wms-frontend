@@ -33,7 +33,7 @@ export const useCountingProcessData = () => {
 
   useEffect(() => {
     setEnable(!user?.binLocations);
-    if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
+    if (scanCode === null || scanCode === undefined) {
       setID(null);
       return;
     }
@@ -41,7 +41,7 @@ export const useCountingProcessData = () => {
       barcodeRef.current?.focus();
       binLocationRef.current?.focus();
     }, 1);
-    setID(parseInt(scanCode));
+    setID(scanCode);
   }, [scanCode, user?.binLocations]);
 
   function onBinChanged(bin: BinLocation) {

@@ -2,13 +2,19 @@ import {useParams} from "react-router-dom";
 import {BinLocation, IsNumeric, Item, SourceTarget, UnitType, useDateTimeFormat} from "@/assets";
 import {useEffect, useRef, useState} from "react";
 import {BarCodeScannerRef, ProcessAlertValue, ProcessesRef, useAuth, useThemeContext} from "@/components";
-import {addItem, fetchTransferContent, TransferContent} from "@/pages/transfer/data/transfer-document";
+import {
+  addItem,
+  fetchTransferContent, getProcessInfo,
+  TransferContent,
+  TransferDocument
+} from "@/pages/transfer/data/transfer-document";
 
 export const useTransferProcessTargetBinsData = () => {
   const {scanCode} = useParams();
   const {dateTimeFormat} = useDateTimeFormat();
   const [id, setID] = useState<string | null>();
   const [binLocation, setBinLocation] = useState<BinLocation | null>(null);
+  const [info, setInfo] = useState<TransferDocument | null>(null);
   const [enable, setEnable] = useState(false);
   const {setLoading, setError} = useThemeContext();
   const {user} = useAuth();
@@ -23,11 +29,15 @@ export const useTransferProcessTargetBinsData = () => {
     if (enable) {
       setTimeout(() => barcodeRef.current?.focus(), 1);
     }
-    if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
+    if (scanCode === null || scanCode === undefined) {
       setID(null);
       return;
     }
-    setID(parseInt(scanCode));
+    setID(scanCode);
+    getProcessInfo(scanCode)
+      .then((result) => setInfo(result))
+      .catch((error) => setError(error))
+      .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
@@ -158,6 +168,7 @@ export const useTransferProcessTargetBinsData = () => {
     handleQuantityChanged,
     handleCancel,
     scanCode,
-    user
+    user,
+    info
   }
 }

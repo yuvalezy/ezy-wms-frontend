@@ -17,7 +17,7 @@ export default function CountingSummaryReport() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
+    if (scanCode === null || scanCode === undefined) {
       setID(null);
       return;
     }

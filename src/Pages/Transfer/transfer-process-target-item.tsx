@@ -48,7 +48,7 @@ export default function TransferProcessTargetItem() {
 //     const title = `${t("transfer")} #${scanCode} - ${t("selectTransferTargetItems")}`;
 //
 //     useEffect(() => {
-//         if (scanCode == null || !IsNumeric(scanCode) || itemCode == null) {
+//         if (scanCode == null || itemCode == null) {
 //             setID(null);
 //             return;
 //         }

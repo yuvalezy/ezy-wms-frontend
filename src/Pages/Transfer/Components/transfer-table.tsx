@@ -24,7 +24,7 @@ import { Status } from "@/assets/Common";
 interface TransferTableProps {
   transfers: TransferDocument[];
   supervisor?: boolean;
-  onAction?: (id: string, action: 'approve' | 'cancel') => void;
+  onAction?: (transfer: TransferDocument, action: 'approve' | 'cancel') => void;
 }
 
 export default function TransferTable({ transfers, supervisor = false, onAction }: TransferTableProps) {
@@ -36,8 +36,8 @@ export default function TransferTable({ transfers, supervisor = false, onAction 
 
   const handleOpenLink = user?.roles?.includes(RoleType.TRANSFER);
 
-  function handleOpen(id: string | number) {
-    navigate(`/transfer/${id}`);
+  function handleOpen(transfer: TransferDocument) {
+    navigate(`/transfer/${transfer.id}`);
   }
 
   return (
@@ -66,7 +66,7 @@ export default function TransferTable({ transfers, supervisor = false, onAction 
                     href="#" 
                     onClick={(e) => { 
                       e.preventDefault(); 
-                      handleOpen(doc.id); 
+                      handleOpen(doc);
                     }} 
                     className="text-blue-600 hover:underline"
                   >
@@ -96,13 +96,13 @@ export default function TransferTable({ transfers, supervisor = false, onAction 
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       {doc.status === Status.InProgress && doc.progress === 100 && (
-                        <DropdownMenuItem onClick={() => onAction?.(doc.id, 'approve')}>
+                        <DropdownMenuItem onClick={() => onAction?.(doc, 'approve')}>
                           <CheckCircle className="mr-2 h-4 w-4" />
                           {t('finish')}
                         </DropdownMenuItem>
                       )}
                       <DropdownMenuItem 
-                        onClick={() => onAction?.(doc.id, 'cancel')}
+                        onClick={() => onAction?.(doc, 'cancel')}
                         className="text-destructive"
                       >
                         <XCircle className="mr-2 h-4 w-4" />

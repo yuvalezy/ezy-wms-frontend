@@ -17,7 +17,7 @@ import InfoBox from "@/components/InfoBox";
 
 type TransferCardProps = {
   doc: TransferDocument,
-  onAction?: (id: string, action: 'approve' | 'cancel') => void,
+  onAction?: (transfer: TransferDocument, action: 'approve' | 'cancel') => void,
   supervisor?: boolean,
   header?: boolean
 }
@@ -28,8 +28,8 @@ const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = 
   const {user} = useAuth();
   const {dateFormat} = useDateTimeFormat();
 
-  function handleOpen(id: string) {
-    navigate(`/transfer/${id}`);
+  function handleOpen(transfer: TransferDocument) {
+    navigate(`/transfer/${transfer.id}`);
   }
 
   let handleOpenLink = user?.roles?.includes(RoleType.TRANSFER);
@@ -42,7 +42,7 @@ const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = 
       <CardContent className="py-4">
         <SecondaryInfoBox>
           <InfoBoxValue label={t('number')} value={doc.number}
-                        onClick={handleOpenLink ? () => handleOpen(doc.id) : undefined}/>
+                        onClick={handleOpenLink ? () => handleOpen(doc) : undefined}/>
           {doc.name && <InfoBoxValue label={t('id')} value={doc.name}/>}
           <InfoBoxValue label={t('docDate')} value={dateFormat(doc.date)}/>
           <InfoBoxValue label={t('createdBy')} value={doc.createdByUser?.fullName}/>
@@ -63,12 +63,12 @@ const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = 
       {supervisor && (
         <CardFooter className="flex justify-end space-x-2 pt-4 border-t">
           {doc.status === Status.InProgress && doc.progress === 100 && (
-            <Button variant="default" onClick={() => onAction?.(doc.id, 'approve')}
+            <Button variant="default" onClick={() => onAction?.(doc, 'approve')}
                     className="bg-green-500 hover:bg-green-600 text-white">
               <CheckCircle className="mr-2 h-4 w-4"/>{t('finish')}
             </Button>
           )}
-          <Button variant="destructive" onClick={() => onAction?.(doc.id, 'cancel')}>
+          <Button variant="destructive" onClick={() => onAction?.(doc, 'cancel')}>
             <XCircle className="mr-2 h-4 w-4"/>{t('cancel')}
           </Button>
         </CardFooter>

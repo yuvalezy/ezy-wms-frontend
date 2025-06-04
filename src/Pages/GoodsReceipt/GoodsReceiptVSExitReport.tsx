@@ -29,7 +29,7 @@ export default function GoodsReceiptVSExitReport({confirm}: GoodsReceiptVSExitRe
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
+    if (scanCode === null || scanCode === undefined) {
       return;
     }
     setLoading(true);

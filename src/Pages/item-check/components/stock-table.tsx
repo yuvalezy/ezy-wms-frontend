@@ -26,7 +26,7 @@ const StockTable: React.FC<StockTableProps> = ({result}) => {
   }, [result, setLoading, setError]);
 
   if (!result) {
-    return null; // Or some placeholder if result is not yet available
+    return null;
   }
 
   return (

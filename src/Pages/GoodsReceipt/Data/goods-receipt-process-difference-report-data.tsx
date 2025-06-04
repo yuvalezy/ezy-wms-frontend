@@ -21,11 +21,11 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
   const [report, setReport] = useState<GoodsReceiptValidateProcess | null>(null);
 
   useEffect(() => {
-    if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
+    if (scanCode === null || scanCode === undefined) {
       setID(null);
       return;
     }
-    setID(parseInt(scanCode));
+    setID(scanCode);
 
     setLoading(true);
     fetchGoodsReceiptValidateProcess(parseInt(scanCode))

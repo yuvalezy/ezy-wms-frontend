@@ -10,7 +10,7 @@ export interface ProcessesRef {
 }
 
 export interface ProcessesProps {
-    id: number;
+    id: string;
     alert: ProcessAlertValue | null;
     reasonType: ReasonType
     supervisorPassword?: boolean;

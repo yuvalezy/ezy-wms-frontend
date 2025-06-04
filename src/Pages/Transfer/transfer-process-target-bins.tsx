@@ -23,10 +23,12 @@ import {useTransferProcessTargetBinsData} from "@/pages/transfer/data/transfer-p
 import {Card, CardContent, FullInfoBox, InfoBoxValue, MetricRow, SecondaryInfoBox} from "@/components";
 import {formatNumber} from "@/lib/utils";
 import {AlertCircle} from "lucide-react";
+import {useStockInfo} from "@/utils/stock-info";
 
 export default function TransferProcessTargetBins() {
   const {t} = useTranslation();
   const navigate = useNavigate();
+  const stockInfo = useStockInfo();
   const {
     id,
     binLocation,
@@ -43,14 +45,15 @@ export default function TransferProcessTargetBins() {
     handleQuantityChanged,
     handleCancel,
     scanCode,
-    user
+    user,
+    info
   } = useTransferProcessTargetBinsData();
 
   if (!id)
     return null;
 
   const titleBreadcrumbs = [
-    {label: scanCode ?? '', onClick: () => navigate(`/transfer/${scanCode}`)},
+    {label: info?.number?.toString() ?? '', onClick: () => navigate(`/transfer/${scanCode}`)},
     {label: t("selectTransferTargetBins"), onClick: binLocation ? onBinClear : undefined}
   ];
   if (binLocation) {

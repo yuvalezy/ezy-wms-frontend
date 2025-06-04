@@ -3,7 +3,6 @@ import {useNavigate} from "react-router-dom";
 import {Button, Card, CardContent, FullInfoBox, InfoBoxValue, SecondaryInfoBox} from "@/components";
 import {useTranslation} from "react-i18next";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
-import {Label} from "@/components/ui/label";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import BarCodeScanner from "@/components/BarCodeScanner";
 import BinLocationScanner from "@/components/BinLocationScanner";
@@ -13,10 +12,12 @@ import Processes from "@/components/Processes";
 import {updateLine} from "@/pages/transfer/data/transfer-process";
 import {AlertCircle} from "lucide-react";
 import {useTransferProcessSourceData} from "@/pages/transfer/data/transfer-process-source-data";
+import {useStockInfo} from "@/utils/stock-info";
 
 export default function TransferProcessSource() {
   const {t} = useTranslation();
   const navigate = useNavigate();
+  const stockInfo = useStockInfo();
   const {
     id,
     binLocation,
@@ -32,13 +33,14 @@ export default function TransferProcessSource() {
     handleQuantityChanged,
     handleCancel,
     scanCode,
-    user
+    user,
+    info
   } = useTransferProcessSourceData();
   if (!id)
     return null;
 
   const titleBreadcrumbs = [
-    {label: scanCode ?? '', onClick: () => navigate(`/transfer/${scanCode}`)},
+    {label: info?.number?.toString() ?? '', onClick: () => navigate(`/transfer/${scanCode}`)},
     {label: t("selectTransferSource"), onClick: binLocation ? onBinClear : undefined}
   ];
   if (binLocation) {
@@ -92,9 +94,6 @@ export default function TransferProcessSource() {
                     <TableHead>{t('code')}</TableHead>
                     <TableHead>{t('description')}</TableHead>
                     <TableHead>{t('quantity')}</TableHead>
-                    <TableHead>{t('unit')}</TableHead>
-                    <TableHead>{t('qtyInUn')}</TableHead>
-                    <TableHead>{t('qtyInPack')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -102,14 +101,15 @@ export default function TransferProcessSource() {
                     <TableRow key={row.code}>
                       <TableCell>{row.code}</TableCell>
                       <TableCell>{row.name}</TableCell>
-                      <TableCell>{row.quantity}</TableCell>
                       <TableCell>
-                        {row.unit === UnitType.Unit ? t('unit') :
-                         row.unit === UnitType.Dozen ? row.buyUnitMsr ?? t('buyUnit') :
-                         row.purPackMsr ?? t('packUnit')}
+                        {stockInfo({
+                          quantity: row.quantity,
+                          numInBuy: row.numInBuy,
+                          buyUnitMsr: row.buyUnitMsr,
+                          purPackUn: row.purPackUn,
+                          purPackMsr: row.purPackMsr,
+                        })}
                       </TableCell>
-                      <TableCell>{row.unit !== UnitType.Unit ? row.numInBuy.toString() : '-'}</TableCell>
-                      <TableCell>{row.unit === UnitType.Pack ? row.purPackUn.toString() : '-'}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

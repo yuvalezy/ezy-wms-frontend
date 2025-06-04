@@ -18,7 +18,7 @@ export const useGoodsReceiptAllData = (confirm: boolean | undefined) => {
   const detailRef = useRef<GRPOAllDetailRef>();
 
   useEffect(() => {
-    if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
+    if (scanCode === null || scanCode === undefined) {
       setID(null);
       return;
     }
