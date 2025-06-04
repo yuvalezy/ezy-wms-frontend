@@ -10,6 +10,7 @@ import {
 } from "@/pages/GoodsReceipt/data/Report";
 import {IsNumeric} from "@/assets/Functions";
 import {exportToExcel} from "@/utils/excelExport";
+import {formatQuantityForExcel} from "@/utils/excel-quantity-format";
 
 export const useGoodsReceiptProcessDifferenceReportData = () => {
   const {t} = useTranslation();
@@ -37,11 +38,13 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
   const excelHeaders = [
     t("code"),
     t("description"),
-    t("Quantity"),
+    t("pack"),
+    t("dozen"),
+    t("unit"),
   ];
 
   function excelData() {
-    const itemMap: { [key: string]: (string | number)[] } = {};
+    const itemMap: { [key: string]: { itemCode: string, itemName: string, quantity: number, numInBuy: number, buyUnitMsr: string, purPackUn: number, purPackMsr: string } } = {};
     const issueFoundMap: { [key: string]: boolean } = {};
 
     data?.forEach(value => {
@@ -49,9 +52,17 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
         let itemCode = line.itemCode;
         let quantity = line.quantity;
         if (!itemMap[itemCode]) {
-          itemMap[itemCode] = [itemCode, line.itemName, quantity];
+          itemMap[itemCode] = {
+            itemCode: itemCode,
+            itemName: line.itemName,
+            quantity: quantity,
+            numInBuy: line.numInBuy,
+            buyUnitMsr: line.buyUnitMsr,
+            purPackUn: line.purPackUn,
+            purPackMsr: line.purPackMsr
+          };
         } else {
-          itemMap[itemCode][2] = (itemMap[itemCode][2] as number) + quantity;
+          itemMap[itemCode].quantity += quantity;
         }
         if (line.lineStatus !== ProcessLineStatus.OK && line.lineStatus !== ProcessLineStatus.ClosedLine) {
           issueFoundMap[itemCode] = true;
@@ -59,7 +70,25 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
       })
     });
 
-    return Object.values(itemMap).filter((v) => issueFoundMap[v[0]]);
+    return Object.values(itemMap)
+      .filter((item) => issueFoundMap[item.itemCode])
+      .map((item) => {
+        const quantities = formatQuantityForExcel({
+          quantity: item.quantity,
+          numInBuy: item.numInBuy,
+          buyUnitMsr: item.buyUnitMsr,
+          purPackUn: item.purPackUn,
+          purPackMsr: item.purPackMsr
+        });
+        
+        return [
+          item.itemCode,
+          item.itemName,
+          quantities.pack,
+          quantities.dozen,
+          quantities.unit,
+        ];
+      });
   }
 
   const handleExportExcel = () => {
