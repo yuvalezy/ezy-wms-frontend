@@ -6,6 +6,7 @@ import {IsNumeric} from "@/assets";
 import {CountingSummaryReportData, fetchCountingSummaryReport} from "@/pages/Counting/data/Report";
 import CountingSummaryReportTable from "@/pages/Counting/components/CountingSummaryReportTable";
 import {exportToExcel} from "@/utils/excelExport";
+import {formatQuantityForExcel} from "@/utils/excel-quantity-format";
 import ContentTheme from "@/components/ContentTheme";
 
 export default function CountingSummaryReport() {
@@ -31,16 +32,30 @@ export default function CountingSummaryReport() {
     t("bin"),
     t("code"),
     t("description"),
-    t("quantity"),
+    t("packages"),
+    t("dozens"),
+    t("units"),
   ];
 
   const excelData = () => {
-    return data?.lines.map((item) => [
-      item.binCode,
-      item.itemCode,
-      item.itemName,
-      item.quantity,
-    ]) ?? [];
+    return data?.lines.map((item) => {
+      const quantities = formatQuantityForExcel({
+        quantity: item.quantity,
+        numInBuy: item.numInBuy,
+        buyUnitMsr: item.buyUnitMsr,
+        purPackUn: item.purPackUn,
+        purPackMsr: item.purPackMsr
+      });
+      
+      return [
+        item.binCode,
+        item.itemCode,
+        item.itemName,
+        quantities.pack,
+        quantities.dozen,
+        quantities.unit,
+      ];
+    }) ?? [];
   };
 
   const handleExportExcel = () => {

@@ -7,6 +7,7 @@ import {IsNumeric} from "@/assets/Functions";
 import {DetailUpdateParameters} from "@/assets/Common";
 import {GRPOAllDetailRef} from "@/pages/GoodsReceipt/data/goods-receipt-all-details-data";
 import {exportToExcel} from "@/utils/excelExport";
+import {formatQuantityForExcel} from "@/utils/excel-quantity-format";
 
 export const useGoodsReceiptAllData = (confirm: boolean | undefined) => {
   const {t} = useTranslation();
@@ -45,7 +46,9 @@ export const useGoodsReceiptAllData = (confirm: boolean | undefined) => {
   const excelHeaders = [
     t("code"),
     t("description"),
-    t("Quantity"),
+    t("pack"),
+    t("dozen"),
+    t("unit"),
     t("delivery"),
     t("showroom"),
     t("stock"),
@@ -54,16 +57,28 @@ export const useGoodsReceiptAllData = (confirm: boolean | undefined) => {
   ];
 
   const excelData = () => {
-    return data?.map((item) => [
-      item.itemCode,
-      item.itemName,
-      item.quantity,
-      item.delivery,
-      item.showroom,
-      item.stock,
-      item.numInBuy,
-      item.purPackUn,
-    ]) ?? [];
+    return data?.map((item) => {
+      const quantities = formatQuantityForExcel({
+        quantity: item.quantity,
+        numInBuy: item.numInBuy,
+        buyUnitMsr: item.buyUnitMsr,
+        purPackUn: item.purPackUn,
+        purPackMsr: item.purPackMsr
+      });
+      
+      return [
+        item.itemCode,
+        item.itemName,
+        quantities.pack,
+        quantities.dozen,
+        quantities.unit,
+        item.delivery,
+        item.showroom,
+        item.stock,
+        item.numInBuy,
+        item.purPackUn,
+      ];
+    }) ?? [];
   };
 
   const handleExportExcel = () => {
