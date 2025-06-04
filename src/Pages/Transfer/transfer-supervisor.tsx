@@ -39,11 +39,13 @@ export default function TransferSupervisor() {
         setDialogOpen(false);
         const id = selectedTransfer?.id!;
         transferAction(id, actionType!)
-            .then(() => {
-                setTransfers((prevTransfers) =>
-                    prevTransfers.filter((transfer) => transfer.id !== id)
-                );
-                toast.success(actionType === "approve" ? t("transferApproved") : t("transferCancelled"));
+            .then((result) => {
+                if (typeof result === "boolean" || result.success) {
+                    setTransfers((prevTransfers) =>
+                        prevTransfers.filter((transfer) => transfer.id !== id)
+                    );
+                    toast.success(actionType === "approve" ? t("transferApproved") : t("transferCancelled"));
+                }
             })
             .catch((error) => {
                 setError(error);

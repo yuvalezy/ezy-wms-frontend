@@ -35,9 +35,11 @@ export const useTransferProcessData = () => {
     if (window.confirm(StringFormat(t("createTransferConfirm"), info?.number))) {
       setLoading(true);
       transferAction(id, "approve")
-        .then(() => {
-          toast.success(t("transferApproved"));
-          navigate(`/transfer`);
+        .then((result) => {
+          if (typeof result === "boolean" || result.success) {
+            toast.success(t("transferApproved"));
+            navigate(`/transfer`);
+          }
         })
         .catch((error) => {
           setError(error);

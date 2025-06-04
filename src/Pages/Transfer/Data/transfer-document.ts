@@ -272,30 +272,42 @@ export const updateTransferTargetItem = async (data: DetailUpdateParameters) => 
     throw error;
   }
 }
+interface TransferActionResponse {
+  success: boolean;
+  externalEntry: string | null;
+  externalNumber: string | null;
+  errorMessage: string;
+  status: string;
+}
+
 export const transferAction = async (
   id: string,
   action: ObjectAction,
-): Promise<boolean> => {
+): Promise<boolean | TransferActionResponse> => {
   try {
-    if (Mockup) {
-      if (action === "approve") {
-        //todo
-        return true;
-      }
-      console.log("Mockup data is being used.");
-      return true;
-    }
-
-
     const url = `Transfer/${action === "approve" ? "Process" : "Cancel"}`;
-    const response = await axiosInstance.post<boolean>(
-      url,
-      {ID: id},
-    );
-    return response.data;
+    
+    if (action === "cancel") {
+      const response = await axiosInstance.post<boolean>(
+        url,
+        {ID: id},
+      );
+      return response.data;
+    } else {
+      const response = await axiosInstance.post<TransferActionResponse>(
+        url,
+        {ID: id},
+      );
+      
+      if (!response.data.success) {
+        throw new Error(response.data.errorMessage);
+      }
+      
+      return response.data;
+    }
   } catch (error) {
-    console.error("Error creating transfer: ", error);
-    throw error; // Re-throwing so that the calling function can decide what to do with the error
+    console.error("Error processing transfer: ", error);
+    throw error;
   }
 };
 
