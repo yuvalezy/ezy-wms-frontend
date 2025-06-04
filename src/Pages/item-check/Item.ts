@@ -3,13 +3,17 @@ import {itemMockup, itemStockMockup, updateItemBarMockup} from "@/assets/mockup"
 import {configUtils, delay, globalConfig} from "@/assets/GlobalConfig";
 import {ResponseStatus} from "@/assets/Common";
 
-export interface ItemCheckResponse {
+
+export interface ItemDetails {
   itemCode: string;
   itemName: string;
   numInBuy: number;
   buyUnitMsr: string;
   purPackUn: number;
   purPackMsr: string;
+}
+
+export interface ItemCheckResponse extends ItemDetails{
   barcodes: string[];
 }
 
