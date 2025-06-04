@@ -39,9 +39,12 @@ const ProcessQuantity = forwardRef((props: ProcessQuantityProps, ref) => {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
+    if (props.alert?.lineId == null) {
+      throw new Error("Line ID is not defined");
+    }
     props.updateLine({
       id: props.id,
-      lineID: props.alert?.lineID ?? -1,
+      lineId: props.alert.lineId,
       quantity: quantity,
       userName: userName,
     })

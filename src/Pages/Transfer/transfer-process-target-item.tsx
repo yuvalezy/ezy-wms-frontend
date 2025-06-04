@@ -87,7 +87,7 @@ export default function TransferProcessTargetItem() {
 //                 }
 //                 let date = new Date(Date.now());
 //                 setCurrentAlert({
-//                     lineID: v.lineID,
+//                     lineId: v.lineId,
 //                     quantity: 1,
 //                     itemCode: itemCode,
 //                     severity: "Information", // For ProcessAlert

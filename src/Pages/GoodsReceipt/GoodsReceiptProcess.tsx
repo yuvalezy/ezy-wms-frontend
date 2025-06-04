@@ -41,7 +41,7 @@ export default function GoodsReceiptProcess({confirm = false}: { confirm?: boole
             <ProcessAlert
               enableComment={true}
               alert={alert}
-              key={alert.lineID}
+              key={alert.lineId}
               onAction={(type) => alertAction(alert, type)}
             />
           ))}

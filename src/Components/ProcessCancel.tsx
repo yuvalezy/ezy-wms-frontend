@@ -37,7 +37,7 @@ export interface ProcessCancelProps {
   supervisorPassword?: boolean;
   reasonType: ReasonType;
   onAccept: (comment: string, cancel: boolean) => void;
-  updateLine: (parameters: UpdateLineParameters) => Promise<UpdateLineReturnValue>;
+  updateLine: (parameters: UpdateLineParameters) => Promise<{returnValue: UpdateLineReturnValue, errorMessage?: string}>;
   updateComplete?: () => void;
 }
 
@@ -54,16 +54,19 @@ const ProcessCancel = forwardRef((props: ProcessCancelProps, ref) => {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
+    if (props.alert?.lineId == null) {
+      throw new Error("Line ID is not defined");
+    }
     props.updateLine({
       id: props.id,
-      lineID: props.alert?.lineID ?? -1,
+      lineId: props.alert.lineId,
       comment: comment,
       userName: userName,
       reason: reason?.value ?? -1,
     })
       .then((value) => {
         let message: string | null = null;
-        switch (value) {
+        switch (value.returnValue) {
           case UpdateLineReturnValue.Status:
             message = t("updateLineStatusError");
             break;

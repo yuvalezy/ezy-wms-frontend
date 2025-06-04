@@ -86,7 +86,7 @@ export function distinctItems(items: Item[]): string[] {
 
 export interface UpdateLineParameters {
     id: string;
-    lineID: number;
+    lineId: string;
     comment?: string;
     userName?: string;
     quantity?: number;

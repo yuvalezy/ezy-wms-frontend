@@ -1,4 +1,4 @@
-import React, {useRef} from "react";
+import React, {useEffect, useRef} from "react";
 import {useTranslation} from "react-i18next";
 import {Label} from "@/components/ui/label";
 import {Alert, AlertDescription} from "@/components/ui/alert";
@@ -61,6 +61,10 @@ export default function CountingProcess() {
     });
   }
 
+  useEffect(() => {
+   console.log("currentAlert", currentAlert);
+  }, [currentAlert]);
+
   return (
     <ContentTheme title={t("counting")}
                   titleOnClick={() => navigate('/counting')}
@@ -118,7 +122,11 @@ export default function CountingProcess() {
       </div>
       {currentAlert && id && <Processes ref={processesRef} id={id} alert={currentAlert} reasonType={ReasonType.Counting}
                                         onCancel={handleCancel}
-                                        onQuantityChanged={handleQuantityChanged} onUpdateLine={updateLine}/>}
+                                        onQuantityChanged={handleQuantityChanged} 
+                                        onUpdateLine={async (params) => {
+                                          const result = await updateLine(params);
+                                          return { returnValue: result };
+                                        }}/>}
     </ContentTheme>
   );
 }

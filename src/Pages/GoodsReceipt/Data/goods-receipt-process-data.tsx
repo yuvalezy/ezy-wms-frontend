@@ -128,7 +128,7 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
         }
 
         alert({
-          lineID: data.lineID,
+          lineId: data.lineId,
           barcode,
           itemCode: item.code,
           message,
@@ -158,7 +158,7 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
       return false;
     }
     alert({
-      lineID: data.lineID,
+      lineId: data.lineId,
       barcode: barcode,
       itemCode: itemCode,
       message: StringFormat(t("goodsReceiptIsClosed"), id),
@@ -197,7 +197,7 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
         break;
     }
 
-    let index = acceptValues.findIndex((v) => v.lineID === currentAlert.lineID);
+    let index = acceptValues.findIndex((v) => v.lineId === currentAlert.lineId);
     let newAcceptValues = [...acceptValues];
     if (index !== -1) {
       newAcceptValues[index] = updatedAlert;
@@ -225,7 +225,7 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
         const updatedAlert: ProcessAlertValue = {...currentAlert};
         updateLineQuantity({
           id: id ?? -1,
-          lineID: parameters.lineID,
+          lineId: parameters.lineId,
           userName: parameters.userName,
           quantity: parameters.quantity
         })
@@ -265,7 +265,7 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
             updatedAlert.message = message;
             updatedAlert.severity = color;
 
-            let index = acceptValues.findIndex((v) => v.lineID === currentAlert.lineID);
+            let index = acceptValues.findIndex((v) => v.lineId === currentAlert.lineId);
             let newAcceptValues = [...acceptValues];
             if (index !== -1) {
               newAcceptValues[index] = updatedAlert;

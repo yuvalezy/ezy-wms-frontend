@@ -75,15 +75,15 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                     if (row.unit === UnitType.Pack && currentData?.purPackUn) {
                       displayQuantity /= currentData.purPackUn;
                     }
-                    const currentQuantityValue = quantityChanges[row.lineID] !== undefined
-                      ? quantityChanges[row.lineID]
+                    const currentQuantityValue = quantityChanges[row.lineId] !== undefined
+                      ? quantityChanges[row.lineId]
                       : displayQuantity;
                     const displayUnit = row.unit === UnitType.Unit ? t('unit') :
                       row.unit === UnitType.Dozen ? (currentData?.buyUnitMsr || t("qtyInUn")) :
                         (currentData?.purPackMsr || t('packUn'));
 
                     return (
-                      <Card key={row.lineID}>
+                      <Card key={row.lineId}>
                         <CardContent>
                           <InfoBox>
                             <InfoBoxValue label={t('employee')} value={row.employeeName}/>
@@ -100,7 +100,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                                 min={1}
                                 step={1}
                                 onFocus={(e) => e.target.select()}
-                                onChange={(e) => handleQuantityChange(row.lineID, e.target.value)}
+                                onChange={(e) => handleQuantityChange(row.lineId, e.target.value)}
                               />
                             ) : (
                               <span className="text-right">
@@ -111,13 +111,13 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                           {enableUpdate && (
                             <div className="flex items-center pt-2">
                               <Checkbox
-                                checked={checkedRows[row.lineID]}
-                                onCheckedChange={(checked) => handleCheckboxChange(row.lineID, !!checked)}
+                                checked={checkedRows[row.lineId]}
+                                onCheckedChange={(checked) => handleCheckboxChange(row.lineId, !!checked)}
                               >
                                 {t('delete')}
                               </Checkbox>
                               <Label className="cursor-pointer pl-2"
-                                     onClick={() => handleCheckboxChange(row.lineID, !checkedRows[row.lineID])}>
+                                     onClick={() => handleCheckboxChange(row.lineId, !checkedRows[row.lineId])}>
                                 {t('delete')}
                               </Label>
                             </div>
@@ -155,15 +155,15 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                       if (row.unit === UnitType.Pack && currentData?.purPackUn) {
                         displayQuantity /= currentData.purPackUn;
                       }
-                      const currentQuantityValue = quantityChanges[row.lineID] !== undefined
-                        ? quantityChanges[row.lineID]
+                      const currentQuantityValue = quantityChanges[row.lineId] !== undefined
+                        ? quantityChanges[row.lineId]
                         : displayQuantity;
                       const displayUnit = row.unit === UnitType.Unit ? t('unit') :
                         row.unit === UnitType.Dozen ? (currentData?.buyUnitMsr || t("qtyInUn")) :
                           (currentData?.purPackMsr || t('packUn'));
 
                       return (
-                        <TableRow key={row.lineID}>
+                        <TableRow key={row.lineId}>
                           <TableCell>{row.employeeName}</TableCell>
                           <TableCell className="text-center">{dateFormat(row.timeStamp)}</TableCell>
                           <TableCell className="text-center">{timeFormat(row.timeStamp)}</TableCell>
@@ -177,7 +177,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                                 min={1}
                                 step={1}
                                 onFocus={(e) => e.target.select()}
-                                onChange={(e) => handleQuantityChange(row.lineID, e.target.value)}
+                                onChange={(e) => handleQuantityChange(row.lineId, e.target.value)}
                               />
                             ) : (
                               formatNumber(currentQuantityValue, 2)
@@ -186,8 +186,8 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                           {enableUpdate && (
                             <TableCell className="text-center">
                               <Checkbox
-                                checked={checkedRows[row.lineID]}
-                                onCheckedChange={(checked) => handleCheckboxChange(row.lineID, !!checked)}
+                                checked={checkedRows[row.lineId]}
+                                onCheckedChange={(checked) => handleCheckboxChange(row.lineId, !!checked)}
                               />
                             </TableCell>
                           )}

@@ -3,7 +3,7 @@ import {UpdateLineParameters, UpdateLineReturnValue} from "@/assets";
 import { axiosInstance, Mockup } from "@/utils/axios-instance";
 
 export interface TransferAddItemResponse {
-  lineID: number;
+  lineId: number;
   closedTransfer: boolean;
   purPackUn: number;
   errorMessage?: string;
@@ -54,7 +54,7 @@ export const addItem = async (
 };
 export const updateLine = async ({
                                    id,
-                                   lineID,
+                                   lineId,
                                    comment,
                                    reason,
                                    quantity,
@@ -65,7 +65,7 @@ export const updateLine = async ({
   }
 
   if (quantity != null) {
-    return await updateLineQuantity(id, lineID, quantity);
+    return await updateLineQuantity(id, lineId, quantity);
   }
   try {
     const url = `transfer/updateLine`;
@@ -74,7 +74,7 @@ export const updateLine = async ({
       url,
       {
         id: id,
-        lineID: lineID,
+        lineId: lineId,
         comment: comment,
         closeReason: reason,
         quantity: quantity,
@@ -88,13 +88,13 @@ export const updateLine = async ({
     throw error;
   }
 };
-const updateLineQuantity = async (id: number, lineID: number, quantity: number): Promise<UpdateLineReturnValue> => {
+const updateLineQuantity = async (id: number, lineId: number, quantity: number): Promise<UpdateLineReturnValue> => {
   try {
     const url = `transfer/updateLineQuantity`;
 
     const response = await axiosInstance.post<UpdateLineReturnValue>(
       url,
-      {id: id, lineID: lineID, quantity: quantity,}
+      {id: id, lineId: lineId, quantity: quantity,}
     );
 
     return response.data;

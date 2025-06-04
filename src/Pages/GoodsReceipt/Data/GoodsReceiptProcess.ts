@@ -73,14 +73,14 @@ export const addItem = async (
 };
 export const updateLine = async ({
                                    id,
-                                   lineID,
+                                   lineId,
                                    comment,
                                    userName,
                                    reason,
                                    quantity,
                                  }: {
   id: number;
-  lineID: number;
+  lineId: number;
   comment?: string;
   userName?: string;
   quantity?: number;
@@ -104,7 +104,7 @@ export const updateLine = async ({
       url,
       {
         id: id,
-        lineID: lineID,
+        lineId: lineId,
         comment: comment,
         userName: userName,
         closeReason: reason,
@@ -121,12 +121,12 @@ export const updateLine = async ({
 };
 export const updateLineQuantity = async ({
                                            id,
-                                           lineID,
+                                           lineId,
                                            userName,
                                            quantity,
                                          }: {
   id: number;
-  lineID: number;
+  lineId: number;
   userName?: string;
   quantity?: number;
 }): Promise<DocumentUpdateLineQuantityResponse> => {
@@ -146,7 +146,7 @@ export const updateLineQuantity = async ({
       url,
       {
         id: id,
-        lineID: lineID,
+        lineId: lineId,
         userName: userName,
         quantity: quantity,
       },

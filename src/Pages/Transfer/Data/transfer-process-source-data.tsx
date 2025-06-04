@@ -110,7 +110,7 @@ export const useTransferProcessSourceData = () => {
         }
         const date = new Date(Date.now());
         setCurrentAlert({
-          lineID: v.lineID,
+          lineId: v.lineId,
           quantity: 1,
           unit: unit,
           purPackUn: v.packUnit,

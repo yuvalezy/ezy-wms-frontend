@@ -12,7 +12,7 @@ import { getAddItemErrorMessage } from "@/utils/error-handler";
 import axios from "axios";
 
 interface TransferAddItemResponse {
-  lineID?: number
+  lineId?: number
   closedTransfer: boolean;
   errorMessage?: string;
   unitMsr: string;
@@ -189,7 +189,7 @@ export const addItem = async (params: addItemParameters, t: (key: string) => str
         const errorData = error.response.data.ErrorData;
         const errorMessage = getAddItemErrorMessage(errorType, errorData, t);
         return {
-          closedTransfer: false, lineID: 0, numIn: 0, packMsr: "", packUnit: 0, unitMsr: "",
+          closedTransfer: false, lineId: 0, numIn: 0, packMsr: "", packUnit: 0, unitMsr: "",
           errorMessage: errorMessage
         }
       }
@@ -229,7 +229,7 @@ export const fetchTransferContent = async (params: transferContentParameters): P
   }
 }
 export type TargetItemDetail = {
-  lineID: string;
+  lineId: string;
   employeeName: string;
   timeStamp: Date;
   quantity: number;

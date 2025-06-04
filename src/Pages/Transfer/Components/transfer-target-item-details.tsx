@@ -49,7 +49,7 @@ const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsD
 
     function update() {
         try {
-            const removeRows = data?.filter(detail => checkedRows[detail.lineID]).map(detail => detail.lineID) ?? [];
+            const removeRows = data?.filter(detail => checkedRows[detail.lineId]).map(detail => detail.lineId) ?? [];
             setIsOpen(false); // Close dialog after update attempt
             props.onUpdate({id: props.id, removeRows: removeRows, quantityChanges: quantityChanges});
         } catch (e) {
@@ -90,19 +90,19 @@ const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsD
         }
     }));
 
-    function handleCheckboxChange(lineID: string, checked: boolean) {
+    function handleCheckboxChange(lineId: string, checked: boolean) {
         setCheckedRows(prevState => ({
             ...prevState,
-            [lineID]: checked
+            [lineId]: checked
         }));
         // setEnableUpdate(true); // Consider if this is still needed or if update button is always active when dialog is open
     }
 
-    function handleQuantityChange(lineID: string, newValue: string) {
+    function handleQuantityChange(lineId: string, newValue: string) {
         const numValue = parseInt(newValue, 10);
         setQuantityChanges(prevState => ({
             ...prevState,
-            [lineID]: isNaN(numValue) ? 0 : numValue,
+            [lineId]: isNaN(numValue) ? 0 : numValue,
         }));
         // setEnableUpdate(true);
     }
@@ -131,12 +131,12 @@ const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsD
                             </TableHeader>
                             <TableBody>
                                 {data.map((row) => (
-                                    <TableRow key={row.lineID}>
+                                    <TableRow key={row.lineId}>
                                         {enableUpdate && (
                                             <TableCell>
                                                 <Checkbox
-                                                    checked={!!checkedRows[row.lineID]}
-                                                    onCheckedChange={(checked) => handleCheckboxChange(row.lineID, !!checked)}
+                                                    checked={!!checkedRows[row.lineId]}
+                                                    onCheckedChange={(checked) => handleCheckboxChange(row.lineId, !!checked)}
                                                 />
                                             </TableCell>
                                         )}
@@ -148,8 +148,8 @@ const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsD
                                                 <Input
                                                     type="number"
                                                     className="w-20 text-right"
-                                                    value={(quantityChanges[row.lineID] ?? row.quantity).toString()}
-                                                    onChange={(e) => handleQuantityChange(row.lineID, e.target.value)}
+                                                    value={(quantityChanges[row.lineId] ?? row.quantity).toString()}
+                                                    onChange={(e) => handleQuantityChange(row.lineId, e.target.value)}
                                                 />
                                             ) : (
                                                 row.quantity

@@ -345,7 +345,7 @@
   "binIsRequired": "Bin es un parámetro requerido",
   "quantityIsRequired": "Cantidad es un parámetro requerido",
   "unitTypeIsRequired": "Tipo de Unidad es un parámetro requerido",
-  "lineIdIsRequired": "LineID es un parámetro requerido",
+  "lineIdIsRequired": "lineId es un parámetro requerido",
   "itemCodeIsRequired": "El parámetro \"ItemCode\" (Código de Artículo) es obligatorio",
   "barcodeIsRequired": "El parámetro \"BarCode\" (Código de Barra) es obligatorio",
   "itemCodeNotFound": "El código de artículo {0} no se encontró en la base de datos",

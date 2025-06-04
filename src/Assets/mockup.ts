@@ -71,9 +71,9 @@ export const GoodsReceiptMockup: GoodsReceiptAll[] = [
 ];
 
 export const GoodsReceiptAllDetailMockup: GoodsReceiptAllDetail[] = [
-  {lineID: 1, timeStamp: new Date(), employeeName: "Test", quantity: 1, unit: UnitType.Unit},
-  {lineID: 2, timeStamp: new Date(), employeeName: "Test", quantity: 3, unit: UnitType.Dozen},
-  {lineID: 3, timeStamp: new Date(), employeeName: "Test", quantity: 10, unit: UnitType.Pack},
+  {lineId: 1, timeStamp: new Date(), employeeName: "Test", quantity: 1, unit: UnitType.Unit},
+  {lineId: 2, timeStamp: new Date(), employeeName: "Test", quantity: 3, unit: UnitType.Dozen},
+  {lineId: 3, timeStamp: new Date(), employeeName: "Test", quantity: 10, unit: UnitType.Pack},
 ]
 
 export const itemStockMockup: ItemStockResponse[] = [
@@ -115,7 +115,7 @@ export const processResponseMockup: ProcessResponse = {
   ok: true
 }
 export const addItemResponseMockup: DocumentAddItemResponse = {
-  lineID: 123,
+  lineId: 123,
   closedDocument: false,
   fulfillment: false,
   showroom: false,
@@ -632,25 +632,25 @@ export const binMockup: BinLocation = {
 }
 
 export const countProcessRows: CountingContent[] = [
-  {code: "test1", name: "test1 name", quantity: 22},
-  {code: "test2", name: "test2 name", quantity: 22},
-  {code: "test3", name: "test3 name", quantity: 22},
-  {code: "test4", name: "test4 name", quantity: 22},
-  {code: "test5", name: "test5 name", quantity: 22},
-  {code: "test6", name: "test6 name", quantity: 22},
-  {code: "test7", name: "test7 name", quantity: 22},
-  {code: "test8", name: "test8 name", quantity: 22},
-  {code: "test9", name: "test9 name", quantity: 22},
-  {code: "test10", name: "test10 name", quantity: 22},
-  {code: "test11", name: "test11 name", quantity: 22},
-  {code: "test12", name: "test12 name", quantity: 22},
-  {code: "test13", name: "test13 name", quantity: 22},
-  {code: "test14", name: "test14 name", quantity: 22},
-  {code: "test15", name: "test15 name", quantity: 22},
-  {code: "test16", name: "test16 name", quantity: 22},
-  {code: "test17", name: "test17 name", quantity: 22},
-  {code: "test18", name: "test18 name", quantity: 22},
-  {code: "test19", name: "test19 name", quantity: 22},
+  {itemCode: "test1", itemName: "test1 name", quantity: 22},
+  {itemCode: "test2", itemName: "test2 name", quantity: 22},
+  {itemCode: "test3", itemName: "test3 name", quantity: 22},
+  {itemCode: "test4", itemName: "test4 name", quantity: 22},
+  {itemCode: "test5", itemName: "test5 name", quantity: 22},
+  {itemCode: "test6", itemName: "test6 name", quantity: 22},
+  {itemCode: "test7", itemName: "test7 name", quantity: 22},
+  {itemCode: "test8", itemName: "test8 name", quantity: 22},
+  {itemCode: "test9", itemName: "test9 name", quantity: 22},
+  {itemCode: "test10", itemName: "test10 name", quantity: 22},
+  {itemCode: "test11", itemName: "test11 name", quantity: 22},
+  {itemCode: "test12", itemName: "test12 name", quantity: 22},
+  {itemCode: "test13", itemName: "test13 name", quantity: 22},
+  {itemCode: "test14", itemName: "test14 name", quantity: 22},
+  {itemCode: "test15", itemName: "test15 name", quantity: 22},
+  {itemCode: "test16", itemName: "test16 name", quantity: 22},
+  {itemCode: "test17", itemName: "test17 name", quantity: 22},
+  {itemCode: "test18", itemName: "test18 name", quantity: 22},
+  {itemCode: "test19", itemName: "test19 name", quantity: 22},
 ]
 export const userMock: UserInfo = {
   id: "00000-0000",
@@ -677,7 +677,7 @@ export const transferMockup: TransferDocument = {
   status: Status.InProgress,
 };
 export const transferAddItemResponseMockup: TransferAddItemResponse = {
-  lineID: 123,
+  lineId: 123,
   closedTransfer: false,
   purPackUn: 5,
 };

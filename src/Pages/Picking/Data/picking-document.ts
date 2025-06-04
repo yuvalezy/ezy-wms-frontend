@@ -68,7 +68,7 @@ export type pickingsParameters = {
 }
 
 export interface PickingAddItemResponse {
-    lineID: number;
+    lineId: number;
     closedDocument: boolean;
     errorMessage?: string;
 }

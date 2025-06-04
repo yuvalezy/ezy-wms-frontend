@@ -17,7 +17,7 @@ export interface ProcessesProps {
     onCancel?: (comment: string, cancel: boolean) => void;
     onCommentsChanged?: (comment: string) => void;
     onQuantityChanged?: (quantity: number) => void;
-    onUpdateLine: (parameters: UpdateLineParameters) => Promise<UpdateLineReturnValue>;
+    onUpdateLine: (parameters: UpdateLineParameters) => Promise<{returnValue: UpdateLineReturnValue, errorMessage?: string}>;
     onUpdateComplete?: () => void;
 }
 

@@ -18,10 +18,18 @@ export interface Counting extends BaseEntity {
 }
 
 export type CountingContent = {
-  code: string;
-  name: string;
-  quantity: number;
-  unit?: number;
-  dozen?: number;
-  pack?: number;
+  itemCode: string;
+  itemName: string;
+  binEntry?: number;
+  binCode?: string;
+  systemQuantity: number;
+  countedQuantity: number;
+  variance: number;
+  systemValue: number;
+  countedValue: number;
+  varianceValue: number;
+  buyUnitMsr?: string;
+  numInBuy: number;
+  purPackMsr?: string;
+  purPackUn: number;
 }

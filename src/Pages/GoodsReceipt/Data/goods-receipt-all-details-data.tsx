@@ -19,7 +19,7 @@ export const useGoodsReceiptAllDetailsData = (props: GRPOAllDetailProps) => {
 
   function update() {
     try {
-      const removeRows = data?.filter(detail => checkedRows[detail.lineID]).map(detail => detail.lineID) ?? [];
+      const removeRows = data?.filter(detail => checkedRows[detail.lineId]).map(detail => detail.lineId) ?? [];
       setIsOpen(false);
       props.onUpdate({id: props.id, removeRows: removeRows, quantityChanges: quantityChanges});
     } catch (e) {
@@ -49,19 +49,19 @@ export const useGoodsReceiptAllDetailsData = (props: GRPOAllDetailProps) => {
       });
   }
 
-  function handleCheckboxChange(lineID: number, checked: boolean) {
+  function handleCheckboxChange(lineId: number, checked: boolean) {
     setCheckedRows(prevState => ({
       ...prevState,
-      [lineID]: checked
+      [lineId]: checked
     }));
     // setEnableUpdate(true); // This might not be needed if button is always enabled or logic changes
   }
 
-  function handleQuantityChange(lineID: number, newValue: string) {
+  function handleQuantityChange(lineId: number, newValue: string) {
     const numValue = parseInt(newValue, 10);
     setQuantityChanges(prevState => ({
       ...prevState,
-      [lineID]: isNaN(numValue) ? 0 : numValue,
+      [lineId]: isNaN(numValue) ? 0 : numValue,
     }));
     // setEnableUpdate(true); // This might not be needed
   }

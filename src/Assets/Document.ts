@@ -30,7 +30,7 @@ export enum DocumentOrderBy {
 }
 
 export interface DocumentAddItemResponse {
-  lineID: number;
+  lineId: number;
   closedDocument: boolean;
   fulfillment: boolean;
   showroom: boolean;

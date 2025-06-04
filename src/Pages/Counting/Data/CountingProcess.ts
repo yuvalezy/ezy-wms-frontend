@@ -11,7 +11,7 @@ export type Process = {
 }
 
 interface CountingAddItemResponse {
-  lineID?: number
+  lineId?: string
   closedDocument: boolean;
   errorMessage?: string;
   unit: UnitType;
@@ -23,7 +23,7 @@ interface CountingAddItemResponse {
 
 export const updateLine = async ({
                                    id,
-                                   lineID,
+                                   lineId,
                                    comment,
                                    reason,
                                    quantity
@@ -40,7 +40,7 @@ export const updateLine = async ({
       url,
       {
         id: id,
-        lineID: lineID,
+        lineId: lineId,
         comment: comment,
         closeReason: reason,
         quantity: quantity,
@@ -57,7 +57,7 @@ export const updateLine = async ({
 
 
 export const addItem = async (
-  id: number,
+  id: string,
   itemCode: string,
   barcode: string,
   binEntry: number | undefined,
@@ -66,12 +66,6 @@ export const addItem = async (
     if (Mockup) {
       //todo mockup
     }
-
-    
-
-    
-
-    
 
     const url = `Counting/AddItem`;
 

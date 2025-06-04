@@ -19,7 +19,7 @@ export type GoodsReceiptAll = {
   purPackMsr?: string | null;
 };
 export type GoodsReceiptAllDetail = {
-  lineID: number;
+  lineId: number;
   employeeName: string;
   timeStamp: Date;
   quantity: number;
@@ -118,7 +118,7 @@ export const fetchGoodsReceiptReportAllDetails = async (id: number, item: string
     const response = await axiosInstance.get<any[]>(url, );
 
     const goodsReceipts: GoodsReceiptAllDetail[] = response.data.map((item: GoodsReceiptAllDetail) => ({
-      lineID: item.lineID,
+      lineId: item.lineId,
       employeeName: item.employeeName,
       timeStamp: new Date(item.timeStamp),
       quantity: item.quantity,
