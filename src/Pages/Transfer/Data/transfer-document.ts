@@ -4,10 +4,11 @@ import {
   DetailUpdateParameters,
   ObjectAction,
   SourceTarget,
-  Status, StringFormat,
+  Status,
   UnitType
 } from "@/assets";
 import {axiosInstance, Mockup} from "@/utils/axios-instance";
+import { getAddItemErrorMessage } from "@/utils/error-handler";
 import axios from "axios";
 
 interface TransferAddItemResponse {
@@ -186,36 +187,7 @@ export const addItem = async (params: addItemParameters, t: (key: string) => str
 
         const errorType = error.response.data.ErrorId as AddItemReturnValueType;
         const errorData = error.response.data.ErrorData;
-        let errorMessage: string = error.message;
-        switch (errorType) {
-          case AddItemReturnValueType.ItemCodeNotFound:
-            errorMessage = StringFormat(t('itemCodeNotFound'), errorData.ItemCode);
-            break;
-          case AddItemReturnValueType.ItemCodeBarCodeMismatch:
-            errorMessage = StringFormat(t('itemCodeBarCodeMismatch'), errorData.BarCode, errorData.itemCode);
-            break;
-          case AddItemReturnValueType.TransactionIDNotExists:
-            errorMessage = StringFormat(t('transactionIDNotExists'), errorData.ID);
-            break;
-          case AddItemReturnValueType.NotStockItem:
-            errorMessage = StringFormat(t('notStockItem'), errorData.ItemCode, errorData.BarCode);
-            break;
-          case AddItemReturnValueType.ItemNotInWarehouse:
-            errorMessage = StringFormat(t('itemNotInWarehouse'), errorData.ItemCode, errorData.BarCode);
-            break;
-          case AddItemReturnValueType.BinNotExists:
-            errorMessage = StringFormat(t('binNotExists'), errorData.BinEntry);
-            break;
-          case AddItemReturnValueType.BinNotInWarehouse:
-            errorMessage = StringFormat(t('binNotInWarehouse'), errorData.BinCode);
-            break;
-          case AddItemReturnValueType.BinMissing:
-            errorMessage = t('binMissing');
-            break;
-          case AddItemReturnValueType.QuantityMoreAvailable:
-            errorMessage = StringFormat(t('quantityMoreAvailable'), errorData.ItemCode);
-            break;
-        }
+        const errorMessage = getAddItemErrorMessage(errorType, errorData, t);
         return {
           closedTransfer: false, lineID: 0, numIn: 0, packMsr: "", packUnit: 0, unitMsr: "",
           errorMessage: errorMessage
