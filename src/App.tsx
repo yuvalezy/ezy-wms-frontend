@@ -38,6 +38,7 @@ import CancellationReasonsList from "@/pages/settings/cancellation-reasons/cance
 import UsersList from "@/pages/settings/users/users-list";
 import AuthorizationGroupsList from "@/pages/settings/authorization-groups/authorization-groups-list";
 import AuthorizationGroupForm from "@/pages/settings/authorization-groups/components/authorization-group-form";
+import { ItemDetailsPopupProvider } from "@/hooks/useItemDetailsPopup";
 
 export default function App() {
     const {user} = useAuth();
@@ -60,9 +61,10 @@ export default function App() {
 
     return (
         <AuthProvider>
-            <BrowserRouter>
-                <Toaster closeButton richColors={true} />
-                <Routes>
+            <ItemDetailsPopupProvider>
+                <BrowserRouter>
+                    <Toaster closeButton richColors={true} />
+                    <Routes>
                     <Route path="/login" element={<LoginPage/>}/>
                     <Route path="/unauthorized" element={<Unauthorized/>}/>
                     <Route path="/binCheck" element={<ProtectedRoute authorizations={[RoleType.GOODS_RECEIPT_SUPERVISOR, RoleType.PICKING_SUPERVISOR, RoleType.COUNTING_SUPERVISOR, RoleType.TRANSFER_SUPERVISOR]} element={<BinCheck/>}/>}/>
@@ -111,8 +113,9 @@ export default function App() {
                     <Route path="/settings/authorizationGroups/:id" element={<ProtectedRoute superUser element={<AuthorizationGroupForm/>}/>}/>
                     <Route path="/" element={<ProtectedRoute element={<HomePage/>}/>}/>
                     <Route path="*" element={<NotFound/>}/>
-                </Routes>
-            </BrowserRouter>
+                    </Routes>
+                </BrowserRouter>
+            </ItemDetailsPopupProvider>
         </AuthProvider>
     );
 }
