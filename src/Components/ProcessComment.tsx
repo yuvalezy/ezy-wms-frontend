@@ -20,7 +20,7 @@ export interface ProcessCommentRef {
 }
 
 export interface ProcessCommentProps {
-    id: number;
+    id: string;
     alert?: ProcessAlertValue | null;
     onAccept: (comment: string) => void;
     updateLine: (parameters: UpdateLineParameters) => Promise<UpdateLineReturnValue>;

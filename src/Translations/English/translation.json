@@ -371,5 +371,6 @@
   "releasedQuantityFromItemIsLess": "Released quantity from item {0} is less then added quantity",
   "quantityMoreThanAvailableCurrent": "Selected quantity for current item is less then available quantity",
   "quantityMoreThanAvailable": "Selected quantity for item {0} is less then available quantity",
-  "pickEntryIsRequired": "PickEntry is a required parameter"
+  "pickEntryIsRequired": "PickEntry is a required parameter",
+  "itemDetails": "Item Details"
 }

@@ -20,11 +20,11 @@ export interface ProcessQuantityRef {
 }
 
 export interface ProcessQuantityProps {
-  id: number;
+  id: string;
   alert: ProcessAlertValue | null;
   supervisorPassword?: boolean;
   onAccept: (quantity: number) => void;
-  updateLine: (parameters: UpdateLineParameters) => Promise<UpdateLineReturnValue>;
+  updateLine: (parameters: UpdateLineParameters) => Promise<{returnValue: UpdateLineReturnValue, errorMessage?: string}>;
   updateComplete?: () => void;
 }
 
@@ -47,7 +47,7 @@ const ProcessQuantity = forwardRef((props: ProcessQuantityProps, ref) => {
     })
       .then((value) => {
         let message: string | null = null;
-        switch (value) {
+        switch (value.returnValue) {
           case UpdateLineReturnValue.Status:
             message = t("updateLineStatusError");
             break;

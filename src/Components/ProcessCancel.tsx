@@ -32,7 +32,7 @@ export interface ProcessCancelRef {
 // The `show` method in useImperativeHandle will manage an internal state for this.
 
 export interface ProcessCancelProps {
-  id: number;
+  id: string;
   alert: ProcessAlertValue | null;
   supervisorPassword?: boolean;
   reasonType: ReasonType;

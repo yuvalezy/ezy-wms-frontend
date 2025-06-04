@@ -1,5 +1,5 @@
 import ContentTheme from "@/components/ContentTheme";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import React from "react";
 import {useTranslation} from "react-i18next";
 import {
@@ -24,11 +24,15 @@ import {Card, CardContent, FullInfoBox, InfoBoxValue, MetricRow, SecondaryInfoBo
 import {formatNumber} from "@/lib/utils";
 import {AlertCircle} from "lucide-react";
 import {useStockInfo} from "@/utils/stock-info";
+import {TransferContent} from "@/pages/transfer/data/transfer-document";
+import {useItemDetailsPopup} from "@/hooks/useItemDetailsPopup";
+import InfoBox from "@/components/InfoBox";
 
 export default function TransferProcessTargetBins() {
   const {t} = useTranslation();
   const navigate = useNavigate();
   const stockInfo = useStockInfo();
+  const {openItemDetails} = useItemDetailsPopup();
   const {
     id,
     binLocation,
@@ -59,6 +63,16 @@ export default function TransferProcessTargetBins() {
   if (binLocation) {
     titleBreadcrumbs.push({label: binLocation.code, onClick: undefined});
   }
+  const showDetails = (row: TransferContent) => {
+    openItemDetails({
+      itemCode: row.code,
+      itemName: row.name,
+      numInBuy: row.numInBuy,
+      buyUnitMsr: row.buyUnitMsr,
+      purPackUn: row.purPackUn,
+      purPackMsr: row.purPackMsr
+    });
+  }
 
   return (
     <ContentTheme title={t("transfer")} titleOnClick={() => navigate(`/transfer`)}
@@ -76,47 +90,26 @@ export default function TransferProcessTargetBins() {
             {/* Mobile view - Cards */}
             <div className="block sm:hidden">
               {rows.map((row) => {
-                let openQuantity = row.openQuantity ?? 0;
-                let binQuantity = row.binQuantity ?? 0;
                 return <Card key={row.code}>
                   <CardContent className="flex flex-col gap-2">
-                    <SecondaryInfoBox>
-                      <InfoBoxValue label={t('code')} value={row.code}/>
-                      <InfoBoxValue label={t('qtyInUn')} value={row.numInBuy.toString()}/>
-                      <InfoBoxValue label={t('qtyInPack')} value={row.purPackUn.toString()}/>
-                    </SecondaryInfoBox>
-                    <div className="flex justify-between items-center border-b-2 border-primary font-bold">
-                      <div className="w-[30%]">
-                        <span>{t('unit')}</span>
-                      </div>
-                      <div className="flex-1 flex justify-around text-center">
-                        <div className="flex-1 text-xs">
-                          <span>{t('units')}</span>
-                        </div>
-                        <div className="flex-1 text-xs">
-                          <span>{t('dozens')}</span>
-                        </div>
-                        <div className="flex-1 text-xs">
-                          <span>{t('boxes')}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <MetricRow
-                      label={t('openQuantity')}
-                      values={{
-                        units: formatNumber(openQuantity, 0),
-                        buyUnits: formatNumber(openQuantity / row.numInBuy, 2),
-                        packUnits: formatNumber(openQuantity / row.numInBuy / row.purPackUn, 2)
-                      }}
-                    />
-                    <MetricRow
-                      label={t('binQuantity')}
-                      values={{
-                        units: formatNumber(binQuantity, 0),
-                        buyUnits: formatNumber(binQuantity / row.numInBuy, 2),
-                        packUnits: formatNumber(binQuantity / row.numInBuy / row.purPackUn, 2)
-                      }}
-                    />
+                    <InfoBox>
+                      <InfoBoxValue label={t('code')} onClick={() => showDetails(row)} value={row.code}/>
+                      <InfoBoxValue label={t('description')} value={row.name}/>
+                      <InfoBoxValue label={t('openQuantity')} value={stockInfo({
+                            quantity: row.openQuantity,
+                            numInBuy: row.numInBuy,
+                            buyUnitMsr: row.buyUnitMsr,
+                            purPackUn: row.purPackUn,
+                            purPackMsr: row.purPackMsr,
+                          })}/>
+                      <InfoBoxValue label={t('binQuantity')} value={stockInfo({
+                            quantity: row.binQuantity??0,
+                            numInBuy: row.numInBuy,
+                            buyUnitMsr: row.buyUnitMsr,
+                            purPackUn: row.purPackUn,
+                            purPackMsr: row.purPackMsr,
+                          })}/>
+                    </InfoBox>
                     <Progress value={row.progress ?? 0} className="w-full h-2"/>
                     <p className="text-xs text-muted-foreground text-center">{`${row.progress ?? 0}%`}</p>
                   </CardContent>
@@ -130,41 +123,40 @@ export default function TransferProcessTargetBins() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>{t('code')}</TableHead>
-                    <TableHead>{t('qtyInUn')}</TableHead>
-                    <TableHead>{t('qtyInPack')}</TableHead>
-                    <TableHead className="text-center border-l" colSpan={3}>{t('openQuantity')}</TableHead>
-                    <TableHead className="text-center border-l" colSpan={3}>{t('binQuantity')}</TableHead>
-                    <TableHead className="border-l">{t('progress')}</TableHead>
-                  </TableRow>
-                  <TableRow>
-                    <TableHead></TableHead>
-                    <TableHead></TableHead>
-                    <TableHead></TableHead>
-                    <TableHead className="text-center border-l">{t('units')}</TableHead>
-                    <TableHead className="text-center">{t('dozens')}</TableHead>
-                    <TableHead className="text-center border-r">{t('boxes')}</TableHead>
-                    <TableHead className="text-center border-l">{t('units')}</TableHead>
-                    <TableHead className="text-center">{t('dozens')}</TableHead>
-                    <TableHead className="text-center border-r">{t('boxes')}</TableHead>
-                    <TableHead className="border-l"></TableHead>
+                    <TableHead>{t('description')}</TableHead>
+                    <TableHead>{t('openQuantity')}</TableHead>
+                    <TableHead>{t('binQuantity')}</TableHead>
+                    <TableHead>{t('progress')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {rows.map((row) => {
-                    let openQuantity = row.openQuantity ?? 0;
-                    let binQuantity = row.binQuantity ?? 0;
                     return (
                       <TableRow key={row.code}>
-                        <TableCell>{row.code}</TableCell>
-                        <TableCell>{row.numInBuy}</TableCell>
-                        <TableCell>{row.purPackUn}</TableCell>
-                        <TableCell className="text-center border-l">{formatNumber(openQuantity, 0)}</TableCell>
-                        <TableCell className="text-center">{formatNumber(openQuantity / row.numInBuy, 2)}</TableCell>
-                        <TableCell className="text-center border-r">{formatNumber(openQuantity / row.numInBuy / row.purPackUn, 2)}</TableCell>
-                        <TableCell className="text-center border-l">{formatNumber(binQuantity, 0)}</TableCell>
-                        <TableCell className="text-center">{formatNumber(binQuantity / row.numInBuy, 2)}</TableCell>
-                        <TableCell className="text-center border-r">{formatNumber(binQuantity / row.numInBuy / row.purPackUn, 2)}</TableCell>
-                        <TableCell className="border-l">
+                        <TableCell><Link
+                          className="text-blue-600 hover:underline"
+                          onClick={() => showDetails(row)} to={""}>{row.code}</Link>
+                        </TableCell>
+                        <TableCell>{row.name}</TableCell>
+                        <TableCell>
+                          {stockInfo({
+                            quantity: row.openQuantity,
+                            numInBuy: row.numInBuy,
+                            buyUnitMsr: row.buyUnitMsr,
+                            purPackUn: row.purPackUn,
+                            purPackMsr: row.purPackMsr,
+                          })}
+                        </TableCell>
+                        <TableCell>
+                          {stockInfo({
+                            quantity: row.binQuantity??0,
+                            numInBuy: row.numInBuy,
+                            buyUnitMsr: row.buyUnitMsr,
+                            purPackUn: row.purPackUn,
+                            purPackMsr: row.purPackMsr,
+                          })}
+                        </TableCell>
+                        <TableCell>
                           <div className="flex items-center gap-2">
                             <Progress value={row.progress ?? 0} className="w-20" />
                             <span className="text-xs">{row.progress ?? 0}%</span>

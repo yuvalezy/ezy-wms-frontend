@@ -32,7 +32,7 @@ export const useTransferProcessData = () => {
   function finish() {
     if (!info?.isComplete || id == null)
       return;
-    if (window.confirm(StringFormat(t("createTransferConfirm"), id))) {
+    if (window.confirm(StringFormat(t("createTransferConfirm"), info?.number))) {
       setLoading(true);
       transferAction(id, "approve")
         .then(() => {
