@@ -1,26 +1,24 @@
 import {BusinessPartner, Employee} from "./Data";
 import {GoodsReceiptType} from "@/pages/GoodsReceipt/data/Document";
-import {Status, UpdateLineReturnValue} from "./Common";
+import {BaseEntity, Status, UpdateLineReturnValue} from "./Common";
 
-export type Document = {
-  id: number;
-  name: string;
-  date: string;
-  employee: Employee;
+export interface Document extends BaseEntity {
+  name?: string;
+  number: number;
+  date: Date;
   status: Status;
-  statusDate?: string;
-  statusEmployee?: Employee;
   businessPartner?: BusinessPartner;
   type: GoodsReceiptType;
   error: boolean;
   errorCode?: number;
   errorParameters?: any[];
-  specificDocuments?: DocumentItem[];
-};
+  documents?: DocumentItem[];
+  createdByUserName?: string;
+}
 
 export type DocumentItem = {
-  objectType: number;
-  documentNumber: number;
+  objType: number;
+  docNumber: number;
 };
 
 export enum DocumentOrderBy {
@@ -30,7 +28,7 @@ export enum DocumentOrderBy {
 }
 
 export interface DocumentAddItemResponse {
-  lineId: number;
+  lineId: string;
   closedDocument: boolean;
   fulfillment: boolean;
   showroom: boolean;

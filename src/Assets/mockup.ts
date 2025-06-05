@@ -131,7 +131,7 @@ export const UpdateLineReturnValueMockup: UpdateLineReturnValue =
   UpdateLineReturnValue.Status;
 
 export const documentMockup = {
-  id: 1,
+  id: "0000-0000",
   name: "Mock Document",
   date: "2023-11-03",
   employee: {
@@ -606,7 +606,7 @@ export const DeliveryOpenDocuments: DeliveryOpenDocument[] = [
   }
 ];
 export const countingMockup: Counting = {
-  id: 1,
+  id: "000----",
   name: "Mock Document",
   date: "2023-11-03",
   employee: {

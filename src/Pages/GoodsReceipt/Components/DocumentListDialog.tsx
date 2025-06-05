@@ -50,11 +50,11 @@ const DocumentListDialog = forwardRef<DocumentListDialogRef, DocumentListDialogP
                     <DialogTitle>{t("documentsList")}</DialogTitle>
                 </DialogHeader>
                 <ScrollArea className="h-[300px] w-full rounded-md border p-4"> {/* Example height, adjust as needed */}
-                    {props.doc?.specificDocuments && props.doc.specificDocuments.length > 0 ? (
+                    {props.doc?.documents && props.doc.documents.length > 0 ? (
                         <div className="space-y-2">
-                            {props.doc.specificDocuments.map((value, index) => (
+                            {props.doc.documents.map((value, index) => (
                                 <div key={index} className="p-2 border-b last:border-b-0">
-                                    {o(value.objectType)} #{value.documentNumber}
+                                    {o(value.objType)} #{value.docNumber}
                                 </div>
                             ))}
                         </div>

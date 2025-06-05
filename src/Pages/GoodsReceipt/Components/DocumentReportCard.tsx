@@ -24,7 +24,7 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc, docDetails,
 
   const formatDocumentsList = (documents: DocumentItem[]) => {
     return documents.map((value, index) => (
-      `${index > 0 ? ', ' : ''}${o(value.objectType)} #${value.documentNumber}`
+      `${index > 0 ? ', ' : ''}${o(value.objType)} #${value.docNumber}`
     )).join('');
   }
 
@@ -39,8 +39,8 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc, docDetails,
           {doc.businessPartner &&
               <InfoBoxValue label={t('vendor')} value={doc.businessPartner.name ?? doc.businessPartner.code}/>}
         </InfoBox>
-          {doc.specificDocuments && doc.specificDocuments.length > 0 &&
-              <InfoBoxValue label={t('documentsList')} value={formatDocumentsList(doc.specificDocuments)}
+          {doc.documents && doc.documents.length > 0 &&
+              <InfoBoxValue label={t('documentsList')} value={formatDocumentsList(doc.documents)}
                             onClick={() => docDetails(doc)}/>
           }
           <SecondaryInfoBox>

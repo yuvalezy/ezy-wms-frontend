@@ -44,7 +44,7 @@ export const createDocument = async (
   try {
     if (Mockup) {
       console.log("Mockup data is being used.");
-      return documentMockup;
+      // return documentMockup;
     }
 
     const response = await axiosInstance.post<Document>(
@@ -56,7 +56,6 @@ export const createDocument = async (
         documents: items,
         confirm
       },
-      
     );
 
     return response.data;
@@ -66,7 +65,7 @@ export const createDocument = async (
   }
 };
 export const documentAction = async (
-  id: number,
+  id: string,
   action: ObjectAction,
   user: UserInfo
 ): Promise<boolean> => {
@@ -80,20 +79,7 @@ export const documentAction = async (
       return true;
     }
 
-    
-
-    
-
-    
-    const response = await axiosInstance.post<boolean>(
-      `GoodsReceipt/${
-        action === "approve" ? "Process" : "Cancel"
-      }`,
-      {
-        ID: id,
-      },
-      
-    );
+    const response = await axiosInstance.post<boolean>(`goodsReceipt/${action === "approve" ? "process" : "cancel"}/${id}`);
     return response.data;
   } catch (error) {
     console.error("Error creating document: ", error);
@@ -108,50 +94,10 @@ export const fetchDocuments = async (
 ): Promise<Document[]> => {
   try {
     if (Mockup) {
-      console.log("Mockup data is being used.");
-      return [documentMockup];
     }
+    const url = `goodsReceipt`;
 
-
-
-    
-
-    // const queryParams = new URLSearchParams();
-    // queryParams.append("OrderBy", orderBy.toString());
-    // queryParams.append("Desc", desc.toString());
-    //
-    // if (filters.statuses && filters.statuses.length > 0) {
-    //     filters.statuses.forEach((status) =>
-    //         queryParams.append("Status", status.toString())
-    //     );
-    // }
-    //
-    // if (filters.id !== null && filters.id !== undefined) {
-    //     queryParams.append("ID", filters.id.toString());
-    // }
-    //
-    // if (filters.grpo !== null && filters.grpo !== undefined) {
-    //     queryParams.append("GRPO", filters.grpo.toString());
-    // }
-    //
-    // if (filters.docName !== null && filters.docName !== undefined) {
-    //     queryParams.append("Name", filters.docName);
-    // }
-    //
-    // if (filters.businessPartner !== null && filters.businessPartner !== undefined) {
-    //     queryParams.append("BusinessPartner", filters.businessPartner.code);
-    // }
-    //
-    // if (filters.date !== null && filters.date !== undefined) {
-    //     queryParams.append("Date", filters.date.toISOString());
-    // }
-
-    // const url = `${
-    //     globalConfig.baseURL
-    // }/api/GoodsReceipt/Documents?${queryParams.toString()}`;
-    const url = `GoodsReceipt/Documents`;
-
-    const response = await axiosInstance.post<Document[]>(url, filters, );
+    const response = await axiosInstance.post<Document[]>(url, filters,);
 
     return response.data;
   } catch (error) {

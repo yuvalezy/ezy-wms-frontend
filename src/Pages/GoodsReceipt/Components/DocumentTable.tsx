@@ -24,7 +24,7 @@ import {useNavigate} from "react-router-dom";
 type DocumentTableProps = {
   documents: Document[],
   supervisor?: boolean,
-  action?: (docId: number, action: 'approve' | 'cancel') => void,
+  action?: (doc: Document, action: 'approve' | 'cancel') => void,
   docDetails: (doc: Document) => void,
   confirm?: boolean
 }
@@ -49,7 +49,7 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
 
   const formatDocumentsList = (documents: DocumentItem[]) => {
     let returnValue = documents.map((value, index) => (
-      `${index > 0 ? ', ' : ''}${o(value.objectType)} #${value.documentNumber}`
+      `${index > 0 ? ', ' : ''}${o(value.objType)} #${value.docNumber}`
     )).join('');
     if (returnValue.length > 50) {
       return returnValue.substring(0, 50) + '...';
@@ -88,7 +88,7 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
           {doc.status === Status.InProgress && (
             <>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => action?.(doc.id, 'approve')}>
+              <DropdownMenuItem onClick={() => action?.(doc, 'approve')}>
                 <FontAwesomeIcon icon={faCheck} className="mr-2 h-4 w-4" />
                 {t('finish')}
               </DropdownMenuItem>
@@ -97,7 +97,7 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
 
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            onClick={() => action?.(doc.id, 'cancel')}
+            onClick={() => action?.(doc, 'cancel')}
             className="text-red-600 focus:text-red-600"
           >
             <FontAwesomeIcon icon={faTimes} className="mr-2 h-4 w-4" />
@@ -133,25 +133,25 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
                     e.preventDefault();
                     openLink(doc);
                   }} className="text-blue-600 hover:underline">
-                    {doc.id}
+                    {doc.number}
                   </a>
                 ) : (
-                  doc.id
+                  doc.number
                 )}
               </TableCell>
-              <TableCell className="whitespace-nowrap">{dateFormat(new Date(doc.date))}</TableCell>
-              <TableCell className="whitespace-nowrap">{doc.employee.name}</TableCell>
+              <TableCell className="whitespace-nowrap">{dateFormat(doc.date)}</TableCell>
+              <TableCell className="whitespace-nowrap">{doc.createdByUserName}</TableCell>
               <TableCell className="whitespace-nowrap">{documentStatusToString(doc.status)}</TableCell>
               <TableCell className="whitespace-nowrap">
                 {doc.businessPartner?.name ?? doc.businessPartner?.code ?? '-'}
               </TableCell>
               <TableCell className="min-w-0">
-                {doc.specificDocuments && doc.specificDocuments?.length > 0 ? (
+                {doc.documents && doc.documents?.length > 0 ? (
                   <a href="#" onClick={(e) => {
                     e.preventDefault();
                     docDetails(doc);
                   }} className="text-blue-600 hover:underline truncate block">
-                    {formatDocumentsList(doc.specificDocuments)}
+                    {formatDocumentsList(doc.documents)}
                   </a>
                 ) : '-'}
               </TableCell>

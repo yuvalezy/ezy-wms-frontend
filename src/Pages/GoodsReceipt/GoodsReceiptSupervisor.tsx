@@ -16,7 +16,6 @@ export default function GoodsReceiptSupervisor({confirm = false}: {confirm?: boo
     documents,
     selectedDocument,
     setDocuments,
-    selectedDocumentId,
     actionType,
     dialogOpen,
     documentListDialogRef,
@@ -56,7 +55,7 @@ export default function GoodsReceiptSupervisor({confirm = false}: {confirm?: boo
           actionType === "approve"
             ? t("confirmFinishDocument")
             : t("confirmCancelDocument"),
-          selectedDocumentId
+          selectedDocument?.number
         )}
         description={t('actionCannotReverse')}
       />

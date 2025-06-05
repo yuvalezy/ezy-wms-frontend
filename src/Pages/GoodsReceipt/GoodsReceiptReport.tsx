@@ -42,7 +42,7 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
   
   const formatDocumentsList = (documents: DocumentItem[]) => {
     const returnValue = documents.map((value, index) => (
-      `${index > 0 ? ', ' : ''}${o(value.objectType)} #${value.documentNumber}`
+      `${index > 0 ? ', ' : ''}${o(value.objType)} #${value.docNumber}`
     )).join('');
     if (returnValue.length > 50) {
       return returnValue.substring(0, 50) + '...';
@@ -152,9 +152,9 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
                     <TableCell>{doc.id}</TableCell>
                     <TableCell>{doc.businessPartner?.name ?? doc.businessPartner?.code ?? '-'}</TableCell>
                     <TableCell>
-                      {doc.specificDocuments && doc.specificDocuments?.length > 0 ? (
+                      {doc.documents && doc.documents?.length > 0 ? (
                         <a href="#" onClick={(e) => { e.preventDefault(); handleDocDetails(doc); }} className="text-blue-600 hover:underline">
-                          {formatDocumentsList(doc.specificDocuments)}
+                          {formatDocumentsList(doc.documents)}
                         </a>
                       ) : '-'}
                     </TableCell>

@@ -19,7 +19,7 @@ import {useNavigate} from "react-router-dom";
 type DocumentCardProps = {
   doc: Document,
   supervisor?: boolean,
-  action?: (docId: number, action: 'approve' | 'cancel') => void,
+  action?: (doc: Document, action: 'approve' | 'cancel') => void,
   docDetails: (doc: Document) => void,
   confirm?: boolean
 }
@@ -45,7 +45,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
 
   const formatDocumentsList = (documents: DocumentItem[]) => {
     return documents.map((value, index) => (
-      `${index > 0 ? ', ' : ''}${o(value.objectType)} #${value.documentNumber}`
+      `${index > 0 ? ', ' : ''}${o(value.objType)} #${value.docNumber}`
     )).join('');
   }
   return (
@@ -54,16 +54,16 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
         <SecondaryInfoBox>
           {doc.name && <InfoBoxValue label={t('id')} value={doc.name}/>}
           <InfoBoxValue onClick={handleOpenLink ? openLink : undefined} label={t('number')} value={doc.id}/>
-          <InfoBoxValue label={t('docDate')} value={dateFormat(new Date(doc.date))}/>
-          <InfoBoxValue label={t('createdBy')} value={doc.employee.name}/>
+          <InfoBoxValue label={t('docDate')} value={dateFormat(doc.date)}/>
+          <InfoBoxValue label={t('createdBy')} value={doc.createdByUserName}/>
           <InfoBoxValue label={t('status')} value={documentStatusToString(doc.status)}/>
         </SecondaryInfoBox>
-        {(doc.businessPartner || doc.specificDocuments) && <FullInfoBox>
+        {(doc.businessPartner || doc.documents) && <FullInfoBox>
           {doc.businessPartner && (
             <InfoBoxValue label={t('vendor')} value={doc.businessPartner.name ?? doc.businessPartner.code}/>
           )}
-          {doc.specificDocuments && doc.specificDocuments?.length > 0 && (
-            <InfoBoxValue label={t('documentsList')} value={formatDocumentsList(doc.specificDocuments)}
+          {doc.documents && doc.documents?.length > 0 && (
+            <InfoBoxValue label={t('documentsList')} value={formatDocumentsList(doc.documents)}
                           onClick={() => docDetails(doc)}/>
           )}
         </FullInfoBox>}
@@ -89,12 +89,12 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
                 </Button>
               )}
               {doc.status === Status.InProgress && (
-                <Button className="w-full" onClick={() => action?.(doc.id, 'approve')}>
+                <Button className="w-full" onClick={() => action?.(doc, 'approve')}>
                   <FontAwesomeIcon icon={faCheck} className="mr-2"/>
                   {t('finish')}
                 </Button>
               )}
-              <Button variant="destructive" className="w-full" onClick={() => action?.(doc.id, 'cancel')}>
+              <Button variant="destructive" className="w-full" onClick={() => action?.(doc, 'cancel')}>
                 <FontAwesomeIcon icon={faTimes} className="mr-2"/>
                 {t('cancel')}
               </Button>

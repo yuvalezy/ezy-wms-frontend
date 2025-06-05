@@ -16,7 +16,6 @@ export const useGoodsReceiptSupervisorData = () => {
   const [supervisor, setSupervisor] = useState(false);
   const {setLoading, setError} = useThemeContext();
   const [documents, setDocuments] = useState<Document[]>([]);
-  const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(null);
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
   const [actionType, setActionType] = useState<ObjectAction | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -42,8 +41,8 @@ export const useGoodsReceiptSupervisorData = () => {
     documentListDialogRef?.current?.show();
   }
 
-  const handleAction = (docId: number, action: ObjectAction) => {
-    setSelectedDocumentId(docId);
+  const handleAction = (doc: Document, action: ObjectAction) => {
+    setSelectedDocument(doc);
     setActionType(action);
     setDialogOpen(true);
   };
@@ -51,10 +50,10 @@ export const useGoodsReceiptSupervisorData = () => {
   const handleConfirmAction = () => {
     setLoading(true);
     setDialogOpen(false);
-    documentAction(selectedDocumentId!, actionType!, user!)
+    documentAction(selectedDocument!.id, actionType!, user!)
       .then(() => {
         setDocuments((prevDocs) =>
-          prevDocs.filter((doc) => doc.id !== selectedDocumentId)
+          prevDocs.filter((doc) => doc.id !== selectedDocument?.id)
         );
         toast.success(actionType === "approve" ? t("approved") : t("cancelled"));
       })
@@ -87,7 +86,6 @@ export const useGoodsReceiptSupervisorData = () => {
     documents,
     selectedDocument,
     setDocuments,
-    selectedDocumentId,
     actionType,
     dialogOpen,
     documentListDialogRef,

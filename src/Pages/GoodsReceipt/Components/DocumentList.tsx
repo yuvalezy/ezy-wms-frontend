@@ -56,11 +56,11 @@ const DocumentList = forwardRef<DocumentListRef, DocumentListProps>((props, ref)
     }
 
     let newDocument: DocumentItem = {
-      objectType: currentObjectType,
-      documentNumber: currentDocumentNumber
+      objType: currentObjectType,
+      docNumber: currentDocumentNumber
     };
 
-    if (items.find(i => i.objectType === newDocument.objectType && i.documentNumber === newDocument.documentNumber)) {
+    if (items.find(i => i.objType === newDocument.objType && i.docNumber === newDocument.docNumber)) {
       toast.warning(t('duplicateNotAllowed'));
       return;
     }
@@ -83,7 +83,7 @@ const DocumentList = forwardRef<DocumentListRef, DocumentListProps>((props, ref)
         <div className="border-b">
           {items.map((item, index) => (
             <div key={index} className="flex items-center justify-between border-b last:border-b-0">
-              <span>{`${o(item.objectType)}: ${item.documentNumber}`}</span>
+              <span>{`${o(item.objType)}: ${item.docNumber}`}</span>
               <Button type="button" variant="ghost" size="icon" onClick={() => handleRemoveClick(index)} aria-label={t('delete')}>
                 <X className="h-4 w-4 text-red-500"/>
               </Button>
