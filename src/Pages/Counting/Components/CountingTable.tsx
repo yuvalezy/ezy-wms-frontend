@@ -22,7 +22,7 @@ import { Status } from "@/assets/Common";
 interface CountingTableProps {
   countings: Counting[];
   supervisor?: boolean;
-  onAction?: (docId: string, action: 'approve' | 'cancel') => void;
+  onAction?: (doc: Counting, action: 'approve' | 'cancel') => void;
 }
 
 export default function CountingTable({ countings, supervisor = false, onAction }: CountingTableProps) {
@@ -87,13 +87,13 @@ export default function CountingTable({ countings, supervisor = false, onAction 
                       {t('countingSummaryReport')}
                     </DropdownMenuItem>
                     {doc.status === Status.InProgress && (
-                      <DropdownMenuItem onClick={() => onAction?.(doc.id, 'approve')}>
+                      <DropdownMenuItem onClick={() => onAction?.(doc, 'approve')}>
                         <CheckCircle className="mr-2 h-4 w-4" />
                         {t('finish')}
                       </DropdownMenuItem>
                     )}
                     <DropdownMenuItem 
-                      onClick={() => onAction?.(doc.id, 'cancel')}
+                      onClick={() => onAction?.(doc, 'cancel')}
                       className="text-destructive"
                     >
                       <XCircle className="mr-2 h-4 w-4" />

@@ -100,7 +100,7 @@ export const fetchCountings = async (
 
     if (statuses && statuses.length > 0) {
       statuses.forEach((status) =>
-        queryParams.append("Status", status.toString())
+        queryParams.append("Statuses", status)
       );
     }
 

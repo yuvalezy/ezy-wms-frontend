@@ -16,7 +16,7 @@ import {InfoBoxValue, SecondaryInfoBox, Separator} from "@/components";
 
 type CountingCardProps = {
   doc: Counting,
-  handleAction?: (docId: string, action: 'approve' | 'cancel') => void,
+  handleAction?: (action: 'approve' | 'cancel') => void,
   supervisor?: boolean
 }
 

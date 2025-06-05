@@ -88,10 +88,6 @@ export const fetchPicking = async (params: pickingParameters): Promise<PickingDo
             return picking;
         }
 
-
-
-        
-
         const queryParams = new URLSearchParams();
 
         if (params.type != null) {
@@ -109,7 +105,7 @@ export const fetchPicking = async (params: pickingParameters): Promise<PickingDo
             queryParams.append("binEntry", params.binLocation.toString());
         }
 
-        const url = `Picking/Picking/${params.id}?${queryParams.toString()}`;
+        const url = `picking/${params.id}?${queryParams.toString()}`;
 
         const response = await axiosInstance.get<PickingDocument>(url);
 

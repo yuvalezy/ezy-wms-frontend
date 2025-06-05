@@ -31,6 +31,8 @@ export const useStockInfo = () => {
         response += ', ';
       response += `${units} ${t('units')}`;
     }
+    if (response.length === 0)
+      response = '0';
     return response;
   };
 }
