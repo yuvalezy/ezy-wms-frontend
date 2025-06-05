@@ -185,23 +185,13 @@ export const addItem = async (params: {
             };
         }
 
-        
-
-        
-
-        
-
         const url = `Picking/AddItem`;
 
         const response = await axiosInstance.post<PickingAddItemResponse>(
             url,
             params
         );
-        if (response.data.errorMessage == null) {
-            return response.data;
-        } else {
-            throw new Error(response.data.errorMessage);
-        }
+        return response.data;
     } catch (error) {
         console.error("Error adding item:", error);
         throw error;

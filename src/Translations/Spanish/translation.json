@@ -217,6 +217,7 @@
   "updateLineWrongSupervisorPassword": "Contraseña de supervisión errónea",
   "updateLineNotSupervisorError": "El código introducido no es de un supervisor",
   "updateLineQuantityMoreThenAvailableError": "La cantidad excede el stock disponible. Por favor, introduzca una cantidad que no supere el inventario disponible.",
+  "binQuantityExceedError": "La cantidad excede el stock disponible en ubicación para el artículo {0}",
   "noDataFound": "No se encontró datos",
   "multipleItemsDetected": "Multiples Artículos Detectados",
   "unknownError": "Error desconocido",
