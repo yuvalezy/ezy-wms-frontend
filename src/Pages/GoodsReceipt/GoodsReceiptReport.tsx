@@ -5,7 +5,7 @@ import {fetchDocuments, GoodsReceiptReportFilter} from "@/pages/GoodsReceipt/dat
 import DocumentReportCard from "@/pages/GoodsReceipt/components/DocumentReportCard";
 import {useThemeContext} from "@/components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {Document, DocumentItem} from "@/assets/Document";
+import {ReceiptDocument, DocumentItem} from "@/assets/ReceiptDocument";
 import DocumentListDialog, {DocumentListDialogRef} from "@/pages/GoodsReceipt/components/DocumentListDialog";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Button} from "@/components/ui/button";
@@ -28,11 +28,11 @@ interface GoodsReceiptReportProps {
 export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReportProps) {
   const {loading, setLoading, setError} = useThemeContext();
   const {t} = useTranslation();
-  const [documents, setDocuments] = useState<Document[]>([]);
+  const [documents, setDocuments] = useState<ReceiptDocument[]>([]);
   const [lastID, setLastID] = useState(-1);
   const [filters, setFilters] = useState<GoodsReceiptReportFilter | null>(null);
   const [stop, setStop] = useState(false);
-  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
+  const [selectedDocument, setSelectedDocument] = useState<ReceiptDocument | null>(null);
   const documentListDialogRef = useRef<DocumentListDialogRef>(null);
   const reportFilterFormRef = useRef<ReportFilterFormRef>(null);
   const {dateFormat} = useDateTimeFormat();
@@ -66,7 +66,7 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
     loadData(filters);
   }
 
-  function handleDocDetails(doc: Document) {
+  function handleDocDetails(doc: ReceiptDocument) {
     setSelectedDocument(doc);
     documentListDialogRef?.current?.show();
   }

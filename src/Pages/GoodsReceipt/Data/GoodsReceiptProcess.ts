@@ -9,7 +9,7 @@ import {
 import {axiosInstance, Mockup} from "@/utils/axios-instance";
 
 export const addItem = async (
-  id: number,
+  id: string,
   itemCode: string,
   barcode: string,
   unit: UnitType
@@ -79,24 +79,19 @@ export const updateLine = async ({
                                    reason,
                                    quantity,
                                  }: {
-  id: number;
-  lineId: number;
+  id: string;
+  lineId: string;
   comment?: string;
   userName?: string;
   quantity?: number;
   reason?: number;
-}): Promise<UpdateLineReturnValue> => {
+}): Promise<{returnValue: UpdateLineReturnValue, errorMessage?: string}> => {
   try {
     if (Mockup) {
       console.log("Mockup data is being used.");
-      return UpdateLineReturnValueMockup;
+      // return UpdateLineReturnValueMockup;
     }
 
-    
-
-    
-
-    
 
     const url = `GoodsReceipt/UpdateLine`;
 
@@ -113,7 +108,7 @@ export const updateLine = async ({
       
     );
 
-    return response.data;
+    return {returnValue: response.data};
   } catch (error) {
     console.error("Error updating line:", error);
     throw error;
@@ -125,8 +120,8 @@ export const updateLineQuantity = async ({
                                            userName,
                                            quantity,
                                          }: {
-  id: number;
-  lineId: number;
+  id: string;
+  lineId: string;
   userName?: string;
   quantity?: number;
 }): Promise<DocumentUpdateLineQuantityResponse> => {

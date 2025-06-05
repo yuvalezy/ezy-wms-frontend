@@ -88,7 +88,7 @@ export const updateLine = async ({
     throw error;
   }
 };
-const updateLineQuantity = async (id: number, lineId: number, quantity: number): Promise<UpdateLineReturnValue> => {
+const updateLineQuantity = async (id: string, lineId: string, quantity: number): Promise<UpdateLineReturnValue> => {
   try {
     const url = `transfer/updateLineQuantity`;
 

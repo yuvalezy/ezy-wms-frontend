@@ -22,13 +22,13 @@ import {
 import {PlusCircle} from "lucide-react"; // Icon for create button
 
 import {useObjectName} from "@/assets/ObjectName";
-import {Document, DocumentItem} from "@/assets/Document";
+import {ReceiptDocument, DocumentItem} from "@/assets/ReceiptDocument";
 import {BusinessPartner, fetchVendors} from "@/assets/Data";
 import {StringFormat} from "@/assets/Functions";
 import {Card} from "@/components";
 
 interface DocumentFormProps {
-  onNewDocument: (document: Document) => void,
+  onNewDocument: (document: ReceiptDocument) => void,
   confirm: boolean
 }
 

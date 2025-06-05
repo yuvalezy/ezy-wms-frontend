@@ -13,8 +13,7 @@ import {useAuth} from "@/components";
 export default function GoodsReceiptProcess({confirm = false}: { confirm?: boolean }) {
   const {t} = useTranslation();
   const {
-    scanCode,
-    id,
+    info,
     enable,
     barcodeRef,
     processesRef,
@@ -32,10 +31,10 @@ export default function GoodsReceiptProcess({confirm = false}: { confirm?: boole
 
   return (
     <ContentTheme title={title} titleOnClick={() => navigate(`/goodsReceipt${confirm ? 'Confirmation' : ''}`)}
-                  titleBreadcrumbs={[{label: scanCode || ''}]}
+                  titleBreadcrumbs={[{label: info?.number?.toString() || ''}]}
                   footer={enable && (<BarCodeScanner ref={barcodeRef} enabled unit onAddItem={handleAddItem}/>)}
     >
-      {id ? (
+      {info ? (
         <>
           {acceptValues.map((alert) => (
             <ProcessAlert
@@ -45,8 +44,8 @@ export default function GoodsReceiptProcess({confirm = false}: { confirm?: boole
               onAction={(type) => alertAction(alert, type)}
             />
           ))}
-          {currentAlert && id &&
-              <Processes ref={processesRef} id={id} alert={currentAlert} reasonType={ReasonType.GoodsReceipt}
+          {currentAlert &&
+              <Processes ref={processesRef} id={info.id} alert={currentAlert} reasonType={ReasonType.GoodsReceipt}
                          onCancel={(comment, cancel) => handleAlertActionAccept(AlertActionType.Cancel, comment, cancel)}
                          onCommentsChanged={(comment) => handleAlertActionAccept(AlertActionType.Comments, comment)}
                          onQuantityChanged={(quantity) => handleAlertActionAccept(AlertActionType.Quantity, quantity)}

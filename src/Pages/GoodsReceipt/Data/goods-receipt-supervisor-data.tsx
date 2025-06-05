@@ -4,7 +4,7 @@ import {useEffect, useRef, useState} from "react";
 import {useLocation} from "react-router-dom";
 import {useThemeContext} from "@/components/ThemeContext";
 import { toast } from "sonner";
-import {Document} from "@/assets/Document";
+import {ReceiptDocument} from "@/assets/ReceiptDocument";
 import {ObjectAction, Status} from "@/assets/Common";
 import {DocumentListDialogRef} from "@/pages/GoodsReceipt/components/DocumentListDialog";
 import {RoleType} from "@/assets/RoleType";
@@ -15,8 +15,8 @@ export const useGoodsReceiptSupervisorData = () => {
   const {user} = useAuth();
   const [supervisor, setSupervisor] = useState(false);
   const {setLoading, setError} = useThemeContext();
-  const [documents, setDocuments] = useState<Document[]>([]);
-  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
+  const [documents, setDocuments] = useState<ReceiptDocument[]>([]);
+  const [selectedDocument, setSelectedDocument] = useState<ReceiptDocument | null>(null);
   const [actionType, setActionType] = useState<ObjectAction | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const documentListDialogRef = useRef<DocumentListDialogRef>(null);
@@ -36,12 +36,12 @@ export const useGoodsReceiptSupervisorData = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  function handleDocDetails(doc: Document) {
+  function handleDocDetails(doc: ReceiptDocument) {
     setSelectedDocument(doc);
     documentListDialogRef?.current?.show();
   }
 
-  const handleAction = (doc: Document, action: ObjectAction) => {
+  const handleAction = (doc: ReceiptDocument, action: ObjectAction) => {
     setSelectedDocument(doc);
     setActionType(action);
     setDialogOpen(true);

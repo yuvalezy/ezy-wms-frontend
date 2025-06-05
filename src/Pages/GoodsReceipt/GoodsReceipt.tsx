@@ -4,7 +4,7 @@ import {fetchDocuments,} from "@/pages/GoodsReceipt/data/Document";
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "@/components/ThemeContext";
 import {Status} from "@/assets/Common";
-import {Document} from "@/assets/Document";
+import {ReceiptDocument} from "@/assets/ReceiptDocument";
 import DocumentListDialog, {DocumentListDialogRef} from "@/pages/GoodsReceipt/components/DocumentListDialog";
 import DocumentCard from "@/pages/GoodsReceipt/components/DocumentCard";
 import DocumentTable from "@/pages/GoodsReceipt/components/DocumentTable";
@@ -15,8 +15,8 @@ export default function GoodsReceipt({confirm = false}: { confirm?: boolean }) {
   const {setLoading, setError} = useThemeContext();
   const {t} = useTranslation();
   const documentListDialogRef = useRef<DocumentListDialogRef>(null);
-  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
-  const [documents, setDocuments] = useState<Document[]>([]);
+  const [selectedDocument, setSelectedDocument] = useState<ReceiptDocument | null>(null);
+  const [documents, setDocuments] = useState<ReceiptDocument[]>([]);
 
   useEffect(() => {
     setLoading(true);
@@ -26,7 +26,7 @@ export default function GoodsReceipt({confirm = false}: { confirm?: boolean }) {
       .finally(() => setLoading(false))
   }, [setError, setLoading]);
 
-  function handleDocDetails(doc: Document) {
+  function handleDocDetails(doc: ReceiptDocument) {
     setSelectedDocument(doc);
     documentListDialogRef?.current?.show();
   }

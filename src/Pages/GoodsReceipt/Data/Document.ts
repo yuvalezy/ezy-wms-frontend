@@ -1,5 +1,5 @@
 import {
-  Document,
+  ReceiptDocument,
   DocumentItem,
   DocumentOrderBy,
   documentMockup,
@@ -40,14 +40,14 @@ export const createDocument = async (
   type: GoodsReceiptType,
   cardCode: string,
   name: string,
-  items: DocumentItem[]): Promise<Document> => {
+  items: DocumentItem[]): Promise<ReceiptDocument> => {
   try {
     if (Mockup) {
       console.log("Mockup data is being used.");
       // return documentMockup;
     }
 
-    const response = await axiosInstance.post<Document>(
+    const response = await axiosInstance.post<ReceiptDocument>(
       `GoodsReceipt/Create`,
       {
         cardCode: cardCode,
@@ -87,17 +87,32 @@ export const documentAction = async (
   }
 };
 
+export const fetchDocument = async (id: string): Promise<ReceiptDocument> => {
+  try {
+    if (Mockup) {
+      // console.log("Mockup data is being used.");
+      // return documentMockup;
+    }
+
+    const response = await axiosInstance.get<ReceiptDocument>(`goodsReceipt/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching document:", error);
+    throw error;
+  }
+};
+
 export const fetchDocuments = async (
   filters: GoodsReceiptReportFilter,
   orderBy: DocumentOrderBy = DocumentOrderBy.ID,
   desc: boolean = true
-): Promise<Document[]> => {
+): Promise<ReceiptDocument[]> => {
   try {
     if (Mockup) {
     }
     const url = `goodsReceipt`;
 
-    const response = await axiosInstance.post<Document[]>(url, filters,);
+    const response = await axiosInstance.post<ReceiptDocument[]>(url, filters,);
 
     return response.data;
   } catch (error) {

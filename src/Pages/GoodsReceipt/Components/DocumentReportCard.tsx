@@ -1,7 +1,7 @@
 import React from "react";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {useTranslation} from "react-i18next";
-import {Document, DocumentItem, useDocumentStatusToString, useObjectName, useDateTimeFormat} from "@/assets";
+import {ReceiptDocument, DocumentItem, useDocumentStatusToString, useObjectName, useDateTimeFormat} from "@/assets";
 import {activeStatuses, processStatuses, useHandleOpen} from "@/pages/GoodsReceipt/data/GoodsReceiptUtils";
 import InfoBox, {InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
 import {Separator} from "@/components/ui/separator";
@@ -10,8 +10,8 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faExchangeAlt, faFileAlt, faTruckLoading} from "@fortawesome/free-solid-svg-icons";
 
 type DocumentReportCardProps = {
-  doc: Document,
-  docDetails: (doc: Document) => void,
+  doc: ReceiptDocument,
+  docDetails: (doc: ReceiptDocument) => void,
   confirm: boolean
 }
 

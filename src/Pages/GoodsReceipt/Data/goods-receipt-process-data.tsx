@@ -14,10 +14,11 @@ import {
 } from "@/assets/Common";
 import {AlertActionType, AlertSeverity, ProcessAlertValue} from "@/components/ProcessAlert";
 import {ProcessesRef} from "@/components/Processes";
-import {IsNumeric, StringFormat} from "@/assets/Functions";
+import { StringFormat} from "@/assets/Functions";
 import {addItem, updateLine, updateLineQuantity} from "@/pages/GoodsReceipt/data/GoodsReceiptProcess";
-import {DocumentAddItemResponse} from "@/assets/Document";
+import {DocumentAddItemResponse, ReceiptDocument} from "@/assets/ReceiptDocument";
 import {Mockup} from "@/utils/axios-instance";
+import { fetchDocument } from "./Document";
 
 export const useGoodsReceiptProcessData = (confirm: boolean) => {
   const {scanCode} = useParams();
@@ -25,20 +26,22 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
   const {dateTimeFormat} = useDateTimeFormat();
   const barcodeRef = useRef<BarCodeScannerRef>(null);
   const boxConfirmationDialogRef = useRef<BoxConfirmationDialogRef>(null);
-  const [id, setID] = useState<number | null>();
   const [enable, setEnable] = useState(true);
   const {setLoading, setError} = useThemeContext();
   const [acceptValues, setAcceptValues] = useState<ProcessAlertValue[]>([]);
   const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
   const processesRef = useRef<ProcessesRef>(null);
+  const [info, setInfo] = useState<ReceiptDocument | null>(null);
 
   useEffect(() => {
     setTimeout(() => barcodeRef.current?.focus(), 1);
     if (scanCode === null || scanCode === undefined) {
-      setID(null);
       return;
     }
-    setID(scanCode);
+    fetchDocument(scanCode)
+      .then((result) => setInfo(result))
+      .catch((error) => setError(error))
+      .finally(() => setLoading(false));
   }, []);
 
   const alert = (alert: ProcessAlertValue) => {
@@ -82,7 +85,7 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
     barcodeRef.current?.clear();
     setLoading(true);
     let barcode = item.barcode!;
-    addItem(id ?? 0, item.code, barcode, unit)
+    addItem(info!.id, item.code, barcode, unit)
       .then((data) => {
         if (isClosedDocument(data, item.code, barcode)) {
           return;
@@ -127,7 +130,7 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
           }
         }
 
-        alert({
+        const newAlert = {
           lineId: data.lineId,
           barcode,
           itemCode: item.code,
@@ -140,7 +143,8 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
           purPackUn: data.purPackUn,
           purPackMsr: data.purPackMsr,
           unit: unit
-        });
+        };
+        alert(newAlert);
       })
       .catch((error) => {
         console.error(`Error performing action: ${error}`);
@@ -161,7 +165,7 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
       lineId: data.lineId,
       barcode: barcode,
       itemCode: itemCode,
-      message: StringFormat(t("goodsReceiptIsClosed"), id),
+      message: StringFormat(t("goodsReceiptIsClosed"), info?.number),
       severity: "Negative",
       multiple: [],
       quantity: data.quantity
@@ -210,7 +214,7 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
   }
 
 
-  function handleUpdateLine(parameters: UpdateLineParameters): Promise<UpdateLineReturnValue> {
+  function handleUpdateLine(parameters: UpdateLineParameters): Promise<{returnValue: UpdateLineReturnValue, errorMessage?: string}> {
     if (parameters.quantity == null) {
       return updateLine(parameters);
     }
@@ -224,7 +228,7 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
 
         const updatedAlert: ProcessAlertValue = {...currentAlert};
         updateLineQuantity({
-          id: id ?? -1,
+          id: parameters.id,
           lineId: parameters.lineId,
           userName: parameters.userName,
           quantity: parameters.quantity
@@ -281,7 +285,7 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
           reject(error);
           return;
         }
-        resolve(response);
+        resolve({returnValue: response});
 
       } catch (error) {
         setError(error);
@@ -292,7 +296,7 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
 
   return {
     scanCode,
-    id,
+    info,
     enable,
     barcodeRef,
     processesRef,

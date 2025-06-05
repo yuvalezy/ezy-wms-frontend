@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCheck, faTimes, faFileAlt, faTruckLoading, faExchangeAlt, faEllipsisV} from '@fortawesome/free-solid-svg-icons';
-import {Document, DocumentItem} from "@/assets/Document";
+import {ReceiptDocument, DocumentItem} from "@/assets/ReceiptDocument";
 import {useObjectName} from "@/assets/ObjectName";
 import {RoleType} from "@/assets/RoleType";
 import {useDocumentStatusToString} from "@/assets/DocumentStatusString";
@@ -22,10 +22,10 @@ import {useDateTimeFormat} from "@/assets/DateFormat";
 import {useNavigate} from "react-router-dom";
 
 type DocumentTableProps = {
-  documents: Document[],
+  documents: ReceiptDocument[],
   supervisor?: boolean,
-  action?: (doc: Document, action: 'approve' | 'cancel') => void,
-  docDetails: (doc: Document) => void,
+  action?: (doc: ReceiptDocument, action: 'approve' | 'cancel') => void,
+  docDetails: (doc: ReceiptDocument) => void,
   confirm?: boolean
 }
 
@@ -40,7 +40,7 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
 
   const handleOpenLink = !confirm ? user?.roles?.includes(RoleType.GOODS_RECEIPT) : user?.roles?.includes(RoleType.GOODS_RECEIPT_CONFIRMATION);
 
-  const openLink = (doc: Document) => {
+  const openLink = (doc: ReceiptDocument) => {
     if (!confirm)
       navigate(`/goodsReceipt/${doc.id}`);
     else
@@ -57,7 +57,7 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
     return returnValue;
   }
 
-  const ActionsMenu = ({doc}: {doc: Document}) => {
+  const ActionsMenu = ({doc}: {doc: ReceiptDocument}) => {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

@@ -2,7 +2,7 @@ import {BusinessPartner, Employee} from "./Data";
 import {GoodsReceiptType} from "@/pages/GoodsReceipt/data/Document";
 import {BaseEntity, Status, UpdateLineReturnValue} from "./Common";
 
-export interface Document extends BaseEntity {
+export interface ReceiptDocument extends BaseEntity {
   name?: string;
   number: number;
   date: Date;

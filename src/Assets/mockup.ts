@@ -6,7 +6,7 @@ import {
   PickingDocumentDetailItem,
   PickStatus
 } from "@/pages/picking/data/picking-document";
-import {DocumentAddItemResponse, ProcessResponse} from "./Document";
+import {DocumentAddItemResponse, ProcessResponse} from "./ReceiptDocument";
 import {Counting, CountingContent} from "./Counting";
 import {GoodsReceiptAll, GoodsReceiptAllDetail, GoodsReceiptVSExitReportData} from "@/pages/GoodsReceipt/data/Report";
 import {TransferDocument} from "@/pages/transfer/data/transfer-document";

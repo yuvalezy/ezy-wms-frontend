@@ -5,7 +5,7 @@ import {Card, CardContent} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCheck, faTimes, faFileAlt, faTruckLoading, faExchangeAlt} from '@fortawesome/free-solid-svg-icons';
-import {Document, DocumentItem} from "@/assets/Document";
+import {ReceiptDocument, DocumentItem} from "@/assets/ReceiptDocument";
 import {useObjectName} from "@/assets/ObjectName";
 import {RoleType} from "@/assets/RoleType";
 import {useDocumentStatusToString} from "@/assets/DocumentStatusString";
@@ -17,10 +17,10 @@ import InfoBox, {FullInfoBox, InfoBoxValue, SecondaryInfoBox} from "@/components
 import {useNavigate} from "react-router-dom";
 
 type DocumentCardProps = {
-  doc: Document,
+  doc: ReceiptDocument,
   supervisor?: boolean,
-  action?: (doc: Document, action: 'approve' | 'cancel') => void,
-  docDetails: (doc: Document) => void,
+  action?: (doc: ReceiptDocument, action: 'approve' | 'cancel') => void,
+  docDetails: (doc: ReceiptDocument) => void,
   confirm?: boolean
 }
 

@@ -4,7 +4,7 @@ export * from './Counting';
 export * from './Data';
 export * from './DateFormat';
 export * from './Deliveries';
-export * from './Document';
+export * from './ReceiptDocument';
 export * from './DocumentStatusString';
 export * from './Functions';
 export * from './Menus';
