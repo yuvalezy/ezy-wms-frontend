@@ -16,7 +16,7 @@ export enum GoodsReceiptType {
 }
 
 export type GoodsReceiptReportFilter = {
-  id?: number | null;
+  id?: string | null;
   businessPartner?: string | null;
   name?: string;
   grpo?: string;

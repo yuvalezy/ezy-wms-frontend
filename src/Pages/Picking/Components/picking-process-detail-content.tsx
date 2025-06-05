@@ -1,10 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {PickingDocumentDetailItem} from "@/pages/picking/data/picking-document";
-import BinLocationQuantities from "../../../components/BinLocationQuantities";
-import {InfoBoxValue, MetricRow, SecondaryInfoBox} from "@/components";
-import {formatNumber} from "@/lib/utils";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {useStockInfo} from "@/utils/stock-info";
 import {useItemDetailsPopup} from "@/hooks/useItemDetailsPopup";

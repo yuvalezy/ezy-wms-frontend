@@ -17,11 +17,11 @@ export default function GoodsReceiptReportAll({confirm = false}: GoodsReceiptAll
   const navigate = useNavigate();
   const {
     data,
-    id,
     detailRef,
     handleExportExcel,
     openDetails,
     onDetailUpdate,
+    info
   } = useGoodsReceiptAllData(confirm);
 
   const title = `${!confirm ? t("goodsReceiptSupervisor") : t("goodsReceiptConfirmationSupervisor")}`;
@@ -33,7 +33,7 @@ export default function GoodsReceiptReportAll({confirm = false}: GoodsReceiptAll
                   titleOnClick={() => navigate(titleLink)}
                   onExportExcel={handleExportExcel}
                   titleBreadcrumbs={[
-                    {label: `${id}`},
+                    {label: `${info?.number}`},
                     {label: subTitle}
                   ]}>
       {data && <>
@@ -43,7 +43,7 @@ export default function GoodsReceiptReportAll({confirm = false}: GoodsReceiptAll
             <AlertDescription>{t("noExitData")}</AlertDescription>
           </Alert>
         )}
-        {id && <GoodsReceiptAllDialog ref={detailRef} id={id} confirm={confirm} onUpdate={onDetailUpdate}/>}
+        {info && <GoodsReceiptAllDialog ref={detailRef} id={info.id} confirm={confirm} onUpdate={onDetailUpdate}/>}
       </>}
     </ContentTheme>
   );

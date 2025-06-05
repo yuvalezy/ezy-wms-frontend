@@ -14,8 +14,8 @@ export const useGoodsReceiptAllDetailsData = (props: GRPOAllDetailProps) => {
   const [currentData, setCurrentData] = useState<GoodsReceiptAll | null>(null);
   const [data, setData] = useState<GoodsReceiptAllDetail[] | null>([]);
   const [enableUpdate, setEnableUpdate] = useState(false);
-  const [checkedRows, setCheckedRows] = useState<{ [key: number]: boolean }>({}); // State to store checked rows
-  const [quantityChanges, setQuantityChanges] = useState<{ [key: number]: number }>({}); // State to store quantity changes
+  const [checkedRows, setCheckedRows] = useState<{ [key: string]: boolean }>({}); // State to store checked rows
+  const [quantityChanges, setQuantityChanges] = useState<{ [key: string]: number }>({}); // State to store quantity changes
 
   function update() {
     try {
@@ -49,7 +49,7 @@ export const useGoodsReceiptAllDetailsData = (props: GRPOAllDetailProps) => {
       });
   }
 
-  function handleCheckboxChange(lineId: number, checked: boolean) {
+  function handleCheckboxChange(lineId: string, checked: boolean) {
     setCheckedRows(prevState => ({
       ...prevState,
       [lineId]: checked
@@ -57,7 +57,7 @@ export const useGoodsReceiptAllDetailsData = (props: GRPOAllDetailProps) => {
     // setEnableUpdate(true); // This might not be needed if button is always enabled or logic changes
   }
 
-  function handleQuantityChange(lineId: number, newValue: string) {
+  function handleQuantityChange(lineId: string, newValue: string) {
     const numValue = parseInt(newValue, 10);
     setQuantityChanges(prevState => ({
       ...prevState,
@@ -87,7 +87,7 @@ export interface GRPOAllDetailRef {
 }
 
 export interface GRPOAllDetailProps {
-  id: number,
+  id: string,
   onUpdate: (data: DetailUpdateParameters) => void,
   confirm: boolean | undefined
 }

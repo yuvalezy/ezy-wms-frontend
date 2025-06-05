@@ -19,7 +19,7 @@ export type GoodsReceiptAll = {
   purPackMsr?: string | null;
 };
 export type GoodsReceiptAllDetail = {
-  lineId: number;
+  lineId: string;
   employeeName: string;
   timeStamp: Date;
   quantity: number;
@@ -85,16 +85,14 @@ export enum ProcessLineStatus {
   NotReceived = 'NotReceived'
 }
 
-export const fetchGoodsReceiptReportAll = async (id: number): Promise<GoodsReceiptAll[]> => {
+export const fetchGoodsReceiptReportAll = async (id: string): Promise<GoodsReceiptAll[]> => {
   try {
     if (Mockup) {
       console.log("Mockup data is being used.");
       return GoodsReceiptMockup;
     }
 
-    
-
-    const url = `GoodsReceipt/GoodsReceiptAll/${id}`;
+    const url = `goodsReceipt/${id}/report/all`;
 
     const response = await axiosInstance.get<GoodsReceiptAll[]>(url, );
 
@@ -104,7 +102,7 @@ export const fetchGoodsReceiptReportAll = async (id: number): Promise<GoodsRecei
     throw error;
   }
 };
-export const fetchGoodsReceiptReportAllDetails = async (id: number, item: string): Promise<GoodsReceiptAllDetail[]> => {
+export const fetchGoodsReceiptReportAllDetails = async (id: string, item: string): Promise<GoodsReceiptAllDetail[]> => {
   try {
     if (Mockup) {
       console.log("Mockup data is being used.");
