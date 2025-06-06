@@ -20,7 +20,7 @@ export type GoodsReceiptAll = {
 };
 export type GoodsReceiptAllDetail = {
   lineId: string;
-  employeeName: string;
+  createdByUserName: string;
   timeStamp: Date;
   quantity: number;
   unit: UnitType;
@@ -109,23 +109,11 @@ export const fetchGoodsReceiptReportAllDetails = async (id: string, item: string
       return GoodsReceiptAllDetailMockup;
     }
 
-    
-
-    const url = `GoodsReceipt/GoodsReceiptAll/${id}/${item}`;
+    const url = `goodsReceipt/${id}/report/all/${item}`;
 
     const response = await axiosInstance.get<any[]>(url, );
 
-    const goodsReceipts: GoodsReceiptAllDetail[] = response.data.map((item: GoodsReceiptAllDetail) => ({
-      lineId: item.lineId,
-      employeeName: item.employeeName,
-      timeStamp: new Date(item.timeStamp),
-      quantity: item.quantity,
-      unit: item.unit,
-      buyUnitMsr: "Doz",
-      purPackMsr: "Pack"
-    }));
-
-    return goodsReceipts;
+    return response.data;
   } catch (error) {
     console.error("Error fetching all details:", error);
     throw error;
@@ -137,13 +125,7 @@ export const updateGoodsReceiptReport = async (data: DetailUpdateParameters) => 
       return;
     }
 
-    
-
-    
-
-    
-
-    const url = `GoodsReceipt/UpdateGoodsReceiptAll`;
+    const url = `goodsReceipt/updateGoodsReceiptAll`;
 
     const response = await axiosInstance.post(url, data, );
 

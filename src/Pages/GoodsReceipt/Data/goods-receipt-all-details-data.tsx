@@ -6,7 +6,7 @@ import {
 } from "@/pages/GoodsReceipt/data/Report";
 import {useThemeContext} from "@/components/ThemeContext";
 import {useState} from "react";
-import {fetchDocuments} from "@/pages/GoodsReceipt/data/Document";
+import {fetchDocument, fetchDocuments} from "@/pages/GoodsReceipt/data/Document";
 
 export const useGoodsReceiptAllDetailsData = (props: GRPOAllDetailProps) => {
   const {setLoading, setError} = useThemeContext();
@@ -32,9 +32,9 @@ export const useGoodsReceiptAllDetailsData = (props: GRPOAllDetailProps) => {
     setEnableUpdate(false);
     setCheckedRows({})
     setQuantityChanges({})
-    fetchDocuments({id: props.id, confirm: props.confirm})
+    fetchDocument(props.id)
       .then((doc) => {
-        setEnableUpdate(doc[0].status === Status.InProgress);
+        setEnableUpdate(doc.status === Status.Open || doc.status === Status.InProgress);
         fetchGoodsReceiptReportAllDetails(props.id, data.itemCode)
           .then((result) => {
             setIsOpen(true);

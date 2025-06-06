@@ -35,7 +35,6 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
     data,
     enableUpdate,
     checkedRows,
-    quantityChanges,
     setCurrentData,
     loadDetails,
     update,
@@ -68,16 +67,6 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
               <ScrollArea className="h-[60vh]">
                 <div className="grid grid-cols-1 gap-2">
                   {data.map((row) => {
-                    let displayQuantity = row.quantity;
-                    if (row.unit !== UnitType.Unit && currentData?.numInBuy) {
-                      displayQuantity /= currentData.numInBuy;
-                    }
-                    if (row.unit === UnitType.Pack && currentData?.purPackUn) {
-                      displayQuantity /= currentData.purPackUn;
-                    }
-                    const currentQuantityValue = quantityChanges[row.lineId] !== undefined
-                      ? quantityChanges[row.lineId]
-                      : displayQuantity;
                     const displayUnit = row.unit === UnitType.Unit ? t('unit') :
                       row.unit === UnitType.Dozen ? (currentData?.buyUnitMsr || t("qtyInUn")) :
                         (currentData?.purPackMsr || t('packUn'));
@@ -86,7 +75,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                       <Card key={row.lineId}>
                         <CardContent>
                           <InfoBox>
-                            <InfoBoxValue label={t('employee')} value={row.employeeName}/>
+                            <InfoBoxValue label={t('employee')} value={row.createdByUserName}/>
                           </InfoBox>
                           <SecondaryInfoBox>
                             <InfoBoxValue label={t('date')} value={dateFormat(row.timeStamp)}/>
@@ -96,7 +85,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                               <Input
                                 type="number"
                                 className="w-24 text-right"
-                                value={currentQuantityValue.toString()}
+                                value={row.quantity.toString()}
                                 min={1}
                                 step={1}
                                 onFocus={(e) => e.target.select()}
@@ -104,7 +93,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                               />
                             ) : (
                               <span className="text-right">
-                                    {formatNumber(currentQuantityValue, 2)}
+                                    {formatNumber(row.quantity, 0)}
                                   </span>
                             )}/>
                           </SecondaryInfoBox>
@@ -148,23 +137,13 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                   </TableHeader>
                   <TableBody>
                     {data.map((row) => {
-                      let displayQuantity = row.quantity;
-                      if (row.unit !== UnitType.Unit && currentData?.numInBuy) {
-                        displayQuantity /= currentData.numInBuy;
-                      }
-                      if (row.unit === UnitType.Pack && currentData?.purPackUn) {
-                        displayQuantity /= currentData.purPackUn;
-                      }
-                      const currentQuantityValue = quantityChanges[row.lineId] !== undefined
-                        ? quantityChanges[row.lineId]
-                        : displayQuantity;
                       const displayUnit = row.unit === UnitType.Unit ? t('unit') :
                         row.unit === UnitType.Dozen ? (currentData?.buyUnitMsr || t("qtyInUn")) :
                           (currentData?.purPackMsr || t('packUn'));
 
                       return (
                         <TableRow key={row.lineId}>
-                          <TableCell>{row.employeeName}</TableCell>
+                          <TableCell>{row.createdByUserName}</TableCell>
                           <TableCell className="text-center">{dateFormat(row.timeStamp)}</TableCell>
                           <TableCell className="text-center">{timeFormat(row.timeStamp)}</TableCell>
                           <TableCell className="text-center">{displayUnit}</TableCell>
@@ -173,14 +152,14 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                               <Input
                                 type="number"
                                 className="w-24 text-right mx-auto"
-                                value={currentQuantityValue.toString()}
+                                value={row.quantity.toString()}
                                 min={1}
                                 step={1}
                                 onFocus={(e) => e.target.select()}
                                 onChange={(e) => handleQuantityChange(row.lineId, e.target.value)}
                               />
                             ) : (
-                              formatNumber(currentQuantityValue, 2)
+                              formatNumber(row.quantity, 0)
                             )}
                           </TableCell>
                           {enableUpdate && (
