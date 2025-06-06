@@ -35,6 +35,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
     data,
     enableUpdate,
     checkedRows,
+    quantityChanges,
     setCurrentData,
     loadDetails,
     update,
@@ -85,7 +86,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                               <Input
                                 type="number"
                                 className="w-24 text-right"
-                                value={row.quantity.toString()}
+                                value={(quantityChanges[row.lineId] ?? row.quantity).toString()}
                                 min={1}
                                 step={1}
                                 onFocus={(e) => e.target.select()}
@@ -152,7 +153,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                               <Input
                                 type="number"
                                 className="w-24 text-right mx-auto"
-                                value={row.quantity.toString()}
+                                value={(quantityChanges[row.lineId] ?? row.quantity).toString()}
                                 min={1}
                                 step={1}
                                 onFocus={(e) => e.target.select()}

@@ -125,7 +125,7 @@ export const updateGoodsReceiptReport = async (data: DetailUpdateParameters) => 
       return;
     }
 
-    const url = `goodsReceipt/updateGoodsReceiptAll`;
+    const url = `goodsReceipt/updateAll`;
 
     const response = await axiosInstance.post(url, data, );
 
