@@ -54,7 +54,7 @@ const DocumentListDialog = forwardRef<DocumentListDialogRef, DocumentListDialogP
                         <div className="space-y-2">
                             {props.doc.documents.map((value, index) => (
                                 <div key={index} className="p-2 border-b last:border-b-0">
-                                    {o(value.objType)} #{value.docNumber}
+                                    {o(value.objectType)} #{value.documentNumber}
                                 </div>
                             ))}
                         </div>

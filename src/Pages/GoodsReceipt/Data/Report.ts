@@ -94,7 +94,7 @@ export const fetchGoodsReceiptReportAll = async (id: string): Promise<GoodsRecei
 
     const url = `goodsReceipt/${id}/report/all`;
 
-    const response = await axiosInstance.get<GoodsReceiptAll[]>(url, );
+    const response = await axiosInstance.get<GoodsReceiptAll[]>(url,);
 
     return response.data;
   } catch (error) {
@@ -111,7 +111,7 @@ export const fetchGoodsReceiptReportAllDetails = async (id: string, item: string
 
     const url = `goodsReceipt/${id}/report/all/${item}`;
 
-    const response = await axiosInstance.get<any[]>(url, );
+    const response = await axiosInstance.get<any[]>(url,);
 
     return response.data;
   } catch (error) {
@@ -127,7 +127,7 @@ export const updateGoodsReceiptReport = async (data: DetailUpdateParameters) => 
 
     const url = `goodsReceipt/updateAll`;
 
-    const response = await axiosInstance.post(url, data, );
+    const response = await axiosInstance.post(url, data,);
 
     return response.data;
   } catch (error) {
@@ -141,16 +141,9 @@ export const fetchGoodsReceiptVSExitReport = async (id: number): Promise<GoodsRe
       console.log("Mockup data is being used.");
       return goodsReceiptVSExitReportDataMockup;
     }
-
-    
-
-    
-
-    
-
     const url = `GoodsReceipt/GoodsReceiptVSExitReport/${id}`;
 
-    const response = await axiosInstance.get<GoodsReceiptVSExitReportData[]>(url, );
+    const response = await axiosInstance.get<GoodsReceiptVSExitReportData[]>(url,);
 
     return response.data;
   } catch (error) {
@@ -158,22 +151,11 @@ export const fetchGoodsReceiptVSExitReport = async (id: number): Promise<GoodsRe
     throw error;
   }
 };
-export const fetchGoodsReceiptValidateProcess = async (id: number): Promise<GoodsReceiptValidateProcess[]> => {
+export const fetchGoodsReceiptValidateProcess = async (id: string): Promise<GoodsReceiptValidateProcess[]> => {
   try {
-    // if (Mockup) {
-    //     console.log("Mockup data is being used.");
-    //     return goodsReceiptVSExitReportDataMockup;
-    // }
+    const url = `goodsReceipt/${id}/validateProcess`;
 
-    
-
-    
-
-    
-
-    const url = `GoodsReceipt/GoodsReceiptValidateProcess/${id}`;
-
-    const response = await axiosInstance.get<GoodsReceiptValidateProcess[]>(url, );
+    const response = await axiosInstance.get<GoodsReceiptValidateProcess[]>(url,);
 
     return response.data;
   } catch (error) {
@@ -183,17 +165,6 @@ export const fetchGoodsReceiptValidateProcess = async (id: number): Promise<Good
 };
 export const fetchGoodsReceiptValidateProcessLineDetails = async (id: number, baseType: number, baseEntry: number, baseLine: number): Promise<GoodsReceiptValidateProcessLineDetails[]> => {
   try {
-    // if (Mockup) {
-    //     console.log("Mockup data is being used.");
-    //     return goodsReceiptVSExitReportDataMockup;
-    // }
-
-    
-
-    
-
-    
-
     const url = `GoodsReceipt/GoodsReceiptValidateProcessLineDetails`;
 
     const response = await axiosInstance.post<GoodsReceiptValidateProcessLineDetails[]>(url, {
@@ -201,7 +172,7 @@ export const fetchGoodsReceiptValidateProcessLineDetails = async (id: number, ba
       baseType: baseType,
       baseEntry: baseEntry,
       baseLine: baseLine
-    }, );
+    },);
 
     return response.data;
   } catch (error) {

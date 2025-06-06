@@ -56,6 +56,7 @@ export interface ApplicationSettings {
     goodsReceiptDraft: boolean;
     goodsReceiptModificationSupervisor: boolean;
     goodsReceiptCreateSupervisorRequired: boolean;
+    goodsReceiptTargetDocuments: boolean;
     transferTargetItems: boolean;
 }
 

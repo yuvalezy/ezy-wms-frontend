@@ -23,7 +23,7 @@ const StockTable: React.FC<StockTableProps> = ({result}) => {
         .catch((e) => setError(e))
         .finally(() => setLoading(false));
     }
-  }, [result, setLoading, setError]);
+  }, [result]);
 
   if (!result) {
     return null;

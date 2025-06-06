@@ -42,7 +42,7 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
   
   const formatDocumentsList = (documents: DocumentItem[]) => {
     const returnValue = documents.map((value, index) => (
-      `${index > 0 ? ', ' : ''}${o(value.objType)} #${value.docNumber}`
+      `${index > 0 ? ', ' : ''}${o(value.objectType)} #${value.documentNumber}`
     )).join('');
     if (returnValue.length > 50) {
       return returnValue.substring(0, 50) + '...';

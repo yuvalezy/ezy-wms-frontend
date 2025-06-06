@@ -30,7 +30,7 @@ export const useGoodsReceiptSupervisorData = () => {
       setSupervisor(user?.roles.filter((v) => v === RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR).length === 1);
     }
     setLoading(true);
-    fetchDocuments({status: [Status.Open, Status.InProgress], confirm: confirmation})
+    fetchDocuments({statuses: [Status.Open, Status.InProgress], confirm: confirmation})
       .then((data) => setDocuments(data))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));

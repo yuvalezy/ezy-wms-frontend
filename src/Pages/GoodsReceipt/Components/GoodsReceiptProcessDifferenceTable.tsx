@@ -38,7 +38,7 @@ interface QuantityRowProps {
 }
 
 interface GoodsReceiptProcessDifferenceTableProps {
-  id: number,
+  id: string,
   data: GoodsReceiptValidateProcess,
 }
 

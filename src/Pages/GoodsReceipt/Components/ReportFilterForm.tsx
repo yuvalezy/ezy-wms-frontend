@@ -86,7 +86,7 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
       setStatusValue(selectedOption?.name || "");
       setFilters((prevFilters) => ({
         ...prevFilters,
-        status: selectedOption ? [selectedOption.status] : undefined,
+        statuses: selectedOption ? [selectedOption.status] : undefined,
       }));
     };
 
@@ -247,7 +247,7 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
                 <div>
                   <Label htmlFor="status">{t("status")}</Label>
                   <Select
-                    value={filters.status && filters.status.length > 0 ? documentStatusOptions.find(opt => opt.status === filters.status![0])?.code || "" : ""}
+                    value={filters.statuses && filters.statuses.length > 0 ? documentStatusOptions.find(opt => opt.status === filters.statuses![0])?.code || "" : ""}
                     onValueChange={handleStatusChange}>
                     <SelectTrigger id="status">
                       <SelectValue placeholder={t("selectStatusPlaceholder")}/>

@@ -49,7 +49,7 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
 
   const formatDocumentsList = (documents: DocumentItem[]) => {
     let returnValue = documents.map((value, index) => (
-      `${index > 0 ? ', ' : ''}${o(value.objType)} #${value.docNumber}`
+      `${index > 0 ? ', ' : ''}${o(value.objectType)} #${value.documentNumber}`
     )).join('');
     if (returnValue.length > 50) {
       return returnValue.substring(0, 50) + '...';
@@ -118,7 +118,7 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
             <TableHead className="whitespace-nowrap">{t('docDate')}</TableHead>
             <TableHead className="whitespace-nowrap">{t('createdBy')}</TableHead>
             <TableHead className="whitespace-nowrap">{t('status')}</TableHead>
-            <TableHead className="whitespace-nowrap">{t('vendor')}</TableHead>
+            {!confirm && <TableHead className="whitespace-nowrap">{t('vendor')}</TableHead>}
             <TableHead className="whitespace-nowrap">{t('documentsList')}</TableHead>
             {supervisor && <TableHead className="text-right whitespace-nowrap w-16"></TableHead>}
           </TableRow>
@@ -142,9 +142,9 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
               <TableCell className="whitespace-nowrap">{dateFormat(doc.date)}</TableCell>
               <TableCell className="whitespace-nowrap">{doc.createdByUserName}</TableCell>
               <TableCell className="whitespace-nowrap">{documentStatusToString(doc.status)}</TableCell>
-              <TableCell className="whitespace-nowrap">
+              {!confirm && <TableCell className="whitespace-nowrap">
                 {doc.businessPartner?.name ?? doc.businessPartner?.code ?? '-'}
-              </TableCell>
+              </TableCell>}
               <TableCell className="min-w-0">
                 {doc.documents && doc.documents?.length > 0 ? (
                   <a href="#" onClick={(e) => {

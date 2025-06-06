@@ -24,7 +24,7 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc, docDetails,
 
   const formatDocumentsList = (documents: DocumentItem[]) => {
     return documents.map((value, index) => (
-      `${index > 0 ? ', ' : ''}${o(value.objType)} #${value.docNumber}`
+      `${index > 0 ? ', ' : ''}${o(value.objectType)} #${value.documentNumber}`
     )).join('');
   }
 

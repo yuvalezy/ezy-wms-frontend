@@ -372,5 +372,6 @@
   "quantityMoreThanAvailableCurrent": "La cantidad seleccionada para el artículo actual es menor que la cantidad disponible",
   "quantityMoreThanAvailable": "La cantidad seleccionada para el artículo {0} es menor que la cantidad disponible",
   "pickEntryIsRequired": "El parámetro \"PickEntry\" es obligatorio",
-  "itemDetails": "Detalles del Artículo"
+  "itemDetails": "Detalles del Artículo",
+  "document": "Documento"
 }

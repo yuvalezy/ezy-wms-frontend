@@ -20,7 +20,7 @@ export default function GoodsReceipt({confirm = false}: { confirm?: boolean }) {
 
   useEffect(() => {
     setLoading(true);
-    fetchDocuments({status: [Status.Open, Status.InProgress], confirm})
+    fetchDocuments({statuses: [Status.Open, Status.InProgress], confirm})
       .then((data) => setDocuments(data))
       .catch((err) => setError(err))
       .finally(() => setLoading(false))

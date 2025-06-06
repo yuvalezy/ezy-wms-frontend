@@ -11,25 +11,29 @@ import {
 import {IsNumeric} from "@/assets/Functions";
 import {exportToExcel} from "@/utils/excelExport";
 import {formatQuantityForExcel} from "@/utils/excel-quantity-format";
+import {ReceiptDocument} from "@/assets";
+import {fetchDocument} from "@/pages/GoodsReceipt/data/Document";
 
 export const useGoodsReceiptProcessDifferenceReportData = () => {
   const {t} = useTranslation();
-  const [id, setID] = useState<number | null>();
   const {scanCode} = useParams();
   const o = useObjectName();
   const {setLoading, setError} = useThemeContext();
   const [data, setData] = useState<GoodsReceiptValidateProcess[] | null>(null);
   const [report, setReport] = useState<GoodsReceiptValidateProcess | null>(null);
+  const [info, setInfo] = useState<ReceiptDocument | null>(null);
 
   useEffect(() => {
     if (scanCode === null || scanCode === undefined) {
-      setID(null);
       return;
     }
-    setID(scanCode);
 
+    fetchDocument(scanCode)
+      .then((result) => setInfo(result))
+      .catch((error) => setError(error))
+      .finally(() => setLoading(false));
     setLoading(true);
-    fetchGoodsReceiptValidateProcess(parseInt(scanCode))
+    fetchGoodsReceiptValidateProcess(scanCode)
       .then((result) => setData(result))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
@@ -96,7 +100,7 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
       name: "DifferenceReport",
       headers: excelHeaders,
       getData: excelData,
-      fileName: `goods_receipt_differences_${id}`
+      fileName: `goods_receipt_differences_${info?.number}`
     });
   };
 
@@ -105,7 +109,7 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
     setReport(report);
   }
   return {
-    id,
+    info,
     scanCode,
     o,
     data,

@@ -52,7 +52,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, confirm}) => 
     fetchVendors()
       .then((data) => setVendors(data))
       .catch((error) => setError(error));
-  }, [setError]);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,40 +91,38 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, confirm}) => 
           // Potentially switch back to the first tab or clear specific orders items
           setItems([]);
         } else {
-          let errorMessage: string = t("unknownError");
-          // Error handling logic (remains largely the same)
-          switch (response.errorCode) {
-            case -1:
-              try {
-                let errorParameters = response.errorParameters;
-                if (errorParameters != null && errorParameters.length >= 3) {
-                  let errorObjType: number = errorParameters[0];
-                  let errorDocNum: number = errorParameters[1];
-                  let errorType: string;
-                  switch (errorParameters[2]) {
-                    case "E":
-                      errorType = t("doesNotExists");
-                      break;
-                    case "R":
-                      errorType = "Not Reserved";
-                      break; // Consider translating
-                    case "W":
-                      errorType = "No lines for warehouse";
-                      break; // Consider translating
-                    default:
-                      errorType = t("isNotOpen");
-                      break;
-                  }
-                  errorMessage = StringFormat(t("badDocumentError"), o(errorObjType), errorDocNum, errorType);
-                }
-              } catch {
-              }
-              break;
-          }
-          setError(errorMessage);
+          setError(t("unknownError"));
         }
       })
-      .catch((err) => setError(err))
+      .catch((err) => {
+        let errorMessage = t("unknownError");
+        if (err.response?.status === 400 && err.response?.data) {
+          try {
+            const errorData = err.response.data.ErrorData;
+            if (errorData.objectType && errorData.documentNumber && errorData.docStatus) {
+              let errorType: string;
+              switch (errorData.docStatus) {
+                case "E":
+                  errorType = t("doesNotExists");
+                  break;
+                case "R":
+                  errorType = t("notReserved");
+                  break;
+                case "W":
+                  errorType = t("noLinesForWarehouse");
+                  break;
+                default:
+                  errorType = t("isNotOpen");
+                  break;
+              }
+              errorMessage = StringFormat(t("badDocumentError"), o(errorData.objectType), errorData.documentNumber, errorType);
+            }
+          } catch {
+            errorMessage = t("unknownError");
+          }
+        }
+        setError(errorMessage);
+      })
       .finally(() => setLoading(false));
   };
 

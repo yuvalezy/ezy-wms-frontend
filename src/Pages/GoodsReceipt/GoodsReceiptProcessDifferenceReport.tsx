@@ -20,24 +20,22 @@ export default function GoodsReceiptProcessDifferenceReport({confirm}: GoodsRece
   const {t} = useTranslation();
   const navigate = useNavigate();
   const {
-    id,
-    scanCode,
+    info,
     o,
     data,
     report,
     setReport,
     handleExportExcel,
-    openReport,
   } = useGoodsReceiptProcessDifferenceReportData();
 
-  if (!id)
+  if (!info)
     return null;
 
   const title = `${!confirm ? t("goodsReceiptSupervisor") : t("goodsReceiptConfirmationSupervisor")}`;
   const titleLink = `/goodsReceipt${confirm ? 'Confirmation' : ''}Supervisor`;
   const subTitle = !confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit');
   const titleBreadcrumbs = [
-    {label: `${scanCode}`},
+    {label: `${info?.number}`},
     {label: subTitle, onClick: report ? () => setReport(null) : undefined}
   ];
 
@@ -101,7 +99,7 @@ export default function GoodsReceiptProcessDifferenceReport({confirm}: GoodsRece
               <InfoBoxValue label={t("supplier")} value={report.cardCode}/>
               <InfoBoxValue label={t("supplierName")} value={report.cardName}/>
           </FullInfoBox>
-          <GoodsReceiptProcessDifferenceTable id={id} data={report}/>
+          <GoodsReceiptProcessDifferenceTable id={info.id} data={report}/>
       </>}
       {data && data.length === 0 && (
         <Alert variant="default" className="mt-4 bg-yellow-100 border-yellow-400 text-yellow-700">

@@ -24,7 +24,7 @@ export type GoodsReceiptReportFilter = {
   reservedInvoice?: string;
   goodsReceipt?: string;
   purchaseInvoice?: string;
-  status?: Status[] | null;
+  statuses?: Status[] | null;
   date?: Date | null;
   dateFrom?: Date | null;
   dateTo?: Date | null;
