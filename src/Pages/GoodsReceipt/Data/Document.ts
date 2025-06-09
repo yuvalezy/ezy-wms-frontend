@@ -31,7 +31,7 @@ export type GoodsReceiptReportFilter = {
   orderByDesc?: boolean | null;
   pageSize?: number | null;
   pageNumber?: number | null;
-  lastID?: string | null;
+  lastId?: string | null;
   confirm?: boolean;
 }
 

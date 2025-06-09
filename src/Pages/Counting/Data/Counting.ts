@@ -42,7 +42,7 @@ export const countingAction = async (
       const response = await axiosInstance.post<boolean>(
         `Counting/Cancel`,
         {
-          ID: id,
+          id,
         },
       );
       return response.data;
@@ -50,7 +50,7 @@ export const countingAction = async (
       const response = await axiosInstance.post<CountingActionResponse>(
         `Counting/Process`,
         {
-          ID: id,
+          id,
         },
       );
       

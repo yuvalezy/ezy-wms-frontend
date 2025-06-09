@@ -29,7 +29,7 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
   const {loading, setLoading, setError} = useThemeContext();
   const {t} = useTranslation();
   const [documents, setDocuments] = useState<ReceiptDocument[]>([]);
-  const [lastID, setLastID] = useState("");
+  const [lastId, setLastID] = useState("");
   const [filters, setFilters] = useState<GoodsReceiptReportFilter | null>(null);
   const [stop, setStop] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState<ReceiptDocument | null>(null);
@@ -51,15 +51,15 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
   };
 
   const filtersRef = useRef<GoodsReceiptReportFilter | null>(filters);
-  const lastIDRef = useRef<string>(lastID);
+  const lastIdRef = useRef<string>(lastId);
 
   useEffect(() => {
     filtersRef.current = filters;
   }, [filters]);
 
   useEffect(() => {
-    lastIDRef.current = lastID;
-  }, [lastID]);
+    lastIdRef.current = lastId;
+  }, [lastId]);
 
   const onSubmit = (filters: GoodsReceiptReportFilter) => {
     setFilters(filters);
@@ -92,14 +92,14 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [loading, lastID]);
+  }, [loading, lastId]);
 
   const handleScroll = () => {
     if (window.innerHeight + document.documentElement.scrollTop <= document.documentElement.offsetHeight - 50 || loading || !filtersRef.current || stop) {
       return;
     }
     setLoading(true);
-    const newFilters = {...filtersRef.current, lastID: lastIDRef.current};
+    const newFilters = {...filtersRef.current, lastId: lastIdRef.current};
     setFilters(newFilters);
     loadData(newFilters);
   };

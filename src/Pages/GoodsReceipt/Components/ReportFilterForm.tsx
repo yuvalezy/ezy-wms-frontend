@@ -58,7 +58,7 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
     }));
 
     function newFilters(): GoodsReceiptReportFilter {
-      return {lastID: null, pageSize: 10, confirm: confirm};
+      return {lastId: null, pageSize: 10, confirm: confirm};
     }
 
     function clearForm() {

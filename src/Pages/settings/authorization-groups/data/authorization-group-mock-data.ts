@@ -62,12 +62,12 @@ export const roleInfoMap = new Map<RoleType, RoleInfo>([
     description: "Supervise transfer operations and approve movements",
     category: "Supervision"
   }],
-  [RoleType.TRANSFER_REQUEST, {
-    role: RoleType.TRANSFER_REQUEST,
-    displayName: "Transfer Request",
-    description: "Create and manage transfer requests between locations",
-    category: "Operations"
-  }]
+  // [RoleType.TRANSFER_REQUEST, {
+  //   role: RoleType.TRANSFER_REQUEST,
+  //   displayName: "Transfer Request",
+  //   description: "Create and manage transfer requests between locations",
+  //   category: "Operations"
+  // }]
 ]);
 
 export const mockAuthorizationGroups: AuthorizationGroup[] = [

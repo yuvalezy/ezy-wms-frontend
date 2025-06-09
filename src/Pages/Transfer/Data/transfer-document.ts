@@ -258,13 +258,13 @@ export const transferAction = async (
     if (action === "cancel") {
       const response = await axiosInstance.post<boolean>(
         url,
-        {ID: id},
+        {id},
       );
       return response.data;
     } else {
       const response = await axiosInstance.post<TransferActionResponse>(
         url,
-        {ID: id},
+        {id},
       );
       
       if (!response.data.success) {

@@ -121,7 +121,7 @@ export const useTransferProcessSourceData = () => {
           itemCode: item.code,
           severity: "Information",
           timeStamp: dateTimeFormat(date)
-        })
+        });
         barcodeRef?.current?.clear();
         loadRows();
         barcodeRef?.current?.focus();

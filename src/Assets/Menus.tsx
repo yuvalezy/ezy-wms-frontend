@@ -116,18 +116,18 @@ export function useMenus() {
             Authorization: RoleType.TRANSFER_SUPERVISOR,
             Icon: "journey-depart",
         },
-        {
-            Link: "/transferRequest",
-            Text: t('transferRequest'),
-            Authorization: RoleType.TRANSFER_REQUEST,
-            Icon: "request",
-        },
-        {
-            Link: "/settings/cancelReasons",
-            Text: t('cancellationReasons'),
-            SuperUser: true,
-            Icon: "cancel-reasons",
-        },
+        // {
+        //     Link: "/transferRequest",
+        //     Text: t('transferRequest'),
+        //     Authorization: RoleType.TRANSFER_REQUEST,
+        //     Icon: "request",
+        // },
+        // {
+        //     Link: "/settings/cancelReasons",
+        //     Text: t('cancellationReasons'),
+        //     SuperUser: true,
+        //     Icon: "cancel-reasons",
+        // },
         {
             Link: "/settings/users",
             Text: t('users'),
