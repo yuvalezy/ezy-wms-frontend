@@ -131,7 +131,7 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
       setIsDetailDialogOpen(true);
       setLoading(false);
     } else {
-      fetchGoodsReceiptValidateProcessLineDetails(id, data.baseType, data.baseEntry, line.baseLine)
+      fetchGoodsReceiptValidateProcessLineDetails(id, data.baseType, data.baseEntry, line.lineNumber)
         .then((details) => {
           setExpandedRowsData(prevState => ({
             ...prevState,
@@ -166,7 +166,7 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
                     className="text-blue-600 hover:underline"
                     onClick={() => showDetails(row)} to={""}>{row.itemCode}</Link>
                 </CardTitle>
-                <CardDescription>{`${t('description')}: ${row.itemName} (#${row.lineNumber})`}</CardDescription>
+                <CardDescription>{`${t('description')}: ${row.itemName} (#${row.visualLineNumber})`}</CardDescription>
               </CardHeader>
               <CardContent>
                 <FullInfoBox>
@@ -221,7 +221,7 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
               
               return (
                 <TableRow key={row.lineNumber}>
-                  <TableCell>{row.lineNumber}</TableCell>
+                  <TableCell>{row.visualLineNumber}</TableCell>
                   <TableCell><Link
                     className="text-blue-600 hover:underline"
                     onClick={() => showDetails(row)} to={""}>{row.itemCode}</Link></TableCell>
@@ -263,7 +263,7 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
         <Dialog open={isDetailDialogOpen} onOpenChange={setIsDetailDialogOpen}>
           <DialogContent className="sm:max-w-xl">
             <DialogHeader>
-              <DialogTitle>{`${t('detailsFor')} ${selectedLineForDetail.itemCode} (#${selectedLineForDetail.lineNumber})`}</DialogTitle>
+              <DialogTitle>{`${t('detailsFor')} ${selectedLineForDetail.itemCode} (#${selectedLineForDetail.visualLineNumber})`}</DialogTitle>
               <DialogDescription>{selectedLineForDetail.itemName}</DialogDescription>
             </DialogHeader>
             <div className="py-4">
@@ -293,12 +293,12 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
                           (selectedLineForDetail?.purPackMsr || t('packUn'));
                       return (
                         <Card
-                          key={`${detail.timeStamp}-${detail.employee}-${detail.scannedQuantity}`}> {/* Adjusted key for more uniqueness */}
+                          key={`${detail.timeStamp}-${detail.createdByUserName}-${detail.scannedQuantity}`}> {/* Adjusted key for more uniqueness */}
                           <CardContent>
                             <SecondaryInfoBox>
                               <InfoBoxValue label={t('date')} value={dateFormat(timeStamp)}/>
                               <InfoBoxValue label={t('time')} value={timeFormat(timeStamp)}/>
-                              <InfoBoxValue label={t('employee')} value={detail.employee}/>
+                              <InfoBoxValue label={t('employee')} value={detail.createdByUserName}/>
                               <InfoBoxValue label={t('unit')} value={displayUnit}/>
                             </SecondaryInfoBox>
                             <InfoBox>
@@ -338,10 +338,10 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
                               (selectedLineForDetail?.purPackMsr || t('packUn'));
                           
                           return (
-                            <TableRow key={`${detail.timeStamp}-${detail.employee}-${detail.scannedQuantity}`}>
+                            <TableRow key={`${detail.timeStamp}-${detail.createdByUserName}-${detail.scannedQuantity}`}>
                               <TableCell>{dateFormat(timeStamp)}</TableCell>
                               <TableCell>{timeFormat(timeStamp)}</TableCell>
-                              <TableCell>{detail.employee}</TableCell>
+                              <TableCell>{detail.createdByUserName}</TableCell>
                               <TableCell>{displayUnit}</TableCell>
                               <TableCell className="text-right">{formatNumber(scannedQuantity, 2)}</TableCell>
                             </TableRow>

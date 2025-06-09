@@ -54,11 +54,12 @@ export type GoodsReceiptValidateProcess = {
 }
 
 export type GoodsReceiptValidateProcessLine = {
+  visualLineNumber: number;
   lineNumber: number;
   itemCode: string;
   itemName: string;
   quantity: number;
-  baseLine: number;
+  baseLine: string;
   documentQuantity: number;
   numInBuy: number;
   buyUnitMsr: string;
@@ -70,7 +71,7 @@ export type GoodsReceiptValidateProcessLine = {
 
 export type GoodsReceiptValidateProcessLineDetails = {
   timeStamp: string;
-  employee: string;
+  createdByUserName: string;
   quantity: number;
   scannedQuantity: number;
   unit: UnitType;
@@ -164,7 +165,7 @@ export const fetchGoodsReceiptValidateProcess = async (id: string): Promise<Good
 };
 export const fetchGoodsReceiptValidateProcessLineDetails = async (id: string, baseType: number, baseEntry: number, baseLine: number): Promise<GoodsReceiptValidateProcessLineDetails[]> => {
   try {
-    const url = `GoodsReceipt/GoodsReceiptValidateProcessLineDetails`;
+    const url = `GoodsReceipt/validateProcessLineDetails`;
 
     const response = await axiosInstance.post<GoodsReceiptValidateProcessLineDetails[]>(url, {
       id: id,
