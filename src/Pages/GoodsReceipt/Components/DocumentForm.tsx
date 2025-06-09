@@ -39,7 +39,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, confirm}) => 
   const documentListRef = useRef<DocumentListRef>(null); // Keep as is for DocumentList
 
   // Use string values for TabsTrigger, matching GoodsReceiptType enum keys for clarity
-  const TAB_AUTOCONFIRM = GoodsReceiptType.AutoConfirm.toString();
+  const TAB_AUTOCONFIRM = GoodsReceiptType.All.toString();
   const TAB_SPECIFICORDERS = GoodsReceiptType.SpecificOrders.toString();
 
   const [activeTab, setActiveTab] = useState<string>(TAB_SPECIFICORDERS);
@@ -56,7 +56,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, confirm}) => 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const selectedType = activeTab === TAB_AUTOCONFIRM ? GoodsReceiptType.AutoConfirm :
+    const selectedType = activeTab === TAB_AUTOCONFIRM ? GoodsReceiptType.All :
       !confirm ? GoodsReceiptType.SpecificOrders : GoodsReceiptType.SpecificReceipts;
 
     // Validation logic (can be enhanced with react-hook-form later if needed)
@@ -65,7 +65,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, confirm}) => 
     //     return;
     // }
     switch (selectedType) {
-      case GoodsReceiptType.AutoConfirm:
+      case GoodsReceiptType.All:
         // if (cardCodeInput.trim() === "") {
         //     setError(t("vendorRequired"));
         //     return;
@@ -180,7 +180,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, confirm}) => 
               </SelectTrigger>
               <SelectContent>
                 {vendors.map((vendor) => (
-                  <SelectItem key={vendor.code} value={vendor.code}>
+                  <SelectItem key={vendor.id} value={vendor.id}>
                     {vendor.name}
                   </SelectItem>
                 ))}

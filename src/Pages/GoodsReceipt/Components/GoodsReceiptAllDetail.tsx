@@ -72,6 +72,14 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                       row.unit === UnitType.Dozen ? (currentData?.buyUnitMsr || t("qtyInUn")) :
                         (currentData?.purPackMsr || t('packUn'));
 
+                    let quantity = row.quantity;
+                    if (row.unit !== UnitType.Unit) {
+                      quantity /= currentData.numInBuy;
+                    }
+                    if (row.unit === UnitType.Pack) {
+                      quantity /= currentData.purPackUn;
+                    }
+
                     return (
                       <Card key={row.lineId}>
                         <CardContent>
@@ -86,16 +94,14 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                               <Input
                                 type="number"
                                 className="w-24 text-right"
-                                value={(quantityChanges[row.lineId] ?? row.quantity).toString()}
+                                value={(quantityChanges[row.lineId] ?? quantity).toString()}
                                 min={1}
                                 step={1}
                                 onFocus={(e) => e.target.select()}
                                 onChange={(e) => handleQuantityChange(row.lineId, e.target.value)}
                               />
                             ) : (
-                              <span className="text-right">
-                                    {formatNumber(row.quantity, 0)}
-                                  </span>
+                              <span className="text-right"> {formatNumber(quantity, 0)} </span>
                             )}/>
                           </SecondaryInfoBox>
                           {enableUpdate && (
@@ -142,6 +148,14 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                         row.unit === UnitType.Dozen ? (currentData?.buyUnitMsr || t("qtyInUn")) :
                           (currentData?.purPackMsr || t('packUn'));
 
+                      let quantity = row.quantity;
+                      if (row.unit !== UnitType.Unit) {
+                        quantity /= currentData.numInBuy;
+                      }
+                      if (row.unit === UnitType.Pack) {
+                        quantity /= currentData.purPackUn;
+                      }
+
                       return (
                         <TableRow key={row.lineId}>
                           <TableCell>{row.createdByUserName}</TableCell>
@@ -153,14 +167,14 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                               <Input
                                 type="number"
                                 className="w-24 text-right mx-auto"
-                                value={(quantityChanges[row.lineId] ?? row.quantity).toString()}
+                                value={(quantityChanges[row.lineId] ?? quantity).toString()}
                                 min={1}
                                 step={1}
                                 onFocus={(e) => e.target.select()}
                                 onChange={(e) => handleQuantityChange(row.lineId, e.target.value)}
                               />
                             ) : (
-                              formatNumber(row.quantity, 0)
+                              formatNumber(quantity, 0)
                             )}
                           </TableCell>
                           {enableUpdate && (

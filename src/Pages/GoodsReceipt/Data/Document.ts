@@ -10,7 +10,7 @@ import {
 import {axiosInstance, Mockup} from "@/utils/axios-instance";
 
 export enum GoodsReceiptType {
-  AutoConfirm = "AutoConfirm",
+  All = "All",
   SpecificOrders = "SpecificOrders",
   SpecificReceipts = "SpecificReceipts"
 }
@@ -64,11 +64,17 @@ export const createDocument = async (
     throw error; // Re-throwing so that the calling function can decide what to do with the error
   }
 };
+interface DocumentActionResponse {
+  success: boolean;
+  documentNumber: string | null;
+  errorMessage: string;
+  status: string;
+}
 export const documentAction = async (
   id: string,
   action: ObjectAction,
   user: UserInfo
-): Promise<boolean> => {
+): Promise<DocumentActionResponse | boolean> => {
   try {
     if (Mockup) {
       if (action === "approve") {

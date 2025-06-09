@@ -60,7 +60,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
         </SecondaryInfoBox>
         {(doc.businessPartner || doc.documents) && <FullInfoBox>
           {doc.businessPartner && (
-            <InfoBoxValue label={t('vendor')} value={doc.businessPartner.name ?? doc.businessPartner.code}/>
+            <InfoBoxValue label={t('vendor')} value={doc.businessPartner.name ?? doc.businessPartner.id}/>
           )}
           {doc.documents && doc.documents?.length > 0 && (
             <InfoBoxValue label={t('documentsList')} value={formatDocumentsList(doc.documents)}

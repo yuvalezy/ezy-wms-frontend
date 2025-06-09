@@ -51,11 +51,15 @@ export const useGoodsReceiptSupervisorData = () => {
     setLoading(true);
     setDialogOpen(false);
     documentAction(selectedDocument!.id, actionType!, user!)
-      .then(() => {
-        setDocuments((prevDocs) =>
-          prevDocs.filter((doc) => doc.id !== selectedDocument?.id)
-        );
-        toast.success(actionType === "approve" ? t("approved") : t("cancelled"));
+      .then((response) => {
+        if (typeof response === "boolean" || response.success) {
+          setDocuments((prevDocs) =>
+            prevDocs.filter((doc) => doc.id !== selectedDocument?.id)
+          );
+          toast.success(actionType === "approve" ? t("approved") : t("cancelled"));
+        } else {
+          toast.error(response.errorMessage);
+        }
       })
       .catch((error) => setError(error))
       .finally(() => setLoading(false));

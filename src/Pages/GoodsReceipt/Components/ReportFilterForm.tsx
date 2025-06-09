@@ -73,11 +73,11 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
     };
 
     const handleVendorChange = (value: string) => { // value is string from Select
-      const selectedVendor = vendors.find((v) => v.code === value);
+      const selectedVendor = vendors.find((v) => v.id === value);
       setVendorName(selectedVendor?.name || "");
       setFilters((prevFilters) => ({
         ...prevFilters,
-        businessPartner: selectedVendor?.code,
+        businessPartner: selectedVendor?.id,
       }));
     };
 
@@ -116,7 +116,7 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
                     </SelectTrigger>
                     <SelectContent>
                       {vendors.map((vendor) => (
-                        <SelectItem key={vendor.code} value={vendor.code}>
+                        <SelectItem key={vendor.id} value={vendor.id}>
                           {vendor.name}
                         </SelectItem>
                       ))}

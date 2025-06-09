@@ -37,7 +37,7 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc, docDetails,
         <div className="grid gap-2"><InfoBox>
           {doc.name && <InfoBoxValue label={t('id')} value={doc.name}/>}
           {doc.businessPartner &&
-              <InfoBoxValue label={t('vendor')} value={doc.businessPartner.name ?? doc.businessPartner.code}/>}
+              <InfoBoxValue label={t('vendor')} value={doc.businessPartner.name ?? doc.businessPartner.id}/>}
         </InfoBox>
           {doc.documents && doc.documents.length > 0 &&
               <InfoBoxValue label={t('documentsList')} value={formatDocumentsList(doc.documents)}

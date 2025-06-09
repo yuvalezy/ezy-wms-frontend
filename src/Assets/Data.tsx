@@ -10,7 +10,7 @@ export type Employee = {
 };
 
 export type BusinessPartner = {
-  code: string;
+  id: string;
   name: string;
 };
 
