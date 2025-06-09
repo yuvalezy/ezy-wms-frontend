@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {CSSProperties, useState} from 'react';
 import {
-  fetchGoodsReceiptValidateProcessLineDetails,
+  fetchGoodsReceiptValidateProcessLineDetails, GoodsReceiptAll,
   GoodsReceiptValidateProcess,
   GoodsReceiptValidateProcessLine,
   GoodsReceiptValidateProcessLineDetails,
@@ -24,18 +24,11 @@ import {ScrollArea} from "@/components/ui/scroll-area";
 import {UnitType} from "@/assets/Common";
 import {formatNumber} from "@/lib/utils";
 import {MetricRow} from "@/components/MetricRow";
-import InfoBox, {InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
+import InfoBox, {FullInfoBox, InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-
-// Interface for the new quantity row structure
-interface QuantityRowProps {
-  label: string;
-  baseQuantity: number;
-  numInBuy?: number;
-  numInPurPack?: number;
-  buyUnitMsrText: string;
-  packUnitMsrText: string;
-}
+import {useStockInfo} from "@/utils/stock-info";
+import {useItemDetailsPopup} from "@/hooks/useItemDetailsPopup";
+import {Link} from "react-router-dom";
 
 interface GoodsReceiptProcessDifferenceTableProps {
   id: string,
@@ -50,6 +43,19 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
   const {t} = useTranslation();
   const {dateFormat, timeFormat} = useDateTimeFormat();
   const {setLoading, setError} = useThemeContext(); // Removed setAlert as it's not used
+  const stockInfo = useStockInfo();
+  const {openItemDetails} = useItemDetailsPopup();
+
+  const showDetails = (row: GoodsReceiptValidateProcessLine) => {
+    openItemDetails({
+      itemCode: row.itemCode,
+      itemName: row.itemCode,
+      numInBuy: row.numInBuy,
+      buyUnitMsr: row.buyUnitMsr || "",
+      purPackUn: row.purPackUn,
+      purPackMsr: row.purPackMsr || ""
+    });
+  }
 
   const [expandedRowsData, setExpandedRowsData] = useState<{
     [key: number]: GoodsReceiptValidateProcessLineDetails[]
@@ -155,52 +161,31 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
           return (
             <Card key={row.lineNumber}>
               <CardHeader>
-                <CardTitle>{`${t('code')}: ${row.itemCode}`}</CardTitle>
+                <CardTitle>{`${t('code')}: `}
+                  <Link
+                    className="text-blue-600 hover:underline"
+                    onClick={() => showDetails(row)} to={""}>{row.itemCode}</Link>
+                </CardTitle>
                 <CardDescription>{`${t('description')}: ${row.itemName} (#${row.lineNumber})`}</CardDescription>
               </CardHeader>
               <CardContent>
-                {/* Unit Headers */}
-                <div className="flex justify-between items-center border-b-2 border-primary font-bold">
-                  <div className="w-[30%]">
-                    <span>{t('unit')}</span>
-                  </div>
-                  <div className="flex-1 flex justify-around text-center">
-                    <div className="flex-1 text-xs">
-                      <span>{t('units')}</span>
-                    </div>
-                    <div className="flex-1 text-xs">
-                      <span>{row.buyUnitMsr ?? t("qtyInUn")}</span>
-                    </div>
-                    <div className="flex-1 text-xs">
-                      <span>{row.purPackMsr ?? t('packUn')}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Scanned Quantity Row */}
-                <MetricRow
-                  label={t('scannedQuantity')}
-                  values={{
-                    units: formatNumber(row.quantity, 0),
-                    buyUnits: formatNumber(row.quantity / row.numInBuy),
-                    packUnits: formatNumber(row.quantity / row.numInBuy / row.purPackUn)
-                  }}
-                />
-
-                {/* Document Quantity Row */}
-                <MetricRow
-                  label={t('documentQuantity')}
-                  values={{
-                    units: formatNumber(row.openInvQty, 0),
-                    buyUnits: formatNumber(row.openInvQty / row.numInBuy),
-                    packUnits: formatNumber(row.openInvQty / row.numInBuy / row.purPackUn)
-                  }}
-                />
-
-                <div className="my-4">
-                  <span className="font-bold">{t('status')}: </span>
-                  <span style={statusTextStyle}>{getRowStatusLabel(row.lineStatus)}</span>
-                </div>
+                <FullInfoBox>
+                  <InfoBoxValue label={t('scannedQuantity')} value={stockInfo({
+                    quantity: row.quantity,
+                    numInBuy: row.numInBuy,
+                    buyUnitMsr: row.buyUnitMsr,
+                    purPackUn: row.purPackUn,
+                    purPackMsr: row.purPackMsr,
+                  })} />
+                  <InfoBoxValue label={t('documentQuantity')} value={stockInfo({
+                    quantity: row.documentQuantity,
+                    numInBuy: row.numInBuy,
+                    buyUnitMsr: row.buyUnitMsr,
+                    purPackUn: row.purPackUn,
+                    purPackMsr: row.purPackMsr,
+                  })} />
+                  <InfoBoxValue label={t('status')} value={<span style={statusTextStyle}>{getRowStatusLabel(row.lineStatus)}</span>} />
+                </FullInfoBox>
               </CardContent>
               <CardFooter>
                 <Button
@@ -221,21 +206,13 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead rowSpan={2} className="text-center">{t('lineNumber')}</TableHead>
-              <TableHead rowSpan={2} className="text-center">{t('code')}</TableHead>
-              <TableHead rowSpan={2} className="text-center">{t('description')}</TableHead>
-              <TableHead colSpan={3} className="text-center border-l">{t('scannedQuantity')}</TableHead>
-              <TableHead colSpan={3} className="text-center border-l">{t('documentQuantity')}</TableHead>
-              <TableHead rowSpan={2} className="text-center border-l">{t('status')}</TableHead>
-              <TableHead rowSpan={2} className="text-center"></TableHead>
-            </TableRow>
-            <TableRow>
-              <TableHead className="text-center border-l">{t('units')}</TableHead>
-              <TableHead className="text-center">{data.lines[0]?.buyUnitMsr ?? t("qtyInUn")}</TableHead>
-              <TableHead className="text-center border-r">{data.lines[0]?.purPackMsr ?? t('packUn')}</TableHead>
-              <TableHead className="text-center border-l">{t('units')}</TableHead>
-              <TableHead className="text-center">{data.lines[0]?.buyUnitMsr ?? t("qtyInUn")}</TableHead>
-              <TableHead className="text-center border-r">{data.lines[0]?.purPackMsr ?? t('packUn')}</TableHead>
+              <TableHead>#</TableHead>
+              <TableHead>{t('code')}</TableHead>
+              <TableHead>{t('description')}</TableHead>
+              <TableHead>{t('scannedQuantity')}</TableHead>
+              <TableHead>{t('documentQuantity')}</TableHead>
+              <TableHead>{t('status')}</TableHead>
+              <TableHead></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -244,19 +221,29 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
               
               return (
                 <TableRow key={row.lineNumber}>
-                  <TableCell className="text-center">{row.lineNumber}</TableCell>
-                  <TableCell className="text-center">{row.itemCode}</TableCell>
+                  <TableCell>{row.lineNumber}</TableCell>
+                  <TableCell><Link
+                    className="text-blue-600 hover:underline"
+                    onClick={() => showDetails(row)} to={""}>{row.itemCode}</Link></TableCell>
                   <TableCell>{row.itemName}</TableCell>
-                  <TableCell className="text-center border-l">{formatNumber(row.quantity, 0)}</TableCell>
-                  <TableCell className="text-center">{formatNumber(row.quantity / row.numInBuy)}</TableCell>
-                  <TableCell className="text-center border-r">{formatNumber(row.quantity / row.numInBuy / row.purPackUn)}</TableCell>
-                  <TableCell className="text-center border-l">{formatNumber(row.openInvQty, 0)}</TableCell>
-                  <TableCell className="text-center">{formatNumber(row.openInvQty / row.numInBuy)}</TableCell>
-                  <TableCell className="text-center border-r">{formatNumber(row.openInvQty / row.numInBuy / row.purPackUn)}</TableCell>
-                  <TableCell className="text-center border-l">
+                  <TableCell>{stockInfo({
+                    quantity: row.quantity,
+                    numInBuy: row.numInBuy,
+                    buyUnitMsr: row.buyUnitMsr,
+                    purPackUn: row.purPackUn,
+                    purPackMsr: row.purPackMsr,
+                  })}</TableCell>
+                  <TableCell>{stockInfo({
+                    quantity: row.documentQuantity,
+                    numInBuy: row.numInBuy,
+                    buyUnitMsr: row.buyUnitMsr,
+                    purPackUn: row.purPackUn,
+                    purPackMsr: row.purPackMsr,
+                  })}</TableCell>
+                  <TableCell>
                     <span style={statusTextStyle}>{getRowStatusLabel(row.lineStatus)}</span>
                   </TableCell>
-                  <TableCell className="text-center">
+                  <TableCell>
                     <Button
                       variant="outline"
                       size="sm"

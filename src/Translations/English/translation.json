@@ -374,5 +374,5 @@
   "quantityMoreThanAvailable": "Selected quantity for item {0} is less then available quantity",
   "pickEntryIsRequired": "PickEntry is a required parameter",
   "itemDetails": "Item Details",
-  "document": "document"
+  "document": "Document"
 }

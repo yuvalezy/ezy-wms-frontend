@@ -76,7 +76,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
                 <FontAwesomeIcon icon={faFileAlt} className="mr-2"/>
                 {!confirm ? t('goodsReceiptReport') : t('confirmationReport')}
               </Button>
-              {activeStatuses.includes(doc.status) && (
+              {user?.settings?.goodsReceiptTargetDocuments && activeStatuses.includes(doc.status) && (
                 <Button variant="outline" className="w-full" onClick={() => handleOpen('vs', doc.id)}>
                   <FontAwesomeIcon icon={faTruckLoading} className="mr-2"/>
                   {!confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}

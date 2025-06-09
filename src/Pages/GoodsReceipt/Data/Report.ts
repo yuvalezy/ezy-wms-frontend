@@ -47,8 +47,7 @@ export type GoodsReceiptVSExitReportDataLine = {
 
 export type GoodsReceiptValidateProcess = {
   documentNumber: number;
-  cardCode: string;
-  cardName: string;
+  vendor: {id: string, name: string}
   baseType: number;
   baseEntry: number;
   lines: GoodsReceiptValidateProcessLine[];
@@ -60,7 +59,7 @@ export type GoodsReceiptValidateProcessLine = {
   itemName: string;
   quantity: number;
   baseLine: number;
-  openInvQty: number;
+  documentQuantity: number;
   numInBuy: number;
   buyUnitMsr: string;
   purPackUn: number;
@@ -163,7 +162,7 @@ export const fetchGoodsReceiptValidateProcess = async (id: string): Promise<Good
     throw error;
   }
 };
-export const fetchGoodsReceiptValidateProcessLineDetails = async (id: number, baseType: number, baseEntry: number, baseLine: number): Promise<GoodsReceiptValidateProcessLineDetails[]> => {
+export const fetchGoodsReceiptValidateProcessLineDetails = async (id: string, baseType: number, baseEntry: number, baseLine: number): Promise<GoodsReceiptValidateProcessLineDetails[]> => {
   try {
     const url = `GoodsReceipt/GoodsReceiptValidateProcessLineDetails`;
 

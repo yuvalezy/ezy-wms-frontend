@@ -71,7 +71,7 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
             {!confirm ? t('goodsReceiptReport') : t('confirmationReport')}
           </DropdownMenuItem>
 
-          {activeStatuses.includes(doc.status) && (
+          {user?.settings?.goodsReceiptTargetDocuments && activeStatuses.includes(doc.status) && (
             <DropdownMenuItem onClick={() => handleOpen('vs', doc.id)}>
               <FontAwesomeIcon icon={faTruckLoading} className="mr-2 h-4 w-4" />
               {!confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}

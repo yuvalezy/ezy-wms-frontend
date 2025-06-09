@@ -44,60 +44,42 @@ export default function GoodsReceiptProcessDifferenceReport({confirm}: GoodsRece
   }
 
   return (
-    <ContentTheme title={title} titleOnClick={() => navigate(titleLink)} titleBreadcrumbs={titleBreadcrumbs} onExportExcel={handleExportExcel}>
+    <ContentTheme title={title} titleOnClick={() => navigate(titleLink)} titleBreadcrumbs={titleBreadcrumbs}
+                  onExportExcel={handleExportExcel}>
       {!report && (
-        <>
-          {/* Mobile view - Cards */}
-          <div className="block sm:hidden">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>{t('document')}</TableHead>
+              <TableHead className="hidden sm:table-cell">{t('supplier')}</TableHead>
+              <TableHead>{t('supplierName')}</TableHead>
+              <TableHead className="text-right"></TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {data?.map((value) => (
-              <div key={value.documentNumber} className="mb-2">
-                <Card className="mb-4 shadow-lg">
-                  <CardHeader>
-                    {`${o(value.baseType)}: ${value.documentNumber}`}
-                  </CardHeader>
-                  <CardContent>
-                    <FullInfoBox>
-                      <InfoBoxValue label={t("supplier")} value={value.cardCode}/>
-                      <InfoBoxValue label={t("supplierName")} value={value.cardName}/>
-                    </FullInfoBox>
-                    <Button className="w-full" type="button" onClick={() => setReport(value)}>{t('details')}</Button>
-                  </CardContent>
-                </Card>
-              </div>
-            ))}
-          </div>
-          
-          {/* Desktop view - Table */}
-          <div className="hidden sm:block">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('document')}</TableHead>
-                  <TableHead>{t('supplier')}</TableHead>
-                  <TableHead>{t('supplierName')}</TableHead>
-                  <TableHead className="text-right"></TableHead>
+              <>
+                <TableRow key={value.documentNumber}>
+                  <TableCell>{`${o(value.baseType)}: ${value.documentNumber}`}</TableCell>
+                  <TableCell>{value.vendor.id}</TableCell>
+                  <TableCell className="hidden sm:table-cell">{value.vendor.name}</TableCell>
+                  <TableCell className="text-right">
+                    <Button variant="outline" size="sm" onClick={() => setReport(value)}>{t('details')}</Button>
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data?.map((value) => (
-                  <TableRow key={value.documentNumber}>
-                    <TableCell>{`${o(value.baseType)}: ${value.documentNumber}`}</TableCell>
-                    <TableCell>{value.cardCode}</TableCell>
-                    <TableCell>{value.cardName}</TableCell>
-                    <TableCell className="text-right">
-                      <Button variant="outline" size="sm" onClick={() => setReport(value)}>{t('details')}</Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </>
+                <TableRow className="sm:hidden">
+                  <TableCell className="bg-gray-100 border-b-1"
+                             colSpan={3}>{t('supplierName')}: {value.vendor.name}</TableCell>
+                </TableRow>
+              </>
+            ))}
+          </TableBody>
+        </Table>
       )}
       {report && <>
           <FullInfoBox>
-              <InfoBoxValue label={t("supplier")} value={report.cardCode}/>
-              <InfoBoxValue label={t("supplierName")} value={report.cardName}/>
+              <InfoBoxValue label={t("supplier")} value={report.vendor.id}/>
+              <InfoBoxValue label={t("supplierName")} value={(report.vendor.name)}/>
           </FullInfoBox>
           <GoodsReceiptProcessDifferenceTable id={info.id} data={report}/>
       </>}
