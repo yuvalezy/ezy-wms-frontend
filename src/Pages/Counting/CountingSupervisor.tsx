@@ -11,17 +11,27 @@ import {ObjectAction} from "@/assets/Common";
 import {MessageBox} from "@/components/ui/message-box";
 import { toast } from "sonner";
 import CountingForm from "@/pages/Counting/components/CountingForm";
+import CountingTable from "@/pages/Counting/components/CountingTable";
+import {useNavigate} from "react-router-dom";
+import {RoleType} from "@/assets/RoleType";
 
 export default function CountingSupervisor() {
   const {user} = useAuth();
   const {t} = useTranslation();
   const {setLoading, setError} = useThemeContext();
   const [countings, setCountings] = useState<Counting[]>([]);
-  const [selectedID, setSelectedID] = useState<number | null>(
+  const [selected, setSelected] = useState<Counting | null>(
     null
   );
   const [actionType, setActionType] = useState<ObjectAction | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const navigate = useNavigate();
+
+  function handleOpen(id: number) {
+    navigate(`/counting/${id}`);
+  }
+
+  let handleOpenLink = user?.roles?.includes(RoleType.COUNTING);
 
   useEffect(() => {
     setLoading(true);
@@ -33,8 +43,8 @@ export default function CountingSupervisor() {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleAction = (docId: number, action: ObjectAction) => {
-    setSelectedID(docId);
+  const handleAction = (doc: Counting, action: ObjectAction) => {
+    setSelected(doc);
     setActionType(action);
     setDialogOpen(true);
   };
@@ -42,12 +52,14 @@ export default function CountingSupervisor() {
   const handleConfirmAction = () => {
     setLoading(true);
     setDialogOpen(false);
-    countingAction(selectedID!, actionType!, user!)
-      .then(() => {
-        setCountings((prev) =>
-          prev.filter((count) => count.id !== selectedID)
-        );
-        toast.success(actionType === "approve" ? t("approved") : t("cancelled"));
+    countingAction(selected!.id, actionType!, user!)
+      .then((result) => {
+        if (typeof result === "boolean" || result.success) {
+          setCountings((prev) =>
+            prev.filter((count) => count.id !== selected?.id)
+          );
+          toast.success(actionType === "approve" ? t("approved") : t("cancelled"));
+        }
       })
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
@@ -61,9 +73,21 @@ export default function CountingSupervisor() {
         }
       />
       <br/>
-      {countings.map((doc) => (
-        <CountingCard supervisor={true} key={doc.id} doc={doc} handleAction={handleAction}/>
-      ))}
+      {/* Mobile view - Cards */}
+      <div className="block sm:hidden">
+        {countings.map((doc) => (
+          <CountingCard supervisor={true} key={doc.id} doc={doc} handleAction={(action) => handleAction(doc, action)}/>
+        ))}
+      </div>
+      
+      {/* Desktop view - Table */}
+      <div className="hidden sm:block">
+        <CountingTable 
+          countings={countings} 
+          supervisor={true} 
+          onAction={handleAction} 
+        />
+      </div>
       <MessageBox
         onConfirm={handleConfirmAction}
         onOpenChange={setDialogOpen}
@@ -73,7 +97,7 @@ export default function CountingSupervisor() {
           actionType === "approve"
             ? t("confirmFinishDocument")
             : t("confirmCancelDocument"),
-          selectedID
+          selected?.number
         )}
         description={t('actionCannotReverse')}
 

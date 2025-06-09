@@ -34,7 +34,7 @@ export default function ItemCheck() {
                   titleBreadcrumbs={hasData ? [{label: result[0].itemCode}] : undefined}>
       {!hasData ? (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
             <div className="space-y-2">
               <Label htmlFor="barcode">{t("barcode")}</Label>
               <Input
@@ -56,10 +56,12 @@ export default function ItemCheck() {
                 onChange={(e) => setItemCodeInput(e.target.value)}
               />
             </div>
-            <Button onClick={() => handleCheckSubmit()} className="h-fit self-end">
-              <FontAwesomeIcon icon={faCheck} className="mr-2"/>
-              {t("accept")}
-            </Button>
+            <div className="md:col-span-2">
+              <Button onClick={() => handleCheckSubmit()} className="w-full md:w-auto">
+                <FontAwesomeIcon icon={faCheck} className="mr-2"/>
+                {t("accept")}
+              </Button>
+            </div>
           </div>
         </>
       ): (

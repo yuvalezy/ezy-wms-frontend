@@ -1,23 +1,62 @@
-import {Authorization} from "./Authorization";
+import {RoleType} from "./RoleType";
 import {AlertSeverity} from "@/components";
+import {Employee} from "@/assets/Data";
+export interface BaseEntity {
+    id: string;
+    createdAt?: Date;
+    createdByUser?: User;
+    updatedAt?: Date;
+    updatedByUser?: User;
+    deleted: boolean;
+    deletedAt?: Date;
+}
 
 export interface AxiosErrorResponse {
     exceptionMessage: string;
     exceptionType: string;
     message: string;
 }
-export interface User {
-    id: number;
+export interface User extends BaseEntity {
+    fullName: string;
+    password: string;
+    email?: string;
+    position?: string;
+    superUser: boolean;
+    active: boolean;
+    warehouses: string[];
+    externalId?: string;
+    authorizationGroupId?: string;
+    authorizationGroup?: AuthorizationGroup;
+}
+
+export interface AuthorizationGroup extends BaseEntity {
     name: string;
-    branch: string;
+    description?: string;
+    roles: RoleType[];
+}
+
+export interface UserInfo {
+    id: string;
+    name: string;
+    roles: RoleType[];
+    warehouses: Warehouse[];
+    currentWarehouse: string;
     binLocations: boolean;
-    authorizations: Authorization[];
     settings: ApplicationSettings;
+    superUser: boolean;
+}
+
+export interface Warehouse {
+    id: string;
+    name: string;
+    enableBinLocations: boolean;
 }
 
 export interface ApplicationSettings {
-    grpoModificationSupervisor: boolean;
-    grpoCreateSupervisorRequired: boolean;
+    goodsReceiptDraft: boolean;
+    goodsReceiptModificationSupervisor: boolean;
+    goodsReceiptCreateSupervisorRequired: boolean;
+    goodsReceiptTargetDocuments: boolean;
     transferTargetItems: boolean;
 }
 
@@ -47,8 +86,8 @@ export function distinctItems(items: Item[]): string[] {
 }
 
 export interface UpdateLineParameters {
-    id: number;
-    lineID: number;
+    id: string;
+    lineId: string;
     comment?: string;
     userName?: string;
     quantity?: number;
@@ -85,13 +124,30 @@ export enum SourceTarget {
 }
 
 export type DetailUpdateParameters = {
-    id: number;
-    removeRows: number[];
-    quantityChanges: { [key: number]: number }
+    id: string;
+    removeRows: string[];
+    quantityChanges: { [key: string]: number }
 };
 
 export enum UnitType {
     Unit = 'Unit',
     Dozen = 'Dozen',
     Pack = 'Pack'
+}
+
+export enum AddItemReturnValueType {
+    Ok                                            = 0,
+    ItemCodeNotFound                              = -1,
+    ItemCodeBarCodeMismatch                       = -2,
+    TransactionIDNotExists                        = -3,
+    NotAdded                                      = -4,
+    NotPurchaseItem                               = -5,
+    ItemWasNotFoundInTransactionSpecificDocuments = -6,
+    QuantityMoreThenReleased                      = -7,
+    NotStockItem                                  = -8,
+    ItemNotInWarehouse                            = -9,
+    BinNotExists                                  = -10,
+    BinNotInWarehouse                             = -11,
+    BinMissing                                    = -12,
+    QuantityMoreAvailable                         = -13,
 }

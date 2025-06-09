@@ -1,34 +1,18 @@
 import {Item} from "./Common";
-import {configUtils, delay, globalConfig} from "./GlobalConfig";
-import {itemFatherMockup} from "./mockup";
-import axios from "axios";
+import {axiosInstance} from "@/utils/axios-instance";
 
 export const scanBarcode = async (
-    scanCode: string,
-    item?: boolean
+  scanCode: string,
+  item?: boolean
 ): Promise<Item[]> => {
-    try {
-        if (configUtils.isMockup) {
-            console.log("Mockup data is being used.");
-            return itemFatherMockup;
-        }
-        if (!globalConfig) throw new Error("Config has not been initialized!");
+  try {
+    const url = `General/ItemByBarCode?scanCode=${scanCode}&item=${item ?? false}`;
 
-        if (globalConfig.debug) await delay();
+    const response = await axiosInstance.get<Item[]>(url);
 
-        const access_token = localStorage.getItem("token");
-
-        const url = `${globalConfig.baseURL}/api/General/ItemByBarCode?scanCode=${scanCode}&item=${item??false}`;
-
-        const response = await axios.get<Item[]>(url, {
-            headers: {
-                Authorization: `Bearer ${access_token}`,
-            },
-        });
-
-        return response.data;
-    } catch (error) {
-        console.error("Error canning barcode:", error);
-        throw error;
-    }
+    return response.data;
+  } catch (error) {
+    console.error("Error canning barcode:", error);
+    throw error;
+  }
 };

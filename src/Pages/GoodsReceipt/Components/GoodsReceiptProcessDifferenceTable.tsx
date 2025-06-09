@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {CSSProperties, useState} from 'react';
 import {
-  fetchGoodsReceiptValidateProcessLineDetails,
+  fetchGoodsReceiptValidateProcessLineDetails, GoodsReceiptAll,
   GoodsReceiptValidateProcess,
   GoodsReceiptValidateProcessLine,
   GoodsReceiptValidateProcessLineDetails,
@@ -24,20 +24,14 @@ import {ScrollArea} from "@/components/ui/scroll-area";
 import {UnitType} from "@/assets/Common";
 import {formatNumber} from "@/lib/utils";
 import {MetricRow} from "@/components/MetricRow";
-import InfoBox, {InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
-
-// Interface for the new quantity row structure
-interface QuantityRowProps {
-  label: string;
-  baseQuantity: number;
-  numInBuy?: number;
-  numInPurPack?: number;
-  buyUnitMsrText: string;
-  packUnitMsrText: string;
-}
+import InfoBox, {FullInfoBox, InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
+import {useStockInfo} from "@/utils/stock-info";
+import {useItemDetailsPopup} from "@/hooks/useItemDetailsPopup";
+import {Link} from "react-router-dom";
 
 interface GoodsReceiptProcessDifferenceTableProps {
-  id: number,
+  id: string,
   data: GoodsReceiptValidateProcess,
 }
 
@@ -49,6 +43,19 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
   const {t} = useTranslation();
   const {dateFormat, timeFormat} = useDateTimeFormat();
   const {setLoading, setError} = useThemeContext(); // Removed setAlert as it's not used
+  const stockInfo = useStockInfo();
+  const {openItemDetails} = useItemDetailsPopup();
+
+  const showDetails = (row: GoodsReceiptValidateProcessLine) => {
+    openItemDetails({
+      itemCode: row.itemCode,
+      itemName: row.itemCode,
+      numInBuy: row.numInBuy,
+      buyUnitMsr: row.buyUnitMsr || "",
+      purPackUn: row.purPackUn,
+      purPackMsr: row.purPackMsr || ""
+    });
+  }
 
   const [expandedRowsData, setExpandedRowsData] = useState<{
     [key: number]: GoodsReceiptValidateProcessLineDetails[]
@@ -124,7 +131,7 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
       setIsDetailDialogOpen(true);
       setLoading(false);
     } else {
-      fetchGoodsReceiptValidateProcessLineDetails(id, data.baseType, data.baseEntry, line.baseLine)
+      fetchGoodsReceiptValidateProcessLineDetails(id, data.baseType, data.baseEntry, line.lineNumber)
         .then((details) => {
           setExpandedRowsData(prevState => ({
             ...prevState,
@@ -145,78 +152,118 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      {data.lines.map((row) => {
-        const statusTextStyle = getStatusTextStyle(row.lineStatus);
+    <>
+      {/* Mobile view - Cards */}
+      <div className="block sm:hidden flex flex-col gap-2">
+        {data.lines.map((row) => {
+          const statusTextStyle = getStatusTextStyle(row.lineStatus);
 
-        return (
-          <Card key={row.lineNumber}>
-            <CardHeader>
-              <CardTitle>{`${t('code')}: ${row.itemCode}`}</CardTitle>
-              <CardDescription>{`${t('description')}: ${row.itemName} (#${row.lineNumber})`}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {/* Unit Headers */}
-              <div className="flex justify-between items-center border-b-2 border-primary font-bold">
-                <div className="w-[30%]">
-                  <span>{t('unit')}</span>
-                </div>
-                <div className="flex-1 flex justify-around text-center">
-                  <div className="flex-1 text-xs">
-                    <span>{t('units')}</span>
-                  </div>
-                  <div className="flex-1 text-xs">
-                    <span>{row.buyUnitMsr ?? t("qtyInUn")}</span>
-                  </div>
-                  <div className="flex-1 text-xs">
-                    <span>{row.purPackMsr ?? t('packUn')}</span>
-                  </div>
-                </div>
-              </div>
+          return (
+            <Card key={row.lineNumber}>
+              <CardHeader>
+                <CardTitle>{`${t('code')}: `}
+                  <Link
+                    className="text-blue-600 hover:underline"
+                    onClick={() => showDetails(row)} to={""}>{row.itemCode}</Link>
+                </CardTitle>
+                <CardDescription>{`${t('description')}: ${row.itemName} (#${row.visualLineNumber})`}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <FullInfoBox>
+                  <InfoBoxValue label={t('scannedQuantity')} value={stockInfo({
+                    quantity: row.quantity,
+                    numInBuy: row.numInBuy,
+                    buyUnitMsr: row.buyUnitMsr,
+                    purPackUn: row.purPackUn,
+                    purPackMsr: row.purPackMsr,
+                  })} />
+                  <InfoBoxValue label={t('documentQuantity')} value={stockInfo({
+                    quantity: row.documentQuantity,
+                    numInBuy: row.numInBuy,
+                    buyUnitMsr: row.buyUnitMsr,
+                    purPackUn: row.purPackUn,
+                    purPackMsr: row.purPackMsr,
+                  })} />
+                  <InfoBoxValue label={t('status')} value={<span style={statusTextStyle}>{getRowStatusLabel(row.lineStatus)}</span>} />
+                </FullInfoBox>
+              </CardContent>
+              <CardFooter>
+                <Button
+                  variant="default"
+                  onClick={() => handleOpenDetailDialog(row)}
+                  className="w-full"
+                >
+                  {t('details')}
+                </Button>
+              </CardFooter>
+            </Card>
+          );
+        })}
+      </div>
 
-              {/* Scanned Quantity Row */}
-              <MetricRow
-                label={t('scannedQuantity')}
-                values={{
-                  units: formatNumber(row.quantity, 0),
-                  buyUnits: formatNumber(row.quantity / row.numInBuy),
-                  packUnits: formatNumber(row.quantity / row.numInBuy / row.purPackUn)
-                }}
-              />
-
-              {/* Document Quantity Row */}
-              <MetricRow
-                label={t('documentQuantity')}
-                values={{
-                  units: formatNumber(row.openInvQty, 0),
-                  buyUnits: formatNumber(row.openInvQty / row.numInBuy),
-                  packUnits: formatNumber(row.openInvQty / row.numInBuy / row.purPackUn)
-                }}
-              />
-
-              <div className="my-4">
-                <span className="font-bold">{t('status')}: </span>
-                <span style={statusTextStyle}>{getRowStatusLabel(row.lineStatus)}</span>
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button
-                variant="default"
-                onClick={() => handleOpenDetailDialog(row)}
-                className="w-full"
-              >
-                {t('details')}
-              </Button>
-            </CardFooter>
-          </Card>
-        );
-      })}
+      {/* Desktop view - Table */}
+      <div className="hidden sm:block">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>#</TableHead>
+              <TableHead>{t('code')}</TableHead>
+              <TableHead>{t('description')}</TableHead>
+              <TableHead>{t('scannedQuantity')}</TableHead>
+              <TableHead>{t('documentQuantity')}</TableHead>
+              <TableHead>{t('status')}</TableHead>
+              <TableHead></TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data.lines.map((row) => {
+              const statusTextStyle = getStatusTextStyle(row.lineStatus);
+              
+              return (
+                <TableRow key={row.lineNumber}>
+                  <TableCell>{row.visualLineNumber}</TableCell>
+                  <TableCell><Link
+                    className="text-blue-600 hover:underline"
+                    onClick={() => showDetails(row)} to={""}>{row.itemCode}</Link></TableCell>
+                  <TableCell>{row.itemName}</TableCell>
+                  <TableCell>{stockInfo({
+                    quantity: row.quantity,
+                    numInBuy: row.numInBuy,
+                    buyUnitMsr: row.buyUnitMsr,
+                    purPackUn: row.purPackUn,
+                    purPackMsr: row.purPackMsr,
+                  })}</TableCell>
+                  <TableCell>{stockInfo({
+                    quantity: row.documentQuantity,
+                    numInBuy: row.numInBuy,
+                    buyUnitMsr: row.buyUnitMsr,
+                    purPackUn: row.purPackUn,
+                    purPackMsr: row.purPackMsr,
+                  })}</TableCell>
+                  <TableCell>
+                    <span style={statusTextStyle}>{getRowStatusLabel(row.lineStatus)}</span>
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleOpenDetailDialog(row)}
+                    >
+                      {t('details')}
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </div>
 
       {selectedLineForDetail && isDetailDialogOpen && (
         <Dialog open={isDetailDialogOpen} onOpenChange={setIsDetailDialogOpen}>
           <DialogContent className="sm:max-w-xl">
             <DialogHeader>
-              <DialogTitle>{`${t('detailsFor')} ${selectedLineForDetail.itemCode} (#${selectedLineForDetail.lineNumber})`}</DialogTitle>
+              <DialogTitle>{`${t('detailsFor')} ${selectedLineForDetail.itemCode} (#${selectedLineForDetail.visualLineNumber})`}</DialogTitle>
               <DialogDescription>{selectedLineForDetail.itemName}</DialogDescription>
             </DialogHeader>
             <div className="py-4">
@@ -229,7 +276,8 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
 
               {detailDataForDialog && detailDataForDialog.length > 0 ? (
                 <ScrollArea className="h-[40vh]">
-                  <div className="space-y-2">
+                  {/* Mobile view - Cards */}
+                  <div className="block sm:hidden space-y-2">
                     {detailDataForDialog.map((detail) => {
                       const timeStamp = new Date(detail.timeStamp);
                       let scannedQuantity = detail.scannedQuantity;
@@ -245,12 +293,12 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
                           (selectedLineForDetail?.purPackMsr || t('packUn'));
                       return (
                         <Card
-                          key={`${detail.timeStamp}-${detail.employee}-${detail.scannedQuantity}`}> {/* Adjusted key for more uniqueness */}
+                          key={`${detail.timeStamp}-${detail.createdByUserName}-${detail.scannedQuantity}`}> {/* Adjusted key for more uniqueness */}
                           <CardContent>
                             <SecondaryInfoBox>
                               <InfoBoxValue label={t('date')} value={dateFormat(timeStamp)}/>
                               <InfoBoxValue label={t('time')} value={timeFormat(timeStamp)}/>
-                              <InfoBoxValue label={t('employee')} value={detail.employee}/>
+                              <InfoBoxValue label={t('employee')} value={detail.createdByUserName}/>
                               <InfoBoxValue label={t('unit')} value={displayUnit}/>
                             </SecondaryInfoBox>
                             <InfoBox>
@@ -260,6 +308,47 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
                         </Card>
                       );
                     })}
+                  </div>
+                  
+                  {/* Desktop view - Table */}
+                  <div className="hidden sm:block">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>{t('date')}</TableHead>
+                          <TableHead>{t('time')}</TableHead>
+                          <TableHead>{t('employee')}</TableHead>
+                          <TableHead>{t('unit')}</TableHead>
+                          <TableHead className="text-right">{t('scannedQuantity')}</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {detailDataForDialog.map((detail) => {
+                          const timeStamp = new Date(detail.timeStamp);
+                          let scannedQuantity = detail.scannedQuantity;
+                          if (selectedLineForDetail?.numInBuy && detail.unit !== UnitType.Unit && selectedLineForDetail.numInBuy !== 0) {
+                            scannedQuantity /= selectedLineForDetail.numInBuy;
+                          }
+                          if (selectedLineForDetail?.purPackUn && detail.unit === UnitType.Pack && selectedLineForDetail.purPackUn !== 0) {
+                            scannedQuantity /= selectedLineForDetail.purPackUn;
+                          }
+
+                          const displayUnit = selectedLineForDetail?.unit === UnitType.Unit ? t('unit') :
+                            selectedLineForDetail?.unit === UnitType.Dozen ? (selectedLineForDetail?.buyUnitMsr || t("qtyInUn")) :
+                              (selectedLineForDetail?.purPackMsr || t('packUn'));
+                          
+                          return (
+                            <TableRow key={`${detail.timeStamp}-${detail.createdByUserName}-${detail.scannedQuantity}`}>
+                              <TableCell>{dateFormat(timeStamp)}</TableCell>
+                              <TableCell>{timeFormat(timeStamp)}</TableCell>
+                              <TableCell>{detail.createdByUserName}</TableCell>
+                              <TableCell>{displayUnit}</TableCell>
+                              <TableCell className="text-right">{formatNumber(scannedQuantity, 2)}</TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
                   </div>
                 </ScrollArea>
               ) : (
@@ -272,7 +361,7 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
           </DialogContent>
         </Dialog>
       )}
-    </div>
+    </>
   );
 }
 

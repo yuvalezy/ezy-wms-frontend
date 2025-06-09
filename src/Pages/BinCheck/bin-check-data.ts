@@ -5,8 +5,8 @@ import {BinLocationScannerRef} from "@/components/BinLocationScanner";
 import {useAuth} from "@/components/AppContext";
 import {binCheck, BinContentResponse} from "@/pages/BinCheck/Bins";
 import {BinLocation} from "@/assets/Common";
-import {delay} from "@/assets/GlobalConfig";
 import {exportToExcel} from "@/utils/excelExport";
+import {formatQuantityForExcel} from "@/utils/excel-quantity-format";
 
 export const useBinCheckData = () => {
   const {t} = useTranslation();
@@ -32,27 +32,36 @@ export const useBinCheckData = () => {
   function onBinClear() {
     setBin(null);
     setBinContent(null);
-    delay(1).then(() => binRef?.current?.focus());
+    setTimeout(() => {
+      binRef?.current?.focus();
+    }, 1)
   }
   const excelData = () => {
     return binContent?.map((value) => {
-      const rowValue = [
+      const quantities = formatQuantityForExcel({
+        quantity: value.onHand,
+        numInBuy: value.numInBuy,
+        buyUnitMsr: value.buyUnitMsr,
+        purPackUn: value.purPackUn,
+        purPackMsr: value.purPackMsr
+      });
+      
+      return [
         value.itemCode,
         value.itemName,
-        value.onHand,
-        value.onHand / value.numInBuy,
-        value.onHand / value.numInBuy / value.purPackUn,
+        quantities.pack,
+        quantities.dozen,
+        quantities.unit,
       ];
-      return rowValue;
     }) ?? [];
   };
 
   const excelHeaders = [
     t("code"),
     t("description"),
-    t("units"),
-    t("quantity"),
-    t('packageQuantity')
+    t("pack"),
+    t("dozen"),
+    t("unit"),
   ];
 
   const handleExportExcel = () => {

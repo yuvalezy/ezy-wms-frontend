@@ -6,7 +6,7 @@ import {
 } from "@/pages/GoodsReceipt/data/Report";
 import {useThemeContext} from "@/components/ThemeContext";
 import {useState} from "react";
-import {fetchDocuments} from "@/pages/GoodsReceipt/data/Document";
+import {fetchDocument, fetchDocuments} from "@/pages/GoodsReceipt/data/Document";
 
 export const useGoodsReceiptAllDetailsData = (props: GRPOAllDetailProps) => {
   const {setLoading, setError} = useThemeContext();
@@ -14,12 +14,12 @@ export const useGoodsReceiptAllDetailsData = (props: GRPOAllDetailProps) => {
   const [currentData, setCurrentData] = useState<GoodsReceiptAll | null>(null);
   const [data, setData] = useState<GoodsReceiptAllDetail[] | null>([]);
   const [enableUpdate, setEnableUpdate] = useState(false);
-  const [checkedRows, setCheckedRows] = useState<{ [key: number]: boolean }>({}); // State to store checked rows
-  const [quantityChanges, setQuantityChanges] = useState<{ [key: number]: number }>({}); // State to store quantity changes
+  const [checkedRows, setCheckedRows] = useState<{ [key: string]: boolean }>({}); // State to store checked rows
+  const [quantityChanges, setQuantityChanges] = useState<{ [key: string]: number }>({}); // State to store quantity changes
 
   function update() {
     try {
-      const removeRows = data?.filter(detail => checkedRows[detail.lineID]).map(detail => detail.lineID) ?? [];
+      const removeRows = data?.filter(detail => checkedRows[detail.lineId]).map(detail => detail.lineId) ?? [];
       setIsOpen(false);
       props.onUpdate({id: props.id, removeRows: removeRows, quantityChanges: quantityChanges});
     } catch (e) {
@@ -32,9 +32,9 @@ export const useGoodsReceiptAllDetailsData = (props: GRPOAllDetailProps) => {
     setEnableUpdate(false);
     setCheckedRows({})
     setQuantityChanges({})
-    fetchDocuments({id: props.id, confirm: props.confirm})
+    fetchDocument(props.id)
       .then((doc) => {
-        setEnableUpdate(doc[0].status === Status.InProgress);
+        setEnableUpdate(doc.status === Status.Open || doc.status === Status.InProgress);
         fetchGoodsReceiptReportAllDetails(props.id, data.itemCode)
           .then((result) => {
             setIsOpen(true);
@@ -49,19 +49,19 @@ export const useGoodsReceiptAllDetailsData = (props: GRPOAllDetailProps) => {
       });
   }
 
-  function handleCheckboxChange(lineID: number, checked: boolean) {
+  function handleCheckboxChange(lineId: string, checked: boolean) {
     setCheckedRows(prevState => ({
       ...prevState,
-      [lineID]: checked
+      [lineId]: checked
     }));
     // setEnableUpdate(true); // This might not be needed if button is always enabled or logic changes
   }
 
-  function handleQuantityChange(lineID: number, newValue: string) {
+  function handleQuantityChange(lineId: string, newValue: string) {
     const numValue = parseInt(newValue, 10);
     setQuantityChanges(prevState => ({
       ...prevState,
-      [lineID]: isNaN(numValue) ? 0 : numValue,
+      [lineId]: isNaN(numValue) ? 0 : numValue,
     }));
     // setEnableUpdate(true); // This might not be needed
   }
@@ -87,7 +87,7 @@ export interface GRPOAllDetailRef {
 }
 
 export interface GRPOAllDetailProps {
-  id: number,
+  id: string,
   onUpdate: (data: DetailUpdateParameters) => void,
   confirm: boolean | undefined
 }

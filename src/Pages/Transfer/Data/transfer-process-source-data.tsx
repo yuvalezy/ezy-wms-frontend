@@ -1,13 +1,21 @@
 import {useParams} from "react-router-dom";
-import {BinLocation, delay, IsNumeric, Item, SourceTarget, UnitType, useDateTimeFormat} from "@/assets";
+import {BinLocation, IsNumeric, Item, SourceTarget, UnitType, useDateTimeFormat} from "@/assets";
 import {useEffect, useRef, useState} from "react";
 import {BarCodeScannerRef, ProcessAlertValue, ProcessesRef, useAuth, useThemeContext} from "@/components";
-import {addItem, fetchTransferContent, TransferContent} from "@/pages/transfer/data/transfer-document";
+import {
+  addItem,
+  fetchTransferContent,
+  getProcessInfo,
+  TransferContent,
+  TransferDocument
+} from "@/pages/transfer/data/transfer-document";
+import {useTranslation} from "react-i18next";
 
 export const useTransferProcessSourceData = () => {
   const {scanCode} = useParams();
   const {dateTimeFormat} = useDateTimeFormat();
-  const [id, setID] = useState<number | null>();
+  const [id, setID] = useState<string | null>();
+  const [info, setInfo] = useState<TransferDocument | null>(null);
   const [binLocation, setBinLocation] = useState<BinLocation | null>(null);
   const [enable, setEnable] = useState(false);
   const {setLoading, setError} = useThemeContext();
@@ -17,18 +25,22 @@ export const useTransferProcessSourceData = () => {
   const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
   const processesRef = useRef<ProcessesRef>(null);
   const processAlertRef = useRef<HTMLDivElement>(null);
+  const {t} = useTranslation();
 
   useEffect(() => {
     setEnable(!user?.binLocations);
     if (enable) {
       setTimeout(() => barcodeRef.current?.focus(), 1);
     }
-    if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
+    if (scanCode === null || scanCode === undefined) {
       setID(null);
       return;
     }
-    setID(parseInt(scanCode));
-
+    setID(scanCode);
+    getProcessInfo(scanCode)
+      .then((result) => setInfo(result))
+      .catch((error) => setError(error))
+      .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
@@ -53,7 +65,9 @@ export const useTransferProcessSourceData = () => {
       setBinLocation(bin);
       setEnable(true);
       loadRows(bin.entry);
-      delay(1).then(() => barcodeRef?.current?.focus());
+      setTimeout(() => {
+        barcodeRef?.current?.focus();
+      }, 1);
     } catch (e) {
       setError(e);
       setLoading(false);
@@ -87,15 +101,16 @@ export const useTransferProcessSourceData = () => {
     if (id == null) {
       return;
     }
-    addItem({id, itemCode: item.code, barcode: item.barcode, type: SourceTarget.Source, binEntry: binLocation?.entry, unit})
+    const params = {id, itemCode: item.code, barcode: item.barcode, type: SourceTarget.Source, binEntry: binLocation?.entry, unit};
+    addItem(params, t)
       .then((v) => {
         if (v.errorMessage != null) {
           setError(v.errorMessage);
           return;
         }
-        let date = new Date(Date.now());
+        const date = new Date(Date.now());
         setCurrentAlert({
-          lineID: v.lineID,
+          lineId: v.lineId,
           quantity: 1,
           unit: unit,
           purPackUn: v.packUnit,
@@ -161,6 +176,7 @@ export const useTransferProcessSourceData = () => {
     handleQuantityChanged,
     handleCancel,
     scanCode,
-    user
+    user,
+    info
   }
 }

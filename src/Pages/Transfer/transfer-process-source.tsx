@@ -1,9 +1,8 @@
 import ContentTheme from "@/components/ContentTheme";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {Button, Card, CardContent, FullInfoBox, InfoBoxValue, SecondaryInfoBox} from "@/components";
 import {useTranslation} from "react-i18next";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
-import {Label} from "@/components/ui/label";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import BarCodeScanner from "@/components/BarCodeScanner";
 import BinLocationScanner from "@/components/BinLocationScanner";
@@ -13,10 +12,17 @@ import Processes from "@/components/Processes";
 import {updateLine} from "@/pages/transfer/data/transfer-process";
 import {AlertCircle} from "lucide-react";
 import {useTransferProcessSourceData} from "@/pages/transfer/data/transfer-process-source-data";
+import {useStockInfo} from "@/utils/stock-info";
+import {useItemDetailsPopup} from "@/hooks/useItemDetailsPopup";
+import {TransferContent} from "./data/transfer-document";
+import React from "react";
 
 export default function TransferProcessSource() {
   const {t} = useTranslation();
   const navigate = useNavigate();
+  const stockInfo = useStockInfo();
+  const {openItemDetails} = useItemDetailsPopup();
+
   const {
     id,
     binLocation,
@@ -32,18 +38,31 @@ export default function TransferProcessSource() {
     handleQuantityChanged,
     handleCancel,
     scanCode,
-    user
+    user,
+    info
   } = useTransferProcessSourceData();
   if (!id)
     return null;
 
   const titleBreadcrumbs = [
-    {label: scanCode ?? '', onClick: () => navigate(`/transfer/${scanCode}`)},
+    {label: info?.number?.toString() ?? '', onClick: () => navigate(`/transfer/${scanCode}`)},
     {label: t("selectTransferSource"), onClick: binLocation ? onBinClear : undefined}
   ];
   if (binLocation) {
     titleBreadcrumbs.push({label: binLocation.code, onClick: undefined});
   }
+
+  const showDetails = (row: TransferContent) => {
+    openItemDetails({
+      itemCode: row.code,
+      itemName: row.name,
+      numInBuy: row.numInBuy,
+      buyUnitMsr: row.buyUnitMsr,
+      purPackUn: row.purPackUn,
+      purPackMsr: row.purPackMsr
+    });
+  }
+
   return (
     <ContentTheme title={t("transfer")} titleOnClick={() => navigate(`/transfer`)}
                   titleBreadcrumbs={titleBreadcrumbs}
@@ -61,24 +80,42 @@ export default function TransferProcessSource() {
             <Button type="button" variant="default" onClick={() => navigate(`/transfer/${id}/targetBins`)}>
               {t("selectTransferTargetBins") || "Select Target Bins"}
             </Button>
-            {rows.map((row) => {
-              return <Card>
-                <CardContent className="flex flex-col gap-2">
-                  <SecondaryInfoBox>
-                    <InfoBoxValue label={t('code')} value={row.code} />
-                    <InfoBoxValue label={t('quantity')} value={row.quantity} />
-                    <InfoBoxValue label={t('unit')} value={row.unit === UnitType.Unit ? t('unit') :
-                    row.unit === UnitType.Dozen ? row.buyUnitMsr ?? t('buyUnit') :
-                    row.purPackMsr ?? t('packUnit')} />
-                    {row.unit !== UnitType.Unit && <InfoBoxValue label={t('qtyInUn')} value={row.numInBuy.toString()}/>}
-                    {row.unit === UnitType.Pack && <InfoBoxValue label={t('qtyInPack')} value={row.purPackUn.toString()}/>}
-                  </SecondaryInfoBox>
-                  <FullInfoBox>
-                    <InfoBoxValue label={t('description')} value={row.name} />
-                  </FullInfoBox>
-                </CardContent>
-              </Card>
-            })}
+
+            {/* Desktop view - Table */}
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t('code')}</TableHead>
+                  <TableHead className="hidden sm:table-cell">{t('description')}</TableHead>
+                  <TableHead>{t('quantity')}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {rows.map((row) => (
+                  <>
+                    <TableRow key={row.code}>
+                      <TableCell><Link
+                        className="text-blue-600 hover:underline"
+                        onClick={() => showDetails(row)} to={""}>{row.code}</Link></TableCell>
+                      <TableCell className="hidden sm:table-cell">{row.name}</TableCell>
+                      <TableCell>
+                        {stockInfo({
+                          quantity: row.quantity,
+                          numInBuy: row.numInBuy,
+                          buyUnitMsr: row.buyUnitMsr,
+                          purPackUn: row.purPackUn,
+                          purPackMsr: row.purPackMsr,
+                        })}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow className="sm:hidden">
+                      <TableCell className="bg-gray-100 border-b-1"
+                                 colSpan={2}>{t('description')}: {row.name}</TableCell>
+                    </TableRow>
+                  </>
+                ))}
+              </TableBody>
+            </Table>
           </div>
         )}
         {rows != null && rows.length === 0 &&

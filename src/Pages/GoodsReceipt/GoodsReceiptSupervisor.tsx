@@ -1,5 +1,6 @@
 import React from "react";
 import DocumentCard from "@/pages/GoodsReceipt/components/DocumentCard";
+import DocumentTable from "@/pages/GoodsReceipt/components/DocumentTable";
 import {useTranslation} from "react-i18next";
 import {StringFormat} from "@/assets/Functions";
 import ContentTheme from "@/components/ContentTheme";
@@ -15,7 +16,6 @@ export default function GoodsReceiptSupervisor({confirm = false}: {confirm?: boo
     documents,
     selectedDocument,
     setDocuments,
-    selectedDocumentId,
     actionType,
     dialogOpen,
     documentListDialogRef,
@@ -33,10 +33,19 @@ export default function GoodsReceiptSupervisor({confirm = false}: {confirm?: boo
           setDocuments((prevDocs) => [newDocument, ...prevDocs])
         }
       />
-      {documents.map((doc) => (
-        <DocumentCard supervisor={supervisor} key={doc.id} doc={doc} action={handleAction}
-                      docDetails={handleDocDetails} confirm={confirm}/>
-      ))}
+      {/* Mobile view - Cards */}
+      <div className="block sm:hidden">
+        {documents.map((doc) => (
+          <DocumentCard supervisor={supervisor} key={doc.id} doc={doc} action={handleAction}
+                        docDetails={handleDocDetails} confirm={confirm}/>
+        ))}
+      </div>
+      
+      {/* Desktop view - Table */}
+      <div className="hidden sm:block">
+        <DocumentTable documents={documents} supervisor={supervisor} action={handleAction} 
+                       docDetails={handleDocDetails} confirm={confirm} />
+      </div>
       <MessageBox
         onConfirm={handleConfirmAction}
         onOpenChange={setDialogOpen}
@@ -46,7 +55,7 @@ export default function GoodsReceiptSupervisor({confirm = false}: {confirm?: boo
           actionType === "approve"
             ? t("confirmFinishDocument")
             : t("confirmCancelDocument"),
-          selectedDocumentId
+          selectedDocument?.number
         )}
         description={t('actionCannotReverse')}
       />

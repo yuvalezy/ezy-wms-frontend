@@ -58,7 +58,7 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
     }));
 
     function newFilters(): GoodsReceiptReportFilter {
-      return {lastID: -1, pageSize: 10, confirm: confirm};
+      return {lastID: null, pageSize: 10, confirm: confirm};
     }
 
     function clearForm() {
@@ -73,11 +73,11 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
     };
 
     const handleVendorChange = (value: string) => { // value is string from Select
-      const selectedVendor = vendors.find((v) => v.code === value);
+      const selectedVendor = vendors.find((v) => v.id === value);
       setVendorName(selectedVendor?.name || "");
       setFilters((prevFilters) => ({
         ...prevFilters,
-        businessPartner: selectedVendor?.code,
+        businessPartner: selectedVendor?.id,
       }));
     };
 
@@ -86,7 +86,7 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
       setStatusValue(selectedOption?.name || "");
       setFilters((prevFilters) => ({
         ...prevFilters,
-        status: selectedOption ? [selectedOption.status] : undefined,
+        statuses: selectedOption ? [selectedOption.status] : undefined,
       }));
     };
 
@@ -116,7 +116,7 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
                     </SelectTrigger>
                     <SelectContent>
                       {vendors.map((vendor) => (
-                        <SelectItem key={vendor.code} value={vendor.code}>
+                        <SelectItem key={vendor.id} value={vendor.id}>
                           {vendor.name}
                         </SelectItem>
                       ))}
@@ -127,11 +127,10 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
                   <Label htmlFor="docNumber">{t("number")}</Label>
                   <Input
                     id="docNumber"
-                    value={filters.id != null ? filters.id.toString() : ""}
-                    type="number"
+                    value={filters.id ?? ""}
                     onChange={(e) => {
                       const val = e.target.value;
-                      setFilters((pf) => ({...pf, id: val ? parseInt(val) : null}));
+                      setFilters((pf) => ({...pf, id: val || null}));
                     }}
                   />
                 </div>
@@ -247,7 +246,7 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
                 <div>
                   <Label htmlFor="status">{t("status")}</Label>
                   <Select
-                    value={filters.status && filters.status.length > 0 ? documentStatusOptions.find(opt => opt.status === filters.status![0])?.code || "" : ""}
+                    value={filters.statuses && filters.statuses.length > 0 ? documentStatusOptions.find(opt => opt.status === filters.statuses![0])?.code || "" : ""}
                     onValueChange={handleStatusChange}>
                     <SelectTrigger id="status">
                       <SelectValue placeholder={t("selectStatusPlaceholder")}/>

@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from "react";
-import {itemCheck, ItemCheckResponse, updateItemBarCode} from "@/pages/item-check/item";
+import {itemCheck, ItemCheckResponse, updateItemBarCode} from "@/pages/item-check/item-check";
 import {useThemeContext} from "@/components/ThemeContext";
 import {ResponseStatus} from "@/assets/Common";
 import {StringFormat} from "@/assets/Functions";

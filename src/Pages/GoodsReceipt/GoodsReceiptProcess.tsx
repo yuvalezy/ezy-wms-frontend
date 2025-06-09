@@ -2,19 +2,18 @@ import ContentTheme from "../../components/ContentTheme";
 import React from "react";
 import {useTranslation} from "react-i18next";
 import {Alert, AlertDescription} from "@/components/ui/alert";
-import {configUtils} from "@/assets/GlobalConfig";
 import ProcessAlert, {AlertActionType} from "../../components/ProcessAlert";
 import {ReasonType} from "@/assets/Reasons";
 import Processes from "../../components/Processes";
 import BarCodeScanner from "../../components/BarCodeScanner";
 import {useGoodsReceiptProcessData} from "@/pages/GoodsReceipt/data/goods-receipt-process-data";
 import {useNavigate} from "react-router-dom";
+import {useAuth} from "@/components";
 
 export default function GoodsReceiptProcess({confirm = false}: { confirm?: boolean }) {
   const {t} = useTranslation();
   const {
-    scanCode,
-    id,
+    info,
     enable,
     barcodeRef,
     processesRef,
@@ -26,28 +25,31 @@ export default function GoodsReceiptProcess({confirm = false}: { confirm?: boole
     handleUpdateLine
   } = useGoodsReceiptProcessData(confirm);
   const navigate = useNavigate();
+  const {user} = useAuth();
 
   const title = `${!confirm ? t("goodsReceipt") : t("receiptConfirmation")}`;
 
   return (
-    <ContentTheme title={title} titleOnClick={() => navigate(`/goodsReceipt${confirm ? 'Confirmation' : ''}`)} titleBreadcrumbs={[{label: scanCode || ''}]}>
-      {id ? (
+    <ContentTheme title={title} titleOnClick={() => navigate(`/goodsReceipt${confirm ? 'Confirmation' : ''}`)}
+                  titleBreadcrumbs={[{label: info?.number?.toString() || ''}]}
+                  footer={enable && (<BarCodeScanner ref={barcodeRef} enabled unit onAddItem={handleAddItem}/>)}
+    >
+      {info ? (
         <>
-          {enable && (<BarCodeScanner ref={barcodeRef} enabled unit onAddItem={handleAddItem}/>)}
           {acceptValues.map((alert) => (
             <ProcessAlert
               enableComment={true}
               alert={alert}
-              key={alert.lineID}
+              key={alert.lineId}
               onAction={(type) => alertAction(alert, type)}
             />
           ))}
-          {currentAlert && id &&
-              <Processes ref={processesRef} id={id} alert={currentAlert} reasonType={ReasonType.GoodsReceipt}
+          {currentAlert &&
+              <Processes ref={processesRef} id={info.id} alert={currentAlert} reasonType={ReasonType.GoodsReceipt}
                          onCancel={(comment, cancel) => handleAlertActionAccept(AlertActionType.Cancel, comment, cancel)}
                          onCommentsChanged={(comment) => handleAlertActionAccept(AlertActionType.Comments, comment)}
                          onQuantityChanged={(quantity) => handleAlertActionAccept(AlertActionType.Quantity, quantity)}
-                         supervisorPassword={configUtils.grpoModificationSupervisor}
+                         supervisorPassword={user?.settings?.goodsReceiptModificationSupervisor}
                          onUpdateLine={handleUpdateLine}/>}
           {/*<BoxConfirmationDialog*/}
           {/*  onSelected={(v: string) => addItemToDocument(v)}*/}

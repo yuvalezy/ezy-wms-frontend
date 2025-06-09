@@ -6,10 +6,10 @@ import {IsNumeric} from "@/assets";
 import {CountingSummaryReportData, fetchCountingSummaryReport} from "@/pages/Counting/data/Report";
 import CountingSummaryReportTable from "@/pages/Counting/components/CountingSummaryReportTable";
 import {exportToExcel} from "@/utils/excelExport";
+import {formatQuantityForExcel} from "@/utils/excel-quantity-format";
 import ContentTheme from "@/components/ContentTheme";
 
 export default function CountingSummaryReport() {
-  const [id, setID] = useState<number | null>();
   const {scanCode} = useParams();
   const {setLoading, setError} = useThemeContext();
   const {t} = useTranslation();
@@ -17,38 +17,45 @@ export default function CountingSummaryReport() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
-      setID(null);
+    if (scanCode === null || scanCode === undefined) {
       return;
     }
-    let number = parseInt(scanCode);
-    setID(number);
-
     setLoading(true);
-    fetchCountingSummaryReport(number)
+    fetchCountingSummaryReport(scanCode)
       .then((result) => setData(result))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
   }, []);
 
+
   const excelHeaders = [
     t("bin"),
     t("code"),
     t("description"),
-    t("units"),
+    t("packages"),
     t("dozens"),
-    t("packs")
+    t("units"),
   ];
 
   const excelData = () => {
-    return data?.lines.map((item) => [
-      item.binCode,
-      item.itemCode,
-      item.itemName,
-      item.unit,
-      item.dozen,
-      item.pack
-    ]) ?? [];
+    return data?.lines.map((item) => {
+      const quantities = formatQuantityForExcel({
+        quantity: item.quantity,
+        numInBuy: item.numInBuy,
+        buyUnitMsr: item.buyUnitMsr,
+        purPackUn: item.purPackUn,
+        purPackMsr: item.purPackMsr
+      });
+      
+      return [
+        item.binCode,
+        item.itemCode,
+        item.itemName,
+        quantities.pack,
+        quantities.dozen,
+        quantities.unit,
+      ];
+    }) ?? [];
   };
 
   const handleExportExcel = () => {
@@ -56,20 +63,20 @@ export default function CountingSummaryReport() {
       name: "CountingData",
       headers: excelHeaders,
       getData: excelData,
-      fileName: `counting_data_${id}`
+      fileName: `counting_data_${data?.number}`
     });
   };
 
   return (
     <ContentTheme title={t("countingSupervisor")}
                   titleOnClick={() => navigate('/countingSupervisor')}
-                  titleBreadcrumbs={[{label: `${id}`}, {label: t("countingSummaryReport")}]}
+                  titleBreadcrumbs={[{label: `${data?.number}`}, {label: t("countingSummaryReport")}]}
                   onExportExcel={handleExportExcel}>
       <div className="space-y-4">
         {data?.name && (
           <div className="flex flex-col space-y-2">
             <h2 className="text-2xl font-semibold text-muted-foreground">
-              {t("id")} {data?.name}
+              {t("id")}: {data?.name}
             </h2>
           </div>
         )}

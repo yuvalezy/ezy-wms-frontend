@@ -1,255 +1,183 @@
-// AuthContext.tsx
 import React, {
-    createContext,
-    useContext,
-    useState,
-    ReactNode,
-    useEffect,
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
 } from "react";
 import axios, {AxiosError} from "axios";
-import {Authorization, User, delay, setGlobalConfig} from "@/assets";
+import {RoleType, UserInfo} from "@/assets";
+import {axiosInstance, ServerUrl} from "@/utils/axios-instance";
 
 // Define the shape of the context
-export type Config = {
-    baseURL: string;
-    debug: boolean;
-    mockup?: boolean;
-    companyName?: string;
-};
-
 interface AuthContextType {
-    isAuthenticated: boolean;
-    user: User | null;
-    config: Config | null;
-    login: (username: string, password: string) => Promise<void>;
-    logout: () => void;
+  isAuthenticated: boolean;
+  user: UserInfo | null;
+  companyName?: string | null;
+  login: (password: string, warehouse?: string) => Promise<void>;
+  logout: () => void;
+  isLoading: boolean; // Add loading state
 }
 
 const AuthContextDefaultValues: AuthContextType = {
-    isAuthenticated: false,
-    user: null,
-    config: null,
-    login: async (username: string, password: string) => {
-        console.warn("Login method not implemented yet!");
-    },
-    logout: () => {
-    },
+  isAuthenticated: false,
+  user: null,
+  login: async (password: string, warehouse?: string) => {
+    console.warn("Login method not implemented yet!");
+  },
+  logout: () => {
+  },
+  isLoading: true, // Default to loading
 };
 
 export const AuthContext = createContext<AuthContextType>(
-    AuthContextDefaultValues
+  AuthContextDefaultValues
 );
 
 interface AuthProviderProps {
-    children: ReactNode;
+  children: ReactNode;
 }
 
 interface ErrorResponse {
-    error: string;
-    error_description: string;
-}
-
-interface CompanyInfo {
-    name: string,
+  error: string;
+  error_description: string;
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
-    const [user, setUser] = useState<User | null>(null);
-    const [config, setConfig] = useState<Config | null>(null);
-    const [waitForTokenValidation, setWaitForTokenValidation] = useState(true);
+  const [user, setUser] = useState<UserInfo | null>(null);
+  const [companyName, setCompanyName] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true); // Add loading state
+  const baseUrl = `${ServerUrl}/api/`;
 
-    useEffect(() => {
-        const fetchConfig = async () => {
-            let config: Config;
-            try {
-                const response = await axios.get<Config>("/config.json");
-                config = response.data;
-            } catch (error) {
-                const urlObject = new URL(window.location.href);
-                const baseUrl = `${urlObject.protocol}//${urlObject.host}`;
-                config = {
-                    baseURL: baseUrl,
-                    debug: true,
-                };
-                console.log("Failed to load config.json file, using default URL");
-            }
+  useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        const response = await axios.get<string>(`${baseUrl}Authentication/CompanyName`);
+        setCompanyName(response.data)
+      } catch (error) {
+        console.log(`Failed to load company name: ${error}`);
+      }
+    };
 
-            try {
-                const response = await axios.get<CompanyInfo>(`${config.baseURL}/api/Public/CompanyInfo`);
-                config.companyName = response.data.name;
-            } catch (error) {
-                console.log(`Failed to load company name: ${error}`);
-            }
-            setConfig(config);
-            setGlobalConfig({config: config});
-        };
+    fetchConfig();
+  }, []);
 
-        fetchConfig();
+  // Call the login function after setting the mock token
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        // Check if token exists and is not expired
+        const token = localStorage.getItem('authToken');
+        const expiration = localStorage.getItem('tokenExpiration');
 
-        const expiry = localStorage.getItem("token_expiry");
-        if (expiry && new Date().getTime() > Number(expiry)) {
-            localStorage.removeItem("token");
-            localStorage.removeItem("token_expiry");
+        if (token && expiration) {
+          const expirationDate = new Date(expiration);
+          const now = new Date();
+
+          if (expirationDate > now) {
+            // Token is valid, fetch user info
+            const response = await axiosInstance.get<UserInfo>(`General/UserInfo`);
+            setUser(response.data);
+          } else {
+            // Token expired, clear it
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('tokenExpiration');
             setUser(null);
-        }
-    }, []);
-
-    // Call the login function after setting the mock token
-    useEffect(() => {
-        // ...existing code...
-
-        const token = localStorage.getItem("token");
-        const expiry = localStorage.getItem("token_expiry");
-        if (token && expiry && new Date().getTime() < Number(expiry)) {
-            // Fetch user info and set user state
-            const fetchUser = async () => {
-                try {
-                    const response = await axios.get<User>(
-                      `${config?.baseURL}/api/General/UserInfo`,
-                      {
-                          headers: {
-                              Authorization: `Bearer ${token}`,
-                          },
-                      }
-                    );
-                    setUser(response.data);
-                } catch (error) {
-                    // Token might be invalid, clear it
-                    localStorage.removeItem("token");
-                    localStorage.removeItem("token_expiry");
-                    setUser(null);
-                }
-            };
-            if (config) fetchUser().finally(() => setWaitForTokenValidation(false));
+          }
         } else {
-            setWaitForTokenValidation(false);
+          setUser(null);
         }
-    }, [config]);
-
-
-    const login = async (username: string, password: string) => {
-        try {
-            if (!config) return;
-
-            if (config.debug) await delay();
-
-            if (!config.mockup) {
-                return await loginExecute(username, password);
-            } else {
-                return mockupLogin();
-            }
-
-            // Set the mock user data
-        } catch (error) {
-            const axiosError = error as AxiosError;
-            const data = axiosError.response?.data as ErrorResponse;
-            const error_description = data?.error_description;
-            console.error(error);
-            alert(`Failed to login: ${error_description || axiosError.message}`);
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+        // Only clear tokens if we get a 401/403 error
+        if (axios.isAxiosError(error) && error.response && (error.response.status === 401 || error.response.status === 403)) {
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('tokenExpiration');
+          setUser(null);
         }
+        // For other errors, don't clear the token - might be a network issue
+      } finally {
+        setIsLoading(false); // Always set loading to false
+      }
     };
+    fetchUser()
+  }, []);
 
-    async function loginExecute(username: string, password: string) {
-        if (!config)
-            return;
-        const response = await axios.post(
-            `${config.baseURL}/token`,
-            {
-                username,
-                password,
-                grant_type: "password",
-            },
-            {
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                },
-            }
-        );
-        if (response.data && response.data.access_token) {
-            const {access_token, expires_in} = response.data;
 
-            localStorage.setItem("token", access_token);
-            const expiryTime = new Date().getTime() + expires_in * 1000;
-            localStorage.setItem("token_expiry", expiryTime.toString());
+  const login = async (password: string, warehouse?: string) => {
+    try {
+      return await loginExecute(password, warehouse);
 
-            setTimeout(logout, expires_in * 1000);
+      // Set the mock user data
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      const data = axiosError.response?.data as ErrorResponse;
+      const error_description = data?.error_description;
+      console.error(error_description ?? error);
+      // Re-throw the error so the login component can handle warehouse selection
+      throw error;
+    }
+  };
 
-            const userInfoResponse = await axios.get<User>(
-                `${config.baseURL}/api/General/UserInfo`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${access_token}`,
-                    },
-                }
-            );
-
-            let data = userInfoResponse.data;
-            if (data) {
-                let settings = data.settings;
-                setGlobalConfig({settings: settings});
-                setUser(data);
-            }
-        }
+  async function loginExecute(password: string, warehouse?: string) {
+    const loginData: any = {password: password};
+    if (warehouse) {
+      loginData.warehouse = warehouse;
     }
 
-    function mockupLogin() {
-        const access_token = "juanse";
-        const expires_in = 3600;
+    const response = await axios.post(`${baseUrl}authentication/login`, loginData, {withCredentials: true});
+    if (response.status === 200) {
+      const loginResponse = response.data;
 
-        localStorage.setItem("token", access_token);
-        const expiryTime = new Date().getTime() + expires_in * 1000;
-        localStorage.setItem("token_expiry", expiryTime.toString());
+      // Save token and expiration to localStorage
+      if (loginResponse.token) {
+        localStorage.setItem('authToken', loginResponse.token);
+        localStorage.setItem('tokenExpiration', loginResponse.expiresAt);
+      }
 
-        setTimeout(logout, expires_in * 1000);
+      // Add a small delay to ensure cookie is set
+      await new Promise(resolve => setTimeout(resolve, 100));
 
-        const userInfoResponse = {
-            id: 1,
-            name: "mockUser",
-            branch: "branch",
-            binLocations: true,
-            authorizations: [
-                Authorization.GOODS_RECEIPT,
-                Authorization.GOODS_RECEIPT_SUPERVISOR,
-                Authorization.PICKING,
-                Authorization.PICKING_SUPERVISOR,
-                Authorization.COUNTING,
-                Authorization.COUNTING_SUPERVISOR,
-            ],
-            settings: {
-                grpoModificationSupervisor: true,
-                grpoCreateSupervisorRequired: true,
-                transferTargetItems: true,
-            }
-        };
+      const userInfoResponse = await axiosInstance.get<UserInfo>(`general/userInfo`);
 
-        return setUser(userInfoResponse);
+      let data = userInfoResponse.data;
+      console.log(data);
+      if (data) {
+        setUser(data);
+      }
     }
+  }
 
-    const logout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("token_expiry");
-        setUser(null);
-    };
+  const logout = async () => {
+    try {
+      await axiosInstance.post(`authentication/logout`);
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+    // Clear token from localStorage
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('tokenExpiration');
+    setUser(null);
+  };
 
-    const isAuthenticated = Boolean(
-        localStorage.getItem("token") && (waitForTokenValidation || user !== null)
-    );
+  const isAuthenticated = user !== null;
 
-    const value = {
-        isAuthenticated,
-        user,
-        config,
-        login,
-        logout,
-    };
+  const value = {
+    isAuthenticated,
+    user,
+    companyName,
+    login,
+    logout,
+    isLoading,
+  };
 
-    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {
-    const context = useContext(AuthContext);
-    if (context === undefined) {
-        throw new Error("useAuth must be used within an AuthProvider");
-    }
-    return context;
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 };

@@ -10,20 +10,19 @@ export const useTransferProcessData = () => {
   const {t} = useTranslation();
   const {scanCode} = useParams();
   const {user} = useAuth();
-  const [id, setID] = useState<number | null>();
+  const [id, setID] = useState<string | null>();
   const [info, setInfo] = useState<TransferDocument | null>(null);
   const {setLoading, setError} = useThemeContext();
   const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(true);
-    if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
+    if (scanCode === null || scanCode === undefined) {
       setID(null);
       return;
     }
-    let value = parseInt(scanCode);
-    setID(value);
-    getProcessInfo(value)
+    setID(scanCode);
+    getProcessInfo(scanCode)
       .then((result) => setInfo(result))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
@@ -33,12 +32,14 @@ export const useTransferProcessData = () => {
   function finish() {
     if (!info?.isComplete || id == null)
       return;
-    if (window.confirm(StringFormat(t("createTransferConfirm"), id))) {
+    if (window.confirm(StringFormat(t("createTransferConfirm"), info?.number))) {
       setLoading(true);
       transferAction(id, "approve")
-        .then(() => {
-          toast.success(t("transferApproved"));
-          navigate(`/transfer`);
+        .then((result) => {
+          if (typeof result === "boolean" || result.success) {
+            toast.success(t("transferApproved"));
+            navigate(`/transfer`);
+          }
         })
         .catch((error) => {
           setError(error);

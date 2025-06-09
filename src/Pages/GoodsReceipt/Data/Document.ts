@@ -1,25 +1,21 @@
-import axios from "axios";
 import {
-  Document,
+  ReceiptDocument,
   DocumentItem,
   DocumentOrderBy,
-  configUtils,
-  delay,
-  globalConfig,
-  documentMockup,
   ObjectAction,
   Status,
-  User
+  UserInfo
 } from "@/assets";
+import {axiosInstance} from "@/utils/axios-instance";
 
 export enum GoodsReceiptType {
-  AutoConfirm = "AutoConfirm",
+  All = "All",
   SpecificOrders = "SpecificOrders",
   SpecificReceipts = "SpecificReceipts"
 }
 
 export type GoodsReceiptReportFilter = {
-  id?: number | null;
+  id?: string | null;
   businessPartner?: string | null;
   name?: string;
   grpo?: string;
@@ -27,7 +23,7 @@ export type GoodsReceiptReportFilter = {
   reservedInvoice?: string;
   goodsReceipt?: string;
   purchaseInvoice?: string;
-  status?: Status[] | null;
+  statuses?: Status[] | null;
   date?: Date | null;
   dateFrom?: Date | null;
   dateTo?: Date | null;
@@ -35,7 +31,7 @@ export type GoodsReceiptReportFilter = {
   orderByDesc?: boolean | null;
   pageSize?: number | null;
   pageNumber?: number | null;
-  lastID?: number | null;
+  lastID?: string | null;
   confirm?: boolean;
 }
 
@@ -43,20 +39,10 @@ export const createDocument = async (
   type: GoodsReceiptType,
   cardCode: string,
   name: string,
-  items: DocumentItem[]): Promise<Document> => {
+  items: DocumentItem[]): Promise<ReceiptDocument> => {
   try {
-    if (configUtils.isMockup) {
-      console.log("Mockup data is being used.");
-      return documentMockup;
-    }
-
-    if (!globalConfig) throw new Error("Config has not been initialized!");
-
-    if (globalConfig.debug) await delay();
-
-    const access_token = localStorage.getItem("token");
-    const response = await axios.post<Document>(
-      `${globalConfig.baseURL}/api/GoodsReceipt/Create`,
+    const response = await axiosInstance.post<ReceiptDocument>(
+      `GoodsReceipt/Create`,
       {
         cardCode: cardCode,
         name: name,
@@ -64,11 +50,6 @@ export const createDocument = async (
         documents: items,
         confirm
       },
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
     );
 
     return response.data;
@@ -77,39 +58,19 @@ export const createDocument = async (
     throw error; // Re-throwing so that the calling function can decide what to do with the error
   }
 };
+interface DocumentActionResponse {
+  success: boolean;
+  documentNumber: string | null;
+  errorMessage: string;
+  status: string;
+}
 export const documentAction = async (
-  id: number,
+  id: string,
   action: ObjectAction,
-  user: User
-): Promise<boolean> => {
+  user: UserInfo
+): Promise<DocumentActionResponse | boolean> => {
   try {
-    if (configUtils.isMockup) {
-      if (action === "approve") {
-        documentMockup.status = Status.Finished;
-        return true;
-      }
-      console.log("Mockup data is being used.");
-      return true;
-    }
-
-    if (!globalConfig) throw new Error("Config has not been initialized!");
-
-    if (globalConfig.debug) await delay();
-
-    const access_token = localStorage.getItem("token");
-    const response = await axios.post<boolean>(
-      `${globalConfig.baseURL}/api/GoodsReceipt/${
-        action === "approve" ? "Process" : "Cancel"
-      }`,
-      {
-        ID: id,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
-    );
+    const response = await axiosInstance.post<boolean>(`goodsReceipt/${action === "approve" ? "process" : "cancel"}/${id}`);
     return response.data;
   } catch (error) {
     console.error("Error creating document: ", error);
@@ -117,67 +78,25 @@ export const documentAction = async (
   }
 };
 
+export const fetchDocument = async (id: string): Promise<ReceiptDocument> => {
+  try {
+    const response = await axiosInstance.get<ReceiptDocument>(`goodsReceipt/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching document:", error);
+    throw error;
+  }
+};
+
 export const fetchDocuments = async (
   filters: GoodsReceiptReportFilter,
   orderBy: DocumentOrderBy = DocumentOrderBy.ID,
   desc: boolean = true
-): Promise<Document[]> => {
+): Promise<ReceiptDocument[]> => {
   try {
-    if (configUtils.isMockup) {
-      console.log("Mockup data is being used.");
-      return [documentMockup];
-    }
+    const url = `goodsReceipt`;
 
-    if (!globalConfig)
-      throw new Error("Config has not been initialized!");
-
-    if (globalConfig.debug)
-      await delay();
-
-    const access_token = localStorage.getItem("token");
-
-    // const queryParams = new URLSearchParams();
-    // queryParams.append("OrderBy", orderBy.toString());
-    // queryParams.append("Desc", desc.toString());
-    //
-    // if (filters.statuses && filters.statuses.length > 0) {
-    //     filters.statuses.forEach((status) =>
-    //         queryParams.append("Status", status.toString())
-    //     );
-    // }
-    //
-    // if (filters.id !== null && filters.id !== undefined) {
-    //     queryParams.append("ID", filters.id.toString());
-    // }
-    //
-    // if (filters.grpo !== null && filters.grpo !== undefined) {
-    //     queryParams.append("GRPO", filters.grpo.toString());
-    // }
-    //
-    // if (filters.docName !== null && filters.docName !== undefined) {
-    //     queryParams.append("Name", filters.docName);
-    // }
-    //
-    // if (filters.businessPartner !== null && filters.businessPartner !== undefined) {
-    //     queryParams.append("BusinessPartner", filters.businessPartner.code);
-    // }
-    //
-    // if (filters.date !== null && filters.date !== undefined) {
-    //     queryParams.append("Date", filters.date.toISOString());
-    // }
-
-    // const url = `${
-    //     globalConfig.baseURL
-    // }/api/GoodsReceipt/Documents?${queryParams.toString()}`;
-    const url = `${
-      globalConfig.baseURL
-    }/api/GoodsReceipt/Documents`;
-
-    const response = await axios.post<Document[]>(url, filters, {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
+    const response = await axiosInstance.post<ReceiptDocument[]>(url, filters,);
 
     return response.data;
   } catch (error) {

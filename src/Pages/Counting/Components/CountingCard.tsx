@@ -4,7 +4,7 @@ import {useAuth} from "@/components/AppContext";
 import {useTranslation} from "react-i18next";
 import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
-import {Authorization} from "@/assets/Authorization";
+import {RoleType} from "@/assets/RoleType";
 import {useDocumentStatusToString} from "@/assets/DocumentStatusString";
 import {Counting} from "@/assets/Counting";
 import {Status} from "@/assets/Common";
@@ -16,7 +16,7 @@ import {InfoBoxValue, SecondaryInfoBox, Separator} from "@/components";
 
 type CountingCardProps = {
   doc: Counting,
-  handleAction?: (docId: number, action: 'approve' | 'cancel') => void,
+  handleAction?: (action: 'approve' | 'cancel') => void,
   supervisor?: boolean
 }
 
@@ -26,11 +26,11 @@ const CountingCard: React.FC<CountingCardProps> = ({doc, handleAction, superviso
   const navigate = useNavigate();
   const {user} = useAuth();
 
-  function handleOpen(id: number) {
+  function handleOpen(id: string) {
     navigate(`/counting/${id}`);
   }
 
-  let handleOpenLink = user?.authorizations?.includes(Authorization.COUNTING);
+  let handleOpenLink = user?.roles?.includes(RoleType.COUNTING);
 
   const documentStatusToString = useDocumentStatusToString();
 
@@ -43,10 +43,10 @@ const CountingCard: React.FC<CountingCardProps> = ({doc, handleAction, superviso
       )}
       <CardContent className="py-4">
         <SecondaryInfoBox>
-          <InfoBoxValue label={t('number')} value={doc.id}
+          <InfoBoxValue label={t('number')} value={doc.number}
                         onClick={handleOpenLink ? () => handleOpen(doc.id) : undefined}/>
-          <InfoBoxValue label={t('docDate')} value={dateFormat(new Date(doc.date))}/>
-          <InfoBoxValue label={t('createdBy')} value={doc.employee.name}/>
+          <InfoBoxValue label={t('docDate')} value={dateFormat(doc.date)}/>
+          <InfoBoxValue label={t('createdBy')} value={doc.createdByUser?.fullName}/>
           <InfoBoxValue label={t('status')} value={documentStatusToString(doc.status)}/>
         </SecondaryInfoBox>
         {supervisor && (
@@ -58,12 +58,12 @@ const CountingCard: React.FC<CountingCardProps> = ({doc, handleAction, superviso
                   {t('countingSummaryReport')}
                 </Button>
                 {doc.status === Status.InProgress && (
-                  <Button variant="default" onClick={() => handleAction?.(doc.id, 'approve')}
+                  <Button variant="default" onClick={() => handleAction?.('approve')}
                           className="bg-green-500 hover:bg-green-600 text-white">
                     <CheckCircle className="mr-2 h-4 w-4"/>{t('finish')}
                   </Button>
                 )}
-                <Button variant="destructive" onClick={() => handleAction?.(doc.id, 'cancel')}>
+                <Button variant="destructive" onClick={() => handleAction?.('cancel')}>
                   <XCircle className="mr-2 h-4 w-4"/>{t('cancel')}
                 </Button>
             </div>

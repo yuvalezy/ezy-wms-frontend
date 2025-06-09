@@ -1,7 +1,7 @@
 import React from "react";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {useTranslation} from "react-i18next";
-import {Document, DocumentItem, useDocumentStatusToString, useObjectName, useDateTimeFormat} from "@/assets";
+import {ReceiptDocument, DocumentItem, useDocumentStatusToString, useObjectName, useDateTimeFormat} from "@/assets";
 import {activeStatuses, processStatuses, useHandleOpen} from "@/pages/GoodsReceipt/data/GoodsReceiptUtils";
 import InfoBox, {InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
 import {Separator} from "@/components/ui/separator";
@@ -10,8 +10,8 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faExchangeAlt, faFileAlt, faTruckLoading} from "@fortawesome/free-solid-svg-icons";
 
 type DocumentReportCardProps = {
-  doc: Document,
-  docDetails: (doc: Document) => void,
+  doc: ReceiptDocument,
+  docDetails: (doc: ReceiptDocument) => void,
   confirm: boolean
 }
 
@@ -37,18 +37,18 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc, docDetails,
         <div className="grid gap-2"><InfoBox>
           {doc.name && <InfoBoxValue label={t('id')} value={doc.name}/>}
           {doc.businessPartner &&
-              <InfoBoxValue label={t('vendor')} value={doc.businessPartner.name ?? doc.businessPartner.code}/>}
+              <InfoBoxValue label={t('vendor')} value={doc.businessPartner.name ?? doc.businessPartner.id}/>}
         </InfoBox>
-          {doc.specificDocuments && doc.specificDocuments.length > 0 &&
-              <InfoBoxValue label={t('documentsList')} value={formatDocumentsList(doc.specificDocuments)}
+          {doc.documents && doc.documents.length > 0 &&
+              <InfoBoxValue label={t('documentsList')} value={formatDocumentsList(doc.documents)}
                             onClick={() => docDetails(doc)}/>
           }
           <SecondaryInfoBox>
             <InfoBoxValue label={t('docDate')} value={dateFormat(new Date(doc.date))}/>
-            <InfoBoxValue label={t('createdBy')} value={doc.employee.name}/>
+            <InfoBoxValue label={t('createdBy')} value={doc.createdByUserName}/>
             <InfoBoxValue label={t('status')} value={documentStatusToString(doc.status)}/>
-            {doc.statusDate &&
-                <InfoBoxValue label={t('statusDate')} value={dateFormat(new Date(doc.statusDate))}/>}
+            {doc.updatedAt &&
+                <InfoBoxValue label={t('statusDate')} value={dateFormat(doc.updatedAt)}/>}
           </SecondaryInfoBox></div>
         <Separator className="my-4"/>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">

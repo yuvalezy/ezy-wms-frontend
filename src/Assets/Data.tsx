@@ -1,9 +1,7 @@
-import axios from "axios";
-import {configUtils, globalConfig} from "./GlobalConfig";
 import {useTranslation} from "react-i18next";
-import {vendorsMockup} from "./mockup";
 
 import {Status} from "./Common";
+import {axiosInstance} from "@/utils/axios-instance";
 
 export type Employee = {
   id: number;
@@ -11,7 +9,7 @@ export type Employee = {
 };
 
 export type BusinessPartner = {
-  code: string;
+  id: string;
   name: string;
 };
 
@@ -46,20 +44,9 @@ export function useDocumentStatusOptions() {
 
 export const fetchVendors = async (): Promise<BusinessPartner[]> => {
   try {
-    if (!globalConfig)
-      throw new Error("Config has not been initialized!");
+    const response = await axiosInstance.get<BusinessPartner[]>(
+      `General/Vendors`,
 
-    if (configUtils.isMockup)
-      return vendorsMockup;
-
-    const access_token = localStorage.getItem("token");
-    const response = await axios.get<BusinessPartner[]>(
-      `${globalConfig.baseURL}/api/General/Vendors`,
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
     );
     return response.data;
   } catch (error) {

@@ -1,30 +1,42 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
-import { useAuth} from "./AppContext";
-import {Authorization} from "@/assets";
+import {Navigate} from 'react-router-dom';
+import {useAuth} from "./AppContext";
+import {RoleType} from "@/assets";
 
 interface ProtectedRouteProps {
-    element: React.ReactElement;
-    authorization?: Authorization;
-    authorizations?: Authorization[];
+  element: React.ReactElement;
+  authorization?: RoleType;
+  authorizations?: RoleType[];
+  superUser?: boolean;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element, authorization, authorizations, ...rest }) => {
-    const { isAuthenticated, user } = useAuth();
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+                                                         element,
+                                                         authorization,
+                                                         authorizations,
+                                                         superUser,
+                                                         ...rest
+                                                       }) => {
+  const {isAuthenticated, user, isLoading} = useAuth();
 
-    if (!isAuthenticated) {
-        // If not authenticated, return a Navigate component to redirect to the login page
-        return <Navigate to="/login"/>;
-    } else if (
-        (authorization !== undefined && !user?.authorizations.includes(authorization)) ||
-        (authorizations !== undefined && !authorizations.some(auth => user?.authorizations.includes(auth)))
-    ) {
-        // If not authenticated, return a Navigate component to redirect to the login page
-        return <Navigate to="/unauthorized"/>;
-    }
+  if (isLoading) {
+    return <div>Loading...</div>; // Or spinner
+  }
 
-    // If authenticated, render the intended component
-    return React.cloneElement(element, rest);
+  if (!isAuthenticated) {
+    // If not authenticated, return a Navigate component to redirect to the login page
+    return <Navigate to="/login"/>;
+  } else if (
+    (authorization !== undefined && !user?.roles.includes(authorization) && !user?.superUser) ||
+    (authorizations !== undefined && !authorizations.some(auth => user?.roles.includes(auth)) && !user?.superUser) ||
+    (superUser && !user?.superUser)
+  ) {
+    // If not authenticated, return a Navigate component to redirect to the login page
+    return <Navigate to="/unauthorized"/>;
+  }
+
+  // If authenticated, render the intended component
+  return React.cloneElement(element, rest);
 }
 
 export default ProtectedRoute;

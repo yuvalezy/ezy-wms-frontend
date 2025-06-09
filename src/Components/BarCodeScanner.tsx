@@ -71,7 +71,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
   function handleScanBarcode(barcode: string) {
     try {
       if (barcode.length === 0) {
-        let message = !item ? t("barcodeRequired") : t("scanCodeRequired");
+        let message = !item ? t("barnameRequired") : t("scannameRequired");
         toast.warning(message);
         return;
       }

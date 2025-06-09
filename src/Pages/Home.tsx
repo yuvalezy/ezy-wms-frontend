@@ -5,9 +5,8 @@ import ContentTheme from "../components/ContentTheme";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import {KpiBox} from "@/components/KpiBox";
 import {getKpiItems, KpiItem} from "@/assets/KpiData";
-import axios from "axios";
-import {delay, globalConfig} from "@/assets";
 import {HomeInfo} from "@/assets/HomeInfo";
+import {axiosInstance} from "@/utils/axios-instance";
 
 const kpiColors = [
   {background: "bg-blue-100", icon: "text-blue-700"},
@@ -26,23 +25,14 @@ export default function Home() {
   const {t} = useTranslation();
   const {setLoading, setError} = useThemeContext();
   const [kpiItems, setKpiItems] = React.useState<KpiItem[]>([]);
-  const {config} = useAuth();
 
   useEffect(() => {
-    if (!config)
-      return;
-
     const fetchData = async () => {
       try {
         setLoading(true);
-        const access_token = localStorage.getItem("token");
-        const response = await axios.get<HomeInfo>(`${config?.baseURL}/api/General/HomeInfo`,
-          {
-            headers: {
-              Authorization: `Bearer ${access_token}`,
-            },
-          });
-        setKpiItems(getKpiItems(user?.authorizations, response.data));
+        
+        const response = await axiosInstance.get<HomeInfo>(`General/HomeInfo`);
+        setKpiItems(getKpiItems(user?.roles, response.data));
       } catch (error) {
         console.error(`Failed to home info: ${error}`);
         setError(error);
@@ -51,7 +41,7 @@ export default function Home() {
       }
     };
     fetchData();
-  }, [config]);
+  }, []);
 
   return (
     <ContentTheme title={t('home')}>

@@ -14,10 +14,10 @@ import {
 } from "@/assets/Common";
 import {AlertActionType, AlertSeverity, ProcessAlertValue} from "@/components/ProcessAlert";
 import {ProcessesRef} from "@/components/Processes";
-import {IsNumeric, StringFormat} from "@/assets/Functions";
+import {StringFormat} from "@/assets/Functions";
 import {addItem, updateLine, updateLineQuantity} from "@/pages/GoodsReceipt/data/GoodsReceiptProcess";
-import {configUtils, delay} from "@/assets/GlobalConfig";
-import {DocumentAddItemResponse} from "@/assets/Document";
+import {DocumentAddItemResponse, ReceiptDocument} from "@/assets/ReceiptDocument";
+import {fetchDocument} from "./Document";
 
 export const useGoodsReceiptProcessData = (confirm: boolean) => {
   const {scanCode} = useParams();
@@ -25,20 +25,22 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
   const {dateTimeFormat} = useDateTimeFormat();
   const barcodeRef = useRef<BarCodeScannerRef>(null);
   const boxConfirmationDialogRef = useRef<BoxConfirmationDialogRef>(null);
-  const [id, setID] = useState<number | null>();
   const [enable, setEnable] = useState(true);
   const {setLoading, setError} = useThemeContext();
   const [acceptValues, setAcceptValues] = useState<ProcessAlertValue[]>([]);
   const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
   const processesRef = useRef<ProcessesRef>(null);
+  const [info, setInfo] = useState<ReceiptDocument | null>(null);
 
   useEffect(() => {
     setTimeout(() => barcodeRef.current?.focus(), 1);
-    if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
-      setID(null);
+    if (scanCode === null || scanCode === undefined) {
       return;
     }
-    setID(parseInt(scanCode));
+    fetchDocument(scanCode)
+      .then((result) => setInfo(result))
+      .catch((error) => setError(error))
+      .finally(() => setLoading(false));
   }, []);
 
   const alert = (alert: ProcessAlertValue) => {
@@ -82,20 +84,10 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
     barcodeRef.current?.clear();
     setLoading(true);
     let barcode = item.barcode!;
-    addItem(id ?? 0, item.code, barcode, unit)
+    addItem(info!.id, item.code, barcode, unit)
       .then((data) => {
         if (isClosedDocument(data, item.code, barcode)) {
           return;
-        }
-
-        if (configUtils.isMockup && !data.fulfillment && !data.warehouse && !data.showroom) {
-          return alert({
-            barcode: barcode,
-            itemCode: item.code,
-            quantity: data.quantity,
-            message: `Error Mockup`,
-            severity: "Negative"
-          });
         }
 
         let message: string = "";
@@ -127,8 +119,8 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
           }
         }
 
-        alert({
-          lineID: data.lineID,
+        const newAlert = {
+          lineId: data.lineId,
           barcode,
           itemCode: item.code,
           message,
@@ -140,7 +132,8 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
           purPackUn: data.purPackUn,
           purPackMsr: data.purPackMsr,
           unit: unit
-        });
+        };
+        alert(newAlert);
       })
       .catch((error) => {
         console.error(`Error performing action: ${error}`);
@@ -158,10 +151,10 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
       return false;
     }
     alert({
-      lineID: data.lineID,
+      lineId: data.lineId,
       barcode: barcode,
       itemCode: itemCode,
-      message: StringFormat(t("goodsReceiptIsClosed"), id),
+      message: StringFormat(t("goodsReceiptIsClosed"), info?.number),
       severity: "Negative",
       multiple: [],
       quantity: data.quantity
@@ -172,7 +165,9 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
 
   function alertAction(alert: ProcessAlertValue, type: AlertActionType) {
     setCurrentAlert(alert);
-    delay(1).then(() => processesRef?.current?.open(type));
+    setTimeout(() => {
+      processesRef?.current?.open(type);
+    }, 1);
   }
 
   function handleAlertActionAccept(type: AlertActionType, value?: string | number, cancel?: boolean): void {
@@ -195,7 +190,7 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
         break;
     }
 
-    let index = acceptValues.findIndex((v) => v.lineID === currentAlert.lineID);
+    let index = acceptValues.findIndex((v) => v.lineId === currentAlert.lineId);
     let newAcceptValues = [...acceptValues];
     if (index !== -1) {
       newAcceptValues[index] = updatedAlert;
@@ -208,7 +203,10 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
   }
 
 
-  function handleUpdateLine(parameters: UpdateLineParameters): Promise<UpdateLineReturnValue> {
+  function handleUpdateLine(parameters: UpdateLineParameters): Promise<{
+    returnValue: UpdateLineReturnValue,
+    errorMessage?: string
+  }> {
     if (parameters.quantity == null) {
       return updateLine(parameters);
     }
@@ -222,8 +220,8 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
 
         const updatedAlert: ProcessAlertValue = {...currentAlert};
         updateLineQuantity({
-          id: id ?? -1,
-          lineID: parameters.lineID,
+          id: parameters.id,
+          lineId: parameters.lineId,
           userName: parameters.userName,
           quantity: parameters.quantity
         })
@@ -263,7 +261,7 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
             updatedAlert.message = message;
             updatedAlert.severity = color;
 
-            let index = acceptValues.findIndex((v) => v.lineID === currentAlert.lineID);
+            let index = acceptValues.findIndex((v) => v.lineId === currentAlert.lineId);
             let newAcceptValues = [...acceptValues];
             if (index !== -1) {
               newAcceptValues[index] = updatedAlert;
@@ -279,7 +277,7 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
           reject(error);
           return;
         }
-        resolve(response);
+        resolve({returnValue: response});
 
       } catch (error) {
         setError(error);
@@ -290,7 +288,7 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
 
   return {
     scanCode,
-    id,
+    info,
     enable,
     barcodeRef,
     processesRef,

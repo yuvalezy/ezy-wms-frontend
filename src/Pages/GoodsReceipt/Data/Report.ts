@@ -1,11 +1,5 @@
-import axios from "axios";
-import {configUtils, delay, globalConfig} from "@/assets";
-import {
-  GoodsReceiptAllDetailMockup,
-  GoodsReceiptMockup,
-  goodsReceiptVSExitReportDataMockup
-} from "@/assets";
 import {DetailUpdateParameters, UnitType} from "@/assets";
+import {axiosInstance} from "@/utils/axios-instance";
 
 export type GoodsReceiptAll = {
   itemCode: string;
@@ -20,8 +14,8 @@ export type GoodsReceiptAll = {
   purPackMsr?: string | null;
 };
 export type GoodsReceiptAllDetail = {
-  lineID: number;
-  employeeName: string;
+  lineId: string;
+  createdByUserName: string;
   timeStamp: Date;
   quantity: number;
   unit: UnitType;
@@ -48,20 +42,20 @@ export type GoodsReceiptVSExitReportDataLine = {
 
 export type GoodsReceiptValidateProcess = {
   documentNumber: number;
-  cardCode: string;
-  cardName: string;
+  vendor: {id: string, name: string}
   baseType: number;
   baseEntry: number;
   lines: GoodsReceiptValidateProcessLine[];
 }
 
 export type GoodsReceiptValidateProcessLine = {
+  visualLineNumber: number;
   lineNumber: number;
   itemCode: string;
   itemName: string;
   quantity: number;
-  baseLine: number;
-  openInvQty: number;
+  baseLine: string;
+  documentQuantity: number;
   numInBuy: number;
   buyUnitMsr: string;
   purPackUn: number;
@@ -72,7 +66,7 @@ export type GoodsReceiptValidateProcessLine = {
 
 export type GoodsReceiptValidateProcessLineDetails = {
   timeStamp: string;
-  employee: string;
+  createdByUserName: string;
   quantity: number;
   scannedQuantity: number;
   unit: UnitType;
@@ -86,26 +80,11 @@ export enum ProcessLineStatus {
   NotReceived = 'NotReceived'
 }
 
-export const fetchGoodsReceiptReportAll = async (id: number): Promise<GoodsReceiptAll[]> => {
+export const fetchGoodsReceiptReportAll = async (id: string): Promise<GoodsReceiptAll[]> => {
   try {
-    if (!globalConfig)
-      throw new Error("Config has not been initialized!");
-    if (globalConfig.debug)
-      await delay();
-    if (configUtils.isMockup) {
-      console.log("Mockup data is being used.");
-      return GoodsReceiptMockup;
-    }
+    const url = `goodsReceipt/${id}/report/all`;
 
-    const access_token = localStorage.getItem("token");
-
-    const url = `${globalConfig.baseURL}/api/GoodsReceipt/GoodsReceiptAll/${id}`;
-
-    const response = await axios.get<GoodsReceiptAll[]>(url, {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
+    const response = await axiosInstance.get<GoodsReceiptAll[]>(url,);
 
     return response.data;
   } catch (error) {
@@ -113,38 +92,13 @@ export const fetchGoodsReceiptReportAll = async (id: number): Promise<GoodsRecei
     throw error;
   }
 };
-export const fetchGoodsReceiptReportAllDetails = async (id: number, item: string): Promise<GoodsReceiptAllDetail[]> => {
+export const fetchGoodsReceiptReportAllDetails = async (id: string, item: string): Promise<GoodsReceiptAllDetail[]> => {
   try {
-    if (!globalConfig)
-      throw new Error("Config has not been initialized!");
-    if (globalConfig.debug)
-      await delay();
-    if (configUtils.isMockup) {
-      console.log("Mockup data is being used.");
-      return GoodsReceiptAllDetailMockup;
-    }
+    const url = `goodsReceipt/${id}/report/all/${item}`;
 
-    const access_token = localStorage.getItem("token");
+    const response = await axiosInstance.get<any[]>(url,);
 
-    const url = `${globalConfig.baseURL}/api/GoodsReceipt/GoodsReceiptAll/${id}/${item}`;
-
-    const response = await axios.get<any[]>(url, {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
-
-    const goodsReceipts: GoodsReceiptAllDetail[] = response.data.map((item: GoodsReceiptAllDetail) => ({
-      lineID: item.lineID,
-      employeeName: item.employeeName,
-      timeStamp: new Date(item.timeStamp),
-      quantity: item.quantity,
-      unit: item.unit,
-      buyUnitMsr: "Doz",
-      purPackMsr: "Pack"
-    }));
-
-    return goodsReceipts;
+    return response.data;
   } catch (error) {
     console.error("Error fetching all details:", error);
     throw error;
@@ -152,23 +106,9 @@ export const fetchGoodsReceiptReportAllDetails = async (id: number, item: string
 };
 export const updateGoodsReceiptReport = async (data: DetailUpdateParameters) => {
   try {
-    if (configUtils.isMockup) {
-      return;
-    }
+    const url = `goodsReceipt/updateAll`;
 
-    if (!globalConfig) throw new Error("Config has not been initialized!");
-
-    if (globalConfig.debug) await delay();
-
-    const access_token = localStorage.getItem("token");
-
-    const url = `${globalConfig.baseURL}/api/GoodsReceipt/UpdateGoodsReceiptAll`;
-
-    const response = await axios.post(url, data, {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
+    const response = await axiosInstance.post(url, data,);
 
     return response.data;
   } catch (error) {
@@ -178,24 +118,9 @@ export const updateGoodsReceiptReport = async (data: DetailUpdateParameters) => 
 }
 export const fetchGoodsReceiptVSExitReport = async (id: number): Promise<GoodsReceiptVSExitReportData[]> => {
   try {
-    if (configUtils.isMockup) {
-      console.log("Mockup data is being used.");
-      return goodsReceiptVSExitReportDataMockup;
-    }
+    const url = `GoodsReceipt/GoodsReceiptVSExitReport/${id}`;
 
-    if (!globalConfig) throw new Error("Config has not been initialized!");
-
-    if (globalConfig.debug) await delay();
-
-    const access_token = localStorage.getItem("token");
-
-    const url = `${globalConfig.baseURL}/api/GoodsReceipt/GoodsReceiptVSExitReport/${id}`;
-
-    const response = await axios.get<GoodsReceiptVSExitReportData[]>(url, {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
+    const response = await axiosInstance.get<GoodsReceiptVSExitReportData[]>(url,);
 
     return response.data;
   } catch (error) {
@@ -203,26 +128,11 @@ export const fetchGoodsReceiptVSExitReport = async (id: number): Promise<GoodsRe
     throw error;
   }
 };
-export const fetchGoodsReceiptValidateProcess = async (id: number): Promise<GoodsReceiptValidateProcess[]> => {
+export const fetchGoodsReceiptValidateProcess = async (id: string): Promise<GoodsReceiptValidateProcess[]> => {
   try {
-    // if (configUtils.isMockup) {
-    //     console.log("Mockup data is being used.");
-    //     return goodsReceiptVSExitReportDataMockup;
-    // }
+    const url = `goodsReceipt/${id}/validateProcess`;
 
-    if (!globalConfig) throw new Error("Config has not been initialized!");
-
-    if (globalConfig.debug) await delay();
-
-    const access_token = localStorage.getItem("token");
-
-    const url = `${globalConfig.baseURL}/api/GoodsReceipt/GoodsReceiptValidateProcess/${id}`;
-
-    const response = await axios.get<GoodsReceiptValidateProcess[]>(url, {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
+    const response = await axiosInstance.get<GoodsReceiptValidateProcess[]>(url,);
 
     return response.data;
   } catch (error) {
@@ -230,31 +140,16 @@ export const fetchGoodsReceiptValidateProcess = async (id: number): Promise<Good
     throw error;
   }
 };
-export const fetchGoodsReceiptValidateProcessLineDetails = async (id: number, baseType: number, baseEntry: number, baseLine: number): Promise<GoodsReceiptValidateProcessLineDetails[]> => {
+export const fetchGoodsReceiptValidateProcessLineDetails = async (id: string, baseType: number, baseEntry: number, baseLine: number): Promise<GoodsReceiptValidateProcessLineDetails[]> => {
   try {
-    // if (configUtils.isMockup) {
-    //     console.log("Mockup data is being used.");
-    //     return goodsReceiptVSExitReportDataMockup;
-    // }
+    const url = `GoodsReceipt/validateProcessLineDetails`;
 
-    if (!globalConfig) throw new Error("Config has not been initialized!");
-
-    if (globalConfig.debug) await delay();
-
-    const access_token = localStorage.getItem("token");
-
-    const url = `${globalConfig.baseURL}/api/GoodsReceipt/GoodsReceiptValidateProcessLineDetails`;
-
-    const response = await axios.post<GoodsReceiptValidateProcessLineDetails[]>(url, {
+    const response = await axiosInstance.post<GoodsReceiptValidateProcessLineDetails[]>(url, {
       id: id,
       baseType: baseType,
       baseEntry: baseEntry,
       baseLine: baseLine
-    }, {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
+    },);
 
     return response.data;
   } catch (error) {

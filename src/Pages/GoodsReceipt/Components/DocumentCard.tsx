@@ -5,9 +5,9 @@ import {Card, CardContent} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCheck, faTimes, faFileAlt, faTruckLoading, faExchangeAlt} from '@fortawesome/free-solid-svg-icons';
-import {Document, DocumentItem} from "@/assets/Document";
+import {ReceiptDocument, DocumentItem} from "@/assets/ReceiptDocument";
 import {useObjectName} from "@/assets/ObjectName";
-import {Authorization} from "@/assets/Authorization";
+import {RoleType} from "@/assets/RoleType";
 import {useDocumentStatusToString} from "@/assets/DocumentStatusString";
 import {Status} from "@/assets/Common";
 import {activeStatuses, processStatuses, useHandleOpen} from "@/pages/GoodsReceipt/data/GoodsReceiptUtils";
@@ -17,10 +17,10 @@ import InfoBox, {FullInfoBox, InfoBoxValue, SecondaryInfoBox} from "@/components
 import {useNavigate} from "react-router-dom";
 
 type DocumentCardProps = {
-  doc: Document,
+  doc: ReceiptDocument,
   supervisor?: boolean,
-  action?: (docId: number, action: 'approve' | 'cancel') => void,
-  docDetails: (doc: Document) => void,
+  action?: (doc: ReceiptDocument, action: 'approve' | 'cancel') => void,
+  docDetails: (doc: ReceiptDocument) => void,
   confirm?: boolean
 }
 
@@ -32,7 +32,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
   const handleOpen = useHandleOpen(confirm);
   const navigate = useNavigate();
 
-  const handleOpenLink = !confirm ? user?.authorizations?.includes(Authorization.GOODS_RECEIPT) : user?.authorizations?.includes(Authorization.GOODS_RECEIPT_CONFIRMATION);
+  const handleOpenLink = !confirm ? user?.roles?.includes(RoleType.GOODS_RECEIPT) : user?.roles?.includes(RoleType.GOODS_RECEIPT_CONFIRMATION);
 
   const openLink = () => {
     if (!confirm)
@@ -54,16 +54,16 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
         <SecondaryInfoBox>
           {doc.name && <InfoBoxValue label={t('id')} value={doc.name}/>}
           <InfoBoxValue onClick={handleOpenLink ? openLink : undefined} label={t('number')} value={doc.id}/>
-          <InfoBoxValue label={t('docDate')} value={dateFormat(new Date(doc.date))}/>
-          <InfoBoxValue label={t('createdBy')} value={doc.employee.name}/>
+          <InfoBoxValue label={t('docDate')} value={dateFormat(doc.date)}/>
+          <InfoBoxValue label={t('createdBy')} value={doc.createdByUserName}/>
           <InfoBoxValue label={t('status')} value={documentStatusToString(doc.status)}/>
         </SecondaryInfoBox>
-        {(doc.businessPartner || doc.specificDocuments) && <FullInfoBox>
+        {(doc.businessPartner || doc.documents) && <FullInfoBox>
           {doc.businessPartner && (
-            <InfoBoxValue label={t('vendor')} value={doc.businessPartner.name ?? doc.businessPartner.code}/>
+            <InfoBoxValue label={t('vendor')} value={doc.businessPartner.name ?? doc.businessPartner.id}/>
           )}
-          {doc.specificDocuments && doc.specificDocuments?.length > 0 && (
-            <InfoBoxValue label={t('documentsList')} value={formatDocumentsList(doc.specificDocuments)}
+          {doc.documents && doc.documents?.length > 0 && (
+            <InfoBoxValue label={t('documentsList')} value={formatDocumentsList(doc.documents)}
                           onClick={() => docDetails(doc)}/>
           )}
         </FullInfoBox>}
@@ -76,7 +76,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
                 <FontAwesomeIcon icon={faFileAlt} className="mr-2"/>
                 {!confirm ? t('goodsReceiptReport') : t('confirmationReport')}
               </Button>
-              {activeStatuses.includes(doc.status) && (
+              {user?.settings?.goodsReceiptTargetDocuments && activeStatuses.includes(doc.status) && (
                 <Button variant="outline" className="w-full" onClick={() => handleOpen('vs', doc.id)}>
                   <FontAwesomeIcon icon={faTruckLoading} className="mr-2"/>
                   {!confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}
@@ -89,12 +89,12 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
                 </Button>
               )}
               {doc.status === Status.InProgress && (
-                <Button className="w-full" onClick={() => action?.(doc.id, 'approve')}>
+                <Button className="w-full" onClick={() => action?.(doc, 'approve')}>
                   <FontAwesomeIcon icon={faCheck} className="mr-2"/>
                   {t('finish')}
                 </Button>
               )}
-              <Button variant="destructive" className="w-full" onClick={() => action?.(doc.id, 'cancel')}>
+              <Button variant="destructive" className="w-full" onClick={() => action?.(doc, 'cancel')}>
                 <FontAwesomeIcon icon={faTimes} className="mr-2"/>
                 {t('cancel')}
               </Button>

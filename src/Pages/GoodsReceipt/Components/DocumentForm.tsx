@@ -22,13 +22,13 @@ import {
 import {PlusCircle} from "lucide-react"; // Icon for create button
 
 import {useObjectName} from "@/assets/ObjectName";
-import {Document, DocumentItem} from "@/assets/Document";
+import {ReceiptDocument, DocumentItem} from "@/assets/ReceiptDocument";
 import {BusinessPartner, fetchVendors} from "@/assets/Data";
 import {StringFormat} from "@/assets/Functions";
 import {Card} from "@/components";
 
 interface DocumentFormProps {
-  onNewDocument: (document: Document) => void,
+  onNewDocument: (document: ReceiptDocument) => void,
   confirm: boolean
 }
 
@@ -39,7 +39,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, confirm}) => 
   const documentListRef = useRef<DocumentListRef>(null); // Keep as is for DocumentList
 
   // Use string values for TabsTrigger, matching GoodsReceiptType enum keys for clarity
-  const TAB_AUTOCONFIRM = GoodsReceiptType.AutoConfirm.toString();
+  const TAB_AUTOCONFIRM = GoodsReceiptType.All.toString();
   const TAB_SPECIFICORDERS = GoodsReceiptType.SpecificOrders.toString();
 
   const [activeTab, setActiveTab] = useState<string>(TAB_SPECIFICORDERS);
@@ -52,11 +52,11 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, confirm}) => 
     fetchVendors()
       .then((data) => setVendors(data))
       .catch((error) => setError(error));
-  }, [setError]);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const selectedType = activeTab === TAB_AUTOCONFIRM ? GoodsReceiptType.AutoConfirm :
+    const selectedType = activeTab === TAB_AUTOCONFIRM ? GoodsReceiptType.All :
       !confirm ? GoodsReceiptType.SpecificOrders : GoodsReceiptType.SpecificReceipts;
 
     // Validation logic (can be enhanced with react-hook-form later if needed)
@@ -65,7 +65,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, confirm}) => 
     //     return;
     // }
     switch (selectedType) {
-      case GoodsReceiptType.AutoConfirm:
+      case GoodsReceiptType.All:
         // if (cardCodeInput.trim() === "") {
         //     setError(t("vendorRequired"));
         //     return;
@@ -91,40 +91,38 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, confirm}) => 
           // Potentially switch back to the first tab or clear specific orders items
           setItems([]);
         } else {
-          let errorMessage: string = t("unknownError");
-          // Error handling logic (remains largely the same)
-          switch (response.errorCode) {
-            case -1:
-              try {
-                let errorParameters = response.errorParameters;
-                if (errorParameters != null && errorParameters.length >= 3) {
-                  let errorObjType: number = errorParameters[0];
-                  let errorDocNum: number = errorParameters[1];
-                  let errorType: string;
-                  switch (errorParameters[2]) {
-                    case "E":
-                      errorType = t("doesNotExists");
-                      break;
-                    case "R":
-                      errorType = "Not Reserved";
-                      break; // Consider translating
-                    case "W":
-                      errorType = "No lines for warehouse";
-                      break; // Consider translating
-                    default:
-                      errorType = t("isNotOpen");
-                      break;
-                  }
-                  errorMessage = StringFormat(t("badDocumentError"), o(errorObjType), errorDocNum, errorType);
-                }
-              } catch {
-              }
-              break;
-          }
-          setError(errorMessage);
+          setError(t("unknownError"));
         }
       })
-      .catch((err) => setError(err))
+      .catch((err) => {
+        let errorMessage = t("unknownError");
+        if (err.response?.status === 400 && err.response?.data) {
+          try {
+            const errorData = err.response.data.ErrorData;
+            if (errorData.objectType && errorData.documentNumber && errorData.docStatus) {
+              let errorType: string;
+              switch (errorData.docStatus) {
+                case "E":
+                  errorType = t("doesNotExists");
+                  break;
+                case "R":
+                  errorType = t("notReserved");
+                  break;
+                case "W":
+                  errorType = t("noLinesForWarehouse");
+                  break;
+                default:
+                  errorType = t("isNotOpen");
+                  break;
+              }
+              errorMessage = StringFormat(t("badDocumentError"), o(errorData.objectType), errorData.documentNumber, errorType);
+            }
+          } catch {
+            errorMessage = t("unknownError");
+          }
+        }
+        setError(errorMessage);
+      })
       .finally(() => setLoading(false));
   };
 
@@ -182,7 +180,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, confirm}) => 
               </SelectTrigger>
               <SelectContent>
                 {vendors.map((vendor) => (
-                  <SelectItem key={vendor.code} value={vendor.code}>
+                  <SelectItem key={vendor.id} value={vendor.id}>
                     {vendor.name}
                   </SelectItem>
                 ))}

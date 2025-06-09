@@ -48,7 +48,7 @@ export default function TransferProcessTargetItem() {
 //     const title = `${t("transfer")} #${scanCode} - ${t("selectTransferTargetItems")}`;
 //
 //     useEffect(() => {
-//         if (scanCode == null || !IsNumeric(scanCode) || itemCode == null) {
+//         if (scanCode == null || itemCode == null) {
 //             setID(null);
 //             return;
 //         }
@@ -87,7 +87,7 @@ export default function TransferProcessTargetItem() {
 //                 }
 //                 let date = new Date(Date.now());
 //                 setCurrentAlert({
-//                     lineID: v.lineID,
+//                     lineId: v.lineId,
 //                     quantity: 1,
 //                     itemCode: itemCode,
 //                     severity: "Information", // For ProcessAlert

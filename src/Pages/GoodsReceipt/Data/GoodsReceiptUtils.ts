@@ -6,7 +6,7 @@ export const processStatuses = [Status.InProgress, Status.Processing];
 
 export const useHandleOpen = (confirm: boolean = false) => {
     const navigate = useNavigate();
-    return (type: string, id: number) => {
+    return (type: string, id: string) => {
         const confirmation = confirm ? 'Confirmation' : '';
         switch (type) {
             case 'open':

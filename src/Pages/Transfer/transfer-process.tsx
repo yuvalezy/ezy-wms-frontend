@@ -1,5 +1,5 @@
 import ContentTheme from "@/components/ContentTheme";
-import {Link, useNavigate} from "react-router-dom";
+import {Link, useNavigate, useSearchParams} from "react-router-dom";
 import {Button, Card, CardContent} from "@/components";
 import {useTranslation} from "react-i18next";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
@@ -11,18 +11,18 @@ import {useTransferProcessData} from "@/pages/transfer/data/transfer-process-dat
 
 export default function TransferProcess() {
   const {t} = useTranslation();
+
   const {
     id,
     info,
     finish,
-    scanCode,
     user
   } = useTransferProcessData();
   const navigate = useNavigate();
 
   return (
     <ContentTheme title={t("transfer")} titleOnClick={() => navigate(`/transfer`)}
-                  titleBreadcrumbs={[{label: scanCode ?? ''}]}
+                  titleBreadcrumbs={[{label: info?.number?.toString() ?? ''}]}
                   footer={
                     <div className="p-4">
                       <Button type="button"

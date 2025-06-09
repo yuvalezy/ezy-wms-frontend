@@ -4,21 +4,19 @@ import {useEffect, useRef, useState} from "react";
 import {useLocation} from "react-router-dom";
 import {useThemeContext} from "@/components/ThemeContext";
 import { toast } from "sonner";
-import {Document} from "@/assets/Document";
+import {ReceiptDocument} from "@/assets/ReceiptDocument";
 import {ObjectAction, Status} from "@/assets/Common";
 import {DocumentListDialogRef} from "@/pages/GoodsReceipt/components/DocumentListDialog";
-import {Authorization} from "@/assets/Authorization";
+import {RoleType} from "@/assets/RoleType";
 import {documentAction, fetchDocuments} from "@/pages/GoodsReceipt/data/Document";
-import {globalSettings} from "@/assets/GlobalConfig";
 
 export const useGoodsReceiptSupervisorData = () => {
   const {t} = useTranslation();
   const {user} = useAuth();
   const [supervisor, setSupervisor] = useState(false);
   const {setLoading, setError} = useThemeContext();
-  const [documents, setDocuments] = useState<Document[]>([]);
-  const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(null);
-  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
+  const [documents, setDocuments] = useState<ReceiptDocument[]>([]);
+  const [selectedDocument, setSelectedDocument] = useState<ReceiptDocument | null>(null);
   const [actionType, setActionType] = useState<ObjectAction | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const documentListDialogRef = useRef<DocumentListDialogRef>(null);
@@ -27,24 +25,24 @@ export const useGoodsReceiptSupervisorData = () => {
 
   useEffect(() => {
     if (!confirmation) {
-      setSupervisor(user?.authorizations.filter((v) => v === Authorization.GOODS_RECEIPT_SUPERVISOR).length === 1);
+      setSupervisor(user?.roles.filter((v) => v === RoleType.GOODS_RECEIPT_SUPERVISOR).length === 1);
     } else {
-      setSupervisor(user?.authorizations.filter((v) => v === Authorization.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR).length === 1);
+      setSupervisor(user?.roles.filter((v) => v === RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR).length === 1);
     }
     setLoading(true);
-    fetchDocuments({status: [Status.Open, Status.InProgress], confirm: confirmation})
+    fetchDocuments({statuses: [Status.Open, Status.InProgress], confirm: confirmation})
       .then((data) => setDocuments(data))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
   }, []);
 
-  function handleDocDetails(doc: Document) {
+  function handleDocDetails(doc: ReceiptDocument) {
     setSelectedDocument(doc);
     documentListDialogRef?.current?.show();
   }
 
-  const handleAction = (docId: number, action: ObjectAction) => {
-    setSelectedDocumentId(docId);
+  const handleAction = (doc: ReceiptDocument, action: ObjectAction) => {
+    setSelectedDocument(doc);
     setActionType(action);
     setDialogOpen(true);
   };
@@ -52,12 +50,16 @@ export const useGoodsReceiptSupervisorData = () => {
   const handleConfirmAction = () => {
     setLoading(true);
     setDialogOpen(false);
-    documentAction(selectedDocumentId!, actionType!, user!)
-      .then(() => {
-        setDocuments((prevDocs) =>
-          prevDocs.filter((doc) => doc.id !== selectedDocumentId)
-        );
-        toast.success(actionType === "approve" ? t("approved") : t("cancelled"));
+    documentAction(selectedDocument!.id, actionType!, user!)
+      .then((response) => {
+        if (typeof response === "boolean" || response.success) {
+          setDocuments((prevDocs) =>
+            prevDocs.filter((doc) => doc.id !== selectedDocument?.id)
+          );
+          toast.success(actionType === "approve" ? t("approved") : t("cancelled"));
+        } else {
+          toast.error(response.errorMessage);
+        }
       })
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
@@ -66,7 +68,7 @@ export const useGoodsReceiptSupervisorData = () => {
   function getTitle(): string {
     if (!confirmation) {
       let title = t("goodsReceiptSupervisor");
-      if (!globalSettings?.grpoCreateSupervisorRequired) {
+      if (!user?.settings?.goodsReceiptCreateSupervisorRequired) {
         if (!supervisor) {
           title = t("goodsReceiptCreation");
         }
@@ -74,7 +76,7 @@ export const useGoodsReceiptSupervisorData = () => {
       return title;
     } else {
       let title = t("goodsReceiptConfirmationSupervisor");
-      if (!globalSettings?.grpoCreateSupervisorRequired) {
+      if (!user?.settings?.goodsReceiptCreateSupervisorRequired) {
         if (!supervisor) {
           title = t("goodsReceiptConfirmationCreation");
         }
@@ -88,7 +90,6 @@ export const useGoodsReceiptSupervisorData = () => {
     documents,
     selectedDocument,
     setDocuments,
-    selectedDocumentId,
     actionType,
     dialogOpen,
     documentListDialogRef,

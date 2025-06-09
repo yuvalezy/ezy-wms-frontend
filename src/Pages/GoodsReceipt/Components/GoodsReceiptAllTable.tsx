@@ -5,6 +5,11 @@ import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} f
 import {Button} from "@/components/ui/button";
 import {MetricRow} from "@/components/MetricRow";
 import {formatNumber} from "@/lib/utils";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
+import {useStockInfo} from "@/utils/stock-info";
+import {useItemDetailsPopup} from "@/hooks/useItemDetailsPopup";
+import {PickingDocumentDetailItem} from "@/pages/picking/data/picking-document";
+import {Link} from "react-router-dom";
 
 interface GoodsReceiptAllTableProps {
   data: GoodsReceiptAll[]
@@ -13,96 +18,98 @@ interface GoodsReceiptAllTableProps {
 
 const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data, onClick}) => {
   const {t} = useTranslation();
+  const stockInfo = useStockInfo();
+  const {openItemDetails} = useItemDetailsPopup();
+
+  const showDetails = (row: GoodsReceiptAll) => {
+    openItemDetails({
+      itemCode: row.itemCode,
+      itemName: row.itemName,
+      numInBuy: row.numInBuy,
+      buyUnitMsr: row.buyUnitMsr || "",
+      purPackUn: row.purPackUn,
+      purPackMsr: row.purPackMsr || ""
+    });
+  }
 
   return (
-    <div className="flex flex-col gap-4">
-      {data.map((row) => {
-        const inWarehouse = row.quantity - row.delivery - row.showroom;
-
-        return (
-          <Card key={row.itemCode} className="w-full shadow-lg">
-            <CardHeader>
-              <CardTitle>{`${t('code')}: ${row.itemCode}`}</CardTitle>
-              <CardDescription>{`${t('description')}: ${row.itemName}`}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {/* Unit Headers */}
-              <div className="flex justify-between items-center border-b-2 border-primary font-bold">
-                <div className="w-[30%]">
-                  <span>{t('unit')}</span>
-                </div>
-                <div className="flex-1 flex justify-around text-center">
-                  <div className="flex-1 text-xs">
-                    <span>{t('units')}</span>
-                  </div>
-                  <div className="flex-1 text-xs">
-                    <span>{row.buyUnitMsr ?? t("qtyInUn")}</span>
-                  </div>
-                  <div className="flex-1 text-xs">
-                    <span>{row.purPackMsr ?? t('packUn')}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Metrics */}
-              <MetricRow
-                label={t('quantity')}
-                values={{
-                  units: formatNumber(row.quantity, 0),
-                  buyUnits: formatNumber(row.quantity / row.numInBuy),
-                  packUnits: formatNumber(row.quantity / row.numInBuy / row.purPackUn)
-                }}
-              />
-
-              <MetricRow
-                label={t('delivery')}
-                values={{
-                  units: formatNumber(row.delivery, 0),
-                  buyUnits: formatNumber(row.delivery / row.numInBuy),
-                  packUnits: formatNumber(row.delivery / row.numInBuy / row.purPackUn)
-                }}
-              />
-
-              <MetricRow
-                label={t('showroom')}
-                values={{
-                  units: formatNumber(row.showroom, 0),
-                  buyUnits: formatNumber(row.showroom / row.numInBuy),
-                  packUnits: formatNumber(row.showroom / row.numInBuy / row.purPackUn)
-                }}
-              />
-
-              <MetricRow
-                label={t('inWarehouse')}
-                values={{
-                  units: formatNumber(inWarehouse, 0),
-                  buyUnits: formatNumber(inWarehouse / row.numInBuy),
-                  packUnits: formatNumber(inWarehouse / row.numInBuy / row.purPackUn)
-                }}
-              />
-
-              <MetricRow
-                label={t('stock')}
-                values={{
-                  units: formatNumber(row.stock, 0),
-                  buyUnits: formatNumber(row.stock / row.numInBuy),
-                  packUnits: formatNumber(row.stock / row.numInBuy / row.purPackUn)
-                }}
-              /> {/* Action Button */}
-            </CardContent>
-            <CardFooter className="text-center border-t pt-4">
-              <Button
-                variant="default" /* or "secondary", "outline" etc. */
-                onClick={() => onClick(row)}
-                className="w-full"
-              >
-                {t('modifyValues')}
-              </Button>
-            </CardFooter>
-          </Card>
-        );
-      })}
-    </div>
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>{t('code')}</TableHead>
+          <TableHead className="hidden sm:table-cell">{t('description')}</TableHead>
+          <TableHead>{t('quantity')}</TableHead>
+          <TableHead>{t('delivery')}</TableHead>
+          <TableHead>{t('showroom')}</TableHead>
+          <TableHead>{t('inWarehouse')}</TableHead>
+          <TableHead>{t('stock')}</TableHead>
+          <TableHead className="border-l"></TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {data.map((row) => {
+          const inWarehouse = row.quantity - row.delivery - row.showroom;
+          return (
+            <>
+              <TableRow key={row.itemCode}>
+                <TableCell><Link
+                  className="text-blue-600 hover:underline"
+                  onClick={() => showDetails(row)} to={""}>{row.itemCode}</Link></TableCell>
+                <TableCell className="hidden sm:table-cell">{row.itemName}</TableCell>
+                <TableCell>{stockInfo({
+                  quantity: row.quantity,
+                  numInBuy: row.numInBuy,
+                  buyUnitMsr: row.buyUnitMsr,
+                  purPackUn: row.purPackUn,
+                  purPackMsr: row.purPackMsr,
+                })}</TableCell>
+                <TableCell>{stockInfo({
+                  quantity: row.delivery,
+                  numInBuy: row.numInBuy,
+                  buyUnitMsr: row.buyUnitMsr,
+                  purPackUn: row.purPackUn,
+                  purPackMsr: row.purPackMsr,
+                })}</TableCell>
+                <TableCell>{stockInfo({
+                  quantity: row.showroom,
+                  numInBuy: row.numInBuy,
+                  buyUnitMsr: row.buyUnitMsr,
+                  purPackUn: row.purPackUn,
+                  purPackMsr: row.purPackMsr,
+                })}</TableCell>
+                <TableCell>{stockInfo({
+                  quantity: inWarehouse,
+                  numInBuy: row.numInBuy,
+                  buyUnitMsr: row.buyUnitMsr,
+                  purPackUn: row.purPackUn,
+                  purPackMsr: row.purPackMsr,
+                })}</TableCell>
+                <TableCell>{stockInfo({
+                  quantity: row.stock,
+                  numInBuy: row.numInBuy,
+                  buyUnitMsr: row.buyUnitMsr,
+                  purPackUn: row.purPackUn,
+                  purPackMsr: row.purPackMsr,
+                })}</TableCell>
+                <TableCell className="border-l">
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={() => onClick(row)}
+                  >
+                    {t('modifyValues')}
+                  </Button>
+                </TableCell>
+              </TableRow>
+              <TableRow className="sm:hidden">
+                <TableCell className="bg-gray-100 border-b-1"
+                           colSpan={8}>{t('description')}: {row.itemName}</TableCell>
+              </TableRow>
+            </>
+          );
+        })}
+      </TableBody>
+    </Table>
   );
 }
 

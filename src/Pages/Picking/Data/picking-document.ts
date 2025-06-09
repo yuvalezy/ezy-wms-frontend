@@ -1,8 +1,7 @@
-import {configUtils, delay, globalConfig, UnitType} from "@/assets";
-import {addItemResponseMockup, PickingDetailItemsMockup, PickingDetailsMockup, PickingMockup, processResponseMockup} from "@/assets";
-import axios from "axios";
+import {UnitType} from "@/assets";
 import {ProcessResponse} from "@/assets";
 import {BinLocation} from "@/assets";
+import { axiosInstance } from "@/utils/axios-instance";
 
 export enum PickStatus {
     Released = "Released",
@@ -68,35 +67,13 @@ export type pickingsParameters = {
 }
 
 export interface PickingAddItemResponse {
-    lineID: number;
+    lineId: number;
     closedDocument: boolean;
     errorMessage?: string;
 }
 
 export const fetchPicking = async (params: pickingParameters): Promise<PickingDocument> => {
     try {
-        if (configUtils.isMockup) {
-            await delay();
-            console.log("Mockup data is being used.");
-            let picking = PickingMockup[0];
-            if (params.type == null) {
-                picking.detail = PickingDetailsMockup;
-            }
-            else {
-                picking.detail = PickingDetailsMockup.filter((v) => v.type === params.type && v.entry === params.entry);
-                picking.detail.forEach(v => v.items = PickingDetailItemsMockup);
-            }
-            return picking;
-        }
-
-        if (!globalConfig)
-            throw new Error("Config has not been initialized!");
-
-        if (globalConfig.debug)
-            await delay();
-
-        const access_token = localStorage.getItem("token");
-
         const queryParams = new URLSearchParams();
 
         if (params.type != null) {
@@ -114,15 +91,9 @@ export const fetchPicking = async (params: pickingParameters): Promise<PickingDo
             queryParams.append("binEntry", params.binLocation.toString());
         }
 
-        const url = `${
-            globalConfig.baseURL
-        }/api/Picking/Picking/${params.id}?${queryParams.toString()}`;
+        const url = `picking/${params.id}?${queryParams.toString()}`;
 
-        const response = await axios.get<PickingDocument>(url, {
-            headers: {
-                Authorization: `Bearer ${access_token}`,
-            },
-        });
+        const response = await axiosInstance.get<PickingDocument>(url);
 
         return response.data;
     } catch (error) {
@@ -132,34 +103,6 @@ export const fetchPicking = async (params: pickingParameters): Promise<PickingDo
 }
 export const fetchPickings = async (params?: pickingsParameters): Promise<PickingDocument[]> => {
     try {
-        if (configUtils.isMockup) {
-            await delay();
-            console.log("Mockup data is being used.");
-            let pickingMockup = PickingMockup;
-            if (params?.detail ?? false) {
-                let picking = pickingMockup[0];
-                picking.detail = PickingDetailsMockup;
-                return [picking];
-            }
-            if (params?.type != null) {
-                let picking = pickingMockup[0];
-                picking.detail = PickingDetailsMockup.filter((v) => v.type === params?.type && v.entry === params?.entry);
-                picking.detail.forEach(v => {
-                    v.items = PickingDetailItemsMockup;
-                })
-                return [picking];
-            }
-            return pickingMockup;
-        }
-
-        if (!globalConfig)
-            throw new Error("Config has not been initialized!");
-
-        if (globalConfig.debug)
-            await delay();
-
-        const access_token = localStorage.getItem("token");
-
         const queryParams = new URLSearchParams();
         if (params != null) {
             if (params.id !== undefined) {
@@ -174,15 +117,9 @@ export const fetchPickings = async (params?: pickingsParameters): Promise<Pickin
             }
         }
 
-        const url = `${
-            globalConfig.baseURL
-        }/api/Picking/Pickings?${queryParams.toString()}`;
+        const url = `Picking?${queryParams.toString()}`;
 
-        const response = await axios.get<PickingDocument[]>(url, {
-            headers: {
-                Authorization: `Bearer ${access_token}`,
-            },
-        });
+        const response = await axiosInstance.get<PickingDocument[]>(url);
 
         return response.data;
     } catch (error) {
@@ -208,34 +145,13 @@ export const addItem = async (params: {
     unit: UnitType
 }): Promise<PickingAddItemResponse> => {
     try {
-        if (configUtils.isMockup) {
-            return {
-                ...addItemResponseMockup,
-            };
-        }
+        const url = `Picking/AddItem`;
 
-        if (!globalConfig) throw new Error("Config has not been initialized!");
-
-        if (globalConfig.debug) await delay();
-
-        const access_token = localStorage.getItem("token");
-
-        const url = `${globalConfig.baseURL}/api/Picking/AddItem`;
-
-        const response = await axios.post<PickingAddItemResponse>(
+        const response = await axiosInstance.post<PickingAddItemResponse>(
             url,
-            params,
-            {
-                headers: {
-                    Authorization: `Bearer ${access_token}`,
-                },
-            }
+            params
         );
-        if (response.data.errorMessage == null) {
-            return response.data;
-        } else {
-            throw new Error(response.data.errorMessage);
-        }
+        return response.data;
     } catch (error) {
         console.error("Error adding item:", error);
         throw error;
@@ -245,28 +161,11 @@ export const processPicking = async (
     id: number,
 ): Promise<ProcessResponse> => {
     try {
-        if (configUtils.isMockup) {
-            return {
-                ...processResponseMockup,
-            };
-        }
+        const url = `Picking/Process`;
 
-        if (!globalConfig) throw new Error("Config has not been initialized!");
-
-        if (globalConfig.debug) await delay();
-
-        const access_token = localStorage.getItem("token");
-
-        const url = `${globalConfig.baseURL}/api/Picking/Process`;
-
-        const response = await axios.post<ProcessResponse>(
+        const response = await axiosInstance.post<ProcessResponse>(
             url,
-            { id: id },
-            {
-                headers: {
-                    Authorization: `Bearer ${access_token}`,
-                },
-            }
+            { id: id }
         );
         if (response.data.errorMessage == null) {
             return response.data;

@@ -1,9 +1,12 @@
 import * as React from 'react';
 import {CountingSummaryReportLine} from "@/pages/Counting/data/Report";
 import {useTranslation} from "react-i18next";
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
-import {MetricRow} from "@/components/MetricRow";
-import {formatNumber} from "@/lib/utils";
+import {Card, CardContent} from "@/components/ui/card";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
+import {useStockInfo} from "@/utils/stock-info";
+import InfoBox, {InfoBoxValue} from "@/components/InfoBox";
+import {useItemDetailsPopup} from "@/hooks/useItemDetailsPopup";
+import {Link} from "react-router-dom";
 
 interface CountingSummaryReportTableProps {
   data: CountingSummaryReportLine[]
@@ -11,47 +14,77 @@ interface CountingSummaryReportTableProps {
 
 const CountingSummaryReportTable: React.FC<CountingSummaryReportTableProps> = ({data}) => {
   const {t} = useTranslation();
+  const stockInfo = useStockInfo();
+  const {openItemDetails} = useItemDetailsPopup();
 
+  const showDetails = (row: CountingSummaryReportLine) => {
+    openItemDetails({
+      itemCode: row.itemCode,
+      itemName: row.itemName,
+      numInBuy: row.numInBuy,
+      buyUnitMsr: row.buyUnitMsr,
+      purPackUn: row.purPackUn,
+      purPackMsr: row.purPackMsr
+    });
+  }
   return (
-    <div className="flex flex-col gap-4">
-      {data.map((row) => (
-        <Card key={`${row.itemCode}-${row.binCode}`} className="w-full shadow-lg">
-          <CardHeader>
-            <CardTitle>{`${t('bin')}: ${row.binCode}`}</CardTitle>
-            <CardDescription>{`${t('code')}: ${row.itemCode} - ${t('description')}: ${row.itemName}`}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {/* Unit Headers */}
-            <div className="flex justify-between items-center border-b-2 border-primary font-bold">
-              <div className="w-[30%]">
-                <span>{t('unit')}</span>
-              </div>
-              <div className="flex-1 flex justify-around text-center">
-                <div className="flex-1 text-xs">
-                  <span>{t('units')}</span>
-                </div>
-                <div className="flex-1 text-xs">
-                  <span>{t('dozens')}</span>
-                </div>
-                <div className="flex-1 text-xs">
-                  <span>{t('packs')}</span>
-                </div>
-              </div>
-            </div>
+    <>
+      {/* Mobile view - Cards */}
+      <div className="sm:hidden flex flex-col gap-4">
+        {data.map((row) => (
+          <Card key={`${row.itemCode}-${row.binCode}`} className="w-full shadow-lg">
+            <CardContent>
+              <InfoBox>
+                <InfoBoxValue label={t('bin')} value={row.binCode} />
+                <InfoBoxValue label={t('code')} value={row.itemCode} onClick={() => showDetails(row)} />
+                <InfoBoxValue label={t('description')} value={row.itemName} />
+                <InfoBoxValue label={t('quantity')} value={stockInfo({
+                    quantity: row.quantity,
+                    numInBuy: row.numInBuy,
+                    buyUnitMsr: row.buyUnitMsr || "",
+                    purPackUn: row.purPackUn,
+                    purPackMsr: row.purPackMsr || "",
+                  })} />
+              </InfoBox>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
-            {/* Metrics */}
-            <MetricRow
-              label={t('counted')}
-              values={{
-                units: formatNumber(row.unit, 0),
-                buyUnits: formatNumber(row.dozen, 0), // Mapping dozen to buyUnits
-                packUnits: formatNumber(row.pack, 0) // Mapping pack to packUnits
-              }}
-            />
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+      {/* Desktop view - Table */}
+      <div className="hidden sm:block">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>{t('bin')}</TableHead>
+              <TableHead>{t('code')}</TableHead>
+              <TableHead>{t('description')}</TableHead>
+              <TableHead>{t('counted')}</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data.map((row) => (
+              <TableRow key={`${row.itemCode}-${row.binCode}`}>
+                <TableCell>{row.binCode}</TableCell>
+                <TableCell><Link
+                  className="text-blue-600 hover:underline"
+                  onClick={() => showDetails(row)} to={""}>{row.itemCode}</Link></TableCell>
+                <TableCell>{row.itemName}</TableCell>
+                <TableCell>
+                  {stockInfo({
+                    quantity: row.quantity,
+                    numInBuy: row.numInBuy,
+                    buyUnitMsr: row.buyUnitMsr,
+                    purPackUn: row.purPackUn,
+                    purPackMsr: row.purPackMsr,
+                  })}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </>
   );
 }
 

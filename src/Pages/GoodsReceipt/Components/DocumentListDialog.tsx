@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useTranslation } from "react-i18next";
-import { Document } from '@/assets/Document'; // Assuming this type is correct
+import { ReceiptDocument } from '@/assets/ReceiptDocument'; // Assuming this type is correct
 import { useObjectName } from "@/assets/ObjectName";
 
 export interface DocumentListDialogRef {
@@ -19,7 +19,7 @@ export interface DocumentListDialogRef {
 }
 
 export interface DocumentListDialogProps {
-    doc: Document | null;
+    doc: ReceiptDocument | null;
     // title?: string; // Optional: if the title needs to be more dynamic than "documentsList"
 }
 
@@ -50,9 +50,9 @@ const DocumentListDialog = forwardRef<DocumentListDialogRef, DocumentListDialogP
                     <DialogTitle>{t("documentsList")}</DialogTitle>
                 </DialogHeader>
                 <ScrollArea className="h-[300px] w-full rounded-md border p-4"> {/* Example height, adjust as needed */}
-                    {props.doc?.specificDocuments && props.doc.specificDocuments.length > 0 ? (
+                    {props.doc?.documents && props.doc.documents.length > 0 ? (
                         <div className="space-y-2">
-                            {props.doc.specificDocuments.map((value, index) => (
+                            {props.doc.documents.map((value, index) => (
                                 <div key={index} className="p-2 border-b last:border-b-0">
                                     {o(value.objectType)} #{value.documentNumber}
                                 </div>

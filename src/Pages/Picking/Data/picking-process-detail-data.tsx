@@ -5,6 +5,7 @@ import {BinLocation, IsNumeric, Item, StringFormat, UnitType} from "@/assets";
 import {addItem, fetchPicking, PickingDocument, PickingDocumentDetail} from "@/pages/picking/data/picking-document";
 import {toast} from "sonner";
 import {useTranslation} from "react-i18next";
+import {isAxiosError} from "axios";
 
 export const usePickingProcessDetailData = () => {
   const {t} = useTranslation();
@@ -95,7 +96,7 @@ export const usePickingProcessDetailData = () => {
   }
 
 
-  function handleAddItem(itemCode: string, barcode: string, unit: UnitType) {
+  function handleAddItem(itemCode: string, barcode: string, unit: UnitType, t: (key: string) => string) {
     boxConfirmationDialogRef?.current?.show(false);
     barcodeRef?.current?.clear();
     if (id == null || type == null || entry == null || binLocation == null) {
@@ -107,6 +108,18 @@ export const usePickingProcessDetailData = () => {
         if (data.closedDocument) {
           setError(StringFormat(t("pickedIsClosed"), id));
           setEnable(false);
+          return;
+        }
+        if (data.errorMessage != null) {
+          try {
+            if (data.errorMessage === 'Quantity exceeds bin available stock') {
+              toast.error(StringFormat(t('binQuantityExceedError'), itemCode));
+              return;
+            }
+            toast.error(data.errorMessage);
+          } finally {
+            setLoading(false);
+          }
           return;
         }
 

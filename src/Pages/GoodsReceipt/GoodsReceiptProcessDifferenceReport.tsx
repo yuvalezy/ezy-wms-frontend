@@ -10,6 +10,7 @@ import {
   useGoodsReceiptProcessDifferenceReportData
 } from "@/pages/GoodsReceipt/data/goods-receipt-process-difference-report-data";
 import {Button, Card, CardContent, CardHeader} from "@/components";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 
 interface GoodsReceiptProcessDifferenceReportProps {
   confirm?: boolean
@@ -19,24 +20,22 @@ export default function GoodsReceiptProcessDifferenceReport({confirm}: GoodsRece
   const {t} = useTranslation();
   const navigate = useNavigate();
   const {
-    id,
-    scanCode,
+    info,
     o,
     data,
     report,
     setReport,
     handleExportExcel,
-    openReport,
   } = useGoodsReceiptProcessDifferenceReportData();
 
-  if (!id)
+  if (!info)
     return null;
 
   const title = `${!confirm ? t("goodsReceiptSupervisor") : t("goodsReceiptConfirmationSupervisor")}`;
   const titleLink = `/goodsReceipt${confirm ? 'Confirmation' : ''}Supervisor`;
   const subTitle = !confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit');
   const titleBreadcrumbs = [
-    {label: `${scanCode}`},
+    {label: `${info?.number}`},
     {label: subTitle, onClick: report ? () => setReport(null) : undefined}
   ];
 
@@ -45,29 +44,44 @@ export default function GoodsReceiptProcessDifferenceReport({confirm}: GoodsRece
   }
 
   return (
-    <ContentTheme title={title} titleOnClick={() => navigate(titleLink)} titleBreadcrumbs={titleBreadcrumbs} onExportExcel={handleExportExcel}>
-      {!report && data?.map((value) => (
-        <div key={value.documentNumber} className="mb-2">
-          <Card className="mb-4 shadow-lg">
-            <CardHeader>
-              {`${o(value.baseType)}: ${value.documentNumber}`}
-            </CardHeader>
-            <CardContent>
-              <FullInfoBox>
-                <InfoBoxValue label={t("supplier")} value={value.cardCode}/>
-                <InfoBoxValue label={t("supplierName")} value={value.cardName}/>
-              </FullInfoBox>
-              <Button className="w-full" type="button" onClick={() => setReport(value)}>{t('details')}</Button>
-            </CardContent>
-          </Card>
-        </div>
-      ))}
+    <ContentTheme title={title} titleOnClick={() => navigate(titleLink)} titleBreadcrumbs={titleBreadcrumbs}
+                  onExportExcel={handleExportExcel}>
+      {!report && (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>{t('document')}</TableHead>
+              <TableHead className="hidden sm:table-cell">{t('supplier')}</TableHead>
+              <TableHead>{t('supplierName')}</TableHead>
+              <TableHead className="text-right"></TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data?.map((value) => (
+              <>
+                <TableRow key={value.documentNumber}>
+                  <TableCell>{`${o(value.baseType)}: ${value.documentNumber}`}</TableCell>
+                  <TableCell>{value.vendor.id}</TableCell>
+                  <TableCell className="hidden sm:table-cell">{value.vendor.name}</TableCell>
+                  <TableCell className="text-right">
+                    <Button variant="outline" size="sm" onClick={() => setReport(value)}>{t('details')}</Button>
+                  </TableCell>
+                </TableRow>
+                <TableRow className="sm:hidden">
+                  <TableCell className="bg-gray-100 border-b-1"
+                             colSpan={3}>{t('supplierName')}: {value.vendor.name}</TableCell>
+                </TableRow>
+              </>
+            ))}
+          </TableBody>
+        </Table>
+      )}
       {report && <>
           <FullInfoBox>
-              <InfoBoxValue label={t("supplier")} value={report.cardCode}/>
-              <InfoBoxValue label={t("supplierName")} value={report.cardName}/>
+              <InfoBoxValue label={t("supplier")} value={report.vendor.id}/>
+              <InfoBoxValue label={t("supplierName")} value={(report.vendor.name)}/>
           </FullInfoBox>
-          <GoodsReceiptProcessDifferenceTable id={id} data={report}/>
+          <GoodsReceiptProcessDifferenceTable id={info.id} data={report}/>
       </>}
       {data && data.length === 0 && (
         <Alert variant="default" className="mt-4 bg-yellow-100 border-yellow-400 text-yellow-700">

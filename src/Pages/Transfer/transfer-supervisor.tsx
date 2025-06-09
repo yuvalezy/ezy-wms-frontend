@@ -4,13 +4,12 @@ import React, {useEffect, useState} from "react";
 import {useThemeContext} from "@/components";
 import {fetchTransfers, TransferDocument, transferAction} from "@/pages/transfer/data/transfer-document";
 import TransferCard from "@/pages/transfer/components/transfer-card";
+import TransferTable from "@/pages/transfer/components/transfer-table";
 import {ObjectAction} from "@/assets/Common";
 import {StringFormat} from "@/assets/Functions";
 import TransferForm from "@/pages/transfer/components/transfer-form";
 import {
     AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
     AlertDialogFooter,
@@ -24,7 +23,7 @@ export default function TransferSupervisor() {
     const {t} = useTranslation();
     const {setLoading, setError} = useThemeContext();
     const [transfers, setTransfers] = useState<TransferDocument[]>([]);
-    const [selectedTransferId, setSelectedTransferId] = useState<number | null>(null);
+    const [selectedTransfer, setSelectedTransfer] = useState<TransferDocument | null>(null);
     const [actionType, setActionType] = useState<ObjectAction | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -38,12 +37,15 @@ export default function TransferSupervisor() {
     const handleConfirmAction = () => {
         setLoading(true);
         setDialogOpen(false);
-        transferAction(selectedTransferId!, actionType!)
-            .then(() => {
-                setTransfers((prevTransfers) =>
-                    prevTransfers.filter((transfer) => transfer.id !== selectedTransferId)
-                );
-                toast.success(actionType === "approve" ? t("transferApproved") : t("transferCancelled"));
+        const id = selectedTransfer?.id!;
+        transferAction(id, actionType!)
+            .then((result) => {
+                if (typeof result === "boolean" || result.success) {
+                    setTransfers((prevTransfers) =>
+                        prevTransfers.filter((transfer) => transfer.id !== id)
+                    );
+                    toast.success(actionType === "approve" ? t("transferApproved") : t("transferCancelled"));
+                }
             })
             .catch((error) => {
                 setError(error);
@@ -51,8 +53,8 @@ export default function TransferSupervisor() {
             .finally(() => setLoading(false));
     };
 
-    function handleAction(id: number, action: 'approve' | 'cancel') {
-        setSelectedTransferId(id);
+    function handleAction(transfer: TransferDocument, action: 'approve' | 'cancel') {
+        setSelectedTransfer(transfer);
         setActionType(action);
         setDialogOpen(true);
     }
@@ -61,9 +63,21 @@ export default function TransferSupervisor() {
         <ContentTheme title={t("transferSupervisor")}>
             <TransferForm onNewTransfer={transfer => setTransfers((prevTransfers) => [transfer, ...prevTransfers])}/>
             <div className="my-4">
-                {transfers.map((transfer, index) => (
-                    <TransferCard supervisor={true} key={transfer.id} doc={transfer} onAction={handleAction}/>
-                ))}
+                {/* Mobile view - Cards */}
+                <div className="block sm:hidden">
+                    {transfers.map((transfer) => (
+                        <TransferCard supervisor={true} key={transfer.id} doc={transfer} onAction={handleAction}/>
+                    ))}
+                </div>
+                
+                {/* Desktop view - Table */}
+                <div className="hidden sm:block">
+                    <TransferTable 
+                        transfers={transfers} 
+                        supervisor={true} 
+                        onAction={handleAction} 
+                    />
+                </div>
             </div>
             <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
                 <AlertDialogContent>
@@ -74,7 +88,7 @@ export default function TransferSupervisor() {
                                 actionType === "approve"
                                     ? t("confirmFinishTransfer")
                                     : t("confirmCancelTransfer"),
-                                selectedTransferId
+                                selectedTransfer?.number
                             )}
                             <br/> {t('actionCannotReverse')}
                         </AlertDialogDescription>

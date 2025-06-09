@@ -1,4 +1,4 @@
-import {LogOutIcon} from "lucide-react"
+import {LogOutIcon, SettingsIcon} from "lucide-react"
 import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {MenuItem, useMenus} from "@/assets/Menus";
@@ -17,6 +17,9 @@ import {
   faQuestionCircle, // request (fallback/generic)
   faQuestion, // general fallback
   faSignOutAlt,
+  faBan, // cancel-reasons
+  faUsers, // users
+  faUserShield, // authorization-groups
 } from '@fortawesome/free-solid-svg-icons';
 import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
 
@@ -46,6 +49,9 @@ const iconMap: { [key: string]: IconDefinition } = {
   "move": faArrowsAlt,
   "journey-depart": faTruckMoving,
   "request": faQuestionCircle,
+  "cancel-reasons": faBan,
+  "users": faUsers,
+  "authorization-groups": faUserShield,
 };
 
 const getFaIcon = (iconName: string): IconDefinition => {
@@ -61,7 +67,7 @@ export function AppSidebar() {
   const {t} = useTranslation();
 
   useEffect(() => {
-    setAuthorizedMenus(menus.GetMenus(user?.authorizations));
+    setAuthorizedMenus(menus.GetMenus(user?.roles, user?.superUser));
   }, [user, menus]);
 
   const handleMenuItemClick = (link: string) => {
@@ -102,6 +108,11 @@ export function AppSidebar() {
       case "/transferRequest":
         groupLabel = t("transfer");
         break;
+      case "/settings/cancelReasons":
+      case "/settings/users":
+      case "/settings/authorizationGroups":
+        groupLabel = t("settings");
+        break;
       default:
         groupLabel = t('other');
         break;
@@ -119,12 +130,19 @@ export function AppSidebar() {
     t("picking"),
     t("counting"),
     t("transfer"),
+    t("settings"),
     t("other"),
   ];
 
   return (
     <Sidebar>
       <SidebarContent>
+
+        <div className="px-4 py-3 border-b border-gray-200">
+          <div className="text-sm font-medium text-gray-900">
+            {user?.warehouses?.find(v => v.id === user?.currentWarehouse)?.name}
+          </div>
+        </div>
         <SidebarGroup>
           <SidebarMenu>
             <SidebarMenuItem>

@@ -1,10 +1,8 @@
-import axios from "axios";
-import {configUtils, delay, globalConfig} from "@/assets";
-import {transferAddItemResponseMockup, UpdateLineReturnValueMockup} from "@/assets";
 import {UpdateLineParameters, UpdateLineReturnValue} from "@/assets";
+import { axiosInstance } from "@/utils/axios-instance";
 
 export interface TransferAddItemResponse {
-  lineID: number;
+  lineId: number;
   closedTransfer: boolean;
   purPackUn: number;
   errorMessage?: string;
@@ -16,42 +14,16 @@ export const addItem = async (
   barcode: string
 ): Promise<TransferAddItemResponse> => {
   try {
-    if (configUtils.isMockup) {
-      switch (barcode) {
-        case "cancel": {
-          return {...transferAddItemResponseMockup, closedTransfer: true};
-        }
-        case "error": {
-          return transferAddItemResponseMockup;
-        }
-        default: {
-          return {
-            ...transferAddItemResponseMockup,
-          };
-        }
-      }
-    }
+    const url = `transfer/addItem`;
 
-    if (!globalConfig) throw new Error("Config has not been initialized!");
-
-    if (globalConfig.debug) await delay();
-
-    const access_token = localStorage.getItem("token");
-
-    const url = `${globalConfig.baseURL}/api/Transfer/AddItem`;
-
-    const response = await axios.post<TransferAddItemResponse>(
+    const response = await axiosInstance.post<TransferAddItemResponse>(
       url,
       {
         id: id,
         itemCode: itemCode,
         barcode: barcode,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
+      
     );
     if (response.data.errorMessage == null) {
       return response.data;
@@ -65,42 +37,27 @@ export const addItem = async (
 };
 export const updateLine = async ({
                                    id,
-                                   lineID,
+                                   lineId,
                                    comment,
                                    reason,
                                    quantity,
-                                 }: UpdateLineParameters): Promise<UpdateLineReturnValue> => {
-  if (configUtils.isMockup) {
-    console.log("Mockup data is being used.");
-    return UpdateLineReturnValueMockup;
-  }
-
+                                 }: UpdateLineParameters): Promise<{returnValue: UpdateLineReturnValue, errorMessage?: string}> => {
   if (quantity != null) {
-    return await updateLineQuantity(id, lineID, quantity);
+    return await updateLineQuantity(id, lineId, quantity);
   }
   try {
-    if (!globalConfig) throw new Error("Config has not been initialized!");
+    const url = `transfer/updateLine`;
 
-    if (globalConfig.debug) await delay();
-
-    const access_token = localStorage.getItem("token");
-
-    const url = `${globalConfig.baseURL}/api/Transfer/UpdateLine`;
-
-    const response = await axios.post<UpdateLineReturnValue>(
+    const response = await axiosInstance.post<{returnValue: UpdateLineReturnValue, errorMessage?: string}>(
       url,
       {
         id: id,
-        lineID: lineID,
+        lineId: lineId,
         comment: comment,
         closeReason: reason,
         quantity: quantity,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
+      
     );
 
     return response.data;
@@ -109,20 +66,13 @@ export const updateLine = async ({
     throw error;
   }
 };
-const updateLineQuantity = async (id: number, lineID: number, quantity: number): Promise<UpdateLineReturnValue> => {
+const updateLineQuantity = async (id: string, lineId: string, quantity: number): Promise<{returnValue: UpdateLineReturnValue, errorMessage?: string}> => {
   try {
-    if (!globalConfig) throw new Error("Config has not been initialized!");
+    const url = `transfer/updateLineQuantity`;
 
-    if (globalConfig.debug) await delay();
-
-    const access_token = localStorage.getItem("token");
-
-    const url = `${globalConfig.baseURL}/api/Transfer/UpdateLineQuantity`;
-
-    const response = await axios.post<UpdateLineReturnValue>(
+    const response = await axiosInstance.post<{returnValue: UpdateLineReturnValue, errorMessage?: string}>(
       url,
-      {id: id, lineID: lineID, quantity: quantity,},
-      {headers: {Authorization: `Bearer ${access_token}`,},}
+      {id: id, lineId: lineId, quantity: quantity,}
     );
 
     return response.data;
@@ -131,4 +81,3 @@ const updateLineQuantity = async (id: number, lineID: number, quantity: number):
     throw error;
   }
 }
-

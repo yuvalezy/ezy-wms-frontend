@@ -1,6 +1,6 @@
 import {useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import {BinLocation, CountingContent, delay, IsNumeric, Item, UnitType, useDateTimeFormat} from "@/assets";
+import {BinLocation, Counting, CountingContent, IsNumeric, Item, UnitType, useDateTimeFormat} from "@/assets";
 import {useEffect, useRef, useState} from "react";
 import {
   BarCodeScannerRef,
@@ -10,14 +10,14 @@ import {
   useAuth,
   useThemeContext
 } from "@/components";
-import {fetchCountingContent} from "@/pages/Counting/data/Counting";
+import {fetchCounting, fetchCountingContent} from "@/pages/Counting/data/Counting";
 import {addItem} from "@/pages/Counting/data/CountingProcess";
+import {getProcessInfo, TransferDocument} from "@/pages/transfer/data/transfer-document";
 
 export const useCountingProcessData = () => {
   const {scanCode} = useParams();
-  const {t} = useTranslation();
   const {dateTimeFormat} = useDateTimeFormat();
-  const [id, setID] = useState<number | null>();
+  const [id, setID] = useState<string | null>();
   const [binLocation, setBinLocation] = useState<BinLocation | null>(null);
   const binLocationRef = useRef<BinLocationScannerRef>(null);
   const [enable, setEnable] = useState(false);
@@ -29,19 +29,24 @@ export const useCountingProcessData = () => {
   const processesRef = useRef<ProcessesRef>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const processAlertRef = useRef<HTMLDivElement>(null);
+  const [info, setInfo] = useState<Counting | null>(null);
 
 
   useEffect(() => {
     setEnable(!user?.binLocations);
-    if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
+    if (scanCode === null || scanCode === undefined) {
       setID(null);
       return;
     }
-    delay(1).then(() => {
+    setTimeout(() => {
       barcodeRef.current?.focus();
       binLocationRef.current?.focus();
-    });
-    setID(parseInt(scanCode));
+    }, 1);
+    setID(scanCode);
+    fetchCounting(scanCode)
+      .then((result) => setInfo(result))
+      .catch((error) => setError(error))
+      .finally(() => setLoading(false));
   }, [scanCode, user?.binLocations]);
 
   function onBinChanged(bin: BinLocation) {
@@ -49,7 +54,9 @@ export const useCountingProcessData = () => {
       setBinLocation(bin);
       setEnable(true);
       loadRows(bin.entry);
-      delay(1).then(() => barcodeRef?.current?.focus());
+      setTimeout(() => {
+        barcodeRef?.current?.focus()
+      }, 1);
     } catch (e) {
       setError(e);
       setLoading(false);
@@ -61,7 +68,9 @@ export const useCountingProcessData = () => {
     setRows(null);
     setEnable(false);
     setCurrentAlert(null);
-    delay(1).then(() => binLocationRef?.current?.focus());
+    setTimeout(() => {
+      binLocationRef?.current?.focus();
+    }, 1);
   }
 
 
@@ -116,7 +125,7 @@ export const useCountingProcessData = () => {
         }
         let date = new Date(Date.now());
         setCurrentAlert({
-          lineID: v.lineID,
+          lineId: v.lineId,
           quantity: 1,
           unit: unit,
           purPackUn: v.packUnit,
@@ -157,6 +166,7 @@ export const useCountingProcessData = () => {
     handleCancel,
     handleAddItem,
     scrollRef,
-    processAlertRef
+    processAlertRef,
+    info
   }
 }

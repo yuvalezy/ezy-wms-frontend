@@ -1,60 +1,21 @@
-import axios from "axios";
 import {
   DocumentAddItemResponse,
   DocumentUpdateLineQuantityResponse,
-  configUtils,
-  delay,
-  globalConfig,
-  addItemResponseMockup,
-  UpdateLineReturnValueMockup,
   UnitType,
   UpdateLineReturnValue
 } from "@/assets";
+import {axiosInstance} from "@/utils/axios-instance";
 
 export const addItem = async (
-  id: number,
+  id: string,
   itemCode: string,
   barcode: string,
   unit: UnitType
 ): Promise<DocumentAddItemResponse> => {
   try {
-    if (configUtils.isMockup) {
-      switch (barcode) {
-        case "approve": {
-          return {...addItemResponseMockup, warehouse: true};
-        }
-        case "alert": {
-          return {...addItemResponseMockup, fulfillment: true};
-        }
-        case "showroom": {
-          return {...addItemResponseMockup, showroom: true};
-        }
-        case "cancel": {
-          return {...addItemResponseMockup, closedDocument: true};
-        }
-        case "error": {
-          return addItemResponseMockup;
-        }
-        default: {
-          return {
-            ...addItemResponseMockup,
-            showroom: true,
-            fulfillment: true,
-            warehouse: true,
-          };
-        }
-      }
-    }
+    const url = `GoodsReceipt/AddItem`;
 
-    if (!globalConfig) throw new Error("Config has not been initialized!");
-
-    if (globalConfig.debug) await delay();
-
-    const access_token = localStorage.getItem("token");
-
-    const url = `${globalConfig.baseURL}/api/GoodsReceipt/AddItem`;
-
-    const response = await axios.post<DocumentAddItemResponse>(
+    const response = await axiosInstance.post<DocumentAddItemResponse>(
       url,
       {
         id: id,
@@ -62,11 +23,7 @@ export const addItem = async (
         barcode: barcode,
         unit: unit,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
+      
     );
     if (response.data.errorMessage == null) {
       return response.data;
@@ -80,51 +37,36 @@ export const addItem = async (
 };
 export const updateLine = async ({
                                    id,
-                                   lineID,
+                                   lineId,
                                    comment,
                                    userName,
                                    reason,
                                    quantity,
                                  }: {
-  id: number;
-  lineID: number;
+  id: string;
+  lineId: string;
   comment?: string;
   userName?: string;
   quantity?: number;
   reason?: number;
-}): Promise<UpdateLineReturnValue> => {
+}): Promise<{returnValue: UpdateLineReturnValue, errorMessage?: string}> => {
   try {
-    if (configUtils.isMockup) {
-      console.log("Mockup data is being used.");
-      return UpdateLineReturnValueMockup;
-    }
+    const url = `GoodsReceipt/UpdateLine`;
 
-    if (!globalConfig) throw new Error("Config has not been initialized!");
-
-    if (globalConfig.debug) await delay();
-
-    const access_token = localStorage.getItem("token");
-
-    const url = `${globalConfig.baseURL}/api/GoodsReceipt/UpdateLine`;
-
-    const response = await axios.post<UpdateLineReturnValue>(
+    const response = await axiosInstance.post<UpdateLineReturnValue>(
       url,
       {
         id: id,
-        lineID: lineID,
+        lineId: lineId,
         comment: comment,
         userName: userName,
         closeReason: reason,
         quantity: quantity,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
+      
     );
 
-    return response.data;
+    return {returnValue: response.data};
   } catch (error) {
     console.error("Error updating line:", error);
     throw error;
@@ -132,44 +74,27 @@ export const updateLine = async ({
 };
 export const updateLineQuantity = async ({
                                            id,
-                                           lineID,
+                                           lineId,
                                            userName,
                                            quantity,
                                          }: {
-  id: number;
-  lineID: number;
+  id: string;
+  lineId: string;
   userName?: string;
   quantity?: number;
 }): Promise<DocumentUpdateLineQuantityResponse> => {
   try {
-    // if (configUtils.isMockup) {
-    //   console.log("Mockup data is being used.");
-    //   return UpdateLineReturnValueMockup;
-    // }
+    const url = `GoodsReceipt/UpdateLineQuantity`;
 
-    if (!globalConfig)
-      throw new Error("Config has not been initialized!");
-
-    if (globalConfig.debug)
-      await delay();
-
-    const access_token = localStorage.getItem("token");
-
-    const url = `${globalConfig.baseURL}/api/GoodsReceipt/UpdateLineQuantity`;
-
-    const response = await axios.post<DocumentUpdateLineQuantityResponse>(
+    const response = await axiosInstance.post<DocumentUpdateLineQuantityResponse>(
       url,
       {
         id: id,
-        lineID: lineID,
+        lineId: lineId,
         userName: userName,
         quantity: quantity,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
+      
     );
 
     return response.data;

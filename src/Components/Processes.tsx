@@ -10,14 +10,14 @@ export interface ProcessesRef {
 }
 
 export interface ProcessesProps {
-    id: number;
+    id: string;
     alert: ProcessAlertValue | null;
     reasonType: ReasonType
     supervisorPassword?: boolean;
     onCancel?: (comment: string, cancel: boolean) => void;
     onCommentsChanged?: (comment: string) => void;
     onQuantityChanged?: (quantity: number) => void;
-    onUpdateLine: (parameters: UpdateLineParameters) => Promise<UpdateLineReturnValue>;
+    onUpdateLine: (parameters: UpdateLineParameters) => Promise<{returnValue: UpdateLineReturnValue, errorMessage?: string}>;
     onUpdateComplete?: () => void;
 }
 

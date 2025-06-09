@@ -10,25 +10,30 @@ import {
 } from "@/pages/GoodsReceipt/data/Report";
 import {IsNumeric} from "@/assets/Functions";
 import {exportToExcel} from "@/utils/excelExport";
+import {formatQuantityForExcel} from "@/utils/excel-quantity-format";
+import {ReceiptDocument} from "@/assets";
+import {fetchDocument} from "@/pages/GoodsReceipt/data/Document";
 
 export const useGoodsReceiptProcessDifferenceReportData = () => {
   const {t} = useTranslation();
-  const [id, setID] = useState<number | null>();
   const {scanCode} = useParams();
   const o = useObjectName();
   const {setLoading, setError} = useThemeContext();
   const [data, setData] = useState<GoodsReceiptValidateProcess[] | null>(null);
   const [report, setReport] = useState<GoodsReceiptValidateProcess | null>(null);
+  const [info, setInfo] = useState<ReceiptDocument | null>(null);
 
   useEffect(() => {
-    if (scanCode === null || scanCode === undefined || !IsNumeric(scanCode)) {
-      setID(null);
+    if (scanCode === null || scanCode === undefined) {
       return;
     }
-    setID(parseInt(scanCode));
 
+    fetchDocument(scanCode)
+      .then((result) => setInfo(result))
+      .catch((error) => setError(error))
+      .finally(() => setLoading(false));
     setLoading(true);
-    fetchGoodsReceiptValidateProcess(parseInt(scanCode))
+    fetchGoodsReceiptValidateProcess(scanCode)
       .then((result) => setData(result))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
@@ -37,11 +42,13 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
   const excelHeaders = [
     t("code"),
     t("description"),
-    t("Quantity"),
+    t("pack"),
+    t("dozen"),
+    t("unit"),
   ];
 
   function excelData() {
-    const itemMap: { [key: string]: (string | number)[] } = {};
+    const itemMap: { [key: string]: { itemCode: string, itemName: string, quantity: number, numInBuy: number, buyUnitMsr: string, purPackUn: number, purPackMsr: string } } = {};
     const issueFoundMap: { [key: string]: boolean } = {};
 
     data?.forEach(value => {
@@ -49,9 +56,17 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
         let itemCode = line.itemCode;
         let quantity = line.quantity;
         if (!itemMap[itemCode]) {
-          itemMap[itemCode] = [itemCode, line.itemName, quantity];
+          itemMap[itemCode] = {
+            itemCode: itemCode,
+            itemName: line.itemName,
+            quantity: quantity,
+            numInBuy: line.numInBuy,
+            buyUnitMsr: line.buyUnitMsr,
+            purPackUn: line.purPackUn,
+            purPackMsr: line.purPackMsr
+          };
         } else {
-          itemMap[itemCode][2] = (itemMap[itemCode][2] as number) + quantity;
+          itemMap[itemCode].quantity += quantity;
         }
         if (line.lineStatus !== ProcessLineStatus.OK && line.lineStatus !== ProcessLineStatus.ClosedLine) {
           issueFoundMap[itemCode] = true;
@@ -59,7 +74,25 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
       })
     });
 
-    return Object.values(itemMap).filter((v) => issueFoundMap[v[0]]);
+    return Object.values(itemMap)
+      .filter((item) => issueFoundMap[item.itemCode])
+      .map((item) => {
+        const quantities = formatQuantityForExcel({
+          quantity: item.quantity,
+          numInBuy: item.numInBuy,
+          buyUnitMsr: item.buyUnitMsr,
+          purPackUn: item.purPackUn,
+          purPackMsr: item.purPackMsr
+        });
+        
+        return [
+          item.itemCode,
+          item.itemName,
+          quantities.pack,
+          quantities.dozen,
+          quantities.unit,
+        ];
+      });
   }
 
   const handleExportExcel = () => {
@@ -67,7 +100,7 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
       name: "DifferenceReport",
       headers: excelHeaders,
       getData: excelData,
-      fileName: `goods_receipt_differences_${id}`
+      fileName: `goods_receipt_differences_${info?.number}`
     });
   };
 
@@ -76,7 +109,7 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
     setReport(report);
   }
   return {
-    id,
+    info,
     scanCode,
     o,
     data,

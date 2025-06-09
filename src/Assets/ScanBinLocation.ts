@@ -1,32 +1,23 @@
-import {configUtils, delay, globalConfig} from "./GlobalConfig";
-import axios from "axios";
 import {BinLocation} from "./Common";
-import {binMockup} from "./mockup";
+import {axiosInstance} from "@/utils/axios-instance";
+import axios from "axios";
 
 export const scanBinLocation = async (
     bin: string
-): Promise<BinLocation> => {
+): Promise<BinLocation | null> => {
     try {
-        if (configUtils.isMockup) {
-            console.log("Mockup data is being used.");
-            return binMockup;
+        const url = `General/ScanBinLocation?bin=${bin}`;
+
+        const response = await axiosInstance.get<BinLocation>(url);
+
+        if (response.status === 404) {
+            return null;
         }
-        if (!globalConfig) throw new Error("Config has not been initialized!");
-
-        if (globalConfig.debug) await delay();
-
-        const access_token = localStorage.getItem("token");
-
-        const url = `${globalConfig.baseURL}/api/General/ScanBinLocation?bin=${bin}`;
-
-        const response = await axios.get<BinLocation>(url, {
-            headers: {
-                Authorization: `Bearer ${access_token}`,
-            },
-        });
-
         return response.data;
     } catch (error) {
+        if (axios.isAxiosError(error) && error.response?.status === 404) {
+            return null;
+        }
         console.error("Error canning barcode:", error);
         throw error;
     }

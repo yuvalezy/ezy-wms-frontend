@@ -1,4 +1,4 @@
-import { Authorization } from "./Authorization";
+import { RoleType } from "./RoleType";
 import {
   faCheckCircle,
   faCube,
@@ -15,7 +15,7 @@ export interface KpiItem {
   title: string;
   value: number;
   icon: any;
-  authorizations: Authorization[];
+  authorizations: RoleType[];
   route: string;
 }
 
@@ -26,7 +26,7 @@ export const kpiItems: KpiItem[] = [
     title: 'items',
     value: 125,
     icon: faCheckCircle,
-    authorizations: [Authorization.GOODS_RECEIPT_SUPERVISOR, Authorization.PICKING_SUPERVISOR],
+    authorizations: [RoleType.GOODS_RECEIPT_SUPERVISOR, RoleType.PICKING_SUPERVISOR],
     route: "/itemCheck"
   },
   {
@@ -35,10 +35,10 @@ export const kpiItems: KpiItem[] = [
     value: 78,
     icon: faCube,
     authorizations: [
-      Authorization.GOODS_RECEIPT_SUPERVISOR, 
-      Authorization.PICKING_SUPERVISOR, 
-      Authorization.COUNTING_SUPERVISOR, 
-      Authorization.TRANSFER_SUPERVISOR
+      RoleType.GOODS_RECEIPT_SUPERVISOR,
+      RoleType.PICKING_SUPERVISOR,
+      RoleType.COUNTING_SUPERVISOR,
+      RoleType.TRANSFER_SUPERVISOR
     ],
     route: "/binCheck"
   },
@@ -47,7 +47,7 @@ export const kpiItems: KpiItem[] = [
     title: 'goodsReceipts',
     value: 42,
     icon: faClipboardList,
-    authorizations: [Authorization.GOODS_RECEIPT, Authorization.GOODS_RECEIPT_SUPERVISOR],
+    authorizations: [RoleType.GOODS_RECEIPT, RoleType.GOODS_RECEIPT_SUPERVISOR],
     route: "/goodsReceipt"
   },
   {
@@ -55,7 +55,7 @@ export const kpiItems: KpiItem[] = [
     title: 'receiptConfirmations',
     value: 15,
     icon: faCheckCircle,
-    authorizations: [Authorization.GOODS_RECEIPT_CONFIRMATION, Authorization.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR],
+    authorizations: [RoleType.GOODS_RECEIPT_CONFIRMATION, RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR],
     route: "/goodsReceiptConfirmation"
   },
   {
@@ -63,7 +63,7 @@ export const kpiItems: KpiItem[] = [
     title: 'pickings',
     value: 36,
     icon: faShoppingCart,
-    authorizations: [Authorization.PICKING, Authorization.PICKING_SUPERVISOR],
+    authorizations: [RoleType.PICKING, RoleType.PICKING_SUPERVISOR],
     route: "/pick"
   },
   {
@@ -71,7 +71,7 @@ export const kpiItems: KpiItem[] = [
     title: 'counts',
     value: 53,
     icon: faBox,
-    authorizations: [Authorization.COUNTING, Authorization.COUNTING_SUPERVISOR],
+    authorizations: [RoleType.COUNTING, RoleType.COUNTING_SUPERVISOR],
     route: "/counting"
   },
   {
@@ -79,13 +79,13 @@ export const kpiItems: KpiItem[] = [
     title: 'transfers',
     value: 29,
     icon: faArrowsAlt,
-    authorizations: [Authorization.TRANSFER, Authorization.TRANSFER_SUPERVISOR, Authorization.TRANSFER_REQUEST],
+    authorizations: [RoleType.TRANSFER, RoleType.TRANSFER_SUPERVISOR, RoleType.TRANSFER_REQUEST],
     route: "/transfer"
   }
 ];
 
 // Function to filter KPI items based on user authorizations
-export function getKpiItems(userAuthorizations: Authorization[] | undefined, info: HomeInfo): KpiItem[] {
+export function getKpiItems(userAuthorizations: RoleType[] | undefined, info: HomeInfo): KpiItem[] {
   if (!userAuthorizations) {
     return [];
   }

@@ -41,7 +41,7 @@ export default function PickingProcessDetail() {
                     {detail.totalOpenItems > 0 && binLocation &&
                         <BarCodeScanner ref={barcodeRef}
                                         unit
-                                        onAddItem={(item, unit) => handleAddItem(item.code, item.barcode ?? "", unit)}
+                                        onAddItem={(item, unit) => handleAddItem(item.code, item.barcode ?? "", unit, t)}
                                         enabled={enable}/>}
                     {!binLocation && detail.totalOpenItems > 0 &&
                         <div className="space-y-4 p-2">

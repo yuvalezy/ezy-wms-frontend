@@ -18,7 +18,7 @@ const mapSeverity = (design?: string): AlertSeverity => {
 };
 
 export interface ProcessAlertValue {
-  lineID?: number,
+  lineId?: string,
   barcode?: string | null;
   itemCode?: string | null;
   quantity?: number,
