@@ -1,10 +1,5 @@
-import {
-  GoodsReceiptAllDetailMockup,
-  GoodsReceiptMockup,
-  goodsReceiptVSExitReportDataMockup
-} from "@/assets";
 import {DetailUpdateParameters, UnitType} from "@/assets";
-import {axiosInstance, Mockup} from "@/utils/axios-instance";
+import {axiosInstance} from "@/utils/axios-instance";
 
 export type GoodsReceiptAll = {
   itemCode: string;
@@ -87,11 +82,6 @@ export enum ProcessLineStatus {
 
 export const fetchGoodsReceiptReportAll = async (id: string): Promise<GoodsReceiptAll[]> => {
   try {
-    if (Mockup) {
-      console.log("Mockup data is being used.");
-      return GoodsReceiptMockup;
-    }
-
     const url = `goodsReceipt/${id}/report/all`;
 
     const response = await axiosInstance.get<GoodsReceiptAll[]>(url,);
@@ -104,11 +94,6 @@ export const fetchGoodsReceiptReportAll = async (id: string): Promise<GoodsRecei
 };
 export const fetchGoodsReceiptReportAllDetails = async (id: string, item: string): Promise<GoodsReceiptAllDetail[]> => {
   try {
-    if (Mockup) {
-      console.log("Mockup data is being used.");
-      return GoodsReceiptAllDetailMockup;
-    }
-
     const url = `goodsReceipt/${id}/report/all/${item}`;
 
     const response = await axiosInstance.get<any[]>(url,);
@@ -121,10 +106,6 @@ export const fetchGoodsReceiptReportAllDetails = async (id: string, item: string
 };
 export const updateGoodsReceiptReport = async (data: DetailUpdateParameters) => {
   try {
-    if (Mockup) {
-      return;
-    }
-
     const url = `goodsReceipt/updateAll`;
 
     const response = await axiosInstance.post(url, data,);
@@ -137,10 +118,6 @@ export const updateGoodsReceiptReport = async (data: DetailUpdateParameters) => 
 }
 export const fetchGoodsReceiptVSExitReport = async (id: number): Promise<GoodsReceiptVSExitReportData[]> => {
   try {
-    if (Mockup) {
-      console.log("Mockup data is being used.");
-      return goodsReceiptVSExitReportDataMockup;
-    }
     const url = `GoodsReceipt/GoodsReceiptVSExitReport/${id}`;
 
     const response = await axiosInstance.get<GoodsReceiptVSExitReportData[]>(url,);

@@ -155,6 +155,7 @@ const AuthorizationGroupsList: React.FC = () => {
               <TableBody>
                 {groups.map((group) => {
                   const rolesByCategory = groupRolesByCategory(group.authorizations);
+                  // @ts-ignore
                   return (
                     <TableRow key={group.id}>
                       <TableCell className="font-medium">
@@ -183,7 +184,7 @@ const AuthorizationGroupsList: React.FC = () => {
                                 {t(category.toLowerCase())}
                               </Badge>
                               <span className="text-xs text-gray-600">
-                              {roles.length} {t('roles')}
+                              {(roles as any[]).length} {t('roles')}
                             </span>
                             </div>
                           ))}

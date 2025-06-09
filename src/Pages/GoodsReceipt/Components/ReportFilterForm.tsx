@@ -58,7 +58,7 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
     }));
 
     function newFilters(): GoodsReceiptReportFilter {
-      return {lastID: -1, pageSize: 10, confirm: confirm};
+      return {lastID: null, pageSize: 10, confirm: confirm};
     }
 
     function clearForm() {
@@ -127,11 +127,10 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
                   <Label htmlFor="docNumber">{t("number")}</Label>
                   <Input
                     id="docNumber"
-                    value={filters.id != null ? filters.id.toString() : ""}
-                    type="number"
+                    value={filters.id ?? ""}
                     onChange={(e) => {
                       const val = e.target.value;
-                      setFilters((pf) => ({...pf, id: val ? parseInt(val) : null}));
+                      setFilters((pf) => ({...pf, id: val || null}));
                     }}
                   />
                 </div>

@@ -8,7 +8,6 @@ export * from './ReceiptDocument';
 export * from './DocumentStatusString';
 export * from './Functions';
 export * from './Menus';
-export * from './mockup';
 export * from './ObjectName';
 export * from './Quantities';
 export * from './Reasons';

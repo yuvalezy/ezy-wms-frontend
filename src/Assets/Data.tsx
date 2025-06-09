@@ -1,8 +1,7 @@
 import {useTranslation} from "react-i18next";
-import {vendorsMockup} from "./mockup";
 
 import {Status} from "./Common";
-import {axiosInstance, Mockup} from "@/utils/axios-instance";
+import {axiosInstance} from "@/utils/axios-instance";
 
 export type Employee = {
   id: number;
@@ -45,9 +44,6 @@ export function useDocumentStatusOptions() {
 
 export const fetchVendors = async (): Promise<BusinessPartner[]> => {
   try {
-    if (Mockup)
-      return vendorsMockup;
-
     const response = await axiosInstance.get<BusinessPartner[]>(
       `General/Vendors`,
 

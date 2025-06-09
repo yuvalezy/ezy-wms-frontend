@@ -34,7 +34,7 @@ export default function CountingTable({ countings, supervisor = false, onAction 
 
   const handleOpenLink = user?.roles?.includes(RoleType.COUNTING);
 
-  function handleOpen(id: number) {
+  function handleOpen(id: string) {
     navigate(`/counting/${id}`);
   }
 

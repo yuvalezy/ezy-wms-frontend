@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import axios, {AxiosError} from "axios";
 import {RoleType, UserInfo} from "@/assets";
-import {axiosInstance, Mockup, ServerUrl} from "@/utils/axios-instance";
+import {axiosInstance, ServerUrl} from "@/utils/axios-instance";
 
 // Define the shape of the context
 interface AuthContextType {
@@ -106,11 +106,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
 
   const login = async (password: string, warehouse?: string) => {
     try {
-      if (!Mockup) {
-        return await loginExecute(password, warehouse);
-      } else {
-        return mockupLogin();
-      }
+      return await loginExecute(password, warehouse);
 
       // Set the mock user data
     } catch (error) {
@@ -150,37 +146,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         setUser(data);
       }
     }
-  }
-
-  function mockupLogin() {
-    const userInfoResponse: UserInfo = {
-      id: "00000000-0000-0000-0000-000000000000",
-      name: "mockUser",
-      currentWarehouse: "branch",
-      binLocations: true,
-      superUser: true,
-      warehouses: [
-        {id: "branch", name: "Branch Warehouse", enableBinLocations: true}
-      ],
-      roles: [
-        RoleType.GOODS_RECEIPT,
-        RoleType.GOODS_RECEIPT_SUPERVISOR,
-        RoleType.PICKING,
-        RoleType.PICKING_SUPERVISOR,
-        RoleType.COUNTING,
-        RoleType.COUNTING_SUPERVISOR,
-        RoleType.SETTINGS,
-      ],
-      settings: {
-        goodsReceiptDraft: false,
-        goodsReceiptModificationSupervisor: true,
-        goodsReceiptCreateSupervisorRequired: true,
-        transferTargetItems: true,
-      }
-    };
-
-    setIsLoading(false);
-    return setUser(userInfoResponse);
   }
 
   const logout = async () => {

@@ -8,7 +8,7 @@ import TransferCard from "@/pages/transfer/components/transfer-card";
 import TransferTable from "@/pages/transfer/components/transfer-table";
 import {AlertCircle} from "lucide-react";
 
-export default function Transfer() {
+export default function TransferUser() {
   const {setLoading, setError} = useThemeContext();
   const {t} = useTranslation();
   const [transfers, setTransfers] = useState<TransferDocument[]>([]);

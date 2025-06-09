@@ -1,16 +1,11 @@
 import {BinLocation} from "./Common";
-import {binMockup} from "./mockup";
-import {axiosInstance, Mockup} from "@/utils/axios-instance";
+import {axiosInstance} from "@/utils/axios-instance";
 import axios from "axios";
 
 export const scanBinLocation = async (
     bin: string
 ): Promise<BinLocation | null> => {
     try {
-        if (Mockup) {
-            console.log("Mockup data is being used.");
-            return binMockup;
-        }
         const url = `General/ScanBinLocation?bin=${bin}`;
 
         const response = await axiosInstance.get<BinLocation>(url);

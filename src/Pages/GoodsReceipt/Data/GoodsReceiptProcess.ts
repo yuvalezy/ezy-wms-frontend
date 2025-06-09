@@ -1,12 +1,10 @@
 import {
   DocumentAddItemResponse,
   DocumentUpdateLineQuantityResponse,
-  addItemResponseMockup,
-  UpdateLineReturnValueMockup,
   UnitType,
   UpdateLineReturnValue
 } from "@/assets";
-import {axiosInstance, Mockup} from "@/utils/axios-instance";
+import {axiosInstance} from "@/utils/axios-instance";
 
 export const addItem = async (
   id: string,
@@ -15,40 +13,6 @@ export const addItem = async (
   unit: UnitType
 ): Promise<DocumentAddItemResponse> => {
   try {
-    if (Mockup) {
-      switch (barcode) {
-        case "approve": {
-          return {...addItemResponseMockup, warehouse: true};
-        }
-        case "alert": {
-          return {...addItemResponseMockup, fulfillment: true};
-        }
-        case "showroom": {
-          return {...addItemResponseMockup, showroom: true};
-        }
-        case "cancel": {
-          return {...addItemResponseMockup, closedDocument: true};
-        }
-        case "error": {
-          return addItemResponseMockup;
-        }
-        default: {
-          return {
-            ...addItemResponseMockup,
-            showroom: true,
-            fulfillment: true,
-            warehouse: true,
-          };
-        }
-      }
-    }
-
-    
-
-    
-
-    
-
     const url = `GoodsReceipt/AddItem`;
 
     const response = await axiosInstance.post<DocumentAddItemResponse>(
@@ -87,12 +51,6 @@ export const updateLine = async ({
   reason?: number;
 }): Promise<{returnValue: UpdateLineReturnValue, errorMessage?: string}> => {
   try {
-    if (Mockup) {
-      console.log("Mockup data is being used.");
-      // return UpdateLineReturnValueMockup;
-    }
-
-
     const url = `GoodsReceipt/UpdateLine`;
 
     const response = await axiosInstance.post<UpdateLineReturnValue>(
@@ -126,15 +84,6 @@ export const updateLineQuantity = async ({
   quantity?: number;
 }): Promise<DocumentUpdateLineQuantityResponse> => {
   try {
-    // if (Mockup) {
-    //   console.log("Mockup data is being used.");
-    //   return UpdateLineReturnValueMockup;
-    // }
-
-
-
-    
-
     const url = `GoodsReceipt/UpdateLineQuantity`;
 
     const response = await axiosInstance.post<DocumentUpdateLineQuantityResponse>(

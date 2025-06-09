@@ -2,7 +2,7 @@ import ItemDetailsList from './item-details-list';
 import React from 'react';
 import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose} from "@/components/ui/dialog";
 import {X} from "lucide-react";
-import {ItemDetails} from "../item";
+import {ItemDetails} from "../item-check";
 import {useTranslation} from "react-i18next";
 
 interface ItemDetailsListPopupProps {

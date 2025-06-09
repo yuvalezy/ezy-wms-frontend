@@ -45,7 +45,6 @@ This is a Light WMS (Warehouse Management System) built with React, TypeScript, 
    - JWT-based authentication stored in localStorage
    - Role-based access control via `Authorization` enum
    - Protected routes enforce authorization checks
-   - Mock mode available via `VITE_APP_MOCKUP` environment variable
 
 3. **State Management**:
    - React Context API for global state (Auth, Theme)
@@ -60,7 +59,6 @@ This is a Light WMS (Warehouse Management System) built with React, TypeScript, 
 5. **Data Fetching Pattern**:
    ```typescript
    const fetchData = async (filters) => {
-     if (Mockup) return mockData;
      const response = await axiosInstance.post(url, filters);
      return response.data;
    };
@@ -68,7 +66,6 @@ This is a Light WMS (Warehouse Management System) built with React, TypeScript, 
 
 6. **Environment Configuration**:
    - `VITE_APP_SERVER_URL` - API endpoint
-   - `VITE_APP_MOCKUP` - Enable mock mode
    - `VITE_APP_DEBUG` - Debug logging
    - `VITE_APP_TEST` - Test mode
 

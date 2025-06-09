@@ -1,5 +1,4 @@
-import {ReasonValueMockup} from "./mockup";
-import {axiosInstance, Mockup} from "@/utils/axios-instance";
+import {axiosInstance} from "@/utils/axios-instance";
 
 export type ReasonValue = {
   value: number;
@@ -13,11 +12,6 @@ export enum ReasonType {
 }
 
 export const fetchReasons = async (type: ReasonType): Promise<ReasonValue[]> => {
-  if (Mockup) {
-    console.log("Mockup data is being used.");
-    return ReasonValueMockup;
-  }
-
   const response = await axiosInstance.get<ReasonValue[]>(`${type}/CancelReasons`);
 
   return response.data;

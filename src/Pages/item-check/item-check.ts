@@ -1,15 +1,14 @@
-import {itemMockup, itemStockMockup, updateItemBarMockup} from "@/assets/mockup";
 import {ResponseStatus} from "@/assets/Common";
-import {axiosInstance, Mockup } from "@/utils/axios-instance";
+import {axiosInstance } from "@/utils/axios-instance";
 
 
 export interface ItemDetails {
   itemCode: string;
   itemName: string;
   numInBuy: number;
-  buyUnitMsr: string;
+  buyUnitMsr?: string | null;
   purPackUn: number;
-  purPackMsr: string;
+  purPackMsr?: string | null;
 }
 
 export interface ItemCheckResponse extends ItemDetails{
@@ -32,12 +31,6 @@ export const itemCheck = async (
   barcode?: string
 ): Promise<ItemCheckResponse[]> => {
   try {
-    if (Mockup) {
-      console.log("Mockup data is being used.");
-      return itemMockup;
-    }
-    
-
     const url = `General/ItemCheck`;
 
     const response = await axiosInstance.post<ItemCheckResponse[]>(
@@ -62,20 +55,6 @@ export const updateItemBarCode = async (
   addBarcode: string
 ): Promise<UpdateItemBarCodeResponse> => {
   try {
-    if (Mockup) {
-      if (addBarcode) {
-        itemMockup[0].barcodes.push(addBarcode);
-      }
-      if (removeBarcodes.length > 0) {
-          itemMockup[0].barcodes = itemMockup[0].barcodes.filter(
-              (barcode) => !removeBarcodes.includes(barcode)
-          );
-      }
-      return updateItemBarMockup;
-    }
-
-    
-
     const url = `General/UpdateItemBarCode`;
 
     const response = await axiosInstance.post<UpdateItemBarCodeResponse>(
@@ -98,12 +77,6 @@ export const itemStock = async (
     itemCode: string,
 ): Promise<ItemStockResponse[]> => {
   try {
-    if (Mockup) {
-      return itemStockMockup;
-    }
-
-    
-
     const url = `General/ItemStock`;
 
     const response = await axiosInstance.post<ItemStockResponse[]>(

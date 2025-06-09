@@ -45,10 +45,10 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc, docDetails,
           }
           <SecondaryInfoBox>
             <InfoBoxValue label={t('docDate')} value={dateFormat(new Date(doc.date))}/>
-            <InfoBoxValue label={t('createdBy')} value={doc.employee.name}/>
+            <InfoBoxValue label={t('createdBy')} value={doc.createdByUserName}/>
             <InfoBoxValue label={t('status')} value={documentStatusToString(doc.status)}/>
-            {doc.statusDate &&
-                <InfoBoxValue label={t('statusDate')} value={dateFormat(new Date(doc.statusDate))}/>}
+            {doc.updatedAt &&
+                <InfoBoxValue label={t('statusDate')} value={dateFormat(doc.updatedAt)}/>}
           </SecondaryInfoBox></div>
         <Separator className="my-4"/>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">

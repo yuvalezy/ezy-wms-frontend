@@ -1,4 +1,4 @@
-import {ItemCheckResponse, ItemDetails} from "../item";
+import {ItemCheckResponse, ItemDetails} from "../item-check";
 import {useTranslation} from "react-i18next";
 import React from "react";
 import InfoBox, {InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
@@ -6,8 +6,8 @@ import {Card, CardContent} from "@/components";
 
 const ItemDetailsList = ({details}: { details: ItemDetails }) => {
   const {t} = useTranslation();
-  const unitMeasure = details.buyUnitMsr.length > 0 ? details.buyUnitMsr : t("qtyInUn");
-  const packMeasure = details.purPackMsr.length > 0 ? details.purPackMsr : t("packUn")
+  const unitMeasure = details.buyUnitMsr && details.buyUnitMsr.length > 0 ? details.buyUnitMsr : t("qtyInUn");
+  const packMeasure = details.purPackMsr && details.purPackMsr.length > 0 ? details.purPackMsr : t("packUn")
   return <Card>
     <CardContent>
       <SecondaryInfoBox>

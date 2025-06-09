@@ -13,7 +13,7 @@ import {RoleType} from "@/assets/RoleType";
 import {useDateTimeFormat} from "@/assets/DateFormat";
 import {formatNumber} from "@/lib/utils";
 
-export default function Picking() {
+export default function PickingUser() {
   const {setLoading, setError} = useThemeContext();
   const {t} = useTranslation();
   const [pickings, setPickings] = React.useState<PickingDocument[]>([]);

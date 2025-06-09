@@ -159,7 +159,6 @@ export const mockAuthorizationGroups: AuthorizationGroup[] = [
       RoleType.TRANSFER,
       RoleType.TRANSFER_SUPERVISOR,
       RoleType.TRANSFER_REQUEST,
-      RoleType.SETTINGS
     ],
     canDelete: false,
     createdAt: new Date("2024-01-01"),

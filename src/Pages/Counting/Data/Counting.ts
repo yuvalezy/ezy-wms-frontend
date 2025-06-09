@@ -2,22 +2,16 @@ import {
   Counting,
   CountingContent,
   OrderBy,
-  countingMockup,
-  documentMockup,
   ObjectAction,
   Status,
   UserInfo
 } from "@/assets";
-import {axiosInstance, Mockup} from "@/utils/axios-instance";
+import {axiosInstance} from "@/utils/axios-instance";
 
 export const createCounting = async (
   name: string
 ): Promise<Counting> => {
   try {
-    if (Mockup) {
-      console.log("Mockup data is being used.");
-      return countingMockup;
-    }
     const response = await axiosInstance.post<Counting>(`Counting/Create`,
       {
         name: name,
@@ -44,15 +38,6 @@ export const countingAction = async (
   user: UserInfo
 ): Promise<boolean | CountingActionResponse> => {
   try {
-    if (Mockup) {
-      if (action === "approve") {
-        documentMockup.status = Status.Finished;
-        return true;
-      }
-      console.log("Mockup data is being used.");
-      return true;
-    }
-
     if (action === "cancel") {
       const response = await axiosInstance.post<boolean>(
         `Counting/Cancel`,
@@ -89,11 +74,6 @@ export const fetchCountings = async (
   desc: boolean = true
 ): Promise<Counting[]> => {
   try {
-    if (Mockup) {
-      console.log("Mockup data is being used.");
-      return [countingMockup];
-    }
-
     const queryParams = new URLSearchParams();
     queryParams.append("OrderBy", orderBy.toString());
     queryParams.append("Desc", desc.toString());
@@ -130,11 +110,6 @@ export const fetchCountings = async (
 
 export const fetchCounting = async (id: string): Promise<Counting> => {
   try {
-    if (Mockup) {
-      console.log("Mockup data is being used.");
-      return countingMockup;
-    }
-
     const response = await axiosInstance.get<Counting>(`Counting/${id}`);
     return response.data;
   } catch (error) {
@@ -145,10 +120,6 @@ export const fetchCounting = async (id: string): Promise<Counting> => {
 
 export const fetchCountingContent = async (id: string, binEntry?: number): Promise<CountingContent[]> => {
   try {
-    if (Mockup) {
-      console.log("Mockup data is being used.");
-      //todo return mockup
-    }
     const url = `Counting/CountingContent`;
 
     const response = await axiosInstance.post<CountingContent[]>(

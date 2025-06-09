@@ -1,5 +1,4 @@
-import {binCheckMockup} from "@/assets/mockup";
-import {axiosInstance, Mockup} from "@/utils/axios-instance";
+import {axiosInstance} from "@/utils/axios-instance";
 
 export interface BinContentResponse {
   itemCode: string;
@@ -15,9 +14,6 @@ export const binCheck = async (
   binEntry: number
 ): Promise<BinContentResponse[]> => {
   try {
-    if (Mockup) {
-      return binCheckMockup;
-    }
     const url = `General/BinCheck?binEntry=${binEntry}`;
 
     const response = await axiosInstance.get<BinContentResponse[]>(url);

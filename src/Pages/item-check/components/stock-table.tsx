@@ -1,6 +1,6 @@
 import {useTranslation} from "react-i18next";
 import React, {useEffect, useState} from "react";
-import {ItemCheckResponse, itemStock, ItemStockResponse} from "../item";
+import {ItemCheckResponse, itemStock, ItemStockResponse} from "../item-check";
 import {useThemeContext} from "@/components/ThemeContext";
 import {Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow} from "@/components";
 import {useStockInfo} from "@/utils/stock-info";

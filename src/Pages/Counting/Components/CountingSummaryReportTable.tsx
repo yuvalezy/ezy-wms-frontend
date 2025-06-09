@@ -1,15 +1,11 @@
 import * as React from 'react';
 import {CountingSummaryReportLine} from "@/pages/Counting/data/Report";
 import {useTranslation} from "react-i18next";
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
-import {MetricRow} from "@/components/MetricRow";
-import {formatNumber} from "@/lib/utils";
+import {Card, CardContent} from "@/components/ui/card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {useStockInfo} from "@/utils/stock-info";
 import InfoBox, {InfoBoxValue} from "@/components/InfoBox";
-import {TransferContent} from "@/pages/transfer/data/transfer-document";
 import {useItemDetailsPopup} from "@/hooks/useItemDetailsPopup";
-import {CountingContent} from "@/assets";
 import {Link} from "react-router-dom";
 
 interface CountingSummaryReportTableProps {

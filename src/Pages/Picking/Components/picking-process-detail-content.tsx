@@ -161,7 +161,7 @@ export const PickingProcessDetailContent: React.FC<PickingProcessDetailContentPr
                   </TableCell>
                   <TableCell>
                     {stockInfo({
-                      quantity: row.available,
+                      quantity: row.available??0,
                       numInBuy: row.numInBuy,
                       buyUnitMsr: row.buyUnitMsr,
                       purPackUn: row.purPackUn,

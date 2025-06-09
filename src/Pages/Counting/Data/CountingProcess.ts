@@ -1,10 +1,9 @@
 import {
-  UpdateLineReturnValueMockup,
   UnitType,
   UpdateLineParameters,
   UpdateLineReturnValue
 } from "@/assets";
-import {axiosInstance, Mockup} from "@/utils/axios-instance";
+import {axiosInstance} from "@/utils/axios-instance";
 
 export type Process = {
   hello: number
@@ -29,11 +28,6 @@ export const updateLine = async ({
                                    quantity
                                  }: UpdateLineParameters): Promise<UpdateLineReturnValue> => {
   try {
-    if (Mockup) {
-      console.log("Mockup data is being used.");
-      return UpdateLineReturnValueMockup;
-    }
-
     const url = `Counting/UpdateLine`;
 
     const response = await axiosInstance.post<UpdateLineReturnValue>(
@@ -63,10 +57,6 @@ export const addItem = async (
   binEntry: number | undefined,
   unit: UnitType): Promise<CountingAddItemResponse> => {
   try {
-    if (Mockup) {
-      //todo mockup
-    }
-
     const url = `Counting/AddItem`;
 
     const response = await axiosInstance.post<CountingAddItemResponse>(

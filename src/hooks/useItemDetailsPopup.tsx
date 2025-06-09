@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { ItemDetails } from '@/pages/item-check/Item';
+import { ItemDetails } from '@/pages/item-check/item-check';
 import ItemDetailsListPopup from '@/pages/item-check/components/item-details-list-popup';
 
 interface ItemDetailsPopupContextType {

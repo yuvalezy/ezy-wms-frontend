@@ -14,11 +14,10 @@ import {
 } from "@/assets/Common";
 import {AlertActionType, AlertSeverity, ProcessAlertValue} from "@/components/ProcessAlert";
 import {ProcessesRef} from "@/components/Processes";
-import { StringFormat} from "@/assets/Functions";
+import {StringFormat} from "@/assets/Functions";
 import {addItem, updateLine, updateLineQuantity} from "@/pages/GoodsReceipt/data/GoodsReceiptProcess";
 import {DocumentAddItemResponse, ReceiptDocument} from "@/assets/ReceiptDocument";
-import {Mockup} from "@/utils/axios-instance";
-import { fetchDocument } from "./Document";
+import {fetchDocument} from "./Document";
 
 export const useGoodsReceiptProcessData = (confirm: boolean) => {
   const {scanCode} = useParams();
@@ -89,16 +88,6 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
       .then((data) => {
         if (isClosedDocument(data, item.code, barcode)) {
           return;
-        }
-
-        if (Mockup && !data.fulfillment && !data.warehouse && !data.showroom) {
-          return alert({
-            barcode: barcode,
-            itemCode: item.code,
-            quantity: data.quantity,
-            message: `Error Mockup`,
-            severity: "Negative"
-          });
         }
 
         let message: string = "";
@@ -214,7 +203,10 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
   }
 
 
-  function handleUpdateLine(parameters: UpdateLineParameters): Promise<{returnValue: UpdateLineReturnValue, errorMessage?: string}> {
+  function handleUpdateLine(parameters: UpdateLineParameters): Promise<{
+    returnValue: UpdateLineReturnValue,
+    errorMessage?: string
+  }> {
     if (parameters.quantity == null) {
       return updateLine(parameters);
     }

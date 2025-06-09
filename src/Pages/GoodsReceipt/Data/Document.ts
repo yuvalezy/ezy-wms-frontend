@@ -2,12 +2,11 @@ import {
   ReceiptDocument,
   DocumentItem,
   DocumentOrderBy,
-  documentMockup,
   ObjectAction,
   Status,
   UserInfo
 } from "@/assets";
-import {axiosInstance, Mockup} from "@/utils/axios-instance";
+import {axiosInstance} from "@/utils/axios-instance";
 
 export enum GoodsReceiptType {
   All = "All",
@@ -32,7 +31,7 @@ export type GoodsReceiptReportFilter = {
   orderByDesc?: boolean | null;
   pageSize?: number | null;
   pageNumber?: number | null;
-  lastID?: number | null;
+  lastID?: string | null;
   confirm?: boolean;
 }
 
@@ -42,11 +41,6 @@ export const createDocument = async (
   name: string,
   items: DocumentItem[]): Promise<ReceiptDocument> => {
   try {
-    if (Mockup) {
-      console.log("Mockup data is being used.");
-      // return documentMockup;
-    }
-
     const response = await axiosInstance.post<ReceiptDocument>(
       `GoodsReceipt/Create`,
       {
@@ -76,15 +70,6 @@ export const documentAction = async (
   user: UserInfo
 ): Promise<DocumentActionResponse | boolean> => {
   try {
-    if (Mockup) {
-      if (action === "approve") {
-        documentMockup.status = Status.Finished;
-        return true;
-      }
-      console.log("Mockup data is being used.");
-      return true;
-    }
-
     const response = await axiosInstance.post<boolean>(`goodsReceipt/${action === "approve" ? "process" : "cancel"}/${id}`);
     return response.data;
   } catch (error) {
@@ -95,11 +80,6 @@ export const documentAction = async (
 
 export const fetchDocument = async (id: string): Promise<ReceiptDocument> => {
   try {
-    if (Mockup) {
-      // console.log("Mockup data is being used.");
-      // return documentMockup;
-    }
-
     const response = await axiosInstance.get<ReceiptDocument>(`goodsReceipt/${id}`);
     return response.data;
   } catch (error) {
@@ -114,8 +94,6 @@ export const fetchDocuments = async (
   desc: boolean = true
 ): Promise<ReceiptDocument[]> => {
   try {
-    if (Mockup) {
-    }
     const url = `goodsReceipt`;
 
     const response = await axiosInstance.post<ReceiptDocument[]>(url, filters,);

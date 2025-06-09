@@ -1,8 +1,7 @@
 import {UnitType} from "@/assets";
-import {addItemResponseMockup, PickingDetailItemsMockup, PickingDetailsMockup, PickingMockup, processResponseMockup} from "@/assets";
 import {ProcessResponse} from "@/assets";
 import {BinLocation} from "@/assets";
-import { axiosInstance, Mockup } from "@/utils/axios-instance";
+import { axiosInstance } from "@/utils/axios-instance";
 
 export enum PickStatus {
     Released = "Released",
@@ -75,19 +74,6 @@ export interface PickingAddItemResponse {
 
 export const fetchPicking = async (params: pickingParameters): Promise<PickingDocument> => {
     try {
-        if (Mockup) {
-            console.log("Mockup data is being used.");
-            let picking = PickingMockup[0];
-            if (params.type == null) {
-                picking.detail = PickingDetailsMockup;
-            }
-            else {
-                picking.detail = PickingDetailsMockup.filter((v) => v.type === params.type && v.entry === params.entry);
-                picking.detail.forEach(v => v.items = PickingDetailItemsMockup);
-            }
-            return picking;
-        }
-
         const queryParams = new URLSearchParams();
 
         if (params.type != null) {
@@ -117,26 +103,6 @@ export const fetchPicking = async (params: pickingParameters): Promise<PickingDo
 }
 export const fetchPickings = async (params?: pickingsParameters): Promise<PickingDocument[]> => {
     try {
-        if (Mockup) {
-            console.log("Mockup data is being used.");
-            let pickingMockup = PickingMockup;
-            if (params?.detail ?? false) {
-                let picking = pickingMockup[0];
-                picking.detail = PickingDetailsMockup;
-                return [picking];
-            }
-            if (params?.type != null) {
-                let picking = pickingMockup[0];
-                picking.detail = PickingDetailsMockup.filter((v) => v.type === params?.type && v.entry === params?.entry);
-                picking.detail.forEach(v => {
-                    v.items = PickingDetailItemsMockup;
-                })
-                return [picking];
-            }
-            return pickingMockup;
-        }
-
-
         const queryParams = new URLSearchParams();
         if (params != null) {
             if (params.id !== undefined) {
@@ -179,12 +145,6 @@ export const addItem = async (params: {
     unit: UnitType
 }): Promise<PickingAddItemResponse> => {
     try {
-        if (Mockup) {
-            return {
-                ...addItemResponseMockup,
-            };
-        }
-
         const url = `Picking/AddItem`;
 
         const response = await axiosInstance.post<PickingAddItemResponse>(
@@ -201,18 +161,6 @@ export const processPicking = async (
     id: number,
 ): Promise<ProcessResponse> => {
     try {
-        if (Mockup) {
-            return {
-                ...processResponseMockup,
-            };
-        }
-
-        
-
-        
-
-        
-
         const url = `Picking/Process`;
 
         const response = await axiosInstance.post<ProcessResponse>(

@@ -18,7 +18,7 @@ export interface ReceiptDocument extends BaseEntity {
 
 export type DocumentItem = {
   objectType: number;
-  documentEntry: number;
+  documentEntry?: number;
   documentNumber: number;
 };
 

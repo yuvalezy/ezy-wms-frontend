@@ -29,7 +29,7 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
   const {loading, setLoading, setError} = useThemeContext();
   const {t} = useTranslation();
   const [documents, setDocuments] = useState<ReceiptDocument[]>([]);
-  const [lastID, setLastID] = useState(-1);
+  const [lastID, setLastID] = useState("");
   const [filters, setFilters] = useState<GoodsReceiptReportFilter | null>(null);
   const [stop, setStop] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState<ReceiptDocument | null>(null);
@@ -51,7 +51,7 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
   };
 
   const filtersRef = useRef<GoodsReceiptReportFilter | null>(filters);
-  const lastIDRef = useRef<number>(lastID);
+  const lastIDRef = useRef<string>(lastID);
 
   useEffect(() => {
     filtersRef.current = filters;
@@ -159,9 +159,9 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
                       ) : '-'}
                     </TableCell>
                     <TableCell>{dateFormat(new Date(doc.date))}</TableCell>
-                    <TableCell>{doc.employee.name}</TableCell>
+                    <TableCell>{doc.createdByUserName}</TableCell>
                     <TableCell>{documentStatusToString(doc.status)}</TableCell>
-                    <TableCell>{doc.statusDate ? dateFormat(new Date(doc.statusDate)) : '-'}</TableCell>
+                    <TableCell>{doc.updatedAt ? dateFormat(doc.updatedAt) : '-'}</TableCell>
                     <TableCell className="text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>

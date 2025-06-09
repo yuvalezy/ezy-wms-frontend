@@ -7,12 +7,12 @@ import {
   Status,
   UnitType
 } from "@/assets";
-import {axiosInstance, Mockup} from "@/utils/axios-instance";
+import {axiosInstance} from "@/utils/axios-instance";
 import { getAddItemErrorMessage } from "@/utils/error-handler";
 import axios from "axios";
 
 interface TransferAddItemResponse {
-  lineId?: number
+  lineId?: string
   closedTransfer: boolean;
   errorMessage?: string;
   unitMsr: string;
@@ -61,11 +61,6 @@ export const createTransfer = async (
   comments: string,
 ): Promise<TransferDocument> => {
   try {
-    // if (Mockup) {
-    //   console.log("Mockup data is being used.");
-    //   return transferMockup;
-    // }
-
     const response = await axiosInstance.post<TransferDocument>(
       `transfer/create`, {name, comments},
     );
@@ -78,13 +73,6 @@ export const createTransfer = async (
 };
 export const getProcessInfo = async (id: string): Promise<TransferDocument> => {
   try {
-    // if (Mockup) {
-    //   console.log("Mockup data is being used.");
-    //   const mockup = transferMockup;
-    //   mockup.isComplete = true;
-    //   return mockup;
-    // }
-
     const response = await axiosInstance.get<TransferDocument>(
       `transfer/processInfo/${id}`,
     );
@@ -116,11 +104,6 @@ export const fetchTransfers = async (params: TransferUpdateParameters): Promise<
     params.progress = false;
 
   try {
-    // if (Mockup) {
-    //   console.log("Mockup data is being used.");
-    //   return [transferMockup];
-    // }
-
     const queryParams = new URLSearchParams();
     queryParams.append("orderBy", params.orderBy.toString());
     queryParams.append("desc", params.desc.toString());
@@ -189,7 +172,7 @@ export const addItem = async (params: addItemParameters, t: (key: string) => str
         const errorData = error.response.data.ErrorData;
         const errorMessage = getAddItemErrorMessage(errorType, errorData, t);
         return {
-          closedTransfer: false, lineId: 0, numIn: 0, packMsr: "", packUnit: 0, unitMsr: "",
+          closedTransfer: false, lineId: "", numIn: 0, packMsr: "", packUnit: 0, unitMsr: "",
           errorMessage: errorMessage
         }
       }
@@ -209,12 +192,6 @@ export type transferContentParameters = {
 }
 export const fetchTransferContent = async (params: transferContentParameters): Promise<TransferContent[]> => {
   try {
-    if (Mockup) {
-      console.log("Mockup data is being used.");
-      //todo return mockup
-    }
-
-
     const url = `Transfer/TransferContent`;
 
     const response = await axiosInstance.post<TransferContent[]>(
@@ -237,12 +214,6 @@ export type TargetItemDetail = {
 
 export const fetchTargetItemDetails = async (id: string, item: string, binEntry: number): Promise<TargetItemDetail[]> => {
   try {
-    // if (Mockup) {
-    //   console.log("Mockup data is being used.");
-    //   return GoodsReceiptAllDetailMockup;
-    // }
-
-
     const url = `Transfer/TransferContentTargetDetail`;
 
     const response = await axiosInstance.post<TargetItemDetail[]>(url, {
@@ -259,9 +230,6 @@ export const fetchTargetItemDetails = async (id: string, item: string, binEntry:
 };
 export const updateTransferTargetItem = async (data: DetailUpdateParameters) => {
   try {
-    if (Mockup) {
-      return;
-    }
     const url = `Transfer/UpdateContentTargetDetail`;
 
     const response = await axiosInstance.post(url, data,);

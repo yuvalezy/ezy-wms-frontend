@@ -10,7 +10,7 @@ import NotFound from "./components/NotFound";
 import ItemCheck from "@/pages/item-check/ItemCheck";
 import {RoleType} from "@/assets";
 import PickingSupervisor from "./pages/picking/picking-supervisor";
-import Picking from "./pages/picking/picking";
+import PickingUser from "./pages/picking/picking-user";
 import PickingProcess from "./pages/picking/picking-process";
 import PickingProcessDetail from "./pages/picking/picking-process-detail";
 import GoodsReceipt from "./pages/GoodsReceipt/GoodsReceipt";
@@ -22,7 +22,7 @@ import GoodsReceiptAll from './pages/GoodsReceipt/GoodsReceiptAll';
 import CountingList from "./pages/Counting/Counting";
 import CountingProcess from "./pages/Counting/CountingProcess";
 import CountingSupervisor from "./pages/Counting/CountingSupervisor";
-import Transfer from "./pages/transfer/transfer";
+import TransferUser from "./pages/transfer/transfer-user";
 import TransferSupervisor from "./pages/transfer/transfer-supervisor";
 import TransferProcess from "./pages/transfer/transfer-process";
 import TransferProcessSource from "./pages/transfer/transfer-process-source";
@@ -91,13 +91,13 @@ export default function App() {
                     <Route path="/goodsReceiptConfirmationProcessDifferenceReport/:scanCode" element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR} element={<GoodsReceiptProcessDifferenceReport confirm/>}/>}/>
                     <Route path="/goodsReceiptConfirmationReportAll/:scanCode" element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR} element={<GoodsReceiptAll confirm/>}/>}/>
                     {/*Pick*/}
-                    <Route path="/pick" element={<ProtectedRoute authorization={RoleType.PICKING} element={<Picking/>}/>}/>
+                    <Route path="/pick" element={<ProtectedRoute authorization={RoleType.PICKING} element={<PickingUser/>}/>}/>
                     <Route path="/pick/:idParam" element={<ProtectedRoute authorization={RoleType.PICKING} element={<PickingProcess/>}/>}/>
                     <Route path="/pick/:idParam/:typeParam/:entryParam" element={<ProtectedRoute authorization={RoleType.PICKING} element={<PickingProcessDetail/>}/>}/>
                     <Route path="/pickSupervisor" element={<ProtectedRoute authorization={RoleType.PICKING_SUPERVISOR} element={<PickingSupervisor/>}/>}/>
                     {/*<Route path="/PickReport" element={<ProtectedRoute authorization={Authorization.Pick_SUPERVISOR} element={<PickReport/>}/>}/>*/}
                     {/*Transfer*/}
-                    <Route path="/transfer" element={<ProtectedRoute authorization={RoleType.TRANSFER} element={<Transfer/>}/>}/>
+                    <Route path="/transfer" element={<ProtectedRoute authorization={RoleType.TRANSFER} element={<TransferUser/>}/>}/>
                     <Route path="/transfer/:scanCode" element={<ProtectedRoute authorization={RoleType.TRANSFER} element={<TransferProcess/>}/>}/>
                     <Route path="/transfer/:scanCode/source" element={<ProtectedRoute authorization={RoleType.TRANSFER} element={<TransferProcessSource/>}/>}/>
                     <Route path="/transfer/:scanCode/targetBins" element={<ProtectedRoute authorization={RoleType.TRANSFER} element={<TransferProcessTargetBins/>}/>}/>

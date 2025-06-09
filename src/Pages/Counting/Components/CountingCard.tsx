@@ -58,12 +58,12 @@ const CountingCard: React.FC<CountingCardProps> = ({doc, handleAction, superviso
                   {t('countingSummaryReport')}
                 </Button>
                 {doc.status === Status.InProgress && (
-                  <Button variant="default" onClick={() => handleAction?.(doc.id, 'approve')}
+                  <Button variant="default" onClick={() => handleAction?.('approve')}
                           className="bg-green-500 hover:bg-green-600 text-white">
                     <CheckCircle className="mr-2 h-4 w-4"/>{t('finish')}
                   </Button>
                 )}
-                <Button variant="destructive" onClick={() => handleAction?.(doc.id, 'cancel')}>
+                <Button variant="destructive" onClick={() => handleAction?.('cancel')}>
                   <XCircle className="mr-2 h-4 w-4"/>{t('cancel')}
                 </Button>
             </div>
