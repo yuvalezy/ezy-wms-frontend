@@ -10,6 +10,7 @@ import {useStockInfo} from "@/utils/stock-info";
 import {useItemDetailsPopup} from "@/hooks/useItemDetailsPopup";
 import {PickingDocumentDetailItem} from "@/pages/picking/data/picking-document";
 import {Link} from "react-router-dom";
+import {useAuth} from "@/components";
 
 interface GoodsReceiptAllTableProps {
   data: GoodsReceiptAll[]
@@ -20,6 +21,9 @@ const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data, 
   const {t} = useTranslation();
   const stockInfo = useStockInfo();
   const {openItemDetails} = useItemDetailsPopup();
+  const {user} = useAuth();
+
+  const showTarget = user?.settings.goodsReceiptTargetDocuments;
 
   const showDetails = (row: GoodsReceiptAll) => {
     openItemDetails({
@@ -39,8 +43,8 @@ const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data, 
           <TableHead>{t('code')}</TableHead>
           <TableHead className="hidden sm:table-cell">{t('description')}</TableHead>
           <TableHead>{t('quantity')}</TableHead>
-          <TableHead>{t('delivery')}</TableHead>
-          <TableHead>{t('showroom')}</TableHead>
+          {showTarget && <TableHead>{t('delivery')}</TableHead>}
+          {showTarget && <TableHead>{t('showroom')}</TableHead>}
           <TableHead>{t('inWarehouse')}</TableHead>
           <TableHead>{t('stock')}</TableHead>
           <TableHead className="border-l"></TableHead>
@@ -63,20 +67,20 @@ const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data, 
                   purPackUn: row.purPackUn,
                   purPackMsr: row.purPackMsr,
                 })}</TableCell>
-                <TableCell>{stockInfo({
+                {showTarget && <TableCell>{stockInfo({
                   quantity: row.delivery,
                   numInBuy: row.numInBuy,
                   buyUnitMsr: row.buyUnitMsr,
                   purPackUn: row.purPackUn,
                   purPackMsr: row.purPackMsr,
-                })}</TableCell>
-                <TableCell>{stockInfo({
+                })}</TableCell>}
+                {showTarget && <TableCell>{stockInfo({
                   quantity: row.showroom,
                   numInBuy: row.numInBuy,
                   buyUnitMsr: row.buyUnitMsr,
                   purPackUn: row.purPackUn,
                   purPackMsr: row.purPackMsr,
-                })}</TableCell>
+                })}</TableCell>}
                 <TableCell>{stockInfo({
                   quantity: inWarehouse,
                   numInBuy: row.numInBuy,

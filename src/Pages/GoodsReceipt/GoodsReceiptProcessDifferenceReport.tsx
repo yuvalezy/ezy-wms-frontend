@@ -59,7 +59,7 @@ export default function GoodsReceiptProcessDifferenceReport({confirm}: GoodsRece
           <TableBody>
             {data?.map((value) => (
               <>
-                <TableRow key={value.documentNumber}>
+                <TableRow key={`${value.documentNumber}-doc`}>
                   <TableCell>{`${o(value.baseType)}: ${value.documentNumber}`}</TableCell>
                   <TableCell>{value.vendor.id}</TableCell>
                   <TableCell className="hidden sm:table-cell">{value.vendor.name}</TableCell>
@@ -67,7 +67,7 @@ export default function GoodsReceiptProcessDifferenceReport({confirm}: GoodsRece
                     <Button variant="outline" size="sm" onClick={() => setReport(value)}>{t('details')}</Button>
                   </TableCell>
                 </TableRow>
-                <TableRow className="sm:hidden">
+                <TableRow className="sm:hidden" key={`${value.documentNumber}-vendor`}>
                   <TableCell className="bg-gray-100 border-b-1"
                              colSpan={3}>{t('supplierName')}: {value.vendor.name}</TableCell>
                 </TableRow>

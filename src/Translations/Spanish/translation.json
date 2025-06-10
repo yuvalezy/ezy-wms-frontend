@@ -373,5 +373,7 @@
   "quantityMoreThanAvailable": "La cantidad seleccionada para el artículo {0} es menor que la cantidad disponible",
   "pickEntryIsRequired": "El parámetro \"PickEntry\" es obligatorio",
   "itemDetails": "Detalles del Artículo",
-  "document": "Documento"
+  "document": "Documento",
+  "purchasingUoM": "Unidad de medida de compras",
+  "packagingUoM": "Unidad de medida de embalaje"
 }
