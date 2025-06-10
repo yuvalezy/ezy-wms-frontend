@@ -127,10 +127,10 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
                   <Label htmlFor="docNumber">{t("number")}</Label>
                   <Input
                     id="docNumber"
-                    value={filters.id ?? ""}
+                    value={filters.number ?? ""}
                     onChange={(e) => {
                       const val = e.target.value;
-                      setFilters((pf) => ({...pf, id: val || null}));
+                      setFilters((pf) => ({...pf, number: val.length > 0 ? parseInt(val) : null}));
                     }}
                   />
                 </div>

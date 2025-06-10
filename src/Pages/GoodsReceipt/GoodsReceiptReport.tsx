@@ -62,6 +62,7 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
   }, [lastId]);
 
   const onSubmit = (filters: GoodsReceiptReportFilter) => {
+    setDocuments([]);
     setFilters(filters);
     loadData(filters);
   }
@@ -149,7 +150,7 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
                 {documents.map((doc) => (
                   <TableRow key={doc.id}>
                     <TableCell>{doc.name || '-'}</TableCell>
-                    <TableCell>{doc.id}</TableCell>
+                    <TableCell>{doc.number}</TableCell>
                     <TableCell>{doc.businessPartner?.name ?? doc.businessPartner?.id ?? '-'}</TableCell>
                     <TableCell>
                       {doc.documents && doc.documents?.length > 0 ? (
@@ -158,7 +159,7 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
                         </a>
                       ) : '-'}
                     </TableCell>
-                    <TableCell>{dateFormat(new Date(doc.date))}</TableCell>
+                    <TableCell>{dateFormat(doc.date)}</TableCell>
                     <TableCell>{doc.createdByUserName}</TableCell>
                     <TableCell>{documentStatusToString(doc.status)}</TableCell>
                     <TableCell>{doc.updatedAt ? dateFormat(doc.updatedAt) : '-'}</TableCell>
