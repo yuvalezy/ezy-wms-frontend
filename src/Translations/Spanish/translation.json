@@ -375,5 +375,6 @@
   "itemDetails": "Detalles del Artículo",
   "document": "Documento",
   "purchasingUoM": "Unidad de medida de compras",
-  "packagingUoM": "Unidad de medida de embalaje"
+  "packagingUoM": "Unidad de medida de embalaje",
+  "noLinesForWarehouse": "No se encontraron líneas en el documento seleccionado para el almacén conectado actual"
 }

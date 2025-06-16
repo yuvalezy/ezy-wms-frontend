@@ -20,6 +20,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
+import {useAuth} from "@/components";
 
 interface GoodsReceiptReportProps {
   confirm?: boolean
@@ -27,6 +28,7 @@ interface GoodsReceiptReportProps {
 
 export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReportProps) {
   const {loading, setLoading, setError} = useThemeContext();
+  const {user} = useAuth();
   const {t} = useTranslation();
   const [documents, setDocuments] = useState<ReceiptDocument[]>([]);
   const [lastId, setLastID] = useState("");
@@ -82,7 +84,7 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
   }
 
   const loadData = (filters: GoodsReceiptReportFilter | null) => {
-    if (stop || !filters) {
+    if (!filters) {
       return;
     }
     setLoading(true);
@@ -184,7 +186,7 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
                             <FontAwesomeIcon icon={faFileAlt} className="mr-2 h-4 w-4" />
                             {!confirm ? t('goodsReceiptReport') : t('confirmationReport')}
                           </DropdownMenuItem>
-                          {activeStatuses.includes(doc.status) && (
+                          {user?.settings?.goodsReceiptTargetDocuments && activeStatuses.includes(doc.status) && (
                             <DropdownMenuItem onClick={() => handleOpen('vs', doc.id)}>
                               <FontAwesomeIcon icon={faTruckLoading} className="mr-2 h-4 w-4" />
                               {!confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}

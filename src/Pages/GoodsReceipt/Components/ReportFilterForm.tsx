@@ -254,9 +254,9 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
                       <Label htmlFor="goodsReceipt">{t("goodsReceipt")}</Label>
                       <Input
                         id="goodsReceipt"
-                        value={filters.goodsReceipt ?? ""}
+                        value={filters.grpo ?? ""}
                         type="number"
-                        onChange={(e) => setFilters((pf) => ({...pf, goodsReceipt: e.target.value}))}
+                        onChange={(e) => setFilters((pf) => ({...pf, grpo: e.target.value}))}
                       />
                     </div>
                     <div>

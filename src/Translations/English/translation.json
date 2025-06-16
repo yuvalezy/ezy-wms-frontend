@@ -376,5 +376,6 @@
   "itemDetails": "Item Details",
   "document": "Document",
   "purchasingUoM": "Purchasing UoM",
-  "packagingUoM": "Packaging UoM"
+  "packagingUoM": "Packaging UoM",
+  "noLinesForWarehouse": "No lines found in selected document for current connected warehouse"
 }
