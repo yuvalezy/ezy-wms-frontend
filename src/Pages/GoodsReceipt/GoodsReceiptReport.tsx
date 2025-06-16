@@ -64,7 +64,16 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
   const onSubmit = (filters: GoodsReceiptReportFilter) => {
     setDocuments([]);
     setFilters(filters);
+    setLastID("");
+    setStop(false);
     loadData(filters);
+  }
+
+  const clear = () => {
+    setDocuments([]);
+    setFilters(null);
+    setLastID("");
+    setStop(false);
   }
 
   function handleDocDetails(doc: ReceiptDocument) {
@@ -117,7 +126,7 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
       <ReportFilterForm
         ref={reportFilterFormRef}
         onSubmit={onSubmit}
-        onClear={() => setDocuments([])}
+        onClear={() => clear()}
         confirm={confirm}
         showTrigger={false}
       />
