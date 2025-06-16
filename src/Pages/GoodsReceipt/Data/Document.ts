@@ -16,7 +16,7 @@ export enum GoodsReceiptType {
 
 export type GoodsReceiptReportFilter = {
   number?: number | null;
-  businessPartner?: string | null;
+  vendor?: string | null;
   name?: string;
   grpo?: string;
   purchaseOrder?: string;
@@ -37,14 +37,14 @@ export type GoodsReceiptReportFilter = {
 
 export const createDocument = async (
   type: GoodsReceiptType,
-  cardCode: string,
+  vendor: string,
   name: string,
   items: DocumentItem[]): Promise<ReceiptDocument> => {
   try {
     const response = await axiosInstance.post<ReceiptDocument>(
       `GoodsReceipt/Create`,
       {
-        cardCode: cardCode,
+        vendor: vendor,
         name: name,
         type: type,
         documents: items,

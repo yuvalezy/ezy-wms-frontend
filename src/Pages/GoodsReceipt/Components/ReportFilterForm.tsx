@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/popover"; // For DatePicker
 import {cn} from "@/lib/utils"; // For DatePicker
 import {format} from "date-fns"; // For DatePicker
-import {CalendarIcon, BarChart2, Eraser} from "lucide-react";
+import {CalendarIcon, BarChart2, Eraser, X} from "lucide-react";
 
 interface ReportFilterFormProps {
   onSubmit: (filters: GoodsReceiptReportFilter) => void,
@@ -77,7 +77,7 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
       setVendorName(selectedVendor?.name || "");
       setFilters((prevFilters) => ({
         ...prevFilters,
-        businessPartner: selectedVendor?.id,
+        vendor: selectedVendor?.id,
       }));
     };
 
@@ -110,7 +110,7 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div>
                   <Label htmlFor="vendor">{t("vendor")}</Label>
-                  <Select value={filters.businessPartner || ""} onValueChange={handleVendorChange}>
+                  <Select value={filters.vendor || ""} onValueChange={handleVendorChange}>
                     <SelectTrigger id="vendor">
                       <SelectValue placeholder={t("selectVendorPlaceholder")}/>
                     </SelectTrigger>
@@ -145,53 +145,79 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
                 </div>
                 <div>
                   <Label htmlFor="dateFrom">{`${t("status")} - ${t("fromDate")}`}</Label>
-                  <Popover open={isDateFromPopoverOpen} onOpenChange={setIsDateFromPopoverOpen}>
-                    <PopoverTrigger asChild>
+                  <div className="relative">
+                    <Popover open={isDateFromPopoverOpen} onOpenChange={setIsDateFromPopoverOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant={"outline"}
+                          className={cn("w-full justify-start text-left font-normal", !filters.dateFrom && "text-muted-foreground")}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4"/>
+                          {filters.dateFrom ? format(filters.dateFrom, "PPP") : <span>{t("pickADate")}</span>}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0">
+                        <Calendar
+                          mode="single"
+                          selected={filters.dateFrom || undefined}
+                          onSelect={(date: Date | undefined) => {
+                            setFilters(pf => ({...pf, dateFrom: date || null}));
+                            setIsDateFromPopoverOpen(false); // Close popover on date selection
+                          }}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    {filters.dateFrom && (
                       <Button
-                        variant={"outline"}
-                        className={cn("w-full justify-start text-left font-normal", !filters.dateFrom && "text-muted-foreground")}
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-1 top-0 h-full px-2 hover:bg-transparent"
+                        onClick={() => setFilters(pf => ({...pf, dateFrom: null}))}
                       >
-                        <CalendarIcon className="mr-2 h-4 w-4"/>
-                        {filters.dateFrom ? format(filters.dateFrom, "PPP") : <span>{t("pickADate")}</span>}
+                        <X className="h-4 w-4" />
                       </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                      <Calendar
-                        mode="single"
-                        selected={filters.dateFrom || undefined}
-                        onSelect={(date: Date | undefined) => {
-                          setFilters(pf => ({...pf, dateFrom: date || null}));
-                          setIsDateFromPopoverOpen(false); // Close popover on date selection
-                        }}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
+                    )}
+                  </div>
                 </div>
                 <div>
                   <Label htmlFor="dateTo">{`${t("status")} - ${t("toDate")}`}</Label>
-                  <Popover open={isDateToPopoverOpen} onOpenChange={setIsDateToPopoverOpen}>
-                    <PopoverTrigger asChild>
+                  <div className="relative">
+                    <Popover open={isDateToPopoverOpen} onOpenChange={setIsDateToPopoverOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant={"outline"}
+                          className={cn("w-full justify-start text-left font-normal", !filters.dateTo && "text-muted-foreground")}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4"/>
+                          {filters.dateTo ? format(filters.dateTo, "PPP") : <span>{t("pickADate")}</span>}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0">
+                        <Calendar
+                          mode="single"
+                          selected={filters.dateTo || undefined}
+                          onSelect={(date: Date | undefined) => {
+                            setFilters(pf => ({...pf, dateTo: date || null}));
+                            setIsDateToPopoverOpen(false); // Close popover on date selection
+                          }}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    {filters.dateTo && (
                       <Button
-                        variant={"outline"}
-                        className={cn("w-full justify-start text-left font-normal", !filters.dateTo && "text-muted-foreground")}
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-1 top-0 h-full px-2 hover:bg-transparent"
+                        onClick={() => setFilters(pf => ({...pf, dateTo: null}))}
                       >
-                        <CalendarIcon className="mr-2 h-4 w-4"/>
-                        {filters.dateTo ? format(filters.dateTo, "PPP") : <span>{t("pickADate")}</span>}
+                        <X className="h-4 w-4" />
                       </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                      <Calendar
-                        mode="single"
-                        selected={filters.dateTo || undefined}
-                        onSelect={(date: Date | undefined) => {
-                          setFilters(pf => ({...pf, dateTo: date || null}));
-                          setIsDateToPopoverOpen(false); // Close popover on date selection
-                        }}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
+                    )}
+                  </div>
                 </div>
                 {!confirm ?
                   <>

@@ -143,7 +143,7 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
               <TableCell className="whitespace-nowrap">{doc.createdByUserName}</TableCell>
               <TableCell className="whitespace-nowrap">{documentStatusToString(doc.status)}</TableCell>
               {!confirm && <TableCell className="whitespace-nowrap">
-                {doc.businessPartner?.name ?? doc.businessPartner?.id ?? '-'}
+                {doc.vendor?.name ?? doc.vendor?.id ?? '-'}
               </TableCell>}
               <TableCell className="min-w-0">
                 {doc.documents && doc.documents?.length > 0 ? (

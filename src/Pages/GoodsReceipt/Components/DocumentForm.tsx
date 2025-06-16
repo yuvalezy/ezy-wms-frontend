@@ -44,7 +44,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, confirm}) => 
 
   const [activeTab, setActiveTab] = useState<string>(TAB_SPECIFICORDERS);
   const [items, setItems] = useState<DocumentItem[]>([]);
-  const [cardCodeInput, setCardCodeInput] = useState<string>("");
+  const [vendorInput, setVendorInput] = useState<string>("");
   const [docNameInput, setDocNameInput] = useState<string>("");
   const [vendors, setVendors] = useState<BusinessPartner[]>([]);
 
@@ -81,12 +81,12 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, confirm}) => 
     }
 
     setLoading(true);
-    createDocument(selectedType, cardCodeInput, docNameInput, items)
+    createDocument(selectedType, vendorInput, docNameInput, items)
       .then((response) => {
         if (!response.error) {
           onNewDocument(response);
           setDocNameInput("");
-          setCardCodeInput(""); // Reset vendor selection
+          setVendorInput(""); // Reset vendor selection
           documentListRef.current?.clearItems();
           // Potentially switch back to the first tab or clear specific orders items
           setItems([]);
@@ -174,7 +174,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, confirm}) => 
           </div>
           <div className="space-y-2">
             <Label htmlFor="vendorSelect">{t("selectVendor")}</Label>
-            <Select value={cardCodeInput} onValueChange={setCardCodeInput}>
+            <Select value={vendorInput} onValueChange={setVendorInput}>
               <SelectTrigger id="vendorSelect">
                 <SelectValue placeholder={t("selectVendorPlaceholder")}/>
               </SelectTrigger>

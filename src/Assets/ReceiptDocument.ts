@@ -7,7 +7,7 @@ export interface ReceiptDocument extends BaseEntity {
   number: number;
   date: Date;
   status: Status;
-  businessPartner?: BusinessPartner;
+  vendor?: BusinessPartner;
   type: GoodsReceiptType;
   error: boolean;
   errorCode?: number;

@@ -151,7 +151,7 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
                   <TableRow key={doc.id}>
                     <TableCell>{doc.name || '-'}</TableCell>
                     <TableCell>{doc.number}</TableCell>
-                    <TableCell>{doc.businessPartner?.name ?? doc.businessPartner?.id ?? '-'}</TableCell>
+                    <TableCell>{doc.vendor?.name ?? doc.vendor?.id ?? '-'}</TableCell>
                     <TableCell>
                       {doc.documents && doc.documents?.length > 0 ? (
                         <a href="#" onClick={(e) => { e.preventDefault(); handleDocDetails(doc); }} className="text-blue-600 hover:underline">

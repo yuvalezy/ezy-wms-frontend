@@ -58,9 +58,9 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
           <InfoBoxValue label={t('createdBy')} value={doc.createdByUserName}/>
           <InfoBoxValue label={t('status')} value={documentStatusToString(doc.status)}/>
         </SecondaryInfoBox>
-        {(doc.businessPartner || doc.documents) && <FullInfoBox>
-          {doc.businessPartner && (
-            <InfoBoxValue label={t('vendor')} value={doc.businessPartner.name ?? doc.businessPartner.id}/>
+        {(doc.vendor || doc.documents) && <FullInfoBox>
+          {doc.vendor && (
+            <InfoBoxValue label={t('vendor')} value={doc.vendor.name ?? doc.vendor.id}/>
           )}
           {doc.documents && doc.documents?.length > 0 && (
             <InfoBoxValue label={t('documentsList')} value={formatDocumentsList(doc.documents)}
