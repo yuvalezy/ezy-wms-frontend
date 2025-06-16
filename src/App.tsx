@@ -75,22 +75,57 @@ export default function App() {
                     <Route path="/countingSupervisor" element={<ProtectedRoute authorization={RoleType.COUNTING_SUPERVISOR} element={<CountingSupervisor/>}/>}/>
                     <Route path="/countingSummaryReport/:scanCode" element={<ProtectedRoute authorization={RoleType.COUNTING_SUPERVISOR} element={<CountingSummaryReport/>}/>}/>
                     {/*Goods Receipt*/}
-                    <Route path="/goodsReceipt" element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT} element={<GoodsReceipt key="goodsReceipt"/>}/>}/>
-                    <Route path="/goodsReceipt/:scanCode" element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT} element={<GoodsReceiptProcess/>}/>}/>
-                    <Route path="/goodsReceiptSupervisor" element={<ProtectedRoute authorizations={getGoodsReceiptSupervisorAuthorizations()} element={<GoodsReceiptSupervisor key="goodsReceipt"/>}/>}/>
-                    <Route path="/goodsReceiptReport" element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_SUPERVISOR} element={<GoodsReceiptReport/>}/>}/>
-                    <Route path="/goodsReceiptVSExitReport/:scanCode" element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_SUPERVISOR} element={<GoodsReceiptVSExitReport/>}/>}/>
-                    <Route path="/goodsReceiptProcessDifferenceReport/:scanCode" element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_SUPERVISOR} element={<GoodsReceiptProcessDifferenceReport/>}/>}/>
-                    <Route path="/goodsReceiptReportAll/:scanCode" element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_SUPERVISOR} element={<GoodsReceiptAll/>}/>}/>
-                    {/*Goods Receipt Confirmation */}
-                    <Route path="/goodsReceiptConfirmation" element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_CONFIRMATION} element={<GoodsReceipt confirm key="receiptConfirmation"/>}/>}/>
-                    <Route path="/goodsReceiptConfirmation/:scanCode" element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_CONFIRMATION} element={<GoodsReceiptProcess confirm/>}/>}/>
-                    <Route path="/goodsReceiptConfirmationSupervisor" element={<ProtectedRoute authorizations={getGoodsReceiptConfirmationSupervisorAuthorizations()} element={<GoodsReceiptSupervisor confirm key="receiptConfirmation"/>}/>}/>
-                    <Route path="/goodsReceiptConfirmationReport" element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR} element={<GoodsReceiptReport confirm/>}/>}/>
-                    <Route path="/goodsReceiptConfirmationVSExitReport/:scanCode" element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR} element={<GoodsReceiptVSExitReport confirm/>}/>}/>
-                    <Route path="/goodsReceiptConfirmationProcessDifferenceReport/:scanCode" element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR} element={<GoodsReceiptProcessDifferenceReport confirm/>}/>}/>
-                    <Route path="/goodsReceiptConfirmationReportAll/:scanCode" element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR} element={<GoodsReceiptAll confirm/>}/>}/>
-                    {/*Pick*/}
+                        <Route path="/goodsReceipt" element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT}
+                                                                             element={<GoodsReceipt
+                                                                               key="goodsReceipt"/>}/>}/>
+                        <Route path="/goodsReceipt/:scanCode"
+                               element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT}
+                                                        element={<GoodsReceiptProcess key="goodsReceiptProcess"/>}/>}/>
+                        <Route path="/goodsReceiptSupervisor"
+                               element={<ProtectedRoute authorizations={getGoodsReceiptSupervisorAuthorizations()}
+                                                        element={<GoodsReceiptSupervisor key="goodsReceipt"/>}/>}/>
+                        <Route path="/goodsReceiptReport"
+                               element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_SUPERVISOR}
+                                                        element={<GoodsReceiptReport key="goodsReceiptReport"/>}/>}/>
+                        <Route path="/goodsReceiptVSExitReport/:scanCode"
+                               element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_SUPERVISOR}
+                                                        element={<GoodsReceiptVSExitReport
+                                                          key="goodsReceiptVSExitReport"/>}/>}/>
+                        <Route path="/goodsReceiptProcessDifferenceReport/:scanCode"
+                               element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_SUPERVISOR}
+                                                        element={<GoodsReceiptProcessDifferenceReport
+                                                          key="goodsReceiptProcessDifferenceReport"/>}/>}/>
+                        <Route path="/goodsReceiptReportAll/:scanCode"
+                               element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_SUPERVISOR}
+                                                        element={<GoodsReceiptAll key="goodsReceiptAll"/>}/>}/>
+                        {/*Goods Receipt Confirmation */}
+                        <Route path="/goodsReceiptConfirmation"
+                               element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_CONFIRMATION}
+                                                        element={<GoodsReceipt confirm key="receiptConfirmation"/>}/>}/>
+                        <Route path="/goodsReceiptConfirmation/:scanCode"
+                               element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_CONFIRMATION}
+                                                        element={<GoodsReceiptProcess confirm
+                                                                                      key="receiptConfirmationProcess"/>}/>}/>
+                        <Route path="/goodsReceiptConfirmationSupervisor" element={<ProtectedRoute
+                          authorizations={getGoodsReceiptConfirmationSupervisorAuthorizations()}
+                          element={<GoodsReceiptSupervisor confirm key="receiptConfirmation"/>}/>}/>
+                        <Route path="/goodsReceiptConfirmationReport"
+                               element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR}
+                                                        element={<GoodsReceiptReport confirm
+                                                                                     key="receiptConfirmationReport"/>}/>}/>
+                        <Route path="/goodsReceiptConfirmationVSExitReport/:scanCode"
+                               element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR}
+                                                        element={<GoodsReceiptVSExitReport confirm
+                                                                                           key="receiptConfirmationVSExitReport"/>}/>}/>
+                        <Route path="/goodsReceiptConfirmationProcessDifferenceReport/:scanCode"
+                               element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR}
+                                                        element={<GoodsReceiptProcessDifferenceReport confirm
+                                                                                                      key="receiptConfirmationProcessDifferenceReport"/>}/>}/>
+                        <Route path="/goodsReceiptConfirmationReportAll/:scanCode"
+                               element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR}
+                                                        element={<GoodsReceiptAll confirm
+                                                                                  key="receiptConfirmationAll"/>}/>}/>
+                        {/*Pick*/}
                     <Route path="/pick" element={<ProtectedRoute authorization={RoleType.PICKING} element={<PickingUser/>}/>}/>
                     <Route path="/pick/:idParam" element={<ProtectedRoute authorization={RoleType.PICKING} element={<PickingProcess/>}/>}/>
                     <Route path="/pick/:idParam/:typeParam/:entryParam" element={<ProtectedRoute authorization={RoleType.PICKING} element={<PickingProcessDetail/>}/>}/>
