@@ -1,23 +1,21 @@
 import * as React from 'react';
-import {GoodsReceiptAll} from "@/pages/GoodsReceipt/data/Report";
+import {GoodsReceiptAllLine} from "@/pages/GoodsReceipt/data/Report";
 import {useTranslation} from "react-i18next";
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
-import {MetricRow} from "@/components/MetricRow";
-import {formatNumber} from "@/lib/utils";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {useStockInfo} from "@/utils/stock-info";
 import {useItemDetailsPopup} from "@/hooks/useItemDetailsPopup";
-import {PickingDocumentDetailItem} from "@/pages/picking/data/picking-document";
 import {Link} from "react-router-dom";
 import {useAuth} from "@/components";
+import {Status} from "@/assets";
 
 interface GoodsReceiptAllTableProps {
-  data: GoodsReceiptAll[]
-  onClick: (data: GoodsReceiptAll) => void;
+  data: GoodsReceiptAllLine[],
+  onClick: (data: GoodsReceiptAllLine) => void,
+  status: Status
 }
 
-const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data, onClick}) => {
+const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data, onClick, status}) => {
   const {t} = useTranslation();
   const stockInfo = useStockInfo();
   const {openItemDetails} = useItemDetailsPopup();
@@ -25,7 +23,7 @@ const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data, 
 
   const showTarget = user?.settings.goodsReceiptTargetDocuments;
 
-  const showDetails = (row: GoodsReceiptAll) => {
+  const showDetails = (row: GoodsReceiptAllLine) => {
     openItemDetails({
       itemCode: row.itemCode,
       itemName: row.itemName,
@@ -35,6 +33,8 @@ const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data, 
       purPackMsr: row.purPackMsr || ""
     });
   }
+
+  const allowModify = status === Status.Open || status === Status.InProgress;
 
   return (
     <Table>
@@ -47,7 +47,7 @@ const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data, 
           {showTarget && <TableHead>{t('showroom')}</TableHead>}
           <TableHead>{t('inWarehouse')}</TableHead>
           <TableHead>{t('stock')}</TableHead>
-          <TableHead className="border-l"></TableHead>
+          {allowModify && <TableHead className="border-l"></TableHead>}
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -95,7 +95,7 @@ const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data, 
                   purPackUn: row.purPackUn,
                   purPackMsr: row.purPackMsr,
                 })}</TableCell>
-                <TableCell className="border-l">
+                {allowModify && <TableCell className="border-l">
                   <Button
                     variant="default"
                     size="sm"
@@ -103,11 +103,11 @@ const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data, 
                   >
                     {t('modifyValues')}
                   </Button>
-                </TableCell>
+                </TableCell>}
               </TableRow>
               <TableRow className="sm:hidden">
                 <TableCell className="bg-gray-100 border-b-1"
-                           colSpan={8}>{t('description')}: {row.itemName}</TableCell>
+                           colSpan={allowModify ? 8 : 7}>{t('description')}: {row.itemName}</TableCell>
               </TableRow>
             </>
           );

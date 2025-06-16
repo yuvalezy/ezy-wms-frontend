@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {Input} from "@/components/ui/input";
-import {GoodsReceiptAll} from "@/pages/GoodsReceipt/data/Report";
+import {GoodsReceiptAllLine} from "@/pages/GoodsReceipt/data/Report";
 import {UnitType} from "@/assets/Common";
 import {formatNumber} from "@/lib/utils";
 import {Card, CardContent} from "@/components/ui/card";
@@ -45,7 +45,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
   } = useGoodsReceiptAllDetailsData(props);
 
   useImperativeHandle(ref, () => ({
-    show(data: GoodsReceiptAll) {
+    show(data: GoodsReceiptAllLine) {
       setCurrentData(data);
       loadDetails(data);
     }

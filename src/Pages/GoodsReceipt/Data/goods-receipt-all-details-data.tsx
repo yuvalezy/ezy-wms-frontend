@@ -2,7 +2,7 @@ import {DetailUpdateParameters, Status} from "@/assets/Common";
 import {
   fetchGoodsReceiptReportAllDetails,
   GoodsReceiptAll,
-  GoodsReceiptAllDetail
+  GoodsReceiptAllDetail, GoodsReceiptAllLine
 } from "@/pages/GoodsReceipt/data/Report";
 import {useThemeContext} from "@/components/ThemeContext";
 import {useState} from "react";
@@ -11,7 +11,7 @@ import {fetchDocument, fetchDocuments} from "@/pages/GoodsReceipt/data/Document"
 export const useGoodsReceiptAllDetailsData = (props: GRPOAllDetailProps) => {
   const {setLoading, setError} = useThemeContext();
   const [isOpen, setIsOpen] = useState(false);
-  const [currentData, setCurrentData] = useState<GoodsReceiptAll | null>(null);
+  const [currentData, setCurrentData] = useState<GoodsReceiptAllLine | null>(null);
   const [data, setData] = useState<GoodsReceiptAllDetail[] | null>([]);
   const [enableUpdate, setEnableUpdate] = useState(false);
   const [checkedRows, setCheckedRows] = useState<{ [key: string]: boolean }>({}); // State to store checked rows
@@ -27,7 +27,7 @@ export const useGoodsReceiptAllDetailsData = (props: GRPOAllDetailProps) => {
     }
   }
 
-  function loadDetails(data: GoodsReceiptAll) {
+  function loadDetails(data: GoodsReceiptAllLine) {
     setLoading(true);
     setEnableUpdate(false);
     setCheckedRows({})
@@ -83,7 +83,7 @@ export const useGoodsReceiptAllDetailsData = (props: GRPOAllDetailProps) => {
 }
 
 export interface GRPOAllDetailRef {
-  show: (data: GoodsReceiptAll) => void;
+  show: (data: GoodsReceiptAllLine) => void;
 }
 
 export interface GRPOAllDetailProps {

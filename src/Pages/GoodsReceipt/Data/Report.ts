@@ -1,7 +1,11 @@
-import {DetailUpdateParameters, UnitType} from "@/assets";
+import {DetailUpdateParameters, Status, UnitType} from "@/assets";
 import {axiosInstance} from "@/utils/axios-instance";
 
 export type GoodsReceiptAll = {
+  status: Status;
+  lines: GoodsReceiptAllLine[];
+};
+export type GoodsReceiptAllLine = {
   itemCode: string;
   itemName: string;
   quantity: number;
@@ -80,11 +84,11 @@ export enum ProcessLineStatus {
   NotReceived = 'NotReceived'
 }
 
-export const fetchGoodsReceiptReportAll = async (id: string): Promise<GoodsReceiptAll[]> => {
+export const fetchGoodsReceiptReportAll = async (id: string): Promise<GoodsReceiptAll> => {
   try {
     const url = `goodsReceipt/${id}/report/all`;
 
-    const response = await axiosInstance.get<GoodsReceiptAll[]>(url,);
+    const response = await axiosInstance.get<GoodsReceiptAll>(url,);
 
     return response.data;
   } catch (error) {
@@ -116,9 +120,9 @@ export const updateGoodsReceiptReport = async (data: DetailUpdateParameters) => 
     throw error;
   }
 }
-export const fetchGoodsReceiptVSExitReport = async (id: number): Promise<GoodsReceiptVSExitReportData[]> => {
+export const fetchGoodsReceiptVSExitReport = async (id: string): Promise<GoodsReceiptVSExitReportData[]> => {
   try {
-    const url = `GoodsReceipt/GoodsReceiptVSExitReport/${id}`;
+    const url = `goodsReceipt/${id}/report/vsExit`;
 
     const response = await axiosInstance.get<GoodsReceiptVSExitReportData[]>(url,);
 
@@ -142,7 +146,7 @@ export const fetchGoodsReceiptValidateProcess = async (id: string): Promise<Good
 };
 export const fetchGoodsReceiptValidateProcessLineDetails = async (id: string, baseType: number, baseEntry: number, baseLine: number): Promise<GoodsReceiptValidateProcessLineDetails[]> => {
   try {
-    const url = `GoodsReceipt/validateProcessLineDetails`;
+    const url = `goodsReceipt/validateProcessLineDetails`;
 
     const response = await axiosInstance.post<GoodsReceiptValidateProcessLineDetails[]>(url, {
       id: id,

@@ -2,7 +2,12 @@ import {useTranslation} from "react-i18next";
 import {useEffect, useRef, useState} from "react";
 import {useParams} from "react-router-dom";
 import {useThemeContext} from "@/components/ThemeContext";
-import {fetchGoodsReceiptReportAll, GoodsReceiptAll, updateGoodsReceiptReport} from "@/pages/GoodsReceipt/data/Report";
+import {
+  fetchGoodsReceiptReportAll,
+  GoodsReceiptAll,
+  GoodsReceiptAllLine,
+  updateGoodsReceiptReport
+} from "@/pages/GoodsReceipt/data/Report";
 import {DetailUpdateParameters} from "@/assets/Common";
 import {GRPOAllDetailRef} from "@/pages/GoodsReceipt/data/goods-receipt-all-details-data";
 import {exportToExcel} from "@/utils/excelExport";
@@ -14,7 +19,7 @@ export const useGoodsReceiptAllData = (confirm: boolean | undefined) => {
   const {t} = useTranslation();
   const {scanCode} = useParams();
   const {setLoading, setError} = useThemeContext();
-  const [data, setData] = useState<GoodsReceiptAll[] | null>(null);
+  const [data, setData] = useState<GoodsReceiptAll | null>(null);
   const [info, setInfo] = useState<ReceiptDocument | null>(null);
   const title = `${t("goodsReceiptReport")} #${scanCode}`;
   const detailRef = useRef<GRPOAllDetailRef>();
@@ -57,7 +62,7 @@ export const useGoodsReceiptAllData = (confirm: boolean | undefined) => {
   ];
 
   const excelData = () => {
-    return data?.map((item) => {
+    return data?.lines?.map((item) => {
       const quantities = formatQuantityForExcel({
         quantity: item.quantity,
         numInBuy: item.numInBuy,
@@ -90,7 +95,7 @@ export const useGoodsReceiptAllData = (confirm: boolean | undefined) => {
     });
   };
 
-  function openDetails(newData: GoodsReceiptAll) {
+  function openDetails(newData: GoodsReceiptAllLine) {
     detailRef?.current?.show(newData);
   }
 

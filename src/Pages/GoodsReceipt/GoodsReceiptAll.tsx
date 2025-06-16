@@ -37,8 +37,8 @@ export default function GoodsReceiptReportAll({confirm = false}: GoodsReceiptAll
                     {label: subTitle}
                   ]}>
       {data && <>
-          <GoodsReceiptAllReportTable onClick={openDetails} data={data}/>
-        {data.length === 0 && (
+          <GoodsReceiptAllReportTable onClick={openDetails} data={data.lines} status={data.status}/>
+        {data.lines.length === 0 && (
           <Alert variant="default" className="mt-4 bg-yellow-100 border-yellow-400 text-yellow-700">
             <AlertDescription>{t("noExitData")}</AlertDescription>
           </Alert>

@@ -9,9 +9,7 @@ import GoodsReceiptVSExitReportTable from "@/pages/GoodsReceipt/components/Goods
 import {useThemeContext} from "@/components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {useObjectName} from "@/assets/ObjectName";
-import {IsNumeric} from "@/assets/Functions";
 import {Alert, AlertDescription} from "@/components/ui/alert";
-import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage} from "@/components/ui/breadcrumb";
 import InfoBox, {FullInfoBox, InfoBoxValue} from "@/components/InfoBox";
 import {Button, Card, CardContent, CardHeader} from "@/components";
 
@@ -33,7 +31,7 @@ export default function GoodsReceiptVSExitReport({confirm}: GoodsReceiptVSExitRe
       return;
     }
     setLoading(true);
-    fetchGoodsReceiptVSExitReport(parseInt(scanCode))
+    fetchGoodsReceiptVSExitReport(scanCode)
       .then((result) => setData(result))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
