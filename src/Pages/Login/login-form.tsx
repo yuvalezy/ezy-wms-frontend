@@ -14,9 +14,12 @@ type LoginFormProps = {
   onSubmit: React.FormEventHandler<HTMLFormElement>;
   warehouses?: Warehouse[];
   requiresWarehouse?: boolean;
+  errorMessage?: string;
+  errorType?: string;
+  onClearError?: () => void;
 };
 
-export default function LoginForm({onSubmit, warehouses, requiresWarehouse}: LoginFormProps) {
+export default function LoginForm({onSubmit, warehouses, requiresWarehouse, errorMessage, errorType, onClearError}: LoginFormProps) {
   const {t, i18n} = useTranslation();
   const cookies = new Cookies();
   const {companyName} = useAuth();
@@ -51,6 +54,18 @@ export default function LoginForm({onSubmit, warehouses, requiresWarehouse}: Log
           </h2>
           <p className="text-center text-gray-500">{t('login') || 'Login'}</p>
         </div>
+
+        {(errorMessage || errorType) && (
+          <Alert className="bg-red-50 border-red-200 mb-4">
+            <AlertCircle className="h-4 w-4 text-red-600"/>
+            <AlertDescription className="text-red-800">
+              {errorType === 'invalid_grant' 
+                ? (t('invalidGrant') || 'Invalid password or account disabled')
+                : `${t('loginError') || 'Error during login'}: ${errorMessage}`
+              }
+            </AlertDescription>
+          </Alert>
+        )}
 
         <form onSubmit={onSubmit} className="space-y-5">
           <div>

@@ -377,5 +377,7 @@
   "document": "Document",
   "purchasingUoM": "Purchasing UoM",
   "packagingUoM": "Packaging UoM",
-  "noLinesForWarehouse": "No lines found in selected document for current connected warehouse"
+  "noLinesForWarehouse": "No lines found in selected document for current connected warehouse",
+  "loginError": "Error during login",
+  "invalidGrant": "Invalid password or account disabled"
 }

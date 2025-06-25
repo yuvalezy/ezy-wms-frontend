@@ -15,6 +15,8 @@ export default function Login() {
     const [redirectToHome, setRedirectToHome] = useState(false);
     const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
     const [requiresWarehouse, setRequiresWarehouse] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<string>('');
+    const [errorType, setErrorType] = useState<string>('');
     const {setLoading} = useThemeContext();
 
     const {login} = useAuth();
@@ -35,8 +37,18 @@ export default function Login() {
                 const errorData = error.response.data;
                 setWarehouses(errorData.data.warehouses);
                 setRequiresWarehouse(true);
+                setErrorMessage('');
+                setErrorType('');
             } else {
-                alert(`Error during login: ${error?.response?.data?.error_description || error.message}`);
+                const errorData = error?.response?.data;
+                const errorCode = errorData?.error;
+                if (errorCode === 'invalid_grant') {
+                    setErrorType('invalid_grant');
+                    setErrorMessage('');
+                } else {
+                    setErrorType('');
+                    setErrorMessage(errorData?.error_description || error.message);
+                }
             }
         } finally {
             setLoading(false);
@@ -51,6 +63,9 @@ export default function Login() {
         onSubmit={handleSubmit} 
         warehouses={warehouses} 
         requiresWarehouse={requiresWarehouse}
+        errorMessage={errorMessage}
+        errorType={errorType}
+        onClearError={() => { setErrorMessage(''); setErrorType(''); }}
     />)
 
 }

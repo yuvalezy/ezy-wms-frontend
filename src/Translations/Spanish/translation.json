@@ -376,5 +376,7 @@
   "document": "Documento",
   "purchasingUoM": "Unidad de medida de compras",
   "packagingUoM": "Unidad de medida de embalaje",
-  "noLinesForWarehouse": "No se encontraron líneas en el documento seleccionado para el almacén conectado actual"
+  "noLinesForWarehouse": "No se encontraron líneas en el documento seleccionado para el almacén conectado actual",
+  "loginError": "Error durante el inicio de sesión",
+  "invalidGrant": "Contraseña inválida o cuenta deshabilitada"
 }
