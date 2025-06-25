@@ -3,8 +3,6 @@ import {useTranslation} from "react-i18next";
 import {PickingDocumentDetailItem} from "@/pages/picking/data/picking-document";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {useStockInfo} from "@/utils/stock-info";
-import {useItemDetailsPopup} from "@/hooks/useItemDetailsPopup";
-import {Link} from "react-router-dom";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
 
 export interface PickingProcessDetailContentProps {

@@ -49,18 +49,12 @@ export type GoodsReceiptValidateProcess = {
   lines: GoodsReceiptValidateProcessLine[];
 }
 
-export type GoodsReceiptValidateProcessLine = {
+export interface GoodsReceiptValidateProcessLine extends ItemDetails {
   visualLineNumber: number;
   lineNumber: number;
-  itemCode: string;
-  itemName: string;
   quantity: number;
   baseLine: string;
   documentQuantity: number;
-  numInBuy: number;
-  buyUnitMsr: string;
-  purPackUn: number;
-  purPackMsr: string;
   unit: UnitType;
   lineStatus: ProcessLineStatus;
 }

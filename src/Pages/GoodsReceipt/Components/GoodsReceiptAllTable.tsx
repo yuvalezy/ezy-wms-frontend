@@ -4,8 +4,6 @@ import {useTranslation} from "react-i18next";
 import {Button} from "@/components/ui/button";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {useStockInfo} from "@/utils/stock-info";
-import {useItemDetailsPopup} from "@/hooks/useItemDetailsPopup";
-import {Link} from "react-router-dom";
 import {useAuth} from "@/components";
 import {Status} from "@/assets";
 import ItemDetailsLink from "@/components/ItemDetailsLink";

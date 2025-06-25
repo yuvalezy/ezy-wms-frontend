@@ -1,24 +1,19 @@
-import React, {useEffect, useRef} from "react";
+import React from "react";
 import {useTranslation} from "react-i18next";
-import {Label} from "@/components/ui/label";
 import {Alert, AlertDescription} from "@/components/ui/alert";
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
-import {MetricRow} from "@/components/MetricRow";
-import {formatNumber} from "@/lib/utils";
 import BarCodeScanner from "../../components/BarCodeScanner";
 import BinLocationScanner from "../../components/BinLocationScanner";
 import {updateLine} from "@/pages/Counting/data/CountingProcess";
 import ProcessAlert from "../../components/ProcessAlert";
-import {CountingContent, ReasonType} from "@/assets";
+import {ReasonType} from "@/assets";
 import Processes from "../../components/Processes";
 import ContentTheme from "@/components/ContentTheme";
 import {AlertCircle} from "lucide-react";
 import {useCountingProcessData} from "@/pages/Counting/data/counting-process-data";
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {useStockInfo} from "@/utils/stock-info";
-import {useItemDetailsPopup} from "@/hooks/useItemDetailsPopup";
-import {TransferContent} from "@/pages/transfer/data/transfer-document";
+import ItemDetailsLink from "@/components/ItemDetailsLink";
 
 export default function CountingProcess() {
   const {t} = useTranslation();
@@ -41,7 +36,6 @@ export default function CountingProcess() {
     info
   } = useCountingProcessData();
   const stockInfo = useStockInfo();
-  const {openItemDetails} = useItemDetailsPopup();
 
   const navigate = useNavigate();
 
@@ -49,21 +43,6 @@ export default function CountingProcess() {
   if (binLocation) {
     titleBreadcrumbs.push({label: binLocation.code, onClick: undefined});
   }
-
-  const showDetails = (row: CountingContent) => {
-    openItemDetails({
-      itemCode: row.itemCode,
-      itemName: row.itemName,
-      numInBuy: row.numInBuy,
-      buyUnitMsr: row.buyUnitMsr || "",
-      purPackUn: row.purPackUn,
-      purPackMsr: row.purPackMsr || ""
-    });
-  }
-
-  useEffect(() => {
-   console.log("currentAlert", currentAlert);
-  }, [currentAlert]);
 
   return (
     <ContentTheme title={t("counting")}
@@ -90,9 +69,9 @@ export default function CountingProcess() {
                   {rows.map((row) => (
                     <>
                       <TableRow key={row.itemCode}>
-                        <TableCell><Link
-                          className="text-blue-600 hover:underline"
-                          onClick={() => showDetails(row)} to={""}>{row.itemCode}</Link></TableCell>
+                        <TableCell>
+                          <ItemDetailsLink data={row}/>
+                        </TableCell>
                         <TableCell className="hidden sm:table-cell">{row.itemName}</TableCell>
                         <TableCell>{stockInfo({
                           quantity: row.countedQuantity,

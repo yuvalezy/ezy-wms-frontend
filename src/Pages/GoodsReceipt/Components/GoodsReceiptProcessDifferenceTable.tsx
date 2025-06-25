@@ -1,8 +1,7 @@
 import * as React from 'react';
 import {CSSProperties, useState} from 'react';
 import {
-  fetchGoodsReceiptValidateProcessLineDetails, GoodsReceiptAll,
-  GoodsReceiptValidateProcess,
+  fetchGoodsReceiptValidateProcessLineDetails, GoodsReceiptValidateProcess,
   GoodsReceiptValidateProcessLine,
   GoodsReceiptValidateProcessLineDetails,
   ProcessLineStatus,
@@ -19,16 +18,13 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from "@/components/ui/dialog"; // Added DialogDescription
+} from "@/components/ui/dialog";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {UnitType} from "@/assets/Common";
 import {formatNumber} from "@/lib/utils";
-import {MetricRow} from "@/components/MetricRow";
 import InfoBox, {FullInfoBox, InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {useStockInfo} from "@/utils/stock-info";
-import {useItemDetailsPopup} from "@/hooks/useItemDetailsPopup";
-import {Link} from "react-router-dom";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
 
 interface GoodsReceiptProcessDifferenceTableProps {
@@ -45,18 +41,6 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
   const {dateFormat, timeFormat} = useDateTimeFormat();
   const {setLoading, setError} = useThemeContext(); // Removed setAlert as it's not used
   const stockInfo = useStockInfo();
-  const {openItemDetails} = useItemDetailsPopup();
-
-  const showDetails = (row: GoodsReceiptValidateProcessLine) => {
-    openItemDetails({
-      itemCode: row.itemCode,
-      itemName: row.itemCode,
-      numInBuy: row.numInBuy,
-      buyUnitMsr: row.buyUnitMsr || "",
-      purPackUn: row.purPackUn,
-      purPackMsr: row.purPackMsr || ""
-    });
-  }
 
   const [expandedRowsData, setExpandedRowsData] = useState<{
     [key: number]: GoodsReceiptValidateProcessLineDetails[]
@@ -176,15 +160,16 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
                     buyUnitMsr: row.buyUnitMsr,
                     purPackUn: row.purPackUn,
                     purPackMsr: row.purPackMsr,
-                  })} />
+                  })}/>
                   <InfoBoxValue label={t('documentQuantity')} value={stockInfo({
                     quantity: row.documentQuantity,
                     numInBuy: row.numInBuy,
                     buyUnitMsr: row.buyUnitMsr,
                     purPackUn: row.purPackUn,
                     purPackMsr: row.purPackMsr,
-                  })} />
-                  <InfoBoxValue label={t('status')} value={<span style={statusTextStyle}>{getRowStatusLabel(row.lineStatus)}</span>} />
+                  })}/>
+                  <InfoBoxValue label={t('status')}
+                                value={<span style={statusTextStyle}>{getRowStatusLabel(row.lineStatus)}</span>}/>
                 </FullInfoBox>
               </CardContent>
               <CardFooter>
@@ -218,13 +203,13 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
           <TableBody>
             {data.lines.map((row) => {
               const statusTextStyle = getStatusTextStyle(row.lineStatus);
-              
+
               return (
                 <TableRow key={row.lineNumber}>
                   <TableCell>{row.visualLineNumber}</TableCell>
-                  <TableCell><Link
-                    className="text-blue-600 hover:underline"
-                    onClick={() => showDetails(row)} to={""}>{row.itemCode}</Link></TableCell>
+                  <TableCell>
+                    <ItemDetailsLink data={row}/>
+                  </TableCell>
                   <TableCell>{row.itemName}</TableCell>
                   <TableCell>{stockInfo({
                     quantity: row.quantity,
@@ -309,7 +294,7 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
                       );
                     })}
                   </div>
-                  
+
                   {/* Desktop view - Table */}
                   <div className="hidden sm:block">
                     <Table>
@@ -336,7 +321,7 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
                           const displayUnit = selectedLineForDetail?.unit === UnitType.Unit ? t('unit') :
                             selectedLineForDetail?.unit === UnitType.Dozen ? (selectedLineForDetail?.buyUnitMsr || t("qtyInUn")) :
                               (selectedLineForDetail?.purPackMsr || t('packUn'));
-                          
+
                           return (
                             <TableRow key={`${detail.timeStamp}-${detail.createdByUserName}-${detail.scannedQuantity}`}>
                               <TableCell>{dateFormat(timeStamp)}</TableCell>
