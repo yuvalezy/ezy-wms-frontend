@@ -3,6 +3,8 @@ import {useTranslation} from "react-i18next";
 import {useSwipeable} from "react-swipeable";
 import { Edit3, MessageCircle } from "lucide-react";
 import {AddItemResponseMultipleValue, UnitType} from "@/assets";
+import {useAuth} from "@/components/AppContext";
+import {ItemCustomFields} from "@/pages/item-check/components/item-details-list";
 
 export type AlertSeverity = "Information" | "Positive" | "Negative" | "Warning";
 
@@ -33,6 +35,7 @@ export interface ProcessAlertValue {
   comment?: string;
   canceled?: boolean;
   multiple?: AddItemResponseMultipleValue[];
+  customFields?: Record<string, unknown>;
 }
 
 export interface ProcessAlertProps {
@@ -50,6 +53,7 @@ export enum AlertActionType {
 
 const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComment}) => {
   const {t} = useTranslation();
+  const {user} = useAuth();
   const [swiped, setSwiped] = useState(false);
 
   const handlers = useSwipeable({
@@ -129,18 +133,27 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
             }
             {alert.unit !== UnitType.Unit && alert.numInBuy &&
               <>
-                  <span><strong>{t('dozenUnit')}: </strong>{alert.numInBuy!} {alert.buyUnitMsr}</span>
+                  <span><strong>{t('purchasingUoM')}: </strong>{alert.numInBuy!} {alert.buyUnitMsr}</span>
                   <br/>
               </>
             }
             {alert.unit === UnitType.Pack && alert.purPackUn &&
               <>
-                  <span><strong>{t('packageUnit')}: </strong>{alert.purPackUn!} {alert.purPackMsr}</span>
+                  <span><strong>{t('packagingUoM')}: </strong>{alert.purPackUn!} {alert.purPackMsr}</span>
                   <br/>
               </>
             }
           </>}
-          {alert.message && (<><strong>{t('message')}: </strong>{alert.message}</>)}
+          {user?.settings?.goodsReceiptTargetDocuments && alert.message && (<><strong>{t('message')}: </strong>{alert.message}</>)}
+          <ItemCustomFields
+            customFields={alert.customFields}
+            render={(field, value, index) => (
+              <>
+              <strong>{field.description}: </strong>{value}
+              <br/>
+              </>
+            )}
+          />
           {alert.multiple != null && alert.multiple.length > 0 && (
             <div className="mt-2">
               <strong>{t('messages')}: </strong>

@@ -131,7 +131,8 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
           buyUnitMsr: data.buyUnitMsr,
           purPackUn: data.purPackUn,
           purPackMsr: data.purPackMsr,
-          unit: unit
+          unit: unit,
+          customFields: data.customFields,
         };
         alert(newAlert);
       })

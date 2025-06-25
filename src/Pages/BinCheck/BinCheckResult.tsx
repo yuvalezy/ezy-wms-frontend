@@ -3,6 +3,7 @@ import {BinContentResponse} from "./Bins";
 import {useTranslation} from "react-i18next";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {useStockInfo} from "@/utils/stock-info";
+import ItemDetailsLink from "@/components/ItemDetailsLink";
 
 export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({content}) => {
   const {t} = useTranslation();
@@ -34,7 +35,7 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
             return (
               <>
                 <TableRow key={index}>
-                  <TableCell className="font-medium">{binContent.itemCode}</TableCell>
+                  <TableCell className="font-medium"><ItemDetailsLink data={binContent}/></TableCell>
                   <TableCell className="hidden sm:table-cell">{binContent.itemName}</TableCell>
                   <TableCell>
                     {stockInfo({
@@ -48,7 +49,7 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
                 </TableRow>
                 <TableRow className="sm:hidden">
                   <TableCell className="bg-gray-100 border-b-1"
-                              colSpan={2}>{t('description')}: {binContent.itemName}</TableCell>
+                             colSpan={2}>{t('description')}: {binContent.itemName}</TableCell>
                 </TableRow>
               </>
             );
@@ -58,3 +59,4 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
     </div>
   );
 };
+

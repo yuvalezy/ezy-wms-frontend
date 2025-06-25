@@ -3,12 +3,10 @@ import {useTranslation} from "react-i18next";
 import React from "react";
 import InfoBox, {InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
 import {Card, CardContent, useAuth} from "@/components";
-import {CustomFieldType, useDateTimeFormat} from "@/assets";
+import {CustomFieldType, useDateTimeFormat, CustomField} from "@/assets";
 
 const ItemDetailsList = ({details}: { details: ItemDetails }) => {
   const {t} = useTranslation();
-  const {user} = useAuth();
-  const {dateFormat} = useDateTimeFormat();
   return <Card>
     <CardContent>
       <SecondaryInfoBox>
@@ -16,25 +14,49 @@ const ItemDetailsList = ({details}: { details: ItemDetails }) => {
         <InfoBoxValue label={t("description")} value={details.itemName}/>
         <InfoBoxValue label={t('purchasingUoM')} value={`${details.buyUnitMsr} ${details.numInBuy}`}/>
         <InfoBoxValue label={t('packagingUoM')} value={`${details.purPackMsr} ${details.purPackUn}`}/>
-        {(user?.customFields?.["Items"]??[]).map((field, index) => {
-          let customFieldValue = details.customFields?.[field.key];
-          if (customFieldValue != null) {
-            switch (field.type) {
-              case CustomFieldType.Date:
-                customFieldValue = dateFormat(customFieldValue);
-                break;
-              default:
-                customFieldValue = customFieldValue.toString();
-                break;
-            }
-          }
-          return (
-            <InfoBoxValue key={`${field.key}-${index}`} label={field.description}
-                          value={customFieldValue}/>
-          );
-        })}
+        <ItemCustomFields
+          customFields={details.customFields}
+          render={(field, value, index) => (
+            <InfoBoxValue 
+              key={`${field.key}-${index}`} 
+              label={field.description}
+              value={value}
+            />
+          )}
+        />
       </SecondaryInfoBox>
     </CardContent>
   </Card>
 };
+
+export const ItemCustomFields = ({
+  customFields,
+  render
+}: {
+  customFields?: Record<string, unknown>;
+  render: (field: CustomField, value: unknown, index: number) => React.ReactNode;
+}) => {
+  const { user } = useAuth();
+  const { dateFormat } = useDateTimeFormat();
+
+  return (
+    <>
+      {(user?.customFields?.["Items"] ?? []).map((field, index) => {
+        let customFieldValue = customFields?.[field.key];
+        if (customFieldValue != null) {
+          switch (field.type) {
+            case CustomFieldType.Date:
+              customFieldValue = dateFormat(customFieldValue as Date);
+              break;
+            default:
+              customFieldValue = customFieldValue.toString();
+              break;
+          }
+        }
+        return render(field, customFieldValue, index);
+      })}
+    </>
+  );
+};
+
 export default ItemDetailsList;

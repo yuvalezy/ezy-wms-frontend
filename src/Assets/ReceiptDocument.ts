@@ -40,6 +40,7 @@ export interface DocumentAddItemResponse {
   purPackUn: number;
   purPackMsr: string;
   errorMessage?: string;
+  customFields?: Record<string, unknown>;
 }
 
 export interface DocumentUpdateLineQuantityResponse {

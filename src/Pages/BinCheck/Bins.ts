@@ -1,13 +1,8 @@
 import {axiosInstance} from "@/utils/axios-instance";
+import {ItemDetails} from "@/pages/item-check/item-check";
 
-export interface BinContentResponse {
-  itemCode: string;
-  itemName: string;
+export interface BinContentResponse extends ItemDetails {
   onHand: number;
-  numInBuy: number;
-  buyUnitMsr: string;
-  purPackUn: number;
-  purPackMsr: string;
 }
 
 export const binCheck = async (
