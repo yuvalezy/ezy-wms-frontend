@@ -2,6 +2,7 @@ import {UnitType} from "@/assets";
 import {ProcessResponse} from "@/assets";
 import {BinLocation} from "@/assets";
 import { axiosInstance } from "@/utils/axios-instance";
+import {ItemDetails} from "@/pages/item-check/item-check";
 
 export enum PickStatus {
     Released = "Released",
@@ -35,14 +36,8 @@ export type PickingDocumentDetail = {
     totalOpenItems: number;
 }
 
-export type PickingDocumentDetailItem = {
-    itemCode: string;
-    itemName: string;
+export interface PickingDocumentDetailItem extends ItemDetails {
     quantity: number;
-    numInBuy: number;
-    buyUnitMsr: string;
-    purPackUn: number;
-    purPackMsr: string;
     picked: number;
     openQuantity: number;
     available?: number;

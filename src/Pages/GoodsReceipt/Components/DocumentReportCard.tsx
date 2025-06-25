@@ -8,6 +8,7 @@ import {Separator} from "@/components/ui/separator";
 import {Button} from "@/components/ui/button";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faExchangeAlt, faFileAlt, faTruckLoading} from "@fortawesome/free-solid-svg-icons";
+import {useAuth} from "@/components";
 
 type DocumentReportCardProps = {
   doc: ReceiptDocument,
@@ -17,6 +18,7 @@ type DocumentReportCardProps = {
 
 const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc, docDetails, confirm}) => {
   const {t} = useTranslation();
+  const {user} = useAuth();
   const {dateFormat} = useDateTimeFormat();
   const documentStatusToString = useDocumentStatusToString();
   const handleOpen = useHandleOpen(confirm);
@@ -31,7 +33,7 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc, docDetails,
   return (
     <Card key={doc.id}>
       <CardHeader>
-        <CardTitle>{`${t('number')}: ${doc.id}`}</CardTitle>
+        <CardTitle>{`${t('number')}: ${doc.number}`}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid gap-2"><InfoBox>
@@ -56,7 +58,7 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc, docDetails,
             <FontAwesomeIcon icon={faFileAlt} className="mr-2"/>
             {!confirm ? t('goodsReceiptReport') : t('confirmationReport')}
           </Button>
-          {activeStatuses.includes(doc.status) && (
+          {user?.settings?.goodsReceiptTargetDocuments && activeStatuses.includes(doc.status) && (
             <Button variant="outline" className="w-full" onClick={() => handleOpen('vs', doc.id)}>
               <FontAwesomeIcon icon={faTruckLoading} className="mr-2"/>
               {!confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}

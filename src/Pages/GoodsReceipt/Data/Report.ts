@@ -1,22 +1,19 @@
 import {DetailUpdateParameters, Status, UnitType} from "@/assets";
 import {axiosInstance} from "@/utils/axios-instance";
+import {ItemDetails} from "@/pages/item-check/item-check";
 
 export type GoodsReceiptAll = {
   status: Status;
   lines: GoodsReceiptAllLine[];
 };
-export type GoodsReceiptAllLine = {
-  itemCode: string;
-  itemName: string;
+
+export interface GoodsReceiptAllLine extends ItemDetails {
   quantity: number;
   delivery: number;
   showroom: number;
   stock: number;
-  numInBuy: number;
-  buyUnitMsr?: string | null;
-  purPackUn: number;
-  purPackMsr?: string | null;
-};
+}
+
 export type GoodsReceiptAllDetail = {
   lineId: string;
   createdByUserName: string;

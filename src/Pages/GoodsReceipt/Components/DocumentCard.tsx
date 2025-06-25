@@ -53,7 +53,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
       <CardContent className="grid text-sm gap-2">
         <SecondaryInfoBox>
           {doc.name && <InfoBoxValue label={t('id')} value={doc.name}/>}
-          <InfoBoxValue onClick={handleOpenLink ? openLink : undefined} label={t('number')} value={doc.id}/>
+          <InfoBoxValue onClick={handleOpenLink ? openLink : undefined} label={t('number')} value={doc.number}/>
           <InfoBoxValue label={t('docDate')} value={dateFormat(doc.date)}/>
           <InfoBoxValue label={t('createdBy')} value={doc.createdByUserName}/>
           <InfoBoxValue label={t('status')} value={documentStatusToString(doc.status)}/>

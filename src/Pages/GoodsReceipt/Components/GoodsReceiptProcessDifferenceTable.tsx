@@ -29,6 +29,7 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/c
 import {useStockInfo} from "@/utils/stock-info";
 import {useItemDetailsPopup} from "@/hooks/useItemDetailsPopup";
 import {Link} from "react-router-dom";
+import ItemDetailsLink from "@/components/ItemDetailsLink";
 
 interface GoodsReceiptProcessDifferenceTableProps {
   id: string,
@@ -161,10 +162,9 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
           return (
             <Card key={row.lineNumber}>
               <CardHeader>
-                <CardTitle>{`${t('code')}: `}
-                  <Link
-                    className="text-blue-600 hover:underline"
-                    onClick={() => showDetails(row)} to={""}>{row.itemCode}</Link>
+                <CardTitle>
+                  {t('code')}:&nbsp;
+                  <ItemDetailsLink data={row}/>
                 </CardTitle>
                 <CardDescription>{`${t('description')}: ${row.itemName} (#${row.visualLineNumber})`}</CardDescription>
               </CardHeader>

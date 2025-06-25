@@ -8,6 +8,7 @@ import {useItemDetailsPopup} from "@/hooks/useItemDetailsPopup";
 import {Link} from "react-router-dom";
 import {useAuth} from "@/components";
 import {Status} from "@/assets";
+import ItemDetailsLink from "@/components/ItemDetailsLink";
 
 interface GoodsReceiptAllTableProps {
   data: GoodsReceiptAllLine[],
@@ -18,21 +19,9 @@ interface GoodsReceiptAllTableProps {
 const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data, onClick, status}) => {
   const {t} = useTranslation();
   const stockInfo = useStockInfo();
-  const {openItemDetails} = useItemDetailsPopup();
   const {user} = useAuth();
 
   const showTarget = user?.settings.goodsReceiptTargetDocuments;
-
-  const showDetails = (row: GoodsReceiptAllLine) => {
-    openItemDetails({
-      itemCode: row.itemCode,
-      itemName: row.itemName,
-      numInBuy: row.numInBuy,
-      buyUnitMsr: row.buyUnitMsr || "",
-      purPackUn: row.purPackUn,
-      purPackMsr: row.purPackMsr || ""
-    });
-  }
 
   const allowModify = status === Status.Open || status === Status.InProgress;
 
@@ -56,9 +45,7 @@ const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data, 
           return (
             <>
               <TableRow key={row.itemCode}>
-                <TableCell><Link
-                  className="text-blue-600 hover:underline"
-                  onClick={() => showDetails(row)} to={""}>{row.itemCode}</Link></TableCell>
+                <TableCell><ItemDetailsLink data={row}/></TableCell>
                 <TableCell className="hidden sm:table-cell">{row.itemName}</TableCell>
                 <TableCell>{stockInfo({
                   quantity: row.quantity,

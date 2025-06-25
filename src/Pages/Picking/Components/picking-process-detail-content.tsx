@@ -5,6 +5,7 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/c
 import {useStockInfo} from "@/utils/stock-info";
 import {useItemDetailsPopup} from "@/hooks/useItemDetailsPopup";
 import {Link} from "react-router-dom";
+import ItemDetailsLink from "@/components/ItemDetailsLink";
 
 export interface PickingProcessDetailContentProps {
   items?: PickingDocumentDetailItem[];
@@ -14,22 +15,10 @@ export const PickingProcessDetailContent: React.FC<PickingProcessDetailContentPr
   const {t} = useTranslation();
   const [available, setAvailable] = useState(false);
   const stockInfo = useStockInfo();
-  const {openItemDetails} = useItemDetailsPopup();
 
   useEffect(() => {
     setAvailable(items?.some(i => i.available != null && i.available > 0) ?? false);
   }, [items]);
-
-  const showDetails = (row: PickingDocumentDetailItem) => {
-    openItemDetails({
-      itemCode: row.itemCode,
-      itemName: row.itemName,
-      numInBuy: row.numInBuy,
-      buyUnitMsr: row.buyUnitMsr,
-      purPackUn: row.purPackUn,
-      purPackMsr: row.purPackMsr
-    });
-  }
 
   return (
     <div className="contentStyle">
@@ -48,9 +37,7 @@ export const PickingProcessDetailContent: React.FC<PickingProcessDetailContentPr
             {items?.map((row) => (
               <React.Fragment key={row.itemCode}>
                 <TableRow className={row.openQuantity === 0 ? 'bg-green-100' : ''}>
-                  <TableCell><Link
-                    className="text-blue-600 hover:underline"
-                    onClick={() => showDetails(row)} to={""}>{row.itemCode}</Link></TableCell>
+                  <TableCell><ItemDetailsLink data={row}/></TableCell>
                   <TableCell className="hidden sm:table-cell">{row.itemName}</TableCell>
                   <TableCell>{stockInfo({
                     quantity: row.quantity,
@@ -128,9 +115,9 @@ export const PickingProcessDetailContent: React.FC<PickingProcessDetailContentPr
             {items?.map((row) => (
               <>
                 <TableRow key={row.itemCode} className={row.openQuantity === 0 ? 'bg-green-100' : ''}>
-                  <TableCell><Link
-                    className="text-blue-600 hover:underline"
-                    onClick={() => showDetails(row)} to={""}>{row.itemCode}</Link></TableCell>
+                  <TableCell>
+                    <ItemDetailsLink data={row}/>
+                  </TableCell>
                   <TableCell className="hidden sm:table-cell">{row.itemName}</TableCell>
                   <TableCell>
                     {stockInfo({
