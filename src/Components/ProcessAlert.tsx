@@ -176,7 +176,7 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-3">
+          {alert.customFields && <div className="grid grid-cols-2 gap-3">
             <ItemCustomFields
               customFields={alert.customFields}
               render={(field, value, index) => (
@@ -186,7 +186,7 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
                 </div>
               )}
             />
-          </div>
+          </div>}
           {alert.multiple != null && alert.multiple.length > 0 && (
             <div className="space-y-2">
               <div className="text-xs text-gray-500 uppercase tracking-wide">{t('messages')}</div>

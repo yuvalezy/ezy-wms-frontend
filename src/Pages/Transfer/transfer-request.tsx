@@ -36,7 +36,7 @@ export default function TransferRequest() {
 
     function handleAddItem(item: Item, unit: UnitType) {
         try {
-            const duplicateItem = rows.find(row => row.code === item.code);
+            const duplicateItem = rows.find(row => row.itemCode === item.code);
 
             if (duplicateItem) {
                 setError(t('duplicateItems'));
@@ -44,7 +44,7 @@ export default function TransferRequest() {
             }
 
             let newRow: TransferContent = {
-                code: item.code,
+                itemCode: item.code,
                 quantity: 1,
                 openQuantity: 0,
                 numInBuy: 1,
@@ -52,7 +52,7 @@ export default function TransferRequest() {
                 buyUnitMsr:"N/A",
                 purPackUn: 1,
                 unit: unit,
-                name: item.name,
+                itemName: item.name,
             }
             setRows((prevRows) => [...prevRows, newRow]);
             barcodeRef?.current?.clear();
@@ -127,8 +127,8 @@ export default function TransferRequest() {
                             <TableBody>
                                 {rows.map((row, index) => (
                                     <TableRow key={index}>
-                                        <TableCell>{row.code}</TableCell>
-                                        <TableCell>{row.name}</TableCell>
+                                        <TableCell>{row.itemCode}</TableCell>
+                                        <TableCell>{row.itemName}</TableCell>
                                         <TableCell>
                                             <Input
                                                 type="number"
@@ -171,7 +171,7 @@ export default function TransferRequest() {
                     <DialogHeader>
                         <DialogTitle>{t("confirmRemove")}</DialogTitle>
                         <DialogDescription>
-                            {StringFormat(t('confirmRemoveItem'), itemToRemoveIndex !== null ? rows[itemToRemoveIndex].code : '')}
+                            {StringFormat(t('confirmRemoveItem'), itemToRemoveIndex !== null ? rows[itemToRemoveIndex].itemCode : '')}
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>

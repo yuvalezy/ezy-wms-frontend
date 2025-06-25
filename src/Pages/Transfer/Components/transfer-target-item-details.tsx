@@ -65,7 +65,7 @@ const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsD
         fetchTransfers({id: props.id})
             .then((transfer) => {
                 setEnableUpdate(transfer[0].status === Status.InProgress);
-                fetchTargetItemDetails(props.id, contentArg.code, binArg.entry)
+                fetchTargetItemDetails(props.id, contentArg.itemCode, binArg.entry)
                     .then((result) => {
                         setIsOpen(true);
                         setData(result);
@@ -113,7 +113,7 @@ const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsD
                 <DialogHeader>
                     <DialogTitle>{t("detail")} - {bin?.code}</DialogTitle>
                     <DialogDescription>
-                        {content?.code} - {content?.name}
+                        {content?.itemCode} - {content?.itemName}
                     </DialogDescription>
                 </DialogHeader>
                 

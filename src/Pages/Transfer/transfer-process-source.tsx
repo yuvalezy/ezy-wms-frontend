@@ -13,15 +13,14 @@ import {updateLine} from "@/pages/transfer/data/transfer-process";
 import {AlertCircle} from "lucide-react";
 import {useTransferProcessSourceData} from "@/pages/transfer/data/transfer-process-source-data";
 import {useStockInfo} from "@/utils/stock-info";
-import {useItemDetailsPopup} from "@/hooks/useItemDetailsPopup";
 import {TransferContent} from "./data/transfer-document";
 import React from "react";
+import ItemDetailsLink from "@/components/ItemDetailsLink";
 
 export default function TransferProcessSource() {
   const {t} = useTranslation();
   const navigate = useNavigate();
   const stockInfo = useStockInfo();
-  const {openItemDetails} = useItemDetailsPopup();
 
   const {
     id,
@@ -50,17 +49,6 @@ export default function TransferProcessSource() {
   ];
   if (binLocation) {
     titleBreadcrumbs.push({label: binLocation.code, onClick: undefined});
-  }
-
-  const showDetails = (row: TransferContent) => {
-    openItemDetails({
-      itemCode: row.code,
-      itemName: row.name,
-      numInBuy: row.numInBuy,
-      buyUnitMsr: row.buyUnitMsr,
-      purPackUn: row.purPackUn,
-      purPackMsr: row.purPackMsr
-    });
   }
 
   return (
@@ -93,11 +81,11 @@ export default function TransferProcessSource() {
               <TableBody>
                 {rows.map((row) => (
                   <>
-                    <TableRow key={row.code}>
-                      <TableCell><Link
-                        className="text-blue-600 hover:underline"
-                        onClick={() => showDetails(row)} to={""}>{row.code}</Link></TableCell>
-                      <TableCell className="hidden sm:table-cell">{row.name}</TableCell>
+                    <TableRow key={row.itemCode}>
+                      <TableCell>
+                        <ItemDetailsLink data={row} />
+                      </TableCell>
+                      <TableCell className="hidden sm:table-cell">{row.itemName}</TableCell>
                       <TableCell>
                         {stockInfo({
                           quantity: row.quantity,
@@ -110,7 +98,7 @@ export default function TransferProcessSource() {
                     </TableRow>
                     <TableRow className="sm:hidden">
                       <TableCell className="bg-gray-100 border-b-1"
-                                 colSpan={2}>{t('description')}: {row.name}</TableCell>
+                                 colSpan={2}>{t('description')}: {row.itemName}</TableCell>
                     </TableRow>
                   </>
                 ))}

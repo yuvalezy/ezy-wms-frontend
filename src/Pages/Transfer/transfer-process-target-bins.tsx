@@ -10,33 +10,28 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {Label} from "@/components/ui/label";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import {Progress} from "@/components/ui/progress";
 import BarCodeScanner from "@/components/BarCodeScanner";
 import BinLocationScanner from "@/components/BinLocationScanner";
 import ProcessAlert from "@/components/ProcessAlert";
-import {ReasonType, UnitType} from "@/assets";
+import {ReasonType} from "@/assets";
 import Processes from "@/components/Processes";
 import {updateLine} from "@/pages/transfer/data/transfer-process";
 import {useTransferProcessTargetBinsData} from "@/pages/transfer/data/transfer-process-target-bins-data";
-import {Card, CardContent, FullInfoBox, InfoBoxValue, MetricRow, SecondaryInfoBox} from "@/components";
-import {formatNumber} from "@/lib/utils";
+import {Card, CardContent, InfoBoxValue} from "@/components";
 import {AlertCircle} from "lucide-react";
 import {useStockInfo} from "@/utils/stock-info";
-import {TransferContent} from "@/pages/transfer/data/transfer-document";
-import {useItemDetailsPopup} from "@/hooks/useItemDetailsPopup";
 import InfoBox from "@/components/InfoBox";
+import ItemDetailsLink from "@/components/ItemDetailsLink";
 
 export default function TransferProcessTargetBins() {
   const {t} = useTranslation();
   const navigate = useNavigate();
   const stockInfo = useStockInfo();
-  const {openItemDetails} = useItemDetailsPopup();
   const {
     id,
     binLocation,
-    enable,
     barcodeRef,
     rows,
     currentAlert,
@@ -63,16 +58,6 @@ export default function TransferProcessTargetBins() {
   if (binLocation) {
     titleBreadcrumbs.push({label: binLocation.code, onClick: undefined});
   }
-  const showDetails = (row: TransferContent) => {
-    openItemDetails({
-      itemCode: row.code,
-      itemName: row.name,
-      numInBuy: row.numInBuy,
-      buyUnitMsr: row.buyUnitMsr,
-      purPackUn: row.purPackUn,
-      purPackMsr: row.purPackMsr
-    });
-  }
 
   return (
     <ContentTheme title={t("transfer")} titleOnClick={() => navigate(`/transfer`)}
@@ -90,11 +75,11 @@ export default function TransferProcessTargetBins() {
             {/* Mobile view - Cards */}
             <div className="block sm:hidden">
               {rows.map((row) => {
-                return <Card key={row.code}>
+                return <Card key={row.itemCode}>
                   <CardContent className="flex flex-col gap-2">
                     <InfoBox>
-                      <InfoBoxValue label={t('code')} onClick={() => showDetails(row)} value={row.code}/>
-                      <InfoBoxValue label={t('description')} value={row.name}/>
+                      <InfoBoxValue label={t('code')} itemDetailsLink={row} value={row.itemCode}/>
+                      <InfoBoxValue label={t('description')} value={row.itemName}/>
                       <InfoBoxValue label={t('openQuantity')} value={stockInfo({
                             quantity: row.openQuantity,
                             numInBuy: row.numInBuy,
@@ -132,12 +117,11 @@ export default function TransferProcessTargetBins() {
                 <TableBody>
                   {rows.map((row) => {
                     return (
-                      <TableRow key={row.code}>
-                        <TableCell><Link
-                          className="text-blue-600 hover:underline"
-                          onClick={() => showDetails(row)} to={""}>{row.code}</Link>
+                      <TableRow key={row.itemCode}>
+                        <TableCell>
+                          <ItemDetailsLink data={row} />
                         </TableCell>
-                        <TableCell>{row.name}</TableCell>
+                        <TableCell>{row.itemName}</TableCell>
                         <TableCell>
                           {stockInfo({
                             quantity: row.openQuantity,

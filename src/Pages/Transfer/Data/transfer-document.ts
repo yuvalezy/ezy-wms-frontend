@@ -10,6 +10,7 @@ import {
 import {axiosInstance} from "@/utils/axios-instance";
 import { getAddItemErrorMessage } from "@/utils/error-handler";
 import axios from "axios";
+import {ItemDetails} from "@/pages/item-check/item-check";
 
 interface TransferAddItemResponse {
   lineId?: string
@@ -31,15 +32,9 @@ export interface TransferDocument extends BaseEntity {
   isComplete?: boolean;
 }
 
-export type TransferContent = {
-  code: string;
-  name: string;
+export interface TransferContent extends ItemDetails {
   quantity: number;
   unit: UnitType;
-  numInBuy: number;
-  buyUnitMsr: string;
-  purPackUn: number;
-  purPackMsr: string;
   openQuantity: number;
   binQuantity?: number;
   progress?: number;
