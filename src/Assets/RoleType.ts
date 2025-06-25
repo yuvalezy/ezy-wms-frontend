@@ -11,3 +11,4 @@ export enum RoleType {
     TRANSFER_SUPERVISOR = 'TransferSupervisor',
     TRANSFER_REQUEST = 'TransferRequest',
 }
+

@@ -6,7 +6,7 @@ import React, {
   useEffect,
 } from "react";
 import axios, {AxiosError} from "axios";
-import {RoleType, UserInfo} from "@/assets";
+import {UserInfo} from "@/assets";
 import {axiosInstance, ServerUrl} from "@/utils/axios-instance";
 
 // Define the shape of the context

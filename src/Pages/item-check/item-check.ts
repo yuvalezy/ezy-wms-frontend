@@ -9,6 +9,7 @@ export interface ItemDetails {
   buyUnitMsr?: string | null;
   purPackUn: number;
   purPackMsr?: string | null;
+  customFields?: Record<string, unknown>;
 }
 
 export interface ItemCheckResponse extends ItemDetails{

@@ -1,6 +1,7 @@
 import {RoleType} from "./RoleType";
 import {AlertSeverity} from "@/components";
 import {Employee} from "@/assets/Data";
+import { CustomFieldType } from "./CustomFieldType";
 export interface BaseEntity {
     id: string;
     createdAt?: Date;
@@ -43,7 +44,14 @@ export interface UserInfo {
     currentWarehouse: string;
     binLocations: boolean;
     settings: ApplicationSettings;
+    customFields: Record<string, CustomField[]>;
     superUser: boolean;
+}
+
+export interface CustomField {
+    key: string;
+    description: string;
+    type: CustomFieldType;
 }
 
 export interface Warehouse {
