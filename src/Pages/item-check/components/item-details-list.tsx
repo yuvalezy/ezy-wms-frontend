@@ -34,7 +34,7 @@ export const ItemCustomFields = ({
   render
 }: {
   customFields?: Record<string, unknown>;
-  render: (field: CustomField, value: unknown, index: number) => React.ReactNode;
+  render: (field: CustomField, value: string | null, index: number) => React.ReactNode;
 }) => {
   const { user } = useAuth();
   const { dateFormat } = useDateTimeFormat();
@@ -53,7 +53,7 @@ export const ItemCustomFields = ({
               break;
           }
         }
-        return render(field, customFieldValue, index);
+        return render(field, customFieldValue as string | null, index);
       })}
     </>
   );

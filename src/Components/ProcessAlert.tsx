@@ -117,51 +117,91 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
         <div className="absolute top-0 left-0 right-0 bottom-0 bg-red-500 opacity-70 transition-opacity duration-200 z-0"/>
       )}
       <div className={`relative z-10 ${getAlertClasses()}`}>
-        {alert.barcode && <h4 className="font-bold text-lg mb-1"><strong>{t('barcode')}: </strong>{alert.barcode}</h4>}
-        <div className="text-sm">
-          <strong>{t('time')}: </strong>{alert.timeStamp} <br/>
-          {alert.itemCode && <>
-              <span><strong>{t('item')}: </strong>{alert.itemCode}</span>
-              <br/>
-              <span><strong>{t('quantity')}: </strong>{alert.quantity}{unitDesc()}</span>
-              <br/>
-            {!alert.unit && alert.purPackUn &&
-                <>
-                    <span><strong>{t('packageQuantity')}: </strong>{alert.quantity! * alert.purPackUn!} {alert.buyUnitMsr}</span>
-                    <br/>
-                </>
-            }
-            {alert.unit !== UnitType.Unit && alert.numInBuy &&
-              <>
-                  <span><strong>{t('purchasingUoM')}: </strong>{alert.numInBuy!} {alert.buyUnitMsr}</span>
-                  <br/>
-              </>
-            }
-            {alert.unit === UnitType.Pack && alert.purPackUn &&
-              <>
-                  <span><strong>{t('packagingUoM')}: </strong>{alert.purPackUn!} {alert.purPackMsr}</span>
-                  <br/>
-              </>
-            }
-          </>}
-          {user?.settings?.goodsReceiptTargetDocuments && alert.message && (<><strong>{t('message')}: </strong>{alert.message}</>)}
-          <ItemCustomFields
-            customFields={alert.customFields}
-            render={(field, value, index) => (
-              <>
-              <strong>{field.description}: </strong>{value}
-              <br/>
-              </>
+        {alert.barcode && (
+          <div className="mb-3">
+            <h4 className="font-bold text-lg text-gray-800">{alert.barcode}</h4>
+            <div className="text-xs text-gray-500 mt-1">{t('barcode')}</div>
+          </div>
+        )}
+        
+        <div className="space-y-3">
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <div>
+              <div className="text-xs text-gray-500 uppercase tracking-wide">{t('time')}</div>
+              <div className="font-medium">{alert.timeStamp}</div>
+            </div>
+            
+            {alert.itemCode && (
+              <div>
+                <div className="text-xs text-gray-500 uppercase tracking-wide">{t('item')}</div>
+                <div className="font-medium">{alert.itemCode}</div>
+              </div>
             )}
-          />
-          {alert.multiple != null && alert.multiple.length > 0 && (
-            <div className="mt-2">
-              <strong>{t('messages')}: </strong>
-              {alert.multiple.map((v, index) => (
-                <div key={index} className={`p-2 my-1 rounded-sm text-xs ${mapSeverity(v.severity) === "Positive" ? "bg-green-50" : mapSeverity(v.severity) === "Negative" ? "bg-red-50" : mapSeverity(v.severity) === "Warning" ? "bg-yellow-50" : "bg-blue-50"}`}>
-                  {v.message}
+          </div>
+
+          {alert.itemCode && (
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div>
+                <div className="text-xs text-gray-500 uppercase tracking-wide">{t('quantity')}</div>
+                <div className="font-medium">{alert.quantity}{unitDesc()}</div>
+              </div>
+              
+              {!alert.unit && alert.purPackUn && (
+                <div>
+                  <div className="text-xs text-gray-500 uppercase tracking-wide">{t('packageQuantity')}</div>
+                  <div className="font-medium">{alert.quantity! * alert.purPackUn!} {alert.buyUnitMsr}</div>
                 </div>
-              ))}
+              )}
+              
+              {alert.unit !== UnitType.Unit && alert.numInBuy && (
+                <div>
+                  <div className="text-xs text-gray-500 uppercase tracking-wide">{t('purchasingUoM')}</div>
+                  <div className="font-medium">{alert.numInBuy!} {alert.buyUnitMsr}</div>
+                </div>
+              )}
+              
+              {alert.unit === UnitType.Pack && alert.purPackUn && (
+                <div>
+                  <div className="text-xs text-gray-500 uppercase tracking-wide">{t('packagingUoM')}</div>
+                  <div className="font-medium">{alert.purPackUn!} {alert.purPackMsr}</div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {user?.settings?.goodsReceiptTargetDocuments && alert.message && (
+            <div className="bg-gray-50 p-3 rounded-md">
+              <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">{t('message')}</div>
+              <div className="text-sm">{alert.message}</div>
+            </div>
+          )}
+
+          <div className="grid grid-cols-2 gap-3">
+            <ItemCustomFields
+              customFields={alert.customFields}
+              render={(field, value, index) => (
+                <div key={`custom-${index}`} className="text-sm">
+                  <div className="text-xs text-gray-500 uppercase tracking-wide">{field.description}</div>
+                  <div className="font-medium">{value}</div>
+                </div>
+              )}
+            />
+          </div>
+          {alert.multiple != null && alert.multiple.length > 0 && (
+            <div className="space-y-2">
+              <div className="text-xs text-gray-500 uppercase tracking-wide">{t('messages')}</div>
+              <div className="space-y-2">
+                {alert.multiple.map((v, index) => (
+                  <div key={index} className={`p-3 rounded-md text-sm border-l-4 ${
+                    mapSeverity(v.severity) === "Positive" ? "bg-green-50 border-green-400" : 
+                    mapSeverity(v.severity) === "Negative" ? "bg-red-50 border-red-400" : 
+                    mapSeverity(v.severity) === "Warning" ? "bg-yellow-50 border-yellow-400" : 
+                    "bg-blue-50 border-blue-400"
+                  }`}>
+                    {v.message}
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>
