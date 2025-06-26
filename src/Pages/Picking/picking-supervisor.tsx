@@ -3,19 +3,20 @@ import {useTranslation} from "react-i18next";
 import {useEffect, useState} from "react";
 import {fetchPickings, PickingDocument, processPicking} from "@/pages/picking/data/picking-document";
 import {useThemeContext} from "@/components/ThemeContext";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import {Alert, AlertDescription} from "@/components/ui/alert";
 import {StringFormat} from "@/assets/Functions";
-import { toast } from "sonner";
+import {toast} from "sonner";
 import PickingCard from "@/pages/picking/components/picking-card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Button} from "@/components/ui/button";
 import {Progress} from "@/components/ui/progress";
-import {CheckCircle} from "lucide-react";
+import {RefreshCw} from "lucide-react";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "@/components/AppContext";
 import {RoleType} from "@/assets/RoleType";
 import {useDateTimeFormat} from "@/assets/DateFormat";
 import {formatNumber} from "@/lib/utils";
+import {SyncStatus} from "@/pages/settings/cancellation-reasons/data/cancellation-reason";
 
 export default function PickingSupervisor() {
   const {t} = useTranslation();
@@ -111,9 +112,9 @@ export default function PickingSupervisor() {
                       </TableCell>
                       <TableCell>{pick.remarks || '-'}</TableCell>
                       <TableCell className="text-right">
-                        {pick.updateQuantity > 0 && (
+                        {pick.updateQuantity > 0 && pick.syncStatus === SyncStatus.Pending && (
                           <Button size="sm" onClick={() => handleUpdatePick?.(pick)}>
-                            <CheckCircle className="mr-1 h-3 w-3" />{t("update")}
+                            <RefreshCw className="mr-1 h-3 w-3" />{t("sync")}
                           </Button>
                         )}
                       </TableCell>

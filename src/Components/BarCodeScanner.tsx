@@ -26,7 +26,8 @@ export interface BarCodeScannerProps {
   onAddItem: (item: Item, unit: UnitType) => void;
   onAddAction?: () => void;
   addActionLabel?: string;
-  addActionIcon?: IconProp; // Update type to IconProp
+  addActionIcon?: IconProp;
+  pickPackOnly?: boolean
 }
 
 export interface BarCodeScannerRef {
@@ -44,6 +45,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
     onAddAction,
     addActionLabel,
     addActionIcon,
+    pickPackOnly = false
   }, ref) => {
   const barcodeRef = useRef<HTMLInputElement>(null);
   const [barcodeInput, setBarcodeInput] = useState('');
@@ -157,7 +159,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
       {unit && (
         <div className="space-y-2">
           <Label htmlFor="unit-select">{t('unit')}</Label>
-          <Select onValueChange={handleUnitChanged} value={selectedUnit.toString()}>
+          <Select disabled={pickPackOnly} onValueChange={handleUnitChanged} value={selectedUnit.toString()}>
             <SelectTrigger id="unit-select">
               <SelectValue placeholder={t('selectUnit')}/>
             </SelectTrigger>

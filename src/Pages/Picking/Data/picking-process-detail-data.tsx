@@ -5,7 +5,6 @@ import {BinLocation, IsNumeric, Item, StringFormat, UnitType} from "@/assets";
 import {addItem, fetchPicking, PickingDocument, PickingDocumentDetail} from "@/pages/picking/data/picking-document";
 import {toast} from "sonner";
 import {useTranslation} from "react-i18next";
-import {isAxiosError} from "axios";
 
 export const usePickingProcessDetailData = () => {
   const {t} = useTranslation();
@@ -21,7 +20,7 @@ export const usePickingProcessDetailData = () => {
   const barcodeRef = useRef<BarCodeScannerRef>(null);
   const binLocationRef = useRef<BinLocationScannerRef>(null);
   const [binLocation, setBinLocation] = useState<BinLocation | null>(null);
-
+  const [pickPackOnly, setPickPackOnly] = useState(false);
 
   useEffect(() => {
     [idParam, typeParam, entryParam].forEach((p, index) => {
@@ -73,6 +72,7 @@ export const usePickingProcessDetailData = () => {
           setError(t("pickingNotFound"))
           return;
         }
+        setPickPackOnly(value.pickPackOnly);
         if (value.detail != null) {
           let valueDetail = value.detail[0];
           setDetail(valueDetail);
@@ -110,13 +110,19 @@ export const usePickingProcessDetailData = () => {
           setEnable(false);
           return;
         }
-        if (data.errorMessage != null) {
+        let errorMessage = data.errorMessage;
+        if (errorMessage != null) {
           try {
-            if (data.errorMessage === 'Quantity exceeds bin available stock') {
-              toast.error(StringFormat(t('binQuantityExceedError'), itemCode));
-              return;
+            switch (errorMessage) {
+              case 'Quantity exceeds bin available stock':
+                errorMessage = StringFormat(t('binQuantityExceedError'), itemCode);
+                break;
+              case 'Customer is marked as pick pack only':
+                const name = detail?.cardName ?? detail?.cardCode ?? 'N/A';
+                errorMessage = t('pickPackOnlyError', {name});
+                break;
             }
-            toast.error(data.errorMessage);
+            toast.error(errorMessage);
           } finally {
             setLoading(false);
           }
@@ -150,5 +156,6 @@ export const usePickingProcessDetailData = () => {
     onBinChanged,
     onBinClear,
     handleAddItem,
+    pickPackOnly,
   }
 }

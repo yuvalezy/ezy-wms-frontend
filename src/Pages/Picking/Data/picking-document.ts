@@ -3,6 +3,7 @@ import {ProcessResponse} from "@/assets";
 import {BinLocation} from "@/assets";
 import { axiosInstance } from "@/utils/axios-instance";
 import {ItemDetails} from "@/pages/item-check/item-check";
+import {SyncStatus} from "@/pages/settings/cancellation-reasons/data/cancellation-reason";
 
 export enum PickStatus {
     Released = "Released",
@@ -19,9 +20,11 @@ export type PickingDocument = {
     transfers: number;
     remarks: String | null;
     status: PickStatus;
+    syncStatus: SyncStatus;
     quantity: number;
     openQuantity: number;
     updateQuantity: number;
+    pickPackOnly: boolean;
     detail?: PickingDocumentDetail[];
 }
 export type PickingDocumentDetail = {

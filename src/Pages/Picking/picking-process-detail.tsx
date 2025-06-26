@@ -25,6 +25,7 @@ export default function PickingProcessDetail() {
     onBinChanged,
     onBinClear,
     handleAddItem,
+    pickPackOnly,
   } = usePickingProcessDetailData();
   const titleBreadcrumbs = [
     {label: `${idParam}`, onClick: () => navigate(`/pick/${idParam}`)},
@@ -41,6 +42,7 @@ export default function PickingProcessDetail() {
                     {detail.totalOpenItems > 0 && binLocation &&
                         <BarCodeScanner ref={barcodeRef}
                                         unit
+                                        pickPackOnly={pickPackOnly}
                                         onAddItem={(item, unit) => handleAddItem(item.code, item.barcode ?? "", unit, t)}
                                         enabled={enable}/>}
                     {!binLocation && detail.totalOpenItems > 0 &&
