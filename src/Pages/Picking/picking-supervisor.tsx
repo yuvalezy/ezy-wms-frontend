@@ -112,7 +112,7 @@ export default function PickingSupervisor() {
                       </TableCell>
                       <TableCell>{pick.remarks || '-'}</TableCell>
                       <TableCell className="text-right">
-                        {pick.updateQuantity > 0 && pick.syncStatus === SyncStatus.Pending && (
+                        {pick.syncStatus === SyncStatus.Pending && (
                           <Button size="sm" onClick={() => handleUpdatePick?.(pick)}>
                             <RefreshCw className="mr-1 h-3 w-3" />{t("sync")}
                           </Button>
