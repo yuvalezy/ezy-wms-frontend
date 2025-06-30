@@ -380,5 +380,6 @@
   "packagingUoM": "Unidad de medida de embalaje",
   "noLinesForWarehouse": "No se encontraron líneas en el documento seleccionado para el almacén conectado actual",
   "loginError": "Error durante el inicio de sesión",
-  "invalidGrant": "Contraseña inválida o cuenta deshabilitada"
+  "invalidGrant": "Contraseña inválida o cuenta deshabilitada",
+  "itemEntryNotFoundPicking": "Artículo {0} no fue encontrado en el Picking {1}, Ubicación {2}"
 }

@@ -108,6 +108,7 @@ export const usePickingProcessDetailData = () => {
         if (data.closedDocument) {
           setError(StringFormat(t("pickedIsClosed"), id));
           setEnable(false);
+          navigateBack();
           return;
         }
         let errorMessage = data.errorMessage;
@@ -120,6 +121,9 @@ export const usePickingProcessDetailData = () => {
               case 'Customer is marked as pick pack only':
                 const name = detail?.cardName ?? detail?.cardCode ?? 'N/A';
                 errorMessage = t('pickPackOnlyError', {name});
+                break;
+              case 'Item entry not found in pick':
+                errorMessage = StringFormat(t('itemEntryNotFoundPicking'), itemCode, id, binLocation.code);
                 break;
             }
             toast.error(errorMessage);

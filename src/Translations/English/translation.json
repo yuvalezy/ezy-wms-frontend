@@ -381,5 +381,6 @@
   "packagingUoM": "Packaging UoM",
   "noLinesForWarehouse": "No lines found in selected document for current connected warehouse",
   "loginError": "Error during login",
-  "invalidGrant": "Invalid password or account disabled"
+  "invalidGrant": "Invalid password or account disabled",
+  "itemEntryNotFoundPicking": "Item {0} was not found in Picking {1}, Bin {2}"
 }
