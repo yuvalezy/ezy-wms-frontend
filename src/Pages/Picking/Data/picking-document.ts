@@ -143,7 +143,7 @@ export const addItem = async (params: {
     unit: UnitType
 }): Promise<PickingAddItemResponse> => {
     try {
-        const url = `Picking/AddItem`;
+        const url = `picking/addItem`;
 
         const response = await axiosInstance.post<PickingAddItemResponse>(
             url,
@@ -155,11 +155,12 @@ export const addItem = async (params: {
         throw error;
     }
 };
+
 export const processPicking = async (
     id: number,
 ): Promise<ProcessResponse> => {
     try {
-        const url = `Picking/Process`;
+        const url = `picking/process`;
 
         const response = await axiosInstance.post<ProcessResponse>(
             url,
@@ -175,3 +176,30 @@ export const processPicking = async (
         throw error;
     }
 };
+
+
+export interface ProcessPickListCancelResponse extends ProcessResponse {
+    transferId?: string;
+}
+
+export const cancelPicking = async (
+  id: number,
+): Promise<ProcessPickListCancelResponse> => {
+    try {
+        const url = `picking/cancel`;
+
+        const response = await axiosInstance.post<ProcessPickListCancelResponse>(
+          url,
+          {id: id}
+        );
+        if (response.data.errorMessage == null) {
+            return response.data;
+        } else {
+            throw new Error(response.data.errorMessage);
+        }
+    } catch (error) {
+        console.error("Error canceling picking:", error);
+        throw error;
+    }
+};
+

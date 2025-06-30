@@ -1,7 +1,7 @@
 import ContentTheme from "@/components/ContentTheme";
 import {useTranslation} from "react-i18next";
-import {useEffect, useState} from "react";
-import {fetchPickings, PickingDocument, processPicking} from "@/pages/picking/data/picking-document";
+import React, {useEffect, useState} from "react";
+import {cancelPicking, fetchPickings, PickingDocument, processPicking} from "@/pages/picking/data/picking-document";
 import {useThemeContext} from "@/components/ThemeContext";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import {StringFormat} from "@/assets/Functions";
@@ -10,13 +10,14 @@ import PickingCard from "@/pages/picking/components/picking-card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Button} from "@/components/ui/button";
 import {Progress} from "@/components/ui/progress";
-import {RefreshCw} from "lucide-react";
+import {RefreshCw, XCircle} from "lucide-react";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "@/components/AppContext";
 import {RoleType} from "@/assets/RoleType";
 import {useDateTimeFormat} from "@/assets/DateFormat";
 import {formatNumber} from "@/lib/utils";
 import {SyncStatus} from "@/pages/settings/cancellation-reasons/data/cancellation-reason";
+import {MessageBox} from "@/components";
 
 export default function PickingSupervisor() {
   const {t} = useTranslation();
@@ -25,7 +26,9 @@ export default function PickingSupervisor() {
   const navigate = useNavigate();
   const {user} = useAuth();
   const {dateFormat} = useDateTimeFormat();
-  
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState<PickingDocument | null>(null);
+
   function handleOpen(id: number) {
     navigate(`/pick/${id}`);
   }
@@ -35,7 +38,7 @@ export default function PickingSupervisor() {
     loadData();
   }, []);
 
-  function loadData() {
+  const loadData = () => {
     setLoading(true);
     fetchPickings()
       .then(values => setPickings(values))
@@ -43,7 +46,7 @@ export default function PickingSupervisor() {
       .finally(() => setLoading(false));
   }
 
-  function handleUpdatePick(picking: PickingDocument) {
+  const handleUpdatePick = (picking: PickingDocument) => {
     if (picking.openQuantity > 0 && !window.confirm(StringFormat(t('pickOpenQuantityAlert'), picking.entry) + '\n' + t('confirmContinue'))) {
       return;
     }
@@ -59,6 +62,26 @@ export default function PickingSupervisor() {
       });
   }
 
+  const handleCancelPick = (picking: PickingDocument) => {
+    setSelectedDocument(picking);
+    setDialogOpen(true);
+  }
+
+  const handleConfirmAction = () => {
+    if (!selectedDocument)
+      return;
+    setLoading(true);
+    cancelPicking(selectedDocument.entry)
+      .then(() => {
+        toast.success(StringFormat(t("pickingCancelSuccess"), selectedDocument.entry));
+        loadData();
+      })
+      .catch((error) => {
+        setError(error);
+        setLoading(false);
+      });
+  };
+
   return (
     <ContentTheme title={t("pickSupervisor")}>
       {pickings.length > 0 ? (
@@ -70,7 +93,7 @@ export default function PickingSupervisor() {
                            onUpdatePick={handleUpdatePick}/>
             ))}
           </div>
-          
+
           {/* Desktop view - Table */}
           <div className="hidden sm:block">
             <Table>
@@ -84,6 +107,7 @@ export default function PickingSupervisor() {
                   <TableHead>{t('progress')}</TableHead>
                   <TableHead>{t('comment')}</TableHead>
                   <TableHead className="text-right"></TableHead>
+                  <TableHead className="text-right"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -93,7 +117,10 @@ export default function PickingSupervisor() {
                     <TableRow key={pick.entry}>
                       <TableCell>
                         {handleOpenLink ? (
-                          <a href="#" onClick={(e) => { e.preventDefault(); handleOpen(pick.entry); }} className="text-blue-600 hover:underline">
+                          <a href="#" onClick={(e) => {
+                            e.preventDefault();
+                            handleOpen(pick.entry);
+                          }} className="text-blue-600 hover:underline">
                             {pick.entry}
                           </a>
                         ) : (
@@ -106,17 +133,22 @@ export default function PickingSupervisor() {
                       <TableCell>{pick.transfers || '-'}</TableCell>
                       <TableCell>
                         <div className="flex items-center space-x-2">
-                          <Progress value={progressValue} className="w-20" />
+                          <Progress value={progressValue} className="w-20"/>
                           <span className="text-xs">{formatNumber(progressValue, 0)}%</span>
                         </div>
                       </TableCell>
                       <TableCell>{pick.remarks || '-'}</TableCell>
                       <TableCell className="text-right">
-                        {pick.syncStatus === SyncStatus.Pending && (
-                          <Button size="sm" onClick={() => handleUpdatePick?.(pick)}>
-                            <RefreshCw className="mr-1 h-3 w-3" />{t("sync")}
-                          </Button>
-                        )}
+                        <Button disabled={pick.syncStatus !== SyncStatus.Pending} size="sm"
+                                className={pick.syncStatus !== SyncStatus.Pending ? "cursor-not-allowed" : "cursor-pointer"}
+                                onClick={() => handleUpdatePick?.(pick)}>
+                          <RefreshCw className="mr-1 h-3 w-3"/>{t("sync")}
+                        </Button>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button variant="destructive" size="sm" className="cursor-pointer" onClick={() => handleCancelPick?.(pick)}>
+                          <XCircle className="mr-1 h-3 w-3"/>{t("cancel")}
+                        </Button>
                       </TableCell>
                     </TableRow>
                   );
@@ -132,6 +164,14 @@ export default function PickingSupervisor() {
           </Alert>
         </div>
       )}
+      <MessageBox
+        onConfirm={handleConfirmAction}
+        onOpenChange={setDialogOpen}
+        open={dialogOpen}
+        type="confirm"
+        title={StringFormat(t("confirmCancelPick"), selectedDocument?.entry)}
+        description={t('actionCannotReverse')}
+      />
     </ContentTheme>
   );
 }
