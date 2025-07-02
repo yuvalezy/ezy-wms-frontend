@@ -141,6 +141,11 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
         };
         alert(newAlert);
         setCurrentPackage(data.packageId ? {id: data.packageId, barcode: data.packageBarcode!} : value.package)
+        
+        // If we created a new package, clear the createPackage checkbox
+        if (data.packageId && value.createPackage) {
+          setTimeout(() => barcodeRef.current?.focus(), 100);
+        }
       })
       .catch((error) => {
         console.error(`Error performing action: ${error}`);

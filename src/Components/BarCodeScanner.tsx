@@ -76,6 +76,11 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
   const [loadedPackage, setLoadedPackage] = useState<PackageValue | null | undefined>(currentPackage);
   const {t} = useTranslation();
 
+  // Sync loadedPackage with currentPackage prop
+  React.useEffect(() => {
+    setLoadedPackage(currentPackage);
+  }, [currentPackage]);
+
   useImperativeHandle(ref, () => ({
     clear() {
       clearBarCode();
