@@ -61,6 +61,7 @@ export interface Warehouse {
 }
 
 export interface ApplicationSettings {
+    enablePackages: boolean;
     goodsReceiptDraft: boolean;
     goodsReceiptModificationSupervisor: boolean;
     goodsReceiptCreateSupervisorRequired: boolean;

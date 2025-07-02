@@ -3,6 +3,7 @@ import {useTranslation} from "react-i18next";
 import {BinLocation, Counting, CountingContent, IsNumeric, Item, UnitType, useDateTimeFormat} from "@/assets";
 import {useEffect, useRef, useState} from "react";
 import {
+  AddItemValue,
   BarCodeScannerRef,
   BinLocationScannerRef,
   ProcessAlertValue,
@@ -113,10 +114,12 @@ export const useCountingProcessData = () => {
     loadRows();
   }
 
-  function handleAddItem(item: Item, unit: UnitType) {
+  function handleAddItem(value: AddItemValue) {
     if (id == null) {
       return;
     }
+    const item = value.item;
+    const unit = value.unit;
     addItem(id, item.code, item.barcode ?? "", binLocation?.entry, unit)
       .then((v) => {
         if (v.errorMessage != null) {

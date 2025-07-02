@@ -10,7 +10,9 @@ export const addItem = async (
   id: string,
   itemCode: string,
   barcode: string,
-  unit: UnitType
+  unit: UnitType,
+  startNewPackage: boolean,
+  packageId?: string | null
 ): Promise<DocumentAddItemResponse> => {
   try {
     const url = `GoodsReceipt/AddItem`;
@@ -18,12 +20,13 @@ export const addItem = async (
     const response = await axiosInstance.post<DocumentAddItemResponse>(
       url,
       {
-        id: id,
-        itemCode: itemCode,
-        barcode: barcode,
-        unit: unit,
+        id,
+        itemCode,
+        barcode,
+        unit,
+        startNewPackage,
+        packageId,
       },
-      
     );
     if (response.data.errorMessage == null) {
       return response.data;
@@ -49,7 +52,7 @@ export const updateLine = async ({
   userName?: string;
   quantity?: number;
   reason?: number;
-}): Promise<{returnValue: UpdateLineReturnValue, errorMessage?: string}> => {
+}): Promise<{ returnValue: UpdateLineReturnValue, errorMessage?: string }> => {
   try {
     const url = `GoodsReceipt/UpdateLine`;
 
@@ -63,7 +66,6 @@ export const updateLine = async ({
         closeReason: reason,
         quantity: quantity,
       },
-      
     );
 
     return {returnValue: response.data};
@@ -94,7 +96,6 @@ export const updateLineQuantity = async ({
         userName: userName,
         quantity: quantity,
       },
-      
     );
 
     return response.data;

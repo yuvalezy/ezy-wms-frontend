@@ -2,24 +2,18 @@ import React, {forwardRef, useImperativeHandle, useRef, useState} from 'react';
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCheck, faQrcode} from '@fortawesome/free-solid-svg-icons';
+import {faCheck} from '@fortawesome/free-solid-svg-icons';
 import {IconProp} from '@fortawesome/fontawesome-svg-core'; // Import IconProp
-import {scanBarcode} from "@/assets";
-import {StringFormat, distinctItems, Item, UnitType} from "@/assets";
+import {distinctItems, Item, scanBarcode, StringFormat, UnitType} from "@/assets";
 import {useThemeContext} from "./ThemeContext";
 import {useTranslation} from "react-i18next";
 import {toast} from "sonner";
-import {cn} from "@/lib/utils";
 import {Switch} from "@/components/ui/switch";
 import {Checkbox} from "@/components/ui/checkbox";
+import {getPackageByBarcode} from "@/pages/packages/hooks";
+import {ObjectType, PackageDto, PackageMovementType} from "@/pages/packages/types";
 
 export interface PackageValue {
   id: string;
@@ -30,7 +24,7 @@ export interface AddItemValue {
   item: Item;
   unit: UnitType;
   createPackage: boolean;
-  package?: PackageValue;
+  package?: PackageValue | null;
 }
 
 export interface BarCodeScannerProps {
@@ -38,12 +32,16 @@ export interface BarCodeScannerProps {
   unit?: boolean;
   item?: boolean;
   onAddItem: (addItem: AddItemValue) => void;
+  onPackageChanged?: (value: PackageValue) => void;
   onAddAction?: () => void;
   addActionLabel?: string;
   addActionIcon?: IconProp;
   pickPackOnly?: boolean;
   enablePackage?: boolean;
   currentPackage?: PackageValue | null;
+  objectType?: ObjectType;
+  objectId?: string;
+  objectNumber?: number;
 }
 
 export interface BarCodeScannerRef {
@@ -58,12 +56,16 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
     unit = false,
     item,
     onAddItem,
+    onPackageChanged,
     onAddAction,
     addActionLabel,
     addActionIcon,
     pickPackOnly = false,
     enablePackage = false,
-    currentPackage
+    currentPackage,
+    objectType,
+    objectId,
+    objectNumber
   }, ref) => {
   const barcodeRef = useRef<HTMLInputElement>(null);
   const [barcodeInput, setBarcodeInput] = useState('');
@@ -71,6 +73,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
   const [selectedUnit, setSelectedUnit] = useState<UnitType>(UnitType.Pack);
   const [scanMode, setScanMode] = useState<'item' | 'package'>('item');
   const [createPackage, setCreatePackage] = useState(false);
+  const [loadedPackage, setLoadedPackage] = useState<PackageValue | null | undefined>(currentPackage);
   const {t} = useTranslation();
 
   useImperativeHandle(ref, () => ({
@@ -139,7 +142,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
         item: items[0],
         unit: selectedUnit,
         createPackage: createPackage,
-        package: currentPackage,
+        package: loadedPackage,
       });
       return;
     }
@@ -180,26 +183,35 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
       return;
     }
 
-    window.alert('not implemented yet');
-    return;
-    // onAddItem({
-    //   item: {} as Item,
-    //   unit: selectedUnit,
-    //   createPackage: false,
-    //   packageId: barcode
-    // });
+    getPackageByBarcode(barcode, {history: true})
+      .then((response) => {
+        if (response == null) {
+          toast.error(t('scanPackageNotFound', {barcode}))
+          return;
+        }
+        const checkCreationObject = response.locationHistory?.find((v) => v.sourceOperationType === objectType && v.sourceOperationId === objectId && v.movementType === PackageMovementType.Created);
+        if (!checkCreationObject) {
+          toast.error(t('scanPackageSourceDoc', {barcode, number: objectNumber}))
+          return;
+        }
+        const value: PackageValue = {id: response.id, barcode: response.barcode};
+        setLoadedPackage(value)
+        setScanMode('item');
+        onPackageChanged?.(value);
+      });
+
     clearBarCode();
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 p-2">
-      {currentPackage && <div className="space-y-2">
-        <Label htmlFor="barcode-input">Current Package</Label>
-        <Input
-          id="current-package"
-          value={currentPackage.barcode}
-          readOnly
-        />
+      {loadedPackage && <div className="space-y-2">
+          <Label htmlFor="barcode-input">Current Package</Label>
+          <Input
+              id="current-package"
+              value={loadedPackage.barcode}
+              readOnly
+          />
       </div>}
       <div className="space-y-2">
         <Label htmlFor="barcode-input">{barcodeLabel}</Label>
@@ -236,7 +248,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
               <Checkbox
                 id="create-package"
                 checked={createPackage}
-                onCheckedChange={v => setCreatePackage(!createPackage)}
+                onCheckedChange={() => setCreatePackage(!createPackage)}
               />
               <Label htmlFor="create-package">Create new package</Label>
             </div>
@@ -247,6 +259,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
               checked={scanMode === 'package'}
               onCheckedChange={(checked) => {
                 setScanMode(checked ? 'package' : 'item');
+                setLoadedPackage(null);
                 setTimeout(() => barcodeRef?.current?.focus(), 1);
               }}
             />

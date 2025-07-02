@@ -41,6 +41,8 @@ export interface DocumentAddItemResponse {
   purPackMsr: string;
   errorMessage?: string;
   customFields?: Record<string, unknown>;
+  packageId?: string | null;
+  packageBarcode?: string | null;
 }
 
 export interface DocumentUpdateLineQuantityResponse {

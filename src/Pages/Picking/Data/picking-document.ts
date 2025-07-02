@@ -3,7 +3,8 @@ import {ProcessResponse} from "@/assets";
 import {BinLocation} from "@/assets";
 import { axiosInstance } from "@/utils/axios-instance";
 import {ItemDetails} from "@/pages/item-check/item-check";
-import {SyncStatus} from "@/pages/settings/cancellation-reasons/data/cancellation-reason";
+
+import {SyncStatus} from "@/assets/sync-status";
 
 export enum PickStatus {
     Released = "Released",

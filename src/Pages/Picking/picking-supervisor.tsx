@@ -16,8 +16,8 @@ import {useAuth} from "@/components/AppContext";
 import {RoleType} from "@/assets/RoleType";
 import {useDateTimeFormat} from "@/assets/DateFormat";
 import {formatNumber} from "@/lib/utils";
-import {SyncStatus} from "@/pages/settings/cancellation-reasons/data/cancellation-reason";
 import {MessageBox} from "@/components";
+import {SyncStatus} from "@/assets/sync-status";
 
 export default function PickingSupervisor() {
   const {t} = useTranslation();

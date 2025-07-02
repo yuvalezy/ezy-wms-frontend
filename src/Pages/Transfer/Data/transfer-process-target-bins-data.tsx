@@ -1,7 +1,7 @@
 import {useParams} from "react-router-dom";
 import {BinLocation, IsNumeric, Item, SourceTarget, UnitType, useDateTimeFormat} from "@/assets";
 import {useEffect, useRef, useState} from "react";
-import {BarCodeScannerRef, ProcessAlertValue, ProcessesRef, useAuth, useThemeContext} from "@/components";
+import {AddItemValue, BarCodeScannerRef, ProcessAlertValue, ProcessesRef, useAuth, useThemeContext} from "@/components";
 import {
   addItem,
   fetchTransferContent, getProcessInfo,
@@ -96,10 +96,12 @@ export const useTransferProcessTargetBinsData = () => {
       .finally(() => setLoading(false));
   }
 
-  function handleAddItem(item: Item, unit: UnitType) {
+  function handleAddItem(value: AddItemValue) {
     if (id == null) {
       return;
     }
+    const item = value.item;
+    const unit = value.unit;
     const params = {id, itemCode: item.code, barcode: item.barcode, type: SourceTarget.Target, binEntry: binLocation?.entry, unit};
     addItem(params, t)
       .then((v) => {

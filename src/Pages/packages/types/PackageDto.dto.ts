@@ -1,5 +1,6 @@
 import { PackageStatus } from './PackageStatus.enum';
 import { PackageContentDto } from './PackageContentDto.dto';
+import { PackageLocationHistoryDto } from './PackageLocationHistoryDto.dto';
 
 export interface PackageDto {
   id: string;
@@ -15,4 +16,5 @@ export interface PackageDto {
   notes?: string;
   customAttributes?: Record<string, any>;
   contents: PackageContentDto[];
+  locationHistory?: PackageLocationHistoryDto[];
 }

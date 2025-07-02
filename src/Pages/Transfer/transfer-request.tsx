@@ -1,6 +1,6 @@
 import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
-import BarCodeScanner, {BarCodeScannerRef} from "../../components/BarCodeScanner";
+import BarCodeScanner, {AddItemValue, BarCodeScannerRef} from "../../components/BarCodeScanner";
 import React, {useEffect, useRef, useState} from "react";
 import {Item, UnitType} from "@/assets";
 import {createRequest, TransferContent} from "@/pages/transfer/data/transfer-document";
@@ -34,7 +34,9 @@ export default function TransferRequest() {
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
     const [itemToRemoveIndex, setItemToRemoveIndex] = useState<number | null>(null);
 
-    function handleAddItem(item: Item, unit: UnitType) {
+    function handleAddItem(value: AddItemValue) {
+        const item = value.item;
+        const unit = value.unit;
         try {
             const duplicateItem = rows.find(row => row.itemCode === item.code);
 

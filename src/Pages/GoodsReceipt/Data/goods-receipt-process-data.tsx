@@ -2,7 +2,7 @@ import {useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {useDateTimeFormat} from "@/assets/DateFormat";
 import {useEffect, useRef, useState} from "react";
-import {BarCodeScannerRef} from "@/components/BarCodeScanner";
+import {AddItemValue, BarCodeScannerRef, PackageValue} from "@/components/BarCodeScanner";
 import {BoxConfirmationDialogRef} from "@/components/BoxConfirmationDialog";
 import {useThemeContext} from "@/components/ThemeContext";
 import {
@@ -18,6 +18,8 @@ import {StringFormat} from "@/assets/Functions";
 import {addItem, updateLine, updateLineQuantity} from "@/pages/GoodsReceipt/data/GoodsReceiptProcess";
 import {DocumentAddItemResponse, ReceiptDocument} from "@/assets/ReceiptDocument";
 import {fetchDocument} from "./Document";
+import {getPackageByBarcode} from "@/pages/packages/hooks";
+import {PackageDto} from "@/pages/packages/types";
 
 export const useGoodsReceiptProcessData = (confirm: boolean) => {
   const {scanCode} = useParams();
@@ -31,6 +33,7 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
   const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
   const processesRef = useRef<ProcessesRef>(null);
   const [info, setInfo] = useState<ReceiptDocument | null>(null);
+  const [currentPackage, setCurrentPackage] = useState<PackageValue | null | undefined>(null);
 
   useEffect(() => {
     setTimeout(() => barcodeRef.current?.focus(), 1);
@@ -49,8 +52,8 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
     setAcceptValues([alert, ...acceptValues]);
   };
 
-  function handleAddItem(item: Item, unit: UnitType) {
-    addItemToDocument(item, unit);
+  function handleAddItem(value: AddItemValue) {
+    addItemToDocument(value);
     // setLoading(true);
     // scanBarcode(barcodeInput)
     //   .then((items) => handleItems(items))
@@ -79,12 +82,14 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
   // }
 
 
-  function addItemToDocument(item: Item, unit: UnitType) {
+  function addItemToDocument(value: AddItemValue) {
+    const item = value.item;
+    const unit = value.unit;
     boxConfirmationDialogRef?.current?.show(false);
     barcodeRef.current?.clear();
     setLoading(true);
     let barcode = item.barcode!;
-    addItem(info!.id, item.code, barcode, unit)
+    addItem(info!.id, item.code, barcode, unit, value.createPackage, value.package?.id)
       .then((data) => {
         if (isClosedDocument(data, item.code, barcode)) {
           return;
@@ -135,6 +140,7 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
           customFields: data.customFields,
         };
         alert(newAlert);
+        setCurrentPackage(data.packageId ? {id: data.packageId, barcode: data.packageBarcode!} : value.package)
       })
       .catch((error) => {
         console.error(`Error performing action: ${error}`);
@@ -298,6 +304,8 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
     handleAddItem,
     alertAction,
     handleAlertActionAccept,
-    handleUpdateLine
+    handleUpdateLine,
+    currentPackage,
+    setCurrentPackage,
   }
 }

@@ -1,3 +1,5 @@
+import {ObjectType} from "@/pages/packages/types";
+
 export interface CancellationReason {
   id: string;
   name: string;
@@ -24,17 +26,3 @@ export interface CancellationReasonFilters {
   includeDisabled?: boolean;
 }
 
-export enum ObjectType {
-  GOODS_RECEIPT = 'GoodsReceipt',
-  INVENTORY_COUNTING = 'InventoryCounting',
-  TRANSFER = 'Transfer',
-  PICKING = 'Picking'
-}
-
-export enum SyncStatus {
-  Pending = 'Pending',
-  Syncing = 'Syncing',
-  Synced = 'Synced',
-  Failed = 'Failed',
-  Retry = 'Retry'
-}

@@ -383,5 +383,7 @@
   "loginError": "Error durante el inicio de sesión",
   "invalidGrant": "Contraseña inválida o cuenta deshabilitada",
   "itemEntryNotFoundPicking": "Artículo {0} no fue encontrado en el Picking {1}, Ubicación {2}",
-  "confirmCancelPick": "¿Está seguro que desea cancelar el picking #{0}?"
+  "confirmCancelPick": "¿Está seguro que desea cancelar el picking #{0}?",
+  "scanPackageNotFound": "El paquete {{barcode}} no fue encontrado en el sistema.",
+  "scanPackageSourceDoc": "El paquete {{barcode}} no esta asignado a la entrada {{number}}."
 }
