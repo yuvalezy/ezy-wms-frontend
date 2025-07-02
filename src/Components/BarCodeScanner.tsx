@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCheck} from '@fortawesome/free-solid-svg-icons';
+import {faCheck, faQrcode} from '@fortawesome/free-solid-svg-icons';
 import {IconProp} from '@fortawesome/fontawesome-svg-core'; // Import IconProp
 import {scanBarcode} from "@/assets";
 import {StringFormat, distinctItems, Item, UnitType} from "@/assets";
@@ -18,16 +18,32 @@ import {useThemeContext} from "./ThemeContext";
 import {useTranslation} from "react-i18next";
 import {toast} from "sonner";
 import {cn} from "@/lib/utils";
+import {Switch} from "@/components/ui/switch";
+import {Checkbox} from "@/components/ui/checkbox";
+
+export interface PackageValue {
+  id: string;
+  barcode: string;
+}
+
+export interface AddItemValue {
+  item: Item;
+  unit: UnitType;
+  createPackage: boolean;
+  package?: PackageValue;
+}
 
 export interface BarCodeScannerProps {
   enabled: boolean;
   unit?: boolean;
   item?: boolean;
-  onAddItem: (item: Item, unit: UnitType) => void;
+  onAddItem: (addItem: AddItemValue) => void;
   onAddAction?: () => void;
   addActionLabel?: string;
   addActionIcon?: IconProp;
-  pickPackOnly?: boolean
+  pickPackOnly?: boolean;
+  enablePackage?: boolean;
+  currentPackage?: PackageValue | null;
 }
 
 export interface BarCodeScannerRef {
@@ -45,12 +61,16 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
     onAddAction,
     addActionLabel,
     addActionIcon,
-    pickPackOnly = false
+    pickPackOnly = false,
+    enablePackage = false,
+    currentPackage
   }, ref) => {
   const barcodeRef = useRef<HTMLInputElement>(null);
   const [barcodeInput, setBarcodeInput] = useState('');
   const {setLoading, setError} = useThemeContext();
   const [selectedUnit, setSelectedUnit] = useState<UnitType>(UnitType.Pack);
+  const [scanMode, setScanMode] = useState<'item' | 'package'>('item');
+  const [createPackage, setCreatePackage] = useState(false);
   const {t} = useTranslation();
 
   useImperativeHandle(ref, () => ({
@@ -67,7 +87,12 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    handleScanBarcode(barcodeInput);
+
+    if (scanMode === 'package') {
+      handleScanPackage(barcodeInput);
+    } else {
+      handleScanBarcode(barcodeInput);
+    }
   };
 
   function handleScanBarcode(barcode: string) {
@@ -94,6 +119,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
   const clearBarCode = () => {
     setBarcodeInput('');
     setSelectedUnit(UnitType.Pack);
+    setCreatePackage(false);
   }
 
   function handleItems(items: Item[]) {
@@ -109,7 +135,12 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
       let item = items[0];
       item.barcode = barcode;
       barcodeRef?.current?.blur();
-      onAddItem(items[0], selectedUnit);
+      onAddItem({
+        item: items[0],
+        unit: selectedUnit,
+        createPackage: createPackage,
+        package: currentPackage,
+      });
       return;
     }
     handleMultipleItems(items);
@@ -143,8 +174,33 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
     barcodeRef?.current?.focus();
   }
 
+  const handleScanPackage = (barcode: string) => {
+    if (barcode.length === 0) {
+      toast.warning(t("barcodeRequired"));
+      return;
+    }
+
+    window.alert('not implemented yet');
+    return;
+    // onAddItem({
+    //   item: {} as Item,
+    //   unit: selectedUnit,
+    //   createPackage: false,
+    //   packageId: barcode
+    // });
+    clearBarCode();
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4 p-2">
+      {currentPackage && <div className="space-y-2">
+        <Label htmlFor="barcode-input">Current Package</Label>
+        <Input
+          id="current-package"
+          value={currentPackage.barcode}
+          readOnly
+        />
+      </div>}
       <div className="space-y-2">
         <Label htmlFor="barcode-input">{barcodeLabel}</Label>
         <Input
@@ -156,7 +212,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
           disabled={!enabled}
         />
       </div>
-      {unit && (
+      {unit && scanMode === 'item' && (
         <div className="space-y-2">
           <Label htmlFor="unit-select">{t('unit')}</Label>
           <Select disabled={pickPackOnly} onValueChange={handleUnitChanged} value={selectedUnit.toString()}>
@@ -173,18 +229,45 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
           </Select>
         </div>
       )}
+      {enablePackage && (
+        <div className="space-y-2">
+          {scanMode === 'item' && (
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="create-package"
+                checked={createPackage}
+                onCheckedChange={v => setCreatePackage(!createPackage)}
+              />
+              <Label htmlFor="create-package">Create new package</Label>
+            </div>
+          )}
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="scan-mode"
+              checked={scanMode === 'package'}
+              onCheckedChange={(checked) => {
+                setScanMode(checked ? 'package' : 'item');
+                setTimeout(() => barcodeRef?.current?.focus(), 1);
+              }}
+            />
+            <Label htmlFor="scan-mode">
+              {scanMode === 'package' ? 'Scan Package Mode' : 'Scan Item Mode'}
+            </Label>
+          </div>
+        </div>
+      )}
       <div className="flex space-x-2">
         {onAddAction == null && (
           <Button type="submit" disabled={!enabled} className="w-full">
             <FontAwesomeIcon icon={faCheck} className="mr-2"/>
-            Accept
+            {scanMode === 'package' ? 'Scan Package' : 'Accept'}
           </Button>
         )}
         {onAddAction && (
           <>
             <Button type="submit" disabled={!enabled} className="flex-1">
               <FontAwesomeIcon icon={faCheck} className="mr-2"/>
-              Accept
+              {scanMode === 'package' ? 'Scan Package' : 'Accept'}
             </Button>
             <Button variant="secondary" onClick={onAddAction} className="flex-1">
               {addActionIcon && <FontAwesomeIcon icon={addActionIcon} className="mr-2"/>}
