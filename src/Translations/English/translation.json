@@ -386,5 +386,13 @@
   "itemEntryNotFoundPicking": "Item {0} was not found in Picking {1}, Bin {2}",
   "confirmCancelPick": "Are you sure you want to cancel picking #{0}?",
   "scanPackageNotFound": "Package {{barcode}} was not found in the system.",
-  "scanPackageSourceDoc": "Package {{barcode}} is not assigned to current receipt."
+  "scanPackageSourceDoc": "Package {{barcode}} is not assigned to current receipt.",
+  "currentPackage": "Current Package",
+  "createNewPackage": "Create new package",
+  "scanPackageMode": "Scan Package Mode",
+  "scanItemMode": "Scan Item Mode",
+  "scanPackage": "Scan Package",
+  "multipleBoxesNotImplemented": "Multiple Boxes not implemented yet",
+  "selectUnit": "Select Unit",
+  "barcodeRequired": "Barcode is required"
 }

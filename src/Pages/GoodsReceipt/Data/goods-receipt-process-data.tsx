@@ -7,8 +7,6 @@ import {BoxConfirmationDialogRef} from "@/components/BoxConfirmationDialog";
 import {useThemeContext} from "@/components/ThemeContext";
 import {
   AddItemResponseMultipleValue,
-  Item,
-  UnitType,
   UpdateLineParameters,
   UpdateLineReturnValue
 } from "@/assets/Common";
@@ -18,8 +16,6 @@ import {StringFormat} from "@/assets/Functions";
 import {addItem, updateLine, updateLineQuantity} from "@/pages/GoodsReceipt/data/GoodsReceiptProcess";
 import {DocumentAddItemResponse, ReceiptDocument} from "@/assets/ReceiptDocument";
 import {fetchDocument} from "./Document";
-import {getPackageByBarcode} from "@/pages/packages/hooks";
-import {PackageDto} from "@/pages/packages/types";
 
 export const useGoodsReceiptProcessData = (confirm: boolean) => {
   const {scanCode} = useParams();
