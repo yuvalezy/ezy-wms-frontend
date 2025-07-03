@@ -1,11 +1,11 @@
-import { useState, useRef, useEffect } from 'react';
-import { toast } from 'sonner';
-import { useTranslation } from 'react-i18next';
-import { useThemeContext } from '@/components';
-import { distinctItems, Item, scanBarcode, StringFormat, UnitType } from '@/assets';
-import { getPackageByBarcode } from '@/pages/packages/hooks';
-import { ObjectType, PackageMovementType } from '@/pages/packages/types';
-import { AddItemValue, PackageValue, BarCodeScannerRef } from './types';
+import {useState, useRef, useEffect} from 'react';
+import {toast} from 'sonner';
+import {useTranslation} from 'react-i18next';
+import {useThemeContext} from '@/components';
+import {distinctItems, Item, scanBarcode, StringFormat, UnitType} from '@/assets';
+import {getPackageByBarcode} from '@/pages/packages/hooks';
+import {ObjectType, PackageMovementType} from '@/pages/packages/types';
+import {AddItemValue, PackageValue, BarCodeScannerRef} from './types';
 
 interface UseBarCodeScannerProps {
   enabled: boolean;
@@ -21,25 +21,25 @@ interface UseBarCodeScannerProps {
 }
 
 export const useBarCodeScanner = ({
-  enabled,
-  item,
-  enablePackage = false,
-  currentPackage,
-  objectType,
-  objectId,
-  objectNumber,
-  onAddItem,
-  onPackageChanged
-}: UseBarCodeScannerProps) => {
+                                    enabled,
+                                    item,
+                                    enablePackage = false,
+                                    currentPackage,
+                                    objectType,
+                                    objectId,
+                                    objectNumber,
+                                    onAddItem,
+                                    onPackageChanged,
+                                  }: UseBarCodeScannerProps) => {
   const barcodeRef = useRef<HTMLInputElement>(null);
   const [barcodeInput, setBarcodeInput] = useState('');
   const [selectedUnit, setSelectedUnit] = useState<UnitType>(UnitType.Pack);
   const [scanMode, setScanMode] = useState<'item' | 'package'>('item');
   const [createPackage, setCreatePackage] = useState(false);
   const [loadedPackage, setLoadedPackage] = useState<PackageValue | null | undefined>(currentPackage);
-  
-  const { setLoading, setError } = useThemeContext();
-  const { t } = useTranslation();
+
+  const {setLoading, setError} = useThemeContext();
+  const {t} = useTranslation();
 
   // Sync loadedPackage with currentPackage prop
   useEffect(() => {
@@ -115,22 +115,22 @@ export const useBarCodeScanner = ({
       return;
     }
 
-    getPackageByBarcode(barcode, { history: true })
+    getPackageByBarcode(barcode, {history: true})
       .then((response) => {
         if (response == null) {
-          toast.error(t('scanPackageNotFound', { barcode }));
+          toast.error(t('scanPackageNotFound', {barcode}));
           return;
         }
         const checkCreationObject = response.locationHistory?.find(
-          (v) => v.sourceOperationType === objectType && 
-                 v.sourceOperationId === objectId && 
-                 v.movementType === PackageMovementType.Created
+          (v) => v.sourceOperationType === objectType &&
+            v.sourceOperationId === objectId &&
+            v.movementType === PackageMovementType.Created
         );
         if (!checkCreationObject) {
-          toast.error(t('scanPackageSourceDoc', { barcode, number: objectNumber }));
+          toast.error(t('scanPackageSourceDoc', {barcode, number: objectNumber}));
           return;
         }
-        const value: PackageValue = { id: response.id, barcode: response.barcode };
+        const value: PackageValue = {id: response.id, barcode: response.barcode};
         setLoadedPackage(value);
         setScanMode('item');
         onPackageChanged?.(value);
@@ -160,6 +160,10 @@ export const useBarCodeScanner = ({
     setTimeout(() => barcodeRef?.current?.focus(), 1);
   };
 
+  const handleClearPackage = () => {
+    setLoadedPackage(null);
+  }
+
   return {
     barcodeRef,
     barcodeInput,
@@ -173,6 +177,7 @@ export const useBarCodeScanner = ({
     handleSubmit,
     handleUnitChanged,
     handleScanModeChange,
-    enabled
+    enabled,
+    handleClearPackage
   };
 };

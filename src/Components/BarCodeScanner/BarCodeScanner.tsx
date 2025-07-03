@@ -44,7 +44,8 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
     clearBarCode,
     handleSubmit,
     handleUnitChanged,
-    handleScanModeChange
+    handleScanModeChange,
+    handleClearPackage
   } = useBarCodeScanner({
     enabled,
     item,
@@ -73,7 +74,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 p-2">
-      <PackageDisplay loadedPackage={loadedPackage} />
+      <PackageDisplay onClear={handleClearPackage} loadedPackage={loadedPackage} />
       
       <div className="space-y-2">
         <Label htmlFor="barcode-input">{barcodeLabel}</Label>

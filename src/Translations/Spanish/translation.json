@@ -393,5 +393,6 @@
   "scanPackage": "Escanear Paquete",
   "multipleBoxesNotImplemented": "Múltiples cajas no implementado aún",
   "selectUnit": "Seleccionar Unidad",
-  "barcodeRequired": "Se requiere código de barras"
+  "barcodeRequired": "Se requiere código de barras",
+  "clearPackage": "Limpiar Paquete"
 }

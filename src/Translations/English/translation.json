@@ -394,5 +394,6 @@
   "scanPackage": "Scan Package",
   "multipleBoxesNotImplemented": "Multiple Boxes not implemented yet",
   "selectUnit": "Select Unit",
-  "barcodeRequired": "Barcode is required"
+  "barcodeRequired": "Barcode is required",
+  "clearPackage": "Clear Package"
 }
