@@ -23,7 +23,7 @@ import {
   useGoodsReceiptAllDetailsData
 } from "@/pages/GoodsReceipt/data/goods-receipt-all-details-data";
 import {useDateTimeFormat} from "@/assets/DateFormat";
-import InfoBox, {InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
+import InfoBox, {FullInfoBox, InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
 import {Label} from "@/components";
 
 const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
@@ -83,20 +83,23 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                     }
 
                     return (
-                      <Card key={row.lineId}>
-                        <CardContent>
-                          <InfoBox>
-                            <InfoBoxValue label={t('employee')} value={row.createdByUserName}/>
-                            {row.package && <InfoBoxValue label={t('package')} value={row.package.barcode}/>}
-                          </InfoBox>
-                          <SecondaryInfoBox>
-                            <InfoBoxValue label={t('date')} value={dateFormat(row.timeStamp)}/>
-                            <InfoBoxValue label={t('time')} value={timeFormat(row.timeStamp)}/>
-                            <InfoBoxValue label={t('unit')} value={displayUnit}/>
-                            <InfoBoxValue label={t('quantity')} value={enableUpdate ? (
+                      <div key={row.lineId} className="bg-white rounded-lg shadow-sm mb-4 p-4">
+                        <div className="mb-4">
+                          <h3 className="text-lg font-bold text-gray-900 mb-1">{row.createdByUserName}</h3>
+                          <p className="text-sm text-gray-600">{dateFormat(row.timeStamp)} • {timeFormat(row.timeStamp)}</p>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-4 text-sm mb-4">
+                          <div>
+                            <span className="text-gray-500">{t('unit')}:</span>
+                            <span className="ml-2 font-medium">{displayUnit}</span>
+                          </div>
+                          <div>
+                            <span className="text-gray-500">{t('quantity')}:</span>
+                            {enableUpdate ? (
                               <Input
                                 type="number"
-                                className="w-24 text-right"
+                                className="w-20 text-center font-medium mt-1"
                                 value={(quantityChanges[row.lineId] ?? quantity).toString()}
                                 min={1}
                                 step={1}
@@ -104,25 +107,30 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                                 onChange={(e) => handleQuantityChange(row.lineId, e.target.value)}
                               />
                             ) : (
-                              <span className="text-right"> {formatNumber(quantity, 0)} </span>
-                            )}/>
-                          </SecondaryInfoBox>
-                          {enableUpdate && (
-                            <div className="flex items-center pt-2">
-                              <Checkbox
-                                checked={checkedRows[row.lineId]}
-                                onCheckedChange={(checked) => handleCheckboxChange(row.lineId, !!checked)}
-                              >
-                                {t('delete')}
-                              </Checkbox>
-                              <Label className="cursor-pointer pl-2"
-                                     onClick={() => handleCheckboxChange(row.lineId, !checkedRows[row.lineId])}>
-                                {t('delete')}
-                              </Label>
+                              <span className="ml-2 font-medium">{formatNumber(quantity, 0)}</span>
+                            )}
+                          </div>
+                          {row.package && (
+                            <div className="col-span-2">
+                              <span className="text-gray-500">{t('package')}:</span>
+                              <span className="ml-2 font-medium">{row.package.barcode}</span>
                             </div>
                           )}
-                        </CardContent>
-                      </Card>
+                        </div>
+                        
+                        {enableUpdate && (
+                          <div className="flex items-center pt-2 border-t border-gray-100">
+                            <Checkbox
+                              checked={checkedRows[row.lineId]}
+                              onCheckedChange={(checked) => handleCheckboxChange(row.lineId, !!checked)}
+                            />
+                            <Label className="cursor-pointer pl-2"
+                                   onClick={() => handleCheckboxChange(row.lineId, !checkedRows[row.lineId])}>
+                              {t('delete')}
+                            </Label>
+                          </div>
+                        )}
+                      </div>
                     );
                   })}
                 </div>

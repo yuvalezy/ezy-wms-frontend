@@ -1,21 +1,26 @@
 import React from "react";
-import {CountingSummaryReportLine} from "@/pages/Counting/data/Report";
 import {ItemDetails} from "@/pages/item-check/item-check";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
 
 const InfoBox = ({children}: { children: React.ReactNode | React.ReactNode[] }) => {
-  return <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-    {children}
+  return <div className="bg-white rounded-lg shadow-sm mb-4 p-4 md:p-6">
+    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+      {children}
+    </div>
   </div>
 }
 export const FullInfoBox = ({children}: { children: React.ReactNode | React.ReactNode[] }) => {
-  return <div className="gap-4 space-y-1 mb-4">
-    {children}
+  return <div className="bg-white rounded-lg shadow-sm mb-4 p-4 md:p-6">
+    <div className="space-y-4">
+      {children}
+    </div>
   </div>
 }
 export const SecondaryInfoBox = ({children}: { children: React.ReactNode | React.ReactNode[] }) => {
-  return <div className="grid grid-cols-2 gap-2">
-    {children}
+  return <div className="bg-white rounded-lg shadow-sm mb-4 p-4 md:p-6">
+    <div className="grid grid-cols-2 gap-4 text-sm">
+      {children}
+    </div>
   </div>
 }
 
@@ -30,9 +35,9 @@ export const InfoBoxValue = ({label, value, onClick, itemDetailsLink}: {
     onClick?.();
   };
   return (
-    <div className="flex flex-col space-y-1">
-      <span className="text-sm font-medium text-muted-foreground">{label}:</span>
-      <span className="text-base truncate">{!onClick && !itemDetailsLink ?
+    <div>
+      <span className="text-gray-500">{label}:</span>
+      <span className="ml-2 font-medium nowra">{!onClick && !itemDetailsLink ?
         value :
         !itemDetailsLink ?
           <a href="#" onClick={handleOnClick} className="text-blue-600 hover:underline">
