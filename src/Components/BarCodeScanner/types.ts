@@ -7,6 +7,10 @@ export interface PackageValue {
   barcode: string;
 }
 
+export interface PackageStockValue extends PackageValue{
+  quantity: number;
+}
+
 export interface AddItemValue {
   item: Item;
   unit: UnitType;

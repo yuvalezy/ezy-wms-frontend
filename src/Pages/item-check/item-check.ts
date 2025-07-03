@@ -1,6 +1,6 @@
 import {ResponseStatus} from "@/assets/Common";
 import {axiosInstance } from "@/utils/axios-instance";
-
+import {PackageStockValue} from "@/components";
 
 export interface ItemDetails {
   itemCode: string;
@@ -18,7 +18,9 @@ export interface ItemCheckResponse extends ItemDetails{
 
 export interface ItemStockResponse {
   binCode: string;
+  binEntry: number;
   quantity: number;
+  packages?: PackageStockValue[] | null;
 }
 
 export interface UpdateItemBarCodeResponse {
