@@ -394,5 +394,6 @@
   "multipleBoxesNotImplemented": "Múltiples cajas no implementado aún",
   "selectUnit": "Seleccionar Unidad",
   "barcodeRequired": "Se requiere código de barras",
-  "clearPackage": "Limpiar Paquete"
+  "clearPackage": "Limpiar Paquete",
+  "package": "Paquete"
 }

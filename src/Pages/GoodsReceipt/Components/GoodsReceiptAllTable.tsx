@@ -38,11 +38,11 @@ const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data, 
         </TableRow>
       </TableHeader>
       <TableBody>
-        {data.map((row) => {
+        {data.map((row, index) => {
           const inWarehouse = row.quantity - row.delivery - row.showroom;
           return (
-            <>
-              <TableRow key={row.itemCode}>
+            <React.Fragment key={`row-${index}`}>
+              <TableRow key={`data-${index}`}>
                 <TableCell><ItemDetailsLink data={row}/></TableCell>
                 <TableCell className="hidden sm:table-cell">{row.itemName}</TableCell>
                 <TableCell>{stockInfo({
@@ -90,11 +90,11 @@ const GoodsReceiptAllReportTable: React.FC<GoodsReceiptAllTableProps> = ({data, 
                   </Button>
                 </TableCell>}
               </TableRow>
-              <TableRow className="sm:hidden">
+              <TableRow className="sm:hidden" key={`description-${index}`}>
                 <TableCell className="bg-gray-100 border-b-1"
                            colSpan={allowModify ? 8 : 7}>{t('description')}: {row.itemName}</TableCell>
               </TableRow>
-            </>
+            </React.Fragment>
           );
         })}
       </TableBody>

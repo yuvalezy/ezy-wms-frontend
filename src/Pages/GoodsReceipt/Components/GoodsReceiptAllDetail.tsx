@@ -1,4 +1,4 @@
-import React, {forwardRef, useImperativeHandle} from "react";
+import React, {forwardRef, useImperativeHandle, useMemo} from "react";
 import {useTranslation} from "react-i18next";
 import {Button} from "@/components/ui/button";
 import {Checkbox} from "@/components/ui/checkbox";
@@ -51,9 +51,11 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
     }
   }));
 
+  const displayBarcode = useMemo(() => currentData && data && data.find((v) => v.package != null), [currentData, data]);
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="sm:max-w-xl">
+      <DialogContent className={displayBarcode ? "sm:max-w-4xl" : "sm:max-w-xl"}>
         <DialogHeader>
           <DialogTitle>{t("detail")}</DialogTitle>
           <DialogDescription>
@@ -85,6 +87,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                         <CardContent>
                           <InfoBox>
                             <InfoBoxValue label={t('employee')} value={row.createdByUserName}/>
+                            {row.package && <InfoBoxValue label={t('package')} value={row.package.barcode}/>}
                           </InfoBox>
                           <SecondaryInfoBox>
                             <InfoBoxValue label={t('date')} value={dateFormat(row.timeStamp)}/>
@@ -137,6 +140,9 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                       <TableHead className="text-center">{t('time')}</TableHead>
                       <TableHead className="text-center">{t('unit')}</TableHead>
                       <TableHead className="text-center">{t('quantity')}</TableHead>
+                      {displayBarcode && (
+                        <TableHead className="text-center">{t('package')}</TableHead>
+                      )}
                       {enableUpdate && (
                         <TableHead className="text-center">{t('delete')}</TableHead>
                       )}
@@ -177,6 +183,9 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                               formatNumber(quantity, 0)
                             )}
                           </TableCell>
+                          {displayBarcode && (
+                            <TableCell>{row.package?.barcode}</TableCell>
+                          )}
                           {enableUpdate && (
                             <TableCell className="text-center">
                               <Checkbox

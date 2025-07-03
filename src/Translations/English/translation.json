@@ -395,5 +395,6 @@
   "multipleBoxesNotImplemented": "Multiple Boxes not implemented yet",
   "selectUnit": "Select Unit",
   "barcodeRequired": "Barcode is required",
-  "clearPackage": "Clear Package"
+  "clearPackage": "Clear Package",
+  "package": "Package"
 }
