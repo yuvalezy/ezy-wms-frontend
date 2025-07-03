@@ -5,6 +5,7 @@ import { Edit3, MessageCircle } from "lucide-react";
 import {AddItemResponseMultipleValue, UnitType} from "@/assets";
 import {useAuth} from "@/components/AppContext";
 import {ItemCustomFields} from "@/pages/item-check/components/item-details-list";
+import {PackageValue} from "@/components/BarCodeScanner";
 
 export type AlertSeverity = "Information" | "Positive" | "Negative" | "Warning";
 
@@ -36,6 +37,7 @@ export interface ProcessAlertValue {
   canceled?: boolean;
   multiple?: AddItemResponseMultipleValue[];
   customFields?: Record<string, unknown>;
+  package?: PackageValue | null;
 }
 
 export interface ProcessAlertProps {
@@ -119,11 +121,17 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
       <div className={`relative z-10 ${getAlertClasses()}`}>
         {alert.barcode && (
           <div className="mb-3">
-            <h4 className="font-bold text-lg text-gray-800">{alert.barcode}</h4>
             <div className="text-xs text-gray-500 mt-1">{t('barcode')}</div>
+            <h4 className="font-bold text-lg text-gray-800">{alert.barcode}</h4>
           </div>
         )}
-        
+        {alert.package && (
+          <div className="mb-3">
+            <div className="text-xs text-gray-500 mt-1">{t('package')}</div>
+            <h4 className="font-bold text-lg text-gray-800">{alert.package.barcode}</h4>
+          </div>
+        )}
+
         <div className="space-y-3">
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div>

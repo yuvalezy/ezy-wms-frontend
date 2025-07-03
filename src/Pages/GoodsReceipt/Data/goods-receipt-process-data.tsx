@@ -120,7 +120,7 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
           }
         }
 
-        const newAlert = {
+        const newAlert: ProcessAlertValue = {
           lineId: data.lineId,
           barcode,
           itemCode: item.code,
@@ -134,10 +134,11 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
           purPackMsr: data.purPackMsr,
           unit: unit,
           customFields: data.customFields,
+          package: data.packageId ? {id: data.packageId, barcode: data.packageBarcode!} : value.package
         };
         alert(newAlert);
         setCurrentPackage(data.packageId ? {id: data.packageId, barcode: data.packageBarcode!} : value.package)
-        
+
         // If we created a new package, clear the createPackage checkbox
         if (data.packageId && value.createPackage) {
           setTimeout(() => barcodeRef.current?.focus(), 100);
