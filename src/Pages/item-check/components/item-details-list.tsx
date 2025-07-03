@@ -7,37 +7,33 @@ import {CustomFieldType, useDateTimeFormat, CustomField} from "@/assets";
 
 const ItemDetailsList = ({details}: { details: ItemDetails }) => {
   const {t} = useTranslation();
-  return <Card>
-    <CardContent>
-      <SecondaryInfoBox>
-        <InfoBoxValue label={t("code")} value={details.itemCode}/>
-        <InfoBoxValue label={t("description")} value={details.itemName}/>
-        <InfoBoxValue label={t('purchasingUoM')} value={`${details.buyUnitMsr} ${details.numInBuy}`}/>
-        <InfoBoxValue label={t('packagingUoM')} value={`${details.purPackMsr} ${details.purPackUn}`}/>
-        <ItemCustomFields
-          customFields={details.customFields}
-          render={(field, value, index) => (
-            <InfoBoxValue 
-              key={`${field.key}-${index}`} 
-              label={field.description}
-              value={value}
-            />
-          )}
+  return <SecondaryInfoBox>
+    <InfoBoxValue label={t("code")} value={details.itemCode}/>
+    <InfoBoxValue label={t("description")} value={details.itemName}/>
+    <InfoBoxValue label={t('purchasingUoM')} value={`${details.buyUnitMsr} ${details.numInBuy}`}/>
+    <InfoBoxValue label={t('packagingUoM')} value={`${details.purPackMsr} ${details.purPackUn}`}/>
+    <ItemCustomFields
+      customFields={details.customFields}
+      render={(field, value, index) => (
+        <InfoBoxValue
+          key={`${field.key}-${index}`}
+          label={field.description}
+          value={value}
         />
-      </SecondaryInfoBox>
-    </CardContent>
-  </Card>
+      )}
+    />
+  </SecondaryInfoBox>
 };
 
 export const ItemCustomFields = ({
-  customFields,
-  render
-}: {
+                                   customFields,
+                                   render
+                                 }: {
   customFields?: Record<string, unknown>;
   render: (field: CustomField, value: string | null, index: number) => React.ReactNode;
 }) => {
-  const { user } = useAuth();
-  const { dateFormat } = useDateTimeFormat();
+  const {user} = useAuth();
+  const {dateFormat} = useDateTimeFormat();
 
   return (
     <>

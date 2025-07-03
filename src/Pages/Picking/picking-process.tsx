@@ -73,11 +73,9 @@ export default function PickingProcess() {
                     <CardContent>
                       <FullInfoBox>
                         <InfoBoxValue label={t("customer")} value={`${item.cardCode} - ${item.cardName}`}></InfoBoxValue>
-                      </FullInfoBox>
-                      <SecondaryInfoBox>
                         <InfoBoxValue label={t("totalItems")} value={item.totalItems}></InfoBoxValue>
                         <InfoBoxValue label={t("totalOpenItems")} value={item.totalOpenItems}></InfoBoxValue>
-                      </SecondaryInfoBox>
+                      </FullInfoBox>
                       <ul className="space-y-2 text-sm">
                         <li className="pt-2">
                           <Progress value={progressValue} />

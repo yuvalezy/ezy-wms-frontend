@@ -395,5 +395,24 @@
   "selectUnit": "Seleccionar Unidad",
   "barcodeRequired": "Se requiere código de barras",
   "clearPackage": "Limpiar Paquete",
-  "package": "Paquete"
+  "package": "Paquete",
+  "inventory": {
+    "totalLocations": "Total Ubicaciones",
+    "totalBoxes": "Total Paquetes",
+    "mixedBoxes": "Paquetes Mixtos",
+    "units": {
+      "box": {
+        "label": "Paquete",
+        "abbr": "P"
+      },
+      "dozen": {
+        "label": "Docena",
+        "abbr": "D"
+      },
+      "unit": {
+        "label": "Unidad",
+        "abbr": "U"
+      }
+    }
+  }
 }

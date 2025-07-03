@@ -51,13 +51,13 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
   return (
     <Card className="mb-4 shadow-lg">
       <CardContent className="grid text-sm gap-2">
-        <SecondaryInfoBox>
+        <FullInfoBox>
           {doc.name && <InfoBoxValue label={t('id')} value={doc.name}/>}
           <InfoBoxValue onClick={handleOpenLink ? openLink : undefined} label={t('number')} value={doc.number}/>
           <InfoBoxValue label={t('docDate')} value={dateFormat(doc.date)}/>
           <InfoBoxValue label={t('createdBy')} value={doc.createdByUserName}/>
           <InfoBoxValue label={t('status')} value={documentStatusToString(doc.status)}/>
-        </SecondaryInfoBox>
+        </FullInfoBox>
         {(doc.vendor || doc.documents) && <FullInfoBox>
           {doc.vendor && (
             <InfoBoxValue label={t('vendor')} value={doc.vendor.name ?? doc.vendor.id}/>

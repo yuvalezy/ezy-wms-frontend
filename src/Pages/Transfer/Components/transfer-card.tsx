@@ -12,7 +12,7 @@ import {Status} from "@/assets/Common";
 import {useDateTimeFormat} from "@/assets/DateFormat";
 import {CheckCircle, XCircle} from "lucide-react";
 import {formatNumber} from "@/lib/utils";
-import {InfoBoxValue, SecondaryInfoBox} from "@/components";
+import {FullInfoBox, InfoBoxValue, SecondaryInfoBox} from "@/components";
 import InfoBox from "@/components/InfoBox";
 
 type TransferCardProps = {
@@ -40,14 +40,14 @@ const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = 
   return (
     <Card key={doc.id} className={header ? "mb-4 shadow-lg" : "shadow-lg"}>
       <CardContent className="py-4">
-        <SecondaryInfoBox>
+        <FullInfoBox>
           <InfoBoxValue label={t('number')} value={doc.number}
                         onClick={handleOpenLink ? () => handleOpen(doc) : undefined}/>
           {doc.name && <InfoBoxValue label={t('id')} value={doc.name}/>}
           <InfoBoxValue label={t('docDate')} value={dateFormat(doc.date)}/>
           <InfoBoxValue label={t('createdBy')} value={doc.createdByUser?.fullName}/>
           <InfoBoxValue label={t('status')} value={documentStatusToString(doc.status)}/>
-        </SecondaryInfoBox>
+        </FullInfoBox>
         {doc.comments &&
             <InfoBox>
                 <InfoBoxValue label={t('comment')} value={doc.comments}/>

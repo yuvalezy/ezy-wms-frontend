@@ -12,7 +12,7 @@ import {useDateTimeFormat} from "@/assets/DateFormat";
 import {CheckCircle, XCircle, FileText, Info} from "lucide-react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFileAlt} from "@fortawesome/free-solid-svg-icons";
-import {InfoBoxValue, SecondaryInfoBox, Separator} from "@/components";
+import {FullInfoBox, InfoBoxValue, SecondaryInfoBox, Separator} from "@/components";
 
 type CountingCardProps = {
   doc: Counting,
@@ -42,13 +42,13 @@ const CountingCard: React.FC<CountingCardProps> = ({doc, handleAction, superviso
         </CardHeader>
       )}
       <CardContent className="py-4">
-        <SecondaryInfoBox>
+        <FullInfoBox>
           <InfoBoxValue label={t('number')} value={doc.number}
                         onClick={handleOpenLink ? () => handleOpen(doc.id) : undefined}/>
           <InfoBoxValue label={t('docDate')} value={dateFormat(doc.date)}/>
           <InfoBoxValue label={t('createdBy')} value={doc.createdByUser?.fullName}/>
           <InfoBoxValue label={t('status')} value={documentStatusToString(doc.status)}/>
-        </SecondaryInfoBox>
+        </FullInfoBox>
         {supervisor && (
           <>
             <Separator className="my-4"/>

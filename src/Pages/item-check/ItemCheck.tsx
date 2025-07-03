@@ -34,37 +34,42 @@ export default function ItemCheck() {
                   titleBreadcrumbs={hasData ? [{label: result[0].itemCode}] : undefined}>
       {!hasData ? (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
-            <div className="space-y-2">
-              <Label htmlFor="barcode">{t("barcode")}</Label>
-              <Input
-                id="barcode"
-                required={itemCodeInput.length === 0}
-                disabled={itemCodeInput.length > 0}
-                value={barcodeInput}
-                onChange={(e) => setBarcodeInput(e.target.value)}
-                ref={barcodeInputRef}
-              />
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            handleCheckSubmit();
+          }}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
+              <div className="space-y-2">
+                <Label htmlFor="barcode">{t("barcode")}</Label>
+                <Input
+                  id="barcode"
+                  required={itemCodeInput.length === 0}
+                  disabled={itemCodeInput.length > 0}
+                  value={barcodeInput}
+                  onChange={(e) => setBarcodeInput(e.target.value)}
+                  ref={barcodeInputRef}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="code">{t("code")}</Label>
+                <Input
+                  id="code"
+                  required={barcodeInput.length === 0}
+                  disabled={barcodeInput.length > 0}
+                  value={itemCodeInput}
+                  onChange={(e) => setItemCodeInput(e.target.value)}
+                />
+              </div>
+              <div className="md:col-span-2">
+                <Button className="w-full md:w-auto">
+                  <FontAwesomeIcon icon={faCheck} className="mr-2"/>
+                  {t("accept")}
+                </Button>
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="code">{t("code")}</Label>
-              <Input
-                id="code"
-                required={barcodeInput.length === 0}
-                disabled={barcodeInput.length > 0}
-                value={itemCodeInput}
-                onChange={(e) => setItemCodeInput(e.target.value)}
-              />
-            </div>
-            <div className="md:col-span-2">
-              <Button onClick={() => handleCheckSubmit()} className="w-full md:w-auto">
-                <FontAwesomeIcon icon={faCheck} className="mr-2"/>
-                {t("accept")}
-              </Button>
-            </div>
-          </div>
+          </form>
         </>
-      ): (
+      ) : (
         <>
           {result.length === 0 && (
             <Alert className="border-red-200 bg-red-50">

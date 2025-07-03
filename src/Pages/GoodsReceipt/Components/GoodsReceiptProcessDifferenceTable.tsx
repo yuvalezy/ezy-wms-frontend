@@ -280,15 +280,13 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
                         <Card
                           key={`${detail.timeStamp}-${detail.createdByUserName}-${detail.scannedQuantity}`}> {/* Adjusted key for more uniqueness */}
                           <CardContent>
-                            <SecondaryInfoBox>
+                            <FullInfoBox>
                               <InfoBoxValue label={t('date')} value={dateFormat(timeStamp)}/>
                               <InfoBoxValue label={t('time')} value={timeFormat(timeStamp)}/>
                               <InfoBoxValue label={t('employee')} value={detail.createdByUserName}/>
                               <InfoBoxValue label={t('unit')} value={displayUnit}/>
-                            </SecondaryInfoBox>
-                            <InfoBox>
                               <InfoBoxValue label={t('scannedQuantity')} value={formatNumber(scannedQuantity, 2)}/>
-                            </InfoBox>
+                            </FullInfoBox>
                           </CardContent>
                         </Card>
                       );

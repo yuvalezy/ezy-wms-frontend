@@ -1,8 +1,10 @@
 import {axiosInstance} from "@/utils/axios-instance";
 import {ItemDetails} from "@/pages/item-check/item-check";
+import {PackageStockValue} from "@/components";
 
 export interface BinContentResponse extends ItemDetails {
   onHand: number;
+  packages?: PackageStockValue[] | null;
 }
 
 export const binCheck = async (

@@ -396,5 +396,24 @@
   "selectUnit": "Select Unit",
   "barcodeRequired": "Barcode is required",
   "clearPackage": "Clear Package",
-  "package": "Package"
+  "package": "Package",
+  "inventory": {
+    "totalLocations": "Total Locations",
+    "totalBoxes": "Total Boxes",
+    "mixedBoxes": "Mixed Boxes",
+    "units": {
+      "box": {
+        "label": "Box",
+        "abbr": "B"
+      },
+      "dozen": {
+        "label": "Dozen",
+        "abbr": "D"
+      },
+      "unit": {
+        "label": "Unit",
+        "abbr": "U"
+      }
+    }
+  }
 }

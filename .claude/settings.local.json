@@ -3,7 +3,10 @@
     "allow": [
       "Bash(mkdir:*)",
       "Bash(echo:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "WebFetch(domain:claude.ai)",
+      "Bash(npm run lint)",
+      "Bash(ls:*)"
     ],
     "deny": []
   }
