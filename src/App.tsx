@@ -75,6 +75,7 @@ export default function App() {
                     <Route path="/itemCheck" element={<ProtectedRoute authorizations={[RoleType.GOODS_RECEIPT_SUPERVISOR, RoleType.PICKING_SUPERVISOR, RoleType.COUNTING_SUPERVISOR, RoleType.TRANSFER_SUPERVISOR]} element={<ItemCheck/>}/>}/>
                     <Route path="/itemCheck/:code" element={<ProtectedRoute authorizations={[RoleType.GOODS_RECEIPT_SUPERVISOR, RoleType.PICKING_SUPERVISOR, RoleType.COUNTING_SUPERVISOR, RoleType.TRANSFER_SUPERVISOR]} element={<ItemCheck/>}/>}/>
                     <Route path="/packageCheck" element={<ProtectedRoute authorizations={[RoleType.GOODS_RECEIPT_SUPERVISOR, RoleType.PICKING_SUPERVISOR, RoleType.COUNTING_SUPERVISOR, RoleType.TRANSFER_SUPERVISOR, RoleType.PACKAGE_MANAGEMENT, RoleType.PACKAGE_MANAGEMENT_SUPERVISOR]} element={<PackageCheck/>}/>}/>
+                    <Route path="/packageCheck/:id/:barcode" element={<ProtectedRoute authorizations={[RoleType.GOODS_RECEIPT_SUPERVISOR, RoleType.PICKING_SUPERVISOR, RoleType.COUNTING_SUPERVISOR, RoleType.TRANSFER_SUPERVISOR, RoleType.PACKAGE_MANAGEMENT, RoleType.PACKAGE_MANAGEMENT_SUPERVISOR]} element={<PackageCheck/>}/>}/>
                     {/*Counting*/}
                     <Route path="/counting" element={<ProtectedRoute authorization={RoleType.COUNTING} element={<CountingList/>}/>}/>
                     <Route path="/counting/:scanCode" element={<ProtectedRoute authorization={RoleType.COUNTING} element={<CountingProcess/>}/>}/>

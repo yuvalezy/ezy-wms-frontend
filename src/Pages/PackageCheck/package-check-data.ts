@@ -1,6 +1,6 @@
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "@/components/ThemeContext";
-import {useRef, useState} from "react";
+import {useRef, useState, useCallback} from "react";
 import {PackageScannerRef} from "@/components/PackageScanner";
 import {useAuth} from "@/components/AppContext";
 import {PackageDto} from "@/pages/packages/types";
@@ -15,9 +15,34 @@ export const usePackageCheckData = () => {
   const {user} = useAuth();
   const [packageData, setPackageData] = useState<PackageDto | null>(null);
 
-  function onScan(packageData: PackageDto) {
+  const onScan = useCallback((packageData: PackageDto) => {
     setPackageData(packageData);
-  }
+  }, []);
+
+  const executePackageCheck = useCallback(async (id: string, barcode: string) => {
+    setLoading(true);
+    try {
+      const result = await getPackageByBarcode(barcode, {
+        contents: true,
+        details: true
+      });
+      
+      if (result) {
+        setPackageData(result);
+      } else {
+        setError(new Error(t('packages.packageNotFound')));
+      }
+    } catch (error: any) {
+      // Check if it's a 404 error (package not found)
+      if (error?.response?.status === 404) {
+        setError(new Error(t('packages.packageNotFound')));
+      } else {
+        setError(error);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [setLoading, setError, t]);
 
   function onPackageClear() {
     setPackageData(null);
@@ -112,6 +137,7 @@ export const usePackageCheckData = () => {
     refreshPackageData,
     excelData,
     excelHeaders,
-    handleExportExcel
+    handleExportExcel,
+    executePackageCheck
   };
 };
