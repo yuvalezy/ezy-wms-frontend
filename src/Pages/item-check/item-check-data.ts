@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from "react";
+import React, {useEffect, useRef, useCallback} from "react";
 import {itemCheck, ItemCheckResponse, updateItemBarCode} from "@/pages/item-check/item-check";
 import {useThemeContext} from "@/components/ThemeContext";
 import {ResponseStatus} from "@/assets/Common";
@@ -15,8 +15,10 @@ export const useItemCheckData = () => {
   const barcodeInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    if (barcodeInputRef == null)
+      return;
     setTimeout(() => barcodeInputRef.current?.focus(), 1);
-  }, []);
+  }, [barcodeInputRef]);
 
   function handleCheckSubmit() {
     let barcodeLength = barcodeInput.length === 0;
@@ -30,14 +32,14 @@ export const useItemCheckData = () => {
     executeItemCheck(itemCodeInput, barcodeInput);
   }
 
-  function executeItemCheck(itemCode: string, barCode: string) {
+  const executeItemCheck = useCallback((itemCode: string, barCode: string) => {
     itemCheck(itemCode, barCode)
       .then(function (items) {
         setResult(items);
       })
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
-  }
+  }, [setError, setLoading]);
 
   function handleUpdateSubmit(itemCode: string, checkedBarcodes: string[], newBarcode: string) {
     setLoading(true);

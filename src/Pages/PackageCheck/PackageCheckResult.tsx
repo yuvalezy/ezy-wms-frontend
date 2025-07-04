@@ -1,25 +1,14 @@
-import React, {useState} from "react";
-import {PackageDto, PackageStatus, UnitType} from "@/pages/packages/types";
+import React from "react";
+import {PackageDto, PackageStatus, PackageContentDto} from "@/pages/packages/types";
 import {useTranslation} from "react-i18next";
 import {Card} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
-import {ChevronRight, Package, MapPin, Calendar, User, Box} from "lucide-react";
+import {Package, MapPin, Calendar, User, Box, Grid3x3} from "lucide-react";
 import {formatDistance} from "date-fns";
 
 export const PackageCheckResult: React.FC<{ packageData: PackageDto }> = ({packageData}) => {
   const {t} = useTranslation();
-  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
-
-  const toggleRow = (contentId: string) => {
-    const newExpanded = new Set(expandedRows);
-    if (newExpanded.has(contentId)) {
-      newExpanded.delete(contentId);
-    } else {
-      newExpanded.add(contentId);
-    }
-    setExpandedRows(newExpanded);
-  };
 
   const getStatusColor = (status: PackageStatus) => {
     switch (status) {
@@ -42,38 +31,59 @@ export const PackageCheckResult: React.FC<{ packageData: PackageDto }> = ({packa
     return t(`packages.status.${status.toLowerCase()}`);
   };
 
-  const getUnitIcon = (unitType: UnitType) => {
-    switch (unitType) {
-      case UnitType.Pack:
-        return "bg-blue-500";
-      case UnitType.Dozen:
-        return "bg-green-500";
-      case UnitType.Unit:
-        return "bg-amber-500";
-      default:
-        return "bg-gray-500";
+  const formatStock = (content: PackageContentDto) => {
+    if (!content.itemData) {
+      return `${content.quantity} ${t('units')}`;
     }
+    
+    const { quantityInUnit, quantityInPack } = content.itemData;
+    const totalUnits = content.quantity;
+    
+    // Calculate breakdown: packs -> dozens -> units
+    const packs = Math.floor(totalUnits / (quantityInUnit * quantityInPack));
+    const remainingForDozens = totalUnits % (quantityInUnit * quantityInPack);
+    const dozens = Math.floor(remainingForDozens / quantityInUnit);
+    const units = remainingForDozens % quantityInUnit;
+    
+    const parts = [];
+    if (packs > 0) parts.push(`${packs} ${content.itemData.packMeasure || 'Box'}`);
+    if (dozens > 0) parts.push(`${dozens} ${content.itemData.unitMeasure || 'Doz'}`);
+    if (units > 0) parts.push(`${units} ${t('units')}`);
+    
+    return parts.join(', ') || '0';
   };
 
-  const getUnitLabel = (unitType: UnitType) => {
-    switch (unitType) {
-      case UnitType.Pack:
-        return t('inventory.units.pack.abbr');
-      case UnitType.Dozen:
-        return t('inventory.units.dozen.abbr');
-      case UnitType.Unit:
-        return t('inventory.units.unit.abbr');
-      default:
-        return unitType;
+  const getStockBreakdown = (content: PackageContentDto) => {
+    if (!content.itemData) {
+      return { packs: 0, dozens: 0, units: content.quantity };
     }
+    
+    const { quantityInUnit, quantityInPack } = content.itemData;
+    const totalUnits = content.quantity;
+    
+    const packs = Math.floor(totalUnits / (quantityInUnit * quantityInPack));
+    const remainingForDozens = totalUnits % (quantityInUnit * quantityInPack);
+    const dozens = Math.floor(remainingForDozens / quantityInUnit);
+    const units = remainingForDozens % quantityInUnit;
+    
+    return { packs, dozens, units };
   };
 
   const calculateTotals = () => {
     const totalItems = packageData.contents.length;
     const totalQuantity = packageData.contents.reduce((sum, content) => sum + content.quantity, 0);
-    const uniqueItems = new Set(packageData.contents.map(c => c.itemCode)).size;
+    let totalPacks = 0;
+    let totalDozens = 0;
+    let totalUnits = 0;
     
-    return { totalItems, totalQuantity, uniqueItems };
+    packageData.contents.forEach(content => {
+      const breakdown = getStockBreakdown(content);
+      totalPacks += breakdown.packs;
+      totalDozens += breakdown.dozens;
+      totalUnits += breakdown.units;
+    });
+    
+    return { totalItems, totalQuantity, totalPacks, totalDozens, totalUnits };
   };
 
   if (!packageData) {
@@ -124,82 +134,44 @@ export const PackageCheckResult: React.FC<{ packageData: PackageDto }> = ({packa
 
       {/* Package Contents */}
       <Card className="p-0 gap-0">
-        <div className="p-4 border-b">
-          <h4 className="text-md font-medium">{t('packages.packageContents')}</h4>
-        </div>
-        
         {packageData.contents.map((content, index) => {
-          const isExpanded = expandedRows.has(content.id);
-          const hasDetails = content.itemName || content.binCode;
+          const { packs, dozens, units } = getStockBreakdown(content);
 
           return (
             <div key={content.id} className={`${index !== 0 ? 'border-t' : ''}`}>
-              <div
-                onClick={() => hasDetails ? toggleRow(content.id) : null}
-                className={`flex items-center justify-between p-4 ${hasDetails ? 'cursor-pointer hover:bg-gray-50' : ''} transition-colors`}
-              >
+              <div className="flex items-center justify-between p-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-sm font-medium">{content.itemCode}</span>
+                    <ItemDetailsLink data={content} />
                   </div>
-                  {content.itemName && (
-                    <p className="text-sm text-gray-600 mt-1 truncate">
-                      {content.itemName}
-                    </p>
-                  )}
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-sm text-gray-900 font-medium">
-                      {content.quantity} {getUnitLabel(content.unitType)}
-                    </span>
-                    {content.binCode && (
-                      <span className="text-xs text-gray-500">
-                        @ {content.binCode}
-                      </span>
-                    )}
-                  </div>
+                  <p className="text-sm text-gray-600 mt-1 truncate">
+                    {content.itemData?.itemName || content.itemCode}
+                  </p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {formatStock(content)}
+                  </p>
                 </div>
 
                 <div className="flex items-center">
-                  <span className={`w-8 h-8 rounded flex items-center justify-center text-xs font-bold text-white ${getUnitIcon(content.unitType)}`}>
-                    {getUnitLabel(content.unitType)}
-                  </span>
-                  
-                  {hasDetails && (
-                    <ChevronRight 
-                      className={`w-5 h-5 text-gray-400 transition-transform ml-2 ${
-                        isExpanded ? 'rotate-90' : ''
-                      }`}
-                    />
-                  )}
-                </div>
-              </div>
-
-              {hasDetails && isExpanded && (
-                <div className="bg-gray-50 px-4 pb-4">
-                  <div className="pt-4 space-y-2">
-                    {content.itemName && (
-                      <div>
-                        <p className="text-xs text-gray-500 uppercase tracking-wider">{t('itemName')}</p>
-                        <p className="text-sm text-gray-900">{content.itemName}</p>
-                      </div>
-                    )}
-                    {content.binCode && (
-                      <div>
-                        <p className="text-xs text-gray-500 uppercase tracking-wider">{t('binCode')}</p>
-                        <p className="text-sm text-gray-900">{content.binCode}</p>
-                      </div>
-                    )}
-                    <div>
-                      <p className="text-xs text-gray-500 uppercase tracking-wider">{t('createdAt')}</p>
-                      <p className="text-sm text-gray-900">{new Date(content.createdAt).toLocaleString()}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500 uppercase tracking-wider">{t('createdBy')}</p>
-                      <p className="text-sm text-gray-900">{content.createdBy?.name}</p>
-                    </div>
+                  <div className="flex gap-1">
+                    <span className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold text-white ${
+                      packs > 0 ? 'bg-blue-500' : 'bg-gray-200'
+                    }`}>
+                      {t('inventory.units.box.abbr')}
+                    </span>
+                    <span className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold text-white ${
+                      dozens > 0 ? 'bg-green-500' : 'bg-gray-200'
+                    }`}>
+                      {t('inventory.units.dozen.abbr')}
+                    </span>
+                    <span className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold text-white ${
+                      units > 0 ? 'bg-amber-500' : 'bg-gray-200'
+                    }`}>
+                      {t('inventory.units.unit.abbr')}
+                    </span>
                   </div>
                 </div>
-              )}
+              </div>
             </div>
           );
         })}
@@ -215,23 +187,23 @@ export const PackageCheckResult: React.FC<{ packageData: PackageDto }> = ({packa
       <div className="grid grid-cols-3 gap-4">
         <Card className="p-4 text-center">
           <div className="flex justify-center mb-2">
-            <Box className="w-6 h-6 text-gray-400" />
-          </div>
-          <p className="text-2xl font-bold text-gray-900">{totals.uniqueItems}</p>
-          <p className="text-xs text-gray-500 mt-1">{t('packages.uniqueItems')}</p>
-        </Card>
-        
-        <Card className="p-4 text-center">
-          <div className="flex justify-center mb-2">
-            <Package className="w-6 h-6 text-gray-400" />
+            <Grid3x3 className="w-6 h-6 text-gray-400" />
           </div>
           <p className="text-2xl font-bold text-gray-900">{totals.totalItems}</p>
-          <p className="text-xs text-gray-500 mt-1">{t('packages.totalItemsInPackage')}</p>
+          <p className="text-xs text-gray-500 mt-1">{t('totalItems')}</p>
         </Card>
         
         <Card className="p-4 text-center">
           <div className="flex justify-center mb-2">
             <Package className="w-6 h-6 text-gray-400" />
+          </div>
+          <p className="text-2xl font-bold text-gray-900">{totals.totalPacks}</p>
+          <p className="text-xs text-gray-500 mt-1">{t('inventory.totalBoxes')}</p>
+        </Card>
+        
+        <Card className="p-4 text-center">
+          <div className="flex justify-center mb-2">
+            <Box className="w-6 h-6 text-gray-400" />
           </div>
           <p className="text-2xl font-bold text-gray-900">{totals.totalQuantity}</p>
           <p className="text-xs text-gray-500 mt-1">{t('packages.totalQuantity')}</p>

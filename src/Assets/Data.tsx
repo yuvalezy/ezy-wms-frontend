@@ -18,6 +18,13 @@ export type UserAuditResponse = {
   name: string;
 }
 
+export type ItemDataResponse = {
+  itemName: string;
+  unitMeasure: string;
+  quantityInUnit: number;
+  packMeasure: string;
+  quantityInPack: number;
+}
 
 export function useDocumentStatusOptions() {
   const { t } = useTranslation();

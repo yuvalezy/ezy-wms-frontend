@@ -1,11 +1,11 @@
 import {UnitType} from './UnitType.enum';
-import {UserAuditResponse} from "@/assets";
+import {ItemDataResponse, UserAuditResponse} from "@/assets";
 
 export interface PackageContentDto {
   id: string;
   packageId: string;
   itemCode: string;
-  itemName?: string;
+  itemData?: ItemDataResponse;
   quantity: number;
   unitType: UnitType;
   whsCode: string;

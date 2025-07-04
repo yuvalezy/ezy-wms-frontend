@@ -1,5 +1,5 @@
 import ContentTheme from "../../components/ContentTheme";
-import React from "react";
+import React, { useEffect } from "react";
 import ItemCheckMultipleResult from "./ItemCheckMultipleResult";
 import ItemCheckResult from "./ItemCheckResult";
 import {useTranslation} from "react-i18next";
@@ -9,9 +9,12 @@ import {Label} from "@/components/ui/label";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import {Check, AlertTriangle} from 'lucide-react';
 import {useItemCheckData} from "@/pages/item-check/item-check-data";
+import {useParams, useNavigate} from "react-router-dom";
 
 export default function ItemCheck() {
   const {t} = useTranslation();
+  const { code } = useParams();
+  const navigate = useNavigate();
 
   const {
     barcodeInput,
@@ -20,23 +23,41 @@ export default function ItemCheck() {
     setItemCodeInput,
     result,
     barcodeInputRef,
-    handleCheckSubmit,
     handleUpdateSubmit,
     handleSetBarcodeItem,
-    handleClear
+    handleClear,
+    executeItemCheck
   } = useItemCheckData();
+
+  useEffect(() => {
+    if (code && !result) {
+      executeItemCheck(code, "");
+    }
+  }, [code, executeItemCheck, result]);
+
+  const handleClearAndNavigate = () => {
+    handleClear();
+    navigate('/itemCheck');
+  };
+
+  const handleSubmitAndNavigate = () => {
+    const inputValue = barcodeInput.trim() || itemCodeInput.trim();
+    if (inputValue) {
+      navigate(`/itemCheck/${inputValue}`);
+    }
+  };
 
   const hasData = result && result.length > 0;
   return (
     <ContentTheme title={t("itemCheck")}
-                  titleOnClick={hasData ? () => handleClear() : undefined}
+                  titleOnClick={hasData ? handleClearAndNavigate : undefined}
                   titleBreadcrumbs={hasData ? [{label: result[0].itemCode}] : undefined}>
       {!hasData ? (
         <>
           <div className="flex justify-center">
             <form onSubmit={(e) => {
               e.preventDefault();
-              handleCheckSubmit();
+              handleSubmitAndNavigate();
             }} className="w-full max-w-md">
               <div className="space-y-4">
                 <div className="space-y-2">
