@@ -447,5 +447,11 @@
   },
   "scan": "Escanear",
   "offlineTitle": "Señal de Internet Perdida",
-  "offlineMessage": "Por favor verifique su conexión a internet e intente de nuevo."
+  "offlineMessage": "Por favor verifique su conexión a internet e intente de nuevo.",
+  "license":{
+    "LicenseIssueDetected": "Se detectó un problema de licencia",
+    "paymentDue": "El pago está vencido. Por favor contacte a soporte.",
+    "paymentStatusUnknown": "Estado de pago desconocido. El sistema se deshabilitará en {0} días.",
+    "accountExpiresIn": "La cuenta expira en {0} días. Por favor renueve."
+  }
 }

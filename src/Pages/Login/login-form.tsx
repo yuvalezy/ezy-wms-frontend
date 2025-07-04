@@ -4,6 +4,8 @@ import {useTranslation} from 'react-i18next';
 import {useAuth} from "@/components";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import {AlertCircle} from "lucide-react";
+import {LicenseWarningType} from "@/types/license";
+import {StringFormat} from "@/assets";
 
 type Warehouse = {
   id: string;
@@ -19,10 +21,17 @@ type LoginFormProps = {
   onClearError?: () => void;
 };
 
-export default function LoginForm({onSubmit, warehouses, requiresWarehouse, errorMessage, errorType, onClearError}: LoginFormProps) {
+export default function LoginForm({
+                                    onSubmit,
+                                    warehouses,
+                                    requiresWarehouse,
+                                    errorMessage,
+                                    errorType,
+                                    onClearError
+                                  }: LoginFormProps) {
   const {t, i18n} = useTranslation();
   const cookies = new Cookies();
-  const {companyName} = useAuth();
+  const {companyInfo} = useAuth();
 
   useEffect(() => {
     const savedLang = cookies.get('userLanguage');
@@ -50,7 +59,7 @@ export default function LoginForm({onSubmit, warehouses, requiresWarehouse, erro
             className="w-auto h-20 mb-4 object-contain"
           />
           <h2 className="text-2xl font-bold text-center text-gray-800 mb-1">
-            {companyName || 'COMPANY NAME'}
+            {companyInfo?.companyName || 'COMPANY NAME'}
           </h2>
           <p className="text-center text-gray-500">{t('login') || 'Login'}</p>
         </div>
@@ -59,13 +68,38 @@ export default function LoginForm({onSubmit, warehouses, requiresWarehouse, erro
           <Alert className="bg-red-50 border-red-200 mb-4">
             <AlertCircle className="h-4 w-4 text-red-600"/>
             <AlertDescription className="text-red-800">
-              {errorType === 'invalid_grant' 
+              {errorType === 'invalid_grant'
                 ? (t('invalidGrant') || 'Invalid password or account disabled')
                 : `${t('loginError') || 'Error during login'}: ${errorMessage}`
               }
             </AlertDescription>
           </Alert>
         )}
+
+        {companyInfo?.licenseWarnings?.forEach(warning => {
+          let translationMessage = t('licenseIssueDetected');
+          const isError = warning.type === LicenseWarningType.PaymentDue;
+          switch (warning.type) {
+            case LicenseWarningType.PaymentDue:
+              translationMessage = t('paymentDue');
+              break;
+            case LicenseWarningType.PaymentStatusUnknown:
+              translationMessage = StringFormat(t('paymentStatusUnknown'), warning.data?.[0] ?? 'Unknown');
+              break;
+            case LicenseWarningType.AccountExpiresIn:
+              translationMessage = StringFormat(t('accountExpiresIn'), warning.data?.[0] ?? 'Unknown');
+              break;
+          }
+          return (
+            <Alert key={warning.type} className={isError ? 'bg-red-50 border-red-200 mb-4' : 'bg-yellow-50 border-yellow-200 mb-4'}>
+              <AlertCircle className="h-4 w-4 text-yellow-600"/>
+              <AlertDescription className="text-yellow-800">
+                {translationMessage}
+              </AlertDescription>
+            </Alert>
+          );
+
+        })}
 
         <form onSubmit={onSubmit} className="space-y-5">
           <div>

@@ -8,12 +8,13 @@ import React, {
 import axios, {AxiosError} from "axios";
 import {UserInfo} from "@/assets";
 import {axiosInstance, ServerUrl} from "@/utils/axios-instance";
+import {LicenseWarning} from "@/types/license";
 
 // Define the shape of the context
 interface AuthContextType {
   isAuthenticated: boolean;
   user: UserInfo | null;
-  companyName?: string | null;
+  companyInfo?: CompanyInfoResponse | null;
   login: (password: string, warehouse?: string) => Promise<void>;
   logout: () => void;
   isLoading: boolean; // Add loading state
@@ -43,17 +44,23 @@ interface ErrorResponse {
   error_description: string;
 }
 
+interface CompanyInfoResponse {
+  companyName: string;
+  serverTime: string; // ISO date string
+  licenseWarnings: LicenseWarning[]; // Array of warning messages
+}
+
 export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   const [user, setUser] = useState<UserInfo | null>(null);
-  const [companyName, setCompanyName] = useState<string | null>(null);
+  const [companyInfo, setCompanyInfo] = useState<CompanyInfoResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true); // Add loading state
   const baseUrl = `${ServerUrl}/api/`;
 
   useEffect(() => {
     const fetchConfig = async () => {
       try {
-        const response = await axios.get<string>(`${baseUrl}Authentication/CompanyName`);
-        setCompanyName(response.data)
+        const response = await axios.get<CompanyInfoResponse>(`${baseUrl}Authentication/CompanyInfo`);
+        setCompanyInfo(response.data);
       } catch (error) {
         console.log(`Failed to load company name: ${error}`);
       }
@@ -165,7 +172,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   const value = {
     isAuthenticated,
     user,
-    companyName,
+    companyInfo,
     login,
     logout,
     isLoading,

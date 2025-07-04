@@ -69,3 +69,15 @@ export interface LicenseRecoveryAction {
   isPrimary: boolean;
   isDestructive: boolean;
 }
+
+export interface LicenseWarning {
+  type: LicenseWarningType;
+  data: any[];
+}
+
+export enum LicenseWarningType {
+  LicenseIssueDetected = 'LicenseIssueDetected',
+  PaymentDue           = 'PaymentDue', // "Payment is due. Please contact support."
+  PaymentStatusUnknown = 'PaymentStatusUnknown', //$"Payment status unknown. System will be disabled in {result.DaysUntilExpiration} days."
+  AccountExpiresIn     = 'AccountExpiresIn', //$"Account expires in {result.DaysUntilExpiration} days. Please renew."
+}
