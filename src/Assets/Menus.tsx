@@ -2,6 +2,24 @@ import {useTranslation} from 'react-i18next';
 import { useMemo } from 'react'; // Import useMemo
 import {RoleType} from "./RoleType";
 import {useAuth} from "@/components";
+import {
+  faCheckCircle, // complete
+  faCube, // dimension
+  faClipboardList, // cause
+  faChartBar, // kpi-managing-my-area
+  faChartLine, // manager-insight
+  faShoppingCart, // cart-2
+  faBox, // product
+  faIndustry, // factory
+  faArrowsAlt, // move
+  faTruckMoving, // journey-depart
+  faQuestionCircle, // request (fallback/generic)
+  faQuestion, // general fallback
+  faBan, // cancel-reasons
+  faUsers, // users
+  faUserShield, // authorization-groups
+} from '@fortawesome/free-solid-svg-icons';
+import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
 
 export interface MenuItem {
     Link: string;
@@ -9,8 +27,10 @@ export interface MenuItem {
     Authorization?: RoleType;
     Authorizations?: RoleType[];
     SuperUser?: boolean;
-    Icon: string;
+    Icon: IconDefinition;
+    Color?: string;
 }
+
 
 export function useMenus() {
     const {t} = useTranslation();
@@ -24,61 +44,71 @@ export function useMenus() {
             Link: "/itemCheck",
             Text: t('itemCheck'),
             Authorizations: [RoleType.GOODS_RECEIPT_SUPERVISOR, RoleType.PICKING_SUPERVISOR],
-            Icon: "complete",
+            Icon: faCheckCircle,
+            Color: "text-blue-700",
         },
         {
             Link: "/binCheck",
             Text: t('binCheck'),
             Authorizations: [RoleType.GOODS_RECEIPT_SUPERVISOR, RoleType.PICKING_SUPERVISOR, RoleType.COUNTING_SUPERVISOR, RoleType.TRANSFER_SUPERVISOR],
-            Icon: "dimension",
+            Icon: faCube,
+            Color: "text-green-700",
         },
         {
             Link: "/goodsReceipt",
             Text: t('goodsReceipt'),
             Authorization: RoleType.GOODS_RECEIPT,
-            Icon: "cause",
+            Icon: faClipboardList,
+            Color: "text-gray-700",
         },
         {
             Link: goodsReceiptSupervisorRoute,
             Text: t('goodsReceiptSupervisor'),
             Authorizations: [RoleType.GOODS_RECEIPT_SUPERVISOR],
-            Icon: "kpi-managing-my-area",
+            Icon: faChartBar,
+            Color: "text-gray-700",
         },
         {
             Link: "/goodsReceiptReport",
             Text: t('goodsReceiptReport'),
             Authorization: RoleType.GOODS_RECEIPT_SUPERVISOR,
-            Icon: "manager-insight",
+            Icon: faChartLine,
+            Color: "text-gray-700",
         },
         {
             Link: "/goodsReceiptConfirmation",
             Text: t('receiptConfirmation'),
             Authorization: RoleType.GOODS_RECEIPT_CONFIRMATION,
-            Icon: "cause",
+            Icon: faClipboardList,
+            Color: "text-indigo-700",
         },
         {
             Link: goodsReceiptConfirmationSupervisorRoute,
             Text: t('goodsReceiptConfirmationSupervisor'),
             Authorizations: [RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR],
-            Icon: "kpi-managing-my-area",
+            Icon: faChartBar,
+            Color: "text-indigo-700",
         },
         {
             Link: "/goodsReceiptConfirmationReport",
             Text: t('confirmationReport'),
             Authorization: RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR,
-            Icon: "manager-insight",
+            Icon: faChartLine,
+            Color: "text-indigo-700",
         },
         {
             Link: "/pick",
             Text: t('picking'),
             Authorization: RoleType.PICKING,
-            Icon: "cart-2",
+            Icon: faShoppingCart,
+            Color: "text-teal-700",
         },
         {
             Link: "/pickSupervisor",
             Text: t('pickSupervisor'),
             Authorization: RoleType.PICKING_SUPERVISOR,
-            Icon: "kpi-managing-my-area",
+            Icon: faChartBar,
+            Color: "text-teal-700",
         },
         // {
         //     Link: "/pickReport",
@@ -90,13 +120,15 @@ export function useMenus() {
             Link: "/counting",
             Text: t('counting'),
             Authorization: RoleType.COUNTING,
-            Icon: "product",
+            Icon: faBox,
+            Color: "text-cyan-700",
         },
         {
             Link: "/countingSupervisor",
             Text: t('countingSupervisor'),
             Authorization: RoleType.COUNTING_SUPERVISOR,
-            Icon: "factory",
+            Icon: faIndustry,
+            Color: "text-cyan-700",
         },
         // {
         //     Link: "/countingReport",
@@ -108,13 +140,15 @@ export function useMenus() {
             Link: "/transfer",
             Text: t('transfer'),
             Authorization: RoleType.TRANSFER,
-            Icon: "move",
+            Icon: faArrowsAlt,
+            Color: "text-lime-700",
         },
         {
             Link: "/transferSupervisor",
             Text: t('transferSupervisor'),
             Authorization: RoleType.TRANSFER_SUPERVISOR,
-            Icon: "journey-depart",
+            Icon: faTruckMoving,
+            Color: "text-lime-700",
         },
         // {
         //     Link: "/transferRequest",
@@ -132,13 +166,15 @@ export function useMenus() {
             Link: "/settings/users",
             Text: t('users'),
             SuperUser: true,
-            Icon: "users",
+            Icon: faUsers,
+            Color: "text-gray-600",
         },
         {
             Link: "/settings/authorizationGroups",
             Text: t('authorizationGroups'),
             SuperUser: true,
-            Icon: "authorization-groups",
+            Icon: faUserShield,
+            Color: "text-gray-600",
         },
     ];
 

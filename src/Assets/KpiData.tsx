@@ -17,6 +17,8 @@ export interface KpiItem {
   icon: any;
   authorizations: RoleType[];
   route: string;
+  backgroundColor: string;
+  iconColor: string;
 }
 
 // Mock data for KPI boxes
@@ -27,7 +29,9 @@ export const kpiItems: KpiItem[] = [
     value: 125,
     icon: faCheckCircle,
     authorizations: [RoleType.GOODS_RECEIPT_SUPERVISOR, RoleType.PICKING_SUPERVISOR],
-    route: "/itemCheck"
+    route: "/itemCheck",
+    backgroundColor: "bg-blue-100",
+    iconColor: "text-blue-700"
   },
   {
     id: 'bin-check',
@@ -40,7 +44,9 @@ export const kpiItems: KpiItem[] = [
       RoleType.COUNTING_SUPERVISOR,
       RoleType.TRANSFER_SUPERVISOR
     ],
-    route: "/binCheck"
+    route: "/binCheck",
+    backgroundColor: "bg-green-100",
+    iconColor: "text-green-700"
   },
   {
     id: 'goods-receipt',
@@ -48,15 +54,19 @@ export const kpiItems: KpiItem[] = [
     value: 42,
     icon: faClipboardList,
     authorizations: [RoleType.GOODS_RECEIPT, RoleType.GOODS_RECEIPT_SUPERVISOR],
-    route: "/goodsReceipt"
+    route: "/goodsReceipt",
+    backgroundColor: "bg-gray-100",
+    iconColor: "text-gray-700"
   },
   {
     id: 'receipt-confirmation',
     title: 'receiptConfirmations',
     value: 15,
-    icon: faCheckCircle,
+    icon: faClipboardList,
     authorizations: [RoleType.GOODS_RECEIPT_CONFIRMATION, RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR],
-    route: "/goodsReceiptConfirmation"
+    route: "/goodsReceiptConfirmation",
+    backgroundColor: "bg-indigo-100",
+    iconColor: "text-indigo-700"
   },
   {
     id: 'picking',
@@ -64,7 +74,9 @@ export const kpiItems: KpiItem[] = [
     value: 36,
     icon: faShoppingCart,
     authorizations: [RoleType.PICKING, RoleType.PICKING_SUPERVISOR],
-    route: "/pick"
+    route: "/pick",
+    backgroundColor: "bg-teal-100",
+    iconColor: "text-teal-700"
   },
   {
     id: 'counting',
@@ -72,7 +84,9 @@ export const kpiItems: KpiItem[] = [
     value: 53,
     icon: faBox,
     authorizations: [RoleType.COUNTING, RoleType.COUNTING_SUPERVISOR],
-    route: "/counting"
+    route: "/counting",
+    backgroundColor: "bg-cyan-100",
+    iconColor: "text-cyan-700"
   },
   {
     id: 'transfer',
@@ -80,7 +94,9 @@ export const kpiItems: KpiItem[] = [
     value: 29,
     icon: faArrowsAlt,
     authorizations: [RoleType.TRANSFER, RoleType.TRANSFER_SUPERVISOR, RoleType.TRANSFER_REQUEST],
-    route: "/transfer"
+    route: "/transfer",
+    backgroundColor: "bg-lime-100",
+    iconColor: "text-lime-700"
   }
 ];
 

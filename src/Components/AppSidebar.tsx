@@ -3,25 +3,7 @@ import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {MenuItem, useMenus} from "@/assets/Menus";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {
-  faCheckCircle, // complete
-  faCube, // dimension
-  faClipboardList, // cause
-  faChartBar, // kpi-managing-my-area
-  faChartLine, // manager-insight
-  faShoppingCart, // cart-2
-  faBox, // product
-  faIndustry, // factory
-  faArrowsAlt, // move
-  faTruckMoving, // journey-depart
-  faQuestionCircle, // request (fallback/generic)
-  faQuestion, // general fallback
-  faSignOutAlt,
-  faBan, // cancel-reasons
-  faUsers, // users
-  faUserShield, // authorization-groups
-} from '@fortawesome/free-solid-svg-icons';
-import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
+import {faIndustry} from '@fortawesome/free-solid-svg-icons';
 
 import {
   Sidebar,
@@ -37,26 +19,6 @@ import {
 import {useAuth} from "@/components/AppContext";
 import {useTranslation} from "react-i18next";
 
-const iconMap: { [key: string]: IconDefinition } = {
-  "complete": faCheckCircle,
-  "dimension": faCube,
-  "cause": faClipboardList,
-  "kpi-managing-my-area": faChartBar,
-  "manager-insight": faChartLine,
-  "cart-2": faShoppingCart,
-  "product": faBox,
-  "factory": faIndustry,
-  "move": faArrowsAlt,
-  "journey-depart": faTruckMoving,
-  "request": faQuestionCircle,
-  "cancel-reasons": faBan,
-  "users": faUsers,
-  "authorization-groups": faUserShield,
-};
-
-const getFaIcon = (iconName: string): IconDefinition => {
-  return iconMap[iconName] || faQuestion; // Fallback to a generic question mark icon
-};
 
 export function AppSidebar() {
   const menus = useMenus();
@@ -179,8 +141,8 @@ export function AppSidebar() {
                           }}
                           className={location.pathname === item.Link ? 'bg-gray-200' : ''}
                         >
-                          <FontAwesomeIcon icon={getFaIcon(item.Icon)}/>
-                          <span>{item.Text}</span>
+                          <FontAwesomeIcon icon={item.Icon} className={item.Color || 'text-gray-600'}/>
+                          <span className={item.Color || 'text-gray-600'}>{item.Text}</span>
                         </a>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
