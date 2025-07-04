@@ -42,8 +42,10 @@ import AuthorizationGroupForm from "@/pages/settings/authorization-groups/compon
 import {OfflineOverlay} from "./components/OfflineOverlay";
 import {useOfflineDetection} from "./hooks/useOfflineDetection";
 import {DeviceProvider} from "./contexts/DeviceContext";
+import {LicenseProvider} from "./contexts/LicenseContext";
 import {DeviceRegistration} from "./components/license/DeviceRegistration";
 import {DeviceStatusCard} from "./components/license/DeviceStatusCard";
+import {LicenseStatusDashboard} from "./components/license/LicenseStatusDashboard";
 
 export default function App() {
   const {user} = useAuth();
@@ -69,7 +71,8 @@ export default function App() {
 
   return (
     <DeviceProvider>
-      <AuthProvider>
+      <LicenseProvider>
+        <AuthProvider>
         <BrowserRouter>
           <Toaster closeButton richColors={true}/>
           {isOffline && <OfflineOverlay/>}
@@ -193,11 +196,15 @@ export default function App() {
             {/* Device Management Routes */}
             <Route path="/device/register" element={<DeviceRegistration/>}/>
             <Route path="/device/status" element={<DeviceStatusCard/>}/>
+            {/* License Management Routes */}
+            <Route path="/license" element={<LicenseStatusDashboard/>}/>
+            <Route path="/license/status" element={<LicenseStatusDashboard/>}/>
             <Route path="/" element={<ProtectedRoute element={<HomePage/>}/>}/>
             <Route path="*" element={<NotFound/>}/>
           </Routes>
         </BrowserRouter>
-      </AuthProvider>
+        </AuthProvider>
+      </LicenseProvider>
     </DeviceProvider>
   );
 }
