@@ -10,8 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCheck, faTimes, faFileAlt, faTruckLoading, faExchangeAlt, faEllipsisV} from '@fortawesome/free-solid-svg-icons';
+import {Check, X, FileText, Truck, ArrowRightLeft, MoreVertical} from 'lucide-react';
 import {ReceiptDocument, DocumentItem} from "@/assets/ReceiptDocument";
 import {useObjectName} from "@/assets/ObjectName";
 import {RoleType} from "@/assets/RoleType";
@@ -62,25 +61,25 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-            <FontAwesomeIcon icon={faEllipsisV} className="h-4 w-4" />
+            <MoreVertical className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
           <DropdownMenuItem onClick={() => handleOpen('all', doc.id)}>
-            <FontAwesomeIcon icon={faFileAlt} className="mr-2 h-4 w-4" />
+            <FileText className="mr-2 h-4 w-4" />
             {!confirm ? t('goodsReceiptReport') : t('confirmationReport')}
           </DropdownMenuItem>
 
           {user?.settings?.goodsReceiptTargetDocuments && activeStatuses.includes(doc.status) && (
             <DropdownMenuItem onClick={() => handleOpen('vs', doc.id)}>
-              <FontAwesomeIcon icon={faTruckLoading} className="mr-2 h-4 w-4" />
+              <Truck className="mr-2 h-4 w-4" />
               {!confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}
             </DropdownMenuItem>
           )}
 
           {processStatuses.includes(doc.status) && (
             <DropdownMenuItem onClick={() => handleOpen('diff', doc.id)}>
-              <FontAwesomeIcon icon={faExchangeAlt} className="mr-2 h-4 w-4" />
+              <ArrowRightLeft className="mr-2 h-4 w-4" />
               {t('differencesReport')}
             </DropdownMenuItem>
           )}
@@ -89,7 +88,7 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
             <>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => action?.(doc, 'approve')}>
-                <FontAwesomeIcon icon={faCheck} className="mr-2 h-4 w-4" />
+                <Check className="mr-2 h-4 w-4" />
                 {t('finish')}
               </DropdownMenuItem>
             </>
@@ -100,7 +99,7 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
             onClick={() => action?.(doc, 'cancel')}
             className="text-red-600 focus:text-red-600"
           >
-            <FontAwesomeIcon icon={faTimes} className="mr-2 h-4 w-4" />
+            <X className="mr-2 h-4 w-4" />
             {t('cancel')}
           </DropdownMenuItem>
         </DropdownMenuContent>

@@ -6,8 +6,7 @@ import {activeStatuses, processStatuses, useHandleOpen} from "@/pages/GoodsRecei
 import InfoBox, {FullInfoBox, InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
 import {Separator} from "@/components/ui/separator";
 import {Button} from "@/components/ui/button";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faExchangeAlt, faFileAlt, faTruckLoading} from "@fortawesome/free-solid-svg-icons";
+import {ArrowRightLeft, FileText, Truck} from "lucide-react";
 import {useAuth} from "@/components";
 
 type DocumentReportCardProps = {
@@ -54,18 +53,18 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc, docDetails,
         <Separator className="my-4"/>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <Button variant="outline" className="w-full" onClick={() => handleOpen('all', doc.id)}>
-            <FontAwesomeIcon icon={faFileAlt} className="mr-2"/>
+            <FileText className="h-4 w-4 mr-2"/>
             {!confirm ? t('goodsReceiptReport') : t('confirmationReport')}
           </Button>
           {user?.settings?.goodsReceiptTargetDocuments && activeStatuses.includes(doc.status) && (
             <Button variant="outline" className="w-full" onClick={() => handleOpen('vs', doc.id)}>
-              <FontAwesomeIcon icon={faTruckLoading} className="mr-2"/>
+              <Truck className="h-4 w-4 mr-2"/>
               {!confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}
             </Button>
           )}
           {processStatuses.includes(doc.status) && (
             <Button variant="outline" className="w-full" onClick={() => handleOpen('diff', doc.id)}>
-              <FontAwesomeIcon icon={faExchangeAlt} className="mr-2"/>
+              <ArrowRightLeft className="h-4 w-4 mr-2"/>
               {t('differencesReport')}
             </Button>
           )}

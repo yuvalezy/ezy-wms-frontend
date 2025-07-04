@@ -7,8 +7,7 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/c
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Badge} from "@/components/ui/badge";
 import {Checkbox} from "@/components/ui/checkbox";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faEdit, faTrash, faSearch, faUserSlash, faUserCheck} from "@fortawesome/free-solid-svg-icons";
+import {Edit, Trash2, Search, UserX, UserCheck} from "lucide-react";
 import {useAuth, useThemeContext} from "@/components";
 import {User, UserFilters, AuthorizationGroup, Warehouse} from "./data/user";
 import {userService} from "./data/user-service";
@@ -162,8 +161,7 @@ const UsersList: React.FC = () => {
             {/*<div className="flex gap-4 mb-4 flex-wrap">*/}
             {/*  <div className="flex-1 min-w-64">*/}
             {/*    <div className="relative">*/}
-            {/*      <FontAwesomeIcon icon={faSearch}*/}
-            {/*                       className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"/>*/}
+            {/*      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4"/>*/}
             {/*      <Input*/}
             {/*        placeholder={t('searchUsers')}*/}
             {/*        className="pl-10"*/}
@@ -262,7 +260,7 @@ const UsersList: React.FC = () => {
                           size="sm"
                           onClick={() => handleEdit(u)}
                         >
-                          <FontAwesomeIcon icon={faEdit} className="mr-1"/>
+                          <Edit className="h-4 w-4 mr-1"/>
                           {t('edit')}
                         </Button>
                         <Button
@@ -271,7 +269,7 @@ const UsersList: React.FC = () => {
                           size="sm"
                           onClick={() => handleToggleStatus(u)}
                         >
-                          <FontAwesomeIcon icon={u.active ? faUserSlash : faUserCheck} className="mr-1"/>
+                          {u.active ? <UserX className="h-4 w-4 mr-1"/> : <UserCheck className="h-4 w-4 mr-1"/>}
                           {u.active ? t('disable') : t('enable')}
                         </Button>
                         <Button
@@ -279,7 +277,7 @@ const UsersList: React.FC = () => {
                           size="sm"
                           onClick={() => handleDelete(u)}
                         >
-                          <FontAwesomeIcon icon={faTrash} className="mr-1"/>
+                          <Trash2 className="h-4 w-4 mr-1"/>
                           {t('delete')}
                         </Button>
                       </div>

@@ -3,8 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, XCircle } from "lucide-react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faFileAlt } from '@fortawesome/free-solid-svg-icons';
+import { MoreVertical, FileText } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -78,12 +77,12 @@ export default function CountingTable({ countings, supervisor = false, onAction 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                      <FontAwesomeIcon icon={faEllipsisV} className="h-4 w-4" />
+                      <MoreVertical className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem onClick={() => navigate(`/countingSummaryReport/${doc.id}`)}>
-                      <FontAwesomeIcon icon={faFileAlt} className="mr-2 h-4 w-4" />
+                      <FileText className="mr-2 h-4 w-4" />
                       {t('countingSummaryReport')}
                     </DropdownMenuItem>
                     {doc.status === Status.InProgress && (

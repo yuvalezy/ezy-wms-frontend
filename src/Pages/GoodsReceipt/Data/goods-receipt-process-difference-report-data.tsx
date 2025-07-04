@@ -61,9 +61,9 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
             itemName: line.itemName,
             quantity: quantity,
             numInBuy: line.numInBuy,
-            buyUnitMsr: line.buyUnitMsr,
+            buyUnitMsr: line.buyUnitMsr ?? t('dozen'),
             purPackUn: line.purPackUn,
-            purPackMsr: line.purPackMsr
+            purPackMsr: line.purPackMsr ?? t('pack')
           };
         } else {
           itemMap[itemCode].quantity += quantity;

@@ -8,8 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Badge } from "@/components/ui/badge";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSave, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { Save, X } from "lucide-react";
 import { useThemeContext } from "@/components";
 import ContentTheme from "@/components/ContentTheme";
 import { AuthorizationGroup, AuthorizationGroupFormData } from "../data/authorization-group";
@@ -269,7 +268,7 @@ const AuthorizationGroupForm = () => {
                   disabled={isSubmitting || form.watch("authorizations").length === 0}
                   className="flex-1"
                 >
-                  <FontAwesomeIcon icon={faSave} className="mr-2" />
+                  <Save className="h-4 w-4 mr-2" />
                   {isSubmitting ? t('saving') : t('save')}
                 </Button>
                 <Button
@@ -279,7 +278,7 @@ const AuthorizationGroupForm = () => {
                   disabled={isSubmitting}
                   className="flex-1"
                 >
-                  <FontAwesomeIcon icon={faTimes} className="mr-2" />
+                  <X className="h-4 w-4 mr-2" />
                   {t('cancel')}
                 </Button>
               </div>

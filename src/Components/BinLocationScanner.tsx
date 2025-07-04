@@ -1,12 +1,11 @@
-import React, {forwardRef, useImperativeHandle, useRef, useState} from 'react';
+import React, {forwardRef, useImperativeHandle, useRef, useState, useEffect} from 'react';
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {Label} from "@/components/ui/label";
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "./ThemeContext";
 import {BinLocation, scanBinLocation, StringFormat} from "@/assets";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCheck} from '@fortawesome/free-solid-svg-icons';
+import {Check} from 'lucide-react';
 
 export interface BinLocationScannerProps {
   label?: string | boolean;
@@ -35,6 +34,13 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
   const binRef = useRef<HTMLInputElement>(null);
   const [binInput, setBinInput] = useState('');
   const [binLocation, setBinLocation] = useState<BinLocation | null>(null);
+
+  // Auto-focus the input when component mounts and when binLocation is cleared
+  useEffect(() => {
+    if (!binLocation) {
+      binRef.current?.focus();
+    }
+  }, [binLocation]);
 
   useImperativeHandle(ref, () => ({
     focus() {
@@ -104,9 +110,11 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
           </div>
       }
       {!binLocation &&
-          <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                {showLabel && <Label htmlFor="bin-input">{label ?? t("bin")}</Label>}
+          <div className="flex justify-center">
+            <form onSubmit={handleSubmit} className="w-full max-w-md">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  {showLabel && <Label htmlFor="bin-input">{label ?? t("bin")}</Label>}
                   <Input
                       id="bin-input"
                       value={binInput}
@@ -114,12 +122,16 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
                       onChange={(e) => setBinInput(e.target.value)}
                       placeholder={t("scanBinLocation")} maxLength={255}
                   />
+                </div>
+                <div>
+                  <Button type="submit" className="w-full">
+                      <Check className="h-4 w-4 mr-2"/>
+                    {t("accept")}
+                  </Button>
+                </div>
               </div>
-              <Button type="submit" className="w-full">
-                  <FontAwesomeIcon icon={faCheck} className="mr-2"/>
-                {t("accept")}
-              </Button>
-          </form>
+            </form>
+          </div>
       }
     </div>
   );

@@ -9,8 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ScrollArea, Separator } from "@/components/ui";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { X, ArrowRight } from 'lucide-react';
 import {Item} from "@/assets";
 
 export interface BoxConfirmationDialogRef {
@@ -64,7 +63,7 @@ const BoxConfirmationDialog = forwardRef((props: BoxConfirmationDialogProps, ref
                                         }}
                                     >
                                         <div className="flex items-center">
-                                            <FontAwesomeIcon icon={faArrowRight} className="mr-3 text-blue-500" />
+                                            <ArrowRight className="h-4 w-4 mr-3 text-blue-500" />
                                             <span className="font-medium">
                                                 {`${item.boxNumber} ${t('of')} ${boxes}`}
                                             </span>
@@ -78,7 +77,7 @@ const BoxConfirmationDialog = forwardRef((props: BoxConfirmationDialogProps, ref
                 </div>
                 <DialogFooter className="p-4 border-t flex justify-end">
                     <Button onClick={() => setIsOpen(false)} variant="secondary">
-                        <FontAwesomeIcon icon={faTimes} className="mr-2" />
+                        <X className="h-4 w-4 mr-2" />
                         {t("close")}
                     </Button>
                 </DialogFooter>

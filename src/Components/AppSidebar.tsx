@@ -2,8 +2,6 @@ import {LogOutIcon, SettingsIcon, HomeIcon, UserIcon, ChevronDownIcon} from "luc
 import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {MenuItem, useMenus} from "@/assets/Menus";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faIndustry} from '@fortawesome/free-solid-svg-icons';
 
 import {
   Sidebar,
@@ -116,6 +114,9 @@ export function AppSidebar() {
               </div>
               <div className="flex-1 text-left min-w-0">
                 <div className="text-sm font-semibold text-gray-900 truncate">
+                  {user?.name}
+                </div>
+                <div className="text-xs text-gray-500 truncate">
                   {user?.warehouses?.find(v => v.id === user?.currentWarehouse)?.name}
                 </div>
               </div>

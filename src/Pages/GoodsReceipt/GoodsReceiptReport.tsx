@@ -9,8 +9,7 @@ import {ReceiptDocument, DocumentItem} from "@/assets/ReceiptDocument";
 import DocumentListDialog, {DocumentListDialogRef} from "@/pages/GoodsReceipt/components/DocumentListDialog";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Button} from "@/components/ui/button";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faEllipsisV, faExchangeAlt, faFileAlt, faTruckLoading} from '@fortawesome/free-solid-svg-icons';
+import {MoreVertical, ArrowRightLeft, FileText, Truck} from 'lucide-react';
 import {useDocumentStatusToString, useObjectName, useDateTimeFormat} from "@/assets";
 import {activeStatuses, processStatuses, useHandleOpen} from "@/pages/GoodsReceipt/data/GoodsReceiptUtils";
 import {
@@ -178,23 +177,23 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                            <FontAwesomeIcon icon={faEllipsisV} className="h-4 w-4" />
+                            <MoreVertical className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem onClick={() => handleOpen('all', doc.id)}>
-                            <FontAwesomeIcon icon={faFileAlt} className="mr-2 h-4 w-4" />
+                            <FileText className="mr-2 h-4 w-4" />
                             {!confirm ? t('goodsReceiptReport') : t('confirmationReport')}
                           </DropdownMenuItem>
                           {user?.settings?.goodsReceiptTargetDocuments && activeStatuses.includes(doc.status) && (
                             <DropdownMenuItem onClick={() => handleOpen('vs', doc.id)}>
-                              <FontAwesomeIcon icon={faTruckLoading} className="mr-2 h-4 w-4" />
+                              <Truck className="mr-2 h-4 w-4" />
                               {!confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}
                             </DropdownMenuItem>
                           )}
                           {processStatuses.includes(doc.status) && (
                             <DropdownMenuItem onClick={() => handleOpen('diff', doc.id)}>
-                              <FontAwesomeIcon icon={faExchangeAlt} className="mr-2 h-4 w-4" />
+                              <ArrowRightLeft className="mr-2 h-4 w-4" />
                               {t('differencesReport')}
                             </DropdownMenuItem>
                           )}

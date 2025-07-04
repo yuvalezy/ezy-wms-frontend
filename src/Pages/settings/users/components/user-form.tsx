@@ -6,8 +6,7 @@ import {Input} from "@/components/ui/input";
 import {Checkbox} from "@/components/ui/checkbox";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faSave, faTimes, faEye, faEyeSlash} from "@fortawesome/free-solid-svg-icons";
+import {Save, X, Eye, EyeOff} from "lucide-react";
 import {useThemeContext} from "@/components";
 import {User, UserFormData, AuthorizationGroup, Warehouse, ExternalUser} from "../data/user";
 import {userService} from "../data/user-service";
@@ -212,7 +211,7 @@ const UserForm: React.FC<UserFormProps> = ({user, authorizationGroups, warehouse
                             className="absolute right-0 top-0 h-full px-3"
                             onClick={() => setShowPassword(!showPassword)}
                           >
-                            <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye}/>
+                            {showPassword ? <EyeOff className="h-4 w-4"/> : <Eye className="h-4 w-4"/>}
                           </Button>
                         </div>
                       </FormControl>
@@ -323,7 +322,7 @@ const UserForm: React.FC<UserFormProps> = ({user, authorizationGroups, warehouse
                 disabled={isSubmitting}
                 className="flex-1"
               >
-                <FontAwesomeIcon icon={faSave} className="mr-2"/>
+                <Save className="h-4 w-4 mr-2"/>
                 {isSubmitting ? t('saving') : t('save')}
               </Button>
               <Button
@@ -333,7 +332,7 @@ const UserForm: React.FC<UserFormProps> = ({user, authorizationGroups, warehouse
                 disabled={isSubmitting}
                 className="flex-1"
               >
-                <FontAwesomeIcon icon={faTimes} className="mr-2"/>
+                <X className="h-4 w-4 mr-2"/>
                 {t('cancel')}
               </Button>
             </div>

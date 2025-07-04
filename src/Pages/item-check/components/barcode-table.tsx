@@ -4,8 +4,7 @@ import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Checkbox} from "@/components/ui/checkbox";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faSave} from '@fortawesome/free-solid-svg-icons';
+import {Save} from 'lucide-react';
 import {Label} from "@/components/ui/label";
 
 interface BarcodeTableProps {
@@ -75,7 +74,7 @@ const BarcodeTable: React.FC<BarcodeTableProps> = ({itemCode, barcodes, submit})
           onClick={handleSubmit}
           disabled={checkedBarcodes.length === 0 && newBarcodeInput.trim() === ''}
         >
-          <FontAwesomeIcon icon={faSave} className="mr-2"/>
+          <Save className="h-4 w-4 mr-2"/>
           {t('update')}
         </Button>
       </div>

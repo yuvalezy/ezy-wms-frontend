@@ -7,8 +7,7 @@ import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import {Alert, AlertDescription} from "@/components/ui/alert";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCheck, faExclamationTriangle} from '@fortawesome/free-solid-svg-icons';
+import {Check, AlertTriangle} from 'lucide-react';
 import {useItemCheckData} from "@/pages/item-check/item-check-data";
 
 export default function ItemCheck() {
@@ -34,46 +33,48 @@ export default function ItemCheck() {
                   titleBreadcrumbs={hasData ? [{label: result[0].itemCode}] : undefined}>
       {!hasData ? (
         <>
-          <form onSubmit={(e) => {
-            e.preventDefault();
-            handleCheckSubmit();
-          }}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
-              <div className="space-y-2">
-                <Label htmlFor="barcode">{t("barcode")}</Label>
-                <Input
-                  id="barcode"
-                  required={itemCodeInput.length === 0}
-                  disabled={itemCodeInput.length > 0}
-                  value={barcodeInput}
-                  onChange={(e) => setBarcodeInput(e.target.value)}
-                  ref={barcodeInputRef}
-                />
+          <div className="flex justify-center">
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              handleCheckSubmit();
+            }} className="w-full max-w-md">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="barcode">{t("barcode")}</Label>
+                  <Input
+                    id="barcode"
+                    required={itemCodeInput.length === 0}
+                    disabled={itemCodeInput.length > 0}
+                    value={barcodeInput}
+                    onChange={(e) => setBarcodeInput(e.target.value)}
+                    ref={barcodeInputRef}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="code">{t("code")}</Label>
+                  <Input
+                    id="code"
+                    required={barcodeInput.length === 0}
+                    disabled={barcodeInput.length > 0}
+                    value={itemCodeInput}
+                    onChange={(e) => setItemCodeInput(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Button className="w-full">
+                    <Check className="h-4 w-4 mr-2"/>
+                    {t("accept")}
+                  </Button>
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="code">{t("code")}</Label>
-                <Input
-                  id="code"
-                  required={barcodeInput.length === 0}
-                  disabled={barcodeInput.length > 0}
-                  value={itemCodeInput}
-                  onChange={(e) => setItemCodeInput(e.target.value)}
-                />
-              </div>
-              <div className="md:col-span-2">
-                <Button className="w-full md:w-auto">
-                  <FontAwesomeIcon icon={faCheck} className="mr-2"/>
-                  {t("accept")}
-                </Button>
-              </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </>
       ) : (
         <>
           {result.length === 0 && (
             <Alert className="border-red-200 bg-red-50">
-              <FontAwesomeIcon icon={faExclamationTriangle} className="h-4 w-4 text-red-600"/>
+              <AlertTriangle className="h-4 w-4 text-red-600"/>
               <AlertDescription>
                 {t("noDataFound")}
               </AlertDescription>

@@ -8,8 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { Trash2, Plus } from 'lucide-react';
 import {useThemeContext} from "@/components";
 import {StringFormat} from "@/assets";
 import {useNavigate} from "react-router-dom";
@@ -141,7 +140,7 @@ export default function TransferRequest() {
                                         </TableCell>
                                         <TableCell>
                                             <Button variant="destructive" size="sm" onClick={() => confirmRemoveRow(index)}>
-                                                <FontAwesomeIcon icon={faTrash} />
+                                                <Trash2 className="h-4 w-4" />
                                             </Button>
                                         </TableCell>
                                     </TableRow>
@@ -153,7 +152,7 @@ export default function TransferRequest() {
                 {rows.length > 0 && (
                     <div className="text-center">
                         <Button onClick={() => create()}>
-                            <FontAwesomeIcon icon={faPlus} className="mr-2" />
+                            <Plus className="h-4 w-4 mr-2" />
                             {t('create')}
                         </Button>
                     </div>

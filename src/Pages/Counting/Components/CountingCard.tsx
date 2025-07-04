@@ -2,17 +2,15 @@ import React from "react";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "@/components/AppContext";
 import {useTranslation} from "react-i18next";
-import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {RoleType} from "@/assets/RoleType";
 import {useDocumentStatusToString} from "@/assets/DocumentStatusString";
 import {Counting} from "@/assets/Counting";
 import {Status} from "@/assets/Common";
 import {useDateTimeFormat} from "@/assets/DateFormat";
-import {CheckCircle, XCircle, FileText, Info} from "lucide-react";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faFileAlt} from "@fortawesome/free-solid-svg-icons";
-import {FullInfoBox, InfoBoxValue, SecondaryInfoBox, Separator} from "@/components";
+import {CheckCircle, XCircle, FileText} from "lucide-react";
+import {FullInfoBox, InfoBoxValue, Separator} from "@/components";
 
 type CountingCardProps = {
   doc: Counting,
@@ -54,7 +52,7 @@ const CountingCard: React.FC<CountingCardProps> = ({doc, handleAction, superviso
             <Separator className="my-4"/>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <Button variant="outline" className="w-full" onClick={() => navigate(`/countingSummaryReport/${doc.id}`)}>
-                  <FontAwesomeIcon icon={faFileAlt} className="mr-2"/>
+                  <FileText className="h-4 w-4 mr-2"/>
                   {t('countingSummaryReport')}
                 </Button>
                 {doc.status === Status.InProgress && (

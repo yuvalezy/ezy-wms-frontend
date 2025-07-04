@@ -6,8 +6,7 @@ import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Badge} from "@/components/ui/badge";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPlus, faEdit, faTrash, faSearch, faRemove} from "@fortawesome/free-solid-svg-icons";
+import {Plus, Edit, Trash2, Search, X} from "lucide-react";
 import {CancellationReason, CancellationReasonFilters} from "./data/cancellation-reason";
 import {cancellationReasonService} from "./data/cancellation-reason-service";
 import CancellationReasonForm from "./components/cancellation-reason-form";
@@ -109,10 +108,8 @@ const CancellationReasonsList: React.FC = () => {
             <div className="flex gap-4 mb-4">
               <div className="flex-1">
                 <div className="relative">
-                  <FontAwesomeIcon icon={faSearch}
-                                   className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"/>
-                  {(filters?.searchTerm && filters?.searchTerm?.length > 0) && <FontAwesomeIcon icon={faRemove}
-                                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer" onClick={() => setFilters({...filters, searchTerm: ''})}/>}
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4"/>
+                  {(filters?.searchTerm && filters?.searchTerm?.length > 0) && <X className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer h-4 w-4" onClick={() => setFilters({...filters, searchTerm: ''})}/>}
                   <Input
                     placeholder={t('searchCancellationReasons')}
                     className="pl-10"
@@ -175,7 +172,7 @@ const CancellationReasonsList: React.FC = () => {
                           size="sm"
                           onClick={() => handleEdit(reason)}
                         >
-                          <FontAwesomeIcon icon={faEdit} className="mr-1"/>
+                          <Edit className="h-4 w-4 mr-1"/>
                           {t('edit')}
                         </Button>
                         <Button
@@ -183,7 +180,7 @@ const CancellationReasonsList: React.FC = () => {
                           size="sm"
                           onClick={() => handleDelete(reason)}
                         >
-                          <FontAwesomeIcon icon={faTrash} className="mr-1"/>
+                          <Trash2 className="h-4 w-4 mr-1"/>
                           {t('delete')}
                         </Button>
                       </div>

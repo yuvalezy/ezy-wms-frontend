@@ -4,8 +4,7 @@ import {useTranslation} from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamationTriangle, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { AlertTriangle, X } from 'lucide-react';
 
 interface ItemCheckMultipleResultProps {
     barcode: string;
@@ -19,7 +18,7 @@ const ItemCheckMultipleResult: React.FC<ItemCheckMultipleResultProps> = ({barcod
     return (
         <div className="space-y-4">
             <Alert className="border-yellow-200 bg-yellow-50">
-                <FontAwesomeIcon icon={faExclamationTriangle} className="h-4 w-4 text-yellow-600" />
+                <AlertTriangle className="h-4 w-4 text-yellow-600" />
                 <AlertDescription>
                     <strong>{t('multipleItemsDetected')}</strong>
                     <br/>
@@ -52,7 +51,7 @@ const ItemCheckMultipleResult: React.FC<ItemCheckMultipleResultProps> = ({barcod
             
             <div className="flex justify-center">
                 <Button variant="destructive" onClick={() => clear()}>
-                    <FontAwesomeIcon icon={faTimes} className="mr-2" />
+                    <X className="h-4 w-4 mr-2" />
                     {t('clear')}
                 </Button>
             </div>

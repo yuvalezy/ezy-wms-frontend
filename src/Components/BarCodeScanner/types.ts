@@ -1,4 +1,4 @@
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { LucideIcon } from 'lucide-react';
 import { Item, UnitType } from '@/assets';
 import { ObjectType } from '@/pages/packages/types';
 
@@ -26,7 +26,7 @@ export interface BarCodeScannerProps {
   onPackageChanged?: (value: PackageValue) => void;
   onAddAction?: () => void;
   addActionLabel?: string;
-  addActionIcon?: IconProp;
+  addActionIcon?: LucideIcon;
   pickPackOnly?: boolean;
   enablePackage?: boolean;
   currentPackage?: PackageValue | null;

@@ -5,8 +5,7 @@ import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Checkbox} from "@/components/ui/checkbox";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faSave, faTimes} from "@fortawesome/free-solid-svg-icons";
+import {Save, X} from "lucide-react";
 import {useThemeContext} from "@/components";
 import {CancellationReason, CancellationReasonFormData} from "../data/cancellation-reason";
 import {cancellationReasonService} from "../data/cancellation-reason-service";
@@ -166,7 +165,7 @@ const CancellationReasonForm: React.FC<CancellationReasonFormProps> = ({reason, 
               disabled={isSubmitting}
               className="flex-1"
             >
-              <FontAwesomeIcon icon={faSave} className="mr-2"/>
+              <Save className="h-4 w-4 mr-2"/>
               {isSubmitting ? t('saving') : t('save')}
             </Button>
             <Button
@@ -176,7 +175,7 @@ const CancellationReasonForm: React.FC<CancellationReasonFormProps> = ({reason, 
               disabled={isSubmitting}
               className="flex-1"
             >
-              <FontAwesomeIcon icon={faTimes} className="mr-2"/>
+              <X className="h-4 w-4 mr-2"/>
               {t('cancel')}
             </Button>
           </div>

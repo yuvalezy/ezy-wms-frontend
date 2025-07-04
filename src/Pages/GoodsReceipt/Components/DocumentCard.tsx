@@ -3,8 +3,7 @@ import {useAuth} from "@/components/AppContext";
 import {useTranslation} from "react-i18next";
 import {Card, CardContent} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCheck, faTimes, faFileAlt, faTruckLoading, faExchangeAlt} from '@fortawesome/free-solid-svg-icons';
+import {Check, X, FileText, Truck, ArrowRightLeft} from 'lucide-react';
 import {ReceiptDocument, DocumentItem} from "@/assets/ReceiptDocument";
 import {useObjectName} from "@/assets/ObjectName";
 import {RoleType} from "@/assets/RoleType";
@@ -73,29 +72,29 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
             <Separator className="my-4"/>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <Button variant="outline" className="w-full" onClick={() => handleOpen('all', doc.id)}>
-                <FontAwesomeIcon icon={faFileAlt} className="mr-2"/>
+                <FileText className="mr-2 h-4 w-4"/>
                 {!confirm ? t('goodsReceiptReport') : t('confirmationReport')}
               </Button>
               {user?.settings?.goodsReceiptTargetDocuments && activeStatuses.includes(doc.status) && (
                 <Button variant="outline" className="w-full" onClick={() => handleOpen('vs', doc.id)}>
-                  <FontAwesomeIcon icon={faTruckLoading} className="mr-2"/>
+                  <Truck className="mr-2 h-4 w-4"/>
                   {!confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}
                 </Button>
               )}
               {processStatuses.includes(doc.status) && (
                 <Button variant="outline" className="w-full" onClick={() => handleOpen('diff', doc.id)}>
-                  <FontAwesomeIcon icon={faExchangeAlt} className="mr-2"/>
+                  <ArrowRightLeft className="mr-2 h-4 w-4"/>
                   {t('differencesReport')}
                 </Button>
               )}
               {doc.status === Status.InProgress && (
                 <Button className="w-full" onClick={() => action?.(doc, 'approve')}>
-                  <FontAwesomeIcon icon={faCheck} className="mr-2"/>
+                  <Check className="mr-2 h-4 w-4"/>
                   {t('finish')}
                 </Button>
               )}
               <Button variant="destructive" className="w-full" onClick={() => action?.(doc, 'cancel')}>
-                <FontAwesomeIcon icon={faTimes} className="mr-2"/>
+                <X className="mr-2 h-4 w-4"/>
                 {t('cancel')}
               </Button>
             </div>

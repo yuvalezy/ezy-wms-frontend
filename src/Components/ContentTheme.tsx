@@ -2,9 +2,7 @@ import React from "react";
 import {SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
 import {AppSidebar} from "@/components/AppSidebar";
 import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, Button} from "@/components/ui";
-import {Filter} from "lucide-react";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPlus} from "@fortawesome/free-solid-svg-icons";
+import {Filter, Plus} from "lucide-react";
 import {useTranslation} from "react-i18next";
 
 interface ContentThemeProps {
@@ -43,25 +41,26 @@ const ContentTheme: React.FC<ContentThemeProps> = (
 
         <div className="flex flex-col flex-1 min-w-0">
           {/* Header: trigger + breadcrumb, fixed height */}
-          <header className="flex items-center justify-between h-16 px-4 bg-white shadow flex-shrink-0 z-10 w-full">
-            <div className="flex items-center min-w-0 h-full">
-              <SidebarTrigger className="mr-4 flex-shrink-0 h-10 w-10 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded-lg"/>
-              <Breadcrumb className="min-w-0">
-                <BreadcrumbList>
-                  <BreadcrumbItem>
+          <header className="flex items-center justify-between h-16 px-6 bg-white border-b border-gray-200 flex-shrink-0 z-10 w-full">
+            <div className="flex items-center min-w-0 h-full gap-4">
+              <SidebarTrigger className="flex-shrink-0 h-10 w-10 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded-lg transition-colors hover:bg-gray-100"/>
+              <div className="min-w-0">
+                <nav className="flex items-center gap-2 min-w-0" aria-label="Breadcrumb">
+                  <div>
                     {titleOnClick
-                      ? <BreadcrumbLink className="cursor-pointer font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded px-1" onClick={titleOnClick}>{title}</BreadcrumbLink>
-                      : <BreadcrumbPage className="font-semibold text-gray-900">{title}</BreadcrumbPage>}
-                  </BreadcrumbItem>
+                      ? <button className="cursor-pointer text-lg font-semibold text-gray-700 hover:text-gray-900 underline focus:outline-none focus:ring-2 focus:ring-blue-600 rounded px-2 py-1 transition-all" onClick={titleOnClick}>{title}</button>
+                      : <span className="text-lg font-semibold text-gray-900">{title}</span>}
+                  </div>
                   {titleBreadcrumbs?.map((b, i) => (
-                    <BreadcrumbItem key={i}>
+                    <div key={i} className="flex items-center gap-2">
+                      <span className="text-gray-400 font-medium">/</span>
                       {b.onClick
-                        ? <BreadcrumbLink className="cursor-pointer font-normal text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded px-1" onClick={b.onClick}>{b.label}</BreadcrumbLink>
-                        : <BreadcrumbPage className="font-normal text-gray-700">{b.label}</BreadcrumbPage>}
-                    </BreadcrumbItem>
+                        ? <button className="cursor-pointer text-base font-medium text-gray-700 hover:text-gray-900 underline focus:outline-none focus:ring-2 focus:ring-blue-600 rounded px-2 py-1 transition-all" onClick={b.onClick}>{b.label}</button>
+                        : <span className="text-base font-medium text-gray-600">{b.label}</span>}
+                    </div>
                   ))}
-                </BreadcrumbList>
-              </Breadcrumb>
+                </nav>
+              </div>
             </div>
             <div className="flex items-center flex-shrink-0 h-full gap-2">
               {onFilterClicked && (
@@ -75,7 +74,7 @@ const ContentTheme: React.FC<ContentThemeProps> = (
               )}
               {onAdd && (
                 <Button type="button" variant="outline" size="sm" onClick={onAdd} className="h-10 font-normal focus:outline-none focus:ring-2 focus:ring-blue-600">
-                  <FontAwesomeIcon icon={faPlus} className="mr-2"/>
+                  <Plus className="mr-2 h-4 w-4"/>
                   {t('add')}
                 </Button>
               )}

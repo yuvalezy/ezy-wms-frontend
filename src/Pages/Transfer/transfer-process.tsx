@@ -2,8 +2,7 @@ import ContentTheme from "@/components/ContentTheme";
 import {Link, useNavigate, useSearchParams} from "react-router-dom";
 import {Button, Card, CardContent} from "@/components";
 import {useTranslation} from "react-i18next";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faMap, faCheck,} from '@fortawesome/free-solid-svg-icons';
+import {Map, Check} from 'lucide-react';
 import BinLocationScanner from "@/components/BinLocationScanner";
 import TransferCard from "@/pages/transfer/components/transfer-card";
 import {cn} from "@/lib/utils";
@@ -28,7 +27,7 @@ export default function TransferProcess() {
                       <Button type="button"
                               className={cn("w-full bg-green-500", info?.isComplete ? 'hover:shadow-lg cursor-pointer' : 'opacity-50 cursor-not-allowed')}
                               onClick={() => finish()}>
-                        <FontAwesomeIcon icon={faCheck} className="text-2xl"/>
+                        <Check className="h-6 w-6"/>
                         {t("finish")}
                       </Button>
                     </div>
@@ -54,7 +53,7 @@ export default function TransferProcess() {
               <Link to={`/transfer/${id}/targetItems`} className="block">
                 <div
                   className="bg-white rounded-lg shadow-md p-4 flex items-center space-x-4 hover:shadow-lg transition-shadow duration-300">
-                  <FontAwesomeIcon icon={faMap} className="text-2xl text-blue-500"/>
+                  <Map className="h-6 w-6 text-blue-500"/>
                   <span className="text-lg font-semibold">{t("selectTransferTargetItems")}</span>
                 </div>
               </Link>

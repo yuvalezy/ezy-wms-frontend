@@ -5,8 +5,7 @@ import {Input} from "@/components/ui/input";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Badge} from "@/components/ui/badge";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPlus, faEdit, faTrash, faSearch, faUsers} from "@fortawesome/free-solid-svg-icons";
+import {Plus, Edit, Trash2, Search, Users} from "lucide-react";
 import {useThemeContext} from "@/components";
 import {AuthorizationGroup, AuthorizationGroupFilters} from "./data/authorization-group";
 import {authorizationGroupService} from "./data/authorization-group-service";
@@ -131,8 +130,7 @@ const AuthorizationGroupsList: React.FC = () => {
             {/*<div className="flex gap-4 mb-4">*/}
             {/*  <div className="flex-1">*/}
             {/*    <div className="relative">*/}
-            {/*      <FontAwesomeIcon icon={faSearch}*/}
-            {/*                       className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"/>*/}
+            {/*      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4"/>*/}
             {/*      <Input*/}
             {/*        placeholder={t('searchAuthorizationGroups')}*/}
             {/*        className="pl-10"*/}
@@ -203,7 +201,7 @@ const AuthorizationGroupsList: React.FC = () => {
                             size="sm"
                             onClick={() => handleEdit(group)}
                           >
-                            <FontAwesomeIcon icon={faEdit} className="mr-1"/>
+                            <Edit className="h-4 w-4 mr-1"/>
                             {t('edit')}
                           </Button>
                           <Button
@@ -212,7 +210,7 @@ const AuthorizationGroupsList: React.FC = () => {
                             onClick={() => handleDelete(group)}
                             disabled={!group.canDelete}
                           >
-                            <FontAwesomeIcon icon={faTrash} className="mr-1"/>
+                            <Trash2 className="h-4 w-4 mr-1"/>
                             {t('delete')}
                           </Button>
                         </div>

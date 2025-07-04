@@ -12,8 +12,7 @@ import {Button} from "@/components/ui/button";
 import {IsNumeric} from "@/assets";
 import {fetchPicking, PickingDocument, PickingDocumentDetail} from "@/pages/picking/data/picking-document";
 import {useObjectName} from "@/assets";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faChartBar, faPlay} from "@fortawesome/free-solid-svg-icons";
+import {BarChart3, Play} from "lucide-react";
 import InfoBox from "@/components/InfoBox";
 import {formatNumber} from "@/lib/utils";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
@@ -86,14 +85,14 @@ export default function PickingProcess() {
                     <CardFooter className="flex justify-end space-x-2 pt-4 border-t">
                       {item.totalOpenItems > 0 &&
                           <Button className="flex items-center gap-2" onClick={() => handleOpen(item)}>
-                              <FontAwesomeIcon icon={faPlay} className="h-4 w-4"/>
+                              <Play className="h-4 w-4"/>
                             {t("process")}
                           </Button>
                       }
                       {item.totalOpenItems === 0 &&
                           <Button variant="outline" className="flex items-center gap-2"
                                   onClick={() => handleOpen(item)}>
-                              <FontAwesomeIcon icon={faChartBar} className="h-4 w-4"/>
+                              <BarChart3 className="h-4 w-4"/>
                             {t("report")}
                           </Button>
                       }
@@ -137,14 +136,14 @@ export default function PickingProcess() {
                           <div className="flex justify-end gap-2">
                             {item.totalOpenItems > 0 &&
                                 <Button size="sm" className="flex items-center gap-2" onClick={() => handleOpen(item)}>
-                                    <FontAwesomeIcon icon={faPlay} className="h-3 w-3"/>
+                                    <Play className="h-3 w-3"/>
                                   {t("process")}
                                 </Button>
                             }
                             {item.totalOpenItems === 0 &&
                                 <Button variant="outline" size="sm" className="flex items-center gap-2"
                                         onClick={() => handleOpen(item)}>
-                                    <FontAwesomeIcon icon={faChartBar} className="h-3 w-3"/>
+                                    <BarChart3 className="h-3 w-3"/>
                                   {t("report")}
                                 </Button>
                             }
