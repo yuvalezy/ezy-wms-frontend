@@ -1,4 +1,5 @@
-import { UnitType } from './UnitType.enum';
+import {UnitType} from './UnitType.enum';
+import {UserAuditResponse} from "@/assets";
 
 export interface PackageContentDto {
   id: string;
@@ -10,5 +11,5 @@ export interface PackageContentDto {
   whsCode: string;
   binCode?: string;
   createdAt: Date;
-  createdBy: string;
+  createdBy?: UserAuditResponse;
 }

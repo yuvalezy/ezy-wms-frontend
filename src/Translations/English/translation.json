@@ -131,7 +131,6 @@
   "packUnit": "Pack. Unit",
   "dozenQuantity": "Dozen Quantity",
   "dozenUnit": "Dozen Unit",
-  "packages": "Packages",
   "message": "Message",
   "messages": "Messages",
   "time": "Time",
@@ -418,5 +417,36 @@
   },
   "dashboardOverview": "Overview",
   "activeModules": "Active Modules",
-  "packagesCheck": "Packages Check"
+  "packagesCheck": "Packages Check",
+  "packages": {
+    "packages": "Packages",
+    "packageCheck": "Package Check",
+    "packageScanner": "Package Scanner", 
+    "scanPackageBarcode": "Scan package barcode",
+    "packageStatus": "Package Status",
+    "packageContents": "Package Contents",
+    "noPackageContentFound": "No package content found",
+    "packageNotFound": "Package not found",
+    "packageLocation": "Package Location",
+    "packageCreated": "Created",
+    "packageClosed": "Closed",
+    "totalItemsInPackage": "Total Items in Package",
+    "packageBarcode": "Package Barcode",
+    "uniqueItems": "Unique Items", 
+    "totalQuantity": "Total Quantity",
+    "unitType": "Unit Type",
+    "binCode": "Bin Code",
+    "whsCode": "Warehouse Code",
+    "itemName": "Item Name",
+    "status": {
+      "init": "Initialized",
+      "active": "Active",
+      "closed": "Closed", 
+      "cancelled": "Cancelled",
+      "locked": "Locked"
+    }
+  },
+  "scan": "Scan",
+  "offlineTitle": "Internet Signal Lost",
+  "offlineMessage": "Please check your internet connection and try again."
 }

@@ -127,7 +127,6 @@
   "packUnit": "Un. Emp",
   "dozenQuantity": "Cantidad de Docenas",
   "dozenUnit": "Unidad de Docenas",
-  "packages": "Paquetes",
   "message": "Mensaje",
   "messages": "Mensajes",
   "time": "Tiempo",
@@ -417,5 +416,36 @@
   },
   "dashboardOverview": "Resumen",
   "activeModules": "Módulos Activos",
-  "packagesCheck": "Revision de Paquetes"
+  "packagesCheck": "Revision de Paquetes",
+  "packages": {
+    "packages": "Packages",
+    "packageCheck": "Revisión de Paquetes",
+    "packageScanner": "Escáner de Paquetes",
+    "scanPackageBarcode": "Escanear código de barras del paquete",
+    "packageStatus": "Estado del Paquete",
+    "packageContents": "Contenido del Paquete",
+    "noPackageContentFound": "No se encontró contenido del paquete",
+    "packageNotFound": "Paquete no encontrado",
+    "packageLocation": "Ubicación del Paquete",
+    "packageCreated": "Creado",
+    "packageClosed": "Cerrado",
+    "totalItemsInPackage": "Total de Artículos en el Paquete",
+    "packageBarcode": "Código de Barras del Paquete",
+    "uniqueItems": "Artículos Únicos",
+    "totalQuantity": "Cantidad Total",
+    "unitType": "Tipo de Unidad",
+    "binCode": "Código de Bin",
+    "whsCode": "Código de Almacén",
+    "itemName": "Nombre del Artículo",
+    "status": {
+      "init": "Inicializado",
+      "active": "Activo",
+      "closed": "Cerrado",
+      "cancelled": "Cancelado",
+      "locked": "Bloqueado"
+    }
+  },
+  "scan": "Escanear",
+  "offlineTitle": "Señal de Internet Perdida",
+  "offlineMessage": "Por favor verifique su conexión a internet e intente de nuevo."
 }

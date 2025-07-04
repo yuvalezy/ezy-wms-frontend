@@ -61,7 +61,7 @@ export default function ItemCheck() {
                   />
                 </div>
                 <div>
-                  <Button className="w-full">
+                  <Button disabled={!barcodeInput.trim() && !itemCodeInput.trim()} className="w-full">
                     <Check className="h-4 w-4 mr-2"/>
                     {t("accept")}
                   </Button>

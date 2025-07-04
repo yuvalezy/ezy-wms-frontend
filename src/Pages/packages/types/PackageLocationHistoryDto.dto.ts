@@ -1,5 +1,6 @@
-import { PackageMovementType } from './PackageMovementType.enum';
-import { ObjectType } from './ObjectType.enum';
+import {PackageMovementType} from './PackageMovementType.enum';
+import {ObjectType} from './ObjectType.enum';
+import {UserAuditResponse} from "@/assets";
 
 export interface PackageLocationHistoryDto {
   id: string;
@@ -13,7 +14,7 @@ export interface PackageLocationHistoryDto {
   toBinCode?: string;
   sourceOperationType: ObjectType;
   sourceOperationId?: string;
-  userId: string;
+  user?: UserAuditResponse;
   movementDate: Date;
   notes?: string;
 }

@@ -28,9 +28,9 @@ export const getPackage = async (id: string): Promise<PackageDto> => {
   }
 };
 
-export const getPackageByBarcode = async (barcode: string, options?: {contents?: boolean, history?: boolean}): Promise<PackageDto | null> => {
+export const getPackageByBarcode = async (barcode: string, options?: {contents?: boolean, history?: boolean, details?: boolean}): Promise<PackageDto | null> => {
   try {
-    const response = await axiosInstance.get<PackageDto | null>(`Package/barcode/${barcode}?contents=${options?.contents || false}&history=${options?.history || false}`);
+    const response = await axiosInstance.get<PackageDto | null>(`Package/barcode/${barcode}?contents=${options?.contents || false}&history=${options?.history || false}&details=${options?.details || false}`);
     return response.data;
   } catch (error) {
     console.error('Error getting package by barcode:', error);

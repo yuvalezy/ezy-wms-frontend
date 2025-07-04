@@ -53,7 +53,7 @@ export function AppSidebar() {
     switch (item.Link) {
       case "/binCheck":
       case "/itemCheck":
-      case "/packagesCheck":
+      case "/packageCheck":
         groupLabel = t("inventoryCheck");
         break;
       case "/goodsReceipt":

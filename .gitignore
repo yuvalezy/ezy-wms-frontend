@@ -18,6 +18,9 @@
 .env.test.local
 .env.production.local
 .idea
+.claude
+.junie
+.vscode
 
 npm-debug.log*
 yarn-debug.log*

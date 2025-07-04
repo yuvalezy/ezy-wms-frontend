@@ -30,6 +30,7 @@ import TransferProcessSource from "./pages/transfer/transfer-process-source";
 // import TransferProcessTargetItem from "./pages/transfer/transfer-process-target-item";
 import CountingSummaryReport from "./pages/Counting/CountingSummaryReport";
 import {BinCheck} from "./pages/BinCheck/BinCheck";
+import {PackageCheck} from "./pages/PackageCheck/PackageCheck";
 import GoodsReceiptProcessDifferenceReport from "./pages/GoodsReceipt/GoodsReceiptProcessDifferenceReport";
 import TransferProcessTargetBins from "./pages/transfer/transfer-process-target-bins";
 import TransferRequest from "./pages/transfer/transfer-request";
@@ -38,9 +39,12 @@ import CancellationReasonsList from "@/pages/settings/cancellation-reasons/cance
 import UsersList from "@/pages/settings/users/users-list";
 import AuthorizationGroupsList from "@/pages/settings/authorization-groups/authorization-groups-list";
 import AuthorizationGroupForm from "@/pages/settings/authorization-groups/components/authorization-group-form";
+import { OfflineOverlay } from "./components/OfflineOverlay";
+import { useOfflineDetection } from "./hooks/useOfflineDetection";
 
 export default function App() {
     const {user} = useAuth();
+    const isOffline = useOfflineDetection();
     function getGoodsReceiptSupervisorAuthorizations() {
         let authorizations = [RoleType.GOODS_RECEIPT_SUPERVISOR];
         if (user?.settings?.goodsReceiptCreateSupervisorRequired) {
@@ -62,11 +66,13 @@ export default function App() {
         <AuthProvider>
             <BrowserRouter>
                 <Toaster closeButton richColors={true} />
+                {isOffline && <OfflineOverlay />}
                 <Routes>
                     <Route path="/login" element={<LoginPage/>}/>
                     <Route path="/unauthorized" element={<Unauthorized/>}/>
                     <Route path="/binCheck" element={<ProtectedRoute authorizations={[RoleType.GOODS_RECEIPT_SUPERVISOR, RoleType.PICKING_SUPERVISOR, RoleType.COUNTING_SUPERVISOR, RoleType.TRANSFER_SUPERVISOR]} element={<BinCheck/>}/>}/>
                     <Route path="/itemCheck" element={<ProtectedRoute authorizations={[RoleType.GOODS_RECEIPT_SUPERVISOR, RoleType.PICKING_SUPERVISOR, RoleType.COUNTING_SUPERVISOR, RoleType.TRANSFER_SUPERVISOR]} element={<ItemCheck/>}/>}/>
+                    <Route path="/packageCheck" element={<ProtectedRoute authorizations={[RoleType.GOODS_RECEIPT_SUPERVISOR, RoleType.PICKING_SUPERVISOR, RoleType.COUNTING_SUPERVISOR, RoleType.TRANSFER_SUPERVISOR, RoleType.PACKAGE_MANAGEMENT, RoleType.PACKAGE_MANAGEMENT_SUPERVISOR]} element={<PackageCheck/>}/>}/>
                     {/*Counting*/}
                     <Route path="/counting" element={<ProtectedRoute authorization={RoleType.COUNTING} element={<CountingList/>}/>}/>
                     <Route path="/counting/:scanCode" element={<ProtectedRoute authorization={RoleType.COUNTING} element={<CountingProcess/>}/>}/>

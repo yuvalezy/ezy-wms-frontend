@@ -13,6 +13,11 @@ export type BusinessPartner = {
   name: string;
 };
 
+export type UserAuditResponse = {
+  id: string;
+  name: string;
+}
+
 
 export function useDocumentStatusOptions() {
   const { t } = useTranslation();

@@ -52,7 +52,7 @@ export const kpiItems: KpiItem[] = [
   },
   {
     id: 'packages-check',
-    title: 'packages',
+    title: 'packages.packages',
     value: 100,
     icon: PackageCheckIcon,
     authorizations: [

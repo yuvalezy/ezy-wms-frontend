@@ -124,7 +124,7 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
                   />
                 </div>
                 <div>
-                  <Button type="submit" className="w-full">
+                  <Button type="submit" disabled={!binInput.trim()} className="w-full">
                       <Check className="h-4 w-4 mr-2"/>
                     {t("accept")}
                   </Button>

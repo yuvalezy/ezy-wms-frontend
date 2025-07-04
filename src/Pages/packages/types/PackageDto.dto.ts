@@ -1,6 +1,7 @@
 import { PackageStatus } from './PackageStatus.enum';
 import { PackageContentDto } from './PackageContentDto.dto';
 import { PackageLocationHistoryDto } from './PackageLocationHistoryDto.dto';
+import {UserAuditResponse} from "@/assets";
 
 export interface PackageDto {
   id: string;
@@ -9,7 +10,7 @@ export interface PackageDto {
   whsCode: string;
   binEntry?: number;
   binCode?: string;
-  createdBy: string;
+  createdBy?: UserAuditResponse;
   createdAt: Date;
   closedAt?: Date;
   closedBy?: string;
