@@ -34,7 +34,7 @@ export const LicenseWarningBanner: React.FC = () => {
       }
     }
 
-    if (licenseInfo?.currentDeviceCount >= licenseInfo?.maxDevices) {
+    if (licenseInfo && licenseInfo.currentDeviceCount >= licenseInfo.maxDevices) {
       return 'Device limit reached. Remove unused devices or upgrade your license to add more devices.';
     }
 
@@ -124,7 +124,7 @@ export const LicenseWarningBanner: React.FC = () => {
       );
     }
 
-    if (licenseInfo?.currentDeviceCount >= licenseInfo?.maxDevices) {
+    if (licenseInfo && licenseInfo.currentDeviceCount >= licenseInfo.maxDevices) {
       return (
         <Button 
           variant="outline" 

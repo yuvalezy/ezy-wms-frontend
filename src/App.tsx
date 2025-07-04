@@ -43,9 +43,11 @@ import {OfflineOverlay} from "./components/OfflineOverlay";
 import {useOfflineDetection} from "./hooks/useOfflineDetection";
 import {DeviceProvider} from "./contexts/DeviceContext";
 import {LicenseProvider} from "./contexts/LicenseContext";
+import {CloudSyncProvider} from "./contexts/CloudSyncContext";
 import {DeviceRegistration} from "./components/license/DeviceRegistration";
 import {DeviceStatusCard} from "./components/license/DeviceStatusCard";
 import {LicenseStatusDashboard} from "./components/license/LicenseStatusDashboard";
+import {CloudSyncDashboard} from "./components/license/CloudSyncDashboard";
 
 export default function App() {
   const {user} = useAuth();
@@ -72,7 +74,8 @@ export default function App() {
   return (
     <DeviceProvider>
       <LicenseProvider>
-        <AuthProvider>
+        <CloudSyncProvider>
+          <AuthProvider>
         <BrowserRouter>
           <Toaster closeButton richColors={true}/>
           {isOffline && <OfflineOverlay/>}
@@ -199,11 +202,15 @@ export default function App() {
             {/* License Management Routes */}
             <Route path="/license" element={<LicenseStatusDashboard/>}/>
             <Route path="/license/status" element={<LicenseStatusDashboard/>}/>
+            {/* Cloud Sync Management Routes */}
+            <Route path="/sync" element={<CloudSyncDashboard/>}/>
+            <Route path="/sync/status" element={<CloudSyncDashboard/>}/>
             <Route path="/" element={<ProtectedRoute element={<HomePage/>}/>}/>
             <Route path="*" element={<NotFound/>}/>
           </Routes>
         </BrowserRouter>
-        </AuthProvider>
+          </AuthProvider>
+        </CloudSyncProvider>
       </LicenseProvider>
     </DeviceProvider>
   );
