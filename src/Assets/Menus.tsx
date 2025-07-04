@@ -53,7 +53,7 @@ export function useMenus() {
       Color: "text-green-700",
     },
     {
-      Link: "/packagesCheck",
+      Link: "/packageCheck",
       Text: t('packagesCheck'),
       Authorizations: [RoleType.GOODS_RECEIPT_SUPERVISOR, RoleType.PICKING_SUPERVISOR, RoleType.COUNTING_SUPERVISOR, RoleType.TRANSFER_SUPERVISOR, RoleType.PACKAGE_MANAGEMENT, RoleType.PACKAGE_MANAGEMENT_SUPERVISOR],
       Icon: PackageCheckIcon,

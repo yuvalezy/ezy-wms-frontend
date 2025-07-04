@@ -417,5 +417,6 @@
     }
   },
   "dashboardOverview": "Overview",
-  "activeModules": "Active Modules"
+  "activeModules": "Active Modules",
+  "packagesCheck": "Packages Check"
 }

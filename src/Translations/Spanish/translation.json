@@ -416,5 +416,6 @@
     }
   },
   "dashboardOverview": "Resumen",
-  "activeModules": "Módulos Activos"
+  "activeModules": "Módulos Activos",
+  "packagesCheck": "Revision de Paquetes"
 }
