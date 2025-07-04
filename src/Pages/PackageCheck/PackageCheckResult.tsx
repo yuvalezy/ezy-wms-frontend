@@ -4,6 +4,8 @@ import {useTranslation} from "react-i18next";
 import {Card} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
+import ClickableItemCode from "@/components/ClickableItemCode";
+import ClickableBinCode from "@/components/ClickableBinCode";
 import {Package, MapPin, Calendar, User, Box, Grid3x3} from "lucide-react";
 import {formatDistance} from "date-fns";
 
@@ -105,10 +107,13 @@ export const PackageCheckResult: React.FC<{ packageData: PackageDto }> = ({packa
                   {getStatusLabel(packageData.status)}
                 </Badge>
               </div>
-              {packageData.binCode && (
+              {packageData.binCode && packageData.binEntry && (
                 <div className="flex items-center gap-1">
                   <MapPin className="h-4 w-4" />
-                  <span>{packageData.binCode}</span>
+                  <ClickableBinCode 
+                    binEntry={packageData.binEntry} 
+                    binCode={packageData.binCode}
+                  />
                 </div>
               )}
               <div className="flex items-center gap-1">
@@ -142,7 +147,7 @@ export const PackageCheckResult: React.FC<{ packageData: PackageDto }> = ({packa
               <div className="flex items-center justify-between p-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <ItemDetailsLink data={content} />
+                    <ClickableItemCode itemCode={content.itemCode} />
                   </div>
                   <p className="text-sm text-gray-600 mt-1 truncate">
                     {content.itemData?.itemName || content.itemCode}

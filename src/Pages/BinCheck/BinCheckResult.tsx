@@ -4,6 +4,8 @@ import {useTranslation} from "react-i18next";
 import {Card} from "@/components/ui/card";
 import {useStockInfo} from "@/utils/stock-info";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
+import ClickableItemCode from "@/components/ClickableItemCode";
+import ClickablePackageBarcode from "@/components/ClickablePackageBarcode";
 import {ChevronRight, Package, Box, Grid3x3} from "lucide-react";
 
 export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({content}) => {
@@ -92,7 +94,7 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
               >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <ItemDetailsLink data={binContent} />
+                    <ClickableItemCode itemCode={binContent.itemCode} />
                   </div>
                   <p className="text-sm text-gray-600 mt-1 truncate">
                     {binContent.itemName}
@@ -152,7 +154,11 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
                       <div className="space-y-1">
                         {binContent.packages.map((pkg, idx) => (
                           <div key={idx} className="flex justify-between text-sm">
-                            <span className="text-gray-600 font-mono">{pkg.barcode}</span>
+                            <ClickablePackageBarcode 
+                              packageId={pkg.id} 
+                              barcode={pkg.barcode}
+                              className="text-gray-600 font-mono"
+                            />
                             <span className="text-gray-900 font-medium">
                               {stockInfo({
                                 quantity: pkg.quantity,

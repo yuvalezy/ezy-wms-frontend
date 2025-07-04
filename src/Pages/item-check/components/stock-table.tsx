@@ -4,6 +4,8 @@ import {ItemCheckResponse, itemStock, ItemStockResponse} from "../item-check";
 import {useThemeContext} from "@/components/ThemeContext";
 import {Card} from "@/components/ui/card";
 import {useStockInfo} from "@/utils/stock-info";
+import ClickableBinCode from "@/components/ClickableBinCode";
+import ClickablePackageBarcode from "@/components/ClickablePackageBarcode";
 import {ChevronRight, Package, Box, Grid3x3} from "lucide-react";
 
 interface StockTableProps {
@@ -95,7 +97,7 @@ const StockTable: React.FC<StockTableProps> = ({result}) => {
               >
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-gray-900 truncate">
-                    {binStock.binCode}
+                    <ClickableBinCode binEntry={binStock.binEntry} binCode={binStock.binCode} />
                   </p>
                   <p className="text-sm text-gray-600 mt-1">
                     {formatStock(binStock)}
@@ -152,7 +154,11 @@ const StockTable: React.FC<StockTableProps> = ({result}) => {
                       <div className="space-y-1">
                         {binStock.packages.map((pkg, idx) => (
                           <div key={idx} className="flex justify-between text-sm">
-                            <span className="text-gray-600 font-mono">{pkg.barcode}</span>
+                            <ClickablePackageBarcode 
+                              packageId={pkg.id} 
+                              barcode={pkg.barcode}
+                              className="text-gray-600 font-mono"
+                            />
                             <span className="text-gray-900 font-medium">
                               {stockInfo({
                                 quantity: pkg.quantity,
