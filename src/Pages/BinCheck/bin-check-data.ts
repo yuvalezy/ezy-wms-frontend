@@ -33,8 +33,8 @@ export const useBinCheckData = () => {
     // Create a BinLocation object from the parameters
     const binLocation: BinLocation = {
       code: binCode,
-      entry: binEntry,
-      description: binCode
+      entry: parseInt(binEntry),
+      quantity: 1
     };
     onScan(binLocation);
   }, [onScan]);
