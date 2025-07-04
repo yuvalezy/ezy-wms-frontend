@@ -1,4 +1,4 @@
-import {LogOutIcon, SettingsIcon} from "lucide-react"
+import {LogOutIcon, SettingsIcon, HomeIcon, UserIcon, ChevronDownIcon} from "lucide-react"
 import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {MenuItem, useMenus} from "@/assets/Menus";
@@ -15,7 +15,15 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarHeader,
 } from "@/components/ui/sidebar"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import {useAuth} from "@/components/AppContext";
 import {useTranslation} from "react-i18next";
 
@@ -97,14 +105,31 @@ export function AppSidebar() {
   ];
 
   return (
-    <Sidebar>
-      <SidebarContent>
-
-        <div className="px-4 py-3 border-b border-gray-200">
-          <div className="text-sm font-medium text-gray-900">
-            {user?.warehouses?.find(v => v.id === user?.currentWarehouse)?.name}
-          </div>
+    <Sidebar className="text-base">
+      <SidebarHeader>
+        <div className="h-16 px-4 border-b border-gray-200 flex items-center">
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex items-center gap-3 w-full p-2 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-600 h-12">
+              <div className="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full flex-shrink-0">
+                <UserIcon className="w-4 h-4 text-blue-600" />
+              </div>
+              <div className="flex-1 text-left min-w-0">
+                <div className="text-sm font-semibold text-gray-900 truncate">
+                  {user?.warehouses?.find(v => v.id === user?.currentWarehouse)?.name}
+                </div>
+              </div>
+              <ChevronDownIcon className="w-4 h-4 text-gray-500 flex-shrink-0" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-56">
+              <DropdownMenuItem onClick={handleLogout} className="text-red-600 hover:text-red-700 hover:bg-red-50 h-12">
+                <LogOutIcon className="w-4 h-4 mr-2" />
+                {t('logout')}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
+      </SidebarHeader>
+      <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
             <SidebarMenuItem>
@@ -112,9 +137,9 @@ export function AppSidebar() {
                 <a href="/" onClick={(e) => {
                   e.preventDefault();
                   handleMenuItemClick("/");
-                }} className={location.pathname === "/home" ? 'bg-gray-200' : ''}>
-                  <FontAwesomeIcon icon={faIndustry}/>
-                  <span>{t('home')}</span>
+                }} className={`min-h-[48px] flex items-center gap-3 px-3 py-3 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 ${location.pathname === "/home" ? 'bg-blue-50 text-blue-700' : 'text-gray-900 hover:bg-gray-50'}`}>
+                  <HomeIcon className="w-5 h-5" />
+                  <span className="font-normal">{t('home')}</span>
                 </a>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -127,7 +152,7 @@ export function AppSidebar() {
           }
           return (
             <SidebarGroup key={groupLabel}>
-              <SidebarGroupLabel>{groupLabel}</SidebarGroupLabel>
+              <SidebarGroupLabel className="text-xs font-semibold text-gray-900 uppercase tracking-wider px-3 py-2">{groupLabel}</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
                   {itemsInGroup.map((item) => (
@@ -139,10 +164,11 @@ export function AppSidebar() {
                             e.preventDefault();
                             handleMenuItemClick(item.Link);
                           }}
-                          className={location.pathname === item.Link ? 'bg-gray-200' : ''}
+                          className={`min-h-[48px] flex items-center gap-3 px-3 py-3 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 ${location.pathname === item.Link ? 'bg-blue-50 text-blue-700' : 'text-gray-900 hover:bg-gray-50'}`}
+                          aria-label={item.Text}
                         >
-                          <FontAwesomeIcon icon={item.Icon} className={item.Color || 'text-gray-600'}/>
-                          <span className={item.Color || 'text-gray-600'}>{item.Text}</span>
+                          <item.Icon className="w-5 h-5"/>
+                          <span className="font-normal">{item.Text}</span>
                         </a>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -153,18 +179,6 @@ export function AppSidebar() {
           );
         })}
       </SidebarContent>
-      <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <a href="#" onClick={handleLogout}>
-                <LogOutIcon/>
-                <span>{t('logout')}</span>
-              </a>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
     </Sidebar>
   )
 }

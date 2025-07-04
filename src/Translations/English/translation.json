@@ -415,5 +415,7 @@
         "abbr": "U"
       }
     }
-  }
+  },
+  "dashboardOverview": "Overview",
+  "activeModules": "Active Modules"
 }

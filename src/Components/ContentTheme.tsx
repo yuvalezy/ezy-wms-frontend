@@ -38,51 +38,59 @@ const ContentTheme: React.FC<ContentThemeProps> = (
 
   return (
     <SidebarProvider>
-      <div className="h-screen flex w-full">
+      <div className="h-screen flex w-full text-base md:text-lg">
         <AppSidebar/>
 
         <div className="flex flex-col flex-1 min-w-0">
           {/* Header: trigger + breadcrumb, fixed height */}
-          <header className="flex items-center justify-between py-2 bg-white shadow flex-shrink-0 z-10 w-full">
-            <div className="flex items-center min-w-0">
-              <SidebarTrigger className="mr-4 flex-shrink-0"/>
+          <header className="flex items-center justify-between h-16 px-4 bg-white shadow flex-shrink-0 z-10 w-full">
+            <div className="flex items-center min-w-0 h-full">
+              <SidebarTrigger className="mr-4 flex-shrink-0 h-10 w-10 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded-lg"/>
               <Breadcrumb className="min-w-0">
                 <BreadcrumbList>
                   <BreadcrumbItem>
                     {titleOnClick
-                      ? <BreadcrumbLink className="cursor-pointer" onClick={titleOnClick}>{title}</BreadcrumbLink>
-                      : <BreadcrumbPage>{title}</BreadcrumbPage>}
+                      ? <BreadcrumbLink className="cursor-pointer font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded px-1" onClick={titleOnClick}>{title}</BreadcrumbLink>
+                      : <BreadcrumbPage className="font-semibold text-gray-900">{title}</BreadcrumbPage>}
                   </BreadcrumbItem>
                   {titleBreadcrumbs?.map((b, i) => (
                     <BreadcrumbItem key={i}>
                       {b.onClick
-                        ? <BreadcrumbLink className="cursor-pointer" onClick={b.onClick}>{b.label}</BreadcrumbLink>
-                        : <BreadcrumbPage>{b.label}</BreadcrumbPage>}
+                        ? <BreadcrumbLink className="cursor-pointer font-normal text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded px-1" onClick={b.onClick}>{b.label}</BreadcrumbLink>
+                        : <BreadcrumbPage className="font-normal text-gray-700">{b.label}</BreadcrumbPage>}
                     </BreadcrumbItem>
                   ))}
                 </BreadcrumbList>
               </Breadcrumb>
             </div>
-            <div className="flex items-center flex-shrink-0">
+            <div className="flex items-center flex-shrink-0 h-full gap-2">
               {onFilterClicked && (
-                <Filter
-                  className="h-6 w-6 cursor-pointer mr-2"
+                <button
                   onClick={onFilterClicked}
-                />
+                  className="h-10 w-10 flex items-center justify-center rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  aria-label="Filter"
+                >
+                  <Filter className="h-5 w-5 text-gray-600" />
+                </button>
               )}
               {onAdd && (
-                <Button type="button" variant="outline" size="sm" onClick={onAdd} className="mr-2">
-                  <FontAwesomeIcon icon={faPlus}/>
+                <Button type="button" variant="outline" size="sm" onClick={onAdd} className="h-10 font-normal focus:outline-none focus:ring-2 focus:ring-blue-600">
+                  <FontAwesomeIcon icon={faPlus} className="mr-2"/>
                   {t('add')}
                 </Button>
               )}
               {onExportExcel && (
-                <img
-                  src="/images/excel.jpg"
-                  alt="Export to Excel"
-                  className="h-6 w-6 cursor-pointer mr-2"
+                <button
                   onClick={onExportExcel}
-                />
+                  className="h-10 w-10 flex items-center justify-center rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  aria-label="Export to Excel"
+                >
+                  <img
+                    src="/images/excel.jpg"
+                    alt=""
+                    className="h-6 w-6 object-contain"
+                  />
+                </button>
               )}
             </div>
           </header>

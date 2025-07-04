@@ -1,13 +1,12 @@
-import { RoleType } from "./RoleType";
+import {RoleType} from "./RoleType";
 import {
-  faCheckCircle,
-  faCube,
-  faClipboardList,
-  faShoppingCart,
-  faBox,
-  faArrowsAlt,
-  faIndustry
-} from '@fortawesome/free-solid-svg-icons';
+  CheckCircle,
+  Boxes,
+  ClipboardList,
+  ShoppingCart,
+  Package,
+  Move,
+} from 'lucide-react';
 import {HomeInfo} from "@/assets/HomeInfo";
 
 export interface KpiItem {
@@ -19,6 +18,7 @@ export interface KpiItem {
   route: string;
   backgroundColor: string;
   iconColor: string;
+  borderColor: string;
 }
 
 // Mock data for KPI boxes
@@ -27,17 +27,18 @@ export const kpiItems: KpiItem[] = [
     id: 'item-check',
     title: 'items',
     value: 125,
-    icon: faCheckCircle,
+    icon: CheckCircle,
     authorizations: [RoleType.GOODS_RECEIPT_SUPERVISOR, RoleType.PICKING_SUPERVISOR],
     route: "/itemCheck",
     backgroundColor: "bg-blue-100",
-    iconColor: "text-blue-700"
+    iconColor: "text-blue-700",
+    borderColor: "border-l-blue-500"
   },
   {
     id: 'bin-check',
     title: 'binLocations',
     value: 78,
-    icon: faCube,
+    icon: Boxes,
     authorizations: [
       RoleType.GOODS_RECEIPT_SUPERVISOR,
       RoleType.PICKING_SUPERVISOR,
@@ -46,57 +47,63 @@ export const kpiItems: KpiItem[] = [
     ],
     route: "/binCheck",
     backgroundColor: "bg-green-100",
-    iconColor: "text-green-700"
+    iconColor: "text-green-700",
+    borderColor: "border-l-green-500"
   },
   {
     id: 'goods-receipt',
     title: 'goodsReceipts',
     value: 42,
-    icon: faClipboardList,
+    icon: ClipboardList,
     authorizations: [RoleType.GOODS_RECEIPT, RoleType.GOODS_RECEIPT_SUPERVISOR],
     route: "/goodsReceipt",
-    backgroundColor: "bg-gray-100",
-    iconColor: "text-gray-700"
+    backgroundColor: "bg-orange-100",
+    iconColor: "text-orange-700",
+    borderColor: "border-l-orange-500"
   },
   {
     id: 'receipt-confirmation',
     title: 'receiptConfirmations',
     value: 15,
-    icon: faClipboardList,
+    icon: ClipboardList,
     authorizations: [RoleType.GOODS_RECEIPT_CONFIRMATION, RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR],
     route: "/goodsReceiptConfirmation",
     backgroundColor: "bg-indigo-100",
-    iconColor: "text-indigo-700"
+    iconColor: "text-indigo-700",
+    borderColor: "border-l-indigo-500"
   },
   {
     id: 'picking',
     title: 'pickings',
     value: 36,
-    icon: faShoppingCart,
+    icon: ShoppingCart,
     authorizations: [RoleType.PICKING, RoleType.PICKING_SUPERVISOR],
     route: "/pick",
     backgroundColor: "bg-teal-100",
-    iconColor: "text-teal-700"
+    iconColor: "text-teal-700",
+    borderColor: "border-l-teal-500"
   },
   {
     id: 'counting',
     title: 'counts',
     value: 53,
-    icon: faBox,
+    icon: Package,
     authorizations: [RoleType.COUNTING, RoleType.COUNTING_SUPERVISOR],
     route: "/counting",
     backgroundColor: "bg-cyan-100",
-    iconColor: "text-cyan-700"
+    iconColor: "text-cyan-700",
+    borderColor: "border-l-cyan-500"
   },
   {
     id: 'transfer',
     title: 'transfers',
     value: 29,
-    icon: faArrowsAlt,
+    icon: Move,
     authorizations: [RoleType.TRANSFER, RoleType.TRANSFER_SUPERVISOR, RoleType.TRANSFER_REQUEST],
     route: "/transfer",
     backgroundColor: "bg-lime-100",
-    iconColor: "text-lime-700"
+    iconColor: "text-lime-700",
+    borderColor: "border-l-lime-500"
   }
 ];
 
