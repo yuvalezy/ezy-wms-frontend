@@ -453,5 +453,9 @@
     "paymentDue": "El pago está vencido. Por favor contacte a soporte.",
     "paymentStatusUnknown": "Estado de pago desconocido. El sistema se deshabilitará en {0} días.",
     "accountExpiresIn": "La cuenta expira en {0} días. Por favor renueve."
-  }
+  },
+  "newDeviceDetected": "Nuevo dispositivo detectado. Por favor proporcione un nombre para este dispositivo para continuar.",
+  "deviceName": "Nombre del Dispositivo",
+  "enterDeviceName": "Ingrese un nombre de dispositivo (máximo 100 caracteres)",
+  "deviceNameTaken": "Este nombre de dispositivo ya está en uso. Por favor elija un nombre diferente."
 }

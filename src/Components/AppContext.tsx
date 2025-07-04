@@ -9,13 +9,14 @@ import axios, {AxiosError} from "axios";
 import {UserInfo} from "@/assets";
 import {axiosInstance, ServerUrl} from "@/utils/axios-instance";
 import {LicenseWarning} from "@/types/license";
+import {getOrCreateDeviceUUID} from "@/utils/deviceUtils";
 
 // Define the shape of the context
 interface AuthContextType {
   isAuthenticated: boolean;
   user: UserInfo | null;
   companyInfo?: CompanyInfoResponse | null;
-  login: (password: string, warehouse?: string) => Promise<void>;
+  login: (password: string, warehouse?: string, newDeviceName?: string) => Promise<void>;
   logout: () => void;
   isLoading: boolean; // Add loading state
 }
@@ -23,7 +24,7 @@ interface AuthContextType {
 const AuthContextDefaultValues: AuthContextType = {
   isAuthenticated: false,
   user: null,
-  login: async (password: string, warehouse?: string) => {
+  login: async (password: string, warehouse?: string, newDeviceName?: string) => {
     console.warn("Login method not implemented yet!");
   },
   logout: () => {
@@ -48,6 +49,12 @@ interface CompanyInfoResponse {
   companyName: string;
   serverTime: string; // ISO date string
   licenseWarnings: LicenseWarning[]; // Array of warning messages
+}
+
+interface LoginRequest {
+  password: string;
+  warehouse?: string;
+  newDeviceName?: string;
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
@@ -111,9 +118,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   }, []);
 
 
-  const login = async (password: string, warehouse?: string) => {
+  const login = async (password: string, warehouse?: string, newDeviceName?: string) => {
     try {
-      return await loginExecute(password, warehouse);
+      return await loginExecute(password, warehouse, newDeviceName);
 
       // Set the mock user data
     } catch (error) {
@@ -126,13 +133,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     }
   };
 
-  async function loginExecute(password: string, warehouse?: string) {
-    const loginData: any = {password: password};
+  async function loginExecute(password: string, warehouse?: string, newDeviceName?: string) {
+    const loginData: LoginRequest = {password: password};
     if (warehouse) {
       loginData.warehouse = warehouse;
     }
+    if (newDeviceName) {
+      loginData.newDeviceName = newDeviceName;
+    }
 
-    const response = await axios.post(`${baseUrl}authentication/login`, loginData, {withCredentials: true});
+    const response = await axios.post(`${baseUrl}authentication/login`, loginData, {
+      withCredentials: true,
+      headers: {
+        'X-Device-UUID': getOrCreateDeviceUUID()
+      }
+    });
     if (response.status === 200) {
       const loginResponse = response.data;
 

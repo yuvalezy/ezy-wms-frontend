@@ -1,5 +1,3 @@
-import { DeviceInfo } from '../types/device';
-
 export const generateDeviceUUID = (): string => {
   // Generate cryptographically secure UUID
   if (typeof crypto !== 'undefined' && crypto.randomUUID) {

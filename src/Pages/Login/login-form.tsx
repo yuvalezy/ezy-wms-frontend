@@ -16,6 +16,8 @@ type LoginFormProps = {
   onSubmit: React.FormEventHandler<HTMLFormElement>;
   warehouses?: Warehouse[];
   requiresWarehouse?: boolean;
+  requiresDeviceName?: boolean;
+  deviceNameTaken?: boolean;
   errorMessage?: string;
   errorType?: string;
   onClearError?: () => void;
@@ -25,6 +27,8 @@ export default function LoginForm({
                                     onSubmit,
                                     warehouses,
                                     requiresWarehouse,
+                                    requiresDeviceName,
+                                    deviceNameTaken,
                                     errorMessage,
                                     errorType,
                                     onClearError
@@ -76,7 +80,7 @@ export default function LoginForm({
           </Alert>
         )}
 
-        {companyInfo?.licenseWarnings?.forEach(warning => {
+        {companyInfo?.licenseWarnings?.map(warning => {
           let translationMessage = t('licenseIssueDetected');
           const isError = warning.type === LicenseWarningType.PaymentDue;
           switch (warning.type) {
@@ -98,7 +102,6 @@ export default function LoginForm({
               </AlertDescription>
             </Alert>
           );
-
         })}
 
         <form onSubmit={onSubmit} className="space-y-5">
@@ -162,6 +165,41 @@ export default function LoginForm({
                 </select>
               </div>
             </>
+          )}
+
+          {requiresDeviceName && (
+            <>
+              <Alert className="bg-blue-50 border-blue-200">
+                <AlertCircle className="h-4 w-4 text-blue-600"/>
+                <AlertDescription className="text-blue-800">
+                  {t('newDeviceDetected') || 'New device detected. Please provide a name for this device to continue.'}
+                </AlertDescription>
+              </Alert>
+
+              <div>
+                <label htmlFor="newDeviceName" className="block text-sm font-medium text-gray-700 mb-1">
+                  {t('deviceName') || 'Device Name'}
+                </label>
+                <input
+                  type="text"
+                  name="newDeviceName"
+                  id="newDeviceName"
+                  required
+                  maxLength={100}
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder={t('enterDeviceName') || 'Enter a device name (max 100 characters)'}
+                />
+              </div>
+            </>
+          )}
+
+          {deviceNameTaken && (
+            <Alert className="bg-red-50 border-red-200">
+              <AlertCircle className="h-4 w-4 text-red-600"/>
+              <AlertDescription className="text-red-800">
+                {t('deviceNameTaken') || 'This device name is already taken. Please choose a different name.'}
+              </AlertDescription>
+            </Alert>
           )}
 
           <button

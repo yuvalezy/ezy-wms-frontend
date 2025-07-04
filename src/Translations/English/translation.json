@@ -454,5 +454,9 @@
     "paymentDue": "Payment is due. Please contact support.",
     "paymentStatusUnknown": "Payment status unknown. System will be disabled in {0} days.",
     "accountExpiresIn": "Account expires in {0} days. Please renew."
-  }
+  },
+  "newDeviceDetected": "New device detected. Please provide a name for this device to continue.",
+  "deviceName": "Device Name",
+  "enterDeviceName": "Enter a device name (max 100 characters)",
+  "deviceNameTaken": "This device name is already taken. Please choose a different name."
 }
