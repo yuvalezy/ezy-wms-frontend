@@ -30,6 +30,9 @@ export default function Login() {
         const newDeviceName = data.get('newDeviceName') as string | null;
 
         setLoading(true);
+        
+        // Clear device name taken alert when submitting
+        setDeviceNameTaken(false);
 
         try {
             await login(password, warehouse || undefined, newDeviceName || undefined);
