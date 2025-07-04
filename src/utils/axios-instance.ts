@@ -1,5 +1,6 @@
 import axios from "axios";
 import { convertUTCStringsToDates } from "./date-helpers";
+import { getOrCreateDeviceUUID } from "./deviceUtils";
 
 // @ts-ignore
 export const ServerUrl = window.__env?.VITE_APP_SERVER_URL || "http://localhost:5000";
@@ -16,13 +17,18 @@ if (token) {
   axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 }
 
-// Add a request interceptor to include the token
+// Add a request interceptor to include the token and device UUID
 axiosInstance.interceptors.request.use(
   config => {
     const token = localStorage.getItem('authToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
+    // Add device UUID header for licensing
+    const deviceUUID = getOrCreateDeviceUUID();
+    config.headers['X-Device-UUID'] = deviceUUID;
+    
     return config;
   },
   error => {
