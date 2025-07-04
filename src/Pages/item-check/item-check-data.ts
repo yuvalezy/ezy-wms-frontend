@@ -36,10 +36,17 @@ export const useItemCheckData = () => {
     itemCheck(itemCode, barCode)
       .then(function (items) {
         setResult(items);
+        if (items.length === 0) {
+          toast.error(t("noDataFound"));
+          setBarcodeInput("");
+          setItemCodeInput("");
+          setResult(null);
+          setTimeout(() => barcodeInputRef.current?.focus(), 100);
+        }
       })
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
-  }, [setError, setLoading]);
+  }, [setError, setLoading, t]);
 
   function handleUpdateSubmit(itemCode: string, checkedBarcodes: string[], newBarcode: string) {
     setLoading(true);

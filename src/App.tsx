@@ -71,6 +71,7 @@ export default function App() {
                     <Route path="/login" element={<LoginPage/>}/>
                     <Route path="/unauthorized" element={<Unauthorized/>}/>
                     <Route path="/binCheck" element={<ProtectedRoute authorizations={[RoleType.GOODS_RECEIPT_SUPERVISOR, RoleType.PICKING_SUPERVISOR, RoleType.COUNTING_SUPERVISOR, RoleType.TRANSFER_SUPERVISOR]} element={<BinCheck/>}/>}/>
+                    <Route path="/binCheck/:binEntry/:binCode" element={<ProtectedRoute authorizations={[RoleType.GOODS_RECEIPT_SUPERVISOR, RoleType.PICKING_SUPERVISOR, RoleType.COUNTING_SUPERVISOR, RoleType.TRANSFER_SUPERVISOR]} element={<BinCheck/>}/>}/>
                     <Route path="/itemCheck" element={<ProtectedRoute authorizations={[RoleType.GOODS_RECEIPT_SUPERVISOR, RoleType.PICKING_SUPERVISOR, RoleType.COUNTING_SUPERVISOR, RoleType.TRANSFER_SUPERVISOR]} element={<ItemCheck/>}/>}/>
                     <Route path="/itemCheck/:code" element={<ProtectedRoute authorizations={[RoleType.GOODS_RECEIPT_SUPERVISOR, RoleType.PICKING_SUPERVISOR, RoleType.COUNTING_SUPERVISOR, RoleType.TRANSFER_SUPERVISOR]} element={<ItemCheck/>}/>}/>
                     <Route path="/packageCheck" element={<ProtectedRoute authorizations={[RoleType.GOODS_RECEIPT_SUPERVISOR, RoleType.PICKING_SUPERVISOR, RoleType.COUNTING_SUPERVISOR, RoleType.TRANSFER_SUPERVISOR, RoleType.PACKAGE_MANAGEMENT, RoleType.PACKAGE_MANAGEMENT_SUPERVISOR]} element={<PackageCheck/>}/>}/>

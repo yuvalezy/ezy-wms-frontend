@@ -1,6 +1,6 @@
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "@/components/ThemeContext";
-import {useRef, useState} from "react";
+import {useRef, useState, useCallback} from "react";
 import {BinLocationScannerRef} from "@/components/BinLocationScanner";
 import {useAuth} from "@/components/AppContext";
 import {binCheck, BinContentResponse} from "@/pages/BinCheck/Bins";
@@ -16,7 +16,7 @@ export const useBinCheckData = () => {
   const [binContent, setBinContent] = useState<BinContentResponse[] | null>(null);
   const [bin, setBin] = useState<BinLocation | null>(null);
 
-  function onScan(bin: BinLocation) {
+  const onScan = useCallback((bin: BinLocation) => {
     setBin(bin);
     try {
       binCheck(bin.entry)
@@ -27,7 +27,17 @@ export const useBinCheckData = () => {
       setError(e);
       setLoading(false);
     }
-  }
+  }, [setError, setLoading]);
+
+  const executeBinCheck = useCallback((binEntry: string, binCode: string) => {
+    // Create a BinLocation object from the parameters
+    const binLocation: BinLocation = {
+      code: binCode,
+      entry: binEntry,
+      description: binCode
+    };
+    onScan(binLocation);
+  }, [onScan]);
 
   function onBinClear() {
     setBin(null);
@@ -85,6 +95,7 @@ export const useBinCheckData = () => {
     excelData,
     excelHeaders,
     handleExportExcel,
-    bin
+    bin,
+    executeBinCheck
   }
 }

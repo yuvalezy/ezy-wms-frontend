@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import BinLocationScanner from "../../components/BinLocationScanner";
@@ -7,9 +7,13 @@ import {AlertTriangle} from 'lucide-react';
 import {useBinCheckData} from "@/pages/BinCheck/bin-check-data";
 import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage} from "@/components/ui/breadcrumb";
 import {BinCheckResult} from "@/pages/BinCheck/BinCheckResult";
+import {useParams, useNavigate} from "react-router-dom";
 
 export function BinCheck() {
   const {t} = useTranslation();
+  const { binEntry, binCode } = useParams();
+  const navigate = useNavigate();
+  
   const {
     bin,
     binRef,
@@ -17,8 +21,24 @@ export function BinCheck() {
     binContent,
     onScan,
     onBinClear,
-    handleExportExcel
+    handleExportExcel,
+    executeBinCheck
   } = useBinCheckData();
+
+  useEffect(() => {
+    if (binEntry && binCode && !binContent) {
+      executeBinCheck(binEntry, binCode);
+    }
+  }, [binEntry, binCode, executeBinCheck, binContent]);
+
+  const handleClearAndNavigate = () => {
+    onBinClear();
+    navigate('/binCheck');
+  };
+
+  const handleScanAndNavigate = (binLocation: any) => {
+    navigate(`/binCheck/${binLocation.entry}/${binLocation.code}`);
+  };
 
   if (!user?.binLocations) return (
     <ContentTheme title={t("binCheck")}>
@@ -32,13 +52,13 @@ export function BinCheck() {
   )
 
   return <ContentTheme title={t("binCheck")}
-                       titleOnClick={binContent != null ? () => onBinClear() : undefined}
+                       titleOnClick={binContent != null ? handleClearAndNavigate : undefined}
                        titleBreadcrumbs={binContent ? [{label: bin!.code}] : undefined}
                        onExportExcel={binContent != null ? handleExportExcel : undefined}
   >
     <div className="space-y-4">
       {binContent && <BinCheckResult content={binContent}/>}
-      {!bin && <BinLocationScanner ref={binRef} onScan={onScan} onClear={onBinClear}/>}
+      {!bin && <BinLocationScanner ref={binRef} onScan={handleScanAndNavigate} onClear={handleClearAndNavigate}/>}
     </div>
   </ContentTheme>
 }
