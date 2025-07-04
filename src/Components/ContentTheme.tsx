@@ -2,7 +2,7 @@ import React from "react";
 import {SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
 import {AppSidebar} from "@/components/AppSidebar";
 import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, Button} from "@/components/ui";
-import {Filter, Plus} from "lucide-react";
+import {Filter, Plus, FileSpreadsheet} from "lucide-react";
 import {useTranslation} from "react-i18next";
 
 interface ContentThemeProps {
@@ -84,11 +84,7 @@ const ContentTheme: React.FC<ContentThemeProps> = (
                   className="h-10 w-10 flex items-center justify-center rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-600"
                   aria-label="Export to Excel"
                 >
-                  <img
-                    src="/images/excel.jpg"
-                    alt=""
-                    className="h-6 w-6 object-contain"
-                  />
+                  <FileSpreadsheet className="h-5 w-5 text-green-600"/>
                 </button>
               )}
             </div>

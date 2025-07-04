@@ -44,10 +44,13 @@ import {useOfflineDetection} from "./hooks/useOfflineDetection";
 import {DeviceProvider} from "./contexts/DeviceContext";
 import {LicenseProvider} from "./contexts/LicenseContext";
 import {CloudSyncProvider} from "./contexts/CloudSyncContext";
+import {AccessControlProvider} from "./contexts/AccessControlContext";
 import {DeviceRegistration} from "./components/license/DeviceRegistration";
 import {DeviceStatusCard} from "./components/license/DeviceStatusCard";
 import {LicenseStatusDashboard} from "./components/license/LicenseStatusDashboard";
 import {CloudSyncDashboard} from "./components/license/CloudSyncDashboard";
+import {LicenseErrorHandler} from "./components/access/LicenseErrorHandler";
+import {ACCESS_CONTROL_CONFIG} from "./config/accessControlConfig";
 
 export default function App() {
   const {user} = useAuth();
@@ -75,11 +78,13 @@ export default function App() {
     <DeviceProvider>
       <LicenseProvider>
         <CloudSyncProvider>
-          <AuthProvider>
-        <BrowserRouter>
-          <Toaster closeButton richColors={true}/>
-          {isOffline && <OfflineOverlay/>}
-          <Routes>
+          <AccessControlProvider config={ACCESS_CONTROL_CONFIG}>
+            <AuthProvider>
+          <BrowserRouter>
+            <Toaster closeButton richColors={true}/>
+            {isOffline && <OfflineOverlay/>}
+            <LicenseErrorHandler className="fixed top-0 left-0 right-0 z-50 p-4" />
+            <Routes>
             <Route path="/login" element={<LoginPage/>}/>
             <Route path="/unauthorized" element={<Unauthorized/>}/>
             <Route path="/binCheck" element={<ProtectedRoute
@@ -207,9 +212,10 @@ export default function App() {
             <Route path="/sync/status" element={<CloudSyncDashboard/>}/>
             <Route path="/" element={<ProtectedRoute element={<HomePage/>}/>}/>
             <Route path="*" element={<NotFound/>}/>
-          </Routes>
-        </BrowserRouter>
-          </AuthProvider>
+            </Routes>
+          </BrowserRouter>
+            </AuthProvider>
+          </AccessControlProvider>
         </CloudSyncProvider>
       </LicenseProvider>
     </DeviceProvider>
