@@ -168,8 +168,8 @@ const DeviceDetails: React.FC<DeviceDetailsProps> = ({device, open, onOpenChange
                     <p className="text-center py-8 text-muted-foreground">{t('noAuditHistory')}</p>
                   ) : (
                     <div className="space-y-4">
-                      {auditHistory.map((entry) => (
-                        <div key={entry.id} className="flex gap-4 pb-4 border-b last:border-0">
+                      {auditHistory.map((entry, index) => (
+                        <div key={`${entry.changedAt}-${index}`} className="flex gap-4 pb-4 border-b last:border-0">
                           <div className="flex-shrink-0">
                             <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                               <Clock className="w-4 h-4 text-primary"/>
@@ -177,33 +177,28 @@ const DeviceDetails: React.FC<DeviceDetailsProps> = ({device, open, onOpenChange
                           </div>
                           <div className="flex-1 space-y-1">
                             <div className="flex items-center gap-2">
-                              <p className="font-medium text-sm">{entry.action}</p>
+                              <p className="font-medium text-sm">Status Changed</p>
                               <span className="text-xs text-muted-foreground">
-                                {formatDate(entry.timestamp)}
+                                {formatDate(entry.changedAt)}
                               </span>
                             </div>
                             <div className="flex items-center gap-2 text-sm text-muted-foreground">
                               <User className="w-3 h-3"/>
-                              <span>{entry.userName}</span>
+                              <span>{entry.changedByUser}</span>
                             </div>
-                            {entry.details && (
-                              <p className="text-sm">{entry.details}</p>
-                            )}
-                            {(entry.oldValue || entry.newValue) && (
-                              <div className="text-sm">
-                                {entry.oldValue && (
-                                  <span className="text-muted-foreground">
-                                    {t('from')}: <span className="font-mono">{entry.oldValue}</span>
-                                  </span>
-                                )}
-                                {entry.oldValue && entry.newValue && ' → '}
-                                {entry.newValue && (
-                                  <span className="text-muted-foreground">
-                                    {t('to')}: <span className="font-mono">{entry.newValue}</span>
-                                  </span>
-                                )}
-                              </div>
-                            )}
+                            <div className="text-sm">
+                              <span className="text-muted-foreground font-medium">{t('reason')}: </span>
+                              <span>{entry.reason || t('noReasonProvided')}</span>
+                            </div>
+                            <div className="text-sm">
+                              <span className="text-muted-foreground">
+                                {t('from')}: <span className="font-mono">{entry.previousStatus}</span>
+                              </span>
+                              {' → '}
+                              <span className="text-muted-foreground">
+                                {t('to')}: <span className="font-mono">{entry.newStatus}</span>
+                              </span>
+                            </div>
                           </div>
                         </div>
                       ))}

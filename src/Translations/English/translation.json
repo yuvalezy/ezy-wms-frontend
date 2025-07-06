@@ -493,5 +493,6 @@
   "noDevicesFound": "No devices found",
   "from": "From",
   "to": "To",
-  "deviceNameAlreadyInUse": "New device name is used in another device"
+  "deviceNameAlreadyInUse": "New device name is used in another device",
+  "noReasonProvided": "No reason provided"
 }

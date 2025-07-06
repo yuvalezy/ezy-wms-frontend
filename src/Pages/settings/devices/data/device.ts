@@ -13,13 +13,11 @@ export interface DeviceFilters {
 }
 
 export interface DeviceAuditEntry {
-  id: string;
-  timestamp: string;
-  action: string;
-  userName: string;
-  details: string;
-  oldValue?: string;
-  newValue?: string;
+  previousStatus: string;
+  newStatus: string;
+  reason: string | null;
+  changedAt: string;
+  changedByUser: string;
 }
 
 export interface UpdateDeviceStatusRequest {
