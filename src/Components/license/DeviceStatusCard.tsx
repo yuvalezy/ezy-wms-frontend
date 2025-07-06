@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent, Button } from '@/components/ui';
-import { useDevice } from '../../contexts/DeviceContext';
-import { DeviceStatus } from '../../types/device';
+import { useDevice } from '@/contexts/DeviceContext';
+import { DeviceStatus } from '@/types/device';
 
 export const DeviceStatusCard: React.FC = () => {
   const { deviceInfo, refreshDeviceInfo, isLoading } = useDevice();

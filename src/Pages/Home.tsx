@@ -7,10 +7,8 @@ import {KpiBox} from "@/components/KpiBox";
 import {getKpiItems, KpiItem} from "@/assets/KpiData";
 import {HomeInfo} from "@/assets/HomeInfo";
 import {axiosInstance} from "@/utils/axios-instance";
-import {FeatureGuard} from "../components/access";
-import {useLicenseStatus} from "../hooks/useLicenseStatus";
-
-
+import {FeatureGuard} from "@/components/access";
+import {useLicenseStatus} from "@/hooks/useLicenseStatus";
 
 export default function Home() {
   const {user} = useAuth();

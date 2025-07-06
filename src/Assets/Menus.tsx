@@ -3,21 +3,22 @@ import {useMemo} from 'react'; // Import useMemo
 import {RoleType} from "./RoleType";
 import {useAuth} from "@/components";
 import {
-  CheckCircle, // complete
-  Boxes, // dimension
-  ClipboardList, // cause
-  BarChart3, // kpi-managing-my-area
-  TrendingUp, // manager-insight
-  ShoppingCart, // cart-2
-  Package, // product
-  Factory, // factory
-  Move, // move
-  Truck, // journey-depart
-  HelpCircle, // request (fallback/generic)
-  Users, // users
-  Shield, // authorization-groups
-  PackageCheck, PackageCheckIcon, // Packages
+  BarChart3,
+  Boxes,
+  CheckCircle,
+  ClipboardList,
+  Factory,
+  Move,
+  Package,
+  PackageCheckIcon,
+  Shield,
+  ShoppingCart,
+  Smartphone,
+  TrendingUp,
+  Truck,
+  Users,
 } from 'lucide-react';
+import {DeviceStatus} from "@/pages/settings/devices/data/device";
 
 export interface MenuItem {
   Link: string;
@@ -181,13 +182,24 @@ export function useMenus() {
       Icon: Shield,
       Color: "text-gray-600",
     },
+    {
+      Link: "/settings/devices",
+      Text: t('devices'),
+      SuperUser: true,
+      Icon: Smartphone,
+      Color: "text-gray-600",
+    },
   ];
 
   const GetMenus = (authorizations: RoleType[] | undefined, superUser: boolean | undefined) => {
+    const isDeviceActive = user?.deviceStatus === DeviceStatus.Active;
     if (authorizations !== undefined) {
       applySettings(authorizations);
     }
     return MenuItems.filter(item => {
+      if (!isDeviceActive && !item.Link.startsWith('/settings')) {
+        return false;
+      }
       if (item.Authorization === undefined && item.Authorizations === undefined && user?.superUser) {
         return true;
       }
@@ -208,7 +220,6 @@ export function useMenus() {
       return false;
     });
   };
-
   function applySettings(authorizations: RoleType[]) {
     if (user?.settings?.goodsReceiptCreateSupervisorRequired) {
       return;

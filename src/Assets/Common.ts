@@ -2,6 +2,7 @@ import {RoleType} from "./RoleType";
 import {AlertSeverity} from "@/components";
 import {Employee} from "@/assets/Data";
 import { CustomFieldType } from "./CustomFieldType";
+import {DeviceStatus} from "@/pages/settings/devices/data/device";
 export interface BaseEntity {
     id: string;
     createdAt?: Date;
@@ -46,6 +47,7 @@ export interface UserInfo {
     settings: ApplicationSettings;
     customFields: Record<string, CustomField[]>;
     superUser: boolean;
+    deviceStatus?: DeviceStatus;
 }
 
 export interface CustomField {

@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios';
-import { DeviceRegistrationRequest, DeviceRegistrationResponse, DeviceValidationResponse, DeviceStatus } from '../types/device';
+import {  DeviceValidationResponse, DeviceStatus } from '../types/device';
 
 export class DeviceService {
   private axiosInstance: AxiosInstance;
@@ -8,14 +8,6 @@ export class DeviceService {
     this.axiosInstance = axiosInstance;
   }
 
-  async registerDevice(request: DeviceRegistrationRequest): Promise<DeviceRegistrationResponse> {
-    try {
-      const response = await this.axiosInstance.post('/api/devices/register', request);
-      return response.data;
-    } catch (error: any) {
-      throw new Error(`Device registration failed: ${error.response?.data?.message || error.message}`);
-    }
-  }
 
   async getDeviceStatus(uuid: string): Promise<DeviceStatus> {
     try {
@@ -40,12 +32,4 @@ export class DeviceService {
     }
   }
 
-  async refreshDeviceInfo(uuid: string): Promise<DeviceRegistrationResponse['device']> {
-    try {
-      const response = await this.axiosInstance.get(`/api/devices/${uuid}`);
-      return response.data;
-    } catch (error: any) {
-      throw new Error(`Failed to refresh device info: ${error.response?.data?.message || error.message}`);
-    }
-  }
 }

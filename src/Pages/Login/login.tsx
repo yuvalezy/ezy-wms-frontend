@@ -1,9 +1,9 @@
 import * as React from 'react';
-import {useAuth} from "@/components";
-import {useState} from "react";
-import {Navigate} from "react-router-dom";
+import {useState} from 'react';
+import {useAuth, useThemeContext} from "@/components";
+import {useNavigate} from "react-router-dom";
 import LoginForm from "./login-form";
-import {useThemeContext} from "@/components";
+import {DeviceStatus} from "@/pages/settings/devices/data/device";
 
 
 type Warehouse = {
@@ -12,7 +12,6 @@ type Warehouse = {
 };
 
 export default function Login() {
-    const [redirectToHome, setRedirectToHome] = useState(false);
     const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
     const [requiresWarehouse, setRequiresWarehouse] = useState(false);
     const [requiresDeviceName, setRequiresDeviceName] = useState(false);
@@ -20,6 +19,7 @@ export default function Login() {
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [errorType, setErrorType] = useState<string>('');
     const {setLoading} = useThemeContext();
+    const navigate = useNavigate();
 
     const {login} = useAuth();
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -35,8 +35,12 @@ export default function Login() {
         setDeviceNameTaken(false);
 
         try {
-            await login(password, warehouse || undefined, newDeviceName || undefined);
-            setRedirectToHome(true);
+            const response = await login(password, warehouse || undefined, newDeviceName || undefined);
+            if (response.deviceStatus === DeviceStatus.Active) {
+                navigate('/');
+            } else if (response.superUser) {
+                navigate('/settings/devices');
+            }
         } catch (error: any) {
             const errorData = error?.response?.data;
             const errorCode = errorData?.error;
@@ -82,11 +86,7 @@ export default function Login() {
         }
     };
 
-    if (redirectToHome) {
-        return <Navigate to="/"/>;
-    }
-
-    return (<LoginForm 
+    return (<LoginForm
         onSubmit={handleSubmit} 
         warehouses={warehouses} 
         requiresWarehouse={requiresWarehouse}

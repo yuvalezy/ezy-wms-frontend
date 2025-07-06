@@ -10,13 +10,15 @@ import {UserInfo} from "@/assets";
 import {axiosInstance, ServerUrl} from "@/utils/axios-instance";
 import {LicenseWarning} from "@/types/license";
 import {getOrCreateDeviceUUID} from "@/utils/deviceUtils";
+import {DeviceStatus} from "@/pages/settings/devices/data/device";
+import DeviceStatusForm from "@/pages/settings/devices/components/device-status-form";
 
 // Define the shape of the context
 interface AuthContextType {
   isAuthenticated: boolean;
   user: UserInfo | null;
   companyInfo?: CompanyInfoResponse | null;
-  login: (password: string, warehouse?: string, newDeviceName?: string) => Promise<void>;
+  login: (password: string, warehouse?: string, newDeviceName?: string) => Promise<{deviceStatus?: DeviceStatus, superUser: boolean}>;
   logout: () => void;
   isLoading: boolean; // Add loading state
 }
@@ -26,6 +28,7 @@ const AuthContextDefaultValues: AuthContextType = {
   user: null,
   login: async (password: string, warehouse?: string, newDeviceName?: string) => {
     console.warn("Login method not implemented yet!");
+    return {deviceStatus: undefined, superUser: false}
   },
   logout: () => {
   },
@@ -163,11 +166,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       const userInfoResponse = await axiosInstance.get<UserInfo>(`general/userInfo`);
 
       let data = userInfoResponse.data;
-      console.log(data);
       if (data) {
+        if (!data.superUser && data.deviceStatus !== DeviceStatus.Active) {
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('tokenExpiration');
+          throw new Error("Device is not active")
+        }
         setUser(data);
+        return {deviceStatus: data?.deviceStatus, superUser: data?.superUser??false};
       }
     }
+    return {deviceStatus: DeviceStatus.Disabled, superUser: false};
   }
 
   const logout = async () => {

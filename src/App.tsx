@@ -45,12 +45,9 @@ import {DeviceProvider} from "./contexts/DeviceContext";
 import {LicenseProvider} from "./contexts/LicenseContext";
 import {CloudSyncProvider} from "./contexts/CloudSyncContext";
 import {AccessControlProvider} from "./contexts/AccessControlContext";
-import {DeviceRegistration} from "./components/license/DeviceRegistration";
-import {DeviceStatusCard} from "./components/license/DeviceStatusCard";
-import {LicenseStatusDashboard} from "./components/license/LicenseStatusDashboard";
-import {CloudSyncDashboard} from "./components/license/CloudSyncDashboard";
 import {LicenseErrorHandler} from "./components/access/LicenseErrorHandler";
 import {ACCESS_CONTROL_CONFIG} from "./config/accessControlConfig";
+import DevicesList from "@/pages/settings/devices/devices-list";
 
 export default function App() {
   const {user} = useAuth();
@@ -201,15 +198,16 @@ export default function App() {
                    element={<ProtectedRoute superUser element={<AuthorizationGroupForm/>}/>}/>
             <Route path="/settings/authorizationGroups/:id"
                    element={<ProtectedRoute superUser element={<AuthorizationGroupForm/>}/>}/>
-            {/* Device Management Routes */}
-            <Route path="/device/register" element={<DeviceRegistration/>}/>
-            <Route path="/device/status" element={<DeviceStatusCard/>}/>
-            {/* License Management Routes */}
-            <Route path="/license" element={<LicenseStatusDashboard/>}/>
-            <Route path="/license/status" element={<LicenseStatusDashboard/>}/>
-            {/* Cloud Sync Management Routes */}
-            <Route path="/sync" element={<CloudSyncDashboard/>}/>
-            <Route path="/sync/status" element={<CloudSyncDashboard/>}/>
+            <Route path="/settings/devices" element={<ProtectedRoute superUser element={<DevicesList/>}/>}/>
+            {/*/!* Device Management Routes *!/*/}
+            {/*<Route path="/device/register" element={<DeviceRegistration/>}/>*/}
+            {/*<Route path="/device/status" element={<DeviceStatusCard/>}/>*/}
+            {/*/!* License Management Routes *!/*/}
+            {/*<Route path="/license" element={<LicenseStatusDashboard/>}/>*/}
+            {/*<Route path="/license/status" element={<LicenseStatusDashboard/>}/>*/}
+            {/*/!* Cloud Sync Management Routes *!/*/}
+            {/*<Route path="/sync" element={<CloudSyncDashboard/>}/>*/}
+            {/*<Route path="/sync/status" element={<CloudSyncDashboard/>}/>*/}
             <Route path="/" element={<ProtectedRoute element={<HomePage/>}/>}/>
             <Route path="*" element={<NotFound/>}/>
             </Routes>
