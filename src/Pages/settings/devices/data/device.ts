@@ -33,7 +33,6 @@ export interface UpdateDeviceNameRequest {
 
 export enum DeviceStatus {
   Active = "Active",
-  Inactive = "Inactive",
-  Suspended = "Suspended",
-  Blocked = "Blocked"
+  Inactive = "Inactive", 
+  Disabled = "Disabled"
 }

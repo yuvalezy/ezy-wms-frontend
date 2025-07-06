@@ -4,7 +4,7 @@ import {Button} from "@/components/ui/button";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
-import {AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle} from "@/components/ui/alert-dialog";
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import {Clock, User, Activity, Smartphone, Calendar} from "lucide-react";
 import {useThemeContext} from "@/components";
 import {Device, DeviceAuditEntry} from "../data/device";
@@ -77,11 +77,11 @@ const DeviceDetails: React.FC<DeviceDetailsProps> = ({device, open, onOpenChange
 
   return (
     <>
-      <AlertDialog open={open} onOpenChange={onOpenChange}>
-        <AlertDialogContent className="max-w-4xl">
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('deviceDetails')}</AlertDialogTitle>
-          </AlertDialogHeader>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>{t('deviceDetails')}</DialogTitle>
+          </DialogHeader>
 
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="grid w-full grid-cols-2">
@@ -213,8 +213,8 @@ const DeviceDetails: React.FC<DeviceDetailsProps> = ({device, open, onOpenChange
               </Card>
             </TabsContent>
           </Tabs>
-        </AlertDialogContent>
-      </AlertDialog>
+        </DialogContent>
+      </Dialog>
 
       {showStatusForm && (
         <DeviceStatusForm

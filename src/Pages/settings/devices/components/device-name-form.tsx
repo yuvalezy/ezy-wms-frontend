@@ -1,10 +1,11 @@
 import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useForm} from "react-hook-form";
+import axios from "axios";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
-import {AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle} from "@/components/ui/alert-dialog";
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import {Save, X} from "lucide-react";
 import {useThemeContext} from "@/components";
 import {Device, UpdateDeviceNameRequest} from "../data/device";
@@ -37,7 +38,14 @@ const DeviceNameForm: React.FC<DeviceNameFormProps> = ({device, open, onOpenChan
       
       onClose(true);
     } catch (error) {
-      setError(`Failed to update device name: ${error}`);
+      // Check if it's a 400 error with device name already in use message
+      if (axios.isAxiosError(error) && 
+          error.response?.status === 400 && 
+          error.response?.data?.error === "Device name already in use") {
+        setError(t('deviceNameAlreadyInUse'));
+      } else {
+        setError(`Failed to update device name: ${error}`);
+      }
     } finally {
       setIsSubmitting(false);
       setLoading(false);
@@ -49,11 +57,11 @@ const DeviceNameForm: React.FC<DeviceNameFormProps> = ({device, open, onOpenChan
   };
 
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{t('changeDeviceName')}</AlertDialogTitle>
-        </AlertDialogHeader>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{t('changeDeviceName')}</DialogTitle>
+        </DialogHeader>
         
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -117,8 +125,8 @@ const DeviceNameForm: React.FC<DeviceNameFormProps> = ({device, open, onOpenChan
             </div>
           </form>
         </Form>
-      </AlertDialogContent>
-    </AlertDialog>
+      </DialogContent>
+    </Dialog>
   );
 };
 

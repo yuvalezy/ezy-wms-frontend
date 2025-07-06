@@ -491,5 +491,6 @@
   "allStatuses": "Todos los Estados",
   "noDevicesFound": "No se encontraron dispositivos",
   "from": "De",
-  "to": "A"
+  "to": "A",
+  "deviceNameAlreadyInUse": "El nuevo nombre del dispositivo ya está en uso en otro dispositivo"
 }

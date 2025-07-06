@@ -5,7 +5,7 @@ import {Button} from "@/components/ui/button";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Textarea} from "@/components/ui/textarea";
-import {AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle} from "@/components/ui/alert-dialog";
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import {Save, X} from "lucide-react";
 import {useThemeContext} from "@/components";
 import {Device, UpdateDeviceStatusRequest, DeviceStatus} from "../data/device";
@@ -53,11 +53,11 @@ const DeviceStatusForm: React.FC<DeviceStatusFormProps> = ({device, open, onOpen
   const availableStatuses = Object.values(DeviceStatus).filter(status => status !== device.status);
 
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{t('updateDeviceStatus')}</AlertDialogTitle>
-        </AlertDialogHeader>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{t('updateDeviceStatus')}</DialogTitle>
+        </DialogHeader>
         
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -151,8 +151,8 @@ const DeviceStatusForm: React.FC<DeviceStatusFormProps> = ({device, open, onOpen
             </div>
           </form>
         </Form>
-      </AlertDialogContent>
-    </AlertDialog>
+      </DialogContent>
+    </Dialog>
   );
 };
 
