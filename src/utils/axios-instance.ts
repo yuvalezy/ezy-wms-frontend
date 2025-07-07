@@ -3,7 +3,7 @@ import { convertUTCStringsToDates } from "./date-helpers";
 import { getOrCreateDeviceUUID } from "./deviceUtils";
 
 // @ts-ignore
-export const ServerUrl = window.__env?.VITE_APP_SERVER_URL || "http://localhost:5000";
+export const ServerUrl = window.__env?.VITE_APP_SERVER_URL || import.meta.env.VITE_APP_SERVER_URL || "http://localhost:5000";
 export const None = "|none|";
 
 export const axiosInstance = axios.create({

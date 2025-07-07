@@ -42,6 +42,16 @@ export default function Login() {
                 navigate('/settings/devices');
             }
         } catch (error: any) {
+            console.debug('Login: Full error object:', error);
+            
+            // Check for network/CORS errors
+            if (!error.response && error.message) {
+                console.error('Login: Network/CORS error:', error.message);
+                setErrorMessage(`Network error: ${error.message}. Check console for details.`);
+                setErrorType('network_error');
+                return;
+            }
+            
             const errorData = error?.response?.data;
             const errorCode = errorData?.error;
             
