@@ -6,9 +6,16 @@ import { DeviceStatus } from '@/pages/settings/devices/data/device';
 interface DeviceStatusBannerProps {
   deviceStatus: DeviceStatus;
   onClose: () => void;
+  showBorder?: boolean;
+  showCloseButton?: boolean;
 }
 
-const DeviceStatusBanner: React.FC<DeviceStatusBannerProps> = ({ deviceStatus, onClose }) => {
+const DeviceStatusBanner: React.FC<DeviceStatusBannerProps> = ({ 
+  deviceStatus, 
+  onClose, 
+  showBorder = false, 
+  showCloseButton = true 
+}) => {
   const { t } = useTranslation();
 
   const getBannerConfig = (status: DeviceStatus) => {
@@ -40,21 +47,27 @@ const DeviceStatusBanner: React.FC<DeviceStatusBannerProps> = ({ deviceStatus, o
     return null;
   }
 
+  const containerClasses = showBorder 
+    ? `flex items-center ${showCloseButton ? 'justify-between' : 'justify-start'} p-4 ${config.bgColor} border ${config.borderColor} rounded-lg w-full`
+    : `flex items-center ${showCloseButton ? 'justify-between' : 'justify-start'} p-4 ${config.bgColor} w-full`;
+
   return (
-    <div className={`flex items-center justify-between p-4 ${config.bgColor} w-full`} style={{ left: '0px', right: '0px' }}>
+    <div className={containerClasses} style={showBorder ? {} : { left: '0px', right: '0px' }}>
       <div className="flex items-center">
         <AlertTriangle className={`h-5 w-5 ${config.iconColor} mr-3 flex-shrink-0`} />
         <p className={`text-sm font-medium ${config.textColor}`}>
           {config.message}
         </p>
       </div>
-      <button
-        onClick={onClose}
-        className={`${config.textColor} hover:bg-opacity-20 hover:bg-gray-500 rounded-full p-1 transition-colors`}
-        aria-label={t('close', 'Close')}
-      >
-        <X className="h-4 w-4" />
-      </button>
+      {showCloseButton && (
+        <button
+          onClick={onClose}
+          className={`${config.textColor} hover:bg-opacity-20 hover:bg-gray-500 rounded-full p-1 transition-colors`}
+          aria-label={t('close', 'Close')}
+        >
+          <X className="h-4 w-4" />
+        </button>
+      )}
     </div>
   );
 };

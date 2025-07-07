@@ -6,6 +6,8 @@ import {Alert, AlertDescription} from "@/components/ui/alert";
 import {AlertCircle} from "lucide-react";
 import {LicenseWarningType} from "@/types/license";
 import {StringFormat} from "@/assets";
+import DeviceStatusBanner from "@/components/DeviceStatusBanner";
+import {DeviceStatus} from "@/pages/settings/devices/data/device";
 
 type Warehouse = {
   id: string;
@@ -36,6 +38,10 @@ export default function LoginForm({
   const {t, i18n} = useTranslation();
   const cookies = new Cookies();
   const {companyInfo} = useAuth();
+
+  const shouldShowDeviceStatusBanner = () => {
+    return companyInfo?.deviceStatus && companyInfo.deviceStatus !== DeviceStatus.Active;
+  };
 
   useEffect(() => {
     const savedLang = cookies.get('userLanguage');
@@ -209,6 +215,18 @@ export default function LoginForm({
             {t('enter') || 'Enter'}
           </button>
         </form>
+
+        {/* Device Status Banner */}
+        {shouldShowDeviceStatusBanner() && (
+          <div className="mt-4">
+            <DeviceStatusBanner
+              deviceStatus={companyInfo!.deviceStatus!}
+              onClose={() => {}} // No-op since this is just informational on login
+              showBorder={true}
+              showCloseButton={false}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

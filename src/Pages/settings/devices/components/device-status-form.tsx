@@ -8,8 +8,10 @@ import {Textarea} from "@/components/ui/textarea";
 import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import {Save, X} from "lucide-react";
 import {useThemeContext} from "@/components";
+import {useAuth} from "@/components/AppContext";
 import {Device, UpdateDeviceStatusRequest, DeviceStatus} from "../data/device";
 import {deviceService} from "../data/device-service";
+import {getOrCreateDeviceUUID} from "@/utils/deviceUtils";
 
 interface DeviceStatusFormProps {
   device: Device;
@@ -21,6 +23,7 @@ interface DeviceStatusFormProps {
 const DeviceStatusForm: React.FC<DeviceStatusFormProps> = ({device, open, onOpenChange, onClose}) => {
   const {t} = useTranslation();
   const {setLoading, setError} = useThemeContext();
+  const {updateDeviceStatus} = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<UpdateDeviceStatusRequest>({
@@ -36,6 +39,12 @@ const DeviceStatusForm: React.FC<DeviceStatusFormProps> = ({device, open, onOpen
       setLoading(true);
       
       await deviceService.updateStatus(device.deviceUuid, data);
+      
+      // Check if this is the current user's device and update the context
+      const currentDeviceUUID = getOrCreateDeviceUUID();
+      if (device.deviceUuid === currentDeviceUUID) {
+        updateDeviceStatus(data.status);
+      }
       
       onClose(true);
     } catch (error) {

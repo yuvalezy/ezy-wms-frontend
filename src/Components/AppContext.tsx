@@ -18,9 +18,13 @@ interface AuthContextType {
   isAuthenticated: boolean;
   user: UserInfo | null;
   companyInfo?: CompanyInfoResponse | null;
-  login: (password: string, warehouse?: string, newDeviceName?: string) => Promise<{deviceStatus?: DeviceStatus, superUser: boolean}>;
+  login: (password: string, warehouse?: string, newDeviceName?: string) => Promise<{
+    deviceStatus?: DeviceStatus,
+    superUser: boolean
+  }>;
   logout: () => void;
   isLoading: boolean; // Add loading state
+  updateDeviceStatus: (newStatus: DeviceStatus) => void;
 }
 
 const AuthContextDefaultValues: AuthContextType = {
@@ -33,6 +37,9 @@ const AuthContextDefaultValues: AuthContextType = {
   logout: () => {
   },
   isLoading: true, // Default to loading
+  updateDeviceStatus: (newStatus: DeviceStatus) => {
+    console.warn("updateDeviceStatus method not implemented yet!");
+  },
 };
 
 export const AuthContext = createContext<AuthContextType>(
@@ -52,6 +59,7 @@ interface CompanyInfoResponse {
   companyName: string;
   serverTime: string; // ISO date string
   licenseWarnings: LicenseWarning[]; // Array of warning messages
+  deviceStatus?: DeviceStatus;
 }
 
 interface LoginRequest {
@@ -69,7 +77,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   useEffect(() => {
     const fetchConfig = async () => {
       try {
-        const response = await axios.get<CompanyInfoResponse>(`${baseUrl}Authentication/CompanyInfo`);
+        const deviceUUID = getOrCreateDeviceUUID();
+        const response = await axios.get<CompanyInfoResponse>(`${baseUrl}Authentication/CompanyInfo`, {
+          headers: {
+            'X-Device-UUID': deviceUUID
+          }
+        });
         setCompanyInfo(response.data);
       } catch (error) {
         console.log(`Failed to load company name: ${error}`);
@@ -173,7 +186,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
           throw new Error("Device is not active")
         }
         setUser(data);
-        return {deviceStatus: data?.deviceStatus, superUser: data?.superUser??false};
+        return {deviceStatus: data?.deviceStatus, superUser: data?.superUser ?? false};
       }
     }
     return {deviceStatus: DeviceStatus.Disabled, superUser: false};
@@ -191,6 +204,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     setUser(null);
   };
 
+  const updateDeviceStatus = (newStatus: DeviceStatus) => {
+    if (user) {
+      setUser({
+        ...user,
+        deviceStatus: newStatus
+      });
+    }
+  };
+
   const isAuthenticated = user !== null;
 
   const value = {
@@ -200,6 +222,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     login,
     logout,
     isLoading,
+    updateDeviceStatus,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
