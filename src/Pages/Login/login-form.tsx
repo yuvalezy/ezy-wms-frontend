@@ -4,7 +4,6 @@ import {useTranslation} from 'react-i18next';
 import {useAuth} from "@/components";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import {AlertCircle} from "lucide-react";
-import {LicenseWarningType} from "@/types/license";
 import {StringFormat} from "@/assets";
 import DeviceStatusBanner from "@/components/DeviceStatusBanner";
 import {DeviceStatus} from "@/pages/settings/devices/data/device";
@@ -86,29 +85,29 @@ export default function LoginForm({
           </Alert>
         )}
 
-        {companyInfo?.licenseWarnings?.map(warning => {
-          let translationMessage = t('licenseIssueDetected');
-          const isError = warning.type === LicenseWarningType.PaymentDue;
-          switch (warning.type) {
-            case LicenseWarningType.PaymentDue:
-              translationMessage = t('paymentDue');
-              break;
-            case LicenseWarningType.PaymentStatusUnknown:
-              translationMessage = StringFormat(t('paymentStatusUnknown'), warning.data?.[0] ?? 'Unknown');
-              break;
-            case LicenseWarningType.AccountExpiresIn:
-              translationMessage = StringFormat(t('accountExpiresIn'), warning.data?.[0] ?? 'Unknown');
-              break;
-          }
-          return (
-            <Alert key={warning.type} className={isError ? 'bg-red-50 border-red-200 mb-4' : 'bg-yellow-50 border-yellow-200 mb-4'}>
-              <AlertCircle className="h-4 w-4 text-yellow-600"/>
-              <AlertDescription className="text-yellow-800">
-                {translationMessage}
-              </AlertDescription>
-            </Alert>
-          );
-        })}
+        {/*{companyInfo?.licenseWarnings?.map(warning => {*/}
+        {/*  let translationMessage = t('licenseIssueDetected');*/}
+        {/*  const isError = warning.type === LicenseWarningType.PaymentDue;*/}
+        {/*  switch (warning.type) {*/}
+        {/*    case LicenseWarningType.PaymentDue:*/}
+        {/*      translationMessage = t('paymentDue');*/}
+        {/*      break;*/}
+        {/*    case LicenseWarningType.PaymentStatusUnknown:*/}
+        {/*      translationMessage = StringFormat(t('paymentStatusUnknown'), warning.data?.[0] ?? 'Unknown');*/}
+        {/*      break;*/}
+        {/*    case LicenseWarningType.AccountExpiresIn:*/}
+        {/*      translationMessage = StringFormat(t('accountExpiresIn'), warning.data?.[0] ?? 'Unknown');*/}
+        {/*      break;*/}
+        {/*  }*/}
+        {/*  return (*/}
+        {/*    <Alert key={warning.type} className={isError ? 'bg-red-50 border-red-200 mb-4' : 'bg-yellow-50 border-yellow-200 mb-4'}>*/}
+        {/*      <AlertCircle className="h-4 w-4 text-yellow-600"/>*/}
+        {/*      <AlertDescription className="text-yellow-800">*/}
+        {/*        {translationMessage}*/}
+        {/*      </AlertDescription>*/}
+        {/*    </Alert>*/}
+        {/*  );*/}
+        {/*})}*/}
 
         <form onSubmit={onSubmit} className="space-y-5">
           <div>

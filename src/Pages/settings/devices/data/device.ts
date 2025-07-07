@@ -2,7 +2,7 @@ export interface Device {
   id: string;
   deviceUuid: string;
   deviceName: string;
-  status: string;
+  status: DeviceStatus;
   registrationDate: string;
   statusNotes?: string;
 }
@@ -21,7 +21,7 @@ export interface DeviceAuditEntry {
 }
 
 export interface UpdateDeviceStatusRequest {
-  status: string;
+  status: DeviceStatus;
   reason: string;
 }
 

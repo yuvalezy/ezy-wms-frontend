@@ -17,7 +17,7 @@ interface DeviceStatusFormProps {
   device: Device;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onClose: (shouldReload?: boolean) => void;
+  onClose: (shouldReload: boolean) => void;
 }
 
 const DeviceStatusForm: React.FC<DeviceStatusFormProps> = ({device, open, onOpenChange, onClose}) => {

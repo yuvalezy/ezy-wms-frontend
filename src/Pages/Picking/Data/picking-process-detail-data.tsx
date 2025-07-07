@@ -1,8 +1,8 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useRef, useState} from "react";
 import {BarCodeScannerRef, BinLocationScannerRef, BoxConfirmationDialogRef, useThemeContext} from "@/components";
-import {BinLocation, IsNumeric, Item, StringFormat, UnitType} from "@/assets";
-import {addItem, fetchPicking, PickingDocument, PickingDocumentDetail} from "@/pages/picking/data/picking-document";
+import {BinLocation, IsNumeric,  StringFormat, UnitType} from "@/assets";
+import {addItem, fetchPicking, PickingDocumentDetail} from "@/pages/picking/data/picking-document";
 import {toast} from "sonner";
 import {useTranslation} from "react-i18next";
 

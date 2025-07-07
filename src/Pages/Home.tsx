@@ -7,15 +7,12 @@ import {KpiBox} from "@/components/KpiBox";
 import {getKpiItems, KpiItem} from "@/assets/KpiData";
 import {HomeInfo} from "@/assets/HomeInfo";
 import {axiosInstance} from "@/utils/axios-instance";
-import {FeatureGuard} from "@/components/access";
-import {useLicenseStatus} from "@/hooks/useLicenseStatus";
 
 export default function Home() {
   const {user} = useAuth();
   const {t} = useTranslation();
   const {setLoading, setError} = useThemeContext();
   const [kpiItems, setKpiItems] = React.useState<KpiItem[]>([]);
-  const licenseStatus = useLicenseStatus();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,32 +54,7 @@ export default function Home() {
           <div className="mt-8 p-4 border-t border-gray-200 bg-gray-50">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('dashboardOverview')}</h2>
             
-            {/* License Status Banner */}
-            {licenseStatus.needsAttention && (
-              <div className="mb-4">
-                <Alert className={`border-${licenseStatus.statusColor}-200 bg-${licenseStatus.statusColor}-50`}>
-                  <AlertDescription className={`text-${licenseStatus.statusColor}-800`}>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">License Status: {licenseStatus.statusMessage}</p>
-                        {licenseStatus.gracePeriodDays && (
-                          <p className="text-sm mt-1">Grace period: {licenseStatus.gracePeriodDays} days remaining</p>
-                        )}
-                      </div>
-                      {licenseStatus.isPaymentDue && (
-                        <button 
-                          onClick={() => window.open('/billing', '_blank')}
-                          className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded text-sm"
-                        >
-                          Update Payment
-                        </button>
-                      )}
-                    </div>
-                  </AlertDescription>
-                </Alert>
-              </div>
-            )}
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-white p-4 rounded-lg border border-gray-200">
                 <div className="text-sm text-gray-600">{t('totalItems')}</div>
@@ -102,13 +74,6 @@ export default function Home() {
               </div>
             </div>
             
-            {/* Advanced Features Section - Protected by Access Control */}
-            <FeatureGuard featureName="ADVANCED_REPORTING" className="mt-6">
-              <div className="bg-white p-4 rounded-lg border border-gray-200">
-                <h3 className="text-md font-semibold text-gray-900 mb-2">Advanced Features</h3>
-                <p className="text-sm text-gray-600">Access to advanced reporting and analytics.</p>
-              </div>
-            </FeatureGuard>
           </div>
         </>
       )}
