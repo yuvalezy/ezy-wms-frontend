@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import {SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
 import {AppSidebar} from "@/components/AppSidebar";
 import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, Button} from "@/components/ui";
 import {Filter, Plus, FileSpreadsheet} from "lucide-react";
 import {useTranslation} from "react-i18next";
+import {useAuth} from "@/components/AppContext";
+import DeviceStatusBanner from "@/components/DeviceStatusBanner";
+import {DeviceStatus} from "@/pages/settings/devices/data/device";
 
 interface ContentThemeProps {
   title: string;
@@ -33,6 +36,13 @@ const ContentTheme: React.FC<ContentThemeProps> = (
     onFilterClicked,
   }) => {
   const {t} = useTranslation();
+  const { user } = useAuth();
+  const [showDeviceStatusBanner, setShowDeviceStatusBanner] = useState(true);
+
+  const shouldShowDeviceStatusBanner = () => {
+    if (!user || !user.deviceStatus || !showDeviceStatusBanner) return false;
+    return user.deviceStatus === DeviceStatus.Inactive || user.deviceStatus === DeviceStatus.Disabled;
+  };
 
   return (
     <SidebarProvider>
@@ -89,6 +99,16 @@ const ContentTheme: React.FC<ContentThemeProps> = (
               )}
             </div>
           </header>
+
+          {/* Device Status Banner */}
+          {shouldShowDeviceStatusBanner() && (
+            <div className="w-full">
+              <DeviceStatusBanner
+                deviceStatus={user!.deviceStatus!}
+                onClose={() => setShowDeviceStatusBanner(false)}
+              />
+            </div>
+          )}
 
           {/* Scrollable content */}
           <main className="flex-1 overflow-auto p-2 py-4 w-full min-w-0">

@@ -493,5 +493,9 @@
   "from": "De",
   "to": "A",
   "deviceNameAlreadyInUse": "El nuevo nombre del dispositivo ya está en uso en otro dispositivo",
-  "noReasonProvided": "No se proporcionó razón"
+  "noReasonProvided": "No se proporcionó razón",
+  "deviceStatusBanner": {
+    "inactive": "Su dispositivo está actualmente inactivo. Por favor contacte a su administrador.",
+    "disabled": "Su dispositivo ha sido deshabilitado. Por favor contacte a su administrador."
+  }
 }

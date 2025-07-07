@@ -494,5 +494,9 @@
   "from": "From",
   "to": "To",
   "deviceNameAlreadyInUse": "New device name is used in another device",
-  "noReasonProvided": "No reason provided"
+  "noReasonProvided": "No reason provided",
+  "deviceStatusBanner": {
+    "inactive": "Your device is currently inactive. Please contact your administrator.",
+    "disabled": "Your device has been disabled. Please contact your administrator."
+  }
 }
