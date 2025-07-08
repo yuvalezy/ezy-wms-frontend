@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
 import {AppSidebar} from "@/components/AppSidebar";
 import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, Button} from "@/components/ui";
@@ -36,8 +36,7 @@ const ContentTheme: React.FC<ContentThemeProps> = (
     onFilterClicked,
   }) => {
   const {t} = useTranslation();
-  const { user } = useAuth();
-  const [showDeviceStatusBanner, setShowDeviceStatusBanner] = useState(true);
+  const { user, showDeviceStatusBanner, setShowDeviceStatusBanner } = useAuth();
 
   const shouldShowDeviceStatusBanner = () => {
     if (!user || !user.deviceStatus || !showDeviceStatusBanner) return false;

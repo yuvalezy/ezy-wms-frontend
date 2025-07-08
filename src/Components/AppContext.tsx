@@ -4,14 +4,14 @@ import React, {
   useState,
   ReactNode,
   useEffect,
+  useCallback,
 } from "react";
 import axios, {AxiosError} from "axios";
 import {UserInfo} from "@/assets";
 import {axiosInstance, ServerUrl} from "@/utils/axios-instance";
-import {LicenseWarning} from "@/types/license";
 import {getOrCreateDeviceUUID} from "@/utils/deviceUtils";
 import {DeviceStatus} from "@/pages/settings/devices/data/device";
-import DeviceStatusForm from "@/pages/settings/devices/components/device-status-form";
+import {LicenseWarning} from "@/pages/settings/license/data/license";
 
 // Define the shape of the context
 interface AuthContextType {
@@ -25,6 +25,9 @@ interface AuthContextType {
   logout: () => void;
   isLoading: boolean; // Add loading state
   updateDeviceStatus: (newStatus: DeviceStatus) => void;
+  showDeviceStatusBanner: boolean;
+  setShowDeviceStatusBanner: (show: boolean) => void;
+  reloadCompanyInfo: () => Promise<void>;
 }
 
 const AuthContextDefaultValues: AuthContextType = {
@@ -39,6 +42,13 @@ const AuthContextDefaultValues: AuthContextType = {
   isLoading: true, // Default to loading
   updateDeviceStatus: (newStatus: DeviceStatus) => {
     console.warn("updateDeviceStatus method not implemented yet!");
+  },
+  showDeviceStatusBanner: true,
+  setShowDeviceStatusBanner: (show: boolean) => {
+    console.warn("setShowDeviceStatusBanner method not implemented yet!");
+  },
+  reloadCompanyInfo: async () => {
+    console.warn("reloadCompanyInfo method not implemented yet!");
   },
 };
 
@@ -72,6 +82,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   const [user, setUser] = useState<UserInfo | null>(null);
   const [companyInfo, setCompanyInfo] = useState<CompanyInfoResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true); // Add loading state
+  const [showDeviceStatusBanner, setShowDeviceStatusBanner] = useState(true);
   const baseUrl = `${ServerUrl}/api/`;
 
   useEffect(() => {
@@ -213,6 +224,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     }
   };
 
+  const reloadCompanyInfo = useCallback(async () => {
+    try {
+      const deviceUUID = getOrCreateDeviceUUID();
+      const response = await axios.get<CompanyInfoResponse>(`${baseUrl}Authentication/CompanyInfo`, {
+        headers: {
+          'Device-UUID': deviceUUID
+        }
+      });
+      setCompanyInfo(response.data);
+    } catch (error) {
+      console.error("Failed to reload company info:", error);
+    }
+  }, [baseUrl]);
+
   const isAuthenticated = user !== null;
 
   const value = {
@@ -223,6 +248,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     logout,
     isLoading,
     updateDeviceStatus,
+    showDeviceStatusBanner,
+    setShowDeviceStatusBanner,
+    reloadCompanyInfo,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
