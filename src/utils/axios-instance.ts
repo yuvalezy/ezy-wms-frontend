@@ -2,6 +2,13 @@ import axios from "axios";
 import { convertUTCStringsToDates } from "./date-helpers";
 import { getOrCreateDeviceUUID } from "./deviceUtils";
 
+// Navigation callback for routing outside of React components
+let navigateCallback: ((path: string) => void) | null = null;
+
+export const setNavigateCallback = (callback: (path: string) => void) => {
+  navigateCallback = callback;
+};
+
 // @ts-ignore
 export const ServerUrl = window.__env?.VITE_APP_SERVER_URL || import.meta.env.VITE_APP_SERVER_URL || "http://localhost:5000";
 export const None = "|none|";
@@ -47,13 +54,12 @@ axiosInstance.interceptors.response.use(
     if (response) {
       const status = response.status;
       if (status === 401 || status == 403) {
-        // Clear tokens on authentication failure
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('tokenExpiration');
-        // Clear default header
-        delete axiosInstance.defaults.headers.common['Authorization'];
-        // Handle the error, e.g., redirect to login page
-        window.location.replace('/');
+        if (navigateCallback) {
+          navigateCallback(`/unauthorized?errorCode=${status}`);
+        } else {
+          // Fallback to window.location if navigate callback is not set
+          window.location.replace(`/unauthorized?errorCode=${status}`);
+        }
       }
     }
     return Promise.reject(error);
