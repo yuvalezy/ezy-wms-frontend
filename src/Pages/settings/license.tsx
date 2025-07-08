@@ -2,10 +2,10 @@ import ContentTheme from '@/components/ContentTheme';
 import React, {useState, useEffect} from 'react';
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "@/components";
-import {LicenseStatusResponse, QueueStatusResponse} from "./data/license";
-import {licenseService} from "./data/license-service";
-import {LicenseStatus} from "./components/LicenseStatus";
-import {QueueStatus} from "./components/QueueStatus";
+import {LicenseStatusResponse, QueueStatusResponse} from "@/features/license/data/license";
+import {licenseService} from "@/features/license/data/license-service";
+import {LicenseStatus} from "@/features/license/components/LicenseStatus";
+import {QueueStatus} from "@/features/license/components/QueueStatus";
 
 export const License: React.FC = () => {
   const {t} = useTranslation();

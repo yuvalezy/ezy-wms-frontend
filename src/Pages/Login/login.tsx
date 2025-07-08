@@ -3,7 +3,7 @@ import {useState} from 'react';
 import {useAuth, useThemeContext} from "@/components";
 import {useNavigate} from "react-router-dom";
 import LoginForm from "./login-form";
-import {DeviceStatus} from "@/pages/settings/devices/data/device";
+import {DeviceStatus} from "@/features/devices/data/device";
 
 
 type Warehouse = {
@@ -20,6 +20,7 @@ export default function Login() {
     const [errorType, setErrorType] = useState<string>('');
     const {setLoading} = useThemeContext();
     const navigate = useNavigate();
+    const {isValidAccount} = useAuth();
 
     const {login} = useAuth();
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -36,10 +37,14 @@ export default function Login() {
 
         try {
             const response = await login(password, warehouse || undefined, newDeviceName || undefined);
-            if (response.deviceStatus === DeviceStatus.Active) {
+            if (response.deviceStatus === DeviceStatus.Active && isValidAccount) {
                 navigate('/');
             } else if (response.superUser) {
-                navigate('/settings/devices');
+                if (response.deviceStatus !== DeviceStatus.Active) {
+                    navigate('/settings/devices');
+                } else {
+                    navigate('/settings/license');
+                }
             }
         } catch (error: any) {
             console.debug('Login: Full error object:', error);

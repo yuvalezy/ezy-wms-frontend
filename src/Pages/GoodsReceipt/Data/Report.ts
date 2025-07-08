@@ -1,7 +1,7 @@
 import {DetailUpdateParameters, Status, UnitType} from "@/assets";
 import {axiosInstance} from "@/utils/axios-instance";
-import {ItemDetails} from "@/pages/item-check/item-check";
 import {PackageValue} from "@/components";
+import {ItemDetails} from "@/features/items/data/items";
 
 export type GoodsReceiptAll = {
   status: Status;

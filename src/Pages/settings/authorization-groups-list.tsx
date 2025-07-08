@@ -7,9 +7,9 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/c
 import {Badge} from "@/components/ui/badge";
 import {Plus, Edit, Trash2, Search, Users} from "lucide-react";
 import {useThemeContext} from "@/components";
-import {AuthorizationGroup, AuthorizationGroupFilters} from "./data/authorization-group";
-import {authorizationGroupService} from "./data/authorization-group-service";
-import AuthorizationGroupForm from "./components/authorization-group-form";
+import {AuthorizationGroup, AuthorizationGroupFilters} from "../../features/authorization-groups/data/authorization-group";
+import {authorizationGroupService} from "../../features/authorization-groups/data/authorization-group-service";
+import AuthorizationGroupForm from "../../features/authorization-groups/components/authorization-group-form";
 import {
   AlertDialog,
   AlertDialogAction,

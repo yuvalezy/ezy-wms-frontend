@@ -4,7 +4,7 @@ import {useSwipeable} from "react-swipeable";
 import { Edit3, MessageCircle } from "lucide-react";
 import {AddItemResponseMultipleValue, UnitType} from "@/assets";
 import {useAuth} from "@/components/AppContext";
-import {ItemCustomFields} from "@/pages/item-check/components/item-details-list";
+import {ItemCustomFields} from "@/features/items/components/ItemDetailsList";
 import {PackageValue} from "@/components/BarCodeScanner";
 
 export type AlertSeverity = "Information" | "Positive" | "Negative" | "Warning";

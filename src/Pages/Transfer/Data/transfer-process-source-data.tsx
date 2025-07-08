@@ -1,5 +1,5 @@
 import {useParams} from "react-router-dom";
-import {BinLocation, IsNumeric, Item, SourceTarget, UnitType, useDateTimeFormat} from "@/assets";
+import {IsNumeric, SourceTarget, UnitType, useDateTimeFormat} from "@/assets";
 import {useEffect, useRef, useState} from "react";
 import {AddItemValue, BarCodeScannerRef, ProcessAlertValue, ProcessesRef, useAuth, useThemeContext} from "@/components";
 import {
@@ -10,6 +10,8 @@ import {
   TransferDocument
 } from "@/pages/transfer/data/transfer-document";
 import {useTranslation} from "react-i18next";
+
+import {BinLocation, Item} from "@/features/items/data/items";
 
 export const useTransferProcessSourceData = () => {
   const {scanCode} = useParams();

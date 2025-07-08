@@ -4,8 +4,11 @@ import {Button} from "@/components/ui/button";
 import {Label} from "@/components/ui/label";
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "./ThemeContext";
-import {BinLocation, scanBinLocation, StringFormat} from "@/assets";
+import { StringFormat} from "@/assets";
 import {Check} from 'lucide-react';
+
+import {BinLocation} from "@/features/items/data/items";
+import {itemsService} from "@/features/items/data/items-service";
 
 export interface BinLocationScannerProps {
   label?: string | boolean;
@@ -61,7 +64,7 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
     }
     setLoading(true);
     try {
-      scanBinLocation(binInput)
+      itemsService.scanBinLocation(binInput)
         .then((v) => {
           if (v == null) {
             setError(StringFormat(t(`binLocationNotFound`), binInput));

@@ -10,12 +10,15 @@ import axios, {AxiosError} from "axios";
 import {UserInfo} from "@/assets";
 import {axiosInstance, ServerUrl} from "@/utils/axios-instance";
 import {getOrCreateDeviceUUID} from "@/utils/deviceUtils";
-import {DeviceStatus} from "@/pages/settings/devices/data/device";
-import {LicenseWarning} from "@/pages/settings/license/data/license";
+import {DeviceStatus} from "@/features/devices/data/device";
+import {LicenseWarning} from "@/features/license/data/license";
+import {AccountState} from "@/features/account/data/account";
 
 // Define the shape of the context
 interface AuthContextType {
   isAuthenticated: boolean;
+  isDeviceActive: boolean;
+  isValidAccount: boolean;
   user: UserInfo | null;
   companyInfo?: CompanyInfoResponse | null;
   login: (password: string, warehouse?: string, newDeviceName?: string) => Promise<{
@@ -32,6 +35,8 @@ interface AuthContextType {
 
 const AuthContextDefaultValues: AuthContextType = {
   isAuthenticated: false,
+  isDeviceActive: false,
+  isValidAccount: false,
   user: null,
   login: async (password: string, warehouse?: string, newDeviceName?: string) => {
     console.warn("Login method not implemented yet!");
@@ -70,6 +75,7 @@ interface CompanyInfoResponse {
   serverTime: string; // ISO date string
   licenseWarnings: LicenseWarning[]; // Array of warning messages
   deviceStatus?: DeviceStatus;
+  accountStatus?: AccountState;
 }
 
 interface LoginRequest {
@@ -239,9 +245,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   }, [baseUrl]);
 
   const isAuthenticated = user !== null;
+  const isDeviceActive = user?.deviceStatus === DeviceStatus.Active;
+  const validStatuses = [AccountState.Active, AccountState.PaymentDue, AccountState.PaymentDueUnknown, AccountState.Demo];
+  const isValidAccount = validStatuses.some(v => v === companyInfo?.accountStatus);
 
   const value = {
     isAuthenticated,
+    isDeviceActive,
+    isValidAccount,
     user,
     companyInfo,
     login,

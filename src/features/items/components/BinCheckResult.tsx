@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import {BinContentResponse} from "./Bins";
 import {useTranslation} from "react-i18next";
 import {Card} from "@/components/ui/card";
 import {useStockInfo} from "@/utils/stock-info";
@@ -7,6 +6,7 @@ import ItemDetailsLink from "@/components/ItemDetailsLink";
 import ClickableItemCode from "@/components/ClickableItemCode";
 import ClickablePackageBarcode from "@/components/ClickablePackageBarcode";
 import {ChevronRight, Package, Box, Grid3x3} from "lucide-react";
+import {BinContentResponse} from "@/features/items/data/items";
 
 export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({content}) => {
   const {t} = useTranslation();

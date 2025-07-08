@@ -6,7 +6,9 @@ import {Alert, AlertDescription} from "@/components/ui/alert";
 import {AlertCircle} from "lucide-react";
 import {StringFormat} from "@/assets";
 import DeviceStatusBanner from "@/components/DeviceStatusBanner";
-import {DeviceStatus} from "@/pages/settings/devices/data/device";
+import AccountStatusBanner from "@/components/AccountStatusBanner";
+import {DeviceStatus} from "@/features/devices/data/device";
+import {AccountState} from "@/features/account/data/account";
 
 type Warehouse = {
   id: string;
@@ -36,10 +38,27 @@ export default function LoginForm({
                                   }: LoginFormProps) {
   const {t, i18n} = useTranslation();
   const cookies = new Cookies();
-  const {companyInfo} = useAuth();
+  const {companyInfo, reloadCompanyInfo} = useAuth();
 
   const shouldShowDeviceStatusBanner = () => {
     return companyInfo?.deviceStatus && companyInfo.deviceStatus !== DeviceStatus.Active;
+  };
+
+  const shouldShowAccountStatusBanner = () => {
+    if (!companyInfo?.accountStatus) return false;
+    const invalidStates = [
+      AccountState.Invalid,
+      AccountState.PaymentDue,
+      AccountState.PaymentDueUnknown,
+      AccountState.Demo,
+      AccountState.DemoExpired,
+      AccountState.Disabled
+    ];
+    return invalidStates.includes(companyInfo.accountStatus);
+  };
+
+  const isAccountDisabled = () => {
+    return companyInfo?.accountStatus === AccountState.Disabled;
   };
 
   useEffect(() => {
@@ -48,6 +67,11 @@ export default function LoginForm({
     const lang = savedLang || (['en', 'es'].includes(browserLang) ? browserLang : 'en');
     i18n.changeLanguage(lang);
   }, [i18n]);
+
+  useEffect(() => {
+    // Reload company info when login form mounts (e.g., after logout)
+    reloadCompanyInfo();
+  }, [reloadCompanyInfo]);
 
   const onLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const lang = e.target.value;
@@ -119,7 +143,10 @@ export default function LoginForm({
               name="password"
               id="password"
               required
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={isAccountDisabled()}
+              className={`w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                isAccountDisabled() ? 'bg-gray-100 cursor-not-allowed' : ''
+              }`}
             />
           </div>
 
@@ -132,7 +159,9 @@ export default function LoginForm({
               id="language"
               value={i18n.language}
               onChange={onLanguageChange}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                isAccountDisabled() ? 'bg-gray-100 cursor-not-allowed' : ''
+              }`}
             >
               <option value="en">English</option>
               <option value="es">Español</option>
@@ -156,7 +185,10 @@ export default function LoginForm({
                   name="warehouse"
                   id="warehouse"
                   required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  disabled={isAccountDisabled()}
+                  className={`w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    isAccountDisabled() ? 'bg-gray-100 cursor-not-allowed' : ''
+                  }`}
                   defaultValue=""
                 >
                   <option value="" disabled>
@@ -191,7 +223,10 @@ export default function LoginForm({
                   id="newDeviceName"
                   required
                   maxLength={100}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  disabled={isAccountDisabled()}
+                  className={`w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    isAccountDisabled() ? 'bg-gray-100 cursor-not-allowed' : ''
+                  }`}
                   placeholder={t('enterDeviceName') || 'Enter a device name (max 100 characters)'}
                 />
               </div>
@@ -209,11 +244,26 @@ export default function LoginForm({
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition"
+            disabled={isAccountDisabled()}
+            className={`w-full font-semibold py-2 rounded-lg transition ${
+              isAccountDisabled() 
+                ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
+                : 'bg-blue-600 text-white hover:bg-blue-700'
+            }`}
           >
             {t('enter') || 'Enter'}
           </button>
         </form>
+
+        {/* Account Status Banner */}
+        {shouldShowAccountStatusBanner() && (
+          <div className="mt-4">
+            <AccountStatusBanner
+              accountStatus={companyInfo!.accountStatus!}
+              className="w-full"
+            />
+          </div>
+        )}
 
         {/* Device Status Banner */}
         {shouldShowDeviceStatusBanner() && (

@@ -1,6 +1,6 @@
 import React from "react";
-import {ItemDetails} from "@/pages/item-check/item-check";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
+import {ItemDetails} from "@/features/items/data/items";
 
 const InfoBox = ({children}: { children: React.ReactNode | React.ReactNode[] }) => {
   return <div className="bg-white rounded-lg shadow-sm mb-4 p-4 md:p-6">

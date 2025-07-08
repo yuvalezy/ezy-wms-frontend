@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import {useAuth} from "@/components/AppContext";
 import {useTranslation} from "react-i18next";
-import {DeviceStatus} from "@/pages/settings/devices/data/device";
+import {DeviceStatus} from "@/features/devices/data/device";
 
 
 export function AppSidebar() {
@@ -32,9 +32,8 @@ export function AppSidebar() {
   const [authorizedMenus, setAuthorizedMenus] = useState<MenuItem[]>([]);
   const navigate = useNavigate();
   const location = useLocation();
-  const {logout, user} = useAuth();
+  const {logout, user, isDeviceActive, isValidAccount} = useAuth();
   const {t} = useTranslation();
-  const isDeviceActive = user?.deviceStatus === DeviceStatus.Active;
 
   useEffect(() => {
     setAuthorizedMenus(menus.GetMenus(user?.roles, user?.superUser));
@@ -46,6 +45,7 @@ export function AppSidebar() {
 
   const handleLogout = () => {
     logout();
+    navigate("/");
   };
 
   // Define the grouping logic
@@ -83,6 +83,7 @@ export function AppSidebar() {
       case "/settings/users":
       case "/settings/authorizationGroups":
       case "/settings/devices":
+      case "/settings/license":
         groupLabel = t("settings");
         break;
       default:
@@ -136,7 +137,7 @@ export function AppSidebar() {
         </div>
       </SidebarHeader>
       <SidebarContent>
-        {isDeviceActive && (
+        {isDeviceActive && isValidAccount && (
           <SidebarGroup>
             <SidebarMenu>
               <SidebarMenuItem>

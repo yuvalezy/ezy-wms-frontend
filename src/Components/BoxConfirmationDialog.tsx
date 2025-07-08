@@ -10,7 +10,8 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea, Separator } from "@/components/ui";
 import { X, ArrowRight } from 'lucide-react';
-import {Item} from "@/assets";
+
+import {Item} from "@/features/items/data/items";
 
 export interface BoxConfirmationDialogRef {
     show: (show: boolean) => void;

@@ -2,7 +2,7 @@ import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import BarCodeScanner, {AddItemValue, BarCodeScannerRef} from "../../components/BarCodeScanner";
 import React, {useEffect, useRef, useState} from "react";
-import {Item, UnitType} from "@/assets";
+import {UnitType} from "@/assets";
 import {createRequest, TransferContent} from "@/pages/transfer/data/transfer-document";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,7 @@ import {
     DialogTitle,
     DialogDescription, // Add DialogDescription here
 } from "@/components/ui/dialog";
+import {Item} from "@/features/items/data/items";
 
 export default function TransferRequest() {
     const {t} = useTranslation();

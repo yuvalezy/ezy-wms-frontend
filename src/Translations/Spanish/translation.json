@@ -218,7 +218,7 @@
   "updateLineNotSupervisorError": "El código introducido no es de un supervisor",
   "updateLineQuantityMoreThenAvailableError": "La cantidad excede el stock disponible. Por favor, introduzca una cantidad que no supere el inventario disponible.",
   "binQuantityExceedError": "La cantidad excede el stock disponible en ubicación para el artículo {0}",
-  "pickPackOnlyError": "El cliente \"{{name}}\" está marcado como \"Acepta solo paquetes cerrados\"",
+  "pickPackOnlyError": "El cliente \"{0}\" está marcado como \"Acepta solo paquetes cerrados\"",
   "noDataFound": "No se encontró datos",
   "multipleItemsDetected": "Multiples Artículos Detectados",
   "unknownError": "Error desconocido",
@@ -253,6 +253,8 @@
   "pickingCompletedFor": "Picking completado para el artículo {{type}} #{{number}}",
   "unauthorized": "No Autorizado",
   "unauthorizedMessage": "¡Oops! No estás autorizado para ver esta página.",
+  "unauthorizedMessage401": "Tu sesión ha expirado. Por favor, inicia sesión nuevamente.",
+  "unauthorizedMessage403": "No tienes permisos para acceder a este recurso.",
   "returnToHome": "Regresar a Inicio",
   "notFound": "Página no Encontrada",
   "notFoundMessage": "¡Oops! Página no encontrada.",
@@ -293,6 +295,40 @@
   "fullName": "Nombre Completo",
   "position": "Cargo",
   "warehouses": "Almacenes",
+  "license": {
+    "title": "Licencia",
+    "status": "Estado de Licencia",
+    "accountStatus": "Estado de Cuenta",
+    "validity": "Validez",
+    "daysUntilExpiration": "Días Hasta Expiración",
+    "gracePeriod": "Período de Gracia",
+    "expirationDate": "Fecha de Expiración",
+    "demoExpirationDate": "Fecha de Expiración de Demo",
+    "lastValidation": "Última Validación",
+    "daysRemaining": "{{days}} días restantes",
+    "warning": {
+      "paymentDue": "Pago pendiente. Por favor, contacte al soporte.",
+      "paymentStatusUnknown": "Estado de pago desconocido. El sistema será deshabilitado en {{days}} días.",
+      "accountExpiresIn": "La cuenta expira en {{days}} días. Por favor, renueve.",
+      "licenseIssueDetected": "Se detectó un problema de licencia. Por favor, contacte al soporte.",
+      "unknown": "Problema de licencia desconocido"
+    },
+    "queue": {
+      "title": "Estado de Cola",
+      "status": "Estado",
+      "synced": "Sincronizado",
+      "pending": "Pendiente",
+      "disconnected": "Desconectado",
+      "pendingEvents": "Eventos Pendientes",
+      "cloudService": "Servicio en la Nube",
+      "lastChecked": "Última Verificación",
+      "forceSync": "Sincronizar Forzado",
+      "pendingTitle": "Eventos Pendientes",
+      "pendingDescription": "Hay {{count}} eventos pendientes esperando a ser sincronizados.",
+      "serviceUnavailable": "Servicio No Disponible",
+      "serviceUnavailableDescription": "El servicio en la nube no está disponible actualmente. Los eventos se pondrán en cola hasta que el servicio se restaure."
+    }
+  },
   "superUser": "Super Usuario",
   "disable": "Deshabilitar",
   "enable": "Habilitar",
@@ -448,13 +484,6 @@
   "scan": "Escanear",
   "offlineTitle": "Señal de Internet Perdida",
   "offlineMessage": "Por favor verifique su conexión a internet e intente de nuevo.",
-  "license":{
-    "title": "Licencia",
-    "LicenseIssueDetected": "Se detectó un problema de licencia",
-    "paymentDue": "El pago está vencido. Por favor contacte a soporte.",
-    "paymentStatusUnknown": "Estado de pago desconocido. El sistema se deshabilitará en {0} días.",
-    "accountExpiresIn": "La cuenta expira en {0} días. Por favor renueve."
-  },
   "newDeviceDetected": "Nuevo dispositivo detectado. Por favor proporcione un nombre para este dispositivo para continuar.",
   "deviceName": "Nombre del Dispositivo",
   "enterDeviceName": "Ingrese un nombre de dispositivo (máximo 100 caracteres)",
@@ -495,8 +524,25 @@
   "to": "A",
   "deviceNameAlreadyInUse": "El nuevo nombre del dispositivo ya está en uso en otro dispositivo",
   "noReasonProvided": "No se proporcionó razón",
+  "accountStatusBanner": {
+    "invalid": "El estado de su cuenta es inválido. Por favor contacte al soporte.",
+    "paymentDue": "Su cuenta tiene un pago pendiente. Por favor actualice su método de pago.",
+    "paymentDueUnknown": "El estado de pago es desconocido. Por favor contacte al soporte para verificar su cuenta.",
+    "demo": "Está usando una cuenta de demostración con funciones limitadas.",
+    "demoExpired": "Su cuenta de demostración ha expirado. Por favor contacte al soporte para actualizar.",
+    "disabled": "Su cuenta ha sido deshabilitada. Por favor contacte al soporte."
+  },
   "deviceStatusBanner": {
     "inactive": "Su dispositivo está actualmente inactivo. Por favor contacte a su administrador.",
     "disabled": "Su dispositivo ha sido deshabilitado. Por favor contacte a su administrador."
-  }
+  },
+  "refresh": "Actualizar",
+  "valid": "Válido",
+  "invalid": "Inválido",
+  "expired": "Expirado",
+  "loading": "Cargando...",
+  "warning": "Advertencia",
+  "error": "Error",
+  "syncing": "Sincronizando...",
+  "unavailable": "No disponible"
 }

@@ -1,5 +1,6 @@
 import {axiosInstance} from "@/utils/axios-instance";
-import {ItemDetails} from "@/pages/item-check/item-check";
+
+import {ItemDetails} from "@/features/items/data/items";
 
 export type CountingSummaryReportData = {
   countingId: string;

@@ -1,10 +1,10 @@
 import {UnitType} from "@/assets";
 import {ProcessResponse} from "@/assets";
-import {BinLocation} from "@/assets";
 import { axiosInstance } from "@/utils/axios-instance";
-import {ItemDetails} from "@/pages/item-check/item-check";
 
 import {SyncStatus} from "@/assets/sync-status";
+
+import {BinLocation, ItemDetails} from "@/features/items/data/items";
 
 export enum PickStatus {
     Released = "Released",

@@ -10,7 +10,8 @@ import {
 import {axiosInstance} from "@/utils/axios-instance";
 import { getAddItemErrorMessage } from "@/utils/error-handler";
 import axios from "axios";
-import {ItemDetails} from "@/pages/item-check/item-check";
+
+import {ItemDetails} from "@/features/items/data/items";
 
 interface TransferAddItemResponse {
   lineId?: string

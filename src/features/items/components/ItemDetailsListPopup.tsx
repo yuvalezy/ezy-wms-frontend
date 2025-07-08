@@ -1,4 +1,4 @@
-import ItemDetailsList from './item-details-list';
+import ItemDetailsList from './ItemDetailsList';
 import React from 'react';
 import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose} from "@/components/ui/dialog";
 import {X} from "lucide-react";

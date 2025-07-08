@@ -6,7 +6,9 @@ import {Filter, Plus, FileSpreadsheet} from "lucide-react";
 import {useTranslation} from "react-i18next";
 import {useAuth} from "@/components/AppContext";
 import DeviceStatusBanner from "@/components/DeviceStatusBanner";
-import {DeviceStatus} from "@/pages/settings/devices/data/device";
+import AccountStatusBanner from "@/components/AccountStatusBanner";
+import {DeviceStatus} from "@/features/devices/data/device";
+import {AccountState} from "@/features/account/data/account";
 
 interface ContentThemeProps {
   title: string;
@@ -36,11 +38,24 @@ const ContentTheme: React.FC<ContentThemeProps> = (
     onFilterClicked,
   }) => {
   const {t} = useTranslation();
-  const { user, showDeviceStatusBanner, setShowDeviceStatusBanner } = useAuth();
+  const { user, companyInfo, showDeviceStatusBanner, setShowDeviceStatusBanner } = useAuth();
 
   const shouldShowDeviceStatusBanner = () => {
     if (!user || !user.deviceStatus || !showDeviceStatusBanner) return false;
     return user.deviceStatus === DeviceStatus.Inactive || user.deviceStatus === DeviceStatus.Disabled;
+  };
+
+  const shouldShowAccountStatusBanner = () => {
+    if (!companyInfo?.accountStatus) return false;
+    const invalidStates = [
+      AccountState.Invalid,
+      AccountState.PaymentDue,
+      AccountState.PaymentDueUnknown,
+      AccountState.Demo,
+      AccountState.DemoExpired,
+      AccountState.Disabled
+    ];
+    return invalidStates.includes(companyInfo.accountStatus.status);
   };
 
   return (
@@ -98,6 +113,16 @@ const ContentTheme: React.FC<ContentThemeProps> = (
               )}
             </div>
           </header>
+
+          {/* Account Status Banner */}
+          {shouldShowAccountStatusBanner() && (
+            <div className="w-full">
+              <AccountStatusBanner
+                accountStatus={companyInfo!.accountStatus!.status}
+                className="w-full"
+              />
+            </div>
+          )}
 
           {/* Device Status Banner */}
           {shouldShowDeviceStatusBanner() && (

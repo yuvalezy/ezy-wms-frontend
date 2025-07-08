@@ -9,9 +9,9 @@ import {Badge} from "@/components/ui/badge";
 import {Checkbox} from "@/components/ui/checkbox";
 import {Edit, Trash2, Search, UserX, UserCheck} from "lucide-react";
 import {useAuth, useThemeContext} from "@/components";
-import {User, UserFilters, AuthorizationGroup, Warehouse} from "./data/user";
-import {userService} from "./data/user-service";
-import UserForm from "./components/user-form";
+import {User, UserFilters, AuthorizationGroup, Warehouse} from "@/features/users/data/user";
+import {userService} from "@/features/users/data/user-service";
+import UserForm from "@/features/users/components/user-form";
 import {
   AlertDialog,
   AlertDialogAction,

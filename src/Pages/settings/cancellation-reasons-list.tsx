@@ -7,9 +7,9 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/c
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Badge} from "@/components/ui/badge";
 import {Plus, Edit, Trash2, Search, X} from "lucide-react";
-import {CancellationReason, CancellationReasonFilters} from "./data/cancellation-reason";
-import {cancellationReasonService} from "./data/cancellation-reason-service";
-import CancellationReasonForm from "./components/cancellation-reason-form";
+import {CancellationReason, CancellationReasonFilters} from "@/features/cancellation-reasons/data/cancellation-reason";
+import {cancellationReasonService} from "@/features/cancellation-reasons/data/cancellation-reason-service";
+import CancellationReasonForm from "@/features/cancellation-reasons/components/cancellation-reason-form";
 import {
   AlertDialog,
   AlertDialogAction,

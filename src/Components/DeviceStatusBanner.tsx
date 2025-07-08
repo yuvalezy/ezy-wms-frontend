@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { X, AlertTriangle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { DeviceStatus } from '@/pages/settings/devices/data/device';
+import { DeviceStatus } from '@/features/devices/data/device';
 
 interface DeviceStatusBannerProps {
   deviceStatus: DeviceStatus;

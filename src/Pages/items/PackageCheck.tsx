@@ -4,8 +4,8 @@ import {useTranslation} from "react-i18next";
 import PackageScanner from "../../components/PackageScanner";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import {AlertTriangle} from 'lucide-react';
-import {usePackageCheckData} from "./package-check-data";
-import {PackageCheckResult} from "./PackageCheckResult";
+import {usePackageCheckData} from "../../features/items/hooks/usePackageCheckData";
+import {PackageCheckResult} from "../../features/items/components/PackageCheckResult";
 import {useParams, useNavigate} from "react-router-dom";
 
 export function PackageCheck() {

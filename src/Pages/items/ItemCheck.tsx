@@ -1,14 +1,14 @@
 import ContentTheme from "../../components/ContentTheme";
 import React, { useEffect } from "react";
-import ItemCheckMultipleResult from "./ItemCheckMultipleResult";
-import ItemCheckResult from "./ItemCheckResult";
+import ItemCheckMultipleResult from "../../features/items/components/ItemCheckMultipleResult";
+import ItemCheckResult from "../../features/items/components/ItemCheckResult";
 import {useTranslation} from "react-i18next";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import {Check, AlertTriangle} from 'lucide-react';
-import {useItemCheckData} from "@/pages/item-check/item-check-data";
+import {useItemCheckData} from "@/features/items/hooks/useItemCheckData";
 import {useParams, useNavigate} from "react-router-dom";
 
 export default function ItemCheck() {

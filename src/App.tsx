@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Route, Routes, useNavigate} from "react-router-dom";
 import LoginPage from "./pages/login/login";
 import HomePage from "./pages/Home";
 import {AuthProvider, useAuth} from "@/components";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Unauthorized from "./components/Unauthorized";
 import NotFound from "./components/NotFound";
-import ItemCheck from "@/pages/item-check/ItemCheck";
+import { setNavigateCallback } from "./utils/axios-instance";
+import ItemCheck from "@/pages/items/ItemCheck";
 import {RoleType} from "@/assets";
 import PickingSupervisor from "./pages/picking/picking-supervisor";
 import PickingUser from "./pages/picking/picking-user";
@@ -29,23 +30,29 @@ import TransferProcessSource from "./pages/transfer/transfer-process-source";
 // import TransferProcessTargetItems from "./pages/transfer/transfer-process-target-items";
 // import TransferProcessTargetItem from "./pages/transfer/transfer-process-target-item";
 import CountingSummaryReport from "./pages/Counting/CountingSummaryReport";
-import {BinCheck} from "./pages/BinCheck/BinCheck";
-import {PackageCheck} from "./pages/PackageCheck/PackageCheck";
+import {BinCheck} from "./pages/items/BinCheck";
+import {PackageCheck} from "./pages/items/PackageCheck";
 import GoodsReceiptProcessDifferenceReport from "./pages/GoodsReceipt/GoodsReceiptProcessDifferenceReport";
 import TransferProcessTargetBins from "./pages/transfer/transfer-process-target-bins";
 import TransferRequest from "./pages/transfer/transfer-request";
 import {Toaster} from 'sonner';
-import CancellationReasonsList from "@/pages/settings/cancellation-reasons/cancellation-reasons-list";
-import UsersList from "@/pages/settings/users/users-list";
-import AuthorizationGroupsList from "@/pages/settings/authorization-groups/authorization-groups-list";
-import AuthorizationGroupForm from "@/pages/settings/authorization-groups/components/authorization-group-form";
+import CancellationReasonsList from "@/pages/settings/cancellation-reasons-list";
+import UsersList from "@/pages/settings/users-list";
+import AuthorizationGroupsList from "@/pages/settings/authorization-groups-list";
+import AuthorizationGroupForm from "@/features/authorization-groups/components/authorization-group-form";
 import {OfflineOverlay} from "./components/OfflineOverlay";
 import {useOfflineDetection} from "./hooks/useOfflineDetection";
-import DevicesList from "@/pages/settings/devices/devices-list";
+import DevicesList from "@/pages/settings/devices-list";
+import {License} from "@/pages/settings/license";
 
-export default function App() {
+function AppRoutes() {
   const {user} = useAuth();
   const isOffline = useOfflineDetection();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setNavigateCallback(navigate);
+  }, [navigate]);
 
   function getGoodsReceiptSupervisorAuthorizations() {
     let authorizations = [RoleType.GOODS_RECEIPT_SUPERVISOR];
@@ -66,11 +73,10 @@ export default function App() {
   }
 
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Toaster closeButton richColors={true}/>
-        {isOffline && <OfflineOverlay/>}
-        <Routes>
+    <>
+      <Toaster closeButton richColors={true}/>
+      {isOffline && <OfflineOverlay/>}
+      <Routes>
           <Route path="/login" element={<LoginPage/>}/>
           <Route path="/unauthorized" element={<Unauthorized/>}/>
           <Route path="/binCheck" element={<ProtectedRoute
@@ -188,6 +194,7 @@ export default function App() {
           <Route path="/settings/authorizationGroups/:id"
                  element={<ProtectedRoute superUser element={<AuthorizationGroupForm/>}/>}/>
           <Route path="/settings/devices" element={<ProtectedRoute superUser element={<DevicesList/>}/>}/>
+          <Route path="/settings/license" element={<ProtectedRoute superUser element={<License/>}/>}/>
           {/*/!* Device Management Routes *!/*/}
           {/*<Route path="/device/register" element={<DeviceRegistration/>}/>*/}
           {/*<Route path="/device/status" element={<DeviceStatusCard/>}/>*/}
@@ -200,6 +207,15 @@ export default function App() {
           <Route path="/" element={<ProtectedRoute element={<HomePage/>}/>}/>
           <Route path="*" element={<NotFound/>}/>
         </Routes>
+    </>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <AppRoutes />
       </BrowserRouter>
     </AuthProvider>
   );

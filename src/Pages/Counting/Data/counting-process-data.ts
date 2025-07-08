@@ -1,6 +1,6 @@
 import {useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import {BinLocation, Counting, CountingContent, IsNumeric, Item, UnitType, useDateTimeFormat} from "@/assets";
+import {Counting, CountingContent, IsNumeric, UnitType, useDateTimeFormat} from "@/assets";
 import {useEffect, useRef, useState} from "react";
 import {
   AddItemValue,
@@ -14,6 +14,8 @@ import {
 import {fetchCounting, fetchCountingContent} from "@/pages/Counting/data/Counting";
 import {addItem} from "@/pages/Counting/data/CountingProcess";
 import {getProcessInfo, TransferDocument} from "@/pages/transfer/data/transfer-document";
+
+import {BinLocation, Item} from "@/features/items/data/items";
 
 export const useCountingProcessData = () => {
   const {scanCode} = useParams();

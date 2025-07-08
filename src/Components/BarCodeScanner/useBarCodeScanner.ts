@@ -2,10 +2,12 @@ import {useState, useRef, useEffect} from 'react';
 import {toast} from 'sonner';
 import {useTranslation} from 'react-i18next';
 import {useThemeContext} from '@/components';
-import {distinctItems, Item, scanBarcode, StringFormat, UnitType} from '@/assets';
+import {distinctItems, StringFormat, UnitType} from '@/assets';
 import {getPackageByBarcode} from '@/pages/packages/hooks';
 import {ObjectType, PackageMovementType} from '@/pages/packages/types';
-import {AddItemValue, PackageValue, BarCodeScannerRef} from './types';
+import {AddItemValue, PackageValue} from './types';
+import {Item} from "@/features/items/data/items";
+import {itemsService} from "@/features/items/data/items-service";
 
 interface UseBarCodeScannerProps {
   enabled: boolean;
@@ -61,7 +63,7 @@ export const useBarCodeScanner = ({
       }
 
       setLoading(true);
-      scanBarcode(barcode, item)
+      itemsService.scanBarcode(barcode, item)
         .then((items) => handleItems(items))
         .catch((error) => {
           setError(error);

@@ -223,7 +223,7 @@
   "updateLineNotSupervisorError": "The entered code is not a supervisor code",
   "updateLineQuantityMoreThenAvailableError": "Quantity exceeds available stock. Please enter a quantity that does not exceed the available inventory.",
   "binQuantityExceedError": "Quantity exceeds bin available stock for item {0}",
-  "pickPackOnlyError": "Customer \"{{name}}\" is marked as \"Accepts only closed packages\"",
+  "pickPackOnlyError": "Customer \"{0}\" is marked as \"Accepts only closed packages\"",
   "noDataFound": "No data found",
   "multipleItemsDetected": "Multiple Items Detected",
   "unknownError": "Unknown error",
@@ -258,6 +258,8 @@
   "pickingCompletedFor": "Picking completed for {{type}} #{{number}}",
   "unauthorized": "Unauthorized",
   "unauthorizedMessage": "Oops! You're not authorized to view this page.",
+  "unauthorizedMessage401": "Your session has expired. Please log in again.",
+  "unauthorizedMessage403": "You don't have permission to access this resource.",
   "returnToHome": "Return to Home",
   "notFound": "Page Not Found",
   "notFoundMessage": "Oops! Page not found.",
@@ -295,6 +297,40 @@
   "fullName": "Full Name",
   "position": "Position",
   "warehouses": "Warehouses",
+  "license": {
+    "title": "License",
+    "status": "License Status",
+    "accountStatus": "Account Status",
+    "validity": "Validity",
+    "daysUntilExpiration": "Days Until Expiration",
+    "gracePeriod": "Grace Period",
+    "expirationDate": "Expiration Date",
+    "demoExpirationDate": "Demo Expiration Date",
+    "lastValidation": "Last Validation",
+    "daysRemaining": "{{days}} days remaining",
+    "warning": {
+      "paymentDue": "Payment is due. Please contact support.",
+      "paymentStatusUnknown": "Payment status unknown. System will be disabled in {{days}} days.",
+      "accountExpiresIn": "Account expires in {{days}} days. Please renew.",
+      "licenseIssueDetected": "License issue detected. Please contact support.",
+      "unknown": "Unknown license issue"
+    },
+    "queue": {
+      "title": "Queue Status",
+      "status": "Status",
+      "synced": "Synced",
+      "pending": "Pending",
+      "disconnected": "Disconnected",
+      "pendingEvents": "Pending Events",
+      "cloudService": "Cloud Service",
+      "lastChecked": "Last Checked",
+      "forceSync": "Force Sync",
+      "pendingTitle": "Pending Events",
+      "pendingDescription": "There are {{count}} pending events waiting to be synchronized.",
+      "serviceUnavailable": "Service Unavailable",
+      "serviceUnavailableDescription": "The cloud service is currently unavailable. Events will be queued until the service is restored."
+    }
+  },
   "superUser": "Super User",
   "disable": "Disable",
   "enable": "Enable",
@@ -449,13 +485,6 @@
   "scan": "Scan",
   "offlineTitle": "Internet Signal Lost",
   "offlineMessage": "Please check your internet connection and try again.",
-  "license":{
-    "title": "License",
-    "LicenseIssueDetected": "License issue detected",
-    "paymentDue": "Payment is due. Please contact support.",
-    "paymentStatusUnknown": "Payment status unknown. System will be disabled in {0} days.",
-    "accountExpiresIn": "Account expires in {0} days. Please renew."
-  },
   "newDeviceDetected": "New device detected. Please provide a name for this device to continue.",
   "deviceName": "Device Name",
   "enterDeviceName": "Enter a device name (max 100 characters)",
@@ -496,8 +525,25 @@
   "to": "To",
   "deviceNameAlreadyInUse": "New device name is used in another device",
   "noReasonProvided": "No reason provided",
+  "accountStatusBanner": {
+    "invalid": "Your account status is invalid. Please contact support.",
+    "paymentDue": "Payment is due for your account. Please update your payment method.",
+    "paymentDueUnknown": "Payment status is unknown. Please contact support to verify your account.",
+    "demo": "You are using a demo account with limited features.",
+    "demoExpired": "Your demo account has expired. Please contact support to upgrade.",
+    "disabled": "Your account has been disabled. Please contact support."
+  },
   "deviceStatusBanner": {
     "inactive": "Your device is currently inactive. Please contact your administrator.",
     "disabled": "Your device has been disabled. Please contact your administrator."
-  }
+  },
+  "refresh": "Refresh",
+  "valid": "Valid",
+  "invalid": "Invalid",
+  "expired": "Expired",
+  "loading": "Loading...",
+  "warning": "Warning",
+  "error": "Error",
+  "syncing": "Syncing...",
+  "unavailable": "Unavailable"
 }

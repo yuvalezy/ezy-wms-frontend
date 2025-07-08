@@ -9,7 +9,7 @@ Implement a PackageCheck route (`/packageCheck`) that allows users to scan packa
 Create `/src/pages/PackageCheck/` directory with the following files:
 - `PackageCheck.tsx` - Main component for package scanning
 - `PackageCheckResult.tsx` - Display package contents and details
-- `package-check-data.ts` - Custom hook for package check logic
+- `usePackageCheckData.ts` - Custom hook for package check logic
 
 ### 2. Create PackageScanner Component
 Create `/src/components/PackageScanner.tsx`:
@@ -40,7 +40,7 @@ Display components:
   - Created/closed dates
 - Expandable rows for detailed item information
 
-### 5. Implement package-check-data.ts Hook
+### 5. Implement usePackageCheckData.ts Hook
 Functionality:
 - Use `getPackageByBarcode(barcode, {contents: true, history: true})` from existing hooks
 - Handle loading and error states via `ThemeContext`
@@ -123,6 +123,6 @@ src/
 │   └── PackageCheck/
 │       ├── PackageCheck.tsx
 │       ├── PackageCheckResult.tsx
-│       └── package-check-data.ts
+│       └── usePackageCheckData.ts
 └── App.tsx (update with new route)
 ```

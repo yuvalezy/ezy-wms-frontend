@@ -26,7 +26,7 @@ export const usePackageCheckData = () => {
         contents: true,
         details: true
       });
-      
+
       if (result) {
         setPackageData(result);
       } else {
@@ -53,14 +53,14 @@ export const usePackageCheckData = () => {
 
   async function refreshPackageData() {
     if (!packageData) return;
-    
+
     setLoading(true);
     try {
       const result = await getPackageByBarcode(packageData.barcode, {
         contents: true,
         details: true
       });
-      
+
       if (result) {
         setPackageData(result);
       } else {
@@ -78,27 +78,31 @@ export const usePackageCheckData = () => {
     }
   }
 
-  const excelData = () => {
+  // getData: () => (string | number)[][];
+
+  const excelData = () : (string | number)[][] => {
     if (!packageData?.contents) return [];
     
     return packageData.contents.map((content) => {
       const quantities = formatQuantityForExcel({
         quantity: content.quantity,
-        numInBuy: 1, // Package content doesn't have these fields, using defaults
-        buyUnitMsr: content.unitType,
-        purPackUn: 1,
-        purPackMsr: content.unitType
+        numInBuy: content.itemData?.quantityInUnit || 1,
+        buyUnitMsr: content.itemData?.unitMeasure || '',
+        purPackUn: content.itemData?.quantityInPack || 1,
+        purPackMsr: content.itemData?.packMeasure || ''
       });
-      
+
       return [
         content.itemCode,
-        content.itemName || '',
-        content.quantity,
+        content.itemData?.itemName || '',
+        quantities.pack,
+        quantities.dozen,
+        quantities.unit,
         content.unitType,
         content.binCode || '',
         content.whsCode,
         new Date(content.createdAt).toLocaleDateString(),
-        content.createdBy
+        content.createdBy?.name || ''
       ];
     });
   };
@@ -106,7 +110,9 @@ export const usePackageCheckData = () => {
   const excelHeaders = [
     t("code"),
     t("itemName"),
-    t("quantity"),
+    t("pack"),
+    t("dozen"),
+    t("unit"),
     t("unitType"),
     t("binCode"),
     t("whsCode"),

@@ -1,7 +1,7 @@
-import {ItemDetails} from "@/pages/item-check/item-check";
 import {Link} from "react-router-dom";
 import React, {useState} from "react";
-import ItemDetailsListPopup from "@/pages/item-check/components/item-details-list-popup";
+import ItemDetailsListPopup from "@/features/items/components/ItemDetailsListPopup";
+import {ItemDetails} from "@/features/items/data/items";
 
 const ItemDetailsLink = ({data}: { data: ItemDetails }) => {
   const [isOpen, setIsOpen] = useState(false);

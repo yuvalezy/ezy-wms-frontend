@@ -4,9 +4,9 @@ import {useTranslation} from "react-i18next";
 import BinLocationScanner from "../../components/BinLocationScanner";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import {AlertTriangle} from 'lucide-react';
-import {useBinCheckData} from "@/pages/BinCheck/bin-check-data";
+import {useBinCheckData} from "@/features/items/hooks/useBinCheckData";
 import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage} from "@/components/ui/breadcrumb";
-import {BinCheckResult} from "@/pages/BinCheck/BinCheckResult";
+import {BinCheckResult} from "@/features/items/components/BinCheckResult";
 import {useParams, useNavigate} from "react-router-dom";
 
 export function BinCheck() {

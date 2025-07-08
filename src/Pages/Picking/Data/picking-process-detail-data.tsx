@@ -1,10 +1,12 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useRef, useState} from "react";
 import {BarCodeScannerRef, BinLocationScannerRef, BoxConfirmationDialogRef, useThemeContext} from "@/components";
-import {BinLocation, IsNumeric,  StringFormat, UnitType} from "@/assets";
+import {IsNumeric,  StringFormat, UnitType} from "@/assets";
 import {addItem, fetchPicking, PickingDocumentDetail} from "@/pages/picking/data/picking-document";
 import {toast} from "sonner";
 import {useTranslation} from "react-i18next";
+
+import {BinLocation} from "@/features/items/data/items";
 
 export const usePickingProcessDetailData = () => {
   const {t} = useTranslation();
@@ -120,7 +122,7 @@ export const usePickingProcessDetailData = () => {
                 break;
               case 'Customer is marked as pick pack only':
                 const name = detail?.cardName ?? detail?.cardCode ?? 'N/A';
-                errorMessage = t('pickPackOnlyError', {name});
+                errorMessage = StringFormat(t('pickPackOnlyError'), name);
                 break;
               case 'Item entry not found in pick':
                 errorMessage = StringFormat(t('itemEntryNotFoundPicking'), itemCode, id, binLocation.code);

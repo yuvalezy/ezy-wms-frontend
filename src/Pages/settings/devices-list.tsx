@@ -8,9 +8,9 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/c
 import {Badge} from "@/components/ui/badge";
 import {Eye, Edit, Activity, Search} from "lucide-react";
 import {useThemeContext} from "@/components";
-import {Device, DeviceFilters, DeviceStatus} from "./data/device";
-import {deviceService} from "./data/device-service";
-import DeviceDetails from "./components/device-details";
+import {Device, DeviceFilters, DeviceStatus} from "@/features/devices/data/device";
+import {deviceService} from "@/features/devices/data/device-service";
+import DeviceDetails from "@/features/devices/components/device-details";
 import ContentTheme from "@/components/ContentTheme";
 
 const DevicesList: React.FC = () => {

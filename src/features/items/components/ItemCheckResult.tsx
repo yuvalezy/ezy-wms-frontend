@@ -1,9 +1,9 @@
 import React from "react";
 import {useTranslation} from "react-i18next";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
-import ItemDetailsList from "@/pages/item-check/components/item-details-list";
-import BarcodeTable from "@/pages/item-check/components/barcode-table";
-import StockTable from "@/pages/item-check/components/stock-table";
+import ItemDetailsList from "@/features/items/components/ItemDetailsList";
+import ItemCheckBarcodes from "@/features/items/components/ItemCheckBarcodes";
+import ItemCheckStock from "@/features/items/components/ItemCheckStock";
 import {ItemCheckResponse} from "@/features/items/data/items";
 
 interface ItemCheckResultProps {
@@ -24,10 +24,10 @@ const ItemCheckResult: React.FC<ItemCheckResultProps> = ({result, submit, onClea
           <TabsTrigger value="barcodes">{t("barcodes")}</TabsTrigger>
         </TabsList>
         <TabsContent value="stock" className="mt-4">
-          <StockTable result={result}/>
+          <ItemCheckStock result={result}/>
         </TabsContent>
         <TabsContent value="barcodes" className="mt-4">
-          <BarcodeTable itemCode={result.itemCode} barcodes={result.barcodes} submit={submit}/>
+          <ItemCheckBarcodes itemCode={result.itemCode} barcodes={result.barcodes} submit={submit}/>
         </TabsContent>
       </Tabs>
     </>

@@ -18,7 +18,7 @@ import {
   Truck,
   Users,
 } from 'lucide-react';
-import {DeviceStatus} from "@/pages/settings/devices/data/device";
+import {AccountState} from "@/features/account/data/account";
 
 export interface MenuItem {
   Link: string;
@@ -33,7 +33,7 @@ export interface MenuItem {
 
 export function useMenus() {
   const {t} = useTranslation();
-  const {user} = useAuth();
+  const {user, isDeviceActive, isValidAccount} = useAuth();
 
   const goodsReceiptSupervisorRoute = "/goodsReceiptSupervisor"
   const goodsReceiptConfirmationSupervisorRoute = "/goodsReceiptConfirmationSupervisor"
@@ -199,12 +199,11 @@ export function useMenus() {
   ];
 
   const GetMenus = (authorizations: RoleType[] | undefined, superUser: boolean | undefined) => {
-    const isDeviceActive = user?.deviceStatus === DeviceStatus.Active;
     if (authorizations !== undefined) {
       applySettings(authorizations);
     }
     return MenuItems.filter(item => {
-      if (!isDeviceActive && !item.Link.startsWith('/settings')) {
+      if ((!isDeviceActive || !isValidAccount) && !item.Link.startsWith('/settings')) {
         return false;
       }
       if (item.Authorization === undefined && item.Authorizations === undefined && user?.superUser) {

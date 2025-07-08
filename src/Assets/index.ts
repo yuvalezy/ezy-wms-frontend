@@ -11,6 +11,4 @@ export * from './Menus';
 export * from './ObjectName';
 export * from './Quantities';
 export * from './Reasons';
-export * from './ScanBarcode';
-export * from './ScanBinLocation';
 export {CustomFieldType} from "@/assets/CustomFieldType";

@@ -1,8 +1,9 @@
 import {RoleType} from "./RoleType";
 import {AlertSeverity} from "@/components";
-import {Employee} from "@/assets/Data";
-import { CustomFieldType } from "./CustomFieldType";
-import {DeviceStatus} from "@/pages/settings/devices/data/device";
+import {CustomFieldType} from "./CustomFieldType";
+import {DeviceStatus} from "@/features/devices/data/device";
+import {Item} from "@/features/items/data/items";
+
 export interface BaseEntity {
     id: string;
     createdAt?: Date;
@@ -69,20 +70,6 @@ export interface ApplicationSettings {
     goodsReceiptCreateSupervisorRequired: boolean;
     goodsReceiptTargetDocuments: boolean;
     transferTargetItems: boolean;
-}
-
-export type Item = {
-    code: string;
-    name: string;
-    father: string;
-    boxNumber?: number;
-    barcode?: string;
-}
-
-export type BinLocation = {
-    entry: number;
-    code: string;
-    quantity: number;
 }
 
 export enum ResponseStatus {

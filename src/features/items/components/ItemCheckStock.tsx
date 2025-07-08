@@ -13,7 +13,7 @@ interface StockTableProps {
   result: ItemCheckResponse
 }
 
-const StockTable: React.FC<StockTableProps> = ({result}) => {
+const ItemCheckStock: React.FC<StockTableProps> = ({result}) => {
   const {t} = useTranslation();
   const {setLoading, setError} = useThemeContext();
   const stockInfo = useStockInfo();
@@ -221,4 +221,4 @@ const StockTable: React.FC<StockTableProps> = ({result}) => {
     </div>
   )
 };
-export default StockTable;
+export default ItemCheckStock;

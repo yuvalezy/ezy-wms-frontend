@@ -13,7 +13,7 @@ interface BarcodeTableProps {
   submit: (itemCode: string, checkedBarcodes: string[], newBarcode: string) => void;
 }
 
-const BarcodeTable: React.FC<BarcodeTableProps> = ({itemCode, barcodes, submit}) => {
+const ItemCheckBarcodes: React.FC<BarcodeTableProps> = ({itemCode, barcodes, submit}) => {
   const {t} = useTranslation();
   const [checkedBarcodes, setCheckedBarcodes] = React.useState<string[]>([]);
   const [newBarcodeInput, setNewBarcodeInput] = React.useState('');
@@ -81,4 +81,4 @@ const BarcodeTable: React.FC<BarcodeTableProps> = ({itemCode, barcodes, submit})
     </div>
   );
 };
-export default BarcodeTable;
+export default ItemCheckBarcodes;
