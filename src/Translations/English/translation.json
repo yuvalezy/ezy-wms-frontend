@@ -450,6 +450,7 @@
   "offlineTitle": "Internet Signal Lost",
   "offlineMessage": "Please check your internet connection and try again.",
   "license":{
+    "title": "License",
     "LicenseIssueDetected": "License issue detected",
     "paymentDue": "Payment is due. Please contact support.",
     "paymentStatusUnknown": "Payment status unknown. System will be disabled in {0} days.",

@@ -189,6 +189,13 @@ export function useMenus() {
       Icon: Smartphone,
       Color: "text-gray-600",
     },
+    {
+      Link: "/settings/license",
+      Text: t('license.title'),
+      SuperUser: true,
+      Icon: Shield,
+      Color: "text-gray-600",
+    },
   ];
 
   const GetMenus = (authorizations: RoleType[] | undefined, superUser: boolean | undefined) => {
