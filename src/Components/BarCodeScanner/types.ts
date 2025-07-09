@@ -34,6 +34,7 @@ export interface BarCodeScannerProps {
   objectType?: ObjectType;
   objectId?: string;
   objectNumber?: number;
+  binEntry?: number | undefined;
 }
 
 export interface BarCodeScannerRef {

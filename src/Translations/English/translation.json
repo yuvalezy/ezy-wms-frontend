@@ -545,5 +545,7 @@
   "warning": "Warning",
   "error": "Error",
   "syncing": "Syncing...",
-  "unavailable": "Unavailable"
+  "unavailable": "Unavailable",
+  "packageAlreadyCounted": "Package is already counted in another bin location",
+  "packageNotFoundWithCode": "Package with code {{code}} not found"
 }

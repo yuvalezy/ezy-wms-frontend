@@ -67,7 +67,8 @@ const PackageScanner = forwardRef<PackageScannerRef, PackageScannerProps>((
 
     setLoading(true);
     try {
-      const result = await getPackageByBarcode(barcodeInput.trim(), {
+      const result = await getPackageByBarcode({
+        barcode: barcodeInput.trim(),
         contents: true,
         details: true
       });

@@ -1,14 +1,14 @@
-import React, { forwardRef, useImperativeHandle } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Check } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { useBarCodeScanner } from './useBarCodeScanner';
-import { PackageDisplay } from './PackageDisplay';
-import { ScanModeControls } from './ScanModeControls';
-import { UnitSelector } from './UnitSelector';
-import { BarCodeScannerProps, BarCodeScannerRef } from './types';
+import React, {forwardRef, useImperativeHandle} from 'react';
+import {Button} from '@/components/ui/button';
+import {Input} from '@/components/ui/input';
+import {Label} from '@/components/ui/label';
+import {Check} from 'lucide-react';
+import {useTranslation} from 'react-i18next';
+import {PackageDisplay} from './PackageDisplay';
+import {ScanModeControls} from './ScanModeControls';
+import {UnitSelector} from './UnitSelector';
+import {BarCodeScannerProps, BarCodeScannerRef} from './types';
+import {useBarCodeScanner} from "@/components";
 
 const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
   {
@@ -25,11 +25,12 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
     currentPackage,
     objectType,
     objectId,
-    objectNumber
-  }, 
+    objectNumber,
+    binEntry
+  },
   ref
 ) => {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
 
   const {
     barcodeRef,
@@ -54,7 +55,8 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
     objectId,
     objectNumber,
     onAddItem,
-    onPackageChanged
+    onPackageChanged,
+    binEntry
   });
 
   useImperativeHandle(ref, () => ({
@@ -73,8 +75,8 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 p-2">
-      <PackageDisplay onClear={handleClearPackage} loadedPackage={loadedPackage} />
-      
+      <PackageDisplay onClear={handleClearPackage} loadedPackage={loadedPackage}/>
+
       <div className="space-y-2">
         <Label htmlFor="barcode-input">{barcodeLabel}</Label>
         <Input

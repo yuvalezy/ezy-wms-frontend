@@ -49,36 +49,6 @@ export const useGoodsReceiptProcessData = (confirm: boolean) => {
   };
 
   function handleAddItem(value: AddItemValue) {
-    addItemToDocument(value);
-    // setLoading(true);
-    // scanBarcode(barcodeInput)
-    //   .then((items) => handleItems(items))
-    //   .catch((error) => {
-    //     setError(error);
-    //     setLoading(false);
-    //   });
-  }
-
-  // function handleItems(items: Item[]) {
-  //   if (items.length === 0) {
-  //     alert({
-  //       barcode: barcodeInput,
-  //       message: StringFormat(t("barcodeNotFound"), barcodeInput),
-  //       severity: StatusAlertType.Negative,
-  //     });
-  //     setBarcodeInput("");
-  //     setLoading(false);
-  //     return;
-  //   }
-  //   if (items.length === 1) {
-  //     addItemToDocument(items[0].code);
-  //     return;
-  //   }
-  //   handleMultipleItems(items);
-  // }
-
-
-  function addItemToDocument(value: AddItemValue) {
     const item = value.item;
     const unit = value.unit;
     boxConfirmationDialogRef?.current?.show(false);

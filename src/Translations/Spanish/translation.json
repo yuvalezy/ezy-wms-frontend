@@ -544,5 +544,7 @@
   "warning": "Advertencia",
   "error": "Error",
   "syncing": "Sincronizando...",
-  "unavailable": "No disponible"
+  "unavailable": "No disponible",
+  "packageAlreadyCounted": "El paquete ya está contado en otra ubicación",
+  "packageNotFoundWithCode": "Paquete con código {{code}} no encontrado"
 }

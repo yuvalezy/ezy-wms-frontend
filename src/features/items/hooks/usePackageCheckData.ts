@@ -22,7 +22,8 @@ export const usePackageCheckData = () => {
   const executePackageCheck = useCallback(async (id: string, barcode: string) => {
     setLoading(true);
     try {
-      const result = await getPackageByBarcode(barcode, {
+      const result = await getPackageByBarcode({
+        barcode,
         contents: true,
         details: true
       });
@@ -56,7 +57,8 @@ export const usePackageCheckData = () => {
 
     setLoading(true);
     try {
-      const result = await getPackageByBarcode(packageData.barcode, {
+      const result = await getPackageByBarcode({
+        barcode: packageData.barcode,
         contents: true,
         details: true
       });
@@ -80,9 +82,9 @@ export const usePackageCheckData = () => {
 
   // getData: () => (string | number)[][];
 
-  const excelData = () : (string | number)[][] => {
+  const excelData = (): (string | number)[][] => {
     if (!packageData?.contents) return [];
-    
+
     return packageData.contents.map((content) => {
       const quantities = formatQuantityForExcel({
         quantity: content.quantity,
@@ -122,7 +124,7 @@ export const usePackageCheckData = () => {
 
   const handleExportExcel = () => {
     if (!packageData) return;
-    
+
     exportToExcel({
       name: "PackageCheck",
       headers: excelHeaders,

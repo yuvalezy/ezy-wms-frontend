@@ -149,7 +149,10 @@ export const countingService = {
     itemCode: string,
     barcode: string,
     binEntry: number | undefined,
-    unit: UnitType): Promise<CountingAddItemResponse> {
+    unit: UnitType,
+    startNewPackage: boolean,
+    packageId?: string | null):
+    Promise<CountingAddItemResponse> {
     try {
       const url = `Counting/AddItem`;
 
@@ -161,7 +164,9 @@ export const countingService = {
           barcode: barcode,
           binEntry: binEntry,
           quantity: 1,
-          unit: unit
+          unit: unit,
+          startNewPackage,
+          packageId,
         },
       );
       if (response.data.errorMessage == null) {

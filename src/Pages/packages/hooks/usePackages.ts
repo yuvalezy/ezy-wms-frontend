@@ -1,11 +1,11 @@
 import { axiosInstance } from '@/utils/axios-instance';
-import { 
-  PackageDto, 
-  CreatePackageRequest, 
-  CancelPackageRequest, 
+import {
+  PackageDto,
+  CreatePackageRequest,
+  CancelPackageRequest,
   LockPackageRequest,
   MovePackageRequest,
-  PackageValidationResult
+  PackageValidationResult, ObjectType
 } from '../types';
 
 export const createPackage = async (request: CreatePackageRequest): Promise<PackageDto> => {
@@ -28,9 +28,19 @@ export const getPackage = async (id: string): Promise<PackageDto> => {
   }
 };
 
-export const getPackageByBarcode = async (barcode: string, options?: {contents?: boolean, history?: boolean, details?: boolean}): Promise<PackageDto | null> => {
+interface PackageByBarcodeRequest {
+  barcode: string;
+  contents?: boolean;
+  history?: boolean;
+  details?: boolean;
+  binEntry?: number;
+  objectId?: string;
+  objectType?: ObjectType;
+}
+
+export const getPackageByBarcode = async (parameters: PackageByBarcodeRequest): Promise<PackageDto | null> => {
   try {
-    const response = await axiosInstance.get<PackageDto | null>(`Package/barcode/${barcode}?contents=${options?.contents || false}&history=${options?.history || false}&details=${options?.details || false}`);
+    const response = await axiosInstance.post<PackageDto | null>(`package/barcode`, parameters);
     return response.data;
   } catch (error) {
     console.error('Error getting package by barcode:', error);

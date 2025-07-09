@@ -20,6 +20,7 @@ interface UseBarCodeScannerProps {
   objectNumber?: number;
   onAddItem: (addItem: AddItemValue) => void;
   onPackageChanged?: (value: PackageValue) => void;
+  binEntry?: number | undefined;
 }
 
 export const useBarCodeScanner = ({
@@ -32,6 +33,7 @@ export const useBarCodeScanner = ({
                                     objectNumber,
                                     onAddItem,
                                     onPackageChanged,
+                                    binEntry,
                                   }: UseBarCodeScannerProps) => {
   const barcodeRef = useRef<HTMLInputElement>(null);
   const [barcodeInput, setBarcodeInput] = useState('');
@@ -117,7 +119,7 @@ export const useBarCodeScanner = ({
       return;
     }
 
-    getPackageByBarcode(barcode, {history: true})
+    getPackageByBarcode({barcode, history: true, objectId, objectType, binEntry})
       .then((response) => {
         if (response == null) {
           toast.error(t('scanPackageNotFound', {barcode}));
@@ -136,8 +138,16 @@ export const useBarCodeScanner = ({
         setLoadedPackage(value);
         setScanMode('item');
         onPackageChanged?.(value);
+      })
+      .catch((error) => {
+        if (error.response?.data?.error === "Package is already counted in another bin location") {
+          toast.error(t('packageAlreadyCounted'));
+        } else if (error.response?.status === 404) {
+          toast.error(t('packageNotFoundWithCode', {code: barcode}));
+        } else {
+          toast.error(error.message);
+        }
       });
-
     clearBarCode();
   };
 

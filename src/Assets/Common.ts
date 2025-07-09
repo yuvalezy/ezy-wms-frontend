@@ -5,147 +5,148 @@ import {DeviceStatus} from "@/features/devices/data/device";
 import {Item} from "@/features/items/data/items";
 
 export interface BaseEntity {
-    id: string;
-    createdAt?: Date;
-    createdByUser?: User;
-    updatedAt?: Date;
-    updatedByUser?: User;
-    deleted: boolean;
-    deletedAt?: Date;
+  id: string;
+  createdAt?: Date;
+  createdByUser?: User;
+  updatedAt?: Date;
+  updatedByUser?: User;
+  deleted: boolean;
+  deletedAt?: Date;
 }
 
 export interface AxiosErrorResponse {
-    exceptionMessage: string;
-    exceptionType: string;
-    message: string;
+  exceptionMessage: string;
+  exceptionType: string;
+  message: string;
 }
+
 export interface User extends BaseEntity {
-    fullName: string;
-    password: string;
-    email?: string;
-    position?: string;
-    superUser: boolean;
-    active: boolean;
-    warehouses: string[];
-    externalId?: string;
-    authorizationGroupId?: string;
-    authorizationGroup?: AuthorizationGroup;
+  fullName: string;
+  password?: string;
+  email?: string;
+  position?: string;
+  superUser: boolean;
+  active: boolean;
+  warehouses: string[];
+  externalId?: string;
+  authorizationGroupId?: string;
+  authorizationGroup?: AuthorizationGroup;
 }
 
 export interface AuthorizationGroup extends BaseEntity {
-    name: string;
-    description?: string;
-    roles: RoleType[];
+  name: string;
+  description?: string;
+  roles: RoleType[];
 }
 
 export interface UserInfo {
-    id: string;
-    name: string;
-    roles: RoleType[];
-    warehouses: Warehouse[];
-    currentWarehouse: string;
-    binLocations: boolean;
-    settings: ApplicationSettings;
-    customFields: Record<string, CustomField[]>;
-    superUser: boolean;
-    deviceStatus?: DeviceStatus;
+  id: string;
+  name: string;
+  roles: RoleType[];
+  warehouses: Warehouse[];
+  currentWarehouse: string;
+  binLocations: boolean;
+  settings: ApplicationSettings;
+  customFields: Record<string, CustomField[]>;
+  superUser: boolean;
+  deviceStatus?: DeviceStatus;
 }
 
 export interface CustomField {
-    key: string;
-    description: string;
-    type: CustomFieldType;
+  key: string;
+  description: string;
+  type: CustomFieldType;
 }
 
 export interface Warehouse {
-    id: string;
-    name: string;
-    enableBinLocations: boolean;
+  id: string;
+  name: string;
+  enableBinLocations: boolean;
 }
 
 export interface ApplicationSettings {
-    enablePackages: boolean;
-    goodsReceiptDraft: boolean;
-    goodsReceiptModificationSupervisor: boolean;
-    goodsReceiptCreateSupervisorRequired: boolean;
-    goodsReceiptTargetDocuments: boolean;
-    transferTargetItems: boolean;
+  enablePackages: boolean;
+  goodsReceiptDraft: boolean;
+  goodsReceiptModificationSupervisor: boolean;
+  goodsReceiptCreateSupervisorRequired: boolean;
+  goodsReceiptTargetDocuments: boolean;
+  transferTargetItems: boolean;
 }
 
 export enum ResponseStatus {
-    Error = 'Error',
-    Ok = 'Ok'
+  Error = 'Error',
+  Ok = 'Ok'
 }
 
 export function distinctItems(items: Item[]): string[] {
-    return items
-        .map(item => item.father ?? item.code)
-        .filter((code, index, array) => array.indexOf(code) === index);
+  return items
+    .map(item => item.father ?? item.code)
+    .filter((code, index, array) => array.indexOf(code) === index);
 }
 
 export interface UpdateLineParameters {
-    id: string;
-    lineId: string;
-    comment?: string;
-    userName?: string;
-    quantity?: number;
-    reason?: number;
+  id: string;
+  lineId: string;
+  comment?: string;
+  userName?: string;
+  quantity?: number;
+  reason?: number;
 }
 
 export enum UpdateLineReturnValue {
-    Status = "Status",
-    LineStatus = "LineStatus",
-    CloseReason = "CloseReason",
-    Ok = "Ok",
-    SupervisorPassword = "SupervisorPassword",
-    NotSupervisor = "NotSupervisor",
-    QuantityMoreThenAvailable = "QuantityMoreThenAvailable",
+  Status = "Status",
+  LineStatus = "LineStatus",
+  CloseReason = "CloseReason",
+  Ok = "Ok",
+  SupervisorPassword = "SupervisorPassword",
+  NotSupervisor = "NotSupervisor",
+  QuantityMoreThenAvailable = "QuantityMoreThenAvailable",
 }
 
 export enum Status {
-    Open = "Open",
-    Processing = "Processing",
-    Finished = "Finished",
-    Cancelled = "Cancelled",
-    InProgress = "InProgress",
+  Open = "Open",
+  Processing = "Processing",
+  Finished = "Finished",
+  Cancelled = "Cancelled",
+  InProgress = "InProgress",
 }
 
 export type AddItemResponseMultipleValue = {
-    message: string;
-    severity: AlertSeverity;
+  message: string;
+  severity: AlertSeverity;
 };
 export type ObjectAction = "approve" | "cancel";
 
 export enum SourceTarget {
-    Source = "Source",
-    Target = "Target"
+  Source = "Source",
+  Target = "Target"
 }
 
 export type DetailUpdateParameters = {
-    id: string;
-    removeRows: string[];
-    quantityChanges: { [key: string]: number }
+  id: string;
+  removeRows: string[];
+  quantityChanges: { [key: string]: number }
 };
 
 export enum UnitType {
-    Unit = 'Unit',
-    Dozen = 'Dozen',
-    Pack = 'Pack'
+  Unit = 'Unit',
+  Dozen = 'Dozen',
+  Pack = 'Pack'
 }
 
 export enum AddItemReturnValueType {
-    Ok                                            = 0,
-    ItemCodeNotFound                              = -1,
-    ItemCodeBarCodeMismatch                       = -2,
-    TransactionIDNotExists                        = -3,
-    NotAdded                                      = -4,
-    NotPurchaseItem                               = -5,
-    ItemWasNotFoundInTransactionSpecificDocuments = -6,
-    QuantityMoreThenReleased                      = -7,
-    NotStockItem                                  = -8,
-    ItemNotInWarehouse                            = -9,
-    BinNotExists                                  = -10,
-    BinNotInWarehouse                             = -11,
-    BinMissing                                    = -12,
-    QuantityMoreAvailable                         = -13,
+  Ok = 0,
+  ItemCodeNotFound = -1,
+  ItemCodeBarCodeMismatch = -2,
+  TransactionIDNotExists = -3,
+  NotAdded = -4,
+  NotPurchaseItem = -5,
+  ItemWasNotFoundInTransactionSpecificDocuments = -6,
+  QuantityMoreThenReleased = -7,
+  NotStockItem = -8,
+  ItemNotInWarehouse = -9,
+  BinNotExists = -10,
+  BinNotInWarehouse = -11,
+  BinMissing = -12,
+  QuantityMoreAvailable = -13,
 }

@@ -14,6 +14,7 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/c
 import {useStockInfo} from "@/utils/stock-info";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
 import {countingService} from "@/features/counting/data/counting-service";
+import {ObjectType} from "@/pages/packages/types";
 
 export default function CountingProcess() {
   const {t} = useTranslation();
@@ -33,7 +34,9 @@ export default function CountingProcess() {
     handleCancel,
     handleAddItem,
     processAlertRef,
-    info
+    info,
+    currentPackage,
+    setCurrentPackage,
   } = useCountingProcessData();
   const stockInfo = useStockInfo();
 
@@ -48,7 +51,21 @@ export default function CountingProcess() {
     <ContentTheme title={t("counting")}
                   titleOnClick={() => navigate('/counting')}
                   titleBreadcrumbs={titleBreadcrumbs}
-                  footer={binLocation && <BarCodeScanner ref={barcodeRef} enabled unit onAddItem={handleAddItem}/>}
+                  footer={binLocation && (
+                    <BarCodeScanner
+                      ref={barcodeRef}
+                      enabled
+                      unit
+                      enablePackage={user!.settings!.enablePackages}
+                      currentPackage={currentPackage}
+                      objectType={ObjectType.InventoryCounting}
+                      objectId={info?.id}
+                      objectNumber={info?.number}
+                      binEntry={binLocation?.entry}
+                      onAddItem={handleAddItem}
+                      onPackageChanged={setCurrentPackage}
+                    />
+                  )}
     >
       {!binLocation && user?.binLocations &&
           <BinLocationScanner ref={binLocationRef} onChanged={onBinChanged} onClear={onBinClear}/>}
@@ -101,10 +118,10 @@ export default function CountingProcess() {
       </div>
       {currentAlert && id && <Processes ref={processesRef} id={id} alert={currentAlert} reasonType={ReasonType.Counting}
                                         onCancel={handleCancel}
-                                        onQuantityChanged={handleQuantityChanged} 
+                                        onQuantityChanged={handleQuantityChanged}
                                         onUpdateLine={async (params) => {
                                           const result = await countingService.updateLine(params);
-                                          return { returnValue: result };
+                                          return {returnValue: result};
                                         }}/>}
     </ContentTheme>
   );

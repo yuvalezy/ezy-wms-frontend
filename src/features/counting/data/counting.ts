@@ -28,6 +28,8 @@ export interface CountingAddItemResponse {
   numIn: number;
   packMsr: string;
   packUnit: number;
+  packageId?: string | null;
+  packageBarcode?: string | null;
 }
 
 export type CountingSummaryReportData = {
