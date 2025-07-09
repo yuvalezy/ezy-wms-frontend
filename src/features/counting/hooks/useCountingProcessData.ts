@@ -1,6 +1,5 @@
 import {useParams} from "react-router-dom";
-import {useTranslation} from "react-i18next";
-import {Counting, CountingContent, IsNumeric, UnitType, useDateTimeFormat} from "@/assets";
+import {CountingContent, useDateTimeFormat} from "@/assets";
 import {useEffect, useRef, useState} from "react";
 import {
   AddItemValue,
@@ -11,11 +10,10 @@ import {
   useAuth,
   useThemeContext
 } from "@/components";
-import {fetchCounting, fetchCountingContent} from "@/pages/Counting/data/Counting";
-import {addItem} from "@/pages/Counting/data/CountingProcess";
-import {getProcessInfo, TransferDocument} from "@/pages/transfer/data/transfer-document";
 
-import {BinLocation, Item} from "@/features/items/data/items";
+import {BinLocation} from "@/features/items/data/items";
+import {Counting} from "@/features/counting/data/counting";
+import {countingService} from "@/features/counting/data/counting-service";
 
 export const useCountingProcessData = () => {
   const {scanCode} = useParams();
@@ -46,7 +44,7 @@ export const useCountingProcessData = () => {
       binLocationRef.current?.focus();
     }, 1);
     setID(scanCode);
-    fetchCounting(scanCode)
+    countingService.fetch(scanCode)
       .then((result) => setInfo(result))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
@@ -82,7 +80,7 @@ export const useCountingProcessData = () => {
       return;
     }
     binEntry ??= binLocation?.entry;
-    fetchCountingContent(id, binEntry)
+    countingService.fetchContent(id, binEntry)
       .then((v) => setRows(v))
       .catch((e) => {
         setError(e);
@@ -122,7 +120,7 @@ export const useCountingProcessData = () => {
     }
     const item = value.item;
     const unit = value.unit;
-    addItem(id, item.code, item.barcode ?? "", binLocation?.entry, unit)
+    countingService.addItem(id, item.code, item.barcode ?? "", binLocation?.entry, unit)
       .then((v) => {
         if (v.errorMessage != null) {
           setError(v.errorMessage);

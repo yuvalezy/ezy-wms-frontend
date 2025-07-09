@@ -55,7 +55,7 @@ const ContentTheme: React.FC<ContentThemeProps> = (
       AccountState.DemoExpired,
       AccountState.Disabled
     ];
-    return invalidStates.includes(companyInfo.accountStatus.status);
+    return invalidStates.includes(companyInfo.accountStatus);
   };
 
   return (
@@ -118,7 +118,7 @@ const ContentTheme: React.FC<ContentThemeProps> = (
           {shouldShowAccountStatusBanner() && (
             <div className="w-full">
               <AccountStatusBanner
-                accountStatus={companyInfo!.accountStatus!.status}
+                accountStatus={companyInfo!.accountStatus!}
                 className="w-full"
               />
             </div>

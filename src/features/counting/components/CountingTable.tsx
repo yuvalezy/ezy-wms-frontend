@@ -15,8 +15,8 @@ import { useAuth } from "@/components/AppContext";
 import { RoleType } from "@/assets/RoleType";
 import { useDateTimeFormat } from "@/assets/DateFormat";
 import { useDocumentStatusToString } from "@/assets/DocumentStatusString";
-import { Counting } from "@/assets/Counting";
 import { Status } from "@/assets/Common";
+import {Counting} from "@/features/counting/data/counting";
 
 interface CountingTableProps {
   countings: Counting[];

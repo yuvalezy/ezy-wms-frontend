@@ -6,11 +6,11 @@ import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {RoleType} from "@/assets/RoleType";
 import {useDocumentStatusToString} from "@/assets/DocumentStatusString";
-import {Counting} from "@/assets/Counting";
 import {Status} from "@/assets/Common";
 import {useDateTimeFormat} from "@/assets/DateFormat";
 import {CheckCircle, XCircle, FileText} from "lucide-react";
 import {FullInfoBox, InfoBoxValue, Separator} from "@/components";
+import {Counting} from "@/features/counting/data/counting";
 
 type CountingCardProps = {
   doc: Counting,

@@ -4,9 +4,9 @@ import {useTranslation} from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {createCounting} from "@/pages/Counting/data/Counting";
-import {Counting} from "@/assets/Counting";
 import { PlusCircle } from "lucide-react";
+import {Counting} from "@/features/counting/data/counting";
+import {countingService} from "@/features/counting/data/counting-service";
 
 interface CountingFormProps {
     onNewCounting: (document: Counting) => void;
@@ -25,7 +25,7 @@ const CountingForm: React.FC<CountingFormProps> = ({onNewCounting,}) => {
         // }
         setLoading(true);
         try {
-            createCounting(docNameInput)
+            countingService.create(docNameInput)
                 .then((response) => {
                     if (!response.error) {
                         onNewCounting(response);

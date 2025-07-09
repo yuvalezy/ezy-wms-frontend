@@ -2,12 +2,12 @@ import React, {useEffect, useState} from "react";
 import ContentTheme from "@/components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "@/components/ThemeContext";
-import {fetchCountings} from "@/pages/Counting/data/Counting";
-import {Counting} from "@/assets/Counting";
-import CountingCard from "@/pages/Counting/components/CountingCard";
-import CountingTable from "@/pages/Counting/components/CountingTable";
+import CountingCard from "@/features/counting/components/CountingCard";
+import CountingTable from "@/features/counting/components/CountingTable";
 import {Alert, AlertDescription} from "@/components";
 import {AlertCircle} from "lucide-react";
+import {Counting} from "@/features/counting/data/counting";
+import {countingService} from "@/features/counting/data/counting-service";
 
 export default function CountingList() {
   const {setLoading, setError} = useThemeContext();
@@ -16,7 +16,7 @@ export default function CountingList() {
 
   useEffect(() => {
     setLoading(true);
-    fetchCountings()
+    countingService.search()
       .then((data) => setData(data))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));

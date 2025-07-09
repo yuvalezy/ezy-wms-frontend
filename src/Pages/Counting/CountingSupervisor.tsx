@@ -1,22 +1,18 @@
 import React, {useEffect, useState} from "react";
-import {useAuth} from "@/components/AppContext";
 import ContentTheme from "../../components/ContentTheme";
 import {useThemeContext} from "@/components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {StringFormat} from "@/assets/Functions";
-import {countingAction, fetchCountings} from "@/pages/Counting/data/Counting";
-import {Counting} from "@/assets/Counting";
-import CountingCard from "@/pages/Counting/components/CountingCard";
+import {countingService} from "@/features/counting/data/counting-service";
+import CountingCard from "@/features/counting/components/CountingCard";
 import {ObjectAction} from "@/assets/Common";
 import {MessageBox} from "@/components/ui/message-box";
 import { toast } from "sonner";
-import CountingForm from "@/pages/Counting/components/CountingForm";
-import CountingTable from "@/pages/Counting/components/CountingTable";
-import {useNavigate} from "react-router-dom";
-import {RoleType} from "@/assets/RoleType";
+import CountingForm from "@/features/counting/components/CountingForm";
+import CountingTable from "@/features/counting/components/CountingTable";
+import {Counting} from "@/features/counting/data/counting";
 
 export default function CountingSupervisor() {
-  const {user} = useAuth();
   const {t} = useTranslation();
   const {setLoading, setError} = useThemeContext();
   const [countings, setCountings] = useState<Counting[]>([]);
@@ -25,17 +21,10 @@ export default function CountingSupervisor() {
   );
   const [actionType, setActionType] = useState<ObjectAction | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const navigate = useNavigate();
-
-  function handleOpen(id: number) {
-    navigate(`/counting/${id}`);
-  }
-
-  let handleOpenLink = user?.roles?.includes(RoleType.COUNTING);
 
   useEffect(() => {
     setLoading(true);
-    fetchCountings()
+    countingService.search()
       .then((data) => {
         setCountings(data);
       })
@@ -52,7 +41,12 @@ export default function CountingSupervisor() {
   const handleConfirmAction = () => {
     setLoading(true);
     setDialogOpen(false);
-    countingAction(selected!.id, actionType!, user!)
+    
+    const serviceCall = actionType === "cancel" 
+      ? countingService.cancel(selected!.id)
+      : countingService.process(selected!.id);
+    
+    serviceCall
       .then((result) => {
         if (typeof result === "boolean" || result.success) {
           setCountings((prev) =>

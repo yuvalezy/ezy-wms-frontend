@@ -2,12 +2,12 @@ import React, {useEffect, useState} from "react";
 import {useThemeContext} from "@/components";
 import {useTranslation} from "react-i18next";
 import {useNavigate, useParams} from "react-router-dom";
-import {IsNumeric} from "@/assets";
-import {CountingSummaryReportData, fetchCountingSummaryReport} from "@/pages/Counting/data/Report";
-import CountingSummaryReportTable from "@/pages/Counting/components/CountingSummaryReportTable";
+import CountingSummaryReportTable from "@/features/counting/components/CountingSummaryReportTable";
 import {exportToExcel} from "@/utils/excelExport";
 import {formatQuantityForExcel} from "@/utils/excel-quantity-format";
 import ContentTheme from "@/components/ContentTheme";
+import {countingService} from "@/features/counting/data/counting-service";
+import {CountingSummaryReportData} from "@/features/counting/data/counting";
 
 export default function CountingSummaryReport() {
   const {scanCode} = useParams();
@@ -21,7 +21,7 @@ export default function CountingSummaryReport() {
       return;
     }
     setLoading(true);
-    fetchCountingSummaryReport(scanCode)
+    countingService.fetchCountingSummaryReport(scanCode)
       .then((result) => setData(result))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));

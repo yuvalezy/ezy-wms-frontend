@@ -1,10 +1,10 @@
 import * as React from 'react';
-import {CountingSummaryReportLine} from "@/pages/Counting/data/Report";
 import {useTranslation} from "react-i18next";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {useStockInfo} from "@/utils/stock-info";
 import InfoBox, {FullInfoBox, InfoBoxValue} from "@/components/InfoBox";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
+import {CountingSummaryReportLine} from "@/features/counting/data/counting";
 
 interface CountingSummaryReportTableProps {
   data: CountingSummaryReportLine[]

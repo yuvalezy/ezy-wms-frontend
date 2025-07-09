@@ -3,17 +3,17 @@ import {useTranslation} from "react-i18next";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import BarCodeScanner from "../../components/BarCodeScanner";
 import BinLocationScanner from "../../components/BinLocationScanner";
-import {updateLine} from "@/pages/Counting/data/CountingProcess";
 import ProcessAlert from "../../components/ProcessAlert";
 import {ReasonType} from "@/assets";
 import Processes from "../../components/Processes";
 import ContentTheme from "@/components/ContentTheme";
 import {AlertCircle} from "lucide-react";
-import {useCountingProcessData} from "@/pages/Counting/data/counting-process-data";
+import {useCountingProcessData} from "@/features/counting/hooks/useCountingProcessData";
 import {useNavigate} from "react-router-dom";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {useStockInfo} from "@/utils/stock-info";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
+import {countingService} from "@/features/counting/data/counting-service";
 
 export default function CountingProcess() {
   const {t} = useTranslation();
@@ -103,7 +103,7 @@ export default function CountingProcess() {
                                         onCancel={handleCancel}
                                         onQuantityChanged={handleQuantityChanged} 
                                         onUpdateLine={async (params) => {
-                                          const result = await updateLine(params);
+                                          const result = await countingService.updateLine(params);
                                           return { returnValue: result };
                                         }}/>}
     </ContentTheme>
