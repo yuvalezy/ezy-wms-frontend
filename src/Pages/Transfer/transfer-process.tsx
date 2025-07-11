@@ -45,6 +45,7 @@ export default function TransferProcess() {
           <Card>
             <CardContent>
               <BinLocationScanner label={t("scanTransferTargetBin")}
+                                  autofocus={false}
                                   onScan={(bin) => navigate(`/transfer/${id}/targetBins?bin=${JSON.stringify(bin)}`)}/>
             </CardContent>
           </Card>

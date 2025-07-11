@@ -22,6 +22,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
     addActionIcon,
     pickPackOnly = false,
     enablePackage = false,
+    enablePackageCreate = true,
     currentPackage,
     objectType,
     objectId,
@@ -75,6 +76,15 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 p-2">
+      <ScanModeControls
+        enablePackage={enablePackage}
+        enablePackageCreate={enablePackageCreate}
+        scanMode={scanMode}
+        createPackage={createPackage}
+        onScanModeChange={handleScanModeChange}
+        onCreatePackageChange={setCreatePackage}
+      />
+
       <PackageDisplay onClear={handleClearPackage} loadedPackage={loadedPackage}/>
 
       <div className="space-y-2">
@@ -94,14 +104,6 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
         pickPackOnly={pickPackOnly}
         selectedUnit={selectedUnit}
         onUnitChange={handleUnitChanged}
-      />
-
-      <ScanModeControls
-        enablePackage={enablePackage}
-        scanMode={scanMode}
-        createPackage={createPackage}
-        onScanModeChange={handleScanModeChange}
-        onCreatePackageChange={setCreatePackage}
       />
 
       <div className="flex space-x-2">

@@ -30,6 +30,7 @@ export interface BarCodeScannerProps {
   addActionIcon?: LucideIcon;
   pickPackOnly?: boolean;
   enablePackage?: boolean;
+  enablePackageCreate?: boolean;
   currentPackage?: PackageValue | null;
   objectType?: ObjectType;
   objectId?: string;

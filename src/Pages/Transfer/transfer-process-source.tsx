@@ -54,7 +54,14 @@ export default function TransferProcessSource() {
     <ContentTheme title={t("transfer")} titleOnClick={() => navigate(`/transfer`)}
                   titleBreadcrumbs={titleBreadcrumbs}
                   footer={binLocation &&
-                      <BarCodeScanner unit ref={barcodeRef} onAddItem={handleAddItem} enabled/>}
+                      <BarCodeScanner
+                          unit
+                          ref={barcodeRef}
+                          onAddItem={handleAddItem}
+                          enabled
+                          enablePackage={user!.settings!.enablePackages}
+                          enablePackageCreate={false}
+                      />}
     >
       {user?.binLocations && !binLocation &&
           <BinLocationScanner showLabel={false} onChanged={onBinChanged} onClear={onBinClear}/>}

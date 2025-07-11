@@ -1,10 +1,10 @@
 import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import React, {useEffect, useState} from "react";
-import {useThemeContext} from "@/components";
+import {useAuth, useThemeContext} from "@/components";
 import TransferCard from "@/features/transfer/components/transfer-card";
 import TransferTable from "@/features/transfer/components/transfer-table";
-import {ObjectAction} from "@/assets/Common";
+import {ObjectAction, User} from "@/assets/Common";
 import {StringFormat} from "@/assets/Functions";
 import TransferForm from "@/features/transfer/components/transfer-form";
 import {
@@ -22,6 +22,7 @@ import {transferService} from "@/features/transfer/data/transefer-service";
 
 export default function TransferSupervisor() {
     const {t} = useTranslation();
+    const {user} = useAuth();
     const {setLoading, setError} = useThemeContext();
     const [transfers, setTransfers] = useState<TransferDocument[]>([]);
     const [selectedTransfer, setSelectedTransfer] = useState<TransferDocument | null>(null);
@@ -67,7 +68,16 @@ export default function TransferSupervisor() {
 
     return (
         <ContentTheme title={t("transferSupervisor")}>
-            <TransferForm onNewTransfer={transfer => setTransfers((prevTransfers) => [transfer, ...prevTransfers])}/>
+            <TransferForm onNewTransfer={transfer => {
+                const createByUser: User = {
+                    fullName: user!.name, id: user!.id, deleted: false,
+                    superUser: false,
+                    active: false,
+                    warehouses: []
+                };
+                const newTransfer = {...transfer, createdByUser: createByUser};
+                setTransfers((prevTransfers) => [newTransfer, ...prevTransfers]);
+            }}/>
             <div className="my-4">
                 {/* Mobile view - Cards */}
                 <div className="block sm:hidden">

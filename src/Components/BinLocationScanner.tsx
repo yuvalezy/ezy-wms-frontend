@@ -16,6 +16,7 @@ export interface BinLocationScannerProps {
   onScan?: (bin: BinLocation) => void;
   onChanged?: (bin: BinLocation) => void;
   onClear?: () => void;
+  autofocus?: boolean;
 }
 
 export interface BinLocationScannerRef {
@@ -30,7 +31,8 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
     onChanged,
     onClear,
     label,
-    showLabel = true
+    showLabel = true,
+    autofocus = true,
   }, ref) => {
   const {setLoading, setError} = useThemeContext();
   const {t} = useTranslation();
@@ -40,10 +42,12 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
 
   // Auto-focus the input when component mounts and when binLocation is cleared
   useEffect(() => {
+    if (!autofocus)
+      return;
     if (!binLocation) {
       binRef.current?.focus();
     }
-  }, [binLocation]);
+  }, [binLocation, autofocus]);
 
   useImperativeHandle(ref, () => ({
     focus() {

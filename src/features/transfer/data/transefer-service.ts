@@ -6,7 +6,9 @@ import {
   TransferAddItemResponse, TransferContent, transferContentParameters,
   TransferDocument,
   TransfersOrderBy,
-  TransferUpdateParameters
+  TransferUpdateParameters,
+  TransferAddSourcePackageRequest,
+  TransferAddTargetPackageRequest
 } from "@/features/transfer/data/transfer";
 import {
   AddItemReturnValueType,
@@ -283,6 +285,42 @@ export const addItem = async (
     } catch (error) {
       console.error("Error creating transfer request: ", error);
       throw error; // Re-throwing so that the calling function can decide what to do with the error
+    }
+  },
+
+  async addSourcePackage(request: TransferAddSourcePackageRequest): Promise<TransferAddItemResponse> {
+    try {
+      const response = await axiosInstance.post<TransferAddItemResponse>(
+        `transfer/addSourcePackage`,
+        request
+      );
+      
+      if (response.data.errorMessage) {
+        throw new Error(response.data.errorMessage);
+      }
+      
+      return response.data;
+    } catch (error) {
+      console.error("Error adding source package:", error);
+      throw error;
+    }
+  },
+
+  async addTargetPackage(request: TransferAddTargetPackageRequest): Promise<TransferAddItemResponse> {
+    try {
+      const response = await axiosInstance.post<TransferAddItemResponse>(
+        `transfer/addTargetPackage`,
+        request
+      );
+      
+      if (response.data.errorMessage) {
+        throw new Error(response.data.errorMessage);
+      }
+      
+      return response.data;
+    } catch (error) {
+      console.error("Error adding target package:", error);
+      throw error;
     }
   },
 
