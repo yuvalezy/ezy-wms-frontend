@@ -289,40 +289,28 @@ export const addItem = async (
   },
 
   async addSourcePackage(request: TransferAddSourcePackageRequest): Promise<TransferAddItemResponse> {
-    try {
-      const response = await axiosInstance.post<TransferAddItemResponse>(
-        `transfer/addSourcePackage`,
-        request
-      );
-      
-      if (response.data.errorMessage) {
-        throw new Error(response.data.errorMessage);
-      }
-      
-      return response.data;
-    } catch (error) {
-      console.error("Error adding source package:", error);
-      throw error;
+    const response = await axiosInstance.post<TransferAddItemResponse>(
+      `transfer/addSourcePackage`,
+      request
+    );
+
+    if (response.data.errorMessage) {
+      throw new Error(response.data.errorMessage);
     }
+
+    return response.data;
   },
 
   async addTargetPackage(request: TransferAddTargetPackageRequest): Promise<TransferAddItemResponse> {
-    try {
-      const response = await axiosInstance.post<TransferAddItemResponse>(
-        `transfer/addTargetPackage`,
-        request
-      );
-      
-      if (response.data.errorMessage) {
-        throw new Error(response.data.errorMessage);
-      }
-      
-      return response.data;
-    } catch (error) {
-      console.error("Error adding target package:", error);
-      throw error;
+    const response = await axiosInstance.post<TransferAddItemResponse>(
+      `transfer/addTargetPackage`,
+      request
+    );
+
+    if (response.data.errorMessage) {
+      throw new Error(response.data.errorMessage);
     }
+
+    return response.data;
   },
-
-
 }

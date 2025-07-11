@@ -1,12 +1,17 @@
 import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useSwipeable} from "react-swipeable";
-import { Edit3, MessageCircle } from "lucide-react";
+import { Edit3, MessageCircle, Package2, X } from "lucide-react";
 import {AddItemResponseMultipleValue, UnitType} from "@/assets";
 import {useAuth} from "@/components/AppContext";
 import {ItemCustomFields} from "@/features/items/components/ItemDetailsList";
 import {PackageValue} from "@/components/BarCodeScanner";
 import {PackageContentDto} from "@/features/packages/types";
+import {Button} from "@/components/ui/button";
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import {Card} from "@/components/ui/card";
+import ClickableItemCode from "@/components/ClickableItemCode";
+import {useStockInfo} from "@/utils/stock-info";
 
 export type AlertSeverity = "Information" | "Positive" | "Negative" | "Warning";
 
@@ -59,6 +64,8 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
   const {t} = useTranslation();
   const {user} = useAuth();
   const [swiped, setSwiped] = useState(false);
+  const [showPackageContents, setShowPackageContents] = useState(false);
+  const stockInfo = useStockInfo();
 
   const handlers = useSwipeable({
     onSwipedLeft: () => {
@@ -95,13 +102,6 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
     }
   };
 
-
-  const units = [
-    {text: t("unit"), value: UnitType.Unit},
-    {text: t("dozen"), value: UnitType.Dozen},
-    {text: t("box"), value: UnitType.Pack}
-  ];
-
   const unitDesc = () => {
     switch (alert.unit) {
       case UnitType.Unit:
@@ -114,6 +114,24 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
         return null;
     }
   }
+
+  const formatStock = (content: PackageContentDto) => {
+    if (!content.itemData) return `${content.quantity} ${t('units')}`;
+    
+    const itemData = content.itemData;
+    const packages = Math.floor(content.quantity / (itemData.quantityInUnit * itemData.quantityInPack));
+    const remainingForDozens = content.quantity % (itemData.quantityInUnit * itemData.quantityInPack);
+    const dozens = Math.floor(remainingForDozens / itemData.quantityInUnit);
+    const units = remainingForDozens % itemData.quantityInUnit;
+    
+    const parts = [];
+    if (packages > 0) parts.push(`${packages} ${itemData.packMeasure || 'Box'}`);
+    if (dozens > 0) parts.push(`${dozens} ${itemData.unitMeasure || 'Doz'}`);
+    if (units > 0) parts.push(`${units} ${t('units')}`);
+    return parts.join(', ') || '0';
+  };
+
+  const hasPackageContents = alert.packageContents && alert.packageContents.length > 0;
 
   return (
     <div className="relative p-1 rounded-md overflow-hidden" {...handlers}>
@@ -130,7 +148,20 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
         {alert.package && (
           <div className="mb-3">
             <div className="text-xs text-gray-500 mt-1">{t('package')}</div>
-            <h4 className="font-bold text-lg text-gray-800">{alert.package.barcode}</h4>
+            <div className="flex items-center justify-between">
+              <h4 className="font-bold text-lg text-gray-800">{alert.package.barcode}</h4>
+              {hasPackageContents && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowPackageContents(true)}
+                  className="flex items-center gap-1"
+                >
+                  <Package2 className="w-4 h-4" />
+                  {t('viewContents')}
+                </Button>
+              )}
+            </div>
           </div>
         )}
 
@@ -215,7 +246,7 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
             </div>
           )}
         </div>
-        {!(alert.canceled ?? false) && alertSeverity !== 'Negative' && !swiped &&
+        {!(alert.canceled ?? false) && alertSeverity !== 'Negative' && !swiped && !alert.packageContents &&
             <div className="absolute top-2 right-2 flex flex-col space-y-2">
                 <Edit3 className="h-5 w-5 cursor-pointer hover:text-blue-500" onClick={() => onAction(AlertActionType.Quantity)}/>
               {enableComment &&
@@ -224,6 +255,62 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
             </div>
         }
       </div>
+
+      {/* Package Contents Dialog */}
+      <Dialog open={showPackageContents} onOpenChange={setShowPackageContents}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Package2 className="w-5 h-5" />
+              {t('packageContents')}
+              {alert.package && (
+                <span className="text-sm font-mono text-gray-600">
+                  {alert.package.barcode}
+                </span>
+              )}
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            {alert.packageContents?.map((content, index) => (
+              <Card key={index} className="p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <ClickableItemCode itemCode={content.itemCode} />
+                    </div>
+                    <p className="text-sm text-gray-600 mt-1 truncate">
+                      {content.itemData?.itemName || content.itemCode}
+                    </p>
+                    <p className="text-sm text-gray-600 mt-1">
+                      {formatStock(content)}
+                    </p>
+                  </div>
+                  
+                  <div className="text-right">
+                    <p className="text-sm text-gray-500">{t('quantity')}</p>
+                    <p className="font-semibold">
+                      {content.itemData ? stockInfo({
+                        quantity: content.quantity,
+                        numInBuy: content.itemData.quantityInUnit,
+                        buyUnitMsr: content.itemData.unitMeasure,
+                        purPackUn: content.itemData.quantityInPack,
+                        purPackMsr: content.itemData.packMeasure,
+                      }) : `${content.quantity} ${t('units')}`}
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            ))}
+            
+            {(!alert.packageContents || alert.packageContents.length === 0) && (
+              <div className="text-center py-8 text-gray-500">
+                {t('noPackageContents')}
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

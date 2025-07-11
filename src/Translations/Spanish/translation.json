@@ -546,5 +546,8 @@
   "syncing": "Sincronizando...",
   "unavailable": "No disponible",
   "packageAlreadyCounted": "El paquete ya está contado en otra ubicación",
-  "packageNotFoundWithCode": "Paquete con código {{code}} no encontrado"
+  "packageNotFoundWithCode": "Paquete con código {{code}} no encontrado",
+  "viewContents": "Ver Contenidos",
+  "noPackageContents": "No se encontraron contenidos del paquete",
+  "packageAlreadyAddedAsSource": "El paquete {{barcode}} ya está agregado como fuente a esta transferencia"
 }

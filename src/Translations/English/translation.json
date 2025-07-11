@@ -547,5 +547,8 @@
   "syncing": "Syncing...",
   "unavailable": "Unavailable",
   "packageAlreadyCounted": "Package is already counted in another bin location",
-  "packageNotFoundWithCode": "Package with code {{code}} not found"
+  "packageNotFoundWithCode": "Package with code {{code}} not found",
+  "viewContents": "View Contents",
+  "noPackageContents": "No package contents found",
+  "packageAlreadyAddedAsSource": "Package {{barcode}} is already added as source to this transfer"
 }

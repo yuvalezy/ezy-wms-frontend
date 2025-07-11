@@ -11,6 +11,7 @@ import {
   useThemeContext
 } from "@/components";
 import {useTranslation} from "react-i18next";
+import axios from "axios";
 
 import {BinLocation} from "@/features/items/data/items";
 import {
@@ -173,6 +174,13 @@ export const useTransferProcessSourceData = () => {
         }, 100);
       })
       .catch((error) => {
+        if (axios.isAxiosError(error) && error.response?.status === 400) {
+          const errorMessage = error.response?.data?.error;
+          if (errorMessage === "Package is already added as source to this transfer") {
+            setError(t('packageAlreadyAddedAsSource', { barcode: value.barcode }));
+            return;
+          }
+        }
         setError(error);
       })
       .finally(() => setLoading(false))
