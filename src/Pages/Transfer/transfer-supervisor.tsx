@@ -2,12 +2,11 @@ import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import React, {useEffect, useState} from "react";
 import {useThemeContext} from "@/components";
-import {fetchTransfers, TransferDocument, transferAction} from "@/pages/transfer/data/transfer-document";
-import TransferCard from "@/pages/transfer/components/transfer-card";
-import TransferTable from "@/pages/transfer/components/transfer-table";
+import TransferCard from "@/features/transfer/components/transfer-card";
+import TransferTable from "@/features/transfer/components/transfer-table";
 import {ObjectAction} from "@/assets/Common";
 import {StringFormat} from "@/assets/Functions";
-import TransferForm from "@/pages/transfer/components/transfer-form";
+import TransferForm from "@/features/transfer/components/transfer-form";
 import {
     AlertDialog,
     AlertDialogContent,
@@ -18,6 +17,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import {TransferDocument} from "@/features/transfer/data/transfer";
+import {transferService} from "@/features/transfer/data/transefer-service";
 
 export default function TransferSupervisor() {
     const {t} = useTranslation();
@@ -29,7 +30,7 @@ export default function TransferSupervisor() {
 
     useEffect(() => {
         setLoading(true);
-        fetchTransfers({progress: true})
+        transferService.search({progress: true})
             .then((data) => setTransfers(data))
             .catch((error) => setError(error))
             .finally(() => setLoading(false));
@@ -38,7 +39,12 @@ export default function TransferSupervisor() {
         setLoading(true);
         setDialogOpen(false);
         const id = selectedTransfer?.id!;
-        transferAction(id, actionType!)
+
+        const serviceCall = actionType === "cancel"
+        ? transferService.cancel(id) :
+          transferService.process(id);
+
+        serviceCall
             .then((result) => {
                 if (typeof result === "boolean" || result.success) {
                     setTransfers((prevTransfers) =>

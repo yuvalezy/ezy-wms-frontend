@@ -4,7 +4,6 @@ export * from './PackageTransactionType.enum';
 export * from './PackageMovementType.enum';
 export * from './InconsistencyType.enum';
 export * from './InconsistencySeverity.enum';
-export * from './UnitType.enum';
 export * from './ObjectType.enum';
 
 // DTOs

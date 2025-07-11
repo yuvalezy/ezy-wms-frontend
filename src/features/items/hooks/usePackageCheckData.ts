@@ -3,8 +3,8 @@ import {useThemeContext} from "@/components/ThemeContext";
 import {useRef, useState, useCallback} from "react";
 import {PackageScannerRef} from "@/components/PackageScanner";
 import {useAuth} from "@/components/AppContext";
-import {PackageDto} from "@/pages/packages/types";
-import {getPackageByBarcode} from "@/pages/packages/hooks";
+import {PackageDto} from "@/features/packages/types";
+import {getPackageByBarcode} from "@/features/packages/hooks";
 import {exportToExcel} from "@/utils/excelExport";
 import {formatQuantityForExcel} from "@/utils/excel-quantity-format";
 

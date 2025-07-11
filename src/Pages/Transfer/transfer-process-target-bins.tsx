@@ -17,13 +17,13 @@ import BinLocationScanner from "@/components/BinLocationScanner";
 import ProcessAlert from "@/components/ProcessAlert";
 import {ReasonType} from "@/assets";
 import Processes from "@/components/Processes";
-import {updateLine} from "@/pages/transfer/data/transfer-process";
-import {useTransferProcessTargetBinsData} from "@/pages/transfer/data/transfer-process-target-bins-data";
+import {useTransferProcessTargetBinsData} from "@/features/transfer/hooks/useTransferProcessTargetBinsData";
 import {Card, CardContent, InfoBoxValue} from "@/components";
 import {AlertCircle} from "lucide-react";
 import {useStockInfo} from "@/utils/stock-info";
 import InfoBox from "@/components/InfoBox";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
+import {transferService} from "@/features/transfer/data/transefer-service";
 
 export default function TransferProcessTargetBins() {
   const {t} = useTranslation();
@@ -170,7 +170,7 @@ export default function TransferProcessTargetBins() {
           reasonType={ReasonType.Transfer}
           onCancel={handleCancel}
           onQuantityChanged={handleQuantityChanged}
-          onUpdateLine={updateLine}
+          onUpdateLine={transferService.updateLine}
           onUpdateComplete={loadRows}
       />}
     </ContentTheme>

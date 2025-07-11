@@ -1,6 +1,6 @@
 import { LucideIcon } from 'lucide-react';
 import { UnitType } from '@/assets';
-import { ObjectType } from '@/pages/packages/types';
+import { ObjectType } from '@/features/packages/types';
 import {Item} from "@/features/items/data/items";
 
 export interface PackageValue {

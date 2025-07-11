@@ -9,7 +9,7 @@ import BarCodeScanner from "../../components/BarCodeScanner";
 import {useGoodsReceiptProcessData} from "@/pages/GoodsReceipt/data/goods-receipt-process-data";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "@/components";
-import {ObjectType} from "@/pages/packages/types";
+import {ObjectType} from "@/features/packages/types";
 
 export default function GoodsReceiptProcess({confirm = false}: { confirm?: boolean }) {
   const {t} = useTranslation();

@@ -1,24 +1,19 @@
 import {useParams} from "react-router-dom";
-import {IsNumeric, SourceTarget, UnitType, useDateTimeFormat} from "@/assets";
+import {SourceTarget, useDateTimeFormat} from "@/assets";
 import {useEffect, useRef, useState} from "react";
 import {AddItemValue, BarCodeScannerRef, ProcessAlertValue, ProcessesRef, useAuth, useThemeContext} from "@/components";
-import {
-  addItem,
-  fetchTransferContent,
-  getProcessInfo,
-  TransferContent,
-  TransferDocument
-} from "@/pages/transfer/data/transfer-document";
 import {useTranslation} from "react-i18next";
 
-import {BinLocation, Item} from "@/features/items/data/items";
+import {BinLocation} from "@/features/items/data/items";
+import {TransferContent, TransferDocument} from "@/features/transfer/data/transfer";
+import {transferService} from "@/features/transfer/data/transefer-service";
 
-export const useTransferProcessSourceData = () => {
+export const useTransferProcessTargetBinsData = () => {
   const {scanCode} = useParams();
   const {dateTimeFormat} = useDateTimeFormat();
   const [id, setID] = useState<string | null>();
-  const [info, setInfo] = useState<TransferDocument | null>(null);
   const [binLocation, setBinLocation] = useState<BinLocation | null>(null);
+  const [info, setInfo] = useState<TransferDocument | null>(null);
   const [enable, setEnable] = useState(false);
   const {setLoading, setError} = useThemeContext();
   const {user} = useAuth();
@@ -39,7 +34,7 @@ export const useTransferProcessSourceData = () => {
       return;
     }
     setID(scanCode);
-    getProcessInfo(scanCode)
+    transferService.getProcessInfo(scanCode)
       .then((result) => setInfo(result))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
@@ -90,7 +85,7 @@ export const useTransferProcessSourceData = () => {
     }
     binEntry ??= binLocation?.entry;
     setLoading(true);
-    fetchTransferContent({id, type: SourceTarget.Source, binEntry})
+    transferService.fetchContent({id, type: SourceTarget.Target, binEntry, targetBinQuantity: true})
       .then((v) => setRows(v))
       .catch((e) => {
         setError(e);
@@ -105,14 +100,14 @@ export const useTransferProcessSourceData = () => {
     }
     const item = value.item;
     const unit = value.unit;
-    const params = {id, itemCode: item.code, barcode: item.barcode, type: SourceTarget.Source, binEntry: binLocation?.entry, unit};
-    addItem(params, t)
+    const params = {id, itemCode: item.code, barcode: item.barcode, type: SourceTarget.Target, binEntry: binLocation?.entry, unit};
+    transferService.addItem(params, t)
       .then((v) => {
         if (v.errorMessage != null) {
           setError(v.errorMessage);
           return;
         }
-        const date = new Date(Date.now());
+        let date = new Date(Date.now());
         setCurrentAlert({
           lineId: v.lineId,
           quantity: 1,
@@ -125,13 +120,10 @@ export const useTransferProcessSourceData = () => {
           itemCode: item.code,
           severity: "Information",
           timeStamp: dateTimeFormat(date)
-        });
+        })
         barcodeRef?.current?.clear();
         loadRows();
         barcodeRef?.current?.focus();
-        setTimeout(() => {
-          processAlertRef?.current?.scrollIntoView({behavior: "smooth", block: "start"});
-        }, 100);
       })
       .catch((error) => {
         setError(error);
@@ -163,7 +155,6 @@ export const useTransferProcessSourceData = () => {
     setCurrentAlert(newAlert);
     loadRows();
   }
-
   return {
     id,
     binLocation,

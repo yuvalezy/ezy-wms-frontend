@@ -1,21 +1,20 @@
 import ContentTheme from "@/components/ContentTheme";
-import {Link, useNavigate} from "react-router-dom";
-import {Button, Card, CardContent, FullInfoBox, InfoBoxValue, SecondaryInfoBox} from "@/components";
+import {useNavigate} from "react-router-dom";
+import {Button} from "@/components";
 import {useTranslation} from "react-i18next";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import BarCodeScanner from "@/components/BarCodeScanner";
 import BinLocationScanner from "@/components/BinLocationScanner";
 import ProcessAlert from "@/components/ProcessAlert";
-import {ReasonType, UnitType} from "@/assets";
+import {ReasonType} from "@/assets";
 import Processes from "@/components/Processes";
-import {updateLine} from "@/pages/transfer/data/transfer-process";
 import {AlertCircle} from "lucide-react";
-import {useTransferProcessSourceData} from "@/pages/transfer/data/transfer-process-source-data";
+import {useTransferProcessSourceData} from "@/features/transfer/hooks/useTransferProcessSourceData";
 import {useStockInfo} from "@/utils/stock-info";
-import {TransferContent} from "./data/transfer-document";
 import React from "react";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
+import {transferService} from "@/features/transfer/data/transefer-service";
 
 export default function TransferProcessSource() {
   const {t} = useTranslation();
@@ -120,7 +119,7 @@ export default function TransferProcessSource() {
           reasonType={ReasonType.Transfer}
           onCancel={handleCancel}
           onQuantityChanged={handleQuantityChanged}
-          onUpdateLine={updateLine}
+          onUpdateLine={transferService.updateLine}
           onUpdateComplete={loadRows}
       />}
     </ContentTheme>

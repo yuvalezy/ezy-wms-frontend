@@ -1,10 +1,11 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {useAuth, useThemeContext} from "@/components";
 import {useEffect, useState} from "react";
-import {getProcessInfo, transferAction, TransferDocument} from "@/pages/transfer/data/transfer-document";
-import {IsNumeric, StringFormat} from "@/assets";
+import {StringFormat} from "@/assets";
 import {toast} from "sonner";
 import {useTranslation} from "react-i18next";
+import {TransferDocument} from "@/features/transfer/data/transfer";
+import {transferService} from "@/features/transfer/data/transefer-service";
 
 export const useTransferProcessData = () => {
   const {t} = useTranslation();
@@ -22,7 +23,7 @@ export const useTransferProcessData = () => {
       return;
     }
     setID(scanCode);
-    getProcessInfo(scanCode)
+    transferService.getProcessInfo(scanCode)
       .then((result) => setInfo(result))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
@@ -34,9 +35,9 @@ export const useTransferProcessData = () => {
       return;
     if (window.confirm(StringFormat(t("createTransferConfirm"), info?.number))) {
       setLoading(true);
-      transferAction(id, "approve")
+      transferService.process(id)
         .then((result) => {
-          if (typeof result === "boolean" || result.success) {
+          if (result.success) {
             toast.success(t("transferApproved"));
             navigate(`/transfer`);
           }

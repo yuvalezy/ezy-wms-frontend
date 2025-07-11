@@ -17,8 +17,8 @@ import { RoleType } from "@/assets/RoleType";
 import { useDateTimeFormat } from "@/assets/DateFormat";
 import { useDocumentStatusToString } from "@/assets/DocumentStatusString";
 import { formatNumber } from "@/lib/utils";
-import { TransferDocument } from "@/pages/transfer/data/transfer-document";
 import { Status } from "@/assets/Common";
+import {TransferDocument} from "@/features/transfer/data/transfer";
 
 interface TransferTableProps {
   transfers: TransferDocument[];

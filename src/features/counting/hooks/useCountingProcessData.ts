@@ -55,6 +55,7 @@ export const useCountingProcessData = () => {
       setBinLocation(bin);
       setEnable(true);
       loadRows(bin.entry);
+      setCurrentPackage(null);
       setTimeout(() => {
         barcodeRef?.current?.focus()
       }, 1);
@@ -69,6 +70,7 @@ export const useCountingProcessData = () => {
     setRows(null);
     setEnable(false);
     setCurrentAlert(null);
+    setCurrentPackage(null);
     setTimeout(() => {
       binLocationRef?.current?.focus();
     }, 1);
@@ -127,6 +129,7 @@ export const useCountingProcessData = () => {
           return;
         }
         let date = new Date(Date.now());
+        const newPackage = data.packageId ? {id: data.packageId, barcode: data.packageBarcode??value.package?.barcode??'Unknown Package'} : value.package;
         setCurrentAlert({
           lineId: data.lineId,
           quantity: 1,
@@ -139,9 +142,9 @@ export const useCountingProcessData = () => {
           itemCode: item.code,
           severity: "Information",
           timeStamp: dateTimeFormat(date),
-          package: data.packageId ? {id: data.packageId, barcode: data.packageBarcode!} : value.package
+          package: newPackage
         })
-        setCurrentPackage(data.packageId ? {id: data.packageId, barcode: data.packageBarcode!} : value.package);
+        setCurrentPackage(newPackage);
         barcodeRef?.current?.clear();
         loadRows();
         barcodeRef?.current?.focus();

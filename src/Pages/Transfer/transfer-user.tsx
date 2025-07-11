@@ -2,11 +2,12 @@ import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import {Alert, AlertDescription, useThemeContext} from "@/components";
 import React, {useEffect, useState} from "react";
-import {fetchTransfers, TransferDocument} from "@/pages/transfer/data/transfer-document";
 import {Status} from "@/assets";
-import TransferCard from "@/pages/transfer/components/transfer-card";
-import TransferTable from "@/pages/transfer/components/transfer-table";
+import TransferCard from "@/features/transfer/components/transfer-card";
+import TransferTable from "@/features/transfer/components/transfer-table";
 import {AlertCircle} from "lucide-react";
+import {TransferDocument} from "@/features/transfer/data/transfer";
+import {transferService} from "@/features/transfer/data/transefer-service";
 
 export default function TransferUser() {
   const {setLoading, setError} = useThemeContext();
@@ -15,7 +16,7 @@ export default function TransferUser() {
 
   useEffect(() => {
     setLoading(true);
-    fetchTransfers({statuses: [Status.Open, Status.InProgress], progress: true})
+    transferService.search({statuses: [Status.Open, Status.InProgress], progress: true})
       .then((data) => setTransfers(data))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));

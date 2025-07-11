@@ -7,13 +7,13 @@ import {Button} from "@/components/ui/button";
 import {Progress} from "@/components/ui/progress";
 import {RoleType} from "@/assets/RoleType";
 import {useDocumentStatusToString} from "@/assets/DocumentStatusString";
-import {TransferDocument} from "@/pages/transfer/data/transfer-document";
 import {Status} from "@/assets/Common";
 import {useDateTimeFormat} from "@/assets/DateFormat";
 import {CheckCircle, XCircle} from "lucide-react";
 import {formatNumber} from "@/lib/utils";
 import {FullInfoBox, InfoBoxValue, SecondaryInfoBox} from "@/components";
 import InfoBox from "@/components/InfoBox";
+import {TransferDocument} from "@/features/transfer/data/transfer";
 
 type TransferCardProps = {
   doc: TransferDocument,

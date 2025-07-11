@@ -4,9 +4,9 @@ import {Button, Card, CardContent} from "@/components";
 import {useTranslation} from "react-i18next";
 import {Map, Check} from 'lucide-react';
 import BinLocationScanner from "@/components/BinLocationScanner";
-import TransferCard from "@/pages/transfer/components/transfer-card";
+import TransferCard from "@/features/transfer/components/transfer-card";
 import {cn} from "@/lib/utils";
-import {useTransferProcessData} from "@/pages/transfer/data/transfer-process-data";
+import {useTransferProcessData} from "@/features/transfer/hooks/useTransferProcessData";
 
 export default function TransferProcess() {
   const {t} = useTranslation();

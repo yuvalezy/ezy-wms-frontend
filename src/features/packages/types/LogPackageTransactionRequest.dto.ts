@@ -1,18 +1,16 @@
 import { PackageTransactionType } from './PackageTransactionType.enum';
-import { UnitType } from './UnitType.enum';
 import { ObjectType } from './ObjectType.enum';
+import {UnitType} from "@/assets";
 
-export interface PackageTransactionDto {
-  id: string;
+export interface LogPackageTransactionRequest {
   packageId: string;
   transactionType: PackageTransactionType;
   itemCode: string;
   quantity: number;
   unitType: UnitType;
-  sourceOperationType: ObjectType;
+  sourceOperationType?: ObjectType;
   sourceOperationId?: string;
   sourceOperationLineId?: string;
   userId: string;
-  transactionDate: Date;
   notes?: string;
 }

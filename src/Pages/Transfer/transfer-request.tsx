@@ -2,8 +2,6 @@ import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import BarCodeScanner, {AddItemValue, BarCodeScannerRef} from "../../components/BarCodeScanner";
 import React, {useEffect, useRef, useState} from "react";
-import {UnitType} from "@/assets";
-import {createRequest, TransferContent} from "@/pages/transfer/data/transfer-document";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -22,7 +20,8 @@ import {
     DialogTitle,
     DialogDescription, // Add DialogDescription here
 } from "@/components/ui/dialog";
-import {Item} from "@/features/items/data/items";
+import {TransferContent} from "@/features/transfer/data/transfer";
+import {transferService} from "@/features/transfer/data/transefer-service";
 
 export default function TransferRequest() {
     const {t} = useTranslation();
@@ -100,7 +99,7 @@ export default function TransferRequest() {
     function create() {
         try {
             setLoading(true);
-            createRequest(rows)
+            transferService.createRequest(rows)
                 .then((v) => {
                     toast.success(StringFormat(t('transferRequestCreated'), v));
                     navigate('/');

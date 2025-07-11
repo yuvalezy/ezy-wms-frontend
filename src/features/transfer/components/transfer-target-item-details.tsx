@@ -2,7 +2,6 @@ import React, {forwardRef, useImperativeHandle, useState} from "react";
 import {useThemeContext} from "@/components";
 import {useTranslation} from "react-i18next";
 import {DetailUpdateParameters, Status} from "@/assets";
-import {fetchTargetItemDetails, fetchTransfers, TargetItemDetail, TransferContent, TransferContentBin} from "@/pages/transfer/data/transfer-document";
 import {useDateTimeFormat} from "@/assets";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -24,6 +23,8 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import {transferService} from "@/features/transfer/data/transefer-service";
+import {TargetItemDetail, TransferContent, TransferContentBin} from "@/features/transfer/data/transfer";
 
 export interface TransferTargetItemsDetailRef {
     show: (content: TransferContent, bin: TransferContentBin) => void;
@@ -62,10 +63,10 @@ const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsD
         setEnableUpdate(false);
         setCheckedRows({});
         setQuantityChanges({});
-        fetchTransfers({id: props.id})
+        transferService.search({id: props.id})
             .then((transfer) => {
                 setEnableUpdate(transfer[0].status === Status.InProgress);
-                fetchTargetItemDetails(props.id, contentArg.itemCode, binArg.entry)
+                transferService.fetchTargetItemDetails(props.id, contentArg.itemCode, binArg.entry)
                     .then((result) => {
                         setIsOpen(true);
                         setData(result);

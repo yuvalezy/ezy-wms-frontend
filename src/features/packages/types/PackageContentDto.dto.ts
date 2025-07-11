@@ -1,5 +1,4 @@
-import {UnitType} from './UnitType.enum';
-import {ItemDataResponse, UserAuditResponse} from "@/assets";
+import {ItemDataResponse, UnitType, UserAuditResponse} from "@/assets";
 
 export interface PackageContentDto {
   id: string;

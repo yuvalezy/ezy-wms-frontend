@@ -14,7 +14,7 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/c
 import {useStockInfo} from "@/utils/stock-info";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
 import {countingService} from "@/features/counting/data/counting-service";
-import {ObjectType} from "@/pages/packages/types";
+import {ObjectType} from "@/features/packages/types";
 
 export default function CountingProcess() {
   const {t} = useTranslation();

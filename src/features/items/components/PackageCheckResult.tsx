@@ -1,5 +1,5 @@
 import React from "react";
-import {PackageDto, PackageStatus, PackageContentDto} from "@/pages/packages/types";
+import {PackageDto, PackageStatus, PackageContentDto} from "@/features/packages/types";
 import {useTranslation} from "react-i18next";
 import {Card} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";

@@ -1,12 +1,13 @@
 import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
-import {createTransfer, TransferDocument} from "@/pages/transfer/data/transfer-document";
 import {useThemeContext} from "@/components";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { PlusCircle } from "lucide-react";
+import {TransferDocument} from "@/features/transfer/data/transfer";
+import {transferService} from "@/features/transfer/data/transefer-service";
 
 interface TransferFormProps {
     onNewTransfer: (transfer: TransferDocument) => void;
@@ -20,7 +21,7 @@ const TransferForm: React.FC<TransferFormProps> = ({onNewTransfer,}) => {
     function create() {
         setLoading(true);
         try {
-            createTransfer(docNameInput, commentsInput)
+            transferService.create(docNameInput, commentsInput)
                 .then((response) => {
                     onNewTransfer(response);
                     setDocNameInput('');

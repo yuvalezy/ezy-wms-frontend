@@ -1,4 +1,4 @@
-import {ObjectType} from "@/pages/packages/types";
+import {ObjectType} from "@/features/packages/types";
 
 export interface CancellationReason {
   id: string;

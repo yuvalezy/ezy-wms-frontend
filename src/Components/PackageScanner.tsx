@@ -4,8 +4,8 @@ import {Button} from "@/components/ui/button";
 import {Label} from "@/components/ui/label";
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "./ThemeContext";
-import {getPackageByBarcode} from "@/pages/packages/hooks";
-import {PackageDto} from "@/pages/packages/types";
+import {getPackageByBarcode} from "@/features/packages/hooks";
+import {PackageDto} from "@/features/packages/types";
 import {Check} from 'lucide-react';
 
 export interface PackageScannerProps {
