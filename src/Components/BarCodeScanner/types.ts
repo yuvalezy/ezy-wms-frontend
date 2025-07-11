@@ -31,6 +31,7 @@ export interface BarCodeScannerProps {
   pickPackOnly?: boolean;
   enablePackage?: boolean;
   enablePackageCreate?: boolean;
+  isEphemeralPackage?: boolean;
   currentPackage?: PackageValue | null;
   objectType?: ObjectType;
   objectId?: string;

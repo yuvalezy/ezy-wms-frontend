@@ -1,4 +1,4 @@
-import {useState, useRef, useEffect} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {toast} from 'sonner';
 import {useTranslation} from 'react-i18next';
 import {useThemeContext} from '@/components';
@@ -21,6 +21,7 @@ interface UseBarCodeScannerProps {
   onAddItem: (addItem: AddItemValue) => void;
   onPackageChanged?: (value: PackageValue) => void;
   binEntry?: number | undefined;
+  isEphemeralPackage?: boolean;
 }
 
 export const useBarCodeScanner = ({
@@ -34,6 +35,7 @@ export const useBarCodeScanner = ({
                                     onAddItem,
                                     onPackageChanged,
                                     binEntry,
+                                    isEphemeralPackage,
                                   }: UseBarCodeScannerProps) => {
   const barcodeRef = useRef<HTMLInputElement>(null);
   const [barcodeInput, setBarcodeInput] = useState('');
@@ -125,19 +127,26 @@ export const useBarCodeScanner = ({
           toast.error(t('scanPackageNotFound', {barcode}));
           return;
         }
-        const checkCreationObject = response.locationHistory?.find(
-          (v) => v.sourceOperationType === objectType &&
-            v.sourceOperationId === objectId &&
-            v.movementType === PackageMovementType.Created
-        );
-        if (!checkCreationObject) {
-          toast.error(t('scanPackageSourceDoc', {barcode, number: objectNumber}));
-          return;
+        if (objectType === ObjectType.GoodsReceipt) {
+          const checkCreationObject = response.locationHistory?.find(
+            (v) => v.sourceOperationType === objectType &&
+              v.sourceOperationId === objectId &&
+              v.movementType === PackageMovementType.Created
+          );
+          if (!checkCreationObject) {
+            toast.error(t('scanPackageSourceDoc', {barcode, number: objectNumber}));
+            return;
+          }
         }
         const value: PackageValue = {id: response.id, barcode: response.barcode};
-        setLoadedPackage(value);
-        setScanMode('item');
+        if (isEphemeralPackage) {
+          setLoadedPackage(value);
+          setScanMode('item');
+        }
         onPackageChanged?.(value);
+        if (!isEphemeralPackage) {
+          setTimeout(() => barcodeRef?.current?.focus(), 1);
+        }
       })
       .catch((error) => {
         if (error.response?.data?.error === "Package is already counted in another bin location") {

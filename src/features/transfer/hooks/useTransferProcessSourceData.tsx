@@ -1,12 +1,26 @@
 import {useParams} from "react-router-dom";
 import {SourceTarget, useDateTimeFormat} from "@/assets";
 import {useEffect, useRef, useState} from "react";
-import {AddItemValue, BarCodeScannerRef, ProcessAlertValue, ProcessesRef, useAuth, useThemeContext} from "@/components";
+import {
+  AddItemValue,
+  BarCodeScannerRef,
+  PackageValue,
+  ProcessAlertValue,
+  ProcessesRef,
+  useAuth,
+  useThemeContext
+} from "@/components";
 import {useTranslation} from "react-i18next";
 
 import {BinLocation} from "@/features/items/data/items";
-import {TransferContent, TransferDocument} from "@/features/transfer/data/transfer";
+import {
+  AddItemParameters,
+  TransferAddSourcePackageRequest,
+  TransferContent,
+  TransferDocument
+} from "@/features/transfer/data/transfer";
 import {transferService} from "@/features/transfer/data/transefer-service";
+import {toast} from "sonner";
 
 export const useTransferProcessSourceData = () => {
   const {scanCode} = useParams();
@@ -95,12 +109,11 @@ export const useTransferProcessSourceData = () => {
   }
 
   function handleAddItem(value: AddItemValue) {
-    if (id == null) {
+    if (id == null)
       return;
-    }
     const item = value.item;
     const unit = value.unit;
-    const params = {id, itemCode: item.code, barcode: item.barcode, type: SourceTarget.Source, binEntry: binLocation?.entry, unit};
+    const params : AddItemParameters = {id, itemCode: item.code, barcode: item.barcode, type: SourceTarget.Source, binEntry: binLocation?.entry, unit};
     transferService.addItem(params, t)
       .then((v) => {
         if (v.errorMessage != null) {
@@ -132,7 +145,37 @@ export const useTransferProcessSourceData = () => {
         setError(error);
       })
       .finally(() => setLoading(false));
-    return;
+  }
+
+  function handleAddPackage(value: PackageValue) {
+    if (id == null)
+      return;
+    const params : TransferAddSourcePackageRequest= {transferId: id, packageId: value.id, binEntry: binLocation?.entry};
+    transferService.addSourcePackage(params)
+      .then((r) => {
+        if (r.errorMessage != null) {
+          setError(r.errorMessage);
+          return;
+        }
+        const date = new Date(Date.now());
+        setCurrentAlert({
+          lineId: r.lineId,
+          severity: "Information",
+          timeStamp: dateTimeFormat(date),
+          package: value,
+          packageContents: r.packageContents,
+        });
+        barcodeRef?.current?.clear();
+        loadRows();
+        barcodeRef?.current?.focus();
+        setTimeout(() => {
+          processAlertRef?.current?.scrollIntoView({behavior: "smooth", block: "start"});
+        }, 100);
+      })
+      .catch((error) => {
+        setError(error);
+      })
+      .finally(() => setLoading(false))
   }
 
   function handleQuantityChanged(quantity: number) {
@@ -172,6 +215,7 @@ export const useTransferProcessSourceData = () => {
     onBinClear,
     loadRows,
     handleAddItem,
+    handleAddPackage,
     handleQuantityChanged,
     handleCancel,
     scanCode,

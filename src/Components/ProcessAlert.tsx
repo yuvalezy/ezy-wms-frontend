@@ -6,6 +6,7 @@ import {AddItemResponseMultipleValue, UnitType} from "@/assets";
 import {useAuth} from "@/components/AppContext";
 import {ItemCustomFields} from "@/features/items/components/ItemDetailsList";
 import {PackageValue} from "@/components/BarCodeScanner";
+import {PackageContentDto} from "@/features/packages/types";
 
 export type AlertSeverity = "Information" | "Positive" | "Negative" | "Warning";
 
@@ -38,6 +39,7 @@ export interface ProcessAlertValue {
   multiple?: AddItemResponseMultipleValue[];
   customFields?: Record<string, unknown>;
   package?: PackageValue | null;
+  packageContents?: PackageContentDto[] | null;
 }
 
 export interface ProcessAlertProps {

@@ -27,7 +27,8 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
     objectType,
     objectId,
     objectNumber,
-    binEntry
+    binEntry,
+    isEphemeralPackage = true
   },
   ref
 ) => {
@@ -57,7 +58,8 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
     objectNumber,
     onAddItem,
     onPackageChanged,
-    binEntry
+    binEntry,
+    isEphemeralPackage
   });
 
   useImperativeHandle(ref, () => ({

@@ -1,5 +1,6 @@
 import {BaseEntity, SourceTarget, Status, UnitType} from "@/assets";
 import {ItemDetails} from "@/features/items/data/items";
+import {PackageContentDto} from "@/features/packages/types";
 
 export interface TransferDocument extends BaseEntity {
   name?: string;
@@ -35,6 +36,7 @@ export interface TransferAddItemResponse {
   packMsr: string;
   packUnit: number;
   errorMessage?: string;
+  packageContents?: PackageContentDto[] | null;
 }
 
 export interface TransferContent extends ItemDetails {
@@ -51,7 +53,7 @@ export type TransferContentBin = {
   code: string;
   quantity: number;
 }
-export type addItemParameters = {
+export type AddItemParameters = {
   id: string,
   itemCode: string,
   barcode?: string,
@@ -85,7 +87,7 @@ export interface TransferActionResponse {
 
 export interface TransferAddSourcePackageRequest {
   transferId: string;
-  barcode: string;
+  packageId: string;
   binEntry?: number;
 }
 

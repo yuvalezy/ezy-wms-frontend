@@ -1,7 +1,7 @@
 import {axiosInstance} from "@/utils/axios-instance";
 
 import {
-  addItemParameters,
+  AddItemParameters,
   TargetItemDetail, TransferActionResponse,
   TransferAddItemResponse, TransferContent, transferContentParameters,
   TransferDocument,
@@ -149,7 +149,7 @@ export const addItem = async (
 };
    */
 
-  async addItem(params: addItemParameters, t: (key: string) => string): Promise<TransferAddItemResponse> {
+  async addItem(params: AddItemParameters, t: (key: string) => string): Promise<TransferAddItemResponse> {
     try {
       params.quantity ??= 1;
 

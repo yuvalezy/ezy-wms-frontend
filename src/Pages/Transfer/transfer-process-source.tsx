@@ -15,6 +15,7 @@ import {useStockInfo} from "@/utils/stock-info";
 import React from "react";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
 import {transferService} from "@/features/transfer/data/transefer-service";
+import {ObjectType} from "@/features/packages/types";
 
 export default function TransferProcessSource() {
   const {t} = useTranslation();
@@ -33,6 +34,7 @@ export default function TransferProcessSource() {
     onBinClear,
     loadRows,
     handleAddItem,
+    handleAddPackage,
     handleQuantityChanged,
     handleCancel,
     scanCode,
@@ -61,6 +63,12 @@ export default function TransferProcessSource() {
                           enabled
                           enablePackage={user!.settings!.enablePackages}
                           enablePackageCreate={false}
+                          isEphemeralPackage={false}
+                          objectType={ObjectType.Transfer}
+                          objectId={info?.id}
+                          objectNumber={info?.number}
+                          binEntry={binLocation?.entry}
+                          onPackageChanged={handleAddPackage}
                       />}
     >
       {user?.binLocations && !binLocation &&
