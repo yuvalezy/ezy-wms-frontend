@@ -2,12 +2,13 @@ import {useEffect, useRef, useState} from 'react';
 import {toast} from 'sonner';
 import {useTranslation} from 'react-i18next';
 import {useThemeContext} from '@/components';
-import {distinctItems, StringFormat, UnitType} from '@/assets';
+import {UnitType} from '@/features/shared/data';
 import {getPackageByBarcode} from '@/features/packages/hooks';
 import {ObjectType, PackageMovementType} from '@/features/packages/types';
 import {AddItemValue, PackageValue} from './types';
 import {Item} from "@/features/items/data/items";
 import {itemsService} from "@/features/items/data/items-service";
+import {StringFormat} from "@/utils/string-utils";
 
 interface UseBarCodeScannerProps {
   enabled: boolean;
@@ -102,6 +103,13 @@ export const useBarCodeScanner = ({
     }
     handleMultipleItems(items);
   };
+
+  function distinctItems(items: Item[]): string[] {
+    return items
+      .map(item => item.father ?? item.code)
+      .filter((code, index, array) => array.indexOf(code) === index);
+  }
+
 
   const handleMultipleItems = (items: Item[]) => {
     const distinctCodes = distinctItems(items);

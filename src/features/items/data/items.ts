@@ -1,4 +1,3 @@
-import {ResponseStatus} from "@/assets";
 import {PackageStockValue} from "@/components";
 
 export type BinLocation = {
@@ -12,6 +11,11 @@ export type Item = {
   father: string;
   boxNumber?: number;
   barcode?: string;
+}
+
+export enum ResponseStatus {
+  Error = 'Error',
+  Ok = 'Ok'
 }
 
 export interface UpdateItemBarCodeResponse {
@@ -44,4 +48,16 @@ export interface ItemStockResponse {
 export interface BinContentResponse extends ItemDetails {
   onHand: number;
   packages?: PackageStockValue[] | null;
+}
+
+export enum CustomFieldType {
+  Text = 'Text',
+  Number = 'Number',
+  Date = 'Date'
+}
+
+export interface CustomField {
+  key: string;
+  description: string;
+  type: CustomFieldType;
 }

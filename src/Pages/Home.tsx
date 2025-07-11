@@ -4,9 +4,8 @@ import {useTranslation} from "react-i18next";
 import ContentTheme from "../components/ContentTheme";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import {KpiBox} from "@/components/KpiBox";
-import {getKpiItems, KpiItem} from "@/assets/KpiData";
-import {HomeInfo} from "@/assets/HomeInfo";
 import {axiosInstance} from "@/utils/axios-instance";
+import {getKpiItems, HomeInfo, KpiItem} from "@/features/home/data/home";
 
 export default function Home() {
   const {user} = useAuth();

@@ -1,5 +1,4 @@
-import { AuthorizationGroup, RoleInfo } from "./authorization-group";
-import { RoleType } from "@/assets";
+import {AuthorizationGroup, RoleInfo, RoleType} from "./authorization-group";
 
 export const roleInfoMap = new Map<RoleType, RoleInfo>([
   [RoleType.GOODS_RECEIPT, {

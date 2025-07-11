@@ -1,11 +1,11 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {useAuth, useThemeContext} from "@/components";
 import {useEffect, useState} from "react";
-import {StringFormat} from "@/assets";
 import {toast} from "sonner";
 import {useTranslation} from "react-i18next";
 import {TransferDocument} from "@/features/transfer/data/transfer";
 import {transferService} from "@/features/transfer/data/transefer-service";
+import {StringFormat} from "@/utils/string-utils";
 
 export const useTransferProcessData = () => {
   const {t} = useTranslation();

@@ -1,7 +1,8 @@
 import React from 'react';
 import {Navigate} from 'react-router-dom';
 import {useAuth} from "./AppContext";
-import {RoleType} from "@/assets";
+
+import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 
 interface ProtectedRouteProps {
   element: React.ReactElement;

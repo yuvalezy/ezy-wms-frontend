@@ -9,13 +9,12 @@ import {
 } from "@/components";
 import {useTranslation} from "react-i18next";
 import {Button} from "@/components/ui/button";
-import {IsNumeric} from "@/assets";
-import {fetchPicking, PickingDocument, PickingDocumentDetail} from "@/pages/picking/data/picking-document";
-import {useObjectName} from "@/assets";
 import {BarChart3, Play} from "lucide-react";
-import InfoBox from "@/components/InfoBox";
-import {formatNumber} from "@/lib/utils";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
+import {formatNumber, IsNumeric} from "@/utils/number-utils";
+import {PickingDocument, PickingDocumentDetail} from "@/features/picking/data/picking";
+import { useObjectName } from "@/hooks/useObjectName";
+import {pickingService} from "@/features/picking/data/picking-service";
 
 export default function PickingProcess() {
   const {idParam} = useParams();
@@ -35,7 +34,7 @@ export default function PickingProcess() {
     setID(id);
 
     setLoading(true);
-    fetchPicking({id})
+    pickingService.fetchPicking({id})
       .then(value => {
         if (value == null) {
           setPicking(null);

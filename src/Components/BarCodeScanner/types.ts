@@ -1,5 +1,5 @@
 import { LucideIcon } from 'lucide-react';
-import { UnitType } from '@/assets';
+import { UnitType } from '@/features/shared/data';
 import { ObjectType } from '@/features/packages/types';
 import {Item} from "@/features/items/data/items";
 

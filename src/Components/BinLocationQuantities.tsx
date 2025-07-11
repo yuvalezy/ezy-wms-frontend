@@ -1,8 +1,9 @@
 import React from "react";
 import {useTranslation} from "react-i18next";
-import {PickingDocumentDetailItem} from "@/pages/picking/data/picking-document";
 import {MetricRow} from "@/components/MetricRow";
-import {formatNumber} from "@/lib/utils";
+
+import {formatNumber} from "@/utils/number-utils";
+import {PickingDocumentDetailItem} from "@/features/picking/data/picking";
 
 export interface BinLocationQuantitiesProps {
   data: PickingDocumentDetailItem

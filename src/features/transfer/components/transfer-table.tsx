@@ -13,12 +13,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/components/AppContext";
-import { RoleType } from "@/assets/RoleType";
-import { useDateTimeFormat } from "@/assets/DateFormat";
-import { useDocumentStatusToString } from "@/assets/DocumentStatusString";
-import { formatNumber } from "@/lib/utils";
-import { Status } from "@/assets/Common";
+import { useDateTimeFormat } from "@/hooks/useDateTimeFormat";
+import { useDocumentStatusToString } from "@/hooks/useDocumentStatusToString";
+import { Status } from "@/features/shared/data/shared";
 import {TransferDocument} from "@/features/transfer/data/transfer";
+import {RoleType} from "@/features/authorization-groups/data/authorization-group";
+import {formatNumber} from "@/utils/number-utils";
 
 interface TransferTableProps {
   transfers: TransferDocument[];

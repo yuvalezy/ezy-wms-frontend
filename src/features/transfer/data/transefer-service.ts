@@ -16,7 +16,7 @@ import {
   Status,
   UpdateLineParameters,
   UpdateLineReturnValue
-} from "@/assets";
+} from "@/features/shared/data";
 import axios from "axios";
 import {getAddItemErrorMessage} from "@/utils/error-handler";
 

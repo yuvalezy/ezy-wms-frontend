@@ -11,9 +11,8 @@ import { Badge } from "@/components/ui/badge";
 import { Save, X } from "lucide-react";
 import { useThemeContext } from "@/components";
 import ContentTheme from "@/components/ContentTheme";
-import { AuthorizationGroup, AuthorizationGroupFormData } from "../data/authorization-group";
+import {AuthorizationGroup, AuthorizationGroupFormData, RoleType} from "../data/authorization-group";
 import { authorizationGroupService } from "../data/authorization-group-service";
-import { RoleType } from "@/assets";
 import {useNavigate, useParams} from "react-router-dom";
 
 // interface AuthorizationGroupFormProps {

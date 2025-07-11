@@ -7,12 +7,12 @@ import React, {
   useCallback,
 } from "react";
 import axios, {AxiosError} from "axios";
-import {UserInfo} from "@/assets";
 import {axiosInstance, ServerUrl} from "@/utils/axios-instance";
 import {getOrCreateDeviceUUID} from "@/utils/deviceUtils";
 import {DeviceStatus} from "@/features/devices/data/device";
 import {LicenseWarning} from "@/features/license/data/license";
 import {AccountState} from "@/features/account/data/account";
+import {UserInfo} from "@/features/login/data/login";
 
 // Define the shape of the context
 interface AuthContextType {

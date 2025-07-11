@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useSwipeable} from "react-swipeable";
 import { Edit3, MessageCircle, Package2, X } from "lucide-react";
-import {AddItemResponseMultipleValue, UnitType} from "@/assets";
+import {AddItemResponseMultipleValue, UnitType} from "@/features/shared/data";
 import {useAuth} from "@/components/AppContext";
 import {ItemCustomFields} from "@/features/items/components/ItemDetailsList";
 import {PackageValue} from "@/components/BarCodeScanner";

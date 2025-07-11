@@ -1,9 +1,9 @@
 import {useTranslation} from "react-i18next";
 import React from "react";
-import InfoBox, {InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
-import {Card, CardContent, useAuth} from "@/components";
-import {CustomFieldType, useDateTimeFormat, CustomField} from "@/assets";
-import {ItemCheckResponse, ItemDetails} from "@/features/items/data/items";
+import {InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
+import {useAuth} from "@/components";
+import {CustomField, CustomFieldType, ItemDetails} from "@/features/items/data/items";
+import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
 
 const ItemDetailsList = ({details}: { details: ItemDetails }) => {
   const {t} = useTranslation();

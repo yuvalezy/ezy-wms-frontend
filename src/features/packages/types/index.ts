@@ -20,3 +20,5 @@ export * from './PackageTransactionDto.dto';
 export * from './PackageInconsistencyDto.dto';
 export * from './PackageLocationHistoryDto.dto';
 export * from './PackageValidationResult.dto';
+export * from './ItemDataResponse.dto';
+export * from './UserAuditResponse.dto';

@@ -2,16 +2,17 @@ import React, {useEffect} from "react";
 import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import {Alert, AlertDescription, useThemeContext} from "@/components";
-import {fetchPickings, PickingDocument, PickStatus} from "@/pages/picking/data/picking-document";
-import PickingCard from "@/pages/picking/components/picking-card";
+import PickingCard from "@/features/picking/components/picking-card";
 import {AlertCircle} from "lucide-react";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Progress} from "@/components/ui/progress";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "@/components/AppContext";
-import {RoleType} from "@/assets/RoleType";
-import {useDateTimeFormat} from "@/assets/DateFormat";
-import {formatNumber} from "@/lib/utils";
+import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
+import {RoleType} from "@/features/authorization-groups/data/authorization-group";
+import {formatNumber} from "@/utils/number-utils";
+import {PickingDocument, PickStatus} from "@/features/picking/data/picking";
+import {pickingService} from "@/features/picking/data/picking-service";
 
 export default function PickingUser() {
   const {setLoading, setError} = useThemeContext();
@@ -24,7 +25,7 @@ export default function PickingUser() {
 
   useEffect(() => {
     setLoading(true);
-    fetchPickings({status: [PickStatus.Released]})
+    pickingService.fetchPickings({status: [PickStatus.Released]})
       .then((data) => setPickings(data))
       .catch((err) => setError(err))
       .finally(() => setLoading(false))

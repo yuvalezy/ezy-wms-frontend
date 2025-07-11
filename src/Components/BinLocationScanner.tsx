@@ -4,11 +4,11 @@ import {Button} from "@/components/ui/button";
 import {Label} from "@/components/ui/label";
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "./ThemeContext";
-import { StringFormat} from "@/assets";
 import {Check} from 'lucide-react';
 
 import {BinLocation} from "@/features/items/data/items";
 import {itemsService} from "@/features/items/data/items-service";
+import {StringFormat} from "@/utils/string-utils";
 
 export interface BinLocationScannerProps {
   label?: string | boolean;

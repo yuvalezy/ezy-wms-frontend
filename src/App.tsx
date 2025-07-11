@@ -9,7 +9,6 @@ import Unauthorized from "./components/Unauthorized";
 import NotFound from "./components/NotFound";
 import { setNavigateCallback } from "./utils/axios-instance";
 import ItemCheck from "@/pages/items/ItemCheck";
-import {RoleType} from "@/assets";
 import PickingSupervisor from "./pages/picking/picking-supervisor";
 import PickingUser from "./pages/picking/picking-user";
 import PickingProcess from "./pages/picking/picking-process";
@@ -17,7 +16,7 @@ import PickingProcessDetail from "./pages/picking/picking-process-detail";
 import GoodsReceipt from "./pages/GoodsReceipt/GoodsReceipt";
 import GoodsReceiptProcess from "./pages/GoodsReceipt/GoodsReceiptProcess";
 import GoodsReceiptSupervisor from "./pages/GoodsReceipt/GoodsReceiptSupervisor";
-import GoodsReceiptReport from "./pages/GoodsReceipt/GoodsReceiptReport";
+import {GoodsReceiptReport} from "./pages/GoodsReceipt/GoodsReceiptReport";
 import GoodsReceiptVSExitReport from "./pages/GoodsReceipt/GoodsReceiptVSExitReport";
 import GoodsReceiptAll from './pages/GoodsReceipt/GoodsReceiptAll';
 import CountingList from "./pages/Counting/Counting";
@@ -44,6 +43,7 @@ import {OfflineOverlay} from "./components/OfflineOverlay";
 import {useOfflineDetection} from "./hooks/useOfflineDetection";
 import DevicesList from "@/pages/settings/devices-list";
 import {License} from "@/pages/settings/license";
+import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 
 function AppRoutes() {
   const {user} = useAuth();

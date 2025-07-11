@@ -3,12 +3,12 @@ import {useNavigate} from "react-router-dom";
 import React from "react";
 import {Alert, AlertDescription, AlertTitle} from "@/components";
 import {useTranslation} from "react-i18next";
-import {useObjectName} from "@/assets";
 import BarCodeScanner from "@/components/BarCodeScanner";
-import PickingProcessDetailContent from "@/pages/picking/components/picking-process-detail-content";
+import PickingProcessDetailContent from "@/features/picking/components/picking-process-detail-content";
 import BinLocationScanner from "@/components/BinLocationScanner";
-import {usePickingProcessDetailData} from "@/pages/picking/data/picking-process-detail-data";
+import {usePickingProcessDetailData} from "@/features/picking/hooks/usePickingProcessDetailData";
 import {AlertCircle} from "lucide-react";
+import {useObjectName} from "@/hooks/useObjectName";
 
 export default function PickingProcessDetail() {
   const {t} = useTranslation();

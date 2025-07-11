@@ -1,4 +1,5 @@
-import { AddItemReturnValueType, StringFormat } from "@/assets";
+import { AddItemReturnValueType } from "@/features/shared/data";
+import {StringFormat} from "@/utils/string-utils";
 
 export interface ErrorData {
   ItemCode?: string;

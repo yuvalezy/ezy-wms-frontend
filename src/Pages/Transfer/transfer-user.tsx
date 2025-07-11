@@ -2,7 +2,7 @@ import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import {Alert, AlertDescription, useThemeContext} from "@/components";
 import React, {useEffect, useState} from "react";
-import {Status} from "@/assets";
+import {Status} from "@/features/shared/data";
 import TransferCard from "@/features/transfer/components/transfer-card";
 import TransferTable from "@/features/transfer/components/transfer-table";
 import {AlertCircle} from "lucide-react";

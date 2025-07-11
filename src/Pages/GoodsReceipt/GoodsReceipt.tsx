@@ -1,15 +1,15 @@
 import React, {useEffect, useRef, useState} from "react";
 import ContentTheme from "../../components/ContentTheme";
-import {fetchDocuments,} from "@/pages/GoodsReceipt/data/Document";
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "@/components/ThemeContext";
-import {Status} from "@/assets/Common";
-import {ReceiptDocument} from "@/assets/ReceiptDocument";
-import DocumentListDialog, {DocumentListDialogRef} from "@/pages/GoodsReceipt/components/DocumentListDialog";
-import DocumentCard from "@/pages/GoodsReceipt/components/DocumentCard";
-import DocumentTable from "@/pages/GoodsReceipt/components/DocumentTable";
+import {Status} from "@/features/shared/data/shared";
+import DocumentListDialog, {DocumentListDialogRef} from "@/features/goods-receipt/components/DocumentListDialog";
+import DocumentCard from "@/features/goods-receipt/components/DocumentCard";
+import DocumentTable from "@/features/goods-receipt/components/DocumentTable";
 import {Alert, AlertDescription} from "@/components";
 import {AlertCircle} from "lucide-react";
+import {ReceiptDocument} from "@/features/goods-receipt/data/goods-receipt";
+import {goodsReceiptService} from "@/features/goods-receipt/data/goods-receipt-service";
 
 export default function GoodsReceipt({confirm = false}: { confirm?: boolean }) {
   const {setLoading, setError} = useThemeContext();
@@ -20,7 +20,7 @@ export default function GoodsReceipt({confirm = false}: { confirm?: boolean }) {
 
   useEffect(() => {
     setLoading(true);
-    fetchDocuments({statuses: [Status.Open, Status.InProgress], confirm})
+    goodsReceiptService.search({statuses: [Status.Open, Status.InProgress], confirm})
       .then((data) => setDocuments(data))
       .catch((err) => setError(err))
       .finally(() => setLoading(false))

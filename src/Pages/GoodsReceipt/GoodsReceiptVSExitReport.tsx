@@ -2,16 +2,16 @@ import React, {useEffect, useState} from "react";
 import ContentTheme from "../../components/ContentTheme";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import {
-  fetchGoodsReceiptVSExitReport,
   GoodsReceiptVSExitReportData,
-} from "@/pages/GoodsReceipt/data/Report";
-import GoodsReceiptVSExitReportTable from "@/pages/GoodsReceipt/components/GoodsReceiptVSExitReportTable";
+} from "@/features/goods-receipt/data/goods-receipt-reports";
+import GoodsReceiptVSExitReportTable from "@/features/goods-receipt/components/GoodsReceiptVSExitReportTable";
 import {useThemeContext} from "@/components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {useObjectName} from "@/assets/ObjectName";
+import {useObjectName} from "@/hooks/useObjectName";
 import {Alert, AlertDescription} from "@/components/ui/alert";
-import InfoBox, {FullInfoBox, InfoBoxValue} from "@/components/InfoBox";
+import  {FullInfoBox, InfoBoxValue} from "@/components/InfoBox";
 import {Button, Card, CardContent, CardHeader} from "@/components";
+import {goodsReceiptReportService} from "@/features/goods-receipt/data/goods-receipt-report-service";
 
 interface GoodsReceiptVSExitReportProps {
   confirm?: boolean
@@ -31,7 +31,7 @@ export default function GoodsReceiptVSExitReport({confirm}: GoodsReceiptVSExitRe
       return;
     }
     setLoading(true);
-    fetchGoodsReceiptVSExitReport(scanCode)
+    goodsReceiptReportService.fetchVSExitReport(scanCode)
       .then((result) => setData(result))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));

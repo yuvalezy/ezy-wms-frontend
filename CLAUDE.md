@@ -88,7 +88,7 @@ When adding new features or modifying existing modules:
 2. Implement list, process, and supervisor views as needed
 3. Add routing in `App.tsx` with appropriate authorization
 4. Create data services following the pattern in other modules
-5. Add navigation menu items in `src/assets/Menus.tsx`
+5. Add navigation menu items in `src/assets/useMenus.tsx`
 
 **Working with Forms**:
 - Use React Hook Form with the existing form components

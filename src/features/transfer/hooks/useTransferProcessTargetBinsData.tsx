@@ -1,5 +1,4 @@
 import {useParams} from "react-router-dom";
-import {SourceTarget, useDateTimeFormat} from "@/assets";
 import {useEffect, useRef, useState} from "react";
 import {
   AddItemValue,
@@ -14,14 +13,14 @@ import {useTranslation} from "react-i18next";
 
 import {BinLocation} from "@/features/items/data/items";
 import {
-  TransferAddSourcePackageRequest,
+  SourceTarget,
   TransferAddTargetPackageRequest,
   TransferContent,
   TransferDocument
 } from "@/features/transfer/data/transfer";
 import {transferService} from "@/features/transfer/data/transefer-service";
-import {toast} from "sonner";
 import axios from "axios";
+import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
 
 export const useTransferProcessTargetBinsData = () => {
   const {scanCode} = useParams();

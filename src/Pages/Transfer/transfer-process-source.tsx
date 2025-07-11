@@ -7,7 +7,7 @@ import {Alert, AlertDescription} from "@/components/ui/alert";
 import BarCodeScanner from "@/components/BarCodeScanner";
 import BinLocationScanner from "@/components/BinLocationScanner";
 import ProcessAlert from "@/components/ProcessAlert";
-import {ReasonType} from "@/assets";
+import {ReasonType} from "@/features/shared/data";
 import Processes from "@/components/Processes";
 import {AlertCircle} from "lucide-react";
 import {useTransferProcessSourceData} from "@/features/transfer/hooks/useTransferProcessSourceData";

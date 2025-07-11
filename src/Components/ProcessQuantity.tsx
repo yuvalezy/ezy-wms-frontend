@@ -1,7 +1,7 @@
 import React, {useRef, useState, forwardRef, useImperativeHandle} from "react";
 import {ProcessAlertValue} from "@/components/ProcessAlert";
 import {useTranslation} from "react-i18next";
-import {UnitType, UpdateLineParameters, UpdateLineReturnValue} from "@/assets/Common";
+import {UnitType, UpdateLineParameters, UpdateLineReturnValue} from "@/features/shared/data/shared";
 import {useThemeContext} from "./ThemeContext";
 import {Button} from "@/components/ui/button";
 import {

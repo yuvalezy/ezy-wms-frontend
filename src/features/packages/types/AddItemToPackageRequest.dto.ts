@@ -1,5 +1,5 @@
 import { ObjectType } from './ObjectType.enum';
-import {UnitType} from "@/assets";
+import {UnitType} from "@/features/shared/data";
 
 export interface AddItemToPackageRequest {
   packageId: string;

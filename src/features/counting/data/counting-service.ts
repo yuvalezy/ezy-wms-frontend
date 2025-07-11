@@ -3,10 +3,10 @@ import {axiosInstance, None} from "@/utils/axios-instance";
 import {
   Counting,
   CountingActionResponse,
-  CountingAddItemResponse,
-  CountingSummaryReportData
+  CountingAddItemResponse, CountingContent,
+  CountingSummaryReportData, OrderBy
 } from "@/features/counting/data/counting";
-import {CountingContent, OrderBy, Status, UnitType, UpdateLineParameters, UpdateLineReturnValue} from "@/assets";
+import {Status, UnitType, UpdateLineParameters, UpdateLineReturnValue} from "@/features/shared/data";
 
 export const countingService = {
   async create(name: string): Promise<Counting> {

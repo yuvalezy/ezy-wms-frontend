@@ -1,31 +1,33 @@
 import React, {useEffect, useRef, useState} from "react";
 import ContentTheme from "../../components/ContentTheme";
-import ReportFilterForm, {ReportFilterFormRef} from "@/pages/GoodsReceipt/components/ReportFilterForm";
-import {fetchDocuments, GoodsReceiptReportFilter} from "@/pages/GoodsReceipt/data/Document";
-import DocumentReportCard from "@/pages/GoodsReceipt/components/DocumentReportCard";
+import ReportFilterForm, {ReportFilterFormRef} from "@/features/goods-receipt/components/ReportFilterForm";
+import DocumentReportCard from "@/features/goods-receipt/components/DocumentReportCard";
 import {useThemeContext} from "@/components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import {ReceiptDocument, DocumentItem} from "@/assets/ReceiptDocument";
-import DocumentListDialog, {DocumentListDialogRef} from "@/pages/GoodsReceipt/components/DocumentListDialog";
+import DocumentListDialog, {DocumentListDialogRef} from "@/features/goods-receipt/components/DocumentListDialog";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Button} from "@/components/ui/button";
 import {MoreVertical, ArrowRightLeft, FileText, Truck} from 'lucide-react';
-import {useDocumentStatusToString, useObjectName, useDateTimeFormat} from "@/assets";
-import {activeStatuses, processStatuses, useHandleOpen} from "@/pages/GoodsReceipt/data/GoodsReceiptUtils";
+import {activeStatuses, processStatuses} from "@/features/goods-receipt/data/goods-receipt-utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
 import {useAuth} from "@/components";
+import {DocumentItem, GoodsReceiptReportFilter, ReceiptDocument} from "@/features/goods-receipt/data/goods-receipt";
+import {goodsReceiptService} from "@/features/goods-receipt/data/goods-receipt-service";
+import {useGoodsReceiptHandleOpen} from "@/features/goods-receipt/hooks/useGoodsReceiptHandleOpen";
+import {useDocumentStatusToString} from "@/hooks/useDocumentStatusToString";
+import {useObjectName} from "@/hooks/useObjectName";
+import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
 
 interface GoodsReceiptReportProps {
   confirm?: boolean
 }
 
-export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReportProps) {
+export function GoodsReceiptReport({confirm = false}: GoodsReceiptReportProps) {
   const {loading, setLoading, setError} = useThemeContext();
   const {user} = useAuth();
   const {t} = useTranslation();
@@ -38,9 +40,9 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
   const reportFilterFormRef = useRef<ReportFilterFormRef>(null);
   const {dateFormat} = useDateTimeFormat();
   const documentStatusToString = useDocumentStatusToString();
-  const handleOpen = useHandleOpen(confirm);
+  const handleOpen = useGoodsReceiptHandleOpen(confirm);
   const o = useObjectName();
-  
+
   const formatDocumentsList = (documents: DocumentItem[]) => {
     const returnValue = documents.map((value, index) => (
       `${index > 0 ? ', ' : ''}${o(value.objectType)} #${value.documentNumber}`
@@ -87,7 +89,7 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
       return;
     }
     setLoading(true);
-    fetchDocuments(filters)
+    goodsReceiptService.search(filters)
       .then((data) => {
         if ((data?.length ?? 0) === 0) {
           setStop(true);
@@ -120,7 +122,7 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
   };
 
   return (
-    <ContentTheme 
+    <ContentTheme
       title={!confirm ? t('goodsReceiptReport') : t('confirmationReport')}
       onFilterClicked={handleFilterToggle}
     >
@@ -139,7 +141,7 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
               <DocumentReportCard key={doc.id} doc={doc} confirm={confirm} docDetails={handleDocDetails}/>
             ))}
           </div>
-          
+
           {/* Desktop view - Table */}
           <div className="hidden sm:block">
             <Table>
@@ -164,7 +166,10 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
                     <TableCell>{doc.vendor?.name ?? doc.vendor?.id ?? '-'}</TableCell>
                     <TableCell>
                       {doc.documents && doc.documents?.length > 0 ? (
-                        <a href="#" onClick={(e) => { e.preventDefault(); handleDocDetails(doc); }} className="text-blue-600 hover:underline">
+                        <a href="#" onClick={(e) => {
+                          e.preventDefault();
+                          handleDocDetails(doc);
+                        }} className="text-blue-600 hover:underline">
                           {formatDocumentsList(doc.documents)}
                         </a>
                       ) : '-'}
@@ -177,23 +182,23 @@ export default function GoodsReceiptReport({confirm = false}: GoodsReceiptReport
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                            <MoreVertical className="h-4 w-4" />
+                            <MoreVertical className="h-4 w-4"/>
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem onClick={() => handleOpen('all', doc.id)}>
-                            <FileText className="mr-2 h-4 w-4" />
+                            <FileText className="mr-2 h-4 w-4"/>
                             {!confirm ? t('goodsReceiptReport') : t('confirmationReport')}
                           </DropdownMenuItem>
                           {user?.settings?.goodsReceiptTargetDocuments && activeStatuses.includes(doc.status) && (
                             <DropdownMenuItem onClick={() => handleOpen('vs', doc.id)}>
-                              <Truck className="mr-2 h-4 w-4" />
+                              <Truck className="mr-2 h-4 w-4"/>
                               {!confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}
                             </DropdownMenuItem>
                           )}
                           {processStatuses.includes(doc.status) && (
                             <DropdownMenuItem onClick={() => handleOpen('diff', doc.id)}>
-                              <ArrowRightLeft className="mr-2 h-4 w-4" />
+                              <ArrowRightLeft className="mr-2 h-4 w-4"/>
                               {t('differencesReport')}
                             </DropdownMenuItem>
                           )}

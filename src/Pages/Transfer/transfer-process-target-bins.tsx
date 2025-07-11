@@ -15,7 +15,7 @@ import {Progress} from "@/components/ui/progress";
 import BarCodeScanner from "@/components/BarCodeScanner";
 import BinLocationScanner from "@/components/BinLocationScanner";
 import ProcessAlert from "@/components/ProcessAlert";
-import {ReasonType} from "@/assets";
+import {ReasonType} from "@/features/shared/data";
 import Processes from "@/components/Processes";
 import {useTransferProcessTargetBinsData} from "@/features/transfer/hooks/useTransferProcessTargetBinsData";
 import {Card, CardContent, InfoBoxValue} from "@/components";

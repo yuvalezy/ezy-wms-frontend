@@ -4,8 +4,8 @@ import React, {useEffect, useState} from "react";
 import {useAuth, useThemeContext} from "@/components";
 import TransferCard from "@/features/transfer/components/transfer-card";
 import TransferTable from "@/features/transfer/components/transfer-table";
-import {ObjectAction, User} from "@/assets/Common";
-import {StringFormat} from "@/assets/Functions";
+import {ObjectAction} from "@/features/shared/data/shared";
+import {StringFormat} from "@/utils/string-utils";
 import TransferForm from "@/features/transfer/components/transfer-form";
 import {
     AlertDialog,
@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import {TransferDocument} from "@/features/transfer/data/transfer";
 import {transferService} from "@/features/transfer/data/transefer-service";
+import {User} from "@/features/users/data/user";
 
 export default function TransferSupervisor() {
     const {t} = useTranslation();

@@ -1,8 +1,9 @@
-import { RoleType } from "@/assets";
+import {RoleType} from "@/features/authorization-groups/data/authorization-group";
+import {BaseEntity} from "@/features/shared/data";
 
-export interface User {
-  id: string;
+export interface User extends BaseEntity {
   fullName: string;
+  password?: string;
   email?: string;
   position?: string;
   superUser: boolean;
@@ -10,9 +11,8 @@ export interface User {
   warehouses: string[];
   externalId?: string;
   authorizationGroupId?: string;
+  authorizationGroup?: AuthorizationGroup;
   authorizationGroupName?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
 }
 
 export interface UserFormData {
@@ -38,7 +38,7 @@ export interface ExternalUser {
   name: string;
 }
 
-export interface AuthorizationGroup {
+export interface AuthorizationGroup extends BaseEntity {
   id: string;
   name: string;
   description?: string;

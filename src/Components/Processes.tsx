@@ -3,7 +3,7 @@ import ProcessCancel, {ProcessCancelRef} from "@/components/ProcessCancel";
 import ProcessQuantity, {ProcessQuantityRef} from "@/components/ProcessQuantity";
 import ProcessComment, {ProcessCommentRef} from "@/components/ProcessComment";
 import React, {forwardRef, useImperativeHandle, useRef} from "react";
-import {ReasonType, UpdateLineParameters, UpdateLineReturnValue} from "@/assets";
+import {ReasonType, UpdateLineParameters, UpdateLineReturnValue} from "@/features/shared/data";
 
 export interface ProcessesRef {
     open: (type: AlertActionType) => void;

@@ -4,13 +4,13 @@ import {useAuth} from "@/components/AppContext";
 import {useTranslation} from "react-i18next";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
-import {RoleType} from "@/assets/RoleType";
-import {useDocumentStatusToString} from "@/assets/DocumentStatusString";
-import {Status} from "@/assets/Common";
-import {useDateTimeFormat} from "@/assets/DateFormat";
+import {useDocumentStatusToString} from "@/hooks/useDocumentStatusToString";
+import {Status} from "@/features/shared/data/shared";
+import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
 import {CheckCircle, XCircle, FileText} from "lucide-react";
 import {FullInfoBox, InfoBoxValue, Separator} from "@/components";
 import {Counting} from "@/features/counting/data/counting";
+import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 
 type CountingCardProps = {
   doc: Counting,

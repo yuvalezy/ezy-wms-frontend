@@ -1,10 +1,10 @@
 import React from "react";
 import ContentTheme from "../../components/ContentTheme";
-import GoodsReceiptAllReportTable from "@/pages/GoodsReceipt/components/GoodsReceiptAllTable";
+import GoodsReceiptAllReportTable from "@/features/goods-receipt/components/GoodsReceiptAllTable";
 import {useTranslation} from "react-i18next";
 import {Alert, AlertDescription} from "@/components/ui/alert"; // Added AlertTitle
-import GoodsReceiptAllDialog from "@/pages/GoodsReceipt/components/GoodsReceiptAllDetail";
-import {useGoodsReceiptAllData} from "@/pages/GoodsReceipt/data/goods-receipt-all-data";
+import GoodsReceiptAllDialog from "@/features/goods-receipt/components/GoodsReceiptAllDetail";
+import {useGoodsReceiptAllData} from "@/features/goods-receipt/hooks/useGoodsReceiptAllData";
 import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage} from "@/components/ui/breadcrumb";
 import {useNavigate} from "react-router-dom";
 

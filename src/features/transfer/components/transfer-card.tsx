@@ -5,15 +5,15 @@ import {useTranslation} from "react-i18next";
 import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {Progress} from "@/components/ui/progress";
-import {RoleType} from "@/assets/RoleType";
-import {useDocumentStatusToString} from "@/assets/DocumentStatusString";
-import {Status} from "@/assets/Common";
-import {useDateTimeFormat} from "@/assets/DateFormat";
+import {useDocumentStatusToString} from "@/hooks/useDocumentStatusToString";
+import {Status} from "@/features/shared/data/shared";
+import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
 import {CheckCircle, XCircle} from "lucide-react";
-import {formatNumber} from "@/lib/utils";
 import {FullInfoBox, InfoBoxValue, SecondaryInfoBox} from "@/components";
 import InfoBox from "@/components/InfoBox";
 import {TransferDocument} from "@/features/transfer/data/transfer";
+import {RoleType} from "@/features/authorization-groups/data/authorization-group";
+import {formatNumber} from "@/utils/number-utils";
 
 type TransferCardProps = {
   doc: TransferDocument,

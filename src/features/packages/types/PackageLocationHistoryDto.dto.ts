@@ -1,6 +1,7 @@
 import {PackageMovementType} from './PackageMovementType.enum';
 import {ObjectType} from './ObjectType.enum';
-import {UserAuditResponse} from "@/assets";
+
+import {UserAuditResponse} from "@/features/packages/types/UserAuditResponse.dto";
 
 export interface PackageLocationHistoryDto {
   id: string;

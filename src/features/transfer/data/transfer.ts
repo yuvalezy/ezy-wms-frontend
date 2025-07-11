@@ -1,4 +1,4 @@
-import {BaseEntity, SourceTarget, Status, UnitType} from "@/assets";
+import {BaseEntity, Status, UnitType} from "@/features/shared/data";
 import {ItemDetails} from "@/features/items/data/items";
 import {PackageContentDto} from "@/features/packages/types";
 
@@ -53,6 +53,12 @@ export type TransferContentBin = {
   code: string;
   quantity: number;
 }
+
+export enum SourceTarget {
+  Source = "Source",
+  Target = "Target"
+}
+
 export type AddItemParameters = {
   id: string,
   itemCode: string,

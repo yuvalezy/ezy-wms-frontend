@@ -1,4 +1,6 @@
-import {ItemDataResponse, UnitType, UserAuditResponse} from "@/assets";
+import {UnitType} from "@/features/shared/data";
+import {ItemDataResponse} from "@/features/packages/types/ItemDataResponse.dto";
+import {UserAuditResponse} from "@/features/packages/types/UserAuditResponse.dto";
 
 export interface PackageContentDto {
   id: string;

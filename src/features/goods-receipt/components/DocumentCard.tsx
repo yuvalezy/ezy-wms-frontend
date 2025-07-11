@@ -1,0 +1,109 @@
+import React from "react";
+import {useAuth} from "@/components/AppContext";
+import {useTranslation} from "react-i18next";
+import {Card, CardContent} from "@/components/ui/card";
+import {Button} from "@/components/ui/button";
+import {Check, X, FileText, Truck, ArrowRightLeft} from 'lucide-react';
+import {useObjectName} from "@/hooks/useObjectName";
+import {useDocumentStatusToString} from "@/hooks/useDocumentStatusToString";
+import {Status} from "@/features/shared/data/shared";
+import {activeStatuses, processStatuses} from "@/features/goods-receipt/data/goods-receipt-utils";
+import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
+import {Separator} from "@/components/ui/separator";
+import InfoBox, {FullInfoBox, InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
+import {useNavigate} from "react-router-dom";
+import {DocumentItem, ReceiptDocument} from "@/features/goods-receipt/data/goods-receipt";
+import {useGoodsReceiptHandleOpen} from "@/features/goods-receipt/hooks/useGoodsReceiptHandleOpen";
+import {RoleType} from "@/features/authorization-groups/data/authorization-group";
+
+type DocumentCardProps = {
+  doc: ReceiptDocument,
+  supervisor?: boolean,
+  action?: (doc: ReceiptDocument, action: 'approve' | 'cancel') => void,
+  docDetails: (doc: ReceiptDocument) => void,
+  confirm?: boolean
+}
+
+const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, action, docDetails, confirm}) => {
+  const {t} = useTranslation();
+  const o = useObjectName();
+  const {dateFormat} = useDateTimeFormat();
+  const {user} = useAuth();
+  const handleOpen = useGoodsReceiptHandleOpen(confirm);
+  const navigate = useNavigate();
+
+  const handleOpenLink = !confirm ? user?.roles?.includes(RoleType.GOODS_RECEIPT) : user?.roles?.includes(RoleType.GOODS_RECEIPT_CONFIRMATION);
+
+  const openLink = () => {
+    if (!confirm)
+      navigate(`/goodsReceipt/${doc.id}`);
+    else
+      navigate(`/goodsReceiptConfirmation/${doc.id}`);
+  };
+
+  const documentStatusToString = useDocumentStatusToString();
+
+  const formatDocumentsList = (documents: DocumentItem[]) => {
+    return documents.map((value, index) => (
+      `${index > 0 ? ', ' : ''}${o(value.objectType)} #${value.documentNumber}`
+    )).join('');
+  }
+  return (
+    <Card className="mb-4 shadow-lg">
+      <CardContent className="grid text-sm gap-2">
+        <FullInfoBox>
+          {doc.name && <InfoBoxValue label={t('id')} value={doc.name}/>}
+          <InfoBoxValue onClick={handleOpenLink ? openLink : undefined} label={t('number')} value={doc.number}/>
+          <InfoBoxValue label={t('docDate')} value={dateFormat(doc.date)}/>
+          <InfoBoxValue label={t('createdBy')} value={doc.createdByUserName}/>
+          <InfoBoxValue label={t('status')} value={documentStatusToString(doc.status)}/>
+        </FullInfoBox>
+        {(doc.vendor || doc.documents) && <FullInfoBox>
+          {doc.vendor && (
+            <InfoBoxValue label={t('vendor')} value={doc.vendor.name ?? doc.vendor.id}/>
+          )}
+          {doc.documents && doc.documents?.length > 0 && (
+            <InfoBoxValue label={t('documentsList')} value={formatDocumentsList(doc.documents)}
+                          onClick={() => docDetails(doc)}/>
+          )}
+        </FullInfoBox>}
+
+        {supervisor && (
+          <>
+            <Separator className="my-4"/>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <Button variant="outline" className="w-full" onClick={() => handleOpen('all', doc.id)}>
+                <FileText className="mr-2 h-4 w-4"/>
+                {!confirm ? t('goodsReceiptReport') : t('confirmationReport')}
+              </Button>
+              {user?.settings?.goodsReceiptTargetDocuments && activeStatuses.includes(doc.status) && (
+                <Button variant="outline" className="w-full" onClick={() => handleOpen('vs', doc.id)}>
+                  <Truck className="mr-2 h-4 w-4"/>
+                  {!confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}
+                </Button>
+              )}
+              {processStatuses.includes(doc.status) && (
+                <Button variant="outline" className="w-full" onClick={() => handleOpen('diff', doc.id)}>
+                  <ArrowRightLeft className="mr-2 h-4 w-4"/>
+                  {t('differencesReport')}
+                </Button>
+              )}
+              {doc.status === Status.InProgress && (
+                <Button className="w-full" onClick={() => action?.(doc, 'approve')}>
+                  <Check className="mr-2 h-4 w-4"/>
+                  {t('finish')}
+                </Button>
+              )}
+              <Button variant="destructive" className="w-full" onClick={() => action?.(doc, 'cancel')}>
+                <X className="mr-2 h-4 w-4"/>
+                {t('cancel')}
+              </Button>
+            </div>
+          </>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+export default DocumentCard;

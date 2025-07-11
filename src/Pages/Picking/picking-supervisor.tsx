@@ -1,23 +1,24 @@
 import ContentTheme from "@/components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import React, {useEffect, useState} from "react";
-import {cancelPicking, fetchPickings, PickingDocument, processPicking} from "@/pages/picking/data/picking-document";
 import {useThemeContext} from "@/components/ThemeContext";
 import {Alert, AlertDescription} from "@/components/ui/alert";
-import {StringFormat} from "@/assets/Functions";
+import {StringFormat} from "@/utils/string-utils";
 import {toast} from "sonner";
-import PickingCard from "@/pages/picking/components/picking-card";
+import PickingCard from "@/features/picking/components/picking-card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Button} from "@/components/ui/button";
 import {Progress} from "@/components/ui/progress";
 import {RefreshCw, XCircle} from "lucide-react";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "@/components/AppContext";
-import {RoleType} from "@/assets/RoleType";
-import {useDateTimeFormat} from "@/assets/DateFormat";
-import {formatNumber} from "@/lib/utils";
+import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
 import {MessageBox} from "@/components";
-import {SyncStatus} from "@/assets/sync-status";
+
+import {PickingDocument, SyncStatus} from "@/features/picking/data/picking";
+import {RoleType} from "@/features/authorization-groups/data/authorization-group";
+import {formatNumber} from "@/utils/number-utils";
+import {pickingService} from "@/features/picking/data/picking-service";
 
 export default function PickingSupervisor() {
   const {t} = useTranslation();
@@ -40,7 +41,7 @@ export default function PickingSupervisor() {
 
   const loadData = () => {
     setLoading(true);
-    fetchPickings()
+    pickingService.fetchPickings()
       .then(values => setPickings(values))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
@@ -51,7 +52,7 @@ export default function PickingSupervisor() {
       return;
     }
     setLoading(true);
-    processPicking(picking.entry)
+    pickingService.processPicking(picking.entry)
       .then(() => {
         toast.success(StringFormat(t("pickingUpdateSuccess"), picking.entry));
         loadData();
@@ -71,7 +72,7 @@ export default function PickingSupervisor() {
     if (!selectedDocument)
       return;
     setLoading(true);
-    cancelPicking(selectedDocument.entry)
+    pickingService.cancelPicking(selectedDocument.entry)
       .then(() => {
         toast.success(StringFormat(t("pickingCancelSuccess"), selectedDocument.entry));
         loadData();

@@ -1,7 +1,8 @@
 import { PackageStatus } from './PackageStatus.enum';
 import { PackageContentDto } from './PackageContentDto.dto';
 import { PackageLocationHistoryDto } from './PackageLocationHistoryDto.dto';
-import {UserAuditResponse} from "@/assets";
+
+import {UserAuditResponse} from "@/features/packages/types/UserAuditResponse.dto";
 
 export interface PackageDto {
   id: string;

@@ -8,7 +8,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Trash2, Plus } from 'lucide-react';
 import {useThemeContext} from "@/components";
-import {StringFormat} from "@/assets";
 import {useNavigate} from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
@@ -22,6 +21,7 @@ import {
 } from "@/components/ui/dialog";
 import {TransferContent} from "@/features/transfer/data/transfer";
 import {transferService} from "@/features/transfer/data/transefer-service";
+import {StringFormat} from "@/utils/string-utils";
 
 export default function TransferRequest() {
     const {t} = useTranslation();
