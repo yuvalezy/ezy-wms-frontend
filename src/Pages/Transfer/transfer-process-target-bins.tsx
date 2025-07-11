@@ -24,6 +24,7 @@ import {useStockInfo} from "@/utils/stock-info";
 import InfoBox from "@/components/InfoBox";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
 import {transferService} from "@/features/transfer/data/transefer-service";
+import {ObjectType} from "@/features/packages/types";
 
 export default function TransferProcessTargetBins() {
   const {t} = useTranslation();
@@ -41,6 +42,7 @@ export default function TransferProcessTargetBins() {
     onBinClear,
     loadRows,
     handleAddItem,
+    handleAddPackage,
     handleQuantityChanged,
     handleCancel,
     scanCode,
@@ -63,7 +65,19 @@ export default function TransferProcessTargetBins() {
     <ContentTheme title={t("transfer")} titleOnClick={() => navigate(`/transfer`)}
                   titleBreadcrumbs={titleBreadcrumbs}
                   footer={binLocation &&
-                      <BarCodeScanner unit ref={barcodeRef} onAddItem={handleAddItem} enabled/>}
+                      <BarCodeScanner
+                          unit
+                          ref={barcodeRef}
+                          onAddItem={handleAddItem}
+                          enabled
+                          enablePackage={user!.settings!.enablePackages}
+                          enablePackageCreate={false}
+                          isEphemeralPackage={false}
+                          objectType={ObjectType.Transfer}
+                          objectId={info?.id}
+                          objectNumber={info?.number}
+                          onPackageChanged={handleAddPackage}
+                      />}
     >
       {user?.binLocations && !binLocation && <BinLocationScanner onChanged={onBinChanged} onClear={onBinClear}/>}
       <div className="contentStyle">

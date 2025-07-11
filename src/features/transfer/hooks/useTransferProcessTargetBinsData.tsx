@@ -1,12 +1,27 @@
 import {useParams} from "react-router-dom";
 import {SourceTarget, useDateTimeFormat} from "@/assets";
 import {useEffect, useRef, useState} from "react";
-import {AddItemValue, BarCodeScannerRef, ProcessAlertValue, ProcessesRef, useAuth, useThemeContext} from "@/components";
+import {
+  AddItemValue,
+  BarCodeScannerRef,
+  PackageValue,
+  ProcessAlertValue,
+  ProcessesRef,
+  useAuth,
+  useThemeContext
+} from "@/components";
 import {useTranslation} from "react-i18next";
 
 import {BinLocation} from "@/features/items/data/items";
-import {TransferContent, TransferDocument} from "@/features/transfer/data/transfer";
+import {
+  TransferAddSourcePackageRequest,
+  TransferAddTargetPackageRequest,
+  TransferContent,
+  TransferDocument
+} from "@/features/transfer/data/transfer";
 import {transferService} from "@/features/transfer/data/transefer-service";
+import {toast} from "sonner";
+import axios from "axios";
 
 export const useTransferProcessTargetBinsData = () => {
   const {scanCode} = useParams();
@@ -95,12 +110,18 @@ export const useTransferProcessTargetBinsData = () => {
   }
 
   function handleAddItem(value: AddItemValue) {
-    if (id == null) {
+    if (id == null)
       return;
-    }
     const item = value.item;
     const unit = value.unit;
-    const params = {id, itemCode: item.code, barcode: item.barcode, type: SourceTarget.Target, binEntry: binLocation?.entry, unit};
+    const params = {
+      id,
+      itemCode: item.code,
+      barcode: item.barcode,
+      type: SourceTarget.Target,
+      binEntry: binLocation?.entry,
+      unit
+    };
     transferService.addItem(params, t)
       .then((v) => {
         if (v.errorMessage != null) {
@@ -132,6 +153,44 @@ export const useTransferProcessTargetBinsData = () => {
     return;
   }
 
+  function handleAddPackage(value: PackageValue) {
+    if (id == null)
+      return;
+    const params: TransferAddTargetPackageRequest = {transferId: id, packageId: value.id, targetBinEntry: binLocation?.entry};
+    transferService.addTargetPackage(params)
+      .then((r) => {
+        if (r.errorMessage != null) {
+          setError(r.errorMessage);
+          return;
+        }
+        const date = new Date(Date.now());
+        setCurrentAlert({
+          lineId: r.lineId,
+          severity: "Information",
+          timeStamp: dateTimeFormat(date),
+          package: value,
+          packageContents: r.packageContents,
+        });
+        barcodeRef?.current?.clear();
+        loadRows();
+        barcodeRef?.current?.focus();
+        setTimeout(() => {
+          processAlertRef?.current?.scrollIntoView({behavior: "smooth", block: "start"});
+        }, 100);
+      })
+      .catch((error) => {
+        if (axios.isAxiosError(error) && error.response?.status === 400) {
+          const errorMessage = error.response?.data?.error;
+          if (errorMessage === "Package is already added as source to this transfer") {
+            setError(t('packageAlreadyAddedAsSource', {barcode: value.barcode}));
+            return;
+          }
+        }
+        setError(error);
+      })
+      .finally(() => setLoading(false))
+  }
+
   function handleQuantityChanged(quantity: number) {
     if (currentAlert == null)
       return;
@@ -155,6 +214,7 @@ export const useTransferProcessTargetBinsData = () => {
     setCurrentAlert(newAlert);
     loadRows();
   }
+
   return {
     id,
     binLocation,
@@ -168,6 +228,7 @@ export const useTransferProcessTargetBinsData = () => {
     onBinClear,
     loadRows,
     handleAddItem,
+    handleAddPackage,
     handleQuantityChanged,
     handleCancel,
     scanCode,

@@ -114,7 +114,14 @@ export const useTransferProcessSourceData = () => {
       return;
     const item = value.item;
     const unit = value.unit;
-    const params : AddItemParameters = {id, itemCode: item.code, barcode: item.barcode, type: SourceTarget.Source, binEntry: binLocation?.entry, unit};
+    const params: AddItemParameters = {
+      id,
+      itemCode: item.code,
+      barcode: item.barcode,
+      type: SourceTarget.Source,
+      binEntry: binLocation?.entry,
+      unit
+    };
     transferService.addItem(params, t)
       .then((v) => {
         if (v.errorMessage != null) {
@@ -151,7 +158,7 @@ export const useTransferProcessSourceData = () => {
   function handleAddPackage(value: PackageValue) {
     if (id == null)
       return;
-    const params : TransferAddSourcePackageRequest= {transferId: id, packageId: value.id, binEntry: binLocation?.entry};
+    const params: TransferAddSourcePackageRequest = {transferId: id, packageId: value.id, binEntry: binLocation?.entry};
     transferService.addSourcePackage(params)
       .then((r) => {
         if (r.errorMessage != null) {
@@ -177,7 +184,7 @@ export const useTransferProcessSourceData = () => {
         if (axios.isAxiosError(error) && error.response?.status === 400) {
           const errorMessage = error.response?.data?.error;
           if (errorMessage === "Package is already added as source to this transfer") {
-            setError(t('packageAlreadyAddedAsSource', { barcode: value.barcode }));
+            setError(t('packageAlreadyAddedAsSource', {barcode: value.barcode}));
             return;
           }
         }
