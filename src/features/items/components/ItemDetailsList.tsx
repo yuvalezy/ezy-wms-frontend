@@ -4,14 +4,20 @@ import {InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
 import {useAuth} from "@/components";
 import {CustomField, CustomFieldType, ItemDetails} from "@/features/items/data/items";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
+import {UnitType} from "@/features/shared/data";
 
 const ItemDetailsList = ({details}: { details: ItemDetails }) => {
   const {t} = useTranslation();
+  const {user, defaultUnit, unitSelection} = useAuth();
   return <SecondaryInfoBox>
     <InfoBoxValue label={t("code")} value={details.itemCode}/>
     <InfoBoxValue label={t("description")} value={details.itemName}/>
-    <InfoBoxValue label={t('purchasingUoM')} value={`${details.buyUnitMsr} ${details.numInBuy}`}/>
-    <InfoBoxValue label={t('packagingUoM')} value={`${details.purPackMsr} ${details.purPackUn}`}/>
+    {(unitSelection || defaultUnit === UnitType.Dozen && details.numInBuy != 1) &&
+        <InfoBoxValue label={t('purchasingUoM')} value={`${details.buyUnitMsr} ${details.numInBuy}`}/>
+    }
+    {(unitSelection || defaultUnit === UnitType.Pack && details.purPackUn != 1) &&
+        <InfoBoxValue label={t('packagingUoM')} value={`${details.purPackMsr} ${details.purPackUn}`}/>
+    }
     <ItemCustomFields
       customFields={details.customFields}
       render={(field, value, index) => (

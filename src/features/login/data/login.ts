@@ -2,6 +2,7 @@ import {RoleType} from "@/features/authorization-groups/data/authorization-group
 import {Warehouse} from "@/features/users/data/user";
 import {CustomField} from "@/features/items/data/items";
 import {DeviceStatus} from "@/features/devices/data/device";
+import {UnitType} from "@/features/shared/data";
 
 export interface UserInfo {
   id: string;
@@ -23,4 +24,13 @@ export interface ApplicationSettings {
   goodsReceiptCreateSupervisorRequired: boolean;
   goodsReceiptTargetDocuments: boolean;
   transferTargetItems: boolean;
+  goodsReceiptType: GoodsReceiptDocumentType;
+  defaultUnitType: UnitType;
+  enableUnitSelection: boolean;
+}
+
+export enum GoodsReceiptDocumentType {
+  Transactional = "Transactional",
+  Confirmation = "Confirmation",
+  Both = "Both"
 }

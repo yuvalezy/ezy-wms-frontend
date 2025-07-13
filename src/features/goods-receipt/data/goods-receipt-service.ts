@@ -43,7 +43,7 @@ export const goodsReceiptService = {
 
   async process(id: string): Promise<DocumentActionResponse> {
     try {
-      const response = await axiosInstance.post<DocumentActionResponse>(`goodsReceipt/process`, {id});
+      const response = await axiosInstance.get<DocumentActionResponse>(`goodsReceipt/process/${id}`);
 
       if (!response.data.success) {
         throw new Error(response.data.errorMessage);

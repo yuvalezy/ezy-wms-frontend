@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import {AccountState} from "@/features/account/data/account";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
+import {GoodsReceiptDocumentType} from "@/features/login/data/login";
 
 export interface MenuItem {
   Link: string;
@@ -28,6 +29,7 @@ export interface MenuItem {
   SuperUser?: boolean;
   Icon: React.ComponentType<any>;
   Color?: string;
+  RequiresFeature?: string;
 }
 
 
@@ -59,6 +61,7 @@ export function useMenus() {
       Authorizations: [RoleType.GOODS_RECEIPT_SUPERVISOR, RoleType.PICKING_SUPERVISOR, RoleType.COUNTING_SUPERVISOR, RoleType.TRANSFER_SUPERVISOR, RoleType.PACKAGE_MANAGEMENT, RoleType.PACKAGE_MANAGEMENT_SUPERVISOR],
       Icon: PackageCheckIcon,
       Color: "text-green-700",
+      RequiresFeature: "PackageManagement"
     },
     {
       Link: "/goodsReceipt",
@@ -66,6 +69,7 @@ export function useMenus() {
       Authorization: RoleType.GOODS_RECEIPT,
       Icon: ClipboardList,
       Color: "text-gray-700",
+      RequiresFeature: "GoodsReceiptTransactional"
     },
     {
       Link: goodsReceiptSupervisorRoute,
@@ -73,6 +77,7 @@ export function useMenus() {
       Authorizations: [RoleType.GOODS_RECEIPT_SUPERVISOR],
       Icon: BarChart3,
       Color: "text-gray-700",
+      RequiresFeature: "GoodsReceiptTransactional"
     },
     {
       Link: "/goodsReceiptReport",
@@ -80,6 +85,7 @@ export function useMenus() {
       Authorization: RoleType.GOODS_RECEIPT_SUPERVISOR,
       Icon: TrendingUp,
       Color: "text-gray-700",
+      RequiresFeature: "GoodsReceiptTransactional"
     },
     {
       Link: "/goodsReceiptConfirmation",
@@ -87,6 +93,7 @@ export function useMenus() {
       Authorization: RoleType.GOODS_RECEIPT_CONFIRMATION,
       Icon: ClipboardList,
       Color: "text-indigo-700",
+      RequiresFeature: "GoodsReceiptConfirmation"
     },
     {
       Link: goodsReceiptConfirmationSupervisorRoute,
@@ -94,6 +101,7 @@ export function useMenus() {
       Authorizations: [RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR],
       Icon: BarChart3,
       Color: "text-indigo-700",
+      RequiresFeature: "GoodsReceiptConfirmation"
     },
     {
       Link: "/goodsReceiptConfirmationReport",
@@ -101,6 +109,7 @@ export function useMenus() {
       Authorization: RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR,
       Icon: TrendingUp,
       Color: "text-indigo-700",
+      RequiresFeature: "GoodsReceiptConfirmation"
     },
     {
       Link: "/pick",
@@ -206,6 +215,22 @@ export function useMenus() {
       if ((!isDeviceActive || !isValidAccount) && !item.Link.startsWith('/settings')) {
         return false;
       }
+      if (item.RequiresFeature != null) {
+        switch (item.RequiresFeature) {
+          case "GoodsReceiptTransactional":
+            if (user?.settings?.goodsReceiptType === GoodsReceiptDocumentType.Confirmation)
+              return false;
+            break;
+          case "GoodsReceiptConfirmation":
+            if (user?.settings?.goodsReceiptType === GoodsReceiptDocumentType.Transactional)
+              return false;
+            break;
+          case "PackageManagement":
+            if (!user?.settings?.enablePackages)
+              return false;
+            break;
+        }
+      }
       if (item.Authorization === undefined && item.Authorizations === undefined && user?.superUser) {
         return true;
       }
@@ -226,6 +251,7 @@ export function useMenus() {
       return false;
     });
   };
+
   function applySettings(authorizations: RoleType[]) {
     if (user?.settings?.goodsReceiptCreateSupervisorRequired) {
       return;
