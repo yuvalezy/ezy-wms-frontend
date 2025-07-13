@@ -7,9 +7,12 @@ import ClickableItemCode from "@/components/ClickableItemCode";
 import ClickablePackageBarcode from "@/components/ClickablePackageBarcode";
 import {ChevronRight, Package, Box, Grid3x3} from "lucide-react";
 import {BinContentResponse} from "@/features/items/data/items";
+import {useAuth} from "@/components";
+import {UnitType} from "@/features/shared/data";
 
 export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({content}) => {
   const {t} = useTranslation();
+  const {user, unitSelection, defaultUnit} = useAuth();
   const [data, setData] = useState<BinContentResponse[]>([]);
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const stockInfo = useStockInfo();
@@ -31,11 +34,21 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
   };
 
   const formatStock = (binContent: BinContentResponse) => {
+    if (!unitSelection) {
+      switch (defaultUnit) {
+        case UnitType.Unit:
+          return `${binContent.onHand} ${t('units')}`;
+        case UnitType.Dozen:
+          return `${binContent.onHand / binContent.numInBuy} ${t('units')}`;
+        case UnitType.Pack:
+          return `${binContent.onHand / binContent.numInBuy / binContent.purPackUn} ${t('units')}`;
+      }
+    }
     const packages = Math.floor(binContent.onHand / (binContent.numInBuy * binContent.purPackUn));
     const remainingForDozens = binContent.onHand % (binContent.numInBuy * binContent.purPackUn);
     const dozens = Math.floor(remainingForDozens / binContent.numInBuy);
     const units = remainingForDozens % binContent.numInBuy;
-    
+
     const parts = [];
     if (packages > 0) parts.push(`${packages} ${binContent.purPackMsr || 'Box'}`);
     if (dozens > 0) parts.push(`${dozens} ${binContent.buyUnitMsr || 'Doz'}`);
@@ -48,7 +61,7 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
     const remainingForDozens = binContent.onHand % (binContent.numInBuy * binContent.purPackUn);
     const dozens = Math.floor(remainingForDozens / binContent.numInBuy);
     const units = remainingForDozens % binContent.numInBuy;
-    return { packages, dozens, units };
+    return {packages, dozens, units};
   };
 
   const calculateTotals = () => {
@@ -60,7 +73,7 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
     data.forEach(v => {
       const packages = Math.floor(v.onHand / (v.numInBuy * v.purPackUn));
       totalBoxes += packages;
-      
+
       // Count unique package barcodes
       v.packages?.forEach(pkg => {
         uniquePackages.add(pkg.barcode);
@@ -69,7 +82,7 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
 
     mixedBoxes = uniquePackages.size;
 
-    return { totalItems, totalBoxes, mixedBoxes };
+    return {totalItems, totalBoxes, mixedBoxes};
   };
 
   if (!content || content.length === 0) {
@@ -84,7 +97,7 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
         {data.map((binContent, index) => {
           const hasPackages = binContent.packages && binContent.packages.length > 0;
           const isExpanded = expandedRows.has(binContent.itemCode);
-          const { packages, dozens, units } = getStockBreakdown(binContent);
+          const {packages, dozens, units} = getStockBreakdown(binContent);
 
           return (
             <div key={index} className={`${index !== 0 ? 'border-t' : ''}`}>
@@ -94,7 +107,7 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
               >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <ClickableItemCode itemCode={binContent.itemCode} />
+                    <ClickableItemCode itemCode={binContent.itemCode}/>
                   </div>
                   <p className="text-sm text-gray-600 mt-1 truncate">
                     {binContent.itemName}
@@ -104,27 +117,30 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
                   </p>
                 </div>
 
-                <div className="flex items-center">
-                  <div className="flex gap-1">
+
+                {unitSelection && <div className="flex items-center">
+                    <div className="flex gap-1">
                     <span className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold text-white ${
                       packages > 0 ? 'bg-blue-500' : 'bg-gray-200'
                     }`}>
                       {t('inventory.units.box.abbr')}
                     </span>
-                    <span className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold text-white ${
-                      dozens > 0 ? 'bg-green-500' : 'bg-gray-200'
-                    }`}>
+                        <span
+                            className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold text-white ${
+                              dozens > 0 ? 'bg-green-500' : 'bg-gray-200'
+                            }`}>
                       {t('inventory.units.dozen.abbr')}
                     </span>
-                    <span className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold text-white ${
-                      units > 0 ? 'bg-amber-500' : 'bg-gray-200'
-                    }`}>
+                        <span
+                            className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold text-white ${
+                              units > 0 ? 'bg-amber-500' : 'bg-gray-200'
+                            }`}>
                       {t('inventory.units.unit.abbr')}
                     </span>
-                  </div>
-                </div>
+                    </div>
+                </div>}
 
-                <ChevronRight 
+                <ChevronRight
                   className={`w-5 h-5 text-gray-400 transition-transform ml-2 ${
                     isExpanded ? 'rotate-90' : ''
                   } ${hasPackages ? 'opacity-100' : 'opacity-0'}`}
@@ -135,11 +151,13 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
                 <div className="bg-gray-50 px-4 pb-4">
                   <div className="grid grid-cols-3 gap-4 pt-4">
                     <div className="text-center">
-                      <p className="text-xs text-gray-500 uppercase tracking-wider">{binContent.purPackMsr || t('boxes')}</p>
+                      <p
+                        className="text-xs text-gray-500 uppercase tracking-wider">{binContent.purPackMsr || t('boxes')}</p>
                       <p className="text-lg font-semibold text-gray-900">{packages}</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-xs text-gray-500 uppercase tracking-wider">{binContent.buyUnitMsr || t('dozens')}</p>
+                      <p
+                        className="text-xs text-gray-500 uppercase tracking-wider">{binContent.buyUnitMsr || t('dozens')}</p>
                       <p className="text-lg font-semibold text-gray-900">{dozens}</p>
                     </div>
                     <div className="text-center">
@@ -147,15 +165,15 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
                       <p className="text-lg font-semibold text-gray-900">{units}</p>
                     </div>
                   </div>
-                  
+
                   {binContent.packages && binContent.packages.length > 0 && (
                     <div className="mt-4 pt-4 border-t border-gray-200">
                       <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">{t('inventory.mixedBoxes')}</p>
                       <div className="space-y-1">
                         {binContent.packages.map((pkg, idx) => (
                           <div key={idx} className="flex justify-between text-sm">
-                            <ClickablePackageBarcode 
-                              packageId={pkg.id} 
+                            <ClickablePackageBarcode
+                              packageId={pkg.id}
                               barcode={pkg.barcode}
                               className="text-gray-600 font-mono"
                             />
@@ -173,10 +191,11 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
                       </div>
                     </div>
                   )}
-                  
+
                   <div className="mt-4 pt-4 border-t border-gray-200">
                     <p className="text-sm text-gray-500">
-                      {t('total')}: <span className="font-semibold text-gray-900">{binContent.onHand} {t('units')}</span>
+                      {t('total')}: <span
+                      className="font-semibold text-gray-900">{binContent.onHand} {t('units')}</span>
                     </p>
                   </div>
                 </div>
@@ -184,7 +203,7 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
             </div>
           );
         })}
-        
+
         {data.length === 0 && (
           <div className="p-8 text-center text-gray-500">
             {t('noBinContentFound')}
@@ -192,30 +211,31 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
         )}
       </Card>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className={`grid grid-cols-${(user?.settings?.enablePackages ? "3" : "2")} gap-4`}>
         <Card className="p-4 text-center">
           <div className="flex justify-center mb-2">
-            <Grid3x3 className="w-6 h-6 text-gray-400" />
+            <Grid3x3 className="w-6 h-6 text-gray-400"/>
           </div>
           <p className="text-2xl font-bold text-gray-900">{totals.totalItems}</p>
           <p className="text-xs text-gray-500 mt-1">{t('totalItems')}</p>
         </Card>
-        
+
         <Card className="p-4 text-center">
           <div className="flex justify-center mb-2">
-            <Package className="w-6 h-6 text-gray-400" />
+            <Package className="w-6 h-6 text-gray-400"/>
           </div>
           <p className="text-2xl font-bold text-gray-900">{totals.totalBoxes}</p>
-          <p className="text-xs text-gray-500 mt-1">{t('inventory.totalBoxes')}</p>
+          <p className="text-xs text-gray-500 mt-1">{unitSelection ? t('inventory.totalBoxes') : t('totalItems')}</p>
         </Card>
-        
-        <Card className="p-4 text-center">
-          <div className="flex justify-center mb-2">
-            <Box className="w-6 h-6 text-gray-400" />
-          </div>
-          <p className="text-2xl font-bold text-gray-900">{totals.mixedBoxes}</p>
-          <p className="text-xs text-gray-500 mt-1">{t('inventory.mixedBoxes')}</p>
-        </Card>
+
+        {user?.settings?.enablePackages &&
+            <Card className="p-4 text-center">
+                <div className="flex justify-center mb-2">
+                    <Box className="w-6 h-6 text-gray-400"/>
+                </div>
+                <p className="text-2xl font-bold text-gray-900">{totals.mixedBoxes}</p>
+                <p className="text-xs text-gray-500 mt-1">{t('inventory.mixedBoxes')}</p>
+            </Card>}
       </div>
     </div>
   );

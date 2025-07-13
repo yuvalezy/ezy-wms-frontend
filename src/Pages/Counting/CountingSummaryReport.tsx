@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useThemeContext} from "@/components";
+import {useAuth, useThemeContext} from "@/components";
 import {useTranslation} from "react-i18next";
 import {useNavigate, useParams} from "react-router-dom";
 import CountingSummaryReportTable from "@/features/counting/components/CountingSummaryReportTable";
@@ -13,6 +13,7 @@ export default function CountingSummaryReport() {
   const {scanCode} = useParams();
   const {setLoading, setError} = useThemeContext();
   const {t} = useTranslation();
+  const {user, unitSelection} = useAuth();
   const [data, setData] = useState<CountingSummaryReportData | null>(null);
   const navigate = useNavigate();
 
@@ -28,14 +29,23 @@ export default function CountingSummaryReport() {
   }, []);
 
 
-  const excelHeaders = [
-    t("bin"),
-    t("code"),
-    t("description"),
-    t("packages"),
-    t("dozens"),
-    t("units"),
-  ];
+  const getExcelHeaders = () => {
+    const headers = [
+      t("bin"),
+      t("code"),
+      t("description"),
+    ];
+    if (unitSelection) {
+     headers.push(
+       t("packages"),
+       t("dozens"),
+       t("units"),
+     ) ;
+    } else {
+      headers.push(t("quantity"));
+    }
+    return headers;
+  }
 
   const excelData = () => {
     return data?.lines.map((item) => {
@@ -44,22 +54,29 @@ export default function CountingSummaryReport() {
         numInBuy: item.numInBuy,
         purPackUn: item.purPackUn,
       });
-      
-      return [
+
+      const values = [
         item.binCode,
         item.itemCode,
         item.itemName,
-        quantities.pack,
-        quantities.dozen,
-        quantities.unit,
       ];
+      if (unitSelection) {
+        values.push(
+          quantities.pack,
+          quantities.dozen,
+          quantities.unit,
+        );
+      } else {
+        values.push(item.quantity.toString());
+      }
+      return values;
     }) ?? [];
   };
 
   const handleExportExcel = () => {
     exportToExcel({
       name: "CountingData",
-      headers: excelHeaders,
+      headers: getExcelHeaders,
       getData: excelData,
       fileName: `counting_data_${data?.number}`
     });

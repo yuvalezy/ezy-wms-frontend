@@ -11,9 +11,9 @@ import {itemsService} from "@/features/items/data/items-service";
 
 export const useBinCheckData = () => {
   const {t} = useTranslation();
+  const {user, unitSelection, defaultUnit} = useAuth();
   const {setLoading, setError} = useThemeContext();
   const binRef = useRef<BinLocationScannerRef>(null);
-  const {user} = useAuth();
   const [binContent, setBinContent] = useState<BinContentResponse[] | null>(null);
   const [bin, setBin] = useState<BinLocation | null>(null);
 
@@ -47,36 +47,53 @@ export const useBinCheckData = () => {
       binRef?.current?.focus();
     }, 1)
   }
+
   const excelData = () => {
     return binContent?.map((value) => {
-      const quantities = formatQuantityForExcel({
-        quantity: value.onHand,
-        numInBuy: value.numInBuy,
-        purPackUn: value.purPackUn,
-      });
-      
-      return [
+      const values = [
         value.itemCode,
         value.itemName,
-        quantities.pack,
-        quantities.dozen,
-        quantities.unit,
       ];
+      if (unitSelection) {
+        const quantities = formatQuantityForExcel({
+          quantity: value.onHand,
+          numInBuy: value.numInBuy,
+          purPackUn: value.purPackUn,
+        });
+
+        values.push(
+          quantities.pack,
+          quantities.dozen,
+          quantities.unit,
+        );
+      } else {
+        values.push(value.onHand.toString());
+      }
+      return values;
     }) ?? [];
   };
 
-  const excelHeaders = [
-    t("code"),
-    t("description"),
-    t("pack"),
-    t("dozen"),
-    t("unit"),
-  ];
+  const getExcelHeaders = () => {
+    const headers = [
+      t("code"),
+      t("description"),
+    ];
+    if (unitSelection) {
+      headers.push(
+        t("pack"),
+        t("dozen"),
+        t("unit"),
+      );
+    } else {
+      headers.push(t("quantity"));
+    }
+    return headers;
+  }
 
   const handleExportExcel = () => {
     exportToExcel({
       name: "BinCheck",
-      headers: excelHeaders,
+      headers: getExcelHeaders,
       getData: excelData,
       fileName: `bincheck_${binRef?.current?.getBin()}`
     });
@@ -92,7 +109,6 @@ export const useBinCheckData = () => {
     onScan,
     onBinClear,
     excelData,
-    excelHeaders,
     handleExportExcel,
     bin,
     executeBinCheck
