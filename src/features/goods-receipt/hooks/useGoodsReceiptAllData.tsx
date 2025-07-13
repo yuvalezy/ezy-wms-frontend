@@ -6,7 +6,7 @@ import {
   GoodsReceiptAll,
   GoodsReceiptAllLine,
 } from "@/features/goods-receipt/data/goods-receipt-reports";
-import {DetailUpdateParameters} from "@/features/shared/data/shared";
+import {DetailUpdateParameters, UnitType} from "@/features/shared/data/shared";
 import {GRPOAllDetailRef} from "@/features/goods-receipt/hooks/useGoodsReceiptAllDetailsData";
 import {exportToExcel} from "@/utils/excelExport";
 import {formatQuantityForExcel} from "@/utils/excel-quantity-format";
@@ -14,9 +14,11 @@ import {formatQuantityForExcel} from "@/utils/excel-quantity-format";
 import {ReceiptDocument} from "@/features/goods-receipt/data/goods-receipt";
 import {goodsReceiptService} from "@/features/goods-receipt/data/goods-receipt-service";
 import {goodsReceiptReportService} from "@/features/goods-receipt/data/goods-receipt-report-service";
+import {useAuth} from "@/components";
 
 export const useGoodsReceiptAllData = (confirm: boolean | undefined) => {
   const {t} = useTranslation();
+  const {user, defaultUnit, unitSelection} = useAuth();
   const {scanCode} = useParams();
   const {setLoading, setError} = useThemeContext();
   const [data, setData] = useState<GoodsReceiptAll | null>(null);
@@ -48,48 +50,67 @@ export const useGoodsReceiptAllData = (confirm: boolean | undefined) => {
     ;
   }
 
-  const excelHeaders = [
-    t("code"),
-    t("description"),
-    t("pack"),
-    t("dozen"),
-    t("unit"),
-    t("delivery"),
-    t("showroom"),
-    t("stock"),
-    t("qtyInUn"),
-    t("packUn"),
-  ];
+  const getExcelHeaders = () => {
+    const headers = [
+      t("code"),
+      t("description"),
+    ];
+    if (unitSelection) {
+      headers.push(
+        t("pack"),
+        t("dozen"),
+        t("unit"),
+      );
+    } else {
+      headers.push(t("quantity"));
+    }
+    headers.push(
+      t("delivery"),
+      t("showroom"),
+      t("stock"),
+      t("qtyInUn"),
+      t("packUn"),
+    );
+    return headers;
+  }
 
   const excelData = () => {
     return data?.lines?.map((item) => {
-      const quantities = formatQuantityForExcel({
-        quantity: item.quantity,
-        numInBuy: item.numInBuy,
-        buyUnitMsr: item.buyUnitMsr || "",
-        purPackUn: item.purPackUn,
-        purPackMsr: item.purPackMsr || ""
-      });
-
-      return [
+      const values = [
         item.itemCode,
         item.itemName,
-        quantities.pack,
-        quantities.dozen,
-        quantities.unit,
+      ];
+
+      if (unitSelection) {
+        const quantities = formatQuantityForExcel({
+          quantity: item.quantity,
+          numInBuy: item.numInBuy,
+          purPackUn: item.purPackUn,
+        });
+
+        values.push(
+          quantities.pack,
+          quantities.dozen,
+          quantities.unit,
+        );
+      } else {
+        values.push(item.quantity);
+      }
+      values.push(
         item.delivery,
         item.showroom,
         item.stock,
         item.numInBuy,
         item.purPackUn,
-      ];
+      )
+      return values;
     }) ?? [];
   };
 
   const handleExportExcel = () => {
     exportToExcel({
       name: "GoodsReceiptData",
-      headers: excelHeaders,
+      headers: getExcelHeaders,
       getData: excelData,
       fileName: `goods_receipt_data_${scanCode}`
     });

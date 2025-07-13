@@ -4,7 +4,7 @@ import {saveAs} from "file-saver";
 interface ExportToExcelOptions {
     name: string;
     fileName: string;
-    headers: string[];
+    headers: string[] | (() => string[]);
     getData: () => (string | number)[][];
 }
 
@@ -12,7 +12,8 @@ export function exportToExcel({name, fileName, headers, getData}: ExportToExcelO
     let dataRows = getData();
 
     const wb = XLSX.utils.book_new();
-    const wsData = [headers, ...dataRows];
+    const wsHeaders = headers instanceof Function ? headers() : headers;
+    const wsData = [wsHeaders, ...dataRows];
 
     const ws = XLSX.utils.aoa_to_sheet(wsData);
 

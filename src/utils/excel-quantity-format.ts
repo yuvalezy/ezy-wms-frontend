@@ -1,9 +1,7 @@
 export interface ExcelQuantityFormatParams {
   quantity: number;
   numInBuy: number;
-  buyUnitMsr?: string | null;
   purPackUn: number;
-  purPackMsr?: string | null;
 }
 
 export interface ExcelQuantityResult {

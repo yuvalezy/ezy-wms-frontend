@@ -33,7 +33,7 @@ export const goodsReceiptService = {
 
   async cancel(id: string): Promise<boolean> {
     try {
-      const response = await axiosInstance.post<boolean>(`goodsReceipt/cancel`, {id});
+      const response = await axiosInstance.get<boolean>(`goodsReceipt/cancel/${id}`);
       return response.data;
     } catch (error) {
       console.error("Error cancel goods receipt: ", error);

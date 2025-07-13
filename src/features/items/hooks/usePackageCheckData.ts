@@ -89,9 +89,7 @@ export const usePackageCheckData = () => {
       const quantities = formatQuantityForExcel({
         quantity: content.quantity,
         numInBuy: content.itemData?.quantityInUnit || 1,
-        buyUnitMsr: content.itemData?.unitMeasure || '',
         purPackUn: content.itemData?.quantityInPack || 1,
-        purPackMsr: content.itemData?.packMeasure || ''
       });
 
       return [

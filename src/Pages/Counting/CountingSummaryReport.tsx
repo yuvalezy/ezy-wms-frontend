@@ -42,9 +42,7 @@ export default function CountingSummaryReport() {
       const quantities = formatQuantityForExcel({
         quantity: item.quantity,
         numInBuy: item.numInBuy,
-        buyUnitMsr: item.buyUnitMsr,
         purPackUn: item.purPackUn,
-        purPackMsr: item.purPackMsr
       });
       
       return [

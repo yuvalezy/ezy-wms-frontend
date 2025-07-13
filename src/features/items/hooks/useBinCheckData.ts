@@ -52,9 +52,7 @@ export const useBinCheckData = () => {
       const quantities = formatQuantityForExcel({
         quantity: value.onHand,
         numInBuy: value.numInBuy,
-        buyUnitMsr: value.buyUnitMsr,
         purPackUn: value.purPackUn,
-        purPackMsr: value.purPackMsr
       });
       
       return [
