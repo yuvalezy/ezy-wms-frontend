@@ -1,11 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  useEffect,
-  useCallback,
-} from "react";
+import React, {createContext, ReactNode, useCallback, useContext, useEffect, useState,} from "react";
 import axios, {AxiosError} from "axios";
 import {axiosInstance, ServerUrl} from "@/utils/axios-instance";
 import {getOrCreateDeviceUUID} from "@/utils/deviceUtils";
@@ -13,6 +6,7 @@ import {DeviceStatus} from "@/features/devices/data/device";
 import {LicenseWarning} from "@/features/license/data/license";
 import {AccountState} from "@/features/account/data/account";
 import {UserInfo} from "@/features/login/data/login";
+import {UnitType} from "@/features/shared/data";
 
 // Define the shape of the context
 interface AuthContextType {
@@ -31,6 +25,8 @@ interface AuthContextType {
   showDeviceStatusBanner: boolean;
   setShowDeviceStatusBanner: (show: boolean) => void;
   reloadCompanyInfo: () => Promise<void>;
+  unitSelection: boolean;
+  defaultUnit: UnitType;
 }
 
 const AuthContextDefaultValues: AuthContextType = {
@@ -55,6 +51,8 @@ const AuthContextDefaultValues: AuthContextType = {
   reloadCompanyInfo: async () => {
     console.warn("reloadCompanyInfo method not implemented yet!");
   },
+  unitSelection: true,
+  defaultUnit: UnitType.Pack,
 };
 
 export const AuthContext = createContext<AuthContextType>(
@@ -248,6 +246,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   const isDeviceActive = user?.deviceStatus === DeviceStatus.Active;
   const validStatuses = [AccountState.Active, AccountState.PaymentDue, AccountState.PaymentDueUnknown, AccountState.Demo];
   const isValidAccount = validStatuses.some(v => v === companyInfo?.accountStatus);
+  const unitSelection = user?.settings?.enableUnitSelection ?? true;
+  const defaultUnit = user?.settings?.defaultUnitType ?? UnitType.Pack;
 
   const value = {
     isAuthenticated,
@@ -262,6 +262,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     showDeviceStatusBanner,
     setShowDeviceStatusBanner,
     reloadCompanyInfo,
+    unitSelection,
+    defaultUnit,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

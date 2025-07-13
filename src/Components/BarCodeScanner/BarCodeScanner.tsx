@@ -8,7 +8,7 @@ import {PackageDisplay} from './PackageDisplay';
 import {ScanModeControls} from './ScanModeControls';
 import {UnitSelector} from './UnitSelector';
 import {BarCodeScannerProps, BarCodeScannerRef} from './types';
-import {useBarCodeScanner} from "@/components";
+import {useAuth, useBarCodeScanner} from "@/components";
 
 const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
   {
@@ -33,6 +33,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
   ref
 ) => {
   const {t} = useTranslation();
+  const {unitSelection} = useAuth();
 
   const {
     barcodeRef,
@@ -102,7 +103,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
       </div>
 
       <UnitSelector
-        visible={unit && scanMode === 'item'}
+        visible={unit && unitSelection && scanMode === 'item'}
         pickPackOnly={pickPackOnly}
         selectedUnit={selectedUnit}
         onUnitChange={handleUnitChanged}

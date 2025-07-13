@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from 'react';
 import {toast} from 'sonner';
 import {useTranslation} from 'react-i18next';
-import {useThemeContext} from '@/components';
+import {useAuth, useThemeContext} from '@/components';
 import {UnitType} from '@/features/shared/data';
 import {getPackageByBarcode} from '@/features/packages/hooks';
 import {ObjectType, PackageMovementType} from '@/features/packages/types';
@@ -38,9 +38,10 @@ export const useBarCodeScanner = ({
                                     binEntry,
                                     isEphemeralPackage,
                                   }: UseBarCodeScannerProps) => {
+  const {defaultUnit} = useAuth();
   const barcodeRef = useRef<HTMLInputElement>(null);
   const [barcodeInput, setBarcodeInput] = useState('');
-  const [selectedUnit, setSelectedUnit] = useState<UnitType>(UnitType.Pack);
+  const [selectedUnit, setSelectedUnit] = useState<UnitType>(defaultUnit);
   const [scanMode, setScanMode] = useState<'item' | 'package'>('item');
   const [createPackage, setCreatePackage] = useState(false);
   const [loadedPackage, setLoadedPackage] = useState<PackageValue | null | undefined>(currentPackage);
