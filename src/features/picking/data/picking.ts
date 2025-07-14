@@ -52,7 +52,20 @@ export interface PickingDocumentDetailItem extends ItemDetails {
   picked: number;
   openQuantity: number;
   available?: number;
-  binQuantities?: BinLocation[];
+  binQuantities?: PickingDocumentDetailItemBinQuantities[];
+  packages?: BinLocationPackageQuantityResponse[];
+}
+
+export interface PickingDocumentDetailItemBinQuantities extends BinLocation {
+  packages?: BinLocationPackageQuantityResponse[];
+}
+
+export interface BinLocationPackageQuantityResponse {
+  id: string;
+  barcode: string;
+  binEntry: number;
+  itemCode: string;
+  quantity: number;
 }
 
 export type pickingParameters = {

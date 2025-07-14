@@ -64,29 +64,29 @@ const ContentTheme: React.FC<ContentThemeProps> = (
         <AppSidebar/>
 
         <div className="flex flex-col flex-1 min-w-0">
-          {/* Header: trigger + breadcrumb, fixed height */}
-          <header className="flex items-center justify-between h-16 px-6 bg-white border-b border-gray-200 flex-shrink-0 z-10 w-full">
-            <div className="flex items-center min-w-0 h-full gap-4">
-              <SidebarTrigger className="flex-shrink-0 h-10 w-10 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded-lg transition-colors hover:bg-gray-100"/>
-              <div className="min-w-0">
-                <nav className="flex items-center gap-2 min-w-0" aria-label="Breadcrumb">
-                  <div>
+          {/* Header: responsive height */}
+          <header className="flex items-center justify-between min-h-[4rem] py-2 px-6 bg-white border-b border-gray-200 flex-shrink-0 z-10 w-full">
+            <div className="flex items-start md:items-center gap-4 flex-1">
+              <SidebarTrigger className="flex-shrink-0 h-10 w-10 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded-lg transition-colors hover:bg-gray-100 mt-1 md:mt-0"/>
+              <div className="flex-1 min-w-0">
+                <nav className="flex items-start md:items-center gap-x-2 gap-y-1 flex-wrap" aria-label="Breadcrumb">
+                  <div className="flex-shrink-0">
                     {titleOnClick
                       ? <button className="cursor-pointer text-lg font-semibold text-gray-700 hover:text-gray-900 underline focus:outline-none focus:ring-2 focus:ring-blue-600 rounded px-2 py-1 transition-all" onClick={titleOnClick}>{title}</button>
                       : <span className="text-lg font-semibold text-gray-900">{title}</span>}
                   </div>
                   {titleBreadcrumbs?.map((b, i) => (
-                    <div key={i} className="flex items-center gap-2">
+                    <div key={i} className="flex items-center gap-2 flex-shrink-0">
                       <span className="text-gray-400 font-medium">/</span>
                       {b.onClick
-                        ? <button className="cursor-pointer text-base font-medium text-gray-700 hover:text-gray-900 underline focus:outline-none focus:ring-2 focus:ring-blue-600 rounded px-2 py-1 transition-all" onClick={b.onClick}>{b.label}</button>
-                        : <span className="text-base font-medium text-gray-600">{b.label}</span>}
+                        ? <button className="cursor-pointer text-base font-medium text-gray-700 hover:text-gray-900 underline focus:outline-none focus:ring-2 focus:ring-blue-600 rounded px-2 py-1 transition-all break-all" onClick={b.onClick}>{b.label}</button>
+                        : <span className="text-base font-medium text-gray-600 break-all">{b.label}</span>}
                     </div>
                   ))}
                 </nav>
               </div>
             </div>
-            <div className="flex items-center flex-shrink-0 h-full gap-2">
+            <div className="flex items-center flex-shrink-0 gap-2 ml-4">
               {onFilterClicked && (
                 <button
                   onClick={onFilterClicked}

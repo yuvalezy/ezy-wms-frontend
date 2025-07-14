@@ -1,6 +1,5 @@
 export * from './AppContext';
 export * from './BarCodeScanner';
-export * from './BinLocationQuantities';
 export * from './BinLocationScanner';
 export * from './BoxConfirmationDialog';
 export * from './ContentTheme';

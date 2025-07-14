@@ -8,6 +8,7 @@ import {formatQuantityForExcel} from "@/utils/excel-quantity-format";
 
 import {BinContentResponse, BinLocation} from "@/features/items/data/items";
 import {itemsService} from "@/features/items/data/items-service";
+import {formatNumber} from "@/utils/number-utils";
 
 export const useBinCheckData = () => {
   const {t} = useTranslation();
@@ -62,9 +63,9 @@ export const useBinCheckData = () => {
         });
 
         values.push(
-          quantities.pack,
-          quantities.dozen,
-          quantities.unit,
+          formatNumber(quantities.pack, 0),
+          formatNumber(quantities.dozen, 0),
+          formatNumber(quantities.unit, 0),
         );
       } else {
         values.push(value.onHand.toString());

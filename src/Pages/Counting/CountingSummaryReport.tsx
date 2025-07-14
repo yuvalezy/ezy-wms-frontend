@@ -8,6 +8,7 @@ import {formatQuantityForExcel} from "@/utils/excel-quantity-format";
 import ContentTheme from "@/components/ContentTheme";
 import {countingService} from "@/features/counting/data/counting-service";
 import {CountingSummaryReportData} from "@/features/counting/data/counting";
+import {formatNumber} from "@/utils/number-utils";
 
 export default function CountingSummaryReport() {
   const {scanCode} = useParams();
@@ -62,12 +63,12 @@ export default function CountingSummaryReport() {
       ];
       if (unitSelection) {
         values.push(
-          quantities.pack,
-          quantities.dozen,
-          quantities.unit,
+          formatNumber(quantities.pack, 0),
+          formatNumber(quantities.dozen, 0),
+          formatNumber(quantities.unit, 0),
         );
       } else {
-        values.push(item.quantity.toString());
+        values.push(formatNumber(item.quantity, 0));
       }
       return values;
     }) ?? [];

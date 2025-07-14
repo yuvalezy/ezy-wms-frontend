@@ -28,16 +28,6 @@ export const ScanModeControls: React.FC<ScanModeControlsProps> = ({
 
   return (
     <div className="space-y-2">
-      {scanMode === 'item' && enablePackageCreate && (
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id="create-package"
-            checked={createPackage}
-            onCheckedChange={() => onCreatePackageChange(!createPackage)}
-          />
-          <Label htmlFor="create-package">{t('createNewPackage')}</Label>
-        </div>
-      )}
       <div className="flex rounded-md border">
         <Button
           type="button"
@@ -62,6 +52,16 @@ export const ScanModeControls: React.FC<ScanModeControlsProps> = ({
           {t('scanPackageMode')}
         </Button>
       </div>
+      {scanMode === 'item' && enablePackageCreate && (
+        <div className="flex items-center space-x-2">
+          <Checkbox
+            id="create-package"
+            checked={createPackage}
+            onCheckedChange={() => onCreatePackageChange(!createPackage)}
+          />
+          <Label htmlFor="create-package">{t('createNewPackage')}</Label>
+        </div>
+      )}
     </div>
   );
 };

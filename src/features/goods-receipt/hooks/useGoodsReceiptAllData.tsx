@@ -15,6 +15,7 @@ import {ReceiptDocument} from "@/features/goods-receipt/data/goods-receipt";
 import {goodsReceiptService} from "@/features/goods-receipt/data/goods-receipt-service";
 import {goodsReceiptReportService} from "@/features/goods-receipt/data/goods-receipt-report-service";
 import {useAuth} from "@/components";
+import {formatNumber} from "@/utils/number-utils";
 
 export const useGoodsReceiptAllData = (confirm: boolean | undefined) => {
   const {t} = useTranslation();
@@ -89,19 +90,19 @@ export const useGoodsReceiptAllData = (confirm: boolean | undefined) => {
         });
 
         values.push(
-          quantities.pack,
-          quantities.dozen,
-          quantities.unit,
+          formatNumber(quantities.pack, 0),
+          formatNumber(quantities.dozen, 0),
+          formatNumber(quantities.unit, 0),
         );
       } else {
-        values.push(item.quantity);
+        values.push(formatNumber(item.quantity, 0));
       }
       values.push(
-        item.delivery,
-        item.showroom,
-        item.stock,
-        item.numInBuy,
-        item.purPackUn,
+        formatNumber(item.delivery, 0),
+        formatNumber(item.showroom, 0),
+        formatNumber(item.stock, 0),
+        formatNumber(item.numInBuy, 0),
+        formatNumber(item.purPackUn, 0),
       )
       return values;
     }) ?? [];
