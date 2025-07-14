@@ -12,7 +12,7 @@ import {formatNumber} from "@/utils/number-utils";
 
 export const useBinCheckData = () => {
   const {t} = useTranslation();
-  const {user, unitSelection, defaultUnit} = useAuth();
+  const {user, unitSelection} = useAuth();
   const {setLoading, setError} = useThemeContext();
   const binRef = useRef<BinLocationScannerRef>(null);
   const [binContent, setBinContent] = useState<BinContentResponse[] | null>(null);

@@ -14,7 +14,7 @@ export default function CountingSummaryReport() {
   const {scanCode} = useParams();
   const {setLoading, setError} = useThemeContext();
   const {t} = useTranslation();
-  const {user, unitSelection} = useAuth();
+  const {unitSelection} = useAuth();
   const [data, setData] = useState<CountingSummaryReportData | null>(null);
   const navigate = useNavigate();
 

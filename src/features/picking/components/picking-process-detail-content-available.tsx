@@ -24,7 +24,7 @@ export const PickingProcessDetailContentAvailable = ({items}: PickingProcessDeta
       </TableRow>
     </TableHeader>
     <TableBody>
-      {items?.map((row, itemIndex) => (
+      {items?.map((row) => (
         <>
           <TableRow key={row.itemCode} className={row.openQuantity === 0 ? 'bg-green-100' : ''}>
             <TableCell>

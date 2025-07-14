@@ -6,7 +6,7 @@ import {
   GoodsReceiptAll,
   GoodsReceiptAllLine,
 } from "@/features/goods-receipt/data/goods-receipt-reports";
-import {DetailUpdateParameters, UnitType} from "@/features/shared/data/shared";
+import {DetailUpdateParameters} from "@/features/shared/data/shared";
 import {GRPOAllDetailRef} from "@/features/goods-receipt/hooks/useGoodsReceiptAllDetailsData";
 import {exportToExcel} from "@/utils/excelExport";
 import {formatQuantityForExcel} from "@/utils/excel-quantity-format";
@@ -19,7 +19,7 @@ import {formatNumber} from "@/utils/number-utils";
 
 export const useGoodsReceiptAllData = (confirm: boolean | undefined) => {
   const {t} = useTranslation();
-  const {user, defaultUnit, unitSelection} = useAuth();
+  const {unitSelection} = useAuth();
   const {scanCode} = useParams();
   const {setLoading, setError} = useThemeContext();
   const [data, setData] = useState<GoodsReceiptAll | null>(null);
