@@ -27,6 +27,7 @@ export interface ApplicationSettings {
   goodsReceiptType: GoodsReceiptDocumentType;
   defaultUnitType: UnitType;
   enableUnitSelection: boolean;
+  idleLogoutTimeout?: number | null;
 }
 
 export enum GoodsReceiptDocumentType {
