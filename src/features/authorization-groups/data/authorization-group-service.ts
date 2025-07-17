@@ -1,6 +1,5 @@
 import { axiosInstance } from "@/utils/axios-instance";
 import { AuthorizationGroup, AuthorizationGroupFormData, AuthorizationGroupFilters, RoleInfo } from "./authorization-group";
-import { mockAuthorizationGroups, roleInfoMap } from "./authorization-group-mock-data";
 
 export const authorizationGroupService = {
   // Get all authorization groups with optional filters
@@ -38,9 +37,4 @@ export const authorizationGroupService = {
   async delete(id: string): Promise<void> {
     await axiosInstance.delete(`authorizationgroup/${id}`);
   },
-
-  // Get role information for display
-  getRoleInfo(): RoleInfo[] {
-    return Array.from(roleInfoMap.values());
-  }
 };

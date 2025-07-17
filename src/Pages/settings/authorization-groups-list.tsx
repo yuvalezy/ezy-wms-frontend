@@ -1,15 +1,13 @@
-import React, {useState, useEffect, useContext} from "react";
+import React, {useState, useEffect} from "react";
 import {useTranslation} from "react-i18next";
 import {Button} from "@/components/ui/button";
-import {Input} from "@/components/ui/input";
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardContent} from "@/components/ui/card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Badge} from "@/components/ui/badge";
-import {Plus, Edit, Trash2, Search, Users} from "lucide-react";
+import {Edit, Trash2} from "lucide-react";
 import {useThemeContext} from "@/components";
-import {AuthorizationGroup, AuthorizationGroupFilters} from "../../features/authorization-groups/data/authorization-group";
-import {authorizationGroupService} from "../../features/authorization-groups/data/authorization-group-service";
-import AuthorizationGroupForm from "../../features/authorization-groups/components/authorization-group-form";
+import {AuthorizationGroup, AuthorizationGroupFilters} from "@/features/authorization-groups/data/authorization-group";
+import {authorizationGroupService} from "@/features/authorization-groups/data/authorization-group-service";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,11 +20,13 @@ import {
 } from "@/components/ui/alert-dialog";
 import ContentTheme from "@/components/ContentTheme";
 import {useNavigate} from "react-router-dom";
+import {useAuthorizationGroupRoles} from "@/features/authorization-groups/hooks/useAuthorizationGroupRoles";
 
 const AuthorizationGroupsList: React.FC = () => {
   const {t} = useTranslation();
   const {setLoading, setError} = useThemeContext();
   const navigate = useNavigate();
+  const {getRoleInfo} = useAuthorizationGroupRoles();
 
   const [groups, setGroups] = useState<AuthorizationGroup[]>([]);
   const [filters, setFilters] = useState<AuthorizationGroupFilters>({});
@@ -108,7 +108,7 @@ const AuthorizationGroupsList: React.FC = () => {
   };
 
   const groupRolesByCategory = (authorizations: any[]) => {
-    const roleInfo = authorizationGroupService.getRoleInfo();
+    const roleInfo = getRoleInfo();
     const grouped = authorizations.reduce((acc, auth) => {
       const info = roleInfo.find(r => r.role === auth);
       if (info) {
@@ -145,7 +145,7 @@ const AuthorizationGroupsList: React.FC = () => {
                 <TableRow>
                   <TableHead>{t('name')}</TableHead>
                   <TableHead>{t('description')}</TableHead>
-                  <TableHead>{t('authorizations')}</TableHead>
+                  <TableHead>{t('authorizations.title')}</TableHead>
                   <TableHead>{t('createdAt')}</TableHead>
                   <TableHead className="text-right">{t('actions')}</TableHead>
                 </TableRow>
