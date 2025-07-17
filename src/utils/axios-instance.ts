@@ -18,8 +18,8 @@ export const axiosInstance = axios.create({
   withCredentials: true
 })
 
-// Set token from localStorage on initialization
-const token = localStorage.getItem('authToken');
+// Set token from sessionStorage on initialization
+const token = sessionStorage.getItem('authToken');
 if (token) {
   axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 }
@@ -27,7 +27,7 @@ if (token) {
 // Add a request interceptor to include the token and device UUID
 axiosInstance.interceptors.request.use(
   config => {
-    const token = localStorage.getItem('authToken');
+    const token = sessionStorage.getItem('authToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
