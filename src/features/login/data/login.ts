@@ -35,3 +35,14 @@ export enum GoodsReceiptDocumentType {
   Confirmation = "Confirmation",
   Both = "Both"
 }
+
+export interface LoginRequest {
+  password: string;
+  warehouse?: string;
+  newDeviceName?: string;
+}
+
+export interface ErrorResponse {
+  error: string;
+  error_description: string;
+}
