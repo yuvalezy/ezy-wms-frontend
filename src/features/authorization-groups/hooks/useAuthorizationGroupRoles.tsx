@@ -1,75 +1,77 @@
 import {RoleInfo, RoleType} from "@/features/authorization-groups/data/authorization-group";
+import {useTranslation} from "react-i18next";
 
 export const useAuthorizationGroupRoles = () => {
+  const {t} = useTranslation();
+
   const roleInfoMap = new Map<RoleType, RoleInfo>([
     [RoleType.GOODS_RECEIPT, {
       role: RoleType.GOODS_RECEIPT,
-      displayName: "Goods Receipt",
-      description: "Process incoming goods and update inventory",
+      displayName: t("authorizations.roleGoodsReceipt"),
+      description: t("authorizations.roleGoodsReceiptDescription"),
       category: "Operations"
     }],
     [RoleType.GOODS_RECEIPT_SUPERVISOR, {
       role: RoleType.GOODS_RECEIPT_SUPERVISOR,
-      displayName: "Goods Receipt Supervisor",
-      description: "Supervise goods receipt operations and generate reports",
+      displayName: t("authorizations.roleGoodsReceiptSupervisor"),
+      description: t("authorizations.roleGoodsReceiptSupervisorDescription"),
       category: "Supervision"
     }],
     [RoleType.GOODS_RECEIPT_CONFIRMATION, {
       role: RoleType.GOODS_RECEIPT_CONFIRMATION,
-      displayName: "Goods Receipt Confirmation",
-      description: "Confirm and validate received goods",
+      displayName: t("authorizations.roleGoodsReceiptConfirmation"),
+      description: t("authorizations.roleGoodsReceiptConfirmationDescription"),
       category: "Operations"
     }],
     [RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR, {
       role: RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR,
-      displayName: "Goods Receipt Confirmation Supervisor",
-      description: "Supervise goods receipt confirmation processes",
+      displayName: t("authorizations.roleGoodsReceiptConfirmationSupervisor"),
+      description: t("authorizations.roleGoodsReceiptConfirmationSupervisorDescription"),
       category: "Supervision"
     }],
     [RoleType.PICKING, {
       role: RoleType.PICKING,
-      displayName: "Picking",
-      description: "Pick items for orders and shipments",
+      displayName: t("authorizations.rolePicking"),
+      description: t("authorizations.rolePickingDescription"),
       category: "Operations"
     }],
     [RoleType.PICKING_SUPERVISOR, {
       role: RoleType.PICKING_SUPERVISOR,
-      displayName: "Picking Supervisor",
-      description: "Supervise picking operations and manage assignments",
+      displayName: t("authorizations.rolePickingSupervisor"),
+      description: t("authorizations.rolePickingSupervisorDescription"),
       category: "Supervision"
     }],
     [RoleType.COUNTING, {
       role: RoleType.COUNTING,
-      displayName: "Inventory Counting",
-      description: "Perform physical inventory counts and cycle counts",
+      displayName: t("authorizations.roleCounting"),
+      description: t("authorizations.roleCountingDescription"),
       category: "Operations"
     }],
     [RoleType.COUNTING_SUPERVISOR, {
       role: RoleType.COUNTING_SUPERVISOR,
-      displayName: "Counting Supervisor",
-      description: "Supervise inventory counting activities and resolve discrepancies",
+      displayName: t("authorizations.roleCountingSupervisor"),
+      description: t("authorizations.roleCountingSupervisorDescription"),
       category: "Supervision"
     }],
     [RoleType.TRANSFER, {
       role: RoleType.TRANSFER,
-      displayName: "Transfer",
-      description: "Move inventory between locations and warehouses",
+      displayName: t("authorizations.roleTransfer"),
+      description: t("authorizations.roleTransferDescription"),
       category: "Operations"
     }],
     [RoleType.TRANSFER_SUPERVISOR, {
       role: RoleType.TRANSFER_SUPERVISOR,
-      displayName: "Transfer Supervisor",
-      description: "Supervise transfer operations and approve movements",
+      displayName: t("authorizations.roleTransferSupervisor"),
+      description: t("authorizations.roleTransferSupervisorDescription"),
       category: "Supervision"
     }],
     // [RoleType.TRANSFER_REQUEST, {
     //   role: RoleType.TRANSFER_REQUEST,
-    //   displayName: "Transfer Request",
-    //   description: "Create and manage transfer requests between locations",
+    //   displayName: t("authorizations.roleTransferRequest"),
+    //   description: t("authorizations.roleTransferRequestDescription"),
     //   category: "Operations"
     // }]
   ]);
-
 
   const getRoleInfo = (): RoleInfo[] => {
     return Array.from(roleInfoMap.values());
