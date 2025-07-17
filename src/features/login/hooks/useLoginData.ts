@@ -24,14 +24,6 @@ export const useLoginData = () => {
   const { login, isValidAccount, companyInfo, reloadCompanyInfo } = useAuth();
   const { t, i18n } = useTranslation();
 
-  // Language handling
-  useEffect(() => {
-    const cookies = new Cookies();
-    const savedLang = cookies.get('userLanguage');
-    const browserLang = navigator.language.split('-')[0];
-    const lang = savedLang || (['en', 'es'].includes(browserLang) ? browserLang : 'en');
-    i18n.changeLanguage(lang);
-  }, [i18n]);
 
   // Reload company info when hook mounts
   useEffect(() => {

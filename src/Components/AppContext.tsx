@@ -7,6 +7,8 @@ import {LicenseWarning} from "@/features/license/data/license";
 import {AccountState} from "@/features/account/data/account";
 import {UserInfo} from "@/features/login/data/login";
 import {UnitType} from "@/features/shared/data";
+import { useTranslation } from 'react-i18next';
+import Cookies from 'universal-cookie';
 
 // Define the shape of the context
 interface AuthContextType {
@@ -88,6 +90,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   const [isLoading, setIsLoading] = useState(true); // Add loading state
   const [showDeviceStatusBanner, setShowDeviceStatusBanner] = useState(true);
   const baseUrl = `${ServerUrl}/api/`;
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     const fetchConfig = async () => {
