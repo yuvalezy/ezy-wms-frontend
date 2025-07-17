@@ -1,14 +1,16 @@
-import React, {createContext, ReactNode, useCallback, useContext, useEffect, useRef, useState,} from "react";
+import React, {createContext, ReactNode, useCallback, useContext, useEffect, useState,} from "react";
 import axios, {AxiosError} from "axios";
 import {axiosInstance, ServerUrl} from "@/utils/axios-instance";
 import {getOrCreateDeviceUUID} from "@/utils/deviceUtils";
 import {DeviceStatus} from "@/features/devices/data/device";
-import {LicenseWarning} from "@/features/license/data/license";
 import {AccountState} from "@/features/account/data/account";
-import {UserInfo} from "@/features/login/data/login";
+import {UserInfo, LoginRequest, ErrorResponse} from "@/features/login/data/login";
 import {UnitType} from "@/features/shared/data";
 import { useTranslation } from 'react-i18next';
-import Cookies from 'universal-cookie';
+import { useIdleTimeout } from '@/features/login/hooks/useIdleTimeout';
+import { useCompanyInfo, CompanyInfoResponse } from '@/features/login/hooks/useCompanyInfo';
+import { useBrowserUnload } from '@/features/login/hooks/useBrowserUnload';
+import { useAuthInitialization } from '@/features/login/hooks/useAuthInitialization';
 
 // Define the shape of the context
 interface AuthContextType {
@@ -65,77 +67,16 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-interface ErrorResponse {
-  error: string;
-  error_description: string;
-}
-
-interface CompanyInfoResponse {
-  companyName: string;
-  serverTime: string; // ISO date string
-  licenseWarnings: LicenseWarning[]; // Array of warning messages
-  deviceStatus?: DeviceStatus;
-  accountStatus?: AccountState;
-}
-
-interface LoginRequest {
-  password: string;
-  warehouse?: string;
-  newDeviceName?: string;
-}
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   const [user, setUser] = useState<UserInfo | null>(null);
-  const [companyInfo, setCompanyInfo] = useState<CompanyInfoResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true); // Add loading state
   const [showDeviceStatusBanner, setShowDeviceStatusBanner] = useState(true);
   const baseUrl = `${ServerUrl}/api/`;
-  const { i18n } = useTranslation();
-  
-  // Idle timeout state
-  const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const [lastActivity, setLastActivity] = useState<Date>(new Date());
 
-  useEffect(() => {
-    const fetchConfig = async () => {
-      try {
-        const deviceUUID = getOrCreateDeviceUUID();
-        const response = await axios.get<CompanyInfoResponse>(`${baseUrl}Authentication/CompanyInfo`, {
-          headers: {
-            'X-Device-UUID': deviceUUID
-          }
-        });
-        setCompanyInfo(response.data);
-      } catch (error) {
-        console.log(`Failed to load company name: ${error}`);
-      }
-    };
-
-    fetchConfig();
-  }, []);
-
-  // Add beforeunload event listener to handle browser close
-  useEffect(() => {
-    const handleBeforeUnload = async (event: BeforeUnloadEvent) => {
-      // Attempt to call logout when browser is closing
-      try {
-        // Use sendBeacon for more reliable API call on page unload
-        const token = sessionStorage.getItem('authToken');
-        if (token && navigator.sendBeacon) {
-          const data = new FormData();
-          navigator.sendBeacon(`${ServerUrl}/api/authentication/logout`, data);
-        }
-      } catch (error) {
-        console.error('Error during beforeunload logout:', error);
-      }
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, []);
+  // Use custom hooks
+  const { companyInfo, reloadCompanyInfo } = useCompanyInfo();
+  useBrowserUnload();
 
   // Logout function
   const logout = useCallback(async () => {
@@ -144,112 +85,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     } catch (error) {
       console.error("Logout failed:", error);
     }
-    // Clear idle timer on logout
-    if (idleTimerRef.current) {
-      clearTimeout(idleTimerRef.current);
-      idleTimerRef.current = null;
-    }
     // Clear token from sessionStorage
     sessionStorage.removeItem('authToken');
     sessionStorage.removeItem('tokenExpiration');
     setUser(null);
   }, []);
 
-  // Idle timeout functionality
-  useEffect(() => {
-    if (!user || !user.settings?.idleLogoutTimeout) {
-      // Clear any existing timer if user logged out or no timeout set
-      if (idleTimerRef.current) {
-        clearTimeout(idleTimerRef.current);
-        idleTimerRef.current = null;
-      }
-      return;
-    }
-
-    const timeoutSeconds = user.settings.idleLogoutTimeout;
-    const timeoutMs = timeoutSeconds * 1000;
-
-    const resetIdleTimer = () => {
-      setLastActivity(new Date());
-      
-      // Clear existing timer
-      if (idleTimerRef.current) {
-        clearTimeout(idleTimerRef.current);
-      }
-      
-      // Set new timer
-      idleTimerRef.current = setTimeout(() => {
-        logout();
-      }, timeoutMs);
-    };
-
-    const handleUserActivity = () => {
-      resetIdleTimer();
-    };
-
-    // Activity events to track
-    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
-    
-    // Add event listeners
-    events.forEach(event => {
-      document.addEventListener(event, handleUserActivity, true);
-    });
-
-    // Initialize timer
-    resetIdleTimer();
-
-    // Cleanup
-    return () => {
-      events.forEach(event => {
-        document.removeEventListener(event, handleUserActivity, true);
-      });
-      if (idleTimerRef.current) {
-        clearTimeout(idleTimerRef.current);
-        idleTimerRef.current = null;
-      }
-    };
-  }, [user, logout]);
-
-  // Call the login function after setting the mock token
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        // Check if token exists and is not expired
-        const token = sessionStorage.getItem('authToken');
-        const expiration = sessionStorage.getItem('tokenExpiration');
-
-        if (token && expiration) {
-          const expirationDate = new Date(expiration);
-          const now = new Date();
-
-          if (expirationDate > now) {
-            // Token is valid, fetch user info
-            const response = await axiosInstance.get<UserInfo>(`General/UserInfo`);
-            setUser(response.data);
-          } else {
-            // Token expired, clear it
-            sessionStorage.removeItem('authToken');
-            sessionStorage.removeItem('tokenExpiration');
-            setUser(null);
-          }
-        } else {
-          setUser(null);
-        }
-      } catch (error) {
-        console.error('Error fetching user info:', error);
-        // Only clear tokens if we get a 401/403 error
-        if (axios.isAxiosError(error) && error.response && (error.response.status === 401 || error.response.status === 403)) {
-          sessionStorage.removeItem('authToken');
-          sessionStorage.removeItem('tokenExpiration');
-          setUser(null);
-        }
-        // For other errors, don't clear the token - might be a network issue
-      } finally {
-        setIsLoading(false); // Always set loading to false
-      }
-    };
-    fetchUser()
-  }, []);
+  // Use idle timeout hook
+  useIdleTimeout({ user, onTimeout: logout });
+  
+  // Initialize auth state
+  useAuthInitialization({ setUser, setIsLoading });
 
 
   const login = async (password: string, warehouse?: string, newDeviceName?: string) => {
@@ -319,19 +165,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     }
   };
 
-  const reloadCompanyInfo = useCallback(async () => {
-    try {
-      const deviceUUID = getOrCreateDeviceUUID();
-      const response = await axios.get<CompanyInfoResponse>(`${baseUrl}Authentication/CompanyInfo`, {
-        headers: {
-          'Device-UUID': deviceUUID
-        }
-      });
-      setCompanyInfo(response.data);
-    } catch (error) {
-      console.error("Failed to reload company info:", error);
-    }
-  }, [baseUrl]);
 
   const isAuthenticated = user !== null;
   const isDeviceActive = user?.deviceStatus === DeviceStatus.Active;

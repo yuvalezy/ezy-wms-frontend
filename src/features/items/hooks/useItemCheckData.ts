@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useCallback} from "react";
 import {useThemeContext} from "@/components/ThemeContext";
 import {StringFormat} from "@/utils/string-utils";
 import {useTranslation} from "react-i18next";
-import { toast } from "sonner";
+import {toast} from "sonner";
 import {ItemCheckResponse, ResponseStatus} from "@/features/items/data/items";
 import {itemsService} from "@/features/items/data/items-service";
 
@@ -34,7 +34,7 @@ export const useItemCheckData = () => {
 
   const executeItemCheck = useCallback((itemCode: string, barCode: string) => {
     itemsService.itemCheck(itemCode, barCode)
-      .then(function (items) {
+      .then((items) => {
         setResult(items);
         if (items.length === 0) {
           toast.error(t("noDataFound"));
@@ -111,6 +111,7 @@ export const useItemCheckData = () => {
     setBarcodeInput("");
     setResult(null);
   }
+
   return {
     barcodeInput,
     setBarcodeInput,
