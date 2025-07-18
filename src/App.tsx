@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import './App.css';
 import {BrowserRouter, Route, Routes, useNavigate} from "react-router-dom";
-import LoginPage from "./pages/LoginPage";
+import Login from "./pages/Login";
 import HomePage from "./pages/Home";
 import {AuthProvider, useAuth} from "@/components";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -77,7 +77,7 @@ function AppRoutes() {
       <Toaster closeButton richColors={true}/>
       {isOffline && <OfflineOverlay/>}
       <Routes>
-          <Route path="/login" element={<LoginPage/>}/>
+          <Route path="/login" element={<Login/>}/>
           <Route path="/unauthorized" element={<Unauthorized/>}/>
           <Route path="/binCheck" element={<ProtectedRoute
             authorizations={[RoleType.GOODS_RECEIPT_SUPERVISOR, RoleType.PICKING_SUPERVISOR, RoleType.COUNTING_SUPERVISOR, RoleType.TRANSFER_SUPERVISOR]}

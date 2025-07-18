@@ -11,7 +11,7 @@ import {
   StatusBanners
 } from '@/features/login/components';
 
-export default function LoginPage() {
+export default function Login() {
   const {
     // State
     warehouses,
@@ -41,7 +41,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md bg-white shadow-md rounded-xl p-8">
         <LoginHeader
           companyName={companyInfo?.companyName}
-          loginText={t('login') || 'LoginPage'}
+          loginText={t('login') || 'Login'}
         />
 
         <LoginErrorAlert

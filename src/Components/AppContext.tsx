@@ -38,7 +38,7 @@ const AuthContextDefaultValues: AuthContextType = {
   isValidAccount: false,
   user: null,
   login: async (password: string, warehouse?: string, newDeviceName?: string) => {
-    console.warn("LoginPage method not implemented yet!");
+    console.warn("Login method not implemented yet!");
     return {deviceStatus: undefined, superUser: false}
   },
   logout: () => {
