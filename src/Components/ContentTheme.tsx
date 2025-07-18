@@ -130,6 +130,7 @@ const ContentTheme: React.FC<ContentThemeProps> = (
               <DeviceStatusBanner
                 deviceStatus={user!.deviceStatus!}
                 onClose={() => setShowDeviceStatusBanner(false)}
+                allowActivation={user?.superUser || false}
               />
             </div>
           )}

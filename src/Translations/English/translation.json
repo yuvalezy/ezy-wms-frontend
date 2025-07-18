@@ -557,7 +557,18 @@
   },
   "deviceStatusBanner": {
     "inactive": "Your device is currently inactive. Please contact your administrator.",
-    "disabled": "Your device has been disabled. Please contact your administrator."
+    "disabled": "Your device has been disabled. Please contact your administrator.",
+    "activateDevice": "Activate Device",
+    "activateDeviceTitle": "Activate Device",
+    "activateDeviceDescription": "Please provide a reason for activating this device.",
+    "reasonRequired": "Reason is required",
+    "reasonMinLength": "Reason must be at least 10 characters",
+    "reasonMaxLength": "Reason must not exceed 500 characters",
+    "reasonLabel": "Reason",
+    "reasonPlaceholder": "Enter the reason for activating this device...",
+    "activating": "Activating...",
+    "activate": "Activate",
+    "activationError": "Failed to activate device. Please try again."
   },
   "refresh": "Refresh",
   "valid": "Valid",

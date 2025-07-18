@@ -557,7 +557,18 @@
   },
   "deviceStatusBanner": {
     "inactive": "Su dispositivo está actualmente inactivo. Por favor contacte a su administrador.",
-    "disabled": "Su dispositivo ha sido deshabilitado. Por favor contacte a su administrador."
+    "disabled": "Su dispositivo ha sido deshabilitado. Por favor contacte a su administrador.",
+    "activateDevice": "Activar Dispositivo",
+    "activateDeviceTitle": "Activar Dispositivo",
+    "activateDeviceDescription": "Por favor proporcione una razón para activar este dispositivo.",
+    "reasonRequired": "La razón es requerida",
+    "reasonMinLength": "La razón debe tener al menos 10 caracteres",
+    "reasonMaxLength": "La razón no debe exceder 500 caracteres",
+    "reasonLabel": "Razón",
+    "reasonPlaceholder": "Ingrese la razón para activar este dispositivo...",
+    "activating": "Activando...",
+    "activate": "Activar",
+    "activationError": "Error al activar el dispositivo. Por favor intente de nuevo."
   },
   "refresh": "Actualizar",
   "valid": "Válido",
