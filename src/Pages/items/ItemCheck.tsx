@@ -26,14 +26,14 @@ export default function ItemCheck() {
     handleUpdateSubmit,
     handleSetBarcodeItem,
     handleClear,
-    executeItemCheck
+    handleCheckSubmit
   } = useItemCheckData();
 
   useEffect(() => {
     if (code && !result) {
-      executeItemCheck(code, "");
+      handleCheckSubmit();
     }
-  }, [code, executeItemCheck, result]);
+  }, [code, result]);
 
   const handleClearAndNavigate = () => {
     handleClear();
