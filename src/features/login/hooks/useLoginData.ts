@@ -73,11 +73,11 @@ export const useLoginData = () => {
         }
       }
     } catch (error: any) {
-      console.debug('Login: Full error object:', error);
+      console.debug('LoginPage: Full error object:', error);
       
       // Check for network/CORS errors
       if (!error.response && error.message) {
-        console.error('Login: Network/CORS error:', error.message);
+        console.error('LoginPage: Network/CORS error:', error.message);
         setErrorMessage(`Network error: ${error.message}. Check console for details.`);
         setErrorType('network_error');
         return;

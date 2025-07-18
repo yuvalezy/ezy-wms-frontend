@@ -496,7 +496,7 @@ Test complete user workflows from start to finish.
    - Clear all browser data
    - Navigate to application
    - Complete device registration
-   - Login with demo account
+   - LoginPage with demo account
    - Navigate through available features
    - Encounter demo restrictions
    - Follow upgrade prompts
@@ -504,7 +504,7 @@ Test complete user workflows from start to finish.
 
 2. **Existing User Workflow**
    ```
-   - Login with active license
+   - LoginPage with active license
    - Use various WMS features
    - Check license status periodically
    - Test offline functionality
