@@ -37,6 +37,7 @@ export const StatusBanners: React.FC<StatusBannersProps> = ({
             onClose={() => {}} // No-op since this is just informational on login
             showBorder={true}
             showCloseButton={false}
+            allowActivation={false} // Don't allow activation on login page
           />
         </div>
       )}

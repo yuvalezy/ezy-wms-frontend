@@ -6,7 +6,6 @@ import {DeviceStatus} from "@/features/devices/data/device";
 import {AccountState} from "@/features/account/data/account";
 import {UserInfo, LoginRequest, ErrorResponse} from "@/features/login/data/login";
 import {UnitType} from "@/features/shared/data";
-import { useTranslation } from 'react-i18next';
 import { useIdleTimeout } from '@/features/login/hooks/useIdleTimeout';
 import { useCompanyInfo, CompanyInfoResponse } from '@/features/login/hooks/useCompanyInfo';
 import { useBrowserUnload } from '@/features/login/hooks/useBrowserUnload';
