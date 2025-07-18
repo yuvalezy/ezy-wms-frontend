@@ -25,11 +25,13 @@ export const useLoginData = () => {
   const { t, i18n } = useTranslation();
 
 
-  // Reload company info when hook mounts
+  // Reload company info when hook mounts or when logout=true in URL
   useEffect(() => {
+    if (window.location.search.includes('logout=true')) {
+      navigate("/login?logout=true");
+    }
     reloadCompanyInfo();
   }, [reloadCompanyInfo]);
-
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const lang = e.target.value;
     i18n.changeLanguage(lang);

@@ -45,7 +45,7 @@ export function AppSidebar() {
 
   const handleLogout = () => {
     logout();
-    navigate("/login");
+    navigate("/login?logout=true");
   };
 
   // Define the grouping logic

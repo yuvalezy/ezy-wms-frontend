@@ -41,7 +41,7 @@ export const useCompanyInfo = () => {
       const deviceUUID = getOrCreateDeviceUUID();
       const response = await axios.get<CompanyInfoResponse>(`${baseUrl}Authentication/CompanyInfo`, {
         headers: {
-          'Device-UUID': deviceUUID
+          'X-Device-UUID': deviceUUID
         }
       });
       setCompanyInfo(response.data);
