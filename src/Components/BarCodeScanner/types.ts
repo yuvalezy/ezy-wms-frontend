@@ -1,7 +1,7 @@
 import { LucideIcon } from 'lucide-react';
 import { UnitType } from '@/features/shared/data';
 import { ObjectType } from '@/features/packages/types';
-import {Item} from "@/features/items/data/items";
+import {ItemInfoResponse} from "@/features/items/data/items";
 
 export interface PackageValue {
   id: string;
@@ -13,7 +13,7 @@ export interface PackageStockValue extends PackageValue{
 }
 
 export interface AddItemValue {
-  item: Item;
+  item: ItemInfoResponse;
   unit: UnitType;
   createPackage: boolean;
   package?: PackageValue | null;
@@ -24,6 +24,7 @@ export interface BarCodeScannerProps {
   unit?: boolean;
   item?: boolean;
   onAddItem: (addItem: AddItemValue) => void;
+  onAddPackage?: (value: PackageValue) => void;
   onPackageChanged?: (value: PackageValue) => void;
   onAddAction?: () => void;
   addActionLabel?: string;

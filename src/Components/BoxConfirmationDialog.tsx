@@ -11,7 +11,7 @@ import {
 import { ScrollArea, Separator } from "@/components/ui";
 import { X, ArrowRight } from 'lucide-react';
 
-import {Item} from "@/features/items/data/items";
+import {ItemInfoResponse} from "@/features/items/data/items";
 
 export interface BoxConfirmationDialogRef {
     show: (show: boolean) => void;
@@ -20,7 +20,7 @@ export interface BoxConfirmationDialogRef {
 type BoxConfirmationDialogProps = {
     onSelected: (itemCode: string) => void;
     itemCode: string;
-    items?: Item[];
+    items?: ItemInfoResponse[];
 }
 
 const BoxConfirmationDialog = forwardRef((props: BoxConfirmationDialogProps, ref) => {

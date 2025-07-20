@@ -6,7 +6,7 @@ import {UnitType} from '@/features/shared/data';
 import {getPackageByBarcode} from '@/features/packages/hooks';
 import {ObjectType, PackageMovementType} from '@/features/packages/types';
 import {AddItemValue, PackageValue} from './types';
-import {Item} from "@/features/items/data/items";
+import {ItemInfoResponse} from "@/features/items/data/items";
 import {itemsService} from "@/features/items/data/items-service";
 import {StringFormat} from "@/utils/string-utils";
 
@@ -20,6 +20,7 @@ interface UseBarCodeScannerProps {
   objectId?: string;
   objectNumber?: number;
   onAddItem: (addItem: AddItemValue) => void;
+  onAddPackage?: (value: PackageValue) => void;
   onPackageChanged?: (value: PackageValue) => void;
   binEntry?: number | undefined;
   isEphemeralPackage?: boolean;
@@ -34,6 +35,7 @@ export const useBarCodeScanner = ({
                                     objectId,
                                     objectNumber,
                                     onAddItem,
+                                    onAddPackage,
                                     onPackageChanged,
                                     binEntry,
                                     isEphemeralPackage,
@@ -63,7 +65,7 @@ export const useBarCodeScanner = ({
   const handleScanBarcode = (barcode: string) => {
     try {
       if (barcode.length === 0) {
-        const message = !item ? t("barnameRequired") : t("scannameRequired");
+        const message = !item ? t("barCodeRequired") : t("scanCodeRequired");
         toast.warning(message);
         return;
       }
@@ -81,7 +83,7 @@ export const useBarCodeScanner = ({
     }
   };
 
-  const handleItems = (items: Item[]) => {
+  const handleItems = (items: ItemInfoResponse[]) => {
     const barcode = barcodeInput;
     if (items.length === 0) {
       const template = !item ? t("barcodeNotFound") : t("codeNotFound");
@@ -92,27 +94,37 @@ export const useBarCodeScanner = ({
     }
     if (items.length === 1) {
       const item = items[0];
-      item.barcode = barcode;
-      barcodeRef?.current?.blur();
-      onAddItem({
-        item: items[0],
-        unit: selectedUnit,
-        createPackage: createPackage,
-        package: loadedPackage,
-      });
+      if (!item.isPackage) {
+        item.barcode = barcode;
+        barcodeRef?.current?.blur();
+        onAddItem({
+          item: items[0],
+          unit: selectedUnit,
+          createPackage: createPackage,
+          package: loadedPackage,
+        });
+      }
+      else {
+        if (onAddPackage != null) {
+          onAddPackage({barcode, id: item.code});
+        } else {
+          setError('Add Package handler not implemented!');
+        }
+        barcodeRef?.current?.blur();
+      }
       return;
     }
     handleMultipleItems(items);
   };
 
-  function distinctItems(items: Item[]): string[] {
+  function distinctItems(items: ItemInfoResponse[]): string[] {
     return items
       .map(item => item.father ?? item.code)
       .filter((code, index, array) => array.indexOf(code) === index);
   }
 
 
-  const handleMultipleItems = (items: Item[]) => {
+  const handleMultipleItems = (items: ItemInfoResponse[]) => {
     const distinctCodes = distinctItems(items);
     if (distinctCodes.length !== 1) {
       const codes = distinctCodes.map((v) => `"${v}"`).join(", ");

@@ -2,7 +2,7 @@ import {axiosInstance} from "@/utils/axios-instance";
 import {
   BinContentResponse,
   BinLocation,
-  Item,
+  ItemInfoResponse,
   ItemCheckResponse,
   ItemStockResponse,
   UpdateItemBarCodeResponse
@@ -29,11 +29,11 @@ export const itemsService = {
     }
   },
 
-  async scanBarcode(scanCode: string, item?: boolean): Promise<Item[]> {
+  async scanBarcode(scanCode: string, item?: boolean): Promise<ItemInfoResponse[]> {
     try {
       const url = `items/itemByBarCode?scanCode=${scanCode}&item=${item ?? false}`;
 
-      const response = await axiosInstance.get<Item[]>(url);
+      const response = await axiosInstance.get<ItemInfoResponse[]>(url);
 
       return response.data;
     } catch (error) {

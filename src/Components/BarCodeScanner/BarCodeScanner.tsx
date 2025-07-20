@@ -16,6 +16,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
     unit = false,
     item,
     onAddItem,
+    onAddPackage,
     onPackageChanged,
     onAddAction,
     addActionLabel,
@@ -58,6 +59,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
     objectId,
     objectNumber,
     onAddItem,
+    onAddPackage,
     onPackageChanged,
     binEntry,
     isEphemeralPackage

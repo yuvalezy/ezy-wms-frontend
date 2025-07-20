@@ -1,6 +1,12 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useRef, useState} from "react";
-import {BarCodeScannerRef, BinLocationScannerRef, BoxConfirmationDialogRef, useThemeContext} from "@/components";
+import {
+  BarCodeScannerRef,
+  BinLocationScannerRef,
+  BoxConfirmationDialogRef,
+  PackageValue,
+  useThemeContext
+} from "@/components";
 import {UnitType} from "@/features/shared/data";
 import {toast} from "sonner";
 import {useTranslation} from "react-i18next";
@@ -150,6 +156,11 @@ export const usePickingProcessDetailData = () => {
       });
   }
 
+  function handleAddPackage(value: PackageValue) {
+    toast.success(`hell ${value.barcode}`);
+    setLoading(false);
+  }
+
   function navigateBack() {
     navigate(`/pick/${id}`);
   }
@@ -165,6 +176,7 @@ export const usePickingProcessDetailData = () => {
     onBinChanged,
     onBinClear,
     handleAddItem,
+    handleAddPackage,
     pickPackOnly,
   }
 }

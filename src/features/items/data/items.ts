@@ -5,12 +5,13 @@ export type BinLocation = {
   code: string;
   quantity: number;
 }
-export type Item = {
+export type ItemInfoResponse = {
   code: string;
   name: string;
   father: string;
   boxNumber?: number;
   barcode?: string;
+  isPackage: boolean;
 }
 
 export enum ResponseStatus {

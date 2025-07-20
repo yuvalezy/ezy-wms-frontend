@@ -66,6 +66,7 @@ export interface BinLocationPackageQuantityResponse {
   binEntry: number;
   itemCode: string;
   quantity: number;
+  fullPackage: boolean;
 }
 
 export type pickingParameters = {

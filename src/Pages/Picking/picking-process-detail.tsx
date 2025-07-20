@@ -25,6 +25,7 @@ export default function PickingProcessDetail() {
     onBinChanged,
     onBinClear,
     handleAddItem,
+    handleAddPackage,
     pickPackOnly,
   } = usePickingProcessDetailData();
   const titleBreadcrumbs = [
@@ -44,6 +45,7 @@ export default function PickingProcessDetail() {
                                         unit
                                         pickPackOnly={pickPackOnly}
                                         onAddItem={(value) => handleAddItem(value.item.code, value.item.barcode ?? "", value.unit, t)}
+                                        onAddPackage={handleAddPackage}
                                         enabled={enable}/>}
                     {!binLocation && detail.totalOpenItems > 0 &&
                         <div className="space-y-4 p-2">
