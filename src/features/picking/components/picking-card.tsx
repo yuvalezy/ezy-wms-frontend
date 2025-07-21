@@ -77,33 +77,34 @@ const PickingCard: React.FC<PickingCardProps> = ({picking, onUpdatePick, onStart
           }
         </ul>
       </CardContent>
-      {supervisor ?
-        <CardFooter className="flex justify-center gap-2 pt-4 border-t">
-          {picking.updateQuantity > 0 &&
-              <Button type="button" onClick={() => onUpdatePick?.(picking)}>
-                  <CheckCircle className="mr-2 h-4 w-4"/>{t("update")}
-              </Button>
-          }
+      {supervisor ? (
+        <CardFooter className="flex justify-center gap-2 pt-4 border-t flex-wrap">
+          {picking.updateQuantity > 0 && (
+            <Button type="button" onClick={() => onUpdatePick?.(picking)}>
+              <CheckCircle className="mr-2 h-4 w-4"/>{t("update")}
+            </Button>
+          )}
           {user?.settings.enablePickingCheck && progressValue > 0 && (
             <PickingCheckButton
               picking={picking}
               progressValue={progressValue}
               onStartCheck={onStartCheck}
               size="default"
-              className=""
+              showViewButton={true}
             />
           )}
-        </CardFooter> :
+        </CardFooter>
+      ) : (
         user?.settings.enablePickingCheck && picking.checkStarted ? (
           <CardFooter className="flex justify-center gap-2 pt-4 border-t">
-            <Button type="button" variant="outline" size="sm" className="cursor-pointer"
+            <Button type="button" variant="outline" className="cursor-pointer"
                     onClick={() => navigate(`/pick/${picking.entry}/check`)}
             >
-              <CheckCircle className="mr-2 h-4 w-4"/>{t("check")}
+              <CheckCircle className="mr-2 h-4 w-4"/>{t("viewCheck")}
             </Button>
           </CardFooter>
         ) : null
-      }
+      )}
     </Card>
   );
 }
