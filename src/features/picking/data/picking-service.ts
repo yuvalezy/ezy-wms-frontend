@@ -72,7 +72,8 @@ export const pickingService = {
     itemCode: string;
     quantity: number;
     binEntry: number;
-    unit: UnitType
+    unit: UnitType;
+    packageId: string | undefined
   }): Promise<PickingAddItemResponse> {
     try {
       const url = `picking/addItem`;
