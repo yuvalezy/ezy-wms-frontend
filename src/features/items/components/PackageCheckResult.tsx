@@ -3,7 +3,6 @@ import {PackageDto, PackageStatus, PackageContentDto} from "@/features/packages/
 import {useTranslation} from "react-i18next";
 import {Card} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";
-import ItemDetailsLink from "@/components/ItemDetailsLink";
 import ClickableItemCode from "@/components/ClickableItemCode";
 import ClickableBinCode from "@/components/ClickableBinCode";
 import {Package, MapPin, Calendar, User, Box, Grid3x3} from "lucide-react";

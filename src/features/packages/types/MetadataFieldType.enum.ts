@@ -1,5 +1,5 @@
 export enum MetadataFieldType {
-  String = 0,
-  Decimal = 1,
-  Date = 2
+  String = 'String',
+  Decimal = 'Decimal',
+  Date = 'Date'
 }

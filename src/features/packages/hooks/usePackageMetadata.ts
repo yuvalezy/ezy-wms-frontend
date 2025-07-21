@@ -6,10 +6,7 @@ import {
   MetadataFieldType, 
   PackageDto 
 } from '../types';
-import { 
-  getPackageMetadataDefinitions, 
-  updatePackageMetadata 
-} from './usePackages';
+import { updatePackageMetadata } from './usePackages';
 
 export interface MetadataFieldValue {
   fieldId: string;
@@ -26,7 +23,7 @@ export interface MetadataFormState {
 }
 
 export const usePackageMetadata = (packageData?: PackageDto) => {
-  const { setLoading, setError } = useThemeContext();
+  const { setError } = useThemeContext();
   const [definitions, setDefinitions] = useState<PackageMetadataDefinition[]>([]);
   const [formState, setFormState] = useState<MetadataFormState>({
     fields: [],
@@ -34,26 +31,6 @@ export const usePackageMetadata = (packageData?: PackageDto) => {
     isLoading: false,
     hasChanges: false
   });
-
-  // Load metadata definitions on mount
-  useEffect(() => {
-    const loadDefinitions = async () => {
-      try {
-        setLoading(true);
-        const defs = await getPackageMetadataDefinitions();
-        setDefinitions(defs);
-        
-        // Initialize form state with definitions and current package values
-        initializeFormState(defs, packageData?.customAttributes || {});
-      } catch (error) {
-        setError(error as Error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadDefinitions();
-  }, [setLoading, setError, packageData?.id]);
 
   const initializeFormState = useCallback((
     defs: PackageMetadataDefinition[], 
@@ -73,35 +50,8 @@ export const usePackageMetadata = (packageData?: PackageDto) => {
     });
   }, []);
 
-  const updateFieldValue = useCallback((fieldId: string, value: string | number | Date | null) => {
-    setFormState(prev => {
-      const updatedFields = prev.fields.map(field => {
-        if (field.fieldId === fieldId) {
-          const validation = validateFieldValue(fieldId, value);
-          return {
-            ...field,
-            value,
-            isValid: validation.isValid,
-            errorMessage: validation.errorMessage
-          };
-        }
-        return field;
-      });
-
-      const isValid = updatedFields.every(f => f.isValid);
-      const hasChanges = checkForChanges(updatedFields, packageData?.customAttributes || {});
-
-      return {
-        ...prev,
-        fields: updatedFields,
-        isValid,
-        hasChanges
-      };
-    });
-  }, [packageData?.customAttributes]);
-
-  const validateFieldValue = useCallback((fieldId: string, value: any) => {
-    const definition = definitions.find(def => def.id === fieldId);
+  const validateFieldValue = useCallback((fieldId: string, value: any, defs: PackageMetadataDefinition[]) => {
+    const definition = defs.find(def => def.id === fieldId);
     if (!definition) {
       return { isValid: false, errorMessage: 'Field definition not found' };
     }
@@ -132,7 +82,7 @@ export const usePackageMetadata = (packageData?: PackageDto) => {
       default:
         return { isValid: false, errorMessage: 'Unknown field type' };
     }
-  }, [definitions]);
+  }, []);
 
   const checkForChanges = useCallback((
     fields: MetadataFieldValue[], 
@@ -154,6 +104,42 @@ export const usePackageMetadata = (packageData?: PackageDto) => {
       return originalValue !== currentValue;
     });
   }, []);
+
+  const updateFieldValue = useCallback((fieldId: string, value: string | number | Date | null) => {
+    setFormState(prev => {
+      const updatedFields = prev.fields.map(field => {
+        if (field.fieldId === fieldId) {
+          const validation = validateFieldValue(fieldId, value, definitions);
+          return {
+            ...field,
+            value,
+            isValid: validation.isValid,
+            errorMessage: validation.errorMessage
+          };
+        }
+        return field;
+      });
+
+      const isValid = updatedFields.every(f => f.isValid);
+      const hasChanges = checkForChanges(updatedFields, packageData?.customAttributes || {});
+
+      return {
+        ...prev,
+        fields: updatedFields,
+        isValid,
+        hasChanges
+      };
+    });
+  }, [packageData?.customAttributes, definitions, validateFieldValue, checkForChanges]);
+
+  // Load metadata definitions from packageData
+  useEffect(() => {
+    if (packageData?.metadataDefinitions) {
+      setDefinitions(packageData.metadataDefinitions);
+      // Initialize form state with definitions and current package values
+      initializeFormState(packageData.metadataDefinitions, packageData.customAttributes || {});
+    }
+  }, [packageData?.metadataDefinitions, packageData?.customAttributes, initializeFormState]);
 
   const saveMetadata = useCallback(async (packageId: string): Promise<PackageDto> => {
     if (!formState.isValid) {
@@ -205,9 +191,10 @@ export const usePackageMetadata = (packageData?: PackageDto) => {
       return updatedPackage;
     } catch (error) {
       setFormState(prev => ({ ...prev, isLoading: false }));
+      setError(error as Error);
       throw error;
     }
-  }, [formState, definitions]);
+  }, [formState, definitions, setError]);
 
   const resetForm = useCallback(() => {
     initializeFormState(definitions, packageData?.customAttributes || {});

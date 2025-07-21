@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { 
   Card, 
@@ -7,24 +7,37 @@ import {
   CardTitle 
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Edit } from 'lucide-react';
 import { 
   PackageDto, 
   PackageMetadataDefinition, 
   MetadataFieldType 
 } from '../types';
+import { PackageMetadataForm } from './PackageMetadataForm';
 
 interface PackageMetadataDisplayProps {
   packageData: PackageDto;
   className?: string;
   showTitle?: boolean;
+  onPackageUpdate?: (updatedPackage: PackageDto) => void;
 }
 
 export const PackageMetadataDisplay: React.FC<PackageMetadataDisplayProps> = ({
   packageData,
   className,
-  showTitle = true
+  showTitle = true,
+  onPackageUpdate
 }) => {
   const { t } = useTranslation();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const formatValue = (value: any, fieldType: MetadataFieldType): string => {
     if (value === null || value === undefined) {
@@ -58,6 +71,15 @@ export const PackageMetadataDisplay: React.FC<PackageMetadataDisplayProps> = ({
   const hasMetadata = packageData.metadataDefinitions && packageData.metadataDefinitions.length > 0;
   const hasValues = packageData.customAttributes && Object.keys(packageData.customAttributes).length > 0;
 
+  const handleSave = (updatedPackage: PackageDto) => {
+    onPackageUpdate?.(updatedPackage);
+    setIsDialogOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsDialogOpen(false);
+  };
+
   if (!hasMetadata) {
     return (
       <Card className={className}>
@@ -73,15 +95,57 @@ export const PackageMetadataDisplay: React.FC<PackageMetadataDisplayProps> = ({
   return (
     <Card className={className}>
       {showTitle && (
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle>{t('packages.metadata')}</CardTitle>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="sm">
+                <Edit className="h-4 w-4 mr-2" />
+                {t('edit')}
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>{t('packages.editMetadata')}</DialogTitle>
+              </DialogHeader>
+              <PackageMetadataForm
+                packageData={packageData}
+                onSave={handleSave}
+                onCancel={handleCancel}
+                className="border-0 shadow-none"
+              />
+            </DialogContent>
+          </Dialog>
         </CardHeader>
       )}
       <CardContent className={showTitle ? '' : 'pt-6'}>
         {!hasValues ? (
-          <p className="text-muted-foreground text-center">
-            {t('packages.noMetadataValues')}
-          </p>
+          <div className="text-center space-y-4">
+            <p className="text-muted-foreground">
+              {t('packages.noMetadataValues')}
+            </p>
+            {!showTitle && (
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <Edit className="h-4 w-4 mr-2" />
+                    {t('edit')}
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>{t('packages.editMetadata')}</DialogTitle>
+                  </DialogHeader>
+                  <PackageMetadataForm
+                    packageData={packageData}
+                    onSave={handleSave}
+                    onCancel={handleCancel}
+                    className="border-0 shadow-none"
+                  />
+                </DialogContent>
+              </Dialog>
+            )}
+          </div>
         ) : (
           <div className="space-y-3">
             {packageData.metadataDefinitions.map(definition => {
@@ -105,6 +169,29 @@ export const PackageMetadataDisplay: React.FC<PackageMetadataDisplayProps> = ({
                 </div>
               );
             })}
+            {!showTitle && (
+              <div className="pt-4 border-t">
+                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" size="sm" className="w-full">
+                      <Edit className="h-4 w-4 mr-2" />
+                      {t('edit')}
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl">
+                    <DialogHeader>
+                      <DialogTitle>{t('packages.editMetadata')}</DialogTitle>
+                    </DialogHeader>
+                    <PackageMetadataForm
+                      packageData={packageData}
+                      onSave={handleSave}
+                      onCancel={handleCancel}
+                      className="border-0 shadow-none"
+                    />
+                  </DialogContent>
+                </Dialog>
+              </div>
+            )}
           </div>
         )}
       </CardContent>
