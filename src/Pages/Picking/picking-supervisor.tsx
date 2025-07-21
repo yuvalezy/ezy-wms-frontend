@@ -9,7 +9,7 @@ import PickingCard from "@/features/picking/components/picking-card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Button} from "@/components/ui/button";
 import {Progress} from "@/components/ui/progress";
-import {RefreshCw, XCircle} from "lucide-react";
+import {CheckCircle, RefreshCw, XCircle} from "lucide-react";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "@/components/AppContext";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
@@ -41,7 +41,7 @@ export default function PickingSupervisor() {
 
   const loadData = () => {
     setLoading(true);
-    pickingService.fetchPickingsForCheck()
+    pickingService.fetchPickings()
       .then(values => setPickings(values))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
@@ -160,10 +160,21 @@ export default function PickingSupervisor() {
                         </Button>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button variant="outline" size="sm" className="cursor-pointer mr-2" onClick={() => handleStartCheck(pick)}>
-                          {t("startCheck")}
-                        </Button>
-                        <Button variant="destructive" size="sm" className="cursor-pointer" onClick={() => handleCancelPick?.(pick)}>
+                        {user?.settings.enablePickingCheck &&
+                        !pick.checkStarted ?
+                          <Button type="button" variant="outline" size="sm" className="cursor-pointer mr-2"
+                                  disabled={progressValue === 0}
+                                  onClick={() => handleStartCheck(pick)}>
+                            <CheckCircle className="mr-2 h-4 w-4"/>{t("startCheck")}
+                          </Button> :
+
+                          <Button type="button" variant="outline" size="sm" className="cursor-pointer mr-2"
+                                  disabled>
+                            <CheckCircle className="mr-2 h-4 w-4"/>{t("checkStarted")}
+                          </Button>
+                        }
+                        <Button variant="destructive" size="sm" className="cursor-pointer"
+                                onClick={() => handleCancelPick?.(pick)}>
                           <XCircle className="mr-1 h-3 w-3"/>{t("cancel")}
                         </Button>
                       </TableCell>

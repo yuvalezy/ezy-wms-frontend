@@ -1,9 +1,9 @@
 import React, {useEffect} from "react";
 import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
-import {Alert, AlertDescription, useThemeContext} from "@/components";
+import {Alert, AlertDescription, Button, useThemeContext} from "@/components";
 import PickingCard from "@/features/picking/components/picking-card";
-import {AlertCircle} from "lucide-react";
+import {AlertCircle, CheckCircle} from "lucide-react";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Progress} from "@/components/ui/progress";
 import {useNavigate} from "react-router-dom";
@@ -49,7 +49,7 @@ export default function PickingUser() {
                 <PickingCard key={pick.entry} picking={pick}/>
               ))}
             </div>
-            
+
             {/* Desktop view - Table */}
             <div className="hidden sm:block">
               <Table>
@@ -62,6 +62,7 @@ export default function PickingUser() {
                     <TableHead>{t('transferRequests')}</TableHead>
                     <TableHead>{t('progress')}</TableHead>
                     <TableHead>{t('comment')}</TableHead>
+                    {user?.settings.enablePickingCheck && <TableHead></TableHead>}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -71,7 +72,10 @@ export default function PickingUser() {
                       <TableRow key={pick.entry}>
                         <TableCell>
                           {handleOpenLink ? (
-                            <a href="#" onClick={(e) => { e.preventDefault(); handleOpen(pick.entry); }} className="text-blue-600 hover:underline">
+                            <a href="#" onClick={(e) => {
+                              e.preventDefault();
+                              handleOpen(pick.entry);
+                            }} className="text-blue-600 hover:underline">
                               {pick.entry}
                             </a>
                           ) : (
@@ -84,11 +88,22 @@ export default function PickingUser() {
                         <TableCell>{pick.transfers || '-'}</TableCell>
                         <TableCell>
                           <div className="flex items-center space-x-2">
-                            <Progress value={progressValue} className="w-20" />
+                            <Progress value={progressValue} className="w-20"/>
                             <span className="text-xs">{formatNumber(progressValue, 0)}%</span>
                           </div>
                         </TableCell>
                         <TableCell>{pick.remarks || '-'}</TableCell>
+                        {user?.settings.enablePickingCheck &&
+                            <TableCell>
+                              {pick.checkStarted &&
+                                  <Button type="button" variant="outline" size="sm" className="cursor-pointer mr-2"
+                                          disabled={progressValue === 0}
+                                          onClick={() => navigate(`/pick/${pick.entry}/check`)}
+                                  >
+                                      <CheckCircle className="mr-2 h-4 w-4"/>{t("check")}
+                                  </Button>}
+                            </TableCell>
+                        }
                       </TableRow>
                     );
                   })}
