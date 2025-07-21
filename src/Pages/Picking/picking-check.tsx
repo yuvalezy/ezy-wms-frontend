@@ -144,7 +144,7 @@ export default function PickingCheck() {
       titleOnClick={() => navigate('/pick')}
       titleBreadcrumbs={[{label: `#${id}`}]}
       footer={
-        <BarCodeScanner
+        pickList?.checkStarted && <BarCodeScanner
           ref={barcodeRef}
           enabled
           unit
@@ -175,7 +175,7 @@ export default function PickingCheck() {
                   </Badge>
                 </p>
               </div>
-              {(user?.superUser || user?.roles?.includes(RoleType.PICKING_SUPERVISOR)) &&
+              {(user?.superUser || user?.roles?.includes(RoleType.PICKING_SUPERVISOR)) && pickList?.checkStarted &&
               <div className="flex items-end">
                 <Button
                   onClick={handleCompleteCheck}

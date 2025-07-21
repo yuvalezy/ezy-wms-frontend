@@ -9,7 +9,7 @@ import PickingCard from "@/features/picking/components/picking-card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Button} from "@/components/ui/button";
 import {Progress} from "@/components/ui/progress";
-import {CheckCircle, RefreshCw, XCircle} from "lucide-react";
+import {CheckCircle, RefreshCw, XCircle, Eye} from "lucide-react";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "@/components/AppContext";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
@@ -125,8 +125,7 @@ export default function PickingSupervisor() {
                   {displayTransfers && <TableHead>{t('transferRequests')}</TableHead>}
                   <TableHead>{t('progress')}</TableHead>
                   <TableHead>{t('comment')}</TableHead>
-                  <TableHead className="text-right"></TableHead>
-                  <TableHead className="text-right"></TableHead>
+                  <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -158,24 +157,36 @@ export default function PickingSupervisor() {
                       </TableCell>
                       <TableCell>{pick.remarks || '-'}</TableCell>
                       <TableCell className="text-right">
-                        <Button disabled={pick.syncStatus !== SyncStatus.Pending} size="sm"
-                                className={pick.syncStatus !== SyncStatus.Pending ? "cursor-not-allowed" : "cursor-pointer"}
-                                onClick={() => handleUpdatePick?.(pick)}>
-                          <RefreshCw className="mr-1 h-3 w-3"/>{t("sync")}
-                        </Button>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {user?.settings.enablePickingCheck && (
-                          <PickingCheckButton
-                            picking={pick}
-                            progressValue={progressValue}
-                            onStartCheck={handleStartCheck}
-                          />
-                        )}
-                        <Button variant="destructive" size="sm" className="cursor-pointer"
-                                onClick={() => handleCancelPick?.(pick)}>
-                          <XCircle className="mr-1 h-3 w-3"/>{t("cancel")}
-                        </Button>
+                        <div className="flex justify-end gap-2 flex-wrap">
+                          <Button disabled={pick.syncStatus !== SyncStatus.Pending} size="sm"
+                                  className={pick.syncStatus !== SyncStatus.Pending ? "cursor-not-allowed" : "cursor-pointer"}
+                                  onClick={() => handleUpdatePick?.(pick)}>
+                            <RefreshCw className="mr-1 h-3 w-3"/>{t("sync")}
+                          </Button>
+                          {user?.settings.enablePickingCheck && (
+                            <PickingCheckButton
+                              picking={pick}
+                              progressValue={progressValue}
+                              onStartCheck={handleStartCheck}
+                              showViewButton={false}
+                            />
+                          )}
+                          {user?.settings.enablePickingCheck && pick.hasCheck && !pick.checkStarted && (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() => navigate(`/pick/${pick.entry}/check`)}
+                            >
+                              <Eye className="mr-2 h-4 w-4"/>
+                              {t("viewCheck")}
+                            </Button>
+                          )}
+                          <Button variant="destructive" size="sm" className="cursor-pointer"
+                                  onClick={() => handleCancelPick?.(pick)}>
+                            <XCircle className="mr-1 h-3 w-3"/>{t("cancel")}
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   );
