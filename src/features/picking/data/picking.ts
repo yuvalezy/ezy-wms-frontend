@@ -147,6 +147,8 @@ export interface PickListCheckItemDetail {
   pickedQuantity: number;
   checkedQuantity: number;
   difference: number;
-  unit: UnitType;
-  binLocation?: string;
+  unitMeasure: string;
+  quantityInUnit: number;
+  packMeasure: string;
+  quantityInPack: number;
 }

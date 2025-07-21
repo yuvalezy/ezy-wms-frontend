@@ -1,30 +1,33 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import React, {useEffect, useState, useRef} from 'react';
+import {useParams, useNavigate} from 'react-router-dom';
+import {useTranslation} from 'react-i18next';
 import ContentTheme from '@/components/ContentTheme';
 import BarCodeScanner from '@/components/BarCodeScanner';
-import { useThemeContext } from '@/components/ThemeContext';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Check, AlertCircle } from 'lucide-react';
-import { pickingService } from '@/features/picking/data/picking-service';
-import { PickListCheckSummaryResponse, PickingDocument } from '@/features/picking/data/picking';
-import { UnitType } from '@/features/shared/data';
-import { formatNumber } from '@/utils/number-utils';
-import { AddItemValue } from '@/components/BarCodeScanner/types';
+import {useThemeContext} from '@/components/ThemeContext';
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table';
+import {Button} from '@/components/ui/button';
+import {Badge} from '@/components/ui/badge';
+import {Alert, AlertDescription} from '@/components/ui/alert';
+import {Check, AlertCircle} from 'lucide-react';
+import {pickingService} from '@/features/picking/data/picking-service';
+import {PickListCheckSummaryResponse, PickingDocument, PickListCheckItemDetail} from '@/features/picking/data/picking';
+import {UnitType} from '@/features/shared/data';
+import {formatNumber} from '@/utils/number-utils';
+import {AddItemValue} from '@/components/BarCodeScanner/types';
+import {useStockInfo} from "@/utils/stock-info";
+import {diff} from "node:util";
 
 export default function PickingCheck() {
-  const { id } = useParams<{ id: string }>();
-  const { t } = useTranslation();
+  const {id} = useParams<{ id: string }>();
+  const {t} = useTranslation();
   const navigate = useNavigate();
-  const { setLoading, setError } = useThemeContext();
+  const {setLoading, setError} = useThemeContext();
   const barcodeRef = useRef<any>(null);
-  
+
   const [pickList, setPickList] = useState<PickingDocument | null>(null);
   const [checkSummary, setCheckSummary] = useState<PickListCheckSummaryResponse | null>(null);
   const [isCompleting, setIsCompleting] = useState(false);
+  const stockInfo = useStockInfo();
 
   useEffect(() => {
     if (id) {
@@ -36,7 +39,7 @@ export default function PickingCheck() {
   const loadPickList = async () => {
     setLoading(true);
     try {
-      const data = await pickingService.fetchPicking({ id: parseInt(id!) });
+      const data = await pickingService.fetchPicking({id: parseInt(id!)});
       setPickList(data);
     } catch (error) {
       setError(error);
@@ -62,7 +65,7 @@ export default function PickingCheck() {
         unit: value.unit,
         binEntry: undefined
       });
-      
+
       if (response.success) {
         await loadCheckSummary();
         barcodeRef.current?.clear();
@@ -71,6 +74,8 @@ export default function PickingCheck() {
       }
     } catch (error) {
       setError(error);
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -91,15 +96,23 @@ export default function PickingCheck() {
     return 'bg-red-50';
   };
 
-  const getDifferenceDisplay = (difference: number) => {
+  const getDifferenceDisplay = (item: PickListCheckItemDetail) => {
+    const difference = item.difference;
     if (difference === 0) {
-      return <Check className="h-4 w-4 text-green-600" />;
+      return <Check className="h-4 w-4 text-green-600"/>;
     }
     return (
       <div className="flex items-center gap-1">
-        <AlertCircle className="h-4 w-4 text-red-600" />
+        <AlertCircle className="h-4 w-4 text-red-600"/>
         <span className={`font-bold ${difference > 0 ? 'text-red-600' : 'text-orange-600'}`}>
-          {difference > 0 ? '+' : ''}{difference}
+          {difference > 0 ? '+' : ''}
+          {stockInfo({
+            quantity: difference,
+            numInBuy: item.quantityInUnit,
+            buyUnitMsr: item.unitMeasure,
+            purPackUn: item.quantityInPack,
+            purPackMsr: item.packMeasure,
+          })}
         </span>
       </div>
     );
@@ -108,8 +121,8 @@ export default function PickingCheck() {
   return (
     <ContentTheme
       title={t('pickingCheck')}
-      titleOnClick={() => navigate('/pickingSupervisor')}
-      titleBreadcrumbs={[{ label: `#${id}` }]}
+      titleOnClick={() => navigate('/pick')}
+      titleBreadcrumbs={[{label: `#${id}`}]}
       footer={
         <BarCodeScanner
           ref={barcodeRef}
@@ -155,9 +168,9 @@ export default function PickingCheck() {
 
           {checkSummary.discrepancyCount > 0 && (
             <Alert className="mb-4" variant="destructive">
-              <AlertCircle className="h-4 w-4" />
+              <AlertCircle className="h-4 w-4"/>
               <AlertDescription>
-                {t('checkDiscrepanciesFound', { count: checkSummary.discrepancyCount })}
+                {t('checkDiscrepanciesFound', {count: checkSummary.discrepancyCount})}
               </AlertDescription>
             </Alert>
           )}
@@ -165,12 +178,11 @@ export default function PickingCheck() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{t('itemCode')}</TableHead>
-                <TableHead>{t('itemName')}</TableHead>
-                <TableHead className="text-right">{t('picked')}</TableHead>
-                <TableHead className="text-right">{t('checked')}</TableHead>
-                <TableHead className="text-center">{t('status')}</TableHead>
-                <TableHead>{t('location')}</TableHead>
+                <TableHead>{t('item')}</TableHead>
+                <TableHead>{t('description')}</TableHead>
+                <TableHead>{t('picked')}</TableHead>
+                <TableHead>{t('checked')}</TableHead>
+                <TableHead>{t('status')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -178,14 +190,25 @@ export default function PickingCheck() {
                 <TableRow key={item.itemCode} className={getRowStyle(item.difference)}>
                   <TableCell className="font-medium">{item.itemCode}</TableCell>
                   <TableCell>{item.itemName}</TableCell>
-                  <TableCell className="text-right">{formatNumber(item.pickedQuantity)}</TableCell>
-                  <TableCell className="text-right">
-                    {item.checkedQuantity > 0 ? formatNumber(item.checkedQuantity) : '-'}
+                  <TableCell>{stockInfo({
+                    quantity: item.pickedQuantity,
+                    numInBuy: item.quantityInUnit,
+                    buyUnitMsr: item.unitMeasure,
+                    purPackUn: item.quantityInPack,
+                    purPackMsr: item.packMeasure,
+                  })}</TableCell>
+                  <TableCell>
+                    {item.checkedQuantity > 0 ? stockInfo({
+                      quantity: item.checkedQuantity,
+                      numInBuy: item.quantityInUnit,
+                      buyUnitMsr: item.unitMeasure,
+                      purPackUn: item.quantityInPack,
+                      purPackMsr: item.packMeasure,
+                    }) : '-'}
                   </TableCell>
-                  <TableCell className="text-center">
-                    {item.checkedQuantity > 0 ? getDifferenceDisplay(item.difference) : '-'}
+                  <TableCell>
+                    {item.checkedQuantity > 0 ? getDifferenceDisplay(item) : '-'}
                   </TableCell>
-                  <TableCell>{item.binLocation || '-'}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
