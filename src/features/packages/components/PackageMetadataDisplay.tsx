@@ -72,7 +72,14 @@ export const PackageMetadataDisplay: React.FC<PackageMetadataDisplayProps> = ({
   const hasValues = packageData.customAttributes && Object.keys(packageData.customAttributes).length > 0;
 
   const handleSave = (updatedPackage: PackageDto) => {
-    onPackageUpdate?.(updatedPackage);
+    // Merge the updated package with the existing package data to preserve contents
+    const mergedPackage: PackageDto = {
+      ...packageData,
+      ...updatedPackage,
+      contents: packageData.contents, // Preserve the original contents array
+      metadataDefinitions: packageData.metadataDefinitions // Preserve metadata definitions
+    };
+    onPackageUpdate?.(mergedPackage);
     setIsDialogOpen(false);
   };
 
@@ -92,30 +99,34 @@ export const PackageMetadataDisplay: React.FC<PackageMetadataDisplayProps> = ({
     );
   }
 
+  const renderEditButton = (className?: string) => (
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm" className={className}>
+          <Edit className="h-4 w-4 mr-2" />
+          {t('edit')}
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>{t('packages.editMetadata')}</DialogTitle>
+        </DialogHeader>
+        <PackageMetadataForm
+          packageData={packageData}
+          onSave={handleSave}
+          onCancel={handleCancel}
+          className="border-0 shadow-none"
+        />
+      </DialogContent>
+    </Dialog>
+  );
+
   return (
     <Card className={className}>
       {showTitle && (
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle>{t('packages.metadata')}</CardTitle>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button variant="outline" size="sm">
-                <Edit className="h-4 w-4 mr-2" />
-                {t('edit')}
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl">
-              <DialogHeader>
-                <DialogTitle>{t('packages.editMetadata')}</DialogTitle>
-              </DialogHeader>
-              <PackageMetadataForm
-                packageData={packageData}
-                onSave={handleSave}
-                onCancel={handleCancel}
-                className="border-0 shadow-none"
-              />
-            </DialogContent>
-          </Dialog>
+          {renderEditButton()}
         </CardHeader>
       )}
       <CardContent className={showTitle ? '' : 'pt-6'}>
@@ -124,27 +135,7 @@ export const PackageMetadataDisplay: React.FC<PackageMetadataDisplayProps> = ({
             <p className="text-muted-foreground">
               {t('packages.noMetadataValues')}
             </p>
-            {!showTitle && (
-              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button variant="outline" size="sm">
-                    <Edit className="h-4 w-4 mr-2" />
-                    {t('edit')}
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-2xl">
-                  <DialogHeader>
-                    <DialogTitle>{t('packages.editMetadata')}</DialogTitle>
-                  </DialogHeader>
-                  <PackageMetadataForm
-                    packageData={packageData}
-                    onSave={handleSave}
-                    onCancel={handleCancel}
-                    className="border-0 shadow-none"
-                  />
-                </DialogContent>
-              </Dialog>
-            )}
+            {!showTitle && renderEditButton()}
           </div>
         ) : (
           <div className="space-y-3">
@@ -171,25 +162,7 @@ export const PackageMetadataDisplay: React.FC<PackageMetadataDisplayProps> = ({
             })}
             {!showTitle && (
               <div className="pt-4 border-t">
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" size="sm" className="w-full">
-                      <Edit className="h-4 w-4 mr-2" />
-                      {t('edit')}
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl">
-                    <DialogHeader>
-                      <DialogTitle>{t('packages.editMetadata')}</DialogTitle>
-                    </DialogHeader>
-                    <PackageMetadataForm
-                      packageData={packageData}
-                      onSave={handleSave}
-                      onCancel={handleCancel}
-                      className="border-0 shadow-none"
-                    />
-                  </DialogContent>
-                </Dialog>
+                {renderEditButton("w-full")}
               </div>
             )}
           </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {PackageDto, PackageStatus, PackageContentDto} from "@/features/packages/types";
 import {useTranslation} from "react-i18next";
 import {Card} from "@/components/ui/card";
@@ -9,8 +9,18 @@ import {Package, MapPin, Calendar, User, Box, Grid3x3} from "lucide-react";
 import {formatDistance} from "date-fns";
 import {PackageMetadataDisplay} from "@/features/packages/components";
 
-export const PackageCheckResult: React.FC<{ packageData: PackageDto }> = ({packageData}) => {
+export const PackageCheckResult: React.FC<{ packageData: PackageDto; onPackageUpdate?: (updatedPackage: PackageDto) => void }> = ({packageData: initialPackageData, onPackageUpdate}) => {
   const {t} = useTranslation();
+  const [packageData, setPackageData] = useState<PackageDto>(initialPackageData);
+
+  useEffect(() => {
+    setPackageData(initialPackageData);
+  }, [initialPackageData]);
+
+  const handlePackageUpdate = (updatedPackage: PackageDto) => {
+    setPackageData(updatedPackage);
+    onPackageUpdate?.(updatedPackage);
+  };
 
   const getStatusColor = (status: PackageStatus) => {
     switch (status) {
@@ -139,7 +149,7 @@ export const PackageCheckResult: React.FC<{ packageData: PackageDto }> = ({packa
 
       {/* Package Metadata */}
       {packageData.metadataDefinitions && packageData.metadataDefinitions.length > 0 && (
-        <PackageMetadataDisplay packageData={packageData} />
+        <PackageMetadataDisplay packageData={packageData} onPackageUpdate={handlePackageUpdate} />
       )}
 
       {/* Package Contents */}

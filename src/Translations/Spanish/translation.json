@@ -528,7 +528,8 @@
     "metadata": "Metadatos",
     "noMetadataFieldsConfigured": "No hay campos de metadatos configurados",
     "noMetadataValues": "No se han establecido valores de metadatos",
-    "enterValue": "Ingrese"
+    "enterValue": "Ingrese",
+    "editMetadata": "Editar metadatos"
   },
   "scan": "Escanear",
   "offlineTitle": "Señal de Internet Perdida",
@@ -609,5 +610,6 @@
   "packageNotFoundWithCode": "Paquete con código {{code}} no encontrado",
   "viewContents": "Ver Contenidos",
   "noPackageContents": "No se encontraron contenidos del paquete",
-  "packageAlreadyAddedAsSource": "El paquete {{barcode}} ya está agregado como fuente a esta transferencia"
+  "packageAlreadyAddedAsSource": "El paquete {{barcode}} ya está agregado como fuente a esta transferencia",
+  "enterValue": "Ingrese valor"
 }

@@ -528,7 +528,8 @@
     "metadata": "Metadata",
     "noMetadataFieldsConfigured": "No metadata fields configured",
     "noMetadataValues": "No metadata values set",
-    "enterValue": "Enter"
+    "enterValue": "Enter",
+    "editMetadata": "Edit metadata"
   },
   "scan": "Scan",
   "offlineTitle": "Internet Signal Lost",
@@ -609,5 +610,6 @@
   "packageNotFoundWithCode": "Package with code {{code}} not found",
   "viewContents": "View Contents",
   "noPackageContents": "No package contents found",
-  "packageAlreadyAddedAsSource": "Package {{barcode}} is already added as source to this transfer"
+  "packageAlreadyAddedAsSource": "Package {{barcode}} is already added as source to this transfer",
+  "enterValue": "Enter Value"
 }
