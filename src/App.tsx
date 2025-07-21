@@ -166,7 +166,7 @@ function AppRoutes() {
           <Route path="/pick/:idParam/:typeParam/:entryParam"
                  element={<ProtectedRoute authorization={RoleType.PICKING} element={<PickingProcessDetail/>}/>}/>
           <Route path="/pick/:id/check"
-                 element={<ProtectedRoute authorizations={[RoleType.PICKING_CHECK, RoleType.PICKING_SUPERVISOR]} element={<PickingCheck/>}/>}/>
+                 element={<ProtectedRoute authorizations={[RoleType.PICKING, RoleType.PICKING_SUPERVISOR]} element={<PickingCheck/>}/>}/>
           <Route path="/pickSupervisor" element={<ProtectedRoute authorization={RoleType.PICKING_SUPERVISOR}
                                                                  element={<PickingSupervisor/>}/>}/>
           {/*<Route path="/PickReport" element={<ProtectedRoute authorization={Authorization.Pick_SUPERVISOR} element={<PickReport/>}/>}/>*/}

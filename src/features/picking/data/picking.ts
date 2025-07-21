@@ -35,6 +35,7 @@ export type PickingDocument = {
   openQuantity: number;
   updateQuantity: number;
   pickPackOnly: boolean;
+  checkStarted: boolean;
   detail?: PickingDocumentDetail[];
 }
 export type PickingDocumentDetail = {

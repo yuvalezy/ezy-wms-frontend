@@ -2,8 +2,15 @@ import {axiosInstance} from "@/utils/axios-instance";
 import {
   PickingAddItemResponse,
   PickingDocument,
-  pickingParameters, pickingsParameters, ProcessPickListCancelResponse, ProcessPickListResponse,
-  ProcessResponse, PickListCheckSession, PickListCheckItemRequest, PickListCheckItemResponse, PickListCheckSummaryResponse
+  pickingParameters,
+  pickingsParameters,
+  ProcessPickListCancelResponse,
+  ProcessPickListResponse,
+  ProcessResponse,
+  PickListCheckSession,
+  PickListCheckItemRequest,
+  PickListCheckItemResponse,
+  PickListCheckSummaryResponse
 } from "@/features/picking/data/picking";
 import {UnitType} from "@/features/shared/data";
 
@@ -92,13 +99,13 @@ export const pickingService = {
     entry: number;
     packageId: string;
     binEntry?: number;
-  }) : Promise<ProcessPickListResponse> {
+  }): Promise<ProcessPickListResponse> {
     try {
       const url = `picking/addPackage`;
 
       const response = await axiosInstance.post<ProcessPickListResponse>(url, params);
       return response.data;
-    }catch (error) {
+    } catch (error) {
       console.error("Error adding package:", error);
       throw error;
     }
@@ -135,17 +142,6 @@ export const pickingService = {
       }
     } catch (error) {
       console.error("Error canceling picking:", error);
-      throw error;
-    }
-  },
-
-  async fetchPickingsForCheck(): Promise<PickingDocument[]> {
-    try {
-      const url = `picking?includeForCheck=true`;
-      const response = await axiosInstance.get<PickingDocument[]>(url);
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching pickings for check:", error);
       throw error;
     }
   },
