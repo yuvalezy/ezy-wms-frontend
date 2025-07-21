@@ -1,4 +1,5 @@
-import {BinLocation, ItemDetails} from "@/features/items/data/items";
+import {BinLocation, ItemDetails, ResponseStatus} from "@/features/items/data/items";
+import {PackageContentDto} from "@/features/packages/types";
 
 export enum SyncStatus {
   Pending = 'Pending',
@@ -92,13 +93,12 @@ export interface PickingAddItemResponse {
   errorMessage?: string;
 }
 
-export interface addItemParameters {
-  id: number,
-  type: number,
-  entry: number,
-  itemCode: string,
-  quantity: number,
-  binEntry: number,
+export interface ProcessPickListResponse {
+  status: ResponseStatus;
+  errorMessage?: string;
+  closedDocument: boolean;
+  packageId: string;
+  packageContents: PackageContentDto[];
 }
 
 export interface ProcessPickListCancelResponse extends ProcessResponse {

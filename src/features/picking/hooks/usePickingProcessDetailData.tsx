@@ -13,8 +13,8 @@ import {useTranslation} from "react-i18next";
 
 import {BinLocation} from "@/features/items/data/items";
 import {PickingDocumentDetail} from "@/features/picking/data/picking";
-import { IsNumeric } from "@/utils/number-utils";
-import { StringFormat } from "@/utils/string-utils";
+import {IsNumeric} from "@/utils/number-utils";
+import {StringFormat} from "@/utils/string-utils";
 import {pickingService} from "@/features/picking/data/picking-service";
 
 export const usePickingProcessDetailData = () => {
@@ -157,8 +157,58 @@ export const usePickingProcessDetailData = () => {
   }
 
   function handleAddPackage(value: PackageValue) {
-    toast.success(`hell ${value.barcode}`);
-    setLoading(false);
+    boxConfirmationDialogRef?.current?.show(false);
+    barcodeRef?.current?.clear();
+    if (id == null || type == null || entry == null || binLocation == null) {
+      return;
+    }
+    setLoading(true);
+    pickingService.addPackage({id, type, entry, packageId: value.id, binEntry: binLocation.entry})
+      .then((data) => {
+        if (data.closedDocument) {
+          setError(StringFormat(t("pickedIsClosed"), id));
+          setEnable(false);
+          navigateBack();
+          return;
+        }
+        let errorMessage = data.errorMessage;
+        if (errorMessage != null) {
+          try {
+            switch (errorMessage) {
+              case 'Package is locked':
+                break;
+              case 'Package is not active':
+                break;
+              case 'Package already added to this pick list':
+                break;
+              case 'No items found for the specified pick list entry':
+                break;
+              case 'Package is empty':
+                break;
+              case 'Package has committed quantities for items: {string.Join(", ", itemsWithCommittedQty)}':
+                break;
+              case 'Insufficient open quantities for: {string.Join(", ", insufficientItems)}':
+                break;
+              case 'Package cannot be fully picked':
+                break;
+            }
+            toast.error(errorMessage);
+          } finally {
+            setLoading(false);
+          }
+          return;
+        }
+
+        toast.success(StringFormat(t("pickingPackageSuccess"), value.barcode));
+        loadData({reload: true, binEntry: binLocation.entry});
+      })
+      .catch((error) => {
+        console.error(`Error performing action: ${error}`);
+        let errorMessage = error.response?.data["exceptionMessage"] ?? `Add Package Error: ${error}`;
+        setError(errorMessage);
+        setLoading(false);
+        setTimeout(() => barcodeRef.current?.focus(), 100);
+      });
   }
 
   function navigateBack() {

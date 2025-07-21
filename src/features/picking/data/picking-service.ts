@@ -2,7 +2,7 @@ import {axiosInstance} from "@/utils/axios-instance";
 import {
   PickingAddItemResponse,
   PickingDocument,
-  pickingParameters, pickingsParameters, ProcessPickListCancelResponse,
+  pickingParameters, pickingsParameters, ProcessPickListCancelResponse, ProcessPickListResponse,
   ProcessResponse
 } from "@/features/picking/data/picking";
 import {UnitType} from "@/features/shared/data";
@@ -81,6 +81,24 @@ export const pickingService = {
       return response.data;
     } catch (error) {
       console.error("Error adding item:", error);
+      throw error;
+    }
+  },
+
+  async addPackage(params: {
+    id: number;
+    type: number;
+    entry: number;
+    packageId: string;
+    binEntry?: number;
+  }) : Promise<ProcessPickListResponse> {
+    try {
+      const url = `picking/addPackage`;
+
+      const response = await axiosInstance.post<ProcessPickListResponse>(url, params);
+      return response.data;
+    }catch (error) {
+      console.error("Error adding package:", error);
       throw error;
     }
   },

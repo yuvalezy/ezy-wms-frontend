@@ -181,6 +181,7 @@
   "pickingNotFound": "Picking #{0} is not valid",
   "pickingStatusError": "The status of the picking #{0} is {1}.\nCannot continue.",
   "pickingProcessSuccess": "Picking of item {0} was successfully",
+  "pickingPackageSuccess": "Picking of package {0} was successfully",
   "pickedIsClosed": "Picking #{0} is closed",
   "goodsReceiptNotFound": "The entry #{0} is not valid",
   "goodsReceiptStatusError": "The status of the entry #{0} is {1}.\nCannot continue.",
