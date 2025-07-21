@@ -5,6 +5,7 @@ export * from './PackageMovementType.enum';
 export * from './InconsistencyType.enum';
 export * from './InconsistencySeverity.enum';
 export * from './ObjectType.enum';
+export * from './MetadataFieldType.enum';
 
 // DTOs
 export * from './PackageDto.dto';
@@ -22,3 +23,5 @@ export * from './PackageLocationHistoryDto.dto';
 export * from './PackageValidationResult.dto';
 export * from './ItemDataResponse.dto';
 export * from './UserAuditResponse.dto';
+export * from './PackageMetadataDefinition.dto';
+export * from './UpdatePackageMetadataRequest.dto';

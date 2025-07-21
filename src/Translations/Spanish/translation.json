@@ -289,6 +289,12 @@
   "isActive": "Está Activo",
   "saving": "Guardando...",
   "save": "Guardar",
+  "reset": "Restablecer",
+  "text": "Texto",
+  "number": "Número",
+  "date": "Fecha",
+  "unknown": "Desconocido",
+  "notSet": "Sin establecer",
   "searchUsers": "Buscar usuarios...",
   "allWarehouses": "Todos los Almacenes",
   "allAuthorizationGroups": "Todos los Grupos de Autorización",
@@ -503,7 +509,11 @@
       "closed": "Cerrado",
       "cancelled": "Cancelado",
       "locked": "Bloqueado"
-    }
+    },
+    "metadata": "Metadatos",
+    "noMetadataFieldsConfigured": "No hay campos de metadatos configurados",
+    "noMetadataValues": "No se han establecido valores de metadatos",
+    "enterValue": "Ingrese"
   },
   "scan": "Escanear",
   "offlineTitle": "Señal de Internet Perdida",

@@ -5,7 +5,9 @@ import {
   CancelPackageRequest,
   LockPackageRequest,
   MovePackageRequest,
-  PackageValidationResult, ObjectType
+  PackageValidationResult, ObjectType,
+  UpdatePackageMetadataRequest,
+  PackageMetadataDefinition
 } from '../types';
 
 export const createPackage = async (request: CreatePackageRequest): Promise<PackageDto> => {
@@ -124,6 +126,26 @@ export const generateBarcode = async (): Promise<{ barcode: string }> => {
     return response.data;
   } catch (error) {
     console.error('Error generating barcode:', error);
+    throw error;
+  }
+};
+
+export const updatePackageMetadata = async (id: string, request: UpdatePackageMetadataRequest): Promise<PackageDto> => {
+  try {
+    const response = await axiosInstance.put<PackageDto>(`Package/${id}/metadata`, request);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating package metadata:', error);
+    throw error;
+  }
+};
+
+export const getPackageMetadataDefinitions = async (): Promise<PackageMetadataDefinition[]> => {
+  try {
+    const response = await axiosInstance.get<PackageMetadataDefinition[]>('General/package-metadata-definitions');
+    return response.data;
+  } catch (error) {
+    console.error('Error getting metadata definitions:', error);
     throw error;
   }
 };

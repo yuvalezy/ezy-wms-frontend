@@ -1,6 +1,7 @@
 import { PackageStatus } from './PackageStatus.enum';
 import { PackageContentDto } from './PackageContentDto.dto';
 import { PackageLocationHistoryDto } from './PackageLocationHistoryDto.dto';
+import { PackageMetadataDefinition } from './PackageMetadataDefinition.dto';
 
 import {UserAuditResponse} from "@/features/packages/types/UserAuditResponse.dto";
 
@@ -19,4 +20,5 @@ export interface PackageDto {
   customAttributes?: Record<string, any>;
   contents: PackageContentDto[];
   locationHistory?: PackageLocationHistoryDto[];
+  metadataDefinitions: PackageMetadataDefinition[];
 }

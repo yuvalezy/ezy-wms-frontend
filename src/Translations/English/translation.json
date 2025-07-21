@@ -290,6 +290,12 @@
   "isActive": "Is Active",
   "saving": "Saving...",
   "save": "Save",
+  "reset": "Reset",
+  "text": "Text",
+  "number": "Number",
+  "date": "Date",
+  "unknown": "Unknown",
+  "notSet": "Not set",
   "searchUsers": "Search users...",
   "allWarehouses": "All Warehouses",
   "allAuthorizationGroups": "All Authorization Groups",
@@ -503,7 +509,11 @@
       "closed": "Closed", 
       "cancelled": "Cancelled",
       "locked": "Locked"
-    }
+    },
+    "metadata": "Metadata",
+    "noMetadataFieldsConfigured": "No metadata fields configured",
+    "noMetadataValues": "No metadata values set",
+    "enterValue": "Enter"
   },
   "scan": "Scan",
   "offlineTitle": "Internet Signal Lost",

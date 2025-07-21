@@ -8,6 +8,7 @@ import ClickableItemCode from "@/components/ClickableItemCode";
 import ClickableBinCode from "@/components/ClickableBinCode";
 import {Package, MapPin, Calendar, User, Box, Grid3x3} from "lucide-react";
 import {formatDistance} from "date-fns";
+import {PackageMetadataDisplay} from "@/features/packages/components";
 
 export const PackageCheckResult: React.FC<{ packageData: PackageDto }> = ({packageData}) => {
   const {t} = useTranslation();
@@ -136,6 +137,11 @@ export const PackageCheckResult: React.FC<{ packageData: PackageDto }> = ({packa
           </div>
         </div>
       </Card>
+
+      {/* Package Metadata */}
+      {packageData.metadataDefinitions && packageData.metadataDefinitions.length > 0 && (
+        <PackageMetadataDisplay packageData={packageData} />
+      )}
 
       {/* Package Contents */}
       <Card className="p-0 gap-0">
