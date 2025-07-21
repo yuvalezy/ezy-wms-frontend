@@ -10,7 +10,7 @@ import {
   PickListCheckSession,
   PickListCheckItemRequest,
   PickListCheckItemResponse,
-  PickListCheckSummaryResponse
+  PickListCheckSummaryResponse, PickListCheckPackageResponse
 } from "@/features/picking/data/picking";
 import {UnitType} from "@/features/shared/data";
 
@@ -167,6 +167,18 @@ export const pickingService = {
       throw error;
     }
   },
+
+  async checkPackage(pickListId: number, packageId: string): Promise<PickListCheckPackageResponse> {
+    try {
+      const url = `picking/${pickListId}/check/package`;
+      const response = await axiosInstance.post<PickListCheckPackageResponse>(url, {packageId});
+      return response.data;
+    } catch (error) {
+      console.error("Error checking package:", error);
+      throw error;
+    }
+  },
+
 
   async getCheckSummary(pickListId: number): Promise<PickListCheckSummaryResponse> {
     try {

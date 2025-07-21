@@ -152,3 +152,19 @@ export interface PickListCheckItemDetail {
   packMeasure: string;
   quantityInPack: number;
 }
+
+export interface PickListCheckPackageResponse {
+  errorMessage?: string;
+  status: ResponseStatus;
+  success: boolean;
+  itemsChecked: number;
+  totalItems: number;
+  packageBarcode: string;
+  checkedItems: CheckedPackageItem[];
+}
+
+export interface CheckedPackageItem {
+  itemCode: string;
+  itemName: string;
+  quantity: number;
+}

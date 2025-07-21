@@ -169,7 +169,8 @@ export default function PickingSupervisor() {
                           </Button> :
 
                           <Button type="button" variant="outline" size="sm" className="cursor-pointer mr-2"
-                                  disabled>
+                                  onClick={() => navigate(`/pick/${pick.entry}/check`)}
+                          >
                             <CheckCircle className="mr-2 h-4 w-4"/>{t("checkStarted")}
                           </Button>
                         }
