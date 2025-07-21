@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { 
-  Card, 
-  CardContent, 
-  CardHeader, 
-  CardTitle 
-} from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -16,6 +9,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Edit } from 'lucide-react';
+import InfoBox, { InfoBoxValue } from '@/components/InfoBox';
 import { 
   PackageDto, 
   PackageMetadataDefinition, 
@@ -26,14 +20,12 @@ import { PackageMetadataForm } from './PackageMetadataForm';
 interface PackageMetadataDisplayProps {
   packageData: PackageDto;
   className?: string;
-  showTitle?: boolean;
   onPackageUpdate?: (updatedPackage: PackageDto) => void;
 }
 
 export const PackageMetadataDisplay: React.FC<PackageMetadataDisplayProps> = ({
   packageData,
   className,
-  showTitle = true,
   onPackageUpdate
 }) => {
   const { t } = useTranslation();
@@ -41,7 +33,7 @@ export const PackageMetadataDisplay: React.FC<PackageMetadataDisplayProps> = ({
 
   const formatValue = (value: any, fieldType: MetadataFieldType): string => {
     if (value === null || value === undefined) {
-      return t('notSet');
+      return '-';
     }
 
     switch (fieldType) {
@@ -88,23 +80,15 @@ export const PackageMetadataDisplay: React.FC<PackageMetadataDisplayProps> = ({
   };
 
   if (!hasMetadata) {
-    return (
-      <Card className={className}>
-        <CardContent className="pt-6">
-          <p className="text-muted-foreground text-center">
-            {t('packages.noMetadataFieldsConfigured')}
-          </p>
-        </CardContent>
-      </Card>
-    );
+    return null;
   }
 
-  const renderEditButton = (className?: string) => (
+  const renderEditButton = () => (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className={className}>
-          <Edit className="h-4 w-4 mr-2" />
-          {t('edit')}
+        <Button variant="ghost" size="sm" className="h-8 px-2">
+          <Edit className="h-4 w-4" />
+          <span className="ml-2">{t('edit')}</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-2xl">
@@ -122,52 +106,26 @@ export const PackageMetadataDisplay: React.FC<PackageMetadataDisplayProps> = ({
   );
 
   return (
-    <Card className={className}>
-      {showTitle && (
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle>{t('packages.metadata')}</CardTitle>
-          {renderEditButton()}
-        </CardHeader>
-      )}
-      <CardContent className={showTitle ? '' : 'pt-6'}>
-        {!hasValues ? (
-          <div className="text-center space-y-4">
-            <p className="text-muted-foreground">
-              {t('packages.noMetadataValues')}
-            </p>
-            {!showTitle && renderEditButton()}
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {packageData.metadataDefinitions.map(definition => {
-              const value = packageData.customAttributes?.[definition.id];
-              const displayValue = formatValue(value, definition.type);
-              const hasValue = value !== null && value !== undefined;
-
-              return (
-                <div key={definition.id} className="flex items-center justify-between">
-                  <div className="flex flex-col space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium">{definition.description}</span>
-                      <Badge variant="secondary" className="text-xs">
-                        {getFieldTypeLabel(definition.type)}
-                      </Badge>
-                    </div>
-                    <span className={`text-sm ${hasValue ? 'text-foreground' : 'text-muted-foreground'}`}>
-                      {displayValue}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-            {!showTitle && (
-              <div className="pt-4 border-t">
-                {renderEditButton("w-full")}
-              </div>
-            )}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+    <div className={className}>
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="text-lg font-semibold">{t('packages.metadata')}</h3>
+        {renderEditButton()}
+      </div>
+      <InfoBox>
+        {packageData.metadataDefinitions.map(definition => {
+          const value = packageData.customAttributes?.[definition.id];
+          const displayValue = formatValue(value, definition.type);
+          
+          return (
+            <div key={definition.id}>
+              <span className="text-gray-500">{definition.description}</span>
+              <span className="ml-1 text-xs text-gray-400">{getFieldTypeLabel(definition.type)}</span>
+              <span className="text-gray-500">:</span>
+              <span className="ml-2 font-medium">{displayValue}</span>
+            </div>
+          );
+        })}
+      </InfoBox>
+    </div>
   );
 };
