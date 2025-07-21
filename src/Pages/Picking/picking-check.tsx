@@ -2,7 +2,7 @@ import React, {useEffect, useState, useRef} from 'react';
 import {useParams, useNavigate} from 'react-router-dom';
 import {useTranslation} from 'react-i18next';
 import ContentTheme from '@/components/ContentTheme';
-import BarCodeScanner from '@/components/BarCodeScanner';
+import BarCodeScanner, {PackageValue} from '@/components/BarCodeScanner';
 import {useThemeContext} from '@/components/ThemeContext';
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table';
 import {Button} from '@/components/ui/button';
@@ -16,10 +16,13 @@ import {formatNumber} from '@/utils/number-utils';
 import {AddItemValue} from '@/components/BarCodeScanner/types';
 import {useStockInfo} from "@/utils/stock-info";
 import {diff} from "node:util";
+import {useAuth} from "@/components";
+import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 
 export default function PickingCheck() {
   const {id} = useParams<{ id: string }>();
   const {t} = useTranslation();
+  const {user} = useAuth();
   const navigate = useNavigate();
   const {setLoading, setError} = useThemeContext();
   const barcodeRef = useRef<any>(null);
@@ -79,11 +82,28 @@ export default function PickingCheck() {
     }
   };
 
+  const handleAddPackage = async (value: PackageValue) => {
+    try {
+      const response = await pickingService.checkPackage(parseInt(id!), value.id);
+
+      if (response.success) {
+        await loadCheckSummary();
+        barcodeRef.current?.clear();
+      } else {
+        setError(new Error(response.errorMessage || 'Failed to check package'));
+      }
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const handleCompleteCheck = async () => {
     setIsCompleting(true);
     try {
       await pickingService.completeCheck(parseInt(id!));
-      navigate('/pickingSupervisor');
+      navigate('/pickSupervisor');
     } catch (error) {
       setError(error);
     } finally {
@@ -129,6 +149,7 @@ export default function PickingCheck() {
           enabled
           unit
           onAddItem={handleAddItem}
+          onAddPackage={handleAddPackage}
         />
       }
     >
@@ -154,6 +175,7 @@ export default function PickingCheck() {
                   </Badge>
                 </p>
               </div>
+              {(user?.superUser || user?.roles?.includes(RoleType.PICKING_SUPERVISOR)) &&
               <div className="flex items-end">
                 <Button
                   onClick={handleCompleteCheck}
@@ -163,6 +185,7 @@ export default function PickingCheck() {
                   {t('completeCheck')}
                 </Button>
               </div>
+              }
             </div>
           </div>
 

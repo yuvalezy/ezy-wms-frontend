@@ -85,9 +85,13 @@ const PickingCard: React.FC<PickingCardProps> = ({picking, onUpdatePick, onStart
           }
           {user?.settings.enablePickingCheck && progressValue > 0 &&
           !picking.checkStarted ?
-            <Button type="button" variant="outline" onClick={() => onStartCheck?.(picking)}>
-              <CheckCircle className="mr-2 h-4 w-4"/>{t("startCheck")}
-            </Button>
+            !picking.hasCheck ?
+              <Button type="button" variant="outline" onClick={() => onStartCheck?.(picking)}>
+                <CheckCircle className="mr-2 h-4 w-4"/>{t("startCheck")}
+              </Button> :
+              <Button type="button" variant="outline" onClick={() => onStartCheck?.(picking)}>
+                <CheckCircle className="mr-2 h-4 w-4"/>{t("restartCheck")}
+              </Button>
             :
             <Button variant="outline" disabled>
               <CheckCircle className="mr-2 h-4 w-4"/>{t("checkStarted")}
