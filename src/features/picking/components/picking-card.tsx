@@ -14,10 +14,11 @@ import {PickingDocument} from "@/features/picking/data/picking";
 type PickingCardProps = {
   picking: PickingDocument,
   onUpdatePick?: (picking: PickingDocument) => void,
+  onStartCheck?: (picking: PickingDocument) => void,
   supervisor?: boolean
 }
 
-const PickingCard: React.FC<PickingCardProps> = ({picking, onUpdatePick, supervisor = false}) => {
+const PickingCard: React.FC<PickingCardProps> = ({picking, onUpdatePick, onStartCheck, supervisor = false}) => {
   const {t} = useTranslation();
   const navigate = useNavigate();
   const {user} = useAuth();
@@ -71,10 +72,15 @@ const PickingCard: React.FC<PickingCardProps> = ({picking, onUpdatePick, supervi
           }
         </ul>
       </CardContent>
-      {supervisor && picking.updateQuantity > 0 &&
-        <CardFooter className="flex justify-center pt-4 border-t">
-            <Button onClick={() => onUpdatePick?.(picking)}>
-                <CheckCircle className="mr-2 h-4 w-4" />{t("update")}
+      {supervisor &&
+        <CardFooter className="flex justify-center gap-2 pt-4 border-t">
+            {picking.updateQuantity > 0 &&
+              <Button onClick={() => onUpdatePick?.(picking)}>
+                  <CheckCircle className="mr-2 h-4 w-4" />{t("update")}
+              </Button>
+            }
+            <Button variant="outline" onClick={() => onStartCheck?.(picking)}>
+                {t("startCheck")}
             </Button>
         </CardFooter>
       }

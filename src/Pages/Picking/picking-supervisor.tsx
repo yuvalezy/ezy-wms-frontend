@@ -41,7 +41,7 @@ export default function PickingSupervisor() {
 
   const loadData = () => {
     setLoading(true);
-    pickingService.fetchPickings()
+    pickingService.fetchPickingsForCheck()
       .then(values => setPickings(values))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
@@ -83,6 +83,18 @@ export default function PickingSupervisor() {
       });
   };
 
+  const handleStartCheck = async (picking: PickingDocument) => {
+    setLoading(true);
+    try {
+      await pickingService.startCheck(picking.entry);
+      navigate(`/pick/${picking.entry}/check`);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <ContentTheme title={t("pickSupervisor")}>
       {pickings.length > 0 ? (
@@ -91,7 +103,8 @@ export default function PickingSupervisor() {
           <div className="block sm:hidden">
             {pickings.map((pick) => (
               <PickingCard key={pick.entry} picking={pick} supervisor={true}
-                           onUpdatePick={handleUpdatePick}/>
+                           onUpdatePick={handleUpdatePick}
+                           onStartCheck={handleStartCheck}/>
             ))}
           </div>
 
@@ -147,6 +160,9 @@ export default function PickingSupervisor() {
                         </Button>
                       </TableCell>
                       <TableCell className="text-right">
+                        <Button variant="outline" size="sm" className="cursor-pointer mr-2" onClick={() => handleStartCheck(pick)}>
+                          {t("startCheck")}
+                        </Button>
                         <Button variant="destructive" size="sm" className="cursor-pointer" onClick={() => handleCancelPick?.(pick)}>
                           <XCircle className="mr-1 h-3 w-3"/>{t("cancel")}
                         </Button>

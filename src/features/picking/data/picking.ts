@@ -1,5 +1,6 @@
 import {BinLocation, ItemDetails, ResponseStatus} from "@/features/items/data/items";
 import {PackageContentDto} from "@/features/packages/types";
+import {UnitType} from "@/features/shared/data";
 
 export enum SyncStatus {
   Pending = 'Pending',
@@ -103,4 +104,48 @@ export interface ProcessPickListResponse {
 
 export interface ProcessPickListCancelResponse extends ProcessResponse {
   transferId?: string;
+}
+
+export interface PickListCheckSession {
+  pickListId: number;
+  startedByUserId: string;
+  startedByUserName: string;
+  startedAt: Date;
+  completedAt?: Date;
+  isCompleted: boolean;
+}
+
+export interface PickListCheckItemRequest {
+  pickListId: number;
+  itemCode: string;
+  checkedQuantity: number;
+  unit: UnitType;
+  binEntry?: number;
+}
+
+export interface PickListCheckItemResponse {
+  success: boolean;
+  errorMessage?: string;
+  itemsChecked: number;
+  totalItems: number;
+}
+
+export interface PickListCheckSummaryResponse {
+  pickListId: number;
+  checkStartedAt: Date;
+  checkStartedBy: string;
+  totalItems: number;
+  itemsChecked: number;
+  discrepancyCount: number;
+  items: PickListCheckItemDetail[];
+}
+
+export interface PickListCheckItemDetail {
+  itemCode: string;
+  itemName: string;
+  pickedQuantity: number;
+  checkedQuantity: number;
+  difference: number;
+  unit: UnitType;
+  binLocation?: string;
 }

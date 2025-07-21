@@ -12,6 +12,7 @@ export enum RoleType {
   TRANSFER_REQUEST = 'TransferRequest',
   PACKAGE_MANAGEMENT = 'PackageManagement',
   PACKAGE_MANAGEMENT_SUPERVISOR = 'PackageManagementSupervisor',
+  PICKING_CHECK = 'PickingCheck',
 }
 
 export interface AuthorizationGroup {

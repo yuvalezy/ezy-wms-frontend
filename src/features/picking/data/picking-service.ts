@@ -3,7 +3,7 @@ import {
   PickingAddItemResponse,
   PickingDocument,
   pickingParameters, pickingsParameters, ProcessPickListCancelResponse, ProcessPickListResponse,
-  ProcessResponse
+  ProcessResponse, PickListCheckSession, PickListCheckItemRequest, PickListCheckItemResponse, PickListCheckSummaryResponse
 } from "@/features/picking/data/picking";
 import {UnitType} from "@/features/shared/data";
 
@@ -137,4 +137,58 @@ export const pickingService = {
       throw error;
     }
   },
+
+  async fetchPickingsForCheck(): Promise<PickingDocument[]> {
+    try {
+      const url = `picking?includeForCheck=true`;
+      const response = await axiosInstance.get<PickingDocument[]>(url);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching pickings for check:", error);
+      throw error;
+    }
+  },
+
+  async startCheck(pickListId: number): Promise<PickListCheckSession> {
+    try {
+      const url = `picking/${pickListId}/check/start`;
+      const response = await axiosInstance.post<PickListCheckSession>(url);
+      return response.data;
+    } catch (error) {
+      console.error("Error starting check:", error);
+      throw error;
+    }
+  },
+
+  async checkItem(pickListId: number, request: Omit<PickListCheckItemRequest, 'pickListId'>): Promise<PickListCheckItemResponse> {
+    try {
+      const url = `picking/${pickListId}/check/item`;
+      const response = await axiosInstance.post<PickListCheckItemResponse>(url, request);
+      return response.data;
+    } catch (error) {
+      console.error("Error checking item:", error);
+      throw error;
+    }
+  },
+
+  async getCheckSummary(pickListId: number): Promise<PickListCheckSummaryResponse> {
+    try {
+      const url = `picking/${pickListId}/check/summary`;
+      const response = await axiosInstance.get<PickListCheckSummaryResponse>(url);
+      return response.data;
+    } catch (error) {
+      console.error("Error getting check summary:", error);
+      throw error;
+    }
+  },
+
+  async completeCheck(pickListId: number): Promise<void> {
+    try {
+      const url = `picking/${pickListId}/check/complete`;
+      await axiosInstance.post(url);
+    } catch (error) {
+      console.error("Error completing check:", error);
+      throw error;
+    }
+  }
 }
