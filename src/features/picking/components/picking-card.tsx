@@ -10,6 +10,7 @@ import {CheckCircle} from "lucide-react";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {formatNumber} from "@/utils/number-utils";
 import {PickingDocument} from "@/features/picking/data/picking";
+import {PickingCheckButton} from "@/features/picking/components/picking-check-button";
 
 type PickingCardProps = {
   picking: PickingDocument,
@@ -83,28 +84,25 @@ const PickingCard: React.FC<PickingCardProps> = ({picking, onUpdatePick, onStart
                   <CheckCircle className="mr-2 h-4 w-4"/>{t("update")}
               </Button>
           }
-          {user?.settings.enablePickingCheck && progressValue > 0 &&
-          !picking.checkStarted ?
-            !picking.hasCheck ?
-              <Button type="button" variant="outline" onClick={() => onStartCheck?.(picking)}>
-                <CheckCircle className="mr-2 h-4 w-4"/>{t("startCheck")}
-              </Button> :
-              <Button type="button" variant="outline" onClick={() => onStartCheck?.(picking)}>
-                <CheckCircle className="mr-2 h-4 w-4"/>{t("restartCheck")}
-              </Button>
-            :
-            <Button variant="outline" disabled>
-              <CheckCircle className="mr-2 h-4 w-4"/>{t("checkStarted")}
-            </Button>
-          }
+          {user?.settings.enablePickingCheck && progressValue > 0 && (
+            <PickingCheckButton
+              picking={picking}
+              progressValue={progressValue}
+              onStartCheck={onStartCheck}
+              size="default"
+              className=""
+            />
+          )}
         </CardFooter> :
-        user?.settings.enablePickingCheck && picking.checkStarted ?
-          <Button type="button" variant="outline" size="sm" className="cursor-pointer mr-2"
-                  disabled={progressValue === 0}
-                  onClick={() => navigate(`/pick/${picking.entry}/check`)}
-          >
-            <CheckCircle className="mr-2 h-4 w-4"/>{t("check")}
-          </Button> : null
+        user?.settings.enablePickingCheck && picking.checkStarted ? (
+          <CardFooter className="flex justify-center gap-2 pt-4 border-t">
+            <Button type="button" variant="outline" size="sm" className="cursor-pointer"
+                    onClick={() => navigate(`/pick/${picking.entry}/check`)}
+            >
+              <CheckCircle className="mr-2 h-4 w-4"/>{t("check")}
+            </Button>
+          </CardFooter>
+        ) : null
       }
     </Card>
   );

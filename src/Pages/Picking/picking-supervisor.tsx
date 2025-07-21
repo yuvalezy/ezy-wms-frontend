@@ -19,6 +19,7 @@ import {PickingDocument, SyncStatus} from "@/features/picking/data/picking";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {formatNumber} from "@/utils/number-utils";
 import {pickingService} from "@/features/picking/data/picking-service";
+import {PickingCheckButton} from "@/features/picking/components/picking-check-button";
 
 export default function PickingSupervisor() {
   const {t} = useTranslation();
@@ -41,7 +42,7 @@ export default function PickingSupervisor() {
 
   const loadData = () => {
     setLoading(true);
-    pickingService.fetchPickings()
+    pickingService.fetchPickings({displayCompleted: true})
       .then(values => setPickings(values))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
@@ -95,6 +96,10 @@ export default function PickingSupervisor() {
     }
   };
 
+  const displaySalesOrders = pickings.find(picking => picking.salesOrders > 0) != null;
+  const displayInvoices = pickings.find(picking => picking.invoices > 0) != null;
+  const displayTransfers = pickings.find(picking => picking.transfers > 0) != null;
+
   return (
     <ContentTheme title={t("pickSupervisor")}>
       {pickings.length > 0 ? (
@@ -115,9 +120,9 @@ export default function PickingSupervisor() {
                 <TableRow>
                   <TableHead>{t('number')}</TableHead>
                   <TableHead>{t('date')}</TableHead>
-                  <TableHead>{t('salesOrders')}</TableHead>
-                  <TableHead>{t('invoices')}</TableHead>
-                  <TableHead>{t('transferRequests')}</TableHead>
+                  {displaySalesOrders && <TableHead>{t('salesOrders')}</TableHead>}
+                  {displayInvoices && <TableHead>{t('invoices')}</TableHead>}
+                  {displayTransfers && <TableHead>{t('transferRequests')}</TableHead>}
                   <TableHead>{t('progress')}</TableHead>
                   <TableHead>{t('comment')}</TableHead>
                   <TableHead className="text-right"></TableHead>
@@ -142,9 +147,9 @@ export default function PickingSupervisor() {
                         )}
                       </TableCell>
                       <TableCell>{dateFormat(new Date(pick.date))}</TableCell>
-                      <TableCell>{pick.salesOrders || '-'}</TableCell>
-                      <TableCell>{pick.invoices || '-'}</TableCell>
-                      <TableCell>{pick.transfers || '-'}</TableCell>
+                      {displaySalesOrders && <TableCell>{pick.salesOrders || '-'}</TableCell>}
+                      {displayInvoices && <TableCell>{pick.invoices || '-'}</TableCell>}
+                      {displayTransfers && <TableCell>{pick.transfers || '-'}</TableCell>}
                       <TableCell>
                         <div className="flex items-center space-x-2">
                           <Progress value={progressValue} className="w-20"/>
@@ -160,20 +165,13 @@ export default function PickingSupervisor() {
                         </Button>
                       </TableCell>
                       <TableCell className="text-right">
-                        {user?.settings.enablePickingCheck &&
-                        !pick.checkStarted ?
-                          <Button type="button" variant="outline" size="sm" className="cursor-pointer mr-2"
-                                  disabled={progressValue === 0}
-                                  onClick={() => handleStartCheck(pick)}>
-                            <CheckCircle className="mr-2 h-4 w-4"/>{t("startCheck")}
-                          </Button> :
-
-                          <Button type="button" variant="outline" size="sm" className="cursor-pointer mr-2"
-                                  onClick={() => navigate(`/pick/${pick.entry}/check`)}
-                          >
-                            <CheckCircle className="mr-2 h-4 w-4"/>{t("checkStarted")}
-                          </Button>
-                        }
+                        {user?.settings.enablePickingCheck && (
+                          <PickingCheckButton
+                            picking={pick}
+                            progressValue={progressValue}
+                            onStartCheck={handleStartCheck}
+                          />
+                        )}
                         <Button variant="destructive" size="sm" className="cursor-pointer"
                                 onClick={() => handleCancelPick?.(pick)}>
                           <XCircle className="mr-1 h-3 w-3"/>{t("cancel")}

@@ -22,6 +22,8 @@
   "startCheck": "Start Check",
   "checkStarted": "Check Started",
   "check": "Check",
+  "restartCheck": "Restart Check",
+  "viewCheck": "View Check",
   "pickingCheck": "Picking Check",
   "startedBy": "Started By",
   "progress": "Progress",

@@ -87,6 +87,7 @@ export type pickingsParameters = {
   entry?: number;
   detail?: boolean;
   availableBins?: boolean;
+  displayCompleted?: boolean;
   status?: PickStatus[];
 }
 

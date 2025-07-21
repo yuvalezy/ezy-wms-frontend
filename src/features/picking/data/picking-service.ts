@@ -13,6 +13,7 @@ import {
   PickListCheckSummaryResponse, PickListCheckPackageResponse
 } from "@/features/picking/data/picking";
 import {UnitType} from "@/features/shared/data";
+import processAlert from "@/components/ProcessAlert";
 
 export const pickingService = {
   async fetchPicking(params: pickingParameters): Promise<PickingDocument> {
@@ -58,6 +59,10 @@ export const pickingService = {
 
         if (params.availableBins) {
           queryParams.append("availableBins", "true");
+        }
+
+        if (params.displayCompleted) {
+          queryParams.append("displayCompleted", "true");
         }
       }
 

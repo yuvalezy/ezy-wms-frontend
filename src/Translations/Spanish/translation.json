@@ -22,6 +22,8 @@
   "startCheck": "Iniciar Verificación",
   "checkStarted": "Verificación Iniciada",
   "check": "Verificación",
+  "restartCheck": "Reiniciar Verificación",
+  "viewCheck": "Ver Verificación",
   "pickingCheck": "Verificación de Picking",
   "startedBy": "Iniciado por",
   "progress": "Progreso",
