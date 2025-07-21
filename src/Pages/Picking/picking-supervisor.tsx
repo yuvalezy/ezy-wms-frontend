@@ -9,7 +9,7 @@ import PickingCard from "@/features/picking/components/picking-card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Button} from "@/components/ui/button";
 import {Progress} from "@/components/ui/progress";
-import {RefreshCw, XCircle} from "lucide-react";
+import {CheckCircle, RefreshCw, XCircle, Eye} from "lucide-react";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "@/components/AppContext";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
@@ -19,6 +19,7 @@ import {PickingDocument, SyncStatus} from "@/features/picking/data/picking";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {formatNumber} from "@/utils/number-utils";
 import {pickingService} from "@/features/picking/data/picking-service";
+import {PickingCheckButton} from "@/features/picking/components/picking-check-button";
 
 export default function PickingSupervisor() {
   const {t} = useTranslation();
@@ -41,7 +42,7 @@ export default function PickingSupervisor() {
 
   const loadData = () => {
     setLoading(true);
-    pickingService.fetchPickings()
+    pickingService.fetchPickings({displayCompleted: true})
       .then(values => setPickings(values))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
@@ -83,6 +84,22 @@ export default function PickingSupervisor() {
       });
   };
 
+  const handleStartCheck = async (picking: PickingDocument) => {
+    setLoading(true);
+    try {
+      await pickingService.startCheck(picking.entry);
+      navigate(`/pick/${picking.entry}/check`);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const displaySalesOrders = pickings.find(picking => picking.salesOrders > 0) != null;
+  const displayInvoices = pickings.find(picking => picking.invoices > 0) != null;
+  const displayTransfers = pickings.find(picking => picking.transfers > 0) != null;
+
   return (
     <ContentTheme title={t("pickSupervisor")}>
       {pickings.length > 0 ? (
@@ -91,7 +108,8 @@ export default function PickingSupervisor() {
           <div className="block sm:hidden">
             {pickings.map((pick) => (
               <PickingCard key={pick.entry} picking={pick} supervisor={true}
-                           onUpdatePick={handleUpdatePick}/>
+                           onUpdatePick={handleUpdatePick}
+                           onStartCheck={handleStartCheck}/>
             ))}
           </div>
 
@@ -102,13 +120,12 @@ export default function PickingSupervisor() {
                 <TableRow>
                   <TableHead>{t('number')}</TableHead>
                   <TableHead>{t('date')}</TableHead>
-                  <TableHead>{t('salesOrders')}</TableHead>
-                  <TableHead>{t('invoices')}</TableHead>
-                  <TableHead>{t('transferRequests')}</TableHead>
+                  {displaySalesOrders && <TableHead>{t('salesOrders')}</TableHead>}
+                  {displayInvoices && <TableHead>{t('invoices')}</TableHead>}
+                  {displayTransfers && <TableHead>{t('transferRequests')}</TableHead>}
                   <TableHead>{t('progress')}</TableHead>
                   <TableHead>{t('comment')}</TableHead>
-                  <TableHead className="text-right"></TableHead>
-                  <TableHead className="text-right"></TableHead>
+                  <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -129,9 +146,9 @@ export default function PickingSupervisor() {
                         )}
                       </TableCell>
                       <TableCell>{dateFormat(new Date(pick.date))}</TableCell>
-                      <TableCell>{pick.salesOrders || '-'}</TableCell>
-                      <TableCell>{pick.invoices || '-'}</TableCell>
-                      <TableCell>{pick.transfers || '-'}</TableCell>
+                      {displaySalesOrders && <TableCell>{pick.salesOrders || '-'}</TableCell>}
+                      {displayInvoices && <TableCell>{pick.invoices || '-'}</TableCell>}
+                      {displayTransfers && <TableCell>{pick.transfers || '-'}</TableCell>}
                       <TableCell>
                         <div className="flex items-center space-x-2">
                           <Progress value={progressValue} className="w-20"/>
@@ -140,16 +157,36 @@ export default function PickingSupervisor() {
                       </TableCell>
                       <TableCell>{pick.remarks || '-'}</TableCell>
                       <TableCell className="text-right">
-                        <Button disabled={pick.syncStatus !== SyncStatus.Pending} size="sm"
-                                className={pick.syncStatus !== SyncStatus.Pending ? "cursor-not-allowed" : "cursor-pointer"}
-                                onClick={() => handleUpdatePick?.(pick)}>
-                          <RefreshCw className="mr-1 h-3 w-3"/>{t("sync")}
-                        </Button>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Button variant="destructive" size="sm" className="cursor-pointer" onClick={() => handleCancelPick?.(pick)}>
-                          <XCircle className="mr-1 h-3 w-3"/>{t("cancel")}
-                        </Button>
+                        <div className="flex justify-end gap-2 flex-wrap">
+                          <Button disabled={pick.syncStatus !== SyncStatus.Pending} size="sm"
+                                  className={pick.syncStatus !== SyncStatus.Pending ? "cursor-not-allowed" : "cursor-pointer"}
+                                  onClick={() => handleUpdatePick?.(pick)}>
+                            <RefreshCw className="mr-1 h-3 w-3"/>{t("sync")}
+                          </Button>
+                          {user?.settings.enablePickingCheck && (
+                            <PickingCheckButton
+                              picking={pick}
+                              progressValue={progressValue}
+                              onStartCheck={handleStartCheck}
+                              showViewButton={false}
+                            />
+                          )}
+                          {user?.settings.enablePickingCheck && pick.hasCheck && !pick.checkStarted && (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() => navigate(`/pick/${pick.entry}/check`)}
+                            >
+                              <Eye className="mr-2 h-4 w-4"/>
+                              {t("viewCheck")}
+                            </Button>
+                          )}
+                          <Button variant="destructive" size="sm" className="cursor-pointer"
+                                  onClick={() => handleCancelPick?.(pick)}>
+                            <XCircle className="mr-1 h-3 w-3"/>{t("cancel")}
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   );

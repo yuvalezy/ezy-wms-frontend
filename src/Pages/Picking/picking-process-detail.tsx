@@ -1,7 +1,7 @@
 import ContentTheme from "@/components/ContentTheme";
 import {useNavigate} from "react-router-dom";
 import React from "react";
-import {Alert, AlertDescription, AlertTitle} from "@/components";
+import {Alert, AlertDescription, AlertTitle, useAuth} from "@/components";
 import {useTranslation} from "react-i18next";
 import BarCodeScanner from "@/components/BarCodeScanner";
 import PickingProcessDetailContent from "@/features/picking/components/picking-process-detail-content";
@@ -14,6 +14,7 @@ export default function PickingProcessDetail() {
   const {t} = useTranslation();
   const navigate = useNavigate();
   const o = useObjectName();
+  const {user} = useAuth();
   const {
     idParam,
     type,
@@ -27,6 +28,7 @@ export default function PickingProcessDetail() {
     handleAddItem,
     handleAddPackage,
     pickPackOnly,
+    currentPackage,
   } = usePickingProcessDetailData();
   const titleBreadcrumbs = [
     {label: `${idParam}`, onClick: () => navigate(`/pick/${idParam}`)},
@@ -43,8 +45,11 @@ export default function PickingProcessDetail() {
                     {detail.totalOpenItems > 0 && binLocation &&
                         <BarCodeScanner ref={barcodeRef}
                                         unit
+                                        enablePackage={user!.settings!.enablePackages}
+                                        enablePackageCreate={false}
+                                        currentPackage={currentPackage}
                                         pickPackOnly={pickPackOnly}
-                                        onAddItem={(value) => handleAddItem(value.item.code, value.item.barcode ?? "", value.unit, t)}
+                                        onAddItem={(value) => handleAddItem(value, t)}
                                         onAddPackage={handleAddPackage}
                                         enabled={enable}/>}
                     {!binLocation && detail.totalOpenItems > 0 &&

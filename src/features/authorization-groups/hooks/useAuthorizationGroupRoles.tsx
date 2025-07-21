@@ -1,8 +1,10 @@
 import {RoleInfo, RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {useTranslation} from "react-i18next";
+import {useAuth} from "@/components";
 
 export const useAuthorizationGroupRoles = () => {
   const {t} = useTranslation();
+  const {user} = useAuth();
 
   const roleInfoMap = new Map<RoleType, RoleInfo>([
     [RoleType.GOODS_RECEIPT, {
@@ -41,6 +43,24 @@ export const useAuthorizationGroupRoles = () => {
       description: t("authorizations.rolePickingSupervisorDescription"),
       category: "Supervision"
     }],
+    ...(user?.settings?.enablePickingCheck ? [[RoleType.PICKING, {
+      role: RoleType.PICKING,
+      displayName: t("authorizations.rolePickingCheck"),
+      description: t("authorizations.rolePickingCheckDescription"),
+      category: "Operations",
+    }] as [RoleType, RoleInfo]] : []),
+    // [RoleType.PACKAGE_MANAGEMENT, {
+    //   role: RoleType.PACKAGE_MANAGEMENT,
+    //   displayName: t("authorizations.rolePackageManagement"),
+    //   description: t("authorizations.rolePackageManagementDescription"),
+    //   category: "Operations"
+    // }],
+    // [RoleType.PACKAGE_MANAGEMENT_SUPERVISOR, {
+    //   role: RoleType.PACKAGE_MANAGEMENT_SUPERVISOR,
+    //   displayName: t("authorizations.rolePackageManagementSupervisor"),
+    //   description: t("authorizations.rolePackageManagementSupervisorDescription"),
+    //   category: "Supervision"
+    // }],
     [RoleType.COUNTING, {
       role: RoleType.COUNTING,
       displayName: t("authorizations.roleCounting"),
@@ -65,7 +85,7 @@ export const useAuthorizationGroupRoles = () => {
       description: t("authorizations.roleTransferSupervisorDescription"),
       category: "Supervision"
     }],
-    // [RoleType.TRANSFER_REQUEST, {
+
     //   role: RoleType.TRANSFER_REQUEST,
     //   displayName: t("authorizations.roleTransferRequest"),
     //   description: t("authorizations.roleTransferRequestDescription"),

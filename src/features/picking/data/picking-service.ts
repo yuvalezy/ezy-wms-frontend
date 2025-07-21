@@ -2,10 +2,18 @@ import {axiosInstance} from "@/utils/axios-instance";
 import {
   PickingAddItemResponse,
   PickingDocument,
-  pickingParameters, pickingsParameters, ProcessPickListCancelResponse, ProcessPickListResponse,
-  ProcessResponse
+  pickingParameters,
+  pickingsParameters,
+  ProcessPickListCancelResponse,
+  ProcessPickListResponse,
+  ProcessResponse,
+  PickListCheckSession,
+  PickListCheckItemRequest,
+  PickListCheckItemResponse,
+  PickListCheckSummaryResponse, PickListCheckPackageResponse
 } from "@/features/picking/data/picking";
 import {UnitType} from "@/features/shared/data";
+import processAlert from "@/components/ProcessAlert";
 
 export const pickingService = {
   async fetchPicking(params: pickingParameters): Promise<PickingDocument> {
@@ -52,6 +60,10 @@ export const pickingService = {
         if (params.availableBins) {
           queryParams.append("availableBins", "true");
         }
+
+        if (params.displayCompleted) {
+          queryParams.append("displayCompleted", "true");
+        }
       }
 
       const url = `Picking?${queryParams.toString()}`;
@@ -72,7 +84,8 @@ export const pickingService = {
     itemCode: string;
     quantity: number;
     binEntry: number;
-    unit: UnitType
+    unit: UnitType;
+    packageId: string | undefined
   }): Promise<PickingAddItemResponse> {
     try {
       const url = `picking/addItem`;
@@ -91,13 +104,13 @@ export const pickingService = {
     entry: number;
     packageId: string;
     binEntry?: number;
-  }) : Promise<ProcessPickListResponse> {
+  }): Promise<ProcessPickListResponse> {
     try {
       const url = `picking/addPackage`;
 
       const response = await axiosInstance.post<ProcessPickListResponse>(url, params);
       return response.data;
-    }catch (error) {
+    } catch (error) {
       console.error("Error adding package:", error);
       throw error;
     }
@@ -137,4 +150,59 @@ export const pickingService = {
       throw error;
     }
   },
+
+  async startCheck(pickListId: number): Promise<PickListCheckSession> {
+    try {
+      const url = `picking/${pickListId}/check/start`;
+      const response = await axiosInstance.post<PickListCheckSession>(url);
+      return response.data;
+    } catch (error) {
+      console.error("Error starting check:", error);
+      throw error;
+    }
+  },
+
+  async checkItem(pickListId: number, request: Omit<PickListCheckItemRequest, 'pickListId'>): Promise<PickListCheckItemResponse> {
+    try {
+      const url = `picking/${pickListId}/check/item`;
+      const response = await axiosInstance.post<PickListCheckItemResponse>(url, request);
+      return response.data;
+    } catch (error) {
+      console.error("Error checking item:", error);
+      throw error;
+    }
+  },
+
+  async checkPackage(pickListId: number, packageId: string): Promise<PickListCheckPackageResponse> {
+    try {
+      const url = `picking/${pickListId}/check/package`;
+      const response = await axiosInstance.post<PickListCheckPackageResponse>(url, {packageId});
+      return response.data;
+    } catch (error) {
+      console.error("Error checking package:", error);
+      throw error;
+    }
+  },
+
+
+  async getCheckSummary(pickListId: number): Promise<PickListCheckSummaryResponse> {
+    try {
+      const url = `picking/${pickListId}/check/summary`;
+      const response = await axiosInstance.get<PickListCheckSummaryResponse>(url);
+      return response.data;
+    } catch (error) {
+      console.error("Error getting check summary:", error);
+      throw error;
+    }
+  },
+
+  async completeCheck(pickListId: number): Promise<void> {
+    try {
+      const url = `picking/${pickListId}/check/complete`;
+      await axiosInstance.post(url);
+    } catch (error) {
+      console.error("Error completing check:", error);
+      throw error;
+    }
+  }
 }

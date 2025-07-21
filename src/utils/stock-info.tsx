@@ -15,15 +15,17 @@ export const useStockInfo = () => {
   const {defaultUnit, unitSelection} = useAuth();
 
   return (params: StockInfoParams) => {
+    const isNegative = params.quantity < 0;
+    const quantity = Math.abs(params.quantity);
     const purPackMsr = params.purPackMsr && params.purPackMsr.length > 0 ? params.purPackMsr : t('packUnit');
     const buyUnitMsr = params.buyUnitMsr && params.buyUnitMsr.length > 0 ? params.buyUnitMsr : t('buyUnit');
     const unitMsr = t('units');
     if (!unitSelection) {
       const defaultUnitMsr = defaultUnit === UnitType.Pack ? purPackMsr : defaultUnit === UnitType.Dozen ? buyUnitMsr : unitMsr;
-      return `${params.quantity} ${defaultUnitMsr}`;
+      return `${isNegative ? '-' : ''}${quantity} ${defaultUnitMsr}`;
     }
-    const packages = Math.floor(params.quantity / (params.numInBuy * params.purPackUn));
-    const remainingForDozens = params.quantity % (params.numInBuy * params.purPackUn);
+    const packages = Math.floor(quantity / (params.numInBuy * params.purPackUn));
+    const remainingForDozens = quantity % (params.numInBuy * params.purPackUn);
     const dozens = Math.floor(remainingForDozens / params.numInBuy);
     const units = remainingForDozens % params.numInBuy;
     let response = '';
@@ -44,6 +46,6 @@ export const useStockInfo = () => {
     }
     if (response.length === 0)
       response = '0';
-    return response;
+    return isNegative ? `-${response}` : response;
   };
 }

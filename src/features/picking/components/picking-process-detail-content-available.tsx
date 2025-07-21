@@ -81,13 +81,7 @@ export const PickingProcessDetailContentAvailable = ({items}: PickingProcessDeta
                 &nbsp;
               </TableCell>
               <TableCell>
-                {stockInfo({
-                  quantity: 0, //todo apply picked
-                  numInBuy: row.numInBuy,
-                  buyUnitMsr: row.buyUnitMsr,
-                  purPackUn: row.purPackUn,
-                  purPackMsr: row.purPackMsr,
-                })}
+                &nbsp;
               </TableCell>
               <TableCell>
                 {stockInfo({

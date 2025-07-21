@@ -1,6 +1,7 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useRef, useState} from "react";
 import {
+  AddItemValue,
   BarCodeScannerRef,
   BinLocationScannerRef,
   BoxConfirmationDialogRef,
@@ -32,6 +33,7 @@ export const usePickingProcessDetailData = () => {
   const binLocationRef = useRef<BinLocationScannerRef>(null);
   const [binLocation, setBinLocation] = useState<BinLocation | null>(null);
   const [pickPackOnly, setPickPackOnly] = useState(false);
+  const [currentPackage, setCurrentPackage] = useState<PackageValue | null | undefined>(null);
 
   useEffect(() => {
     [idParam, typeParam, entryParam].forEach((p, index) => {
@@ -106,15 +108,18 @@ export const usePickingProcessDetailData = () => {
       .finally(() => setLoading(false));
   }
 
-
-  function handleAddItem(itemCode: string, barcode: string, unit: UnitType, t: (key: string) => string) {
+  function handleAddItem(value: AddItemValue, t: (key: string) => string) {
     boxConfirmationDialogRef?.current?.show(false);
     barcodeRef?.current?.clear();
     if (id == null || type == null || entry == null || binLocation == null) {
       return;
     }
+    const itemCode = value.item.code;
+    const unit = value.unit;
+    const barcode = value.item.barcode ?? "";
+    const packageId = value.package?.id;
     setLoading(true);
-    pickingService.addItem({id, type, entry, itemCode, quantity: 1, binEntry: binLocation.entry, unit})
+    pickingService.addItem({id, type, entry, itemCode, quantity: 1, binEntry: binLocation.entry, unit, packageId})
       .then((data) => {
         if (data.closedDocument) {
           setError(StringFormat(t("pickedIsClosed"), id));
@@ -228,5 +233,6 @@ export const usePickingProcessDetailData = () => {
     handleAddItem,
     handleAddPackage,
     pickPackOnly,
+    currentPackage,
   }
 }

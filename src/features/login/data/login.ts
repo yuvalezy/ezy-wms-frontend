@@ -28,6 +28,7 @@ export interface ApplicationSettings {
   defaultUnitType: UnitType;
   enableUnitSelection: boolean;
   idleLogoutTimeout?: number | null;
+  enablePickingCheck: boolean;
 }
 
 export enum GoodsReceiptDocumentType {

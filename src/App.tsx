@@ -1,48 +1,49 @@
 import React, { useEffect } from 'react';
 import './App.css';
 import {BrowserRouter, Route, Routes, useNavigate} from "react-router-dom";
-import Login from "./pages/Login";
-import HomePage from "./pages/Home";
+import Login from "./Pages/Login";
+import HomePage from "./Pages/Home";
 import {AuthProvider, useAuth} from "@/components";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Unauthorized from "./components/Unauthorized";
 import NotFound from "./components/NotFound";
 import { setNavigateCallback } from "./utils/axios-instance";
-import ItemCheck from "@/pages/items/ItemCheck";
-import PickingSupervisor from "./pages/picking/picking-supervisor";
-import PickingUser from "./pages/picking/picking-user";
-import PickingProcess from "./pages/picking/picking-process";
-import PickingProcessDetail from "./pages/picking/picking-process-detail";
-import GoodsReceipt from "./pages/GoodsReceipt/GoodsReceipt";
-import GoodsReceiptProcess from "./pages/GoodsReceipt/GoodsReceiptProcess";
-import GoodsReceiptSupervisor from "./pages/GoodsReceipt/GoodsReceiptSupervisor";
-import {GoodsReceiptReport} from "./pages/GoodsReceipt/GoodsReceiptReport";
-import GoodsReceiptVSExitReport from "./pages/GoodsReceipt/GoodsReceiptVSExitReport";
-import GoodsReceiptAll from './pages/GoodsReceipt/GoodsReceiptAll';
-import CountingList from "./pages/Counting/Counting";
-import CountingProcess from "./pages/Counting/CountingProcess";
-import CountingSupervisor from "./pages/Counting/CountingSupervisor";
-import TransferUser from "./pages/transfer/transfer-user";
-import TransferSupervisor from "./pages/transfer/transfer-supervisor";
-import TransferProcess from "./pages/transfer/transfer-process";
-import TransferProcessSource from "./pages/transfer/transfer-process-source";
+import ItemCheck from "@/Pages/items/ItemCheck";
+import PickingSupervisor from "./Pages/Picking/picking-supervisor";
+import PickingUser from "./Pages/Picking/picking-user";
+import PickingProcess from "./Pages/Picking/picking-process";
+import PickingProcessDetail from "./Pages/Picking/picking-process-detail";
+import PickingCheck from "./Pages/Picking/picking-check";
+import GoodsReceipt from "./Pages/GoodsReceipt/GoodsReceipt";
+import GoodsReceiptProcess from "./Pages/GoodsReceipt/GoodsReceiptProcess";
+import GoodsReceiptSupervisor from "./Pages/GoodsReceipt/GoodsReceiptSupervisor";
+import {GoodsReceiptReport} from "./Pages/GoodsReceipt/GoodsReceiptReport";
+import GoodsReceiptVSExitReport from "./Pages/GoodsReceipt/GoodsReceiptVSExitReport";
+import GoodsReceiptAll from './Pages/GoodsReceipt/GoodsReceiptAll';
+import CountingList from "./Pages/Counting/Counting";
+import CountingProcess from "./Pages/Counting/CountingProcess";
+import CountingSupervisor from "./Pages/Counting/CountingSupervisor";
+import TransferUser from "./Pages/Transfer/transfer-user";
+import TransferSupervisor from "./Pages/Transfer/transfer-supervisor";
+import TransferProcess from "./Pages/Transfer/transfer-process";
+import TransferProcessSource from "./Pages/Transfer/transfer-process-source";
 // import TransferProcessTargetItems from "./pages/transfer/transfer-process-target-items";
 // import TransferProcessTargetItem from "./pages/transfer/transfer-process-target-item";
-import CountingSummaryReport from "./pages/Counting/CountingSummaryReport";
-import {BinCheck} from "./pages/items/BinCheck";
-import {PackageCheck} from "./pages/items/PackageCheck";
-import GoodsReceiptProcessDifferenceReport from "./pages/GoodsReceipt/GoodsReceiptProcessDifferenceReport";
-import TransferProcessTargetBins from "./pages/transfer/transfer-process-target-bins";
-import TransferRequest from "./pages/transfer/transfer-request";
+import CountingSummaryReport from "./Pages/Counting/CountingSummaryReport";
+import {BinCheck} from "./Pages/items/BinCheck";
+import {PackageCheck} from "./Pages/items/PackageCheck";
+import GoodsReceiptProcessDifferenceReport from "./Pages/GoodsReceipt/GoodsReceiptProcessDifferenceReport";
+import TransferProcessTargetBins from "./Pages/Transfer/transfer-process-target-bins";
+import TransferRequest from "./Pages/Transfer/transfer-request";
 import {Toaster} from 'sonner';
-import CancellationReasonsList from "@/pages/settings/cancellation-reasons-list";
-import UsersList from "@/pages/settings/users-list";
-import AuthorizationGroupsList from "@/pages/settings/authorization-groups-list";
+import CancellationReasonsList from "@/Pages/settings/cancellation-reasons-list";
+import UsersList from "@/Pages/settings/users-list";
+import AuthorizationGroupsList from "@/Pages/settings/authorization-groups-list";
 import AuthorizationGroupForm from "@/features/authorization-groups/components/authorization-group-form";
 import {OfflineOverlay} from "./components/OfflineOverlay";
 import {useOfflineDetection} from "./hooks/useOfflineDetection";
-import DevicesList from "@/pages/settings/devices-list";
-import {License} from "@/pages/settings/license";
+import DevicesList from "@/Pages/settings/devices-list";
+import {License} from "@/Pages/settings/license";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 
 function AppRoutes() {
@@ -164,6 +165,8 @@ function AppRoutes() {
                  element={<ProtectedRoute authorization={RoleType.PICKING} element={<PickingProcess/>}/>}/>
           <Route path="/pick/:idParam/:typeParam/:entryParam"
                  element={<ProtectedRoute authorization={RoleType.PICKING} element={<PickingProcessDetail/>}/>}/>
+          <Route path="/pick/:id/check"
+                 element={<ProtectedRoute authorizations={[RoleType.PICKING, RoleType.PICKING_SUPERVISOR]} element={<PickingCheck/>}/>}/>
           <Route path="/pickSupervisor" element={<ProtectedRoute authorization={RoleType.PICKING_SUPERVISOR}
                                                                  element={<PickingSupervisor/>}/>}/>
           {/*<Route path="/PickReport" element={<ProtectedRoute authorization={Authorization.Pick_SUPERVISOR} element={<PickReport/>}/>}/>*/}

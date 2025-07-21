@@ -1,5 +1,6 @@
 import {BinLocation, ItemDetails, ResponseStatus} from "@/features/items/data/items";
 import {PackageContentDto} from "@/features/packages/types";
+import {UnitType} from "@/features/shared/data";
 
 export enum SyncStatus {
   Pending = 'Pending',
@@ -34,6 +35,8 @@ export type PickingDocument = {
   openQuantity: number;
   updateQuantity: number;
   pickPackOnly: boolean;
+  checkStarted: boolean;
+  hasCheck: boolean;
   detail?: PickingDocumentDetail[];
 }
 export type PickingDocumentDetail = {
@@ -84,6 +87,7 @@ export type pickingsParameters = {
   entry?: number;
   detail?: boolean;
   availableBins?: boolean;
+  displayCompleted?: boolean;
   status?: PickStatus[];
 }
 
@@ -103,4 +107,66 @@ export interface ProcessPickListResponse {
 
 export interface ProcessPickListCancelResponse extends ProcessResponse {
   transferId?: string;
+}
+
+export interface PickListCheckSession {
+  pickListId: number;
+  startedByUserId: string;
+  startedByUserName: string;
+  startedAt: Date;
+  completedAt?: Date;
+  isCompleted: boolean;
+}
+
+export interface PickListCheckItemRequest {
+  pickListId: number;
+  itemCode: string;
+  checkedQuantity: number;
+  unit: UnitType;
+  binEntry?: number;
+}
+
+export interface PickListCheckItemResponse {
+  success: boolean;
+  errorMessage?: string;
+  itemsChecked: number;
+  totalItems: number;
+}
+
+export interface PickListCheckSummaryResponse {
+  pickListId: number;
+  checkStartedAt: Date;
+  checkStartedBy: string;
+  totalItems: number;
+  itemsChecked: number;
+  discrepancyCount: number;
+  items: PickListCheckItemDetail[];
+}
+
+export interface PickListCheckItemDetail {
+  itemCode: string;
+  itemName: string;
+  pickedQuantity: number;
+  checkedQuantity: number;
+  difference: number;
+  unitMeasure: string;
+  quantityInUnit: number;
+  packMeasure: string;
+  quantityInPack: number;
+}
+
+export interface PickListCheckPackageResponse {
+  errorMessage?: string;
+  status: ResponseStatus;
+  success: boolean;
+  itemsChecked: number;
+  totalItems: number;
+  packageBarcode: string;
+  checkedItems: CheckedPackageItem[];
+}
+
+export interface CheckedPackageItem {
+  itemCode: string;
+  itemName: string;
+  quantity: number;
 }
