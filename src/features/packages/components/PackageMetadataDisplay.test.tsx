@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { PackageMetadataDisplay } from './PackageMetadataDisplay';
-import { PackageDto, PackageStatus, MetadataFieldType } from '../types';
+import { PackageDto, PackageStatus, MetadataFieldType, PackageMetadataDefinition } from '../types';
 
 // Mock i18n
 jest.mock('react-i18next', () => ({
@@ -23,7 +23,7 @@ jest.mock('react-i18next', () => ({
 }));
 
 const createMockPackage = (
-  metadataDefinitions = [],
+  metadataDefinitions: PackageMetadataDefinition[] = [],
   customAttributes = {}
 ): PackageDto => ({
   id: '123e4567-e89b-12d3-a456-426614174000',
@@ -41,7 +41,7 @@ const createMockPackage = (
   locationHistory: [],
   metadataDefinitions,
   createdBy: {
-    guid: 'user-123',
+    id: 'user-123',
     name: 'Test User'
   }
 });
@@ -130,7 +130,7 @@ describe('PackageMetadataDisplay', () => {
     expect(screen.getByText('Not set')).toBeInTheDocument();
   });
 
-  test('can hide title when showTitle is false', () => {
+  test('renders metadata title', () => {
     const metadataDefinitions = [
       { id: 'volume', description: 'Volume', type: MetadataFieldType.Decimal }
     ];
@@ -138,9 +138,9 @@ describe('PackageMetadataDisplay', () => {
     const customAttributes = { volume: 10.5 };
     const packageData = createMockPackage(metadataDefinitions, customAttributes);
     
-    render(<PackageMetadataDisplay packageData={packageData} showTitle={false} />);
+    render(<PackageMetadataDisplay packageData={packageData} />);
     
-    expect(screen.queryByText('Metadata')).not.toBeInTheDocument();
+    expect(screen.getByText('Metadata')).toBeInTheDocument();
     expect(screen.getByText('Volume')).toBeInTheDocument();
   });
 });

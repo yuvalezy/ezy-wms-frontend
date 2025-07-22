@@ -112,7 +112,7 @@ const DeviceStatusForm: React.FC<DeviceStatusFormProps> = ({device, open, onOpen
               control={form.control}
               name="reason"
               rules={{
-                required: t('reasonRequired'),
+                required: form.watch('status') !== DeviceStatus.Active ? t('reasonRequired') : false,
                 minLength: {
                   value: 10,
                   message: t('reasonMinLength')
@@ -124,7 +124,9 @@ const DeviceStatusForm: React.FC<DeviceStatusFormProps> = ({device, open, onOpen
               }}
               render={({field}) => (
                 <FormItem>
-                  <FormLabel>{t('reason')} *</FormLabel>
+                  <FormLabel>
+                    {t('reason')} {form.watch('status') !== DeviceStatus.Active && '*'}
+                  </FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder={t('enterReasonForStatusChange')}

@@ -22,7 +22,7 @@ export interface DeviceAuditEntry {
 
 export interface UpdateDeviceStatusRequest {
   status: DeviceStatus;
-  reason: string;
+  reason?: string;
 }
 
 export interface UpdateDeviceNameRequest {
