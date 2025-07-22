@@ -1,36 +1,40 @@
 import {RoleInfo, RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {useTranslation} from "react-i18next";
 import {useAuth} from "@/components";
+import {GoodsReceiptDocumentType} from "@/features/login/data/login";
 
 export const useAuthorizationGroupRoles = () => {
   const {t} = useTranslation();
   const {user} = useAuth();
 
   const roleInfoMap = new Map<RoleType, RoleInfo>([
-    [RoleType.GOODS_RECEIPT, {
+    // Goods Receipt
+    ...(user?.settings?.goodsReceiptType !== GoodsReceiptDocumentType.Confirmation ? [[RoleType.GOODS_RECEIPT, {
       role: RoleType.GOODS_RECEIPT,
       displayName: t("authorizations.roleGoodsReceipt"),
       description: t("authorizations.roleGoodsReceiptDescription"),
       category: "Operations"
-    }],
-    [RoleType.GOODS_RECEIPT_SUPERVISOR, {
+    }] as [RoleType, RoleInfo]] : []),
+    ...(user?.settings?.goodsReceiptType !== GoodsReceiptDocumentType.Confirmation ? [[RoleType.GOODS_RECEIPT_SUPERVISOR, {
       role: RoleType.GOODS_RECEIPT_SUPERVISOR,
       displayName: t("authorizations.roleGoodsReceiptSupervisor"),
       description: t("authorizations.roleGoodsReceiptSupervisorDescription"),
       category: "Supervision"
-    }],
-    [RoleType.GOODS_RECEIPT_CONFIRMATION, {
+    }] as [RoleType, RoleInfo]] : []),
+    // Goods Receipt Confirmation
+    ...(user?.settings?.goodsReceiptType !== GoodsReceiptDocumentType.Transactional ? [[RoleType.GOODS_RECEIPT_CONFIRMATION, {
       role: RoleType.GOODS_RECEIPT_CONFIRMATION,
       displayName: t("authorizations.roleGoodsReceiptConfirmation"),
       description: t("authorizations.roleGoodsReceiptConfirmationDescription"),
       category: "Operations"
-    }],
-    [RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR, {
+    }] as [RoleType, RoleInfo]] : []),
+    ...(user?.settings?.goodsReceiptType !== GoodsReceiptDocumentType.Transactional ? [[RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR, {
       role: RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR,
       displayName: t("authorizations.roleGoodsReceiptConfirmationSupervisor"),
       description: t("authorizations.roleGoodsReceiptConfirmationSupervisorDescription"),
       category: "Supervision"
-    }],
+    }] as [RoleType, RoleInfo]] : []),
+    // Picking
     [RoleType.PICKING, {
       role: RoleType.PICKING,
       displayName: t("authorizations.rolePicking"),
@@ -49,6 +53,7 @@ export const useAuthorizationGroupRoles = () => {
       description: t("authorizations.rolePickingCheckDescription"),
       category: "Operations",
     }] as [RoleType, RoleInfo]] : []),
+    // Package
     // [RoleType.PACKAGE_MANAGEMENT, {
     //   role: RoleType.PACKAGE_MANAGEMENT,
     //   displayName: t("authorizations.rolePackageManagement"),
@@ -61,6 +66,7 @@ export const useAuthorizationGroupRoles = () => {
     //   description: t("authorizations.rolePackageManagementSupervisorDescription"),
     //   category: "Supervision"
     // }],
+    // Counting
     [RoleType.COUNTING, {
       role: RoleType.COUNTING,
       displayName: t("authorizations.roleCounting"),
@@ -73,6 +79,7 @@ export const useAuthorizationGroupRoles = () => {
       description: t("authorizations.roleCountingSupervisorDescription"),
       category: "Supervision"
     }],
+    // Transfer
     [RoleType.TRANSFER, {
       role: RoleType.TRANSFER,
       displayName: t("authorizations.roleTransfer"),
