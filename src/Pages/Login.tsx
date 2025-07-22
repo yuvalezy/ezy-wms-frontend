@@ -37,8 +37,9 @@ export default function Login() {
   } = useLoginData();
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-md bg-white shadow-md rounded-xl p-8">
+    <div className="h-screen overflow-auto bg-gray-100">
+      <div className="min-h-full flex items-center justify-center px-4 py-8">
+        <div className="w-full max-w-md bg-white shadow-md rounded-xl p-8">
         <LoginHeader
           companyName={companyInfo?.companyName}
           loginText={t('login') || 'Login'}
@@ -95,6 +96,7 @@ export default function Login() {
           accountStatus={companyInfo?.accountStatus}
           deviceStatus={companyInfo?.deviceStatus}
         />
+        </div>
       </div>
     </div>
   );
