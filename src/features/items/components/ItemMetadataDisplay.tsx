@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Dialog,
   DialogContent,
@@ -14,7 +15,9 @@ import { ItemDetails } from '../data/items';
 import { ItemMetadataDefinition } from '../types/ItemMetadataDefinition.dto';
 import { MetadataFieldType } from '../../packages/types/MetadataFieldType.enum';
 import { ItemMetadataForm } from './ItemMetadataForm';
-import {useAuth} from "@/Components";
+import { getItemMetadata } from '../data/items-service';
+import { useAuth } from "@/Components";
+import { useThemeContext } from '@/components/ThemeContext';
 
 interface ItemMetadataDisplayProps {
   itemData: ItemDetails;
@@ -28,9 +31,13 @@ export const ItemMetadataDisplay: React.FC<ItemMetadataDisplayProps> = ({
   onItemUpdate
 }) => {
   const { t } = useTranslation();
-  const {user} = useAuth();
+  const { user } = useAuth();
+  const { setError } = useThemeContext();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [metadataValues, setMetadataValues] = useState<Record<string, any>>({});
   const definitions = user!.itemMetaData;
+  const hasMetadata = definitions && definitions.length > 0;
 
   const formatValue = (value: any, fieldType: MetadataFieldType): string => {
     if (value === null || value === undefined) {
@@ -61,10 +68,31 @@ export const ItemMetadataDisplay: React.FC<ItemMetadataDisplayProps> = ({
     }
   };
 
-  const hasMetadata = definitions && definitions.length > 0;
-  const hasValues = itemData.customAttributes && Object.keys(itemData.customAttributes).length > 0;
+  // Load metadata values from API
+  useEffect(() => {
+    const loadMetadata = async () => {
+      if (!hasMetadata) {
+        setIsLoading(false);
+        return;
+      }
 
-  const handleSave = (updatedItem: ItemDetails) => {
+      try {
+        setIsLoading(true);
+        const response = await getItemMetadata(itemData.itemCode);
+        setMetadataValues(response.metadata || {});
+      } catch (error) {
+        console.error('Failed to load item metadata:', error);
+        setError(error as Error);
+        setMetadataValues({});
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadMetadata();
+  }, [itemData.itemCode, hasMetadata, setError]);
+
+  const handleSave = async (updatedItem: ItemDetails) => {
     // Merge the updated item with the existing item data to preserve other properties
     const mergedItem: ItemDetails = {
       ...itemData,
@@ -72,6 +100,14 @@ export const ItemMetadataDisplay: React.FC<ItemMetadataDisplayProps> = ({
     };
     onItemUpdate?.(mergedItem);
     setIsDialogOpen(false);
+    
+    // Reload metadata to show updated values
+    try {
+      const response = await getItemMetadata(itemData.itemCode);
+      setMetadataValues(response.metadata || {});
+    } catch (error) {
+      console.error('Failed to reload item metadata:', error);
+    }
   };
 
   const handleCancel = () => {
@@ -95,7 +131,11 @@ export const ItemMetadataDisplay: React.FC<ItemMetadataDisplayProps> = ({
           <DialogTitle>{t('items.editMetadata')}</DialogTitle>
         </DialogHeader>
         <ItemMetadataForm
-          itemData={itemData}
+          itemData={{
+            ...itemData,
+            customAttributes: metadataValues,
+            metadataDefinitions: definitions
+          }}
           onSave={handleSave}
           onCancel={handleCancel}
           className="border-0 shadow-none"
@@ -103,6 +143,32 @@ export const ItemMetadataDisplay: React.FC<ItemMetadataDisplayProps> = ({
       </DialogContent>
     </Dialog>
   );
+
+  if (isLoading) {
+    return (
+      <div className={className}>
+        <div className="flex items-center justify-between mb-2">
+          <div>&nbsp;</div>
+          <Button variant="ghost" size="sm" className="h-8 px-2" disabled>
+            <Edit className="h-4 w-4" />
+            <span className="ml-2">{t('edit')}</span>
+          </Button>
+        </div>
+        <InfoBox>
+          {definitions?.map(definition => (
+            <div key={definition.id} className="space-y-1">
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-3 w-12" />
+                <span className="text-gray-500">:</span>
+                <Skeleton className="h-4 w-24" />
+              </div>
+            </div>
+          ))}
+        </InfoBox>
+      </div>
+    );
+  }
 
   return (
     <div className={className}>
@@ -112,7 +178,7 @@ export const ItemMetadataDisplay: React.FC<ItemMetadataDisplayProps> = ({
       </div>
       <InfoBox>
         {definitions?.map(definition => {
-          const value = itemData.customAttributes?.[definition.id];
+          const value = metadataValues[definition.id];
           const displayValue = formatValue(value, definition.type);
           
           return (

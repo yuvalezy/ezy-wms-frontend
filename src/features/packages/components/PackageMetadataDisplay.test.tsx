@@ -39,7 +39,6 @@ const createMockPackage = (
   customAttributes,
   contents: [],
   locationHistory: [],
-  metadataDefinitions,
   createdBy: {
     id: 'user-123',
     name: 'Test User'

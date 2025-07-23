@@ -24,9 +24,9 @@ export interface MetadataFormState {
   hasChanges: boolean;
 }
 
-export const useItemMetadata = (itemData?: ItemDetails) => {
+export const useItemMetadata = (itemData?: ItemDetails, metadataDefinitions?: ItemMetadataDefinition[]) => {
   const { setError } = useThemeContext();
-  const [definitions, setDefinitions] = useState<ItemMetadataDefinition[]>([]);
+  const definitions = metadataDefinitions || [];
   const [formState, setFormState] = useState<MetadataFormState>({
     fields: [],
     isValid: true,
@@ -137,14 +137,13 @@ export const useItemMetadata = (itemData?: ItemDetails) => {
     });
   }, [itemData?.customAttributes, definitions, validateFieldValue, checkForChanges]);
 
-  // Load metadata definitions from itemData
+  // Initialize form state when definitions or item data changes
   useEffect(() => {
-    if (itemData?.metadataDefinitions) {
-      setDefinitions(itemData.metadataDefinitions);
+    if (definitions && definitions.length > 0) {
       // Initialize form state with definitions and current item values
-      initializeFormState(itemData.metadataDefinitions, itemData.customAttributes || {});
+      initializeFormState(definitions, itemData?.customAttributes || {});
     }
-  }, [itemData?.metadataDefinitions, itemData?.customAttributes, initializeFormState]);
+  }, [definitions, itemData?.customAttributes, initializeFormState]);
 
   const saveMetadata = useCallback(async (itemCode: string): Promise<ItemDetails> => {
     if (!formState.isValid) {

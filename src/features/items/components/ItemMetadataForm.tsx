@@ -23,7 +23,7 @@ import { MetadataFieldType } from '../../packages/types/MetadataFieldType.enum';
 import { useItemMetadata } from '../hooks/useItemMetadata';
 
 interface ItemMetadataFormProps {
-  itemData: ItemDetails;
+  itemData: ItemDetails & { metadataDefinitions?: ItemMetadataDefinition[] };
   onSave?: (updatedItem: ItemDetails) => void;
   onCancel?: () => void;
   className?: string;
@@ -47,7 +47,7 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
     resetForm,
     getFieldValue,
     getFieldValidation
-  } = useItemMetadata(itemData);
+  } = useItemMetadata(itemData, itemData.metadataDefinitions);
 
   const form = useForm<FormData>({
     defaultValues: {}
