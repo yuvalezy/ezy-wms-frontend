@@ -33,13 +33,13 @@ const DeviceStatusBanner: React.FC<DeviceStatusBannerProps> = ({
   const { setLoading, setError } = useThemeContext();
   const { updateDeviceStatus } = useAuth();
   
-  const form = useForm<{ reason: string }>({
+  const form = useForm<{ reason?: string }>({
     defaultValues: {
       reason: ''
     }
   });
 
-  const handleActivateDevice = async (data: { reason: string }) => {
+  const handleActivateDevice = async (data: { reason?: string }) => {
     try {
       setIsActivating(true);
       setLoading(true);
@@ -47,7 +47,7 @@ const DeviceStatusBanner: React.FC<DeviceStatusBannerProps> = ({
       const currentDeviceUUID = getOrCreateDeviceUUID();
       await deviceService.updateStatus(currentDeviceUUID, {
         status: DeviceStatus.Active,
-        reason: data.reason
+        reason: data.reason || ''
       });
       
       // Update the local device status
@@ -138,7 +138,7 @@ const DeviceStatusBanner: React.FC<DeviceStatusBannerProps> = ({
           <DialogHeader>
             <DialogTitle>{t('deviceStatusBanner.activateDeviceTitle', 'Activate Device')}</DialogTitle>
             <DialogDescription>
-              {t('deviceStatusBanner.activateDeviceDescription', 'Please provide a reason for activating this device.')}
+              {t('deviceStatusBanner.activateDeviceDescription', 'You can optionally provide a reason for activating this device.')}
             </DialogDescription>
           </DialogHeader>
           
@@ -148,11 +148,6 @@ const DeviceStatusBanner: React.FC<DeviceStatusBannerProps> = ({
                 control={form.control}
                 name="reason"
                 rules={{
-                  required: t('deviceStatusBanner.reasonRequired', 'Reason is required'),
-                  minLength: {
-                    value: 10,
-                    message: t('deviceStatusBanner.reasonMinLength', 'Reason must be at least 10 characters')
-                  },
                   maxLength: {
                     value: 500,
                     message: t('deviceStatusBanner.reasonMaxLength', 'Reason must not exceed 500 characters')
@@ -160,7 +155,7 @@ const DeviceStatusBanner: React.FC<DeviceStatusBannerProps> = ({
                 }}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('deviceStatusBanner.reasonLabel', 'Reason')} *</FormLabel>
+                    <FormLabel>{t('deviceStatusBanner.reasonLabel', 'Reason (Optional)')}</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder={t('deviceStatusBanner.reasonPlaceholder', 'Enter the reason for activating this device...')}

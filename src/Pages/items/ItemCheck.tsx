@@ -43,7 +43,7 @@ export default function ItemCheck() {
   const handleSubmitAndNavigate = () => {
     const inputValue = barcodeInput.trim() || itemCodeInput.trim();
     if (inputValue) {
-      navigate(`/itemCheck/${inputValue}`);
+      navigate(`/itemCheck/${encodeURIComponent(inputValue)}`);
     }
   };
 
