@@ -18,16 +18,22 @@ export interface UserInfo {
 }
 
 export interface ApplicationSettings {
-  enablePackages: boolean;
+  // Goods Receipt
   goodsReceiptDraft: boolean;
   goodsReceiptModificationSupervisor: boolean;
   goodsReceiptCreateSupervisorRequired: boolean;
-  goodsReceiptTargetDocuments: boolean;
-  transferTargetItems: boolean;
   goodsReceiptType: GoodsReceiptDocumentType;
+  goodsReceiptTargetDocuments: boolean;
+  goodsReceiptPackages: boolean;
+  // Transfer
+  transferTargetItems: boolean;
+  // Packages & Units
+  enablePackages: boolean;
   defaultUnitType: UnitType;
   enableUnitSelection: boolean;
+  // System
   idleLogoutTimeout?: number | null;
+  // Pick List
   enablePickingCheck: boolean;
 }
 

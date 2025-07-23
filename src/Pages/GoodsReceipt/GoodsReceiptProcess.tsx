@@ -40,7 +40,7 @@ export default function GoodsReceiptProcess({confirm = false}: { confirm?: boole
                       ref={barcodeRef}
                       enabled
                       unit
-                      enablePackage={user!.settings!.enablePackages}
+                      enablePackage={user!.settings!.enablePackages && user!.settings!.goodsReceiptPackages}
                       currentPackage={currentPackage}
                       objectType={ObjectType.GoodsReceipt}
                       objectId={info?.id}
