@@ -42,6 +42,8 @@ export const PackageMetadataDisplay: React.FC<PackageMetadataDisplayProps> = ({
         return new Date(value).toLocaleDateString();
       case MetadataFieldType.Decimal:
         return typeof value === 'number' ? value.toLocaleString() : String(value);
+      case MetadataFieldType.Integer:
+        return typeof value === 'number' ? value.toLocaleString() : String(value);
       case MetadataFieldType.String:
       default:
         return String(value);
@@ -54,6 +56,8 @@ export const PackageMetadataDisplay: React.FC<PackageMetadataDisplayProps> = ({
         return t('text');
       case MetadataFieldType.Decimal:
         return t('number');
+      case MetadataFieldType.Integer:
+        return t('integer');
       case MetadataFieldType.Date:
         return t('date');
       default:

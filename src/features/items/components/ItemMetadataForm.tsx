@@ -68,6 +68,7 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
             initialValues[def.id] = date.toISOString().split('T')[0];
             break;
           case MetadataFieldType.Decimal:
+          case MetadataFieldType.Integer:
           case MetadataFieldType.String:
           default:
             initialValues[def.id] = String(currentValue);
@@ -95,6 +96,10 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
         case MetadataFieldType.Decimal:
           const numValue = parseFloat(value);
           convertedValue = isNaN(numValue) ? null : numValue;
+          break;
+        case MetadataFieldType.Integer:
+          const intValue = parseInt(value);
+          convertedValue = isNaN(intValue) ? null : intValue;
           break;
         case MetadataFieldType.Date:
           convertedValue = new Date(value);
@@ -158,7 +163,7 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
                 <Input
                   type="date"
                   {...field}
-                  disabled={definition.readOnly}
+                  disabled={definition.readOnly || metadataFormState.isLoading}
                   onChange={(e) => {
                     field.onChange(e);
                     handleFieldChange(definition.id, e.target.value);
@@ -171,7 +176,20 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
                   step="any"
                   placeholder={`${t('enterValue')} ${definition.description.toLowerCase()}`}
                   {...field}
-                  disabled={definition.readOnly}
+                  disabled={definition.readOnly || metadataFormState.isLoading}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    handleFieldChange(definition.id, e.target.value);
+                  }}
+                  className={!validation.isValid ? 'border-red-500' : ''}
+                />
+              ) : definition.type === MetadataFieldType.Integer ? (
+                <Input
+                  type="number"
+                  step="1"
+                  placeholder={`${t('enterValue')} ${definition.description.toLowerCase()}`}
+                  {...field}
+                  disabled={definition.readOnly || metadataFormState.isLoading}
                   onChange={(e) => {
                     field.onChange(e);
                     handleFieldChange(definition.id, e.target.value);
@@ -183,7 +201,7 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
                   type="text"
                   placeholder={`${t('enterValue')} ${definition.description.toLowerCase()}`}
                   {...field}
-                  disabled={definition.readOnly}
+                  disabled={definition.readOnly || metadataFormState.isLoading}
                   onChange={(e) => {
                     field.onChange(e);
                     handleFieldChange(definition.id, e.target.value);

@@ -38,6 +38,7 @@ export const ItemMetadataDisplay: React.FC<ItemMetadataDisplayProps> = ({
   const [metadataValues, setMetadataValues] = useState<Record<string, any>>({});
   const definitions = user!.itemMetaData;
   const hasMetadata = definitions && definitions.length > 0;
+  const hasEditableFields = definitions && definitions.some(def => !def.readOnly);
 
   const formatValue = (value: any, fieldType: MetadataFieldType): string => {
     if (value === null || value === undefined) {
@@ -48,6 +49,8 @@ export const ItemMetadataDisplay: React.FC<ItemMetadataDisplayProps> = ({
       case MetadataFieldType.Date:
         return new Date(value).toLocaleDateString();
       case MetadataFieldType.Decimal:
+        return typeof value === 'number' ? value.toLocaleString() : String(value);
+      case MetadataFieldType.Integer:
         return typeof value === 'number' ? value.toLocaleString() : String(value);
       case MetadataFieldType.String:
       default:
@@ -61,6 +64,8 @@ export const ItemMetadataDisplay: React.FC<ItemMetadataDisplayProps> = ({
         return t('text');
       case MetadataFieldType.Decimal:
         return t('number');
+      case MetadataFieldType.Integer:
+        return t('integer');
       case MetadataFieldType.Date:
         return t('date');
       default:
@@ -118,41 +123,49 @@ export const ItemMetadataDisplay: React.FC<ItemMetadataDisplayProps> = ({
     return null;
   }
 
-  const renderEditButton = () => (
-    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <DialogTrigger asChild>
-        <Button variant="ghost" size="sm" className="h-8 px-2">
-          <Edit className="h-4 w-4" />
-          <span className="ml-2">{t('edit')}</span>
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>{t('items.editMetadata')}</DialogTitle>
-        </DialogHeader>
-        <ItemMetadataForm
-          itemData={{
-            ...itemData,
-            customAttributes: metadataValues,
-            metadataDefinitions: definitions
-          }}
-          onSave={handleSave}
-          onCancel={handleCancel}
-          className="border-0 shadow-none"
-        />
-      </DialogContent>
-    </Dialog>
-  );
+  const renderEditButton = () => {
+    if (!hasEditableFields) {
+      return null;
+    }
+
+    return (
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogTrigger asChild>
+          <Button variant="ghost" size="sm" className="h-8 px-2">
+            <Edit className="h-4 w-4" />
+            <span className="ml-2">{t('edit')}</span>
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>{t('items.editMetadata')}</DialogTitle>
+          </DialogHeader>
+          <ItemMetadataForm
+            itemData={{
+              ...itemData,
+              customAttributes: metadataValues,
+              metadataDefinitions: definitions
+            }}
+            onSave={handleSave}
+            onCancel={handleCancel}
+            className="border-0 shadow-none"
+          />
+        </DialogContent>
+      </Dialog>
+    );
+  };
 
   if (isLoading) {
     return (
       <div className={className}>
         <div className="flex items-center justify-between mb-2">
           <div>&nbsp;</div>
-          <Button variant="ghost" size="sm" className="h-8 px-2" disabled>
-            <Edit className="h-4 w-4" />
-            <span className="ml-2">{t('edit')}</span>
-          </Button>
+          {hasEditableFields && (
+            <Button variant="ghost" size="sm" className="h-8 px-2" disabled>
+              <Edit className="h-4 w-4" />
+              <span className="ml-2">{t('edit')}</span>
+            </Button>
+          )}
         </div>
         <InfoBox>
           {definitions?.map(definition => (

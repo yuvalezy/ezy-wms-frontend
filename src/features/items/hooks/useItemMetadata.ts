@@ -77,6 +77,13 @@ export const useItemMetadata = (itemData?: ItemDetails, metadataDefinitions?: It
         }
         return { isValid: true };
       
+      case MetadataFieldType.Integer:
+        const intValue = typeof value === 'string' ? parseInt(value) : value;
+        if (isNaN(intValue) || !Number.isInteger(intValue)) {
+          return { isValid: false, errorMessage: 'Must be a valid integer' };
+        }
+        return { isValid: true };
+      
       case MetadataFieldType.Date:
         const dateValue = value instanceof Date ? value : new Date(value);
         if (isNaN(dateValue.getTime())) {
@@ -165,6 +172,11 @@ export const useItemMetadata = (itemData?: ItemDetails, metadataDefinitions?: It
               case MetadataFieldType.Decimal:
                 metadata[field.fieldId] = typeof field.value === 'string' 
                   ? parseFloat(field.value) 
+                  : field.value;
+                break;
+              case MetadataFieldType.Integer:
+                metadata[field.fieldId] = typeof field.value === 'string' 
+                  ? parseInt(field.value) 
                   : field.value;
                 break;
               case MetadataFieldType.Date:
