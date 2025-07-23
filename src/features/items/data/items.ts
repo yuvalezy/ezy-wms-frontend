@@ -1,4 +1,5 @@
 import {PackageStockValue} from "@/components";
+import { ItemMetadataDefinition } from '../types/ItemMetadataDefinition.dto';
 
 export type BinLocation = {
   entry: number;
@@ -33,6 +34,8 @@ export interface ItemDetails {
   purPackUn: number;
   purPackMsr?: string | null;
   customFields?: Record<string, unknown>;
+  customAttributes?: Record<string, any>;
+  metadataDefinitions?: ItemMetadataDefinition[];
 }
 
 export interface ItemCheckResponse extends ItemDetails {

@@ -5,8 +5,11 @@ import {
   ItemInfoResponse,
   ItemCheckResponse,
   ItemStockResponse,
-  UpdateItemBarCodeResponse
+  UpdateItemBarCodeResponse,
+  ItemDetails
 } from "@/features/items/data/items";
+import { ItemMetadataDefinition } from "../types/ItemMetadataDefinition.dto";
+import { UpdateItemMetadataRequest } from "../types/UpdateItemMetadataRequest.dto";
 import axios from "axios";
 
 export const itemsService = {
@@ -113,4 +116,48 @@ export const itemsService = {
       throw error;
     }
   },
-}
+
+  async getItemMetadataDefinitions(): Promise<ItemMetadataDefinition[]> {
+    try {
+      const url = `general/item-metadata-definitions`;
+      
+      const response = await axiosInstance.get<ItemMetadataDefinition[]>(url);
+      
+      return response.data;
+    } catch (error) {
+      console.error("Error getting item metadata definitions:", error);
+      throw error;
+    }
+  },
+
+  async getItemMetadata(itemCode: string): Promise<{ metadata: Record<string, any> }> {
+    try {
+      const url = `items/${itemCode}/metadata`;
+      
+      const response = await axiosInstance.get<{ metadata: Record<string, any> }>(url);
+      
+      return response.data;
+    } catch (error) {
+      console.error("Error getting item metadata:", error);
+      throw error;
+    }
+  },
+
+  async updateItemMetadata(itemCode: string, request: UpdateItemMetadataRequest): Promise<ItemDetails> {
+    try {
+      const url = `items/${itemCode}/metadata`;
+      
+      const response = await axiosInstance.put<ItemDetails>(url, request);
+      
+      return response.data;
+    } catch (error) {
+      console.error("Error updating item metadata:", error);
+      throw error;
+    }
+  },
+};
+
+// Export individual functions for use in hooks
+export const updateItemMetadata = itemsService.updateItemMetadata;
+export const getItemMetadataDefinitions = itemsService.getItemMetadataDefinitions;
+export const getItemMetadata = itemsService.getItemMetadata;
