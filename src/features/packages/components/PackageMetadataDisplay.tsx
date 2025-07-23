@@ -9,13 +9,13 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Edit } from 'lucide-react';
-import InfoBox, { InfoBoxValue } from '@/components/InfoBox';
+import InfoBox from '@/components/InfoBox';
 import { 
   PackageDto, 
-  PackageMetadataDefinition, 
-  MetadataFieldType 
+  MetadataFieldType
 } from '../types';
 import { PackageMetadataForm } from './PackageMetadataForm';
+import {useAuth} from "@/Components";
 
 interface PackageMetadataDisplayProps {
   packageData: PackageDto;
@@ -29,6 +29,7 @@ export const PackageMetadataDisplay: React.FC<PackageMetadataDisplayProps> = ({
   onPackageUpdate
 }) => {
   const { t } = useTranslation();
+  const {user} =  useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const formatValue = (value: any, fieldType: MetadataFieldType): string => {
@@ -60,8 +61,8 @@ export const PackageMetadataDisplay: React.FC<PackageMetadataDisplayProps> = ({
     }
   };
 
-  const hasMetadata = packageData.metadataDefinitions && packageData.metadataDefinitions.length > 0;
-  const hasValues = packageData.customAttributes && Object.keys(packageData.customAttributes).length > 0;
+  const definitions = user!.packageMetaData;
+  const hasMetadata = definitions && definitions.length > 0;
 
   const handleSave = (updatedPackage: PackageDto) => {
     // Merge the updated package with the existing package data to preserve contents
@@ -69,7 +70,6 @@ export const PackageMetadataDisplay: React.FC<PackageMetadataDisplayProps> = ({
       ...packageData,
       ...updatedPackage,
       contents: packageData.contents, // Preserve the original contents array
-      metadataDefinitions: packageData.metadataDefinitions // Preserve metadata definitions
     };
     onPackageUpdate?.(mergedPackage);
     setIsDialogOpen(false);
@@ -112,7 +112,7 @@ export const PackageMetadataDisplay: React.FC<PackageMetadataDisplayProps> = ({
         {renderEditButton()}
       </div>
       <InfoBox>
-        {packageData.metadataDefinitions.map(definition => {
+        {definitions.map(definition => {
           const value = packageData.customAttributes?.[definition.id];
           const displayValue = formatValue(value, definition.type);
           

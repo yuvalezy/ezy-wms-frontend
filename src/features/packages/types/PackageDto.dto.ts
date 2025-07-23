@@ -20,5 +20,4 @@ export interface PackageDto {
   customAttributes?: Record<string, any>;
   contents: PackageContentDto[];
   locationHistory?: PackageLocationHistoryDto[];
-  metadataDefinitions: PackageMetadataDefinition[];
 }

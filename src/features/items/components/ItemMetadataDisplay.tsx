@@ -14,6 +14,7 @@ import { ItemDetails } from '../data/items';
 import { ItemMetadataDefinition } from '../types/ItemMetadataDefinition.dto';
 import { MetadataFieldType } from '../../packages/types/MetadataFieldType.enum';
 import { ItemMetadataForm } from './ItemMetadataForm';
+import {useAuth} from "@/Components";
 
 interface ItemMetadataDisplayProps {
   itemData: ItemDetails;
@@ -27,7 +28,9 @@ export const ItemMetadataDisplay: React.FC<ItemMetadataDisplayProps> = ({
   onItemUpdate
 }) => {
   const { t } = useTranslation();
+  const {user} = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const definitions = user!.itemMetaData;
 
   const formatValue = (value: any, fieldType: MetadataFieldType): string => {
     if (value === null || value === undefined) {
@@ -58,7 +61,7 @@ export const ItemMetadataDisplay: React.FC<ItemMetadataDisplayProps> = ({
     }
   };
 
-  const hasMetadata = itemData.metadataDefinitions && itemData.metadataDefinitions.length > 0;
+  const hasMetadata = definitions && definitions.length > 0;
   const hasValues = itemData.customAttributes && Object.keys(itemData.customAttributes).length > 0;
 
   const handleSave = (updatedItem: ItemDetails) => {
@@ -66,7 +69,6 @@ export const ItemMetadataDisplay: React.FC<ItemMetadataDisplayProps> = ({
     const mergedItem: ItemDetails = {
       ...itemData,
       ...updatedItem,
-      metadataDefinitions: itemData.metadataDefinitions // Preserve metadata definitions
     };
     onItemUpdate?.(mergedItem);
     setIsDialogOpen(false);
@@ -105,11 +107,11 @@ export const ItemMetadataDisplay: React.FC<ItemMetadataDisplayProps> = ({
   return (
     <div className={className}>
       <div className="flex items-center justify-between mb-2">
-        <h3 className="text-lg font-semibold">{t('items.metadata')}</h3>
+        <div>&nbsp;</div>
         {renderEditButton()}
       </div>
       <InfoBox>
-        {itemData.metadataDefinitions?.map(definition => {
+        {definitions?.map(definition => {
           const value = itemData.customAttributes?.[definition.id];
           const displayValue = formatValue(value, definition.type);
           

@@ -35,7 +35,6 @@ export interface ItemDetails {
   purPackMsr?: string | null;
   customFields?: Record<string, unknown>;
   customAttributes?: Record<string, any>;
-  metadataDefinitions?: ItemMetadataDefinition[];
 }
 
 export interface ItemCheckResponse extends ItemDetails {

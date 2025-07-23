@@ -8,9 +8,11 @@ import ClickableBinCode from "@/components/ClickableBinCode";
 import {Package, MapPin, Calendar, User, Box, Grid3x3} from "lucide-react";
 import {formatDistance} from "date-fns";
 import {PackageMetadataDisplay} from "@/features/packages/components";
+import {useAuth} from "@/Components";
 
 export const PackageCheckResult: React.FC<{ packageData: PackageDto; onPackageUpdate?: (updatedPackage: PackageDto) => void }> = ({packageData: initialPackageData, onPackageUpdate}) => {
   const {t} = useTranslation();
+  const {user} = useAuth();
   const [packageData, setPackageData] = useState<PackageDto>(initialPackageData);
 
   useEffect(() => {
@@ -148,7 +150,7 @@ export const PackageCheckResult: React.FC<{ packageData: PackageDto; onPackageUp
       </Card>
 
       {/* Package Metadata */}
-      {packageData.metadataDefinitions && packageData.metadataDefinitions.length > 0 && (
+      {user?.packageMetaData && user.packageMetaData.length > 0 && (
         <PackageMetadataDisplay packageData={packageData} onPackageUpdate={handlePackageUpdate} />
       )}
 

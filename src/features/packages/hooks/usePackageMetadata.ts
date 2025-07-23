@@ -1,12 +1,13 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useThemeContext } from '@/components/ThemeContext';
-import { 
-  PackageMetadataDefinition, 
-  UpdatePackageMetadataRequest, 
-  MetadataFieldType, 
-  PackageDto 
+import {useState, useEffect, useCallback} from 'react';
+import {useThemeContext} from '@/components/ThemeContext';
+import {
+  PackageMetadataDefinition,
+  UpdatePackageMetadataRequest,
+  MetadataFieldType,
+  PackageDto
 } from '../types';
-import { updatePackageMetadata } from './usePackages';
+import {updatePackageMetadata} from './usePackages';
+import {useAuth} from "@/Components";
 
 export interface MetadataFieldValue {
   fieldId: string;
@@ -23,8 +24,8 @@ export interface MetadataFormState {
 }
 
 export const usePackageMetadata = (packageData?: PackageDto) => {
-  const { setError } = useThemeContext();
-  const [definitions, setDefinitions] = useState<PackageMetadataDefinition[]>([]);
+  const {setError} = useThemeContext();
+  const {user} = useAuth();
   const [formState, setFormState] = useState<MetadataFormState>({
     fields: [],
     isValid: true,
@@ -32,8 +33,10 @@ export const usePackageMetadata = (packageData?: PackageDto) => {
     hasChanges: false
   });
 
+  const definitions = user!.packageMetaData;
+
   const initializeFormState = useCallback((
-    defs: PackageMetadataDefinition[], 
+    defs: PackageMetadataDefinition[],
     currentValues: Record<string, any>
   ) => {
     const fields = defs.map(def => ({
@@ -53,54 +56,54 @@ export const usePackageMetadata = (packageData?: PackageDto) => {
   const validateFieldValue = useCallback((fieldId: string, value: any, defs: PackageMetadataDefinition[]) => {
     const definition = defs.find(def => def.id === fieldId);
     if (!definition) {
-      return { isValid: false, errorMessage: 'Field definition not found' };
+      return {isValid: false, errorMessage: 'Field definition not found'};
     }
 
     // Allow null/empty values - all fields are optional
     if (value === null || value === undefined || value === '') {
-      return { isValid: true };
+      return {isValid: true};
     }
 
     switch (definition.type) {
       case MetadataFieldType.String:
-        return { isValid: typeof value === 'string' };
-      
+        return {isValid: typeof value === 'string'};
+
       case MetadataFieldType.Decimal:
         const numValue = typeof value === 'string' ? parseFloat(value) : value;
         if (isNaN(numValue)) {
-          return { isValid: false, errorMessage: 'Must be a valid number' };
+          return {isValid: false, errorMessage: 'Must be a valid number'};
         }
-        return { isValid: true };
-      
+        return {isValid: true};
+
       case MetadataFieldType.Date:
         const dateValue = value instanceof Date ? value : new Date(value);
         if (isNaN(dateValue.getTime())) {
-          return { isValid: false, errorMessage: 'Must be a valid date' };
+          return {isValid: false, errorMessage: 'Must be a valid date'};
         }
-        return { isValid: true };
-      
+        return {isValid: true};
+
       default:
-        return { isValid: false, errorMessage: 'Unknown field type' };
+        return {isValid: false, errorMessage: 'Unknown field type'};
     }
   }, []);
 
   const checkForChanges = useCallback((
-    fields: MetadataFieldValue[], 
+    fields: MetadataFieldValue[],
     originalValues: Record<string, any>
   ) => {
     return fields.some(field => {
       const originalValue = originalValues[field.fieldId];
       const currentValue = field.value;
-      
+
       // Handle null/undefined comparison
       if (originalValue === null || originalValue === undefined) {
         return currentValue !== null && currentValue !== undefined && currentValue !== '';
       }
-      
+
       if (currentValue === null || currentValue === undefined || currentValue === '') {
         return true; // Changed to null/empty
       }
-      
+
       return originalValue !== currentValue;
     });
   }, []);
@@ -130,28 +133,27 @@ export const usePackageMetadata = (packageData?: PackageDto) => {
         hasChanges
       };
     });
-  }, [packageData?.customAttributes, definitions, validateFieldValue, checkForChanges]);
+  }, [packageData?.customAttributes, validateFieldValue, checkForChanges]);
 
   // Load metadata definitions from packageData
   useEffect(() => {
-    if (packageData?.metadataDefinitions) {
-      setDefinitions(packageData.metadataDefinitions);
+    if (definitions) {
       // Initialize form state with definitions and current package values
-      initializeFormState(packageData.metadataDefinitions, packageData.customAttributes || {});
+      initializeFormState(definitions, packageData!.customAttributes || {});
     }
-  }, [packageData?.metadataDefinitions, packageData?.customAttributes, initializeFormState]);
+  }, [packageData?.customAttributes, initializeFormState]);
 
   const saveMetadata = useCallback(async (packageId: string): Promise<PackageDto> => {
     if (!formState.isValid) {
       throw new Error('Form contains invalid data');
     }
 
-    setFormState(prev => ({ ...prev, isLoading: true }));
+    setFormState(prev => ({...prev, isLoading: true}));
 
     try {
       // Convert form fields to metadata object
       const metadata: Record<string, any> = {};
-      
+
       formState.fields.forEach(field => {
         if (field.value !== null && field.value !== undefined && field.value !== '') {
           const definition = definitions.find(def => def.id === field.fieldId);
@@ -159,13 +161,13 @@ export const usePackageMetadata = (packageData?: PackageDto) => {
             // Convert values to appropriate types
             switch (definition.type) {
               case MetadataFieldType.Decimal:
-                metadata[field.fieldId] = typeof field.value === 'string' 
-                  ? parseFloat(field.value) 
+                metadata[field.fieldId] = typeof field.value === 'string'
+                  ? parseFloat(field.value)
                   : field.value;
                 break;
               case MetadataFieldType.Date:
-                metadata[field.fieldId] = field.value instanceof Date 
-                  ? field.value.toISOString() 
+                metadata[field.fieldId] = field.value instanceof Date
+                  ? field.value.toISOString()
                   : new Date(field.value as string).toISOString();
                 break;
               default:
@@ -178,7 +180,7 @@ export const usePackageMetadata = (packageData?: PackageDto) => {
         }
       });
 
-      const request: UpdatePackageMetadataRequest = { metadata };
+      const request: UpdatePackageMetadataRequest = {metadata};
       const updatedPackage = await updatePackageMetadata(packageId, request);
 
       // Reset form state to reflect successful save
@@ -190,7 +192,7 @@ export const usePackageMetadata = (packageData?: PackageDto) => {
 
       return updatedPackage;
     } catch (error) {
-      setFormState(prev => ({ ...prev, isLoading: false }));
+      setFormState(prev => ({...prev, isLoading: false}));
       setError(error as Error);
       throw error;
     }
