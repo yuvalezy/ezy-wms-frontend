@@ -20,6 +20,7 @@ export const userService = {
   async create(data: UserFormData): Promise<User> {
     data = {
       ...data,
+      email: data.email ? data.email : undefined,
       authorizationGroupId: data.authorizationGroupId !== None ? data.authorizationGroupId : undefined,
       externalId: data.externalId !== None ? data.externalId : undefined
     };
@@ -31,6 +32,7 @@ export const userService = {
   async update(id: string, data: UserFormData): Promise<User> {
     data = {
       ...data,
+      email: data.email ? data.email : undefined,
       authorizationGroupId: data.authorizationGroupId !== None ? data.authorizationGroupId : undefined,
       externalId: data.externalId !== None ? data.externalId : undefined
     };
