@@ -34,6 +34,7 @@ export const usePickingProcessDetailData = () => {
   const [binLocation, setBinLocation] = useState<BinLocation | null>(null);
   const [pickPackOnly, setPickPackOnly] = useState(false);
   const [currentPackage, setCurrentPackage] = useState<PackageValue | null | undefined>(null);
+  const [pickingPackage, setPickingPackage] = useState<PackageValue | null | undefined>(null);
 
   useEffect(() => {
     [idParam, typeParam, entryParam].forEach((p, index) => {
@@ -119,7 +120,7 @@ export const usePickingProcessDetailData = () => {
     const barcode = value.item.barcode ?? "";
     const packageId = value.package?.id;
     setLoading(true);
-    pickingService.addItem({id, type, entry, itemCode, quantity: 1, binEntry: binLocation.entry, unit, packageId})
+    pickingService.addItem({id, type, entry, itemCode, quantity: 1, binEntry: binLocation.entry, unit, packageId, pickingPackageId: pickingPackage?.id})
       .then((data) => {
         if (data.closedDocument) {
           setError(StringFormat(t("pickedIsClosed"), id));
@@ -168,7 +169,7 @@ export const usePickingProcessDetailData = () => {
       return;
     }
     setLoading(true);
-    pickingService.addPackage({id, type, entry, packageId: value.id, binEntry: binLocation.entry})
+    pickingService.addPackage({id, type, entry, packageId: value.id, binEntry: binLocation.entry, pickingPackageId: pickingPackage?.id})
       .then((data) => {
         if (data.closedDocument) {
           setError(StringFormat(t("pickedIsClosed"), id));
@@ -220,6 +221,21 @@ export const usePickingProcessDetailData = () => {
     navigate(`/pick/${id}`);
   }
 
+  const handleCreatePackage = async () => {
+    setLoading(true);
+    pickingService.createPackage(id!)
+      .then((response) => {
+        setPickingPackage({id: response.id, barcode: response.barcode});
+      })
+      .catch((e) => {
+        console.error(`Error performing action: ${e}`);
+        let errorMessage = e.response?.data["exceptionMessage"] ?? `Create Package Error: ${e}`;
+        setError(errorMessage);
+        setTimeout(() => barcodeRef.current?.focus(), 100);
+      })
+      .finally(() => setLoading(false));
+  }
+
   return {
     idParam,
     type,
@@ -234,5 +250,8 @@ export const usePickingProcessDetailData = () => {
     handleAddPackage,
     pickPackOnly,
     currentPackage,
+    pickingPackage,
+    setPickingPackage,
+    handleCreatePackage,
   }
 }

@@ -14,6 +14,7 @@ import {
 } from "@/features/picking/data/picking";
 import {UnitType} from "@/features/shared/data";
 import processAlert from "@/components/ProcessAlert";
+import {PackageDto} from "@/features/packages/types";
 
 export const pickingService = {
   async fetchPicking(params: pickingParameters): Promise<PickingDocument> {
@@ -85,7 +86,8 @@ export const pickingService = {
     quantity: number;
     binEntry: number;
     unit: UnitType;
-    packageId: string | undefined
+    packageId: string | undefined,
+    pickingPackageId?: string,
   }): Promise<PickingAddItemResponse> {
     try {
       const url = `picking/addItem`;
@@ -104,6 +106,7 @@ export const pickingService = {
     entry: number;
     packageId: string;
     binEntry?: number;
+    pickingPackageId?: string;
   }): Promise<ProcessPickListResponse> {
     try {
       const url = `picking/addPackage`;
@@ -202,6 +205,17 @@ export const pickingService = {
       await axiosInstance.post(url);
     } catch (error) {
       console.error("Error completing check:", error);
+      throw error;
+    }
+  },
+
+  async createPackage(absEntry: number): Promise<PackageDto> {
+    try {
+      const url = `picking/package/${absEntry}`;
+      const response = await axiosInstance.post<PackageDto>(url);
+      return response.data;
+    } catch (error) {
+      console.error("Error creating package:", error);
       throw error;
     }
   }
