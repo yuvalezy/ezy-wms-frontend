@@ -4,11 +4,12 @@ import {Button} from "@/components/ui/button";
 import {Label} from "@/components/ui/label";
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "./ThemeContext";
-import {Check} from 'lucide-react';
+import {BoxIcon, Check} from 'lucide-react';
 
 import {BinLocation} from "@/features/items/data/items";
 import {itemsService} from "@/features/items/data/items-service";
 import {StringFormat} from "@/utils/string-utils";
+import {PackageValue} from "@/components/BarCodeScanner";
 
 export interface BinLocationScannerProps {
   label?: string | boolean;
@@ -17,6 +18,8 @@ export interface BinLocationScannerProps {
   onChanged?: (bin: BinLocation) => void;
   onClear?: () => void;
   autofocus?: boolean;
+  enablePackageCreate?: boolean
+  onCreatePackageClicked?: () => void
 }
 
 export interface BinLocationScannerRef {
@@ -33,6 +36,8 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
     label,
     showLabel = true,
     autofocus = true,
+    enablePackageCreate,
+    onCreatePackageClicked
   }, ref) => {
   const {setLoading, setError} = useThemeContext();
   const {t} = useTranslation();
@@ -104,6 +109,14 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
 
   return (
     <div>
+      {enablePackageCreate &&
+          <div className="flex justify-center">
+              <Button type="button" onClick={onCreatePackageClicked}>
+                  <BoxIcon className="h-4 w-4 mr-2"/>
+                {t("createNewPackage")}
+              </Button>
+          </div>
+      }
       {binLocation &&
         // Responsive layout for displaying selected bin and change button
           <div
@@ -118,26 +131,26 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
       }
       {!binLocation &&
           <div className="flex justify-center">
-            <form onSubmit={handleSubmit} className="w-full max-w-md">
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  {showLabel && <Label htmlFor="bin-input">{label ?? t("bin")}</Label>}
-                  <Input
-                      id="bin-input"
-                      value={binInput}
-                      ref={binRef}
-                      onChange={(e) => setBinInput(e.target.value)}
-                      placeholder={t("scanBinLocation")} maxLength={255}
-                  />
-                </div>
-                <div>
-                  <Button type="submit" disabled={!binInput.trim()} className="w-full">
-                      <Check className="h-4 w-4 mr-2"/>
-                    {t("accept")}
-                  </Button>
-                </div>
-              </div>
-            </form>
+              <form onSubmit={handleSubmit} className="w-full max-w-md">
+                  <div className="space-y-4">
+                      <div className="space-y-2">
+                        {showLabel && <Label htmlFor="bin-input">{label ?? t("bin")}</Label>}
+                          <Input
+                              id="bin-input"
+                              value={binInput}
+                              ref={binRef}
+                              onChange={(e) => setBinInput(e.target.value)}
+                              placeholder={t("scanBinLocation")} maxLength={255}
+                          />
+                      </div>
+                      <div>
+                          <Button type="submit" disabled={!binInput.trim()} className="w-full">
+                              <Check className="h-4 w-4 mr-2"/>
+                            {t("accept")}
+                          </Button>
+                      </div>
+                  </div>
+              </form>
           </div>
       }
     </div>

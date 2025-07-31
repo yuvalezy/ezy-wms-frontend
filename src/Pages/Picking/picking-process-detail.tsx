@@ -1,7 +1,7 @@
 import ContentTheme from "@/components/ContentTheme";
 import {useNavigate} from "react-router-dom";
 import React from "react";
-import {Alert, AlertDescription, AlertTitle, useAuth} from "@/components";
+import {Alert, AlertDescription, AlertTitle, PackageValue, useAuth} from "@/components";
 import {useTranslation} from "react-i18next";
 import BarCodeScanner from "@/components/BarCodeScanner";
 import PickingProcessDetailContent from "@/features/picking/components/picking-process-detail-content";
@@ -29,6 +29,9 @@ export default function PickingProcessDetail() {
     handleAddPackage,
     pickPackOnly,
     currentPackage,
+    pickingPackage,
+    setPickingPackage,
+    handleCreatePackage,
   } = usePickingProcessDetailData();
   const titleBreadcrumbs = [
     {label: `${idParam}`, onClick: () => navigate(`/pick/${idParam}`)},
@@ -54,7 +57,10 @@ export default function PickingProcessDetail() {
                                         enabled={enable}/>}
                     {!binLocation && detail.totalOpenItems > 0 &&
                         <div className="space-y-4 p-2">
-                            <BinLocationScanner ref={binLocationRef} onChanged={onBinChanged} onClear={onBinClear}/>
+                            <BinLocationScanner ref={binLocationRef} onChanged={onBinChanged} onClear={onBinClear}
+                                                enablePackageCreate={user!.settings!.enablePackages}
+                                                onCreatePackageClicked={handleCreatePackage}
+                            />
                         </div>
                     }
                   </>
@@ -74,6 +80,18 @@ export default function PickingProcessDetail() {
                   {t("pickingCompletedFor", {type: o(type), number: detail.number})}:
                 </AlertDescription>}
               </Alert>
+            {pickingPackage && <div className="bg-blue-100 border-l-4 border-blue-500 p-3 mb-4 rounded flex items-center justify-between">
+              <div>
+                <span className="font-semibold text-blue-800">{t('newPackage')}: </span>
+                <span className="font-bold text-blue-900">{pickingPackage.barcode}</span>
+              </div>
+              <button 
+                onClick={() => setPickingPackage(null)}
+                className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm font-medium"
+              >
+                {t('clearPackage')}
+              </button>
+            </div>}
               <PickingProcessDetailContent items={detail.items}/>
             {/*<BoxConfirmationDialog*/}
             {/*    onSelected={(itemCode: string) => handleAddItem(itemCode, barcodeRef?.current?.getValue() ?? "")}*/}
