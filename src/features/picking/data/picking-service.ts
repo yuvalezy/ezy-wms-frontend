@@ -13,7 +13,6 @@ import {
   PickListCheckSummaryResponse, PickListCheckPackageResponse
 } from "@/features/picking/data/picking";
 import {UnitType} from "@/features/shared/data";
-import processAlert from "@/components/ProcessAlert";
 import {PackageDto} from "@/features/packages/types";
 
 export const pickingService = {
@@ -124,11 +123,12 @@ export const pickingService = {
       const url = `picking/process`;
 
       const response = await axiosInstance.post<ProcessResponse>(url, {id: id});
-      if (response.data.errorMessage == null) {
-        return response.data;
-      } else {
-        throw new Error(response.data.errorMessage);
+      if (response.data.errorMessage != null) {
+        if (!response.data.errorMessage.includes("No open pick list items found for AbsEntry")) {
+          throw new Error(response.data.errorMessage);
+        }
       }
+      return response.data;
     } catch (error) {
       console.error("Error process picking:", error);
       throw error;
