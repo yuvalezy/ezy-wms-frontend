@@ -4,12 +4,12 @@ import {
   BinLocation,
   ItemInfoResponse,
   ItemCheckResponse,
-  ItemStockResponse,
+  ItemBinStockResponse,
   UpdateItemBarCodeResponse,
   ItemDetails
 } from "@/features/items/data/items";
-import { ItemMetadataDefinition } from "../types/ItemMetadataDefinition.dto";
-import { UpdateItemMetadataRequest } from "../types/UpdateItemMetadataRequest.dto";
+import {ItemMetadataDefinition} from "../types/ItemMetadataDefinition.dto";
+import {UpdateItemMetadataRequest} from "../types/UpdateItemMetadataRequest.dto";
 import axios from "axios";
 
 export const itemsService = {
@@ -86,20 +86,28 @@ export const itemsService = {
     }
   },
 
-  async itemStock(itemCode: string,): Promise<ItemStockResponse[]> {
+  async itemStock(itemCode: string,): Promise<ItemBinStockResponse[]> {
     try {
       const url = `items/itemStock`;
 
-      const response = await axiosInstance.post<ItemStockResponse[]>(
-        url,
-        {
-          itemCode: itemCode,
-        }
-      );
+      const response = await axiosInstance.post<ItemBinStockResponse[]>(url, {itemCode: itemCode,});
 
       return response.data;
     } catch (error) {
-      console.error("Error checking item barcode:", error);
+      console.error("Error checking item stock:", error);
+      throw error;
+    }
+  },
+
+  async itemBinStock(itemCode: string,): Promise<ItemBinStockResponse[]> {
+    try {
+      const url = `items/itemBinStock`;
+
+      const response = await axiosInstance.post<ItemBinStockResponse[]>(url, {itemCode: itemCode,});
+
+      return response.data;
+    } catch (error) {
+      console.error("Error checking item bin stock:", error);
       throw error;
     }
   },
@@ -120,9 +128,9 @@ export const itemsService = {
   async getItemMetadataDefinitions(): Promise<ItemMetadataDefinition[]> {
     try {
       const url = `general/item-metadata-definitions`;
-      
+
       const response = await axiosInstance.get<ItemMetadataDefinition[]>(url);
-      
+
       return response.data;
     } catch (error) {
       console.error("Error getting item metadata definitions:", error);
@@ -133,9 +141,9 @@ export const itemsService = {
   async getItemMetadata(itemCode: string): Promise<{ metadata: Record<string, any> }> {
     try {
       const url = `items/${itemCode}/metadata`;
-      
+
       const response = await axiosInstance.get<{ metadata: Record<string, any> }>(url);
-      
+
       return response.data;
     } catch (error) {
       console.error("Error getting item metadata:", error);
@@ -146,9 +154,9 @@ export const itemsService = {
   async updateItemMetadata(itemCode: string, request: UpdateItemMetadataRequest): Promise<ItemDetails> {
     try {
       const url = `items/${itemCode}/metadata`;
-      
+
       const response = await axiosInstance.put<ItemDetails>(url, request);
-      
+
       return response.data;
     } catch (error) {
       console.error("Error updating item metadata:", error);

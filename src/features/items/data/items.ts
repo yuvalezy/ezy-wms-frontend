@@ -41,9 +41,9 @@ export interface ItemCheckResponse extends ItemDetails {
   barcodes: string[];
 }
 
-export interface ItemStockResponse {
-  binCode: string;
-  binEntry: number;
+export interface ItemBinStockResponse {
+  binCode?: string;
+  binEntry?: number;
   quantity: number;
   packages?: PackageStockValue[] | null;
 }

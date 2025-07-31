@@ -6,7 +6,7 @@ import {useStockInfo} from "@/utils/stock-info";
 import ClickableBinCode from "@/components/ClickableBinCode";
 import ClickablePackageBarcode from "@/components/ClickablePackageBarcode";
 import {Box, ChevronRight, Grid3x3, Package} from "lucide-react";
-import {ItemCheckResponse, ItemStockResponse} from "@/features/items/data/items";
+import {ItemCheckResponse, ItemBinStockResponse} from "@/features/items/data/items";
 import {itemsService} from "@/features/items/data/items-service";
 import {useAuth} from "@/components";
 import {UnitType} from "@/features/shared/data";
@@ -20,16 +20,24 @@ const ItemCheckStock: React.FC<StockTableProps> = ({result}) => {
   const {user, unitSelection, defaultUnit} = useAuth();
   const {setLoading, setError} = useThemeContext();
   const stockInfo = useStockInfo();
-  const [data, setData] = useState<ItemStockResponse[]>([]);
+  const [data, setData] = useState<ItemBinStockResponse[]>([]);
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     if (result && result.itemCode) {
       setLoading(true);
-      itemsService.itemStock(result.itemCode)
-        .then((data) => setData(data))
-        .catch((e) => setError(e))
-        .finally(() => setLoading(false));
+      if (user!.binLocations) {
+        itemsService.itemBinStock(result.itemCode)
+          .then((data) => setData(data))
+          .catch((e) => setError(e))
+          .finally(() => setLoading(false));
+      }
+      else {
+        itemsService.itemStock(result.itemCode)
+          .then((data) => setData(data))
+          .catch((e) => setError(e))
+          .finally(() => setLoading(false));
+      }
     }
   }, [result]);
 
@@ -43,7 +51,7 @@ const ItemCheckStock: React.FC<StockTableProps> = ({result}) => {
     setExpandedRows(newExpanded);
   };
 
-  const formatStock = (binStock: ItemStockResponse) => {
+  const formatStock = (binStock: ItemBinStockResponse) => {
     if (!unitSelection) {
       switch (defaultUnit) {
         case UnitType.Unit:
@@ -66,7 +74,7 @@ const ItemCheckStock: React.FC<StockTableProps> = ({result}) => {
     return parts.join(', ') || '0';
   };
 
-  const getStockBreakdown = (binStock: ItemStockResponse) => {
+  const getStockBreakdown = (binStock: ItemBinStockResponse) => {
     const packages = Math.floor(binStock.quantity / (result.numInBuy * result.purPackUn));
     const remainingForDozens = binStock.quantity % (result.numInBuy * result.purPackUn);
     const dozens = Math.floor(remainingForDozens / result.numInBuy);

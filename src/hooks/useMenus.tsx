@@ -215,6 +215,9 @@ export function useMenus() {
       if ((!isDeviceActive || !isValidAccount) && !item.Link.startsWith('/settings')) {
         return false;
       }
+      if (item.Link == "/binCheck" && !user?.binLocations) {
+        return false;
+      }
       if (item.RequiresFeature != null) {
         switch (item.RequiresFeature) {
           case "GoodsReceiptTransactional":
