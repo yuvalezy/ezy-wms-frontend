@@ -21,8 +21,7 @@ export default function GoodsReceipt({processType = ProcessType.Regular}: { proc
 
   useEffect(() => {
     setLoading(true);
-    const confirm = processType === ProcessType.Confirmation || processType === ProcessType.TransferConfirmation;
-    goodsReceiptService.search({statuses: [Status.Open, Status.InProgress], confirm})
+    goodsReceiptService.search({statuses: [Status.Open, Status.InProgress], processType})
       .then((data) => setDocuments(data))
       .catch((err) => setError(err))
       .finally(() => setLoading(false))

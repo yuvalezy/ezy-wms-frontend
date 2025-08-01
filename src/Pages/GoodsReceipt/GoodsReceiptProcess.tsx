@@ -27,7 +27,7 @@ export default function GoodsReceiptProcess({processType = ProcessType.Regular}:
     handleUpdateLine,
     currentPackage,
     setCurrentPackage,
-  } = useGoodsReceiptProcessData(processType === ProcessType.Confirmation || processType === ProcessType.TransferConfirmation);
+  } = useGoodsReceiptProcessData(processType);
   const navigate = useNavigate();
   const {user} = useAuth();
 

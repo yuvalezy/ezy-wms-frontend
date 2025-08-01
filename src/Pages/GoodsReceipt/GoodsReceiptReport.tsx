@@ -8,7 +8,7 @@ import DocumentListDialog, {DocumentListDialogRef} from "@/features/goods-receip
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Button} from "@/components/ui/button";
 import {MoreVertical, ArrowRightLeft, FileText, Truck} from 'lucide-react';
-import {activeStatuses, processStatuses} from "@/features/goods-receipt/data/goods-receipt-utils";
+import {activeStatuses} from "@/features/goods-receipt/data/goods-receipt-utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
