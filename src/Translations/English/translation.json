@@ -46,6 +46,7 @@
   "transfersConfirmations": "Transfer Confirmations",
   "transferConfirmationSupervisor": "Transfer Confirmation Supervisor",
   "transferConfirmationReport": "Transfer Confirmation Report",
+  "transferConfirmationVSExitReport": "Transfer Confirmation vs Exit Report",
   "login": "Login",
   "enter": "Enter",
   "username": "User Name",

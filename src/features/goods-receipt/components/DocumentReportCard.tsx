@@ -25,7 +25,7 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc, docDetails,
   const {user} = useAuth();
   const {dateFormat} = useDateTimeFormat();
   const documentStatusToString = useDocumentStatusToString();
-  const handleOpen = useGoodsReceiptHandleOpen(processType === ProcessType.Confirmation || processType === ProcessType.TransferConfirmation);
+  const handleOpen = useGoodsReceiptHandleOpen(processType);
   const o = useObjectName();
 
   const formatDocumentsList = (documents: DocumentItem[]) => {

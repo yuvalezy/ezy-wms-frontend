@@ -36,7 +36,7 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
   const documentStatusToString = useDocumentStatusToString();
   const {dateFormat} = useDateTimeFormat();
   const {user} = useAuth();
-  const handleOpen = useGoodsReceiptHandleOpen(processType === ProcessType.Confirmation || processType === ProcessType.TransferConfirmation);
+  const handleOpen = useGoodsReceiptHandleOpen(processType);
   const navigate = useNavigate();
 
   const getNavigationRole = () => {

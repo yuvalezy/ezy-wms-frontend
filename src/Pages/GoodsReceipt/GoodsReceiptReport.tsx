@@ -41,7 +41,7 @@ export function GoodsReceiptReport({processType = ProcessType.Regular}: GoodsRec
   const reportFilterFormRef = useRef<ReportFilterFormRef>(null);
   const {dateFormat} = useDateTimeFormat();
   const documentStatusToString = useDocumentStatusToString();
-  const handleOpen = useGoodsReceiptHandleOpen(processType === ProcessType.Confirmation || processType === ProcessType.TransferConfirmation);
+  const handleOpen = useGoodsReceiptHandleOpen(processType);
   const o = useObjectName();
 
   const formatDocumentsList = (documents: DocumentItem[]) => {

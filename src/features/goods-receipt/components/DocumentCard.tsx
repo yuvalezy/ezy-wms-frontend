@@ -30,7 +30,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
   const o = useObjectName();
   const {dateFormat} = useDateTimeFormat();
   const {user} = useAuth();
-  const handleOpen = useGoodsReceiptHandleOpen(processType === ProcessType.Confirmation || processType === ProcessType.TransferConfirmation);
+  const handleOpen = useGoodsReceiptHandleOpen(processType);
   const navigate = useNavigate();
 
   const getNavigationRole = () => {
