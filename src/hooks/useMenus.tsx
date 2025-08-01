@@ -176,6 +176,22 @@ export function useMenus() {
       Color: "text-lime-700",
       RequiresFeature: "BinLocation"
     },
+    {
+      Link: "/transferConfirmation",
+      Text: t('transferConfirmation'),
+      Authorization: RoleType.TRANSFER,
+      Icon: Move,
+      Color: "text-lime-700",
+      RequiresFeature: "EnableTransferConfirm"
+    },
+    {
+      Link: "/transferConfirmationSupervisor",
+      Text: t('transferConfirmationSupervisor'),
+      Authorization: RoleType.TRANSFER_SUPERVISOR,
+      Icon: Truck,
+      Color: "text-lime-700",
+      RequiresFeature: "EnableTransferConfirm"
+    },
     // {
     //     Link: "/settings/cancelReasons",
     //     Text: t('cancellationReasons'),
@@ -220,25 +236,9 @@ export function useMenus() {
       if ((!isDeviceActive || !isValidAccount) && !item.Link.startsWith('/settings')) {
         return false;
       }
-      if (item.RequiresFeature === "BinLocation" && !user?.binLocations) {
+
+      if (!hasRequiredFeature(item))
         return false;
-      }
-      if (item.RequiresFeature != null) {
-        switch (item.RequiresFeature) {
-          case "GoodsReceiptTransactional":
-            if (user?.settings?.goodsReceiptType === GoodsReceiptDocumentType.Confirmation)
-              return false;
-            break;
-          case "GoodsReceiptConfirmation":
-            if (user?.settings?.goodsReceiptType === GoodsReceiptDocumentType.Transactional)
-              return false;
-            break;
-          case "PackageManagement":
-            if (!user?.settings?.enablePackages)
-              return false;
-            break;
-        }
-      }
       if (item.Authorization === undefined && item.Authorizations === undefined && user?.superUser) {
         return true;
       }
@@ -259,6 +259,35 @@ export function useMenus() {
       return false;
     });
   };
+
+  function hasRequiredFeature(item: MenuItem) {
+    if (item.RequiresFeature != null) {
+      switch (item.RequiresFeature) {
+        case "GoodsReceiptTransactional":
+          if (user?.settings?.goodsReceiptType === GoodsReceiptDocumentType.Confirmation)
+            return false;
+          break;
+        case "GoodsReceiptConfirmation":
+          if (user?.settings?.goodsReceiptType === GoodsReceiptDocumentType.Transactional)
+            return false;
+          break;
+        case "PackageManagement":
+          if (!user?.settings?.enablePackages)
+            return false;
+          break;
+        case "EnableTransferConfirm":
+          if (!user?.settings?.enableTransferConfirm)
+            return false;
+          break;
+        case "BinLocation":
+          if (!user?.binLocations)
+            return false;
+          break;
+      }
+    }
+    return true;
+  }
+
 
   function applySettings(authorizations: RoleType[]) {
     if (user?.settings?.goodsReceiptCreateSupervisorRequired) {

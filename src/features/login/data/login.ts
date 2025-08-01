@@ -33,6 +33,7 @@ export interface ApplicationSettings {
   goodsReceiptPackages: boolean;
   // Transfer
   transferTargetItems: boolean;
+  enableTransferConfirm: boolean;
   // Packages & Units
   enablePackages: boolean;
   defaultUnitType: UnitType;

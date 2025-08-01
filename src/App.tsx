@@ -27,8 +27,6 @@ import TransferUser from "./Pages/Transfer/transfer-user";
 import TransferSupervisor from "./Pages/Transfer/transfer-supervisor";
 import TransferProcess from "./Pages/Transfer/transfer-process";
 import TransferProcessSource from "./Pages/Transfer/transfer-process-source";
-// import TransferProcessTargetItems from "./pages/transfer/transfer-process-target-items";
-// import TransferProcessTargetItem from "./pages/transfer/transfer-process-target-item";
 import CountingSummaryReport from "./Pages/Counting/CountingSummaryReport";
 import {BinCheck} from "./Pages/items/BinCheck";
 import {PackageCheck} from "./Pages/items/PackageCheck";
@@ -169,7 +167,6 @@ function AppRoutes() {
                  element={<ProtectedRoute authorizations={[RoleType.PICKING, RoleType.PICKING_SUPERVISOR]} element={<PickingCheck/>}/>}/>
           <Route path="/pickSupervisor" element={<ProtectedRoute authorization={RoleType.PICKING_SUPERVISOR}
                                                                  element={<PickingSupervisor/>}/>}/>
-          {/*<Route path="/PickReport" element={<ProtectedRoute authorization={Authorization.Pick_SUPERVISOR} element={<PickReport/>}/>}/>*/}
           {/*Transfer*/}
           <Route path="/transfer"
                  element={<ProtectedRoute authorization={RoleType.TRANSFER} element={<TransferUser/>}/>}/>
@@ -180,8 +177,6 @@ function AppRoutes() {
           <Route path="/transfer/:scanCode/targetBins" element={<ProtectedRoute authorization={RoleType.TRANSFER}
                                                                                 element={
                                                                                   <TransferProcessTargetBins/>}/>}/>
-          {/*<Route path="/transfer/:scanCode/targetItems" element={<ProtectedRoute authorization={Authorization.TRANSFER} element={<TransferProcessTargetItems/>}/>}/>*/}
-          {/*<Route path="/transfer/:scanCode/targetItems/:itemCode" element={<ProtectedRoute authorization={Authorization.TRANSFER} element={<TransferProcessTargetItem/>}/>}/>*/}
           <Route path="/transferSupervisor" element={<ProtectedRoute authorization={RoleType.TRANSFER_SUPERVISOR}
                                                                      element={<TransferSupervisor/>}/>}/>
           <Route path="/transferRequest"
@@ -198,15 +193,6 @@ function AppRoutes() {
                  element={<ProtectedRoute superUser element={<AuthorizationGroupForm/>}/>}/>
           <Route path="/settings/devices" element={<ProtectedRoute superUser element={<DevicesList/>}/>}/>
           <Route path="/settings/license" element={<ProtectedRoute superUser element={<License/>}/>}/>
-          {/*/!* Device Management Routes *!/*/}
-          {/*<Route path="/device/register" element={<DeviceRegistration/>}/>*/}
-          {/*<Route path="/device/status" element={<DeviceStatusCard/>}/>*/}
-          {/*/!* License Management Routes *!/*/}
-          {/*<Route path="/license" element={<LicenseStatusDashboard/>}/>*/}
-          {/*<Route path="/license/status" element={<LicenseStatusDashboard/>}/>*/}
-          {/*/!* Cloud Sync Management Routes *!/*/}
-          {/*<Route path="/sync" element={<CloudSyncDashboard/>}/>*/}
-          {/*<Route path="/sync/status" element={<CloudSyncDashboard/>}/>*/}
           <Route path="/" element={<ProtectedRoute element={<HomePage/>}/>}/>
           <Route path="*" element={<NotFound/>}/>
         </Routes>
