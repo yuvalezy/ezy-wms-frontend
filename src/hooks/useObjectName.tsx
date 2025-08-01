@@ -17,6 +17,8 @@ export function useObjectName() {
                 return t('purchaseOrder');
             case 1250000001:
                 return t('transferRequest');
+            case 67:
+                return t('transfer');
             default:
                 return `Unknown object ${objectType}`; // You may also translate this part if needed
         }

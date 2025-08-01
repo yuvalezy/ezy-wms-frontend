@@ -1,14 +1,8 @@
 import React, {forwardRef, useImperativeHandle, useRef, useState} from 'react';
 import {useTranslation} from "react-i18next";
-import {Label, Button, Input, Alert, AlertDescription} from "@/components";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {X, PlusCircle, AlertCircle} from "lucide-react"; // Icons
+import {Alert, AlertDescription, Button, Input, Label} from "@/components";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
+import {AlertCircle, PlusCircle, X} from "lucide-react"; // Icons
 import {toast} from "sonner";
 import {DocumentItem} from "@/features/goods-receipt/data/goods-receipt";
 import {useObjectName} from "@/hooks/useObjectName";
@@ -33,7 +27,10 @@ const DocumentList = forwardRef<DocumentListRef, DocumentListProps>((props, ref)
   const PURCHASE_DELIVERY_NOTE = "20";
   const PURCHASE_ORDER_TYPE = "22";
   const RESERVED_INVOICE_TYPE = "18";
-  const [objTypeString, setObjTypeString] = useState<string>(props.processType === ProcessType.Regular ? PURCHASE_ORDER_TYPE : PURCHASE_DELIVERY_NOTE);
+  const STOCK_TRANSFER_TYPE = "67";
+  const [objTypeString, setObjTypeString] = useState<string>(props.processType === ProcessType.Regular ? PURCHASE_ORDER_TYPE :
+    props.processType === ProcessType.TransferConfirmation ? STOCK_TRANSFER_TYPE :
+      PURCHASE_DELIVERY_NOTE);
 
   const [docNum, setDocNum] = useState<string>('');
 
@@ -82,15 +79,15 @@ const DocumentList = forwardRef<DocumentListRef, DocumentListProps>((props, ref)
   return (
     <div className="border rounded-md p-3 space-y-3">
       {items.length > 0 && (
-        <div className="border-b">
+        <div className="border-b pb-3">
           {items.map((item, index) => (
             <div key={index} className="flex items-center justify-between border-b last:border-b-0">
               <span>{`${o(item.objectType)}: ${item.documentNumber}`}</span>
-              <Button 
+              <Button
                 type="button"
-                variant="secondary"
+                variant="outline"
                 size="icon"
-                onClick={() => handleRemoveClick(index)} 
+                onClick={() => handleRemoveClick(index)}
                 aria-label={t('delete')}
                 className="hover:bg-red-50 hover:text-red-600 transition-colors"
               >
@@ -104,7 +101,7 @@ const DocumentList = forwardRef<DocumentListRef, DocumentListProps>((props, ref)
         <Alert variant="information">
           <AlertCircle className="h-4 w-4"/>
           <AlertDescription>
-            {t("noDocumentsAdded")}
+            {props.processType === ProcessType.TransferConfirmation ? t("noTransfersAdded") : t("noDocumentsAdded")}
           </AlertDescription>
         </Alert>
       )}
@@ -121,17 +118,20 @@ const DocumentList = forwardRef<DocumentListRef, DocumentListProps>((props, ref)
               {props.processType !== ProcessType.Regular && <SelectItem value={PURCHASE_DELIVERY_NOTE}>{t('goodsReceipt')}</SelectItem>}
               {props.processType === ProcessType.Regular && <SelectItem value={PURCHASE_ORDER_TYPE}>{t('purchaseOrder')}</SelectItem>}
               <SelectItem value={RESERVED_INVOICE_TYPE}>{props.processType === ProcessType.Regular ? t('reservedInvoice') : t('purchaseInvoice')}</SelectItem>
+              {props.processType === ProcessType.TransferConfirmation && <SelectItem value={STOCK_TRANSFER_TYPE}>{t('transfer')}</SelectItem>}
             </SelectContent>
           </Select>
         </div>
         <div className="flex-grow sm:flex-1"> {/* Document Number */}
-          <Label htmlFor="docNumInput" className="mb-1 block">{t("documentNumber")}</Label>
+          <Label htmlFor="docNumInput" className="mb-1 block">
+            {props.processType === ProcessType.TransferConfirmation ? t("transferNumber") : t("documentNumber")}
+          </Label>
           <Input
             id="docNumInput"
             ref={docNumInputRef}
             value={docNum}
             type="number"
-            placeholder={t('enterDocumentNumber')}
+            placeholder={props.processType === ProcessType.TransferConfirmation ? t('enterTransferNumber') : t('enterDocumentNumber')}
             onChange={e => setDocNum(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleAddClick()}
             className="w-full"

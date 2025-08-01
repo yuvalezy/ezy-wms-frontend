@@ -1,9 +1,10 @@
-import {BaseEntity, Status, UpdateLineReturnValue} from "@/features/shared/data";
+import {BaseEntity, ProcessType, Status, UpdateLineReturnValue} from "@/features/shared/data";
 
 export enum GoodsReceiptType {
   All = "All",
   SpecificOrders = "SpecificOrders",
-  SpecificReceipts = "SpecificReceipts"
+  SpecificReceipts = "SpecificReceipts",
+  SpecificTransfers = "SpecificTransfers"
 }
 
 export type BusinessPartner = {
@@ -65,6 +66,7 @@ export interface DocumentUpdateLineQuantityResponse {
 }
 
 export type GoodsReceiptReportFilter = {
+  processType: ProcessType;
   number?: number | null;
   vendor?: string | null;
   name?: string;
@@ -73,6 +75,7 @@ export type GoodsReceiptReportFilter = {
   reservedInvoice?: string;
   goodsReceipt?: string;
   purchaseInvoice?: string;
+  transfer?: string;
   statuses?: Status[] | null;
   date?: Date | null;
   dateFrom?: Date | null;
@@ -82,7 +85,6 @@ export type GoodsReceiptReportFilter = {
   pageSize?: number | null;
   pageNumber?: number | null;
   lastId?: string | null;
-  confirm?: boolean;
 }
 
 export interface DocumentActionResponse {

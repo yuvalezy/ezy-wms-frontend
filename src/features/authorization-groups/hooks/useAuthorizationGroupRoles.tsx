@@ -92,6 +92,19 @@ export const useAuthorizationGroupRoles = () => {
       description: t("authorizations.roleTransferSupervisorDescription"),
       category: "Supervision"
     }],
+    // Transfer Confirmation
+    ...(user?.settings?.enableTransferConfirm ? [[RoleType.TRANSFER_CONFIRMATION, {
+      role: RoleType.TRANSFER_CONFIRMATION,
+      displayName: t("authorizations.roleTransferConfirmation"),
+      description: t("authorizations.roleTransferConfirmationDescription"),
+      category: "Operations"
+    }] as [RoleType, RoleInfo]] : []),
+    ...(user?.settings?.enableTransferConfirm ? [[RoleType.TRANSFER_CONFIRMATION_SUPERVISOR, {
+      role: RoleType.TRANSFER_CONFIRMATION_SUPERVISOR,
+      displayName: t("authorizations.roleTransferConfirmationSupervisor"),
+      description: t("authorizations.roleTransferConfirmationSupervisorDescription"),
+      category: "Supervision"
+    }] as [RoleType, RoleInfo]] : []),
 
     //   role: RoleType.TRANSFER_REQUEST,
     //   displayName: t("authorizations.roleTransferRequest"),

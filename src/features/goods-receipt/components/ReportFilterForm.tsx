@@ -28,11 +28,12 @@ import {CalendarIcon, BarChart2, Eraser, X} from "lucide-react";
 import {BusinessPartner, GoodsReceiptReportFilter} from "@/features/goods-receipt/data/goods-receipt";
 import {useDocumentStatusOptions} from "@/hooks/useDocumentStatusOptions";
 import {goodsReceiptService} from "@/features/goods-receipt/data/goods-receipt-service";
+import {ProcessType} from "@/features/shared/data";
 
 interface ReportFilterFormProps {
   onSubmit: (filters: GoodsReceiptReportFilter) => void,
   onClear: () => void,
-  confirm: boolean,
+  processType?: ProcessType,
   showTrigger?: boolean
 }
 
@@ -42,7 +43,7 @@ export interface ReportFilterFormRef {
 
 
 export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
-  ({onSubmit, onClear, confirm, showTrigger = true}, ref) => {
+  ({onSubmit, onClear, processType = ProcessType.Regular, showTrigger = true}, ref) => {
     const [filters, setFilters] = useState<GoodsReceiptReportFilter>(newFilters())
     const [vendors, setVendors] = useState<BusinessPartner[]>([]);
     const {t} = useTranslation();
@@ -59,7 +60,7 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
     }));
 
     function newFilters(): GoodsReceiptReportFilter {
-      return {lastId: null, pageSize: 10, confirm: confirm};
+      return {lastId: null, pageSize: 10, processType};
     }
 
     function clearForm() {
@@ -110,7 +111,7 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
             <form className="space-y-4 p-1">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div>
-                  <Label htmlFor="vendor">{t("vendor")}</Label>
+                  <Label htmlFor="vendor">{processType === ProcessType.TransferConfirmation ? t("from") : t("vendor")}</Label>
                   <Select value={filters.vendor || ""} onValueChange={handleVendorChange}>
                     <SelectTrigger id="vendor">
                       <SelectValue placeholder={t("selectVendorPlaceholder")}/>
@@ -125,7 +126,7 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor="docNumber">{t("number")}</Label>
+                  <Label htmlFor="docNumber">{processType === ProcessType.TransferConfirmation ? t("transferNumber") : t("number")}</Label>
                   <Input
                     id="docNumber"
                     value={filters.number ?? ""}
@@ -220,7 +221,7 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
                     )}
                   </div>
                 </div>
-                {!confirm ?
+                {processType === ProcessType.Regular ?
                   <>
                     <div>
                       <Label htmlFor="purchaseOrder">{t("purchaseOrder")}</Label>
@@ -249,7 +250,7 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
                         onChange={(e) => setFilters((pf) => ({...pf, grpo: e.target.value}))}
                       />
                     </div>
-                  </> :
+                  </> : processType === ProcessType.Confirmation ?
                   <>
                     <div>
                       <Label htmlFor="goodsReceipt">{t("goodsReceipt")}</Label>
@@ -267,6 +268,17 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
                         value={filters.purchaseInvoice ?? ""}
                         type="number"
                         onChange={(e) => setFilters((pf) => ({...pf, purchaseInvoice: e.target.value}))}
+                      />
+                    </div>
+                  </> :
+                  <>
+                    <div>
+                      <Label htmlFor="transfer">{t("transfer")}</Label>
+                      <Input
+                        id="transfer"
+                        value={filters.transfer ?? ""}
+                        type="number"
+                        onChange={(e) => setFilters((pf) => ({...pf, transfer: e.target.value}))}
                       />
                     </div>
                   </>}

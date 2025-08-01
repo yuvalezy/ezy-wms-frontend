@@ -6,7 +6,7 @@ import {AddItemValue, BarCodeScannerRef, PackageValue} from "@/components/BarCod
 import {BoxConfirmationDialogRef} from "@/components/BoxConfirmationDialog";
 import {useThemeContext} from "@/components/ThemeContext";
 import {
-  AddItemResponseMultipleValue,
+  AddItemResponseMultipleValue, ProcessType,
   UpdateLineParameters,
   UpdateLineReturnValue
 } from "@/features/shared/data/shared";
@@ -16,7 +16,7 @@ import {StringFormat} from "@/utils/string-utils";
 import {DocumentAddItemResponse, ReceiptDocument} from "@/features/goods-receipt/data/goods-receipt";
 import {goodsReceiptService} from "@/features/goods-receipt/data/goods-receipt-service";
 
-export const useGoodsReceiptProcessData = (confirm: boolean) => {
+export const useGoodsReceiptProcessData = (processType: ProcessType) => {
   const {scanCode} = useParams();
   const {t} = useTranslation();
   const {dateTimeFormat} = useDateTimeFormat();

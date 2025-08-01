@@ -248,12 +248,12 @@ function AppRoutes() {
     return (
       <>
         <Route path="/transferConfirmation"
-               element={<ProtectedRoute authorization={RoleType.TRANSFER}
+               element={<ProtectedRoute authorization={RoleType.TRANSFER_CONFIRMATION}
                                         element={<GoodsReceipt 
                                                   processType={ProcessType.TransferConfirmation} 
                                                   key="transferConfirmation"/>}/>}/>
         <Route path="/transferConfirmation/:scanCode"
-               element={<ProtectedRoute authorization={RoleType.TRANSFER}
+               element={<ProtectedRoute authorization={RoleType.TRANSFER_CONFIRMATION}
                                         element={<GoodsReceiptProcess 
                                                   processType={ProcessType.TransferConfirmation}
                                                   key="transferConfirmationProcess"/>}/>}/>
@@ -263,17 +263,17 @@ function AppRoutes() {
                     processType={ProcessType.TransferConfirmation} 
                     key="transferConfirmation"/>}/>}/>
         <Route path="/transferConfirmationReport"
-               element={<ProtectedRoute authorization={RoleType.TRANSFER_SUPERVISOR}
+               element={<ProtectedRoute authorization={RoleType.TRANSFER_CONFIRMATION_SUPERVISOR}
                                         element={<GoodsReceiptReport 
                                                   processType={ProcessType.TransferConfirmation}
                                                   key="transferConfirmationReport"/>}/>}/>
         <Route path="/transferConfirmationProcessDifferenceReport/:scanCode"
-               element={<ProtectedRoute authorization={RoleType.TRANSFER_SUPERVISOR}
+               element={<ProtectedRoute authorization={RoleType.TRANSFER_CONFIRMATION_SUPERVISOR}
                                         element={<GoodsReceiptProcessDifferenceReport 
                                                   processType={ProcessType.TransferConfirmation}
                                                   key="transferConfirmationProcessDifferenceReport"/>}/>}/>
         <Route path="/transferConfirmationReportAll/:scanCode"
-               element={<ProtectedRoute authorization={RoleType.TRANSFER_SUPERVISOR}
+               element={<ProtectedRoute authorization={RoleType.TRANSFER_CONFIRMATION_SUPERVISOR}
                                         element={<GoodsReceiptAll 
                                                   processType={ProcessType.TransferConfirmation}
                                                   key="transferConfirmationAll"/>}/>}/>

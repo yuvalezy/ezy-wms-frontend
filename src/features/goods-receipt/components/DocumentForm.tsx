@@ -62,7 +62,9 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, processType =
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const selectedType = activeTab === TAB_AUTOCONFIRM ? GoodsReceiptType.All :
-      processType === ProcessType.Regular ? GoodsReceiptType.SpecificOrders : GoodsReceiptType.SpecificReceipts;
+      processType === ProcessType.Regular ? GoodsReceiptType.SpecificOrders :
+        processType === ProcessType.TransferConfirmation ? GoodsReceiptType.SpecificTransfers :
+          GoodsReceiptType.SpecificReceipts;
 
     // Validation logic (can be enhanced with react-hook-form later if needed)
     // if (docNameInput.trim() === "") {
@@ -143,7 +145,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, processType =
         />
       </div>
       <div className="space-y-2">
-        <Label>{t("documentsList")}</Label>
+        <Label>{processType === ProcessType.TransferConfirmation ? t("transfersList") : t("documentsList")}</Label>
         <DocumentList ref={documentListRef} processType={processType} onItemsUpdate={setItems}/>
       </div>
       <div>

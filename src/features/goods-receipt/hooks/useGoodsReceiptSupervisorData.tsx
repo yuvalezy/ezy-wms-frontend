@@ -24,8 +24,6 @@ export const useGoodsReceiptSupervisorData = (processType: ProcessType = Process
   const location = useLocation();
 
   useEffect(() => {
-    const isConfirmation = processType === ProcessType.Confirmation || processType === ProcessType.TransferConfirmation;
-    
     if (processType === ProcessType.Regular) {
       setSupervisor(user?.roles.filter((v) => v === RoleType.GOODS_RECEIPT_SUPERVISOR).length === 1);
     } else if (processType === ProcessType.Confirmation) {
@@ -35,7 +33,7 @@ export const useGoodsReceiptSupervisorData = (processType: ProcessType = Process
     }
     
     setLoading(true);
-    goodsReceiptService.search({statuses: [Status.Open, Status.InProgress], confirm: isConfirmation})
+    goodsReceiptService.search({statuses: [Status.Open, Status.InProgress], processType})
       .then((data) => setDocuments(data))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
