@@ -77,6 +77,8 @@ export function AppSidebar() {
       case "/transfer":
       case "/transferSupervisor":
       case "/transferRequest":
+      case "/transferConfirmation":
+      case "/transferConfirmationSupervisor":
         groupLabel = t("transfer");
         break;
       case "/settings/cancelReasons":
@@ -170,6 +172,7 @@ export function AppSidebar() {
                       <SidebarMenuButton asChild>
                         <a
                           href={item.Link}
+                          title={item.Text}
                           onClick={(e) => {
                             e.preventDefault();
                             handleMenuItemClick(item.Link);
