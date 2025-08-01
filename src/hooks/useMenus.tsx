@@ -55,6 +55,7 @@ export function useMenus() {
       Authorizations: [RoleType.GOODS_RECEIPT_SUPERVISOR, RoleType.PICKING_SUPERVISOR, RoleType.COUNTING_SUPERVISOR, RoleType.TRANSFER_SUPERVISOR],
       Icon: Boxes,
       Color: "text-green-700",
+      RequiresFeature: "BinLocation"
     },
     {
       Link: "/packageCheck",
@@ -165,6 +166,7 @@ export function useMenus() {
       Authorization: RoleType.TRANSFER,
       Icon: Move,
       Color: "text-lime-700",
+      RequiresFeature: "BinLocation"
     },
     {
       Link: "/transferSupervisor",
@@ -172,6 +174,7 @@ export function useMenus() {
       Authorization: RoleType.TRANSFER_SUPERVISOR,
       Icon: Truck,
       Color: "text-lime-700",
+      RequiresFeature: "BinLocation"
     },
     // {
     //     Link: "/settings/cancelReasons",
@@ -217,7 +220,7 @@ export function useMenus() {
       if ((!isDeviceActive || !isValidAccount) && !item.Link.startsWith('/settings')) {
         return false;
       }
-      if (item.Link == "/binCheck" && !user?.binLocations) {
+      if (item.RequiresFeature === "BinLocation" && !user?.binLocations) {
         return false;
       }
       if (item.RequiresFeature != null) {

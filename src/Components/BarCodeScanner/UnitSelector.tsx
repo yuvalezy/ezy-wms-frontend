@@ -3,6 +3,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTranslation } from 'react-i18next';
 import { UnitType } from '@/features/shared/data';
+import {useAuth} from "@/components";
 
 interface UnitSelectorProps {
   visible: boolean;
@@ -18,12 +19,17 @@ export const UnitSelector: React.FC<UnitSelectorProps> = ({
   onUnitChange
 }) => {
   const { t } = useTranslation();
+  const {user} = useAuth();
 
-  const units = [
-    { text: t("unit"), value: UnitType.Unit },
-    { text: t("dozen"), value: UnitType.Dozen },
-    { text: t("box"), value: UnitType.Pack }
+  let units = [
+    { text: t("inventory.units.unit.label"), value: UnitType.Unit },
+    { text: t("inventory.units.dozen.label"), value: UnitType.Dozen },
+    { text: t("inventory.units.box.label"), value: UnitType.Pack }
   ];
+
+  if (!user?.settings.enableUseBaseUn)  {
+    units = units.filter(unit => unit.value !== UnitType.Unit);
+  }
 
   if (!visible) return null;
 

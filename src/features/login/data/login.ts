@@ -22,6 +22,8 @@ export interface UserInfo {
 }
 
 export interface ApplicationSettings {
+  // General
+  enableUseBaseUn: boolean;
   // Goods Receipt
   goodsReceiptDraft: boolean;
   goodsReceiptModificationSupervisor: boolean;

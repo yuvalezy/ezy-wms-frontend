@@ -480,12 +480,12 @@
     "mixedBoxes": "Paquetes Mixtos",
     "units": {
       "box": {
-        "label": "Paquete",
-        "abbr": "P"
+        "label": "Unidad de embalaje",
+        "abbr": "E"
       },
       "dozen": {
-        "label": "Docena",
-        "abbr": "D"
+        "label": "Unidad de compras",
+        "abbr": "C"
       },
       "unit": {
         "label": "Unidad",

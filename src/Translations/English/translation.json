@@ -480,12 +480,12 @@
     "mixedBoxes": "Mixed Boxes",
     "units": {
       "box": {
-        "label": "Box",
+        "label": "Packaging UoM",
         "abbr": "B"
       },
       "dozen": {
-        "label": "Dozen",
-        "abbr": "D"
+        "label": "Purchasing UoM",
+        "abbr": "P"
       },
       "unit": {
         "label": "Unit",
