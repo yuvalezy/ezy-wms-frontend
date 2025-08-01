@@ -3,6 +3,7 @@ import {PackageContentDto} from "@/features/packages/types";
 import {UnitType} from "@/features/shared/data";
 
 export enum SyncStatus {
+  Unknown = 'Unknown',
   Pending = 'Pending',
   Syncing = 'Syncing',
   Synced = 'Synced',

@@ -16,6 +16,7 @@ import {
   TrendingUp,
   Truck,
   Users,
+  SendHorizontal,
 } from 'lucide-react';
 import {AccountState} from "@/features/account/data/account";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
@@ -151,6 +152,13 @@ export function useMenus() {
     //     Authorization: Authorization.COUNTING_SUPERVISOR,
     //     Icon: "manager-insight",
     // },
+    // {
+    //   Link: "/transferRequest",
+    //   Text: t('transferRequest'),
+    //   Authorization: RoleType.TRANSFER_REQUEST,
+    //   Icon: SendHorizontal,
+    //   Color: "text-lime-700",
+    // },
     {
       Link: "/transfer",
       Text: t('transfer'),
@@ -165,12 +173,6 @@ export function useMenus() {
       Icon: Truck,
       Color: "text-lime-700",
     },
-    // {
-    //     Link: "/transferRequest",
-    //     Text: t('transferRequest'),
-    //     Authorization: RoleType.TRANSFER_REQUEST,
-    //     Icon: "request",
-    // },
     // {
     //     Link: "/settings/cancelReasons",
     //     Text: t('cancellationReasons'),

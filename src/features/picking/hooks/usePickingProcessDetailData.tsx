@@ -5,10 +5,9 @@ import {
   BarCodeScannerRef,
   BinLocationScannerRef,
   BoxConfirmationDialogRef,
-  PackageValue,
+  PackageValue, useAuth,
   useThemeContext
 } from "@/components";
-import {UnitType} from "@/features/shared/data";
 import {toast} from "sonner";
 import {useTranslation} from "react-i18next";
 
@@ -35,6 +34,7 @@ export const usePickingProcessDetailData = () => {
   const [pickPackOnly, setPickPackOnly] = useState(false);
   const [currentPackage, setCurrentPackage] = useState<PackageValue | null | undefined>(null);
   const [pickingPackage, setPickingPackage] = useState<PackageValue | null | undefined>(null);
+  const {user} = useAuth();
 
   useEffect(() => {
     [idParam, typeParam, entryParam].forEach((p, index) => {
@@ -112,15 +112,18 @@ export const usePickingProcessDetailData = () => {
   function handleAddItem(value: AddItemValue, t: (key: string) => string) {
     boxConfirmationDialogRef?.current?.show(false);
     barcodeRef?.current?.clear();
-    if (id == null || type == null || entry == null || binLocation == null) {
+    if (id == null || type == null || entry == null || user?.binLocations && binLocation == null) {
+      toast.error(t('missingRequiredParameters'));
+      setLoading(false);
       return;
     }
     const itemCode = value.item.code;
     const unit = value.unit;
     const barcode = value.item.barcode ?? "";
     const packageId = value.package?.id;
+    
     setLoading(true);
-    pickingService.addItem({id, type, entry, itemCode, quantity: 1, binEntry: binLocation.entry, unit, packageId, pickingPackageId: pickingPackage?.id})
+    pickingService.addItem({id, type, entry, itemCode, quantity: 1, binEntry: binLocation?.entry, unit, packageId, pickingPackageId: pickingPackage?.id})
       .then((data) => {
         if (data.closedDocument) {
           setError(StringFormat(t("pickedIsClosed"), id));
@@ -140,7 +143,10 @@ export const usePickingProcessDetailData = () => {
                 errorMessage = StringFormat(t('pickPackOnlyError'), name);
                 break;
               case 'Item entry not found in pick':
-                errorMessage = StringFormat(t('itemEntryNotFoundPicking'), itemCode, id, binLocation.code);
+                if (user?.binLocations)
+                  errorMessage = StringFormat(t('itemEntryNotFoundPickingBin'), itemCode, id, binLocation!.code);
+                else
+                  errorMessage = StringFormat(t('itemEntryNotFoundPicking'), itemCode, id);
                 break;
             }
             toast.error(errorMessage);
@@ -151,7 +157,8 @@ export const usePickingProcessDetailData = () => {
         }
 
         toast.success(StringFormat(t("pickingProcessSuccess"), barcode));
-        loadData({reload: true, binEntry: binLocation.entry});
+        loadData({reload: true, binEntry: binLocation?.entry});
+        setTimeout(() => barcodeRef.current?.focus(), 100);
       })
       .catch((error) => {
         console.error(`Error performing action: ${error}`);
@@ -201,6 +208,7 @@ export const usePickingProcessDetailData = () => {
             toast.error(errorMessage);
           } finally {
             setLoading(false);
+            setTimeout(() => barcodeRef.current?.focus(), 100);
           }
           return;
         }

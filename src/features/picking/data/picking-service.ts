@@ -83,7 +83,7 @@ export const pickingService = {
     entry: number;
     itemCode: string;
     quantity: number;
-    binEntry: number;
+    binEntry?: number;
     unit: UnitType;
     packageId: string | undefined,
     pickingPackageId?: string,
