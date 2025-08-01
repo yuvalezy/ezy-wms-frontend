@@ -55,14 +55,7 @@ export default function GoodsReceiptProcessDifferenceReport({processType = Proce
   };
 
   const getSubTitle = () => {
-    switch (processType) {
-      case ProcessType.Confirmation:
-        return t('confirmationReceiptVSExit');
-      case ProcessType.TransferConfirmation:
-        return t('transferConfirmationVSExit');
-      default:
-        return t('goodsReceiptVSExit');
-    }
+    return t('differencesReport');
   };
 
   const title = getTitle();
@@ -85,8 +78,12 @@ export default function GoodsReceiptProcessDifferenceReport({processType = Proce
           <TableHeader>
             <TableRow>
               <TableHead>{t('document')}</TableHead>
-              <TableHead className="hidden sm:table-cell">{t('supplier')}</TableHead>
-              <TableHead>{t('supplierName')}</TableHead>
+              {processType !== ProcessType.TransferConfirmation && (
+                <>
+                  <TableHead className="hidden sm:table-cell">{t('supplier')}</TableHead>
+                  <TableHead>{t('supplierName')}</TableHead>
+                </>
+              )}
               <TableHead className="text-right"></TableHead>
             </TableRow>
           </TableHeader>
@@ -95,26 +92,34 @@ export default function GoodsReceiptProcessDifferenceReport({processType = Proce
               <>
                 <TableRow key={`${value.documentNumber}-doc`}>
                   <TableCell>{`${o(value.baseType)}: ${value.documentNumber}`}</TableCell>
-                  <TableCell>{value.vendor.id}</TableCell>
-                  <TableCell className="hidden sm:table-cell">{value.vendor.name}</TableCell>
+                  {processType !== ProcessType.TransferConfirmation && (
+                    <>
+                      <TableCell>{value.vendor.id}</TableCell>
+                      <TableCell className="hidden sm:table-cell">{value.vendor.name}</TableCell>
+                    </>
+                  )}
                   <TableCell className="text-right">
                     <Button variant="outline" size="sm" onClick={() => setReport(value)}>{t('details')}</Button>
                   </TableCell>
                 </TableRow>
-                <TableRow className="sm:hidden" key={`${value.documentNumber}-vendor`}>
-                  <TableCell className="bg-gray-100 border-b-1"
-                             colSpan={3}>{t('supplierName')}: {value.vendor.name}</TableCell>
-                </TableRow>
+                {processType !== ProcessType.TransferConfirmation && (
+                  <TableRow className="sm:hidden" key={`${value.documentNumber}-vendor`}>
+                    <TableCell className="bg-gray-100 border-b-1"
+                               colSpan={3}>{t('supplierName')}: {value.vendor.name}</TableCell>
+                  </TableRow>
+                )}
               </>
             ))}
           </TableBody>
         </Table>
       )}
       {report && <>
-          <FullInfoBox>
-              <InfoBoxValue label={t("supplier")} value={report.vendor.id}/>
-              <InfoBoxValue label={t("supplierName")} value={(report.vendor.name)}/>
-          </FullInfoBox>
+          {processType !== ProcessType.TransferConfirmation && (
+            <FullInfoBox>
+                <InfoBoxValue label={t("supplier")} value={report.vendor.id}/>
+                <InfoBoxValue label={t("supplierName")} value={(report.vendor.name)}/>
+            </FullInfoBox>
+          )}
           <GoodsReceiptProcessDifferenceTable id={info.id} data={report}/>
       </>}
       {data && data.length === 0 && (
