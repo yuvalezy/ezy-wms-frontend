@@ -10,6 +10,7 @@ import {ItemCheckResponse, ItemBinStockResponse} from "@/features/items/data/ite
 import {itemsService} from "@/features/items/data/items-service";
 import {useAuth} from "@/components";
 import {UnitType} from "@/features/shared/data";
+import {InventoryUnitIndicators} from "@/components/InventoryUnitIndicators";
 
 interface StockTableProps {
   result: ItemCheckResponse
@@ -31,8 +32,7 @@ const ItemCheckStock: React.FC<StockTableProps> = ({result}) => {
           .then((data) => setData(data))
           .catch((e) => setError(e))
           .finally(() => setLoading(false));
-      }
-      else {
+      } else {
         itemsService.itemStock(result.itemCode)
           .then((data) => setData(data))
           .catch((e) => setError(e))
@@ -108,45 +108,32 @@ const ItemCheckStock: React.FC<StockTableProps> = ({result}) => {
       <Card className="p-0 gap-0">
         {data.map((binStock, index) => {
           const hasPackages = binStock.packages && binStock.packages.length > 0;
-          const isExpanded = expandedRows.has(binStock.binEntry??-1);
+          const isExpanded = expandedRows.has(binStock.binEntry ?? -1);
           const {packages, dozens, units} = getStockBreakdown(binStock);
 
           return (
             <div key={index} className={`${index !== 0 ? 'border-t' : ''}`}>
               <div
-                onClick={() => hasPackages ? toggleRow(binStock.binEntry??-1) : null}
+                onClick={() => hasPackages ? toggleRow(binStock.binEntry ?? -1) : null}
                 className={`flex items-center justify-between p-4 ${hasPackages ? 'cursor-pointer hover:bg-gray-50' : ''} transition-colors`}
               >
                 <div className="flex-1 min-w-0">
                   {binStock.binEntry &&
-                  <p className="text-sm font-medium text-gray-900 truncate">
-                    <ClickableBinCode binEntry={binStock.binEntry} binCode={binStock.binCode!}/>
-                  </p>}
+                      <p className="text-sm font-medium text-gray-900 truncate">
+                          <ClickableBinCode binEntry={binStock.binEntry} binCode={binStock.binCode!}/>
+                      </p>}
                   <p className="text-sm text-gray-600 mt-1">
                     {formatStock(binStock)}
                   </p>
                 </div>
 
                 {unitSelection && (
-                  <div className="flex items-center">
-                    <div className="flex gap-1">
-                    <span className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold text-white ${
-                      packages > 0 ? 'bg-blue-500' : 'bg-gray-200'
-                    }`}>
-                      {t('inventory.units.box.abbr')}
-                    </span>
-                      <span className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold text-white ${
-                        dozens > 0 ? 'bg-green-500' : 'bg-gray-200'
-                      }`}>
-                      {t('inventory.units.dozen.abbr')}
-                    </span>
-                      <span className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold text-white ${
-                        units > 0 ? 'bg-amber-500' : 'bg-gray-200'
-                      }`}>
-                      {t('inventory.units.unit.abbr')}
-                    </span>
-                    </div>
-                  </div>)}
+                  <InventoryUnitIndicators
+                    packages={packages}
+                    dozens={dozens}
+                    units={units}
+                  />
+                )}
 
                 <ChevronRight
                   className={`w-5 h-5 text-gray-400 transition-transform ml-2 ${

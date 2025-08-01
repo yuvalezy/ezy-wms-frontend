@@ -9,6 +9,7 @@ import {Package, MapPin, Calendar, User, Box, Grid3x3} from "lucide-react";
 import {formatDistance} from "date-fns";
 import {PackageMetadataDisplay} from "@/features/packages/components";
 import {useAuth} from "@/Components";
+import {InventoryUnitIndicators} from "@/components/InventoryUnitIndicators";
 
 export const PackageCheckResult: React.FC<{ packageData: PackageDto; onPackageUpdate?: (updatedPackage: PackageDto) => void }> = ({packageData: initialPackageData, onPackageUpdate}) => {
   const {t} = useTranslation();
@@ -174,25 +175,11 @@ export const PackageCheckResult: React.FC<{ packageData: PackageDto; onPackageUp
                   </p>
                 </div>
 
-                <div className="flex items-center">
-                  <div className="flex gap-1">
-                    <span className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold text-white ${
-                      packs > 0 ? 'bg-blue-500' : 'bg-gray-200'
-                    }`}>
-                      {t('inventory.units.box.abbr')}
-                    </span>
-                    <span className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold text-white ${
-                      dozens > 0 ? 'bg-green-500' : 'bg-gray-200'
-                    }`}>
-                      {t('inventory.units.dozen.abbr')}
-                    </span>
-                    <span className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold text-white ${
-                      units > 0 ? 'bg-amber-500' : 'bg-gray-200'
-                    }`}>
-                      {t('inventory.units.unit.abbr')}
-                    </span>
-                  </div>
-                </div>
+                <InventoryUnitIndicators
+                  packages={packs}
+                  dozens={dozens}
+                  units={units}
+                />
               </div>
             </div>
           );

@@ -2,13 +2,13 @@ import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {Card} from "@/components/ui/card";
 import {useStockInfo} from "@/utils/stock-info";
-import ItemDetailsLink from "@/components/ItemDetailsLink";
 import ClickableItemCode from "@/components/ClickableItemCode";
 import ClickablePackageBarcode from "@/components/ClickablePackageBarcode";
 import {ChevronRight, Package, Box, Grid3x3} from "lucide-react";
 import {BinContentResponse} from "@/features/items/data/items";
 import {useAuth} from "@/components";
 import {UnitType} from "@/features/shared/data";
+import {InventoryUnitIndicators} from "@/components/InventoryUnitIndicators";
 
 export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({content}) => {
   const {t} = useTranslation();
@@ -118,27 +118,13 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
                 </div>
 
 
-                {unitSelection && <div className="flex items-center">
-                    <div className="flex gap-1">
-                    <span className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold text-white ${
-                      packages > 0 ? 'bg-blue-500' : 'bg-gray-200'
-                    }`}>
-                      {t('inventory.units.box.abbr')}
-                    </span>
-                        <span
-                            className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold text-white ${
-                              dozens > 0 ? 'bg-green-500' : 'bg-gray-200'
-                            }`}>
-                      {t('inventory.units.dozen.abbr')}
-                    </span>
-                        <span
-                            className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold text-white ${
-                              units > 0 ? 'bg-amber-500' : 'bg-gray-200'
-                            }`}>
-                      {t('inventory.units.unit.abbr')}
-                    </span>
-                    </div>
-                </div>}
+                {unitSelection && (
+                  <InventoryUnitIndicators
+                    packages={packages}
+                    dozens={dozens}
+                    units={units}
+                  />
+                )}
 
                 <ChevronRight
                   className={`w-5 h-5 text-gray-400 transition-transform ml-2 ${
