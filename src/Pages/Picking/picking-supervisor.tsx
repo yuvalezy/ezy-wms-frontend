@@ -158,11 +158,19 @@ export default function PickingSupervisor() {
                       <TableCell>{pick.remarks || '-'}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2 flex-wrap">
-                          <Button disabled={pick.syncStatus !== SyncStatus.Pending} size="sm"
-                                  className={pick.syncStatus !== SyncStatus.Pending ? "cursor-not-allowed" : "cursor-pointer"}
-                                  onClick={() => handleUpdatePick?.(pick)}>
-                            <RefreshCw className="mr-1 h-3 w-3"/>{t("sync")}
-                          </Button>
+                          {user?.binLocations ?
+                            (<Button disabled={pick.syncStatus !== SyncStatus.Pending} size="sm"
+                                     className={pick.syncStatus !== SyncStatus.Pending ? "cursor-not-allowed" : "cursor-pointer"}
+                                     onClick={() => handleUpdatePick?.(pick)}>
+                              <RefreshCw className="mr-1 h-3 w-3"/>{t("sync")}
+                            </Button>) :
+                            (<Button disabled={pick.syncStatus === SyncStatus.Synced} size="sm"
+                                     className={pick.syncStatus === SyncStatus.Synced ? "cursor-not-allowed" : "cursor-pointer"}
+                                     onClick={() => handleUpdatePick?.(pick)}>
+                              <CheckCircle className="mr-1 h-3 w-3"/>{t("finish")}
+                            </Button>)
+                          }
+
                           {user?.settings.enablePickingCheck && (
                             <PickingCheckButton
                               picking={pick}

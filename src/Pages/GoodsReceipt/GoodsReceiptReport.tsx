@@ -196,7 +196,7 @@ export function GoodsReceiptReport({confirm = false}: GoodsReceiptReportProps) {
                               {!confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}
                             </DropdownMenuItem>
                           )}
-                          {processStatuses.includes(doc.status) && (
+                          {activeStatuses.includes(doc.status) && (
                             <DropdownMenuItem onClick={() => handleOpen('diff', doc.id)}>
                               <ArrowRightLeft className="mr-2 h-4 w-4"/>
                               {t('differencesReport')}

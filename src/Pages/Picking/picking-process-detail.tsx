@@ -45,7 +45,7 @@ export default function PickingProcessDetail() {
                   titleOnClick={() => navigate("/pick")}
                   titleBreadcrumbs={titleBreadcrumbs}
                   footer={detail && <>
-                    {detail.totalOpenItems > 0 && binLocation &&
+                    {detail.totalOpenItems > 0 && (binLocation || !user?.binLocations) &&
                         <BarCodeScanner ref={barcodeRef}
                                         unit
                                         enablePackage={user!.settings!.enablePackages}
@@ -55,7 +55,7 @@ export default function PickingProcessDetail() {
                                         onAddItem={(value) => handleAddItem(value, t)}
                                         onAddPackage={handleAddPackage}
                                         enabled={enable}/>}
-                    {!binLocation && detail.totalOpenItems > 0 &&
+                    {!binLocation && detail.totalOpenItems > 0 && user?.binLocations &&
                         <div className="space-y-4 p-2">
                             <BinLocationScanner ref={binLocationRef} onChanged={onBinChanged} onClear={onBinClear}
                                                 enablePackageCreate={user!.settings!.enablePackages}
@@ -80,17 +80,19 @@ export default function PickingProcessDetail() {
                   {t("pickingCompletedFor", {type: o(type), number: detail.number})}:
                 </AlertDescription>}
               </Alert>
-            {pickingPackage && <div className="bg-blue-100 border-l-4 border-blue-500 p-3 mb-4 rounded flex items-center justify-between">
-              <div>
-                <span className="font-semibold text-blue-800">{t('newPackage')}: </span>
-                <span className="font-bold text-blue-900">{pickingPackage.barcode}</span>
-              </div>
-              <button 
-                onClick={() => setPickingPackage(null)}
-                className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm font-medium"
-              >
-                {t('clearPackage')}
-              </button>
+            {pickingPackage && <div
+                className="bg-blue-100 border-l-4 border-blue-500 p-3 mb-4 rounded flex items-center justify-between">
+                <div>
+                    <span className="font-semibold text-blue-800">{t('newPackage')}: </span>
+                    <span className="font-bold text-blue-900">{pickingPackage.barcode}</span>
+                </div>
+                <button
+                    type="button"
+                    onClick={() => setPickingPackage(null)}
+                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm font-medium"
+                >
+                  {t('clearPackage')}
+                </button>
             </div>}
               <PickingProcessDetailContent items={detail.items}/>
             {/*<BoxConfirmationDialog*/}
