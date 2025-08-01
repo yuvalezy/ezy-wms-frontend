@@ -51,7 +51,7 @@ export default function CountingProcess() {
     <ContentTheme title={t("counting")}
                   titleOnClick={() => navigate('/counting')}
                   titleBreadcrumbs={titleBreadcrumbs}
-                  footer={binLocation && (
+                  footer={(binLocation || !user?.binLocations) && (
                     <BarCodeScanner
                       ref={barcodeRef}
                       enabled
