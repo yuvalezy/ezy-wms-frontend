@@ -10,8 +10,9 @@ import {useGoodsReceiptProcessData} from "@/features/goods-receipt/hooks/useGood
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "@/components";
 import {ObjectType} from "@/features/packages/types";
+import {ProcessType} from "@/features/shared/data";
 
-export default function GoodsReceiptProcess({confirm = false}: { confirm?: boolean }) {
+export default function GoodsReceiptProcess({processType = ProcessType.Regular}: { processType?: ProcessType }) {
   const {t} = useTranslation();
   const {
     info,
@@ -26,14 +27,36 @@ export default function GoodsReceiptProcess({confirm = false}: { confirm?: boole
     handleUpdateLine,
     currentPackage,
     setCurrentPackage,
-  } = useGoodsReceiptProcessData(confirm);
+  } = useGoodsReceiptProcessData(processType === ProcessType.Confirmation || processType === ProcessType.TransferConfirmation);
   const navigate = useNavigate();
   const {user} = useAuth();
 
-  const title = `${!confirm ? t("goodsReceipt") : t("receiptConfirmation")}`;
+  const getTitle = () => {
+    switch (processType) {
+      case ProcessType.Confirmation:
+        return t('receiptConfirmation');
+      case ProcessType.TransferConfirmation:
+        return t('transferConfirmation');
+      default:
+        return t("goodsReceipt");
+    }
+  };
+
+  const title = getTitle();
+
+  const getNavigationPath = () => {
+    switch (processType) {
+      case ProcessType.Confirmation:
+        return '/goodsReceiptConfirmation';
+      case ProcessType.TransferConfirmation:
+        return '/transferConfirmation';
+      default:
+        return '/goodsReceipt';
+    }
+  };
 
   return (
-    <ContentTheme title={title} titleOnClick={() => navigate(`/goodsReceipt${confirm ? 'Confirmation' : ''}`)}
+    <ContentTheme title={title} titleOnClick={() => navigate(getNavigationPath())}
                   titleBreadcrumbs={[{label: info?.number?.toString() || ''}]}
                   footer={enable && (
                     <BarCodeScanner

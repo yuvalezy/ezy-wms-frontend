@@ -11,12 +11,13 @@ import {
 } from "@/features/goods-receipt/hooks/useGoodsReceiptProcessDifferenceReportData";
 import {Button, Card, CardContent, CardHeader} from "@/components";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
+import {ProcessType} from "@/features/shared/data";
 
 interface GoodsReceiptProcessDifferenceReportProps {
-  confirm?: boolean
+  processType?: ProcessType
 }
 
-export default function GoodsReceiptProcessDifferenceReport({confirm}: GoodsReceiptProcessDifferenceReportProps) {
+export default function GoodsReceiptProcessDifferenceReport({processType = ProcessType.Regular}: GoodsReceiptProcessDifferenceReportProps) {
   const {t} = useTranslation();
   const navigate = useNavigate();
   const {
@@ -31,9 +32,42 @@ export default function GoodsReceiptProcessDifferenceReport({confirm}: GoodsRece
   if (!info)
     return null;
 
-  const title = `${!confirm ? t("goodsReceiptSupervisor") : t("goodsReceiptConfirmationSupervisor")}`;
-  const titleLink = `/goodsReceipt${confirm ? 'Confirmation' : ''}Supervisor`;
-  const subTitle = !confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit');
+  const getTitle = () => {
+    switch (processType) {
+      case ProcessType.Confirmation:
+        return t("goodsReceiptConfirmationSupervisor");
+      case ProcessType.TransferConfirmation:
+        return t("transferConfirmationSupervisor");
+      default:
+        return t("goodsReceiptSupervisor");
+    }
+  };
+
+  const getTitleLink = () => {
+    switch (processType) {
+      case ProcessType.Confirmation:
+        return '/goodsReceiptConfirmationSupervisor';
+      case ProcessType.TransferConfirmation:
+        return '/transferConfirmationSupervisor';
+      default:
+        return '/goodsReceiptSupervisor';
+    }
+  };
+
+  const getSubTitle = () => {
+    switch (processType) {
+      case ProcessType.Confirmation:
+        return t('confirmationReceiptVSExit');
+      case ProcessType.TransferConfirmation:
+        return t('transferConfirmationVSExit');
+      default:
+        return t('goodsReceiptVSExit');
+    }
+  };
+
+  const title = getTitle();
+  const titleLink = getTitleLink();
+  const subTitle = getSubTitle();
   const titleBreadcrumbs = [
     {label: `${info?.number}`},
     {label: subTitle, onClick: report ? () => setReport(null) : undefined}

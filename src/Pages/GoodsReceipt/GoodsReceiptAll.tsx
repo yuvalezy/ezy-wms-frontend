@@ -7,12 +7,13 @@ import GoodsReceiptAllDialog from "@/features/goods-receipt/components/GoodsRece
 import {useGoodsReceiptAllData} from "@/features/goods-receipt/hooks/useGoodsReceiptAllData";
 import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage} from "@/components/ui/breadcrumb";
 import {useNavigate} from "react-router-dom";
+import {ProcessType} from "@/features/shared/data";
 
 interface GoodsReceiptAllProps {
-  confirm?: boolean
+  processType?: ProcessType
 }
 
-export default function GoodsReceiptReportAll({confirm = false}: GoodsReceiptAllProps) {
+export default function GoodsReceiptReportAll({processType = ProcessType.Regular}: GoodsReceiptAllProps) {
   const {t} = useTranslation();
   const navigate = useNavigate();
   const {
@@ -22,11 +23,44 @@ export default function GoodsReceiptReportAll({confirm = false}: GoodsReceiptAll
     openDetails,
     onDetailUpdate,
     info
-  } = useGoodsReceiptAllData(confirm);
+  } = useGoodsReceiptAllData(processType === ProcessType.Confirmation || processType === ProcessType.TransferConfirmation);
 
-  const title = `${!confirm ? t("goodsReceiptSupervisor") : t("goodsReceiptConfirmationSupervisor")}`;
-  const titleLink = `/goodsReceipt${confirm ? 'Confirmation' : ''}Supervisor`;
-  const subTitle = !confirm ? t("goodsReceiptReport") : t("confirmationReport");
+  const getTitle = () => {
+    switch (processType) {
+      case ProcessType.Confirmation:
+        return t("goodsReceiptConfirmationSupervisor");
+      case ProcessType.TransferConfirmation:
+        return t("transferConfirmationSupervisor");
+      default:
+        return t("goodsReceiptSupervisor");
+    }
+  };
+
+  const getTitleLink = () => {
+    switch (processType) {
+      case ProcessType.Confirmation:
+        return '/goodsReceiptConfirmationSupervisor';
+      case ProcessType.TransferConfirmation:
+        return '/transferConfirmationSupervisor';
+      default:
+        return '/goodsReceiptSupervisor';
+    }
+  };
+
+  const getSubTitle = () => {
+    switch (processType) {
+      case ProcessType.Confirmation:
+        return t("confirmationReport");
+      case ProcessType.TransferConfirmation:
+        return t("transferConfirmationReport");
+      default:
+        return t("goodsReceiptReport");
+    }
+  };
+
+  const title = getTitle();
+  const titleLink = getTitleLink();
+  const subTitle = getSubTitle();
 
   return (
     <ContentTheme title={title}

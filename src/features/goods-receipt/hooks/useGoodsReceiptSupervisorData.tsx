@@ -9,8 +9,9 @@ import {DocumentListDialogRef} from "@/features/goods-receipt/components/Documen
 import {ReceiptDocument} from "@/features/goods-receipt/data/goods-receipt";
 import {goodsReceiptService} from "@/features/goods-receipt/data/goods-receipt-service";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
+import {ProcessType} from "@/features/shared/data";
 
-export const useGoodsReceiptSupervisorData = () => {
+export const useGoodsReceiptSupervisorData = (processType: ProcessType = ProcessType.Regular) => {
   const {t} = useTranslation();
   const {user} = useAuth();
   const [supervisor, setSupervisor] = useState(false);
@@ -21,20 +22,24 @@ export const useGoodsReceiptSupervisorData = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const documentListDialogRef = useRef<DocumentListDialogRef>(null);
   const location = useLocation();
-  const confirmation = location.pathname.includes('goodsReceiptConfirmationSupervisor');
 
   useEffect(() => {
-    if (!confirmation) {
+    const isConfirmation = processType === ProcessType.Confirmation || processType === ProcessType.TransferConfirmation;
+    
+    if (processType === ProcessType.Regular) {
       setSupervisor(user?.roles.filter((v) => v === RoleType.GOODS_RECEIPT_SUPERVISOR).length === 1);
-    } else {
+    } else if (processType === ProcessType.Confirmation) {
       setSupervisor(user?.roles.filter((v) => v === RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR).length === 1);
+    } else if (processType === ProcessType.TransferConfirmation) {
+      setSupervisor(user?.roles.filter((v) => v === RoleType.TRANSFER_SUPERVISOR).length === 1);
     }
+    
     setLoading(true);
-    goodsReceiptService.search({statuses: [Status.Open, Status.InProgress], confirm: confirmation})
+    goodsReceiptService.search({statuses: [Status.Open, Status.InProgress], confirm: isConfirmation})
       .then((data) => setDocuments(data))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
-  }, []);
+  }, [processType, user]);
 
   function handleDocDetails(doc: ReceiptDocument) {
     setSelectedDocument(doc);
@@ -70,23 +75,28 @@ export const useGoodsReceiptSupervisorData = () => {
   };
 
   function getTitle(): string {
-    if (!confirmation) {
-      let title = t("goodsReceiptSupervisor");
-      if (!user?.settings?.goodsReceiptCreateSupervisorRequired) {
-        if (!supervisor) {
-          title = t("goodsReceiptCreation");
-        }
-      }
-      return title;
-    } else {
-      let title = t("goodsReceiptConfirmationSupervisor");
-      if (!user?.settings?.goodsReceiptCreateSupervisorRequired) {
-        if (!supervisor) {
-          title = t("goodsReceiptConfirmationCreation");
-        }
-      }
-      return title;
+    let title: string;
+    let creationTitle: string;
+
+    switch (processType) {
+      case ProcessType.Confirmation:
+        title = t("goodsReceiptConfirmationSupervisor");
+        creationTitle = t("goodsReceiptConfirmationCreation");
+        break;
+      case ProcessType.TransferConfirmation:
+        title = t("transferConfirmationSupervisor");
+        creationTitle = t("transferConfirmationCreation");
+        break;
+      default:
+        title = t("goodsReceiptSupervisor");
+        creationTitle = t("goodsReceiptCreation");
     }
+
+    if (!user?.settings?.goodsReceiptCreateSupervisorRequired && !supervisor) {
+      return creationTitle;
+    }
+
+    return title;
   }
 
   return {
@@ -101,7 +111,6 @@ export const useGoodsReceiptSupervisorData = () => {
     handleAction,
     handleConfirmAction,
     setDialogOpen,
-    getTitle,
-    confirmation
+    getTitle
   }
 }

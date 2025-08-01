@@ -10,8 +10,9 @@ import {Alert, AlertDescription} from "@/components";
 import {AlertCircle} from "lucide-react";
 import {ReceiptDocument} from "@/features/goods-receipt/data/goods-receipt";
 import {goodsReceiptService} from "@/features/goods-receipt/data/goods-receipt-service";
+import {ProcessType} from "@/features/shared/data";
 
-export default function GoodsReceipt({confirm = false}: { confirm?: boolean }) {
+export default function GoodsReceipt({processType = ProcessType.Regular}: { processType?: ProcessType }) {
   const {setLoading, setError} = useThemeContext();
   const {t} = useTranslation();
   const documentListDialogRef = useRef<DocumentListDialogRef>(null);
@@ -20,38 +21,52 @@ export default function GoodsReceipt({confirm = false}: { confirm?: boolean }) {
 
   useEffect(() => {
     setLoading(true);
+    const confirm = processType === ProcessType.Confirmation || processType === ProcessType.TransferConfirmation;
     goodsReceiptService.search({statuses: [Status.Open, Status.InProgress], confirm})
       .then((data) => setDocuments(data))
       .catch((err) => setError(err))
       .finally(() => setLoading(false))
-  }, [setError, setLoading]);
+  }, [setError, setLoading, processType]);
 
   function handleDocDetails(doc: ReceiptDocument) {
     setSelectedDocument(doc);
     documentListDialogRef?.current?.show();
   }
 
+  const getTitle = () => {
+    switch (processType) {
+      case ProcessType.Confirmation:
+        return t('receiptConfirmation');
+      case ProcessType.TransferConfirmation:
+        return t('transferConfirmation');
+      default:
+        return t("goodsReceipt");
+    }
+  };
+
+  const confirm = processType === ProcessType.Confirmation || processType === ProcessType.TransferConfirmation;
+
   return (
-    <ContentTheme title={!confirm ? t("goodsReceipt") : t('receiptConfirmation')}>
+    <ContentTheme title={getTitle()}>
       {documents.length > 0 ? (
         <>
           {/* Mobile view - Cards */}
           <div className="block sm:hidden">
             {documents.map((doc) => (
-              <DocumentCard key={doc.id} doc={doc} docDetails={handleDocDetails} confirm={confirm}/>
+              <DocumentCard key={doc.id} doc={doc} docDetails={handleDocDetails} processType={processType}/>
             ))}
           </div>
           
           {/* Desktop view - Table */}
           <div className="hidden sm:block">
-            <DocumentTable documents={documents} docDetails={handleDocDetails} confirm={confirm} supervisor={false} />
+            <DocumentTable documents={documents} docDetails={handleDocDetails} processType={processType} supervisor={false} />
           </div>
         </>
       ) : (
         <Alert variant="information">
           <AlertCircle className="h-4 w-4"/>
           <AlertDescription>
-            {!confirm ? t("noGoodsReceiptData") : t("noConfirmationData")}
+            {processType === ProcessType.Regular ? t("noGoodsReceiptData") : t("noConfirmationData")}
           </AlertDescription>
         </Alert>
       )}

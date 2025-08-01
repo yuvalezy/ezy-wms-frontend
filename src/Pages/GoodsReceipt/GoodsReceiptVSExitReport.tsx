@@ -12,12 +12,13 @@ import {Alert, AlertDescription} from "@/components/ui/alert";
 import  {FullInfoBox, InfoBoxValue} from "@/components/InfoBox";
 import {Button, Card, CardContent, CardHeader} from "@/components";
 import {goodsReceiptReportService} from "@/features/goods-receipt/data/goods-receipt-report-service";
+import {ProcessType} from "@/features/shared/data";
 
 interface GoodsReceiptVSExitReportProps {
-  confirm?: boolean
+  processType?: ProcessType
 }
 
-export default function GoodsReceiptVSExitReport({confirm}: GoodsReceiptVSExitReportProps) {
+export default function GoodsReceiptVSExitReport({processType = ProcessType.Regular}: GoodsReceiptVSExitReportProps) {
   const {scanCode} = useParams();
   const {t} = useTranslation();
   const o = useObjectName();
@@ -37,9 +38,42 @@ export default function GoodsReceiptVSExitReport({confirm}: GoodsReceiptVSExitRe
       .finally(() => setLoading(false));
   }, []);
 
-  const title = `${!confirm ? t("goodsReceiptSupervisor") : t("goodsReceiptConfirmationSupervisor")}`;
-  const titleLink = `/goodsReceipt${confirm ? 'Confirmation' : ''}Supervisor`;
-  const subTitle = !confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit');
+  const getTitle = () => {
+    switch (processType) {
+      case ProcessType.Confirmation:
+        return t("goodsReceiptConfirmationSupervisor");
+      case ProcessType.TransferConfirmation:
+        return t("transferConfirmationSupervisor");
+      default:
+        return t("goodsReceiptSupervisor");
+    }
+  };
+
+  const getTitleLink = () => {
+    switch (processType) {
+      case ProcessType.Confirmation:
+        return '/goodsReceiptConfirmationSupervisor';
+      case ProcessType.TransferConfirmation:
+        return '/transferConfirmationSupervisor';
+      default:
+        return '/goodsReceiptSupervisor';
+    }
+  };
+
+  const getSubTitle = () => {
+    switch (processType) {
+      case ProcessType.Confirmation:
+        return t('confirmationReceiptVSExit');
+      case ProcessType.TransferConfirmation:
+        return t('transferConfirmationVSExit');
+      default:
+        return t('goodsReceiptVSExit');
+    }
+  };
+
+  const title = getTitle();
+  const titleLink = getTitleLink();
+  const subTitle = getSubTitle();
   const titleBreadcrumbs = [
     {label: `${scanCode}`},
     {label: subTitle, onClick: report ? () => setReport(null) : undefined}

@@ -22,12 +22,13 @@ import {useGoodsReceiptHandleOpen} from "@/features/goods-receipt/hooks/useGoods
 import {useDocumentStatusToString} from "@/hooks/useDocumentStatusToString";
 import {useObjectName} from "@/hooks/useObjectName";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
+import {ProcessType} from "@/features/shared/data";
 
 interface GoodsReceiptReportProps {
-  confirm?: boolean
+  processType?: ProcessType
 }
 
-export function GoodsReceiptReport({confirm = false}: GoodsReceiptReportProps) {
+export function GoodsReceiptReport({processType = ProcessType.Regular}: GoodsReceiptReportProps) {
   const {loading, setLoading, setError} = useThemeContext();
   const {user} = useAuth();
   const {t} = useTranslation();
@@ -40,7 +41,7 @@ export function GoodsReceiptReport({confirm = false}: GoodsReceiptReportProps) {
   const reportFilterFormRef = useRef<ReportFilterFormRef>(null);
   const {dateFormat} = useDateTimeFormat();
   const documentStatusToString = useDocumentStatusToString();
-  const handleOpen = useGoodsReceiptHandleOpen(confirm);
+  const handleOpen = useGoodsReceiptHandleOpen(processType === ProcessType.Confirmation || processType === ProcessType.TransferConfirmation);
   const o = useObjectName();
 
   const formatDocumentsList = (documents: DocumentItem[]) => {
@@ -121,16 +122,27 @@ export function GoodsReceiptReport({confirm = false}: GoodsReceiptReportProps) {
     reportFilterFormRef.current?.togglePanel();
   };
 
+  const getTitle = () => {
+    switch (processType) {
+      case ProcessType.Confirmation:
+        return t('confirmationReport');
+      case ProcessType.TransferConfirmation:
+        return t('transferConfirmationReport');
+      default:
+        return t('goodsReceiptReport');
+    }
+  };
+
   return (
     <ContentTheme
-      title={!confirm ? t('goodsReceiptReport') : t('confirmationReport')}
+      title={getTitle()}
       onFilterClicked={handleFilterToggle}
     >
       <ReportFilterForm
         ref={reportFilterFormRef}
         onSubmit={onSubmit}
         onClear={() => clear()}
-        confirm={confirm}
+        processType={processType}
         showTrigger={false}
       />
       {documents.length > 0 && (
@@ -138,7 +150,7 @@ export function GoodsReceiptReport({confirm = false}: GoodsReceiptReportProps) {
           {/* Mobile view - Cards */}
           <div className="block sm:hidden flex flex-col gap-2">
             {documents.map((doc) => (
-              <DocumentReportCard key={doc.id} doc={doc} confirm={confirm} docDetails={handleDocDetails}/>
+              <DocumentReportCard key={doc.id} doc={doc} processType={processType} docDetails={handleDocDetails}/>
             ))}
           </div>
 
@@ -188,12 +200,12 @@ export function GoodsReceiptReport({confirm = false}: GoodsReceiptReportProps) {
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem onClick={() => handleOpen('all', doc.id)}>
                             <FileText className="mr-2 h-4 w-4"/>
-                            {!confirm ? t('goodsReceiptReport') : t('confirmationReport')}
+                            {processType === ProcessType.Regular ? t('goodsReceiptReport') : t('confirmationReport')}
                           </DropdownMenuItem>
                           {user?.settings?.goodsReceiptTargetDocuments && activeStatuses.includes(doc.status) && (
                             <DropdownMenuItem onClick={() => handleOpen('vs', doc.id)}>
                               <Truck className="mr-2 h-4 w-4"/>
-                              {!confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}
+                              {processType === ProcessType.Regular ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}
                             </DropdownMenuItem>
                           )}
                           {activeStatuses.includes(doc.status) && (

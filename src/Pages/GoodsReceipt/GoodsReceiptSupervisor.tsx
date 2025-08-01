@@ -8,8 +8,9 @@ import {MessageBox} from "@/components/ui/message-box";
 import {useGoodsReceiptSupervisorData} from "@/features/goods-receipt/hooks/useGoodsReceiptSupervisorData";
 import DocumentForm from "@/features/goods-receipt/components/DocumentForm";
 import DocumentListDialog from "@/features/goods-receipt/components/DocumentListDialog";
+import {ProcessType} from "@/features/shared/data";
 
-export default function GoodsReceiptSupervisor({confirm = false}: {confirm?: boolean}) {
+export default function GoodsReceiptSupervisor({processType = ProcessType.Regular}: {processType?: ProcessType}) {
   const {t} = useTranslation();
   const {
     supervisor,
@@ -24,11 +25,11 @@ export default function GoodsReceiptSupervisor({confirm = false}: {confirm?: boo
     handleConfirmAction,
     setDialogOpen,
     getTitle
-  } = useGoodsReceiptSupervisorData();
+  } = useGoodsReceiptSupervisorData(processType);
   return (
     <ContentTheme title={getTitle()}>
       <DocumentForm
-        confirm={confirm}
+        processType={processType}
         onNewDocument={(newDocument) =>
           setDocuments((prevDocs) => [newDocument, ...prevDocs])
         }
@@ -37,14 +38,14 @@ export default function GoodsReceiptSupervisor({confirm = false}: {confirm?: boo
       <div className="block sm:hidden">
         {documents.map((doc) => (
           <DocumentCard supervisor={supervisor} key={doc.id} doc={doc} action={handleAction}
-                        docDetails={handleDocDetails} confirm={confirm}/>
+                        docDetails={handleDocDetails} processType={processType}/>
         ))}
       </div>
       
       {/* Desktop view - Table */}
       <div className="hidden sm:block">
         <DocumentTable documents={documents} supervisor={supervisor} action={handleAction} 
-                       docDetails={handleDocDetails} confirm={confirm} />
+                       docDetails={handleDocDetails} processType={processType} />
       </div>
       <MessageBox
         onConfirm={handleConfirmAction}
