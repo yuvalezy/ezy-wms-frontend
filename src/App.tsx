@@ -43,6 +43,7 @@ import {useOfflineDetection} from "./hooks/useOfflineDetection";
 import DevicesList from "@/Pages/settings/devices-list";
 import {License} from "@/Pages/settings/license";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
+import {ProcessType} from "@/features/shared/data";
 
 function AppRoutes() {
   const {user} = useAuth();
@@ -129,27 +130,38 @@ function AppRoutes() {
       <>
         <Route path="/goodsReceipt" element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT}
                                                              element={<GoodsReceipt
+                                                               processType={ProcessType.Regular}
                                                                key="goodsReceipt"/>}/>}/>
         <Route path="/goodsReceipt/:scanCode"
                element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT}
-                                        element={<GoodsReceiptProcess key="goodsReceiptProcess"/>}/>}/>
+                                        element={<GoodsReceiptProcess 
+                                                  processType={ProcessType.Regular}
+                                                  key="goodsReceiptProcess"/>}/>}/>
         <Route path="/goodsReceiptSupervisor"
                element={<ProtectedRoute authorizations={getGoodsReceiptSupervisorAuthorizations()}
-                                        element={<GoodsReceiptSupervisor key="goodsReceipt"/>}/>}/>
+                                        element={<GoodsReceiptSupervisor 
+                                                  processType={ProcessType.Regular}
+                                                  key="goodsReceipt"/>}/>}/>
         <Route path="/goodsReceiptReport"
                element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_SUPERVISOR}
-                                        element={<GoodsReceiptReport key="goodsReceiptReport"/>}/>}/>
+                                        element={<GoodsReceiptReport 
+                                                  processType={ProcessType.Regular}
+                                                  key="goodsReceiptReport"/>}/>}/>
         <Route path="/goodsReceiptVSExitReport/:scanCode"
                element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_SUPERVISOR}
                                         element={<GoodsReceiptVSExitReport
+                                          processType={ProcessType.Regular}
                                           key="goodsReceiptVSExitReport"/>}/>}/>
         <Route path="/goodsReceiptProcessDifferenceReport/:scanCode"
                element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_SUPERVISOR}
                                         element={<GoodsReceiptProcessDifferenceReport
+                                          processType={ProcessType.Regular}
                                           key="goodsReceiptProcessDifferenceReport"/>}/>}/>
         <Route path="/goodsReceiptReportAll/:scanCode"
                element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_SUPERVISOR}
-                                        element={<GoodsReceiptAll key="goodsReceiptAll"/>}/>}/>
+                                        element={<GoodsReceiptAll 
+                                          processType={ProcessType.Regular}
+                                          key="goodsReceiptAll"/>}/>}/>
       </>
     );
   }
@@ -159,30 +171,39 @@ function AppRoutes() {
       <>
         <Route path="/goodsReceiptConfirmation"
                element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_CONFIRMATION}
-                                        element={<GoodsReceipt confirm key="receiptConfirmation"/>}/>}/>
+                                        element={<GoodsReceipt 
+                                                  processType={ProcessType.Confirmation} 
+                                                  key="receiptConfirmation"/>}/>}/>
         <Route path="/goodsReceiptConfirmation/:scanCode"
                element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_CONFIRMATION}
-                                        element={<GoodsReceiptProcess confirm
-                                                                      key="receiptConfirmationProcess"/>}/>}/>
+                                        element={<GoodsReceiptProcess 
+                                                  processType={ProcessType.Confirmation}
+                                                  key="receiptConfirmationProcess"/>}/>}/>
         <Route path="/goodsReceiptConfirmationSupervisor" element={<ProtectedRoute
           authorizations={getGoodsReceiptConfirmationSupervisorAuthorizations()}
-          element={<GoodsReceiptSupervisor confirm key="receiptConfirmation"/>}/>}/>
+          element={<GoodsReceiptSupervisor 
+                    processType={ProcessType.Confirmation} 
+                    key="receiptConfirmation"/>}/>}/>
         <Route path="/goodsReceiptConfirmationReport"
                element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR}
-                                        element={<GoodsReceiptReport confirm
-                                                                     key="receiptConfirmationReport"/>}/>}/>
+                                        element={<GoodsReceiptReport 
+                                                  processType={ProcessType.Confirmation}
+                                                  key="receiptConfirmationReport"/>}/>}/>
         <Route path="/goodsReceiptConfirmationVSExitReport/:scanCode"
                element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR}
-                                        element={<GoodsReceiptVSExitReport confirm
-                                                                           key="receiptConfirmationVSExitReport"/>}/>}/>
+                                        element={<GoodsReceiptVSExitReport 
+                                                  processType={ProcessType.Confirmation}
+                                                  key="receiptConfirmationVSExitReport"/>}/>}/>
         <Route path="/goodsReceiptConfirmationProcessDifferenceReport/:scanCode"
                element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR}
-                                        element={<GoodsReceiptProcessDifferenceReport confirm
-                                                                                      key="receiptConfirmationProcessDifferenceReport"/>}/>}/>
+                                        element={<GoodsReceiptProcessDifferenceReport 
+                                                  processType={ProcessType.Confirmation}
+                                                  key="receiptConfirmationProcessDifferenceReport"/>}/>}/>
         <Route path="/goodsReceiptConfirmationReportAll/:scanCode"
                element={<ProtectedRoute authorization={RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR}
-                                        element={<GoodsReceiptAll confirm
-                                                                  key="receiptConfirmationAll"/>}/>}/>
+                                        element={<GoodsReceiptAll 
+                                                  processType={ProcessType.Confirmation}
+                                                  key="receiptConfirmationAll"/>}/>}/>
       </>
     );
   }
@@ -228,30 +249,34 @@ function AppRoutes() {
       <>
         <Route path="/transferConfirmation"
                element={<ProtectedRoute authorization={RoleType.TRANSFER}
-                                        element={<GoodsReceipt confirm key="receiptConfirmation"/>}/>}/>
+                                        element={<GoodsReceipt 
+                                                  processType={ProcessType.TransferConfirmation} 
+                                                  key="transferConfirmation"/>}/>}/>
         <Route path="/transferConfirmation/:scanCode"
                element={<ProtectedRoute authorization={RoleType.TRANSFER}
-                                        element={<GoodsReceiptProcess confirm
-                                                                      key="receiptConfirmationProcess"/>}/>}/>
+                                        element={<GoodsReceiptProcess 
+                                                  processType={ProcessType.TransferConfirmation}
+                                                  key="transferConfirmationProcess"/>}/>}/>
         <Route path="/transferConfirmationSupervisor" element={<ProtectedRoute
           authorizations={getGoodsReceiptConfirmationSupervisorAuthorizations()}
-          element={<GoodsReceiptSupervisor confirm key="receiptConfirmation"/>}/>}/>
+          element={<GoodsReceiptSupervisor 
+                    processType={ProcessType.TransferConfirmation} 
+                    key="transferConfirmation"/>}/>}/>
         <Route path="/transferConfirmationReport"
                element={<ProtectedRoute authorization={RoleType.TRANSFER_SUPERVISOR}
-                                        element={<GoodsReceiptReport confirm
-                                                                     key="receiptConfirmationReport"/>}/>}/>
-        <Route path="/transferConfirmationVSExitReport/:scanCode"
-               element={<ProtectedRoute authorization={RoleType.TRANSFER_SUPERVISOR}
-                                        element={<GoodsReceiptVSExitReport confirm
-                                                                           key="receiptConfirmationVSExitReport"/>}/>}/>
+                                        element={<GoodsReceiptReport 
+                                                  processType={ProcessType.TransferConfirmation}
+                                                  key="transferConfirmationReport"/>}/>}/>
         <Route path="/transferConfirmationProcessDifferenceReport/:scanCode"
                element={<ProtectedRoute authorization={RoleType.TRANSFER_SUPERVISOR}
-                                        element={<GoodsReceiptProcessDifferenceReport confirm
-                                                                                      key="receiptConfirmationProcessDifferenceReport"/>}/>}/>
+                                        element={<GoodsReceiptProcessDifferenceReport 
+                                                  processType={ProcessType.TransferConfirmation}
+                                                  key="transferConfirmationProcessDifferenceReport"/>}/>}/>
         <Route path="/transferConfirmationReportAll/:scanCode"
                element={<ProtectedRoute authorization={RoleType.TRANSFER_SUPERVISOR}
-                                        element={<GoodsReceiptAll confirm
-                                                                  key="receiptConfirmationAll"/>}/>}/>
+                                        element={<GoodsReceiptAll 
+                                                  processType={ProcessType.TransferConfirmation}
+                                                  key="transferConfirmationAll"/>}/>}/>
       </>
     );
   }
@@ -295,6 +320,7 @@ function AppRoutes() {
         {getGoodsReceiptConfirmationRoutes()}
         {getPickingRoutes()}
         {getTransferRoutes()}
+        {getTransferConfirmationRoutes()}
         {getSettingsRoutes()}
         {getDefaultRoutes()}
       </Routes>

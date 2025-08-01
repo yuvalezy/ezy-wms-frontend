@@ -30,13 +30,14 @@ import {
   GoodsReceiptType,
   ReceiptDocument
 } from "@/features/goods-receipt/data/goods-receipt";
+import {ProcessType} from "@/features/shared/data";
 
 interface DocumentFormProps {
   onNewDocument: (document: ReceiptDocument) => void,
-  confirm: boolean
+  processType?: ProcessType
 }
 
-const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, confirm}) => {
+const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, processType = ProcessType.Regular}) => {
   const {t} = useTranslation();
   const o = useObjectName();
   const {setLoading, setError} = useThemeContext();
@@ -61,7 +62,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, confirm}) => 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const selectedType = activeTab === TAB_AUTOCONFIRM ? GoodsReceiptType.All :
-      !confirm ? GoodsReceiptType.SpecificOrders : GoodsReceiptType.SpecificReceipts;
+      processType === ProcessType.Regular ? GoodsReceiptType.SpecificOrders : GoodsReceiptType.SpecificReceipts;
 
     // Validation logic (can be enhanced with react-hook-form later if needed)
     // if (docNameInput.trim() === "") {
@@ -143,7 +144,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, confirm}) => 
       </div>
       <div className="space-y-2">
         <Label>{t("documentsList")}</Label>
-        <DocumentList ref={documentListRef} confirm={confirm} onItemsUpdate={setItems}/>
+        <DocumentList ref={documentListRef} processType={processType} onItemsUpdate={setItems}/>
       </div>
       <div>
         <Button type="submit">
@@ -153,7 +154,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, confirm}) => 
     </form>
   }
 
-  if (confirm)
+  if (processType !== ProcessType.Regular)
     return <Card className="mb-4 shadow-lg">
       {renderSpecificOrders()}
     </Card>;

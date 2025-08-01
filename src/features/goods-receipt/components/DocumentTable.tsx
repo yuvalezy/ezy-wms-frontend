@@ -20,31 +20,49 @@ import {useNavigate} from "react-router-dom";
 import {DocumentItem, ReceiptDocument} from "@/features/goods-receipt/data/goods-receipt";
 import {useGoodsReceiptHandleOpen} from "@/features/goods-receipt/hooks/useGoodsReceiptHandleOpen";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
+import {ProcessType} from "@/features/shared/data";
 
 type DocumentTableProps = {
   documents: ReceiptDocument[],
   supervisor?: boolean,
   action?: (doc: ReceiptDocument, action: 'approve' | 'cancel') => void,
   docDetails: (doc: ReceiptDocument) => void,
-  confirm?: boolean
+  processType?: ProcessType
 }
 
-const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = false, action, docDetails, confirm}) => {
+const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = false, action, docDetails, processType = ProcessType.Regular}) => {
   const {t} = useTranslation();
   const o = useObjectName();
   const documentStatusToString = useDocumentStatusToString();
   const {dateFormat} = useDateTimeFormat();
   const {user} = useAuth();
-  const handleOpen = useGoodsReceiptHandleOpen(confirm);
+  const handleOpen = useGoodsReceiptHandleOpen(processType === ProcessType.Confirmation || processType === ProcessType.TransferConfirmation);
   const navigate = useNavigate();
 
-  const handleOpenLink = !confirm ? user?.roles?.includes(RoleType.GOODS_RECEIPT) : user?.roles?.includes(RoleType.GOODS_RECEIPT_CONFIRMATION);
+  const getNavigationRole = () => {
+    switch (processType) {
+      case ProcessType.Confirmation:
+        return RoleType.GOODS_RECEIPT_CONFIRMATION;
+      case ProcessType.TransferConfirmation:
+        return RoleType.TRANSFER;
+      default:
+        return RoleType.GOODS_RECEIPT;
+    }
+  };
+
+  const handleOpenLink = user?.roles?.includes(getNavigationRole());
 
   const openLink = (doc: ReceiptDocument) => {
-    if (!confirm)
-      navigate(`/goodsReceipt/${doc.id}`);
-    else
-      navigate(`/goodsReceiptConfirmation/${doc.id}`);
+    switch (processType) {
+      case ProcessType.Confirmation:
+        navigate(`/goodsReceiptConfirmation/${doc.id}`);
+        break;
+      case ProcessType.TransferConfirmation:
+        navigate(`/transferConfirmation/${doc.id}`);
+        break;
+      default:
+        navigate(`/goodsReceipt/${doc.id}`);
+    }
   };
 
   const formatDocumentsList = (documents: DocumentItem[]) => {
@@ -68,13 +86,13 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
         <DropdownMenuContent align="end" className="w-48">
           <DropdownMenuItem onClick={() => handleOpen('all', doc.id)}>
             <FileText className="mr-2 h-4 w-4" />
-            {!confirm ? t('goodsReceiptReport') : t('confirmationReport')}
+            {processType === ProcessType.Regular ? t('goodsReceiptReport') : t('confirmationReport')}
           </DropdownMenuItem>
 
           {user?.settings?.goodsReceiptTargetDocuments && activeStatuses.includes(doc.status) && (
             <DropdownMenuItem onClick={() => handleOpen('vs', doc.id)}>
               <Truck className="mr-2 h-4 w-4" />
-              {!confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}
+              {processType === ProcessType.Regular ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}
             </DropdownMenuItem>
           )}
 
@@ -118,7 +136,7 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
             <TableHead className="whitespace-nowrap">{t('docDate')}</TableHead>
             <TableHead className="whitespace-nowrap">{t('createdBy')}</TableHead>
             <TableHead className="whitespace-nowrap">{t('status')}</TableHead>
-            {!confirm && <TableHead className="whitespace-nowrap">{t('vendor')}</TableHead>}
+            {processType === ProcessType.Regular && <TableHead className="whitespace-nowrap">{t('vendor')}</TableHead>}
             <TableHead className="whitespace-nowrap">{t('documentsList')}</TableHead>
             {supervisor && <TableHead className="text-right whitespace-nowrap w-16"></TableHead>}
           </TableRow>
@@ -142,7 +160,7 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
               <TableCell className="whitespace-nowrap">{dateFormat(doc.date)}</TableCell>
               <TableCell className="whitespace-nowrap">{doc.createdByUserName}</TableCell>
               <TableCell className="whitespace-nowrap">{documentStatusToString(doc.status)}</TableCell>
-              {!confirm && <TableCell className="whitespace-nowrap">
+              {processType === ProcessType.Regular && <TableCell className="whitespace-nowrap">
                 {doc.vendor?.name ?? doc.vendor?.id ?? '-'}
               </TableCell>}
               <TableCell className="min-w-0">

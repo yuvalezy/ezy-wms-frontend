@@ -15,30 +15,48 @@ import {useNavigate} from "react-router-dom";
 import {DocumentItem, ReceiptDocument} from "@/features/goods-receipt/data/goods-receipt";
 import {useGoodsReceiptHandleOpen} from "@/features/goods-receipt/hooks/useGoodsReceiptHandleOpen";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
+import {ProcessType} from "@/features/shared/data";
 
 type DocumentCardProps = {
   doc: ReceiptDocument,
   supervisor?: boolean,
   action?: (doc: ReceiptDocument, action: 'approve' | 'cancel') => void,
   docDetails: (doc: ReceiptDocument) => void,
-  confirm?: boolean
+  processType?: ProcessType
 }
 
-const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, action, docDetails, confirm}) => {
+const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, action, docDetails, processType = ProcessType.Regular}) => {
   const {t} = useTranslation();
   const o = useObjectName();
   const {dateFormat} = useDateTimeFormat();
   const {user} = useAuth();
-  const handleOpen = useGoodsReceiptHandleOpen(confirm);
+  const handleOpen = useGoodsReceiptHandleOpen(processType === ProcessType.Confirmation || processType === ProcessType.TransferConfirmation);
   const navigate = useNavigate();
 
-  const handleOpenLink = !confirm ? user?.roles?.includes(RoleType.GOODS_RECEIPT) : user?.roles?.includes(RoleType.GOODS_RECEIPT_CONFIRMATION);
+  const getNavigationRole = () => {
+    switch (processType) {
+      case ProcessType.Confirmation:
+        return RoleType.GOODS_RECEIPT_CONFIRMATION;
+      case ProcessType.TransferConfirmation:
+        return RoleType.TRANSFER;
+      default:
+        return RoleType.GOODS_RECEIPT;
+    }
+  };
+
+  const handleOpenLink = user?.roles?.includes(getNavigationRole());
 
   const openLink = () => {
-    if (!confirm)
-      navigate(`/goodsReceipt/${doc.id}`);
-    else
-      navigate(`/goodsReceiptConfirmation/${doc.id}`);
+    switch (processType) {
+      case ProcessType.Confirmation:
+        navigate(`/goodsReceiptConfirmation/${doc.id}`);
+        break;
+      case ProcessType.TransferConfirmation:
+        navigate(`/transferConfirmation/${doc.id}`);
+        break;
+      default:
+        navigate(`/goodsReceipt/${doc.id}`);
+    }
   };
 
   const documentStatusToString = useDocumentStatusToString();
@@ -74,12 +92,12 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <Button variant="outline" className="w-full" onClick={() => handleOpen('all', doc.id)}>
                 <FileText className="mr-2 h-4 w-4"/>
-                {!confirm ? t('goodsReceiptReport') : t('confirmationReport')}
+                {processType === ProcessType.Regular ? t('goodsReceiptReport') : t('confirmationReport')}
               </Button>
               {user?.settings?.goodsReceiptTargetDocuments && activeStatuses.includes(doc.status) && (
                 <Button variant="outline" className="w-full" onClick={() => handleOpen('vs', doc.id)}>
                   <Truck className="mr-2 h-4 w-4"/>
-                  {!confirm ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}
+                  {processType === ProcessType.Regular ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}
                 </Button>
               )}
               {processStatuses.includes(doc.status) && (

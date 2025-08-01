@@ -12,6 +12,7 @@ import {X, PlusCircle, AlertCircle} from "lucide-react"; // Icons
 import {toast} from "sonner";
 import {DocumentItem} from "@/features/goods-receipt/data/goods-receipt";
 import {useObjectName} from "@/hooks/useObjectName";
+import {ProcessType} from "@/features/shared/data";
 
 export interface DocumentListRef {
   clearItems: () => void;
@@ -19,7 +20,7 @@ export interface DocumentListRef {
 
 type DocumentListProps = {
   onItemsUpdate: (newItems: DocumentItem[]) => void;
-  confirm: boolean
+  processType?: ProcessType
 };
 
 const DocumentList = forwardRef<DocumentListRef, DocumentListProps>((props, ref) => {
@@ -32,7 +33,7 @@ const DocumentList = forwardRef<DocumentListRef, DocumentListProps>((props, ref)
   const PURCHASE_DELIVERY_NOTE = "20";
   const PURCHASE_ORDER_TYPE = "22";
   const RESERVED_INVOICE_TYPE = "18";
-  const [objTypeString, setObjTypeString] = useState<string>(!props.confirm ? PURCHASE_ORDER_TYPE : PURCHASE_DELIVERY_NOTE);
+  const [objTypeString, setObjTypeString] = useState<string>(props.processType === ProcessType.Regular ? PURCHASE_ORDER_TYPE : PURCHASE_DELIVERY_NOTE);
 
   const [docNum, setDocNum] = useState<string>('');
 
@@ -85,7 +86,14 @@ const DocumentList = forwardRef<DocumentListRef, DocumentListProps>((props, ref)
           {items.map((item, index) => (
             <div key={index} className="flex items-center justify-between border-b last:border-b-0">
               <span>{`${o(item.objectType)}: ${item.documentNumber}`}</span>
-              <Button type="button" variant="ghost" size="icon" onClick={() => handleRemoveClick(index)} aria-label={t('delete')}>
+              <Button 
+                type="button"
+                variant="secondary"
+                size="icon"
+                onClick={() => handleRemoveClick(index)} 
+                aria-label={t('delete')}
+                className="hover:bg-red-50 hover:text-red-600 transition-colors"
+              >
                 <X className="h-4 w-4 text-red-500"/>
               </Button>
             </div>
@@ -110,9 +118,9 @@ const DocumentList = forwardRef<DocumentListRef, DocumentListProps>((props, ref)
               <SelectValue placeholder={t("selectDocumentType")}/>
             </SelectTrigger>
             <SelectContent>
-              {props.confirm && <SelectItem value={PURCHASE_DELIVERY_NOTE}>{t('goodsReceipt')}</SelectItem>}
-              {!props.confirm && <SelectItem value={PURCHASE_ORDER_TYPE}>{t('purchaseOrder')}</SelectItem>}
-              <SelectItem value={RESERVED_INVOICE_TYPE}>{!props.confirm ? t('reservedInvoice') : t('purchaseInvoice')}</SelectItem>
+              {props.processType !== ProcessType.Regular && <SelectItem value={PURCHASE_DELIVERY_NOTE}>{t('goodsReceipt')}</SelectItem>}
+              {props.processType === ProcessType.Regular && <SelectItem value={PURCHASE_ORDER_TYPE}>{t('purchaseOrder')}</SelectItem>}
+              <SelectItem value={RESERVED_INVOICE_TYPE}>{props.processType === ProcessType.Regular ? t('reservedInvoice') : t('purchaseInvoice')}</SelectItem>
             </SelectContent>
           </Select>
         </div>

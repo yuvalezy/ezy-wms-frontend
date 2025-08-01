@@ -56,6 +56,12 @@ export enum UnitType {
   Pack = 'Pack'
 }
 
+export enum ProcessType {
+  Regular = 'regular',
+  Confirmation = 'confirmation',
+  TransferConfirmation = 'transferConfirmation'
+}
+
 export enum AddItemReturnValueType {
   Ok = 0,
   ItemCodeNotFound = -1,
