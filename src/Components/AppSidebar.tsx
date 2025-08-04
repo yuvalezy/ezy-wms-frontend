@@ -79,6 +79,7 @@ export function AppSidebar() {
       case "/transferRequest":
       case "/transferConfirmation":
       case "/transferConfirmationSupervisor":
+      case "/transferConfirmationReport":
         groupLabel = t("transfer");
         break;
       case "/settings/cancelReasons":
