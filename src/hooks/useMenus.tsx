@@ -192,6 +192,14 @@ export function useMenus() {
       Color: "text-lime-700",
       RequiresFeature: "EnableTransferConfirm"
     },
+    {
+      Link: "/transferConfirmationReport",
+      Text: t('transferConfirmationReport'),
+      Authorization: RoleType.TRANSFER_SUPERVISOR,
+      Icon: TrendingUp,
+      Color: "text-indigo-700",
+      RequiresFeature: "EnableTransferConfirm"
+    },
     // {
     //     Link: "/settings/cancelReasons",
     //     Text: t('cancellationReasons'),

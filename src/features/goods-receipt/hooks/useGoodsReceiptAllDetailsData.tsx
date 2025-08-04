@@ -1,4 +1,5 @@
 import {DetailUpdateParameters, Status} from "@/features/shared/data/shared";
+import {ProcessType} from "@/features/shared/data";
 import {
   GoodsReceiptAllDetail, GoodsReceiptAllLine
 } from "@/features/goods-receipt/data/goods-receipt-reports";
@@ -88,5 +89,5 @@ export interface GRPOAllDetailRef {
 export interface GRPOAllDetailProps {
   id: string,
   onUpdate: (data: DetailUpdateParameters) => void,
-  confirm: boolean | undefined
+  processType?: ProcessType
 }

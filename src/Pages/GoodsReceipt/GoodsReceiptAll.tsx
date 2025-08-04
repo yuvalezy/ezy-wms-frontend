@@ -23,7 +23,7 @@ export default function GoodsReceiptReportAll({processType = ProcessType.Regular
     openDetails,
     onDetailUpdate,
     info
-  } = useGoodsReceiptAllData(processType === ProcessType.Confirmation || processType === ProcessType.TransferConfirmation);
+  } = useGoodsReceiptAllData(processType);
 
   const getTitle = () => {
     switch (processType) {
@@ -77,7 +77,7 @@ export default function GoodsReceiptReportAll({processType = ProcessType.Regular
             <AlertDescription>{t("noExitData")}</AlertDescription>
           </Alert>
         )}
-        {info && <GoodsReceiptAllDialog ref={detailRef} id={info.id} confirm={confirm} onUpdate={onDetailUpdate}/>}
+        {info && <GoodsReceiptAllDialog ref={detailRef} id={info.id} processType={processType} onUpdate={onDetailUpdate}/>}
       </>}
     </ContentTheme>
   );
