@@ -7,6 +7,7 @@ import {
   GoodsReceiptAllLine,
 } from "@/features/goods-receipt/data/goods-receipt-reports";
 import {DetailUpdateParameters} from "@/features/shared/data/shared";
+import {ProcessType} from "@/features/shared/data";
 import {GRPOAllDetailRef} from "@/features/goods-receipt/hooks/useGoodsReceiptAllDetailsData";
 import {exportToExcel} from "@/utils/excelExport";
 import {getExcelQuantityHeaders, getExcelQuantityValues} from "@/utils/excel-quantity-format";
@@ -17,7 +18,7 @@ import {goodsReceiptReportService} from "@/features/goods-receipt/data/goods-rec
 import {useAuth} from "@/components";
 import {formatNumber} from "@/utils/number-utils";
 
-export const useGoodsReceiptAllData = (confirm: boolean | undefined) => {
+export const useGoodsReceiptAllData = (processType: ProcessType = ProcessType.Regular) => {
   const {t} = useTranslation();
   const {unitSelection} = useAuth();
   const {scanCode} = useParams();
@@ -57,7 +58,7 @@ export const useGoodsReceiptAllData = (confirm: boolean | undefined) => {
       t("code"),
       t("description"),
     ];
-    headers.push(...getExcelQuantityHeaders());
+    headers.push(...getExcelQuantityHeaders(t, unitSelection, user?.settings.enableUseBaseUn));
     headers.push(
       t("delivery"),
       t("showroom"),
@@ -79,7 +80,7 @@ export const useGoodsReceiptAllData = (confirm: boolean | undefined) => {
         quantity: item.quantity,
         numInBuy: item.numInBuy,
         purPackUn: item.purPackUn,
-      }));
+      }, unitSelection, user?.settings.enableUseBaseUn));
       
       values.push(
         formatNumber(item.delivery, 0),

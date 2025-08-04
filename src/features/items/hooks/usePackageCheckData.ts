@@ -6,7 +6,7 @@ import {useAuth} from "@/components/AppContext";
 import {PackageDto} from "@/features/packages/types";
 import {getPackageByBarcode} from "@/features/packages/hooks";
 import {exportToExcel} from "@/utils/excelExport";
-import {formatQuantityForExcel} from "@/utils/excel-quantity-format";
+import {formatQuantityForExcel, getExcelQuantityHeaders, getExcelQuantityValuesFromResult} from "@/utils/excel-quantity-format";
 
 export const usePackageCheckData = () => {
   const {t} = useTranslation();
@@ -95,9 +95,7 @@ export const usePackageCheckData = () => {
       return [
         content.itemCode,
         content.itemData?.itemName || '',
-        quantities.pack,
-        quantities.dozen,
-        quantities.unit,
+        ...getExcelQuantityValuesFromResult(quantities, user?.settings.enableUseBaseUn),
         content.unitType,
         content.binCode || '',
         content.whsCode,
@@ -110,9 +108,7 @@ export const usePackageCheckData = () => {
   const excelHeaders = [
     t("code"),
     t("itemName"),
-    t("pack"),
-    t("dozen"),
-    t("unit"),
+    ...getExcelQuantityHeaders(t, true, user?.settings.enableUseBaseUn),
     t("unitType"),
     t("binCode"),
     t("whsCode"),

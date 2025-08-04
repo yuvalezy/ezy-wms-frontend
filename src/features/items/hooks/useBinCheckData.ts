@@ -58,7 +58,7 @@ export const useBinCheckData = () => {
         quantity: value.onHand,
         numInBuy: value.numInBuy,
         purPackUn: value.purPackUn,
-      }));
+      }, unitSelection, user?.settings.enableUseBaseUn));
       return values;
     }) ?? [];
   };
@@ -68,7 +68,7 @@ export const useBinCheckData = () => {
       t("code"),
       t("description"),
     ];
-    headers.push(...getExcelQuantityHeaders());
+    headers.push(...getExcelQuantityHeaders(t, unitSelection, user?.settings.enableUseBaseUn));
     return headers;
   }
 

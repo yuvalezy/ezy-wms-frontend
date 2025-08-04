@@ -4,17 +4,16 @@ import {useTranslation} from "react-i18next";
 import {useNavigate, useParams} from "react-router-dom";
 import CountingSummaryReportTable from "@/features/counting/components/CountingSummaryReportTable";
 import {exportToExcel} from "@/utils/excelExport";
-import {formatQuantityForExcel} from "@/utils/excel-quantity-format";
+import {formatQuantityForExcel, getExcelQuantityHeaders, getExcelQuantityValues} from "@/utils/excel-quantity-format";
 import ContentTheme from "@/components/ContentTheme";
 import {countingService} from "@/features/counting/data/counting-service";
 import {CountingSummaryReportData} from "@/features/counting/data/counting";
-import {formatNumber} from "@/utils/number-utils";
 
 export default function CountingSummaryReport() {
   const {scanCode} = useParams();
   const {setLoading, setError} = useThemeContext();
   const {t} = useTranslation();
-  const {unitSelection} = useAuth();
+  const {unitSelection, user} = useAuth();
   const [data, setData] = useState<CountingSummaryReportData | null>(null);
   const navigate = useNavigate();
 
@@ -36,40 +35,22 @@ export default function CountingSummaryReport() {
       t("code"),
       t("description"),
     ];
-    if (unitSelection) {
-     headers.push(
-       t("packages"),
-       t("dozens"),
-       t("units"),
-     ) ;
-    } else {
-      headers.push(t("quantity"));
-    }
+    headers.push(...getExcelQuantityHeaders(t, unitSelection, user?.settings.enableUseBaseUn));
     return headers;
   }
 
   const excelData = () => {
     return data?.lines.map((item) => {
-      const quantities = formatQuantityForExcel({
-        quantity: item.quantity,
-        numInBuy: item.numInBuy,
-        purPackUn: item.purPackUn,
-      });
-
       const values = [
         item.binCode,
         item.itemCode,
         item.itemName,
       ];
-      if (unitSelection) {
-        values.push(
-          formatNumber(quantities.pack, 0),
-          formatNumber(quantities.dozen, 0),
-          formatNumber(quantities.unit, 0),
-        );
-      } else {
-        values.push(formatNumber(item.quantity, 0));
-      }
+      values.push(...getExcelQuantityValues({
+        quantity: item.quantity,
+        numInBuy: item.numInBuy,
+        purPackUn: item.purPackUn,
+      }, unitSelection, user?.settings.enableUseBaseUn));
       return values;
     }) ?? [];
   };

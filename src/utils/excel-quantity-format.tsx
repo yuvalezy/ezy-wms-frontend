@@ -1,6 +1,4 @@
 import { TFunction } from "i18next";
-import { useTranslation } from "react-i18next";
-import {useAuth} from "@/components";
 import {formatNumber} from "@/utils/number-utils";
 
 export interface ExcelQuantityFormatParams {
@@ -44,10 +42,12 @@ export const formatQuantityForExcel = (params: ExcelQuantityFormatParams): Excel
 /**
  * Returns Excel headers for quantity columns based on unit selection settings
  */
-export const getExcelQuantityHeaders = (): string[] => {
-  const {t} = useTranslation();
+export const getExcelQuantityHeaders = (
+  t: TFunction,
+  unitSelection: boolean,
+  enableUseBaseUn?: boolean
+): string[] => {
   const headers: string[] = [];
-  const {unitSelection, enableUseBaseUn} = useAuth();
 
   if (unitSelection) {
     headers.push(
@@ -67,8 +67,11 @@ export const getExcelQuantityHeaders = (): string[] => {
 /**
  * Returns formatted Excel values for quantity columns based on unit selection settings
  */
-export const getExcelQuantityValues = (params: ExcelQuantityFormatParams): string[] => {
-  const {unitSelection, user} = useAuth();
+export const getExcelQuantityValues = (
+  params: ExcelQuantityFormatParams,
+  unitSelection: boolean,
+  enableUseBaseUn?: boolean
+): string[] => {
   const values: string[] = [];
   
   if (unitSelection) {
@@ -78,11 +81,27 @@ export const getExcelQuantityValues = (params: ExcelQuantityFormatParams): strin
       formatNumber(quantities.pack, 0),
       formatNumber(quantities.dozen, 0),
     );
-    if (user?.settings.enableUseBaseUn) {
+    if (enableUseBaseUn) {
       values.push(formatNumber(quantities.unit, 0));
     }
   } else {
     values.push(formatNumber(params.quantity, 0));
+  }
+  
+  return values;
+};
+
+/**
+ * Returns Excel quantity values from pre-calculated quantities
+ * Used when quantities are already calculated (e.g., from backend)
+ */
+export const getExcelQuantityValuesFromResult = (quantities: ExcelQuantityResult, enableUseBaseUn?: boolean): number[] => {
+  const values: number[] = [];
+  
+  values.push(quantities.pack, quantities.dozen);
+  
+  if (enableUseBaseUn) {
+    values.push(quantities.unit);
   }
   
   return values;

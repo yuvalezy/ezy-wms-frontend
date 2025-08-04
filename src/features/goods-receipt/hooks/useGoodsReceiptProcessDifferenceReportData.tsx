@@ -3,12 +3,13 @@ import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import {useObjectName} from "@/hooks/useObjectName";
 import {useThemeContext} from "@/components/ThemeContext";
+import {useAuth} from "@/components";
 import {
   GoodsReceiptValidateProcess,
   ProcessLineStatus
 } from "@/features/goods-receipt/data/goods-receipt-reports";
 import {exportToExcel} from "@/utils/excelExport";
-import {formatQuantityForExcel} from "@/utils/excel-quantity-format";
+import {formatQuantityForExcel, getExcelQuantityHeaders, getExcelQuantityValuesFromResult} from "@/utils/excel-quantity-format";
 import {ReceiptDocument} from "@/features/goods-receipt/data/goods-receipt";
 import {goodsReceiptService} from "@/features/goods-receipt/data/goods-receipt-service";
 import {goodsReceiptReportService} from "@/features/goods-receipt/data/goods-receipt-report-service";
@@ -18,6 +19,7 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
   const {scanCode} = useParams();
   const o = useObjectName();
   const {setLoading, setError} = useThemeContext();
+  const {user} = useAuth();
   const [data, setData] = useState<GoodsReceiptValidateProcess[] | null>(null);
   const [report, setReport] = useState<GoodsReceiptValidateProcess | null>(null);
   const [info, setInfo] = useState<ReceiptDocument | null>(null);
@@ -41,9 +43,7 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
   const excelHeaders = [
     t("code"),
     t("description"),
-    t("pack"),
-    t("dozen"),
-    t("unit"),
+    ...getExcelQuantityHeaders(t, true, user?.settings.enableUseBaseUn),
   ];
 
   function excelData() {
@@ -85,9 +85,7 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
         return [
           item.itemCode,
           item.itemName,
-          quantities.pack,
-          quantities.dozen,
-          quantities.unit,
+          ...getExcelQuantityValuesFromResult(quantities, user?.settings.enableUseBaseUn),
         ];
       });
   }
