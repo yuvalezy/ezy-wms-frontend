@@ -1,6 +1,7 @@
 import { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import {useAuth} from "@/components";
+import {formatNumber} from "@/utils/number-utils";
 
 export interface ExcelQuantityFormatParams {
   quantity: number;
@@ -61,4 +62,28 @@ export const getExcelQuantityHeaders = (): string[] => {
   }
   
   return headers;
+};
+
+/**
+ * Returns formatted Excel values for quantity columns based on unit selection settings
+ */
+export const getExcelQuantityValues = (params: ExcelQuantityFormatParams): string[] => {
+  const {unitSelection, user} = useAuth();
+  const values: string[] = [];
+  
+  if (unitSelection) {
+    const quantities = formatQuantityForExcel(params);
+    
+    values.push(
+      formatNumber(quantities.pack, 0),
+      formatNumber(quantities.dozen, 0),
+    );
+    if (user?.settings.enableUseBaseUn) {
+      values.push(formatNumber(quantities.unit, 0));
+    }
+  } else {
+    values.push(formatNumber(params.quantity, 0));
+  }
+  
+  return values;
 };

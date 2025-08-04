@@ -9,7 +9,7 @@ import {
 import {DetailUpdateParameters} from "@/features/shared/data/shared";
 import {GRPOAllDetailRef} from "@/features/goods-receipt/hooks/useGoodsReceiptAllDetailsData";
 import {exportToExcel} from "@/utils/excelExport";
-import {formatQuantityForExcel, getExcelQuantityHeaders} from "@/utils/excel-quantity-format";
+import {getExcelQuantityHeaders, getExcelQuantityValues} from "@/utils/excel-quantity-format";
 
 import {ReceiptDocument} from "@/features/goods-receipt/data/goods-receipt";
 import {goodsReceiptService} from "@/features/goods-receipt/data/goods-receipt-service";
@@ -75,23 +75,12 @@ export const useGoodsReceiptAllData = (confirm: boolean | undefined) => {
         item.itemName,
       ];
 
-      if (unitSelection) {
-        const quantities = formatQuantityForExcel({
-          quantity: item.quantity,
-          numInBuy: item.numInBuy,
-          purPackUn: item.purPackUn,
-        });
-
-        values.push(
-          formatNumber(quantities.pack, 0),
-          formatNumber(quantities.dozen, 0),
-        );
-        if (!user?.settings.enableUseBaseUn) {
-          values.push(formatNumber(quantities.unit, 0),);
-        }
-      } else {
-        values.push(formatNumber(item.quantity, 0));
-      }
+      values.push(...getExcelQuantityValues({
+        quantity: item.quantity,
+        numInBuy: item.numInBuy,
+        purPackUn: item.purPackUn,
+      }));
+      
       values.push(
         formatNumber(item.delivery, 0),
         formatNumber(item.showroom, 0),

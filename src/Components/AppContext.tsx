@@ -29,6 +29,7 @@ interface AuthContextType {
   setShowDeviceStatusBanner: (show: boolean) => void;
   reloadCompanyInfo: () => Promise<void>;
   unitSelection: boolean;
+  enableUseBaseUn: boolean;
   defaultUnit: UnitType;
 }
 
@@ -55,6 +56,7 @@ const AuthContextDefaultValues: AuthContextType = {
     console.warn("reloadCompanyInfo method not implemented yet!");
   },
   unitSelection: true,
+  enableUseBaseUn: true,
   defaultUnit: UnitType.Pack,
 };
 
@@ -170,6 +172,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   const validStatuses = [AccountState.Active, AccountState.PaymentDue, AccountState.PaymentDueUnknown, AccountState.Demo];
   const isValidAccount = validStatuses.some(v => v === companyInfo?.accountStatus);
   const unitSelection = user?.settings?.enableUnitSelection ?? true;
+  const enableUseBaseUn = user?.settings?.enableUseBaseUn ?? true;
   const defaultUnit = user?.settings?.defaultUnitType ?? UnitType.Pack;
 
   const value = {
@@ -186,6 +189,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     setShowDeviceStatusBanner,
     reloadCompanyInfo,
     unitSelection,
+    enableUseBaseUn,
     defaultUnit,
   };
 
