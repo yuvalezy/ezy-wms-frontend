@@ -114,8 +114,12 @@ export const useGoodsReceiptProcessData = (processType: ProcessType) => {
         }
       })
       .catch((error) => {
-        console.error(`Error performing action: ${error}`);
-        let errorMessage = error.response?.data["exceptionMessage"] ?? `Add Item Error: ${error}`;
+        let errorMessage = `${error}`
+        if (errorMessage.includes('Item was not found in any of the source documents')) {
+          errorMessage = t('itemNotFoundInSource');
+        } else {
+          errorMessage = error.response?.data["exceptionMessage"] ?? `Add Item Error: ${error}`;
+        }
         alert({barcode: barcode, itemCode: item.code, message: errorMessage, severity: "Negative"});
       })
       .finally(function () {

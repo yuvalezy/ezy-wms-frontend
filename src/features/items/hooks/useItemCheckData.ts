@@ -1,24 +1,34 @@
-import React, {useEffect, useRef, useCallback} from "react";
+import React, {useCallback, useEffect, useRef} from "react";
 import {useThemeContext} from "@/components/ThemeContext";
 import {StringFormat} from "@/utils/string-utils";
 import {useTranslation} from "react-i18next";
 import {toast} from "sonner";
 import {ItemCheckResponse, ResponseStatus} from "@/features/items/data/items";
 import {itemsService} from "@/features/items/data/items-service";
+import {useAuth} from "@/components";
+import {ScannerMode} from "@/features/login/data/login";
 
 export const useItemCheckData = () => {
   const {t} = useTranslation();
+  const {user} = useAuth();
   const [barcodeInput, setBarcodeInput] = React.useState("");
   const [itemCodeInput, setItemCodeInput] = React.useState("");
   const [result, setResult] = React.useState<ItemCheckResponse[] | null>(null);
   const {setLoading, setError} = useThemeContext();
   const barcodeInputRef = useRef<HTMLInputElement>(null);
+  const codeInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (barcodeInputRef == null)
+    setCodeFocus();
+  }, [barcodeInputRef, codeInputRef]);
+
+  const setCodeFocus = () => {
+    if (user!.settings.scannerMode === ScannerMode.ItemCode) {
+      setTimeout(() => codeInputRef?.current?.focus(), 1);
       return;
-    setTimeout(() => barcodeInputRef.current?.focus(), 1);
-  }, [barcodeInputRef]);
+    }
+    setTimeout(() => barcodeInputRef?.current?.focus(), 1);
+  }
 
   function handleCheckSubmit() {
     let barcodeLength = barcodeInput.length === 0;
@@ -41,7 +51,7 @@ export const useItemCheckData = () => {
           setBarcodeInput("");
           setItemCodeInput("");
           setResult(null);
-          setTimeout(() => barcodeInputRef.current?.focus(), 100);
+          setCodeFocus();
         }
       })
       .catch((error) => setError(error))
@@ -120,6 +130,7 @@ export const useItemCheckData = () => {
     result,
     setResult,
     barcodeInputRef,
+    codeInputRef,
     handleCheckSubmit,
     executeItemCheck,
     handleUpdateSubmit,

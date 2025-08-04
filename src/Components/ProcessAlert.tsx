@@ -182,10 +182,12 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
 
           {alert.itemCode && (
             <div className="grid grid-cols-2 gap-3 text-sm">
+              {alert.quantity && (
               <div>
                 <div className="text-xs text-gray-500 uppercase tracking-wide">{t('quantity')}</div>
                 <div className="font-medium">{alert.quantity}{unitDesc()}</div>
               </div>
+              )}
               
               {!alert.unit && alert.purPackUn && (
                 <div>
@@ -210,7 +212,7 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
             </div>
           )}
 
-          {user?.settings?.goodsReceiptTargetDocuments && alert.message && (
+          {alert.message && (
             <div className="bg-gray-50 p-3 rounded-md">
               <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">{t('message')}</div>
               <div className="text-sm">{alert.message}</div>

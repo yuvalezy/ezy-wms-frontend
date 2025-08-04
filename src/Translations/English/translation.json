@@ -623,5 +623,6 @@
   "viewContents": "View Contents",
   "noPackageContents": "No package contents found",
   "packageAlreadyAddedAsSource": "Package {{barcode}} is already added as source to this transfer",
-  "enterValue": "Enter Value"
+  "enterValue": "Enter Value",
+  "itemNotFoundInSource": "Item was not found in any of the source documents"
 }

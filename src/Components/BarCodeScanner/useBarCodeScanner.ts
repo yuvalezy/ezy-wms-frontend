@@ -9,6 +9,7 @@ import {AddItemValue, PackageValue} from './types';
 import {ItemInfoResponse} from "@/features/items/data/items";
 import {itemsService} from "@/features/items/data/items-service";
 import {StringFormat} from "@/utils/string-utils";
+import { ScannerMode } from '@/features/login/data/login';
 
 interface UseBarCodeScannerProps {
   enabled: boolean;
@@ -40,7 +41,7 @@ export const useBarCodeScanner = ({
                                     binEntry,
                                     isEphemeralPackage,
                                   }: UseBarCodeScannerProps) => {
-  const {defaultUnit} = useAuth();
+  const {defaultUnit, user} = useAuth();
   const barcodeRef = useRef<HTMLInputElement>(null);
   const [barcodeInput, setBarcodeInput] = useState('');
   const [selectedUnit, setSelectedUnit] = useState<UnitType>(defaultUnit);
@@ -65,13 +66,15 @@ export const useBarCodeScanner = ({
   const handleScanBarcode = (barcode: string) => {
     try {
       if (barcode.length === 0) {
-        const message = !item ? t("barCodeRequired") : t("scanCodeRequired");
+        const message = item ? t("scanCodeRequired") :
+          (user!.settings.scannerMode === ScannerMode.ItemBarcode || scanMode === 'package') ?
+            t("barCodeRequired") : t("scanCodeRequired");
         toast.warning(message);
         return;
       }
 
       setLoading(true);
-      itemsService.scanBarcode(barcode, item)
+      itemsService.scanBarcode(barcode, item || user!.settings.scannerMode === ScannerMode.ItemCode)
         .then((items) => handleItems(items))
         .catch((error) => {
           setError(error);

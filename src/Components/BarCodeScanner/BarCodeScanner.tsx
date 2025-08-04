@@ -9,6 +9,7 @@ import {ScanModeControls} from './ScanModeControls';
 import {UnitSelector} from './UnitSelector';
 import {BarCodeScannerProps, BarCodeScannerRef} from './types';
 import {useAuth, useBarCodeScanner} from "@/components";
+import {ScannerMode} from "@/features/login/data/login";
 
 const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
   {
@@ -34,7 +35,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
   ref
 ) => {
   const {t} = useTranslation();
-  const {unitSelection} = useAuth();
+  const {unitSelection, user} = useAuth();
 
   const {
     barcodeRef,
@@ -77,8 +78,10 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
     }
   }));
 
-  const barcodeLabel = !item ? t("barcode") : t("code");
-
+  // item is true for example Transfer Request where the user is directly requesting an item
+  const barcodeLabel = item ? t("code") :
+    (user!.settings.scannerMode === ScannerMode.ItemBarcode || scanMode === 'package') ?
+      t("barcode") : t("code");
   return (
     <form onSubmit={handleSubmit} className="space-y-4 p-2">
       <ScanModeControls

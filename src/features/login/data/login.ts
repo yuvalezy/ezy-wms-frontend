@@ -24,6 +24,7 @@ export interface UserInfo {
 export interface ApplicationSettings {
   // General
   enableUseBaseUn: boolean;
+  scannerMode: ScannerMode;
   // Goods Receipt
   goodsReceiptDraft: boolean;
   goodsReceiptModificationSupervisor: boolean;
@@ -59,4 +60,9 @@ export interface LoginRequest {
 export interface ErrorResponse {
   error: string;
   error_description: string;
+}
+
+export enum ScannerMode {
+  ItemBarcode = 'ItemBarcode',
+  ItemCode = 'ItemCode'
 }
