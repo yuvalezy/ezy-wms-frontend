@@ -9,7 +9,7 @@ import {
 import {DetailUpdateParameters} from "@/features/shared/data/shared";
 import {GRPOAllDetailRef} from "@/features/goods-receipt/hooks/useGoodsReceiptAllDetailsData";
 import {exportToExcel} from "@/utils/excelExport";
-import {formatQuantityForExcel} from "@/utils/excel-quantity-format";
+import {formatQuantityForExcel, getExcelQuantityHeaders} from "@/utils/excel-quantity-format";
 
 import {ReceiptDocument} from "@/features/goods-receipt/data/goods-receipt";
 import {goodsReceiptService} from "@/features/goods-receipt/data/goods-receipt-service";
@@ -26,6 +26,7 @@ export const useGoodsReceiptAllData = (confirm: boolean | undefined) => {
   const [info, setInfo] = useState<ReceiptDocument | null>(null);
   const title = `${t("goodsReceiptReport")} #${scanCode}`;
   const detailRef = useRef<GRPOAllDetailRef>();
+  const {user} = useAuth();
 
   useEffect(() => {
     if (scanCode === null || scanCode === undefined) {
@@ -56,15 +57,7 @@ export const useGoodsReceiptAllData = (confirm: boolean | undefined) => {
       t("code"),
       t("description"),
     ];
-    if (unitSelection) {
-      headers.push(
-        t("pack"),
-        t("dozen"),
-        t("unit"),
-      );
-    } else {
-      headers.push(t("quantity"));
-    }
+    headers.push(...getExcelQuantityHeaders());
     headers.push(
       t("delivery"),
       t("showroom"),
@@ -92,8 +85,10 @@ export const useGoodsReceiptAllData = (confirm: boolean | undefined) => {
         values.push(
           formatNumber(quantities.pack, 0),
           formatNumber(quantities.dozen, 0),
-          formatNumber(quantities.unit, 0),
         );
+        if (!user?.settings.enableUseBaseUn) {
+          values.push(formatNumber(quantities.unit, 0),);
+        }
       } else {
         values.push(formatNumber(item.quantity, 0));
       }

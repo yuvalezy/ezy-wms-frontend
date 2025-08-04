@@ -1,0 +1,64 @@
+import { TFunction } from "i18next";
+import { useTranslation } from "react-i18next";
+import {useAuth} from "@/components";
+
+export interface ExcelQuantityFormatParams {
+  quantity: number;
+  numInBuy: number;
+  purPackUn: number;
+}
+
+export interface ExcelQuantityResult {
+  pack: number;
+  dozen: number;
+  unit: number;
+}
+
+/**
+ * Formats quantity into separate pack, dozen, and unit values for Excel export
+ * Based on the same logic as stock-info but returns individual numeric values
+ */
+export const formatQuantityForExcel = (params: ExcelQuantityFormatParams): ExcelQuantityResult => {
+  const { quantity, numInBuy, purPackUn } = params;
+  
+  // Calculate packages (packs)
+  const pack = Math.floor(quantity / (numInBuy * purPackUn));
+  
+  // Calculate remaining quantity after removing full packages
+  const remainingForDozens = quantity % (numInBuy * purPackUn);
+  
+  // Calculate dozens from remaining quantity
+  const dozen = Math.floor(remainingForDozens / numInBuy);
+  
+  // Calculate units from remaining quantity after dozens
+  const unit = remainingForDozens % numInBuy;
+  
+  return {
+    pack,
+    dozen,
+    unit
+  };
+};
+
+/**
+ * Returns Excel headers for quantity columns based on unit selection settings
+ */
+export const getExcelQuantityHeaders = (): string[] => {
+  const {t} = useTranslation();
+  const headers: string[] = [];
+  const {unitSelection, enableUseBaseUn} = useAuth();
+
+  if (unitSelection) {
+    headers.push(
+      t("inventory.units.box.label"),
+      t("inventory.units.dozen.label"),
+    );
+    if (enableUseBaseUn) {
+      headers.push(t("inventory.units.unit.label"));
+    }
+  } else {
+    headers.push(t("quantity"));
+  }
+  
+  return headers;
+};

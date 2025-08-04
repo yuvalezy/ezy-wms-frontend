@@ -4,7 +4,7 @@ import {useRef, useState, useCallback} from "react";
 import {BinLocationScannerRef} from "@/components/BinLocationScanner";
 import {useAuth} from "@/components/AppContext";
 import {exportToExcel} from "@/utils/excelExport";
-import {formatQuantityForExcel} from "@/utils/excel-quantity-format";
+import {formatQuantityForExcel, getExcelQuantityHeaders} from "@/utils/excel-quantity-format";
 
 import {BinContentResponse, BinLocation} from "@/features/items/data/items";
 import {itemsService} from "@/features/items/data/items-service";
@@ -65,8 +65,10 @@ export const useBinCheckData = () => {
         values.push(
           formatNumber(quantities.pack, 0),
           formatNumber(quantities.dozen, 0),
-          formatNumber(quantities.unit, 0),
         );
+        if (user?.settings.enableUseBaseUn) {
+          values.push(formatNumber(quantities.unit, 0),);
+        }
       } else {
         values.push(value.onHand.toString());
       }
@@ -79,15 +81,7 @@ export const useBinCheckData = () => {
       t("code"),
       t("description"),
     ];
-    if (unitSelection) {
-      headers.push(
-        t("pack"),
-        t("dozen"),
-        t("unit"),
-      );
-    } else {
-      headers.push(t("quantity"));
-    }
+    headers.push(...getExcelQuantityHeaders());
     return headers;
   }
 
