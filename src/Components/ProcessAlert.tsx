@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useSwipeable} from "react-swipeable";
-import { Edit3, MessageCircle, Package2, X } from "lucide-react";
+import {Edit3, MessageCircle, Package2} from "lucide-react";
 import {AddItemResponseMultipleValue, UnitType} from "@/features/shared/data";
 import {useAuth} from "@/components/AppContext";
 import {ItemCustomFields} from "@/features/items/components/ItemDetailsList";
@@ -12,6 +12,7 @@ import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/
 import {Card} from "@/components/ui/card";
 import ClickableItemCode from "@/components/ClickableItemCode";
 import {useStockInfo} from "@/utils/stock-info";
+import {ScannerMode} from "@/features/login/data/login";
 
 export type AlertSeverity = "Information" | "Positive" | "Negative" | "Warning";
 
@@ -139,7 +140,13 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
         <div className="absolute top-0 left-0 right-0 bottom-0 bg-red-500 opacity-70 transition-opacity duration-200 z-0"/>
       )}
       <div className={`relative z-10 ${getAlertClasses()}`}>
-        {alert.barcode && (
+        {alert.itemCode && user!.settings.scannerMode === ScannerMode.ItemCode && (
+          <div className="mb-3">
+            <div className="text-xs text-gray-500 mt-1">{t('item')}</div>
+            <h4 className="font-bold text-lg text-gray-800">{alert.itemCode}</h4>
+          </div>
+        )}
+        {alert.barcode && user!.settings.scannerMode === ScannerMode.ItemBarcode && (
           <div className="mb-3">
             <div className="text-xs text-gray-500 mt-1">{t('barcode')}</div>
             <h4 className="font-bold text-lg text-gray-800">{alert.barcode}</h4>
@@ -172,7 +179,7 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
               <div className="font-medium">{alert.timeStamp}</div>
             </div>
             
-            {alert.itemCode && (
+            {alert.itemCode && user!.settings.scannerMode === ScannerMode.ItemBarcode && (
               <div>
                 <div className="text-xs text-gray-500 uppercase tracking-wide">{t('item')}</div>
                 <div className="font-medium">{alert.itemCode}</div>

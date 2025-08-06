@@ -98,7 +98,9 @@ export const useBarCodeScanner = ({
     if (items.length === 1) {
       const item = items[0];
       if (!item.isPackage) {
-        item.barcode = barcode;
+        if (user!.settings.scannerMode === ScannerMode.ItemBarcode) {
+          item.barcode = barcode;
+        }
         barcodeRef?.current?.blur();
         onAddItem({
           item: items[0],
