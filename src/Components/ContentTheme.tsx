@@ -60,7 +60,7 @@ const ContentTheme: React.FC<ContentThemeProps> = (
 
   return (
     <SidebarProvider>
-      <div className="h-screen flex w-full text-base md:text-lg">
+      <div className="h-dvh flex w-full text-base md:text-lg">
         <AppSidebar/>
 
         <div className="flex flex-col flex-1 min-w-0">
