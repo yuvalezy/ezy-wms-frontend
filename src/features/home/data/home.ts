@@ -1,5 +1,6 @@
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {Boxes, CheckCircle, ClipboardList, Move, Package, PackageCheckIcon, ShoppingCart} from "lucide-react";
+import {ApplicationSettings} from "@/features/login/data/login";
 
 export interface HomeInfo {
   itemCheck: number;
@@ -19,6 +20,7 @@ export interface KpiItem {
   value: number;
   icon: any;
   authorizations: RoleType[];
+  dependency?: string;
   route: string;
   backgroundColor: string;
   iconColor: string;
@@ -131,18 +133,28 @@ export const kpiItems: KpiItem[] = [
     value: 30,
     icon: Move,
     authorizations: [RoleType.TRANSFER_CONFIRMATION, RoleType.TRANSFER_CONFIRMATION_SUPERVISOR],
+    dependency: "transferConfirmation",
     route: "/transferConfirmation",
     backgroundColor: "bg-purple-100",
     iconColor: "text-purple-700",
     borderColor: "border-l-purple-500"
   }
 ]; // Function to filter KPI items based on user authorizations
-export function getKpiItems(userAuthorizations: RoleType[] | undefined, info: HomeInfo): KpiItem[] {
+
+export function getKpiItems(settings: ApplicationSettings, userAuthorizations: RoleType[] | undefined, info: HomeInfo): KpiItem[] {
   if (!userAuthorizations) {
     return [];
   }
 
   return kpiItems.filter(item => {
+    if (item.dependency) {
+      switch (item.dependency) {
+        case 'transferConfirmation':
+          if (!settings.enableTransferConfirm)
+            return false;
+          break;
+      }
+    }
     for (const auth of item.authorizations) {
       if (userAuthorizations.includes(auth)) {
         return true;

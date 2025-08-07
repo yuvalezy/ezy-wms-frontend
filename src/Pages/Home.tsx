@@ -19,7 +19,7 @@ export default function Home() {
         setLoading(true);
         
         const response = await axiosInstance.get<HomeInfo>(`General/HomeInfo`);
-        setKpiItems(getKpiItems(user?.roles, response.data));
+        setKpiItems(getKpiItems(user!.settings, user!.roles, response.data));
       } catch (error) {
         console.error(`Failed to home info: ${error}`);
         setError(error);
