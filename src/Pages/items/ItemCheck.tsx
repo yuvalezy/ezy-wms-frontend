@@ -58,7 +58,7 @@ export default function ItemCheck() {
                   titleBreadcrumbs={hasData ? [{label: result[0].itemCode}] : undefined}>
       {!hasData ? (
         <>
-          <div className="flex justify-center">
+          <div className="flex justify-center px-3 pt-3 md:px-0 md:pt-0">
             <form onSubmit={(e) => {
               e.preventDefault();
               handleSubmitAndNavigate();
@@ -112,7 +112,7 @@ export default function ItemCheck() {
           </div>
         </>
       ) : (
-        <>
+        <div className="px-3 pt-3 md:px-0 md:pt-0">
           {result.length === 0 && (
             <Alert className="border-red-200 bg-red-50">
               <AlertTriangle className="h-4 w-4 text-red-600"/>
@@ -136,7 +136,7 @@ export default function ItemCheck() {
               setBarcodeItem={handleSetBarcodeItem}
             />
           )}
-        </>
+        </div>
       )}
     </ContentTheme>
   );

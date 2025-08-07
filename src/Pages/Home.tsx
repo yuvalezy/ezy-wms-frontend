@@ -35,7 +35,7 @@ export default function Home() {
     <ContentTheme title={t('home')}>
       {kpiItems.length > 0 && (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 md:gap-6 px-4 md:px-6 py-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 md:gap-6 px-2 md:px-6 py-3 md:py-6">
             {kpiItems.map((item) => (
               <KpiBox
                 key={item.id}
@@ -51,7 +51,7 @@ export default function Home() {
           </div>
           
           {/* Dashboard Summary */}
-          <div className="mx-4 md:mx-6 mt-6 p-4 md:p-6 border border-gray-200 rounded-xl bg-gradient-to-br from-gray-50 to-white shadow-sm">
+          <div className="mx-2 md:mx-6 mt-3 md:mt-6 p-3 md:p-6 border border-gray-200 rounded-xl bg-gradient-to-br from-gray-50 to-white shadow-sm">
             <div className="flex items-center gap-2 mb-6">
               <div className="h-1 w-8 bg-blue-500 rounded-full"></div>
               <h2 className="text-lg font-semibold text-gray-900">{t('dashboardOverview')}</h2>
@@ -91,7 +91,7 @@ export default function Home() {
         </>
       )}
       {kpiItems.length === 0 && (
-        <div className="flex flex-col items-center justify-center min-h-[50vh] p-8">
+        <div className="flex flex-col items-center justify-center min-h-[50vh] p-4 md:p-8">
           <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
             <HomeIcon className="w-8 h-8 text-blue-600" />
           </div>

@@ -58,7 +58,7 @@ export function PackageCheck() {
       titleBreadcrumbs={packageData ? [{label: packageData.barcode}] : undefined}
       onExportExcel={packageData ? handleExportExcel : undefined}
     >
-      <div className="space-y-4">
+      <div className="space-y-4 px-3 pt-3 md:px-0 md:pt-0">
         {packageData && <PackageCheckResult packageData={packageData} />}
         {!packageData && (
           <PackageScanner 

@@ -65,50 +65,75 @@ const ContentTheme: React.FC<ContentThemeProps> = (
 
         <div className="flex flex-col flex-1 min-w-0">
           {/* Header: responsive height */}
-          <header className="flex items-center justify-between min-h-[4rem] py-2 px-6 bg-white border-b border-gray-200 flex-shrink-0 z-10 w-full">
-            <div className="flex items-start md:items-center gap-4 flex-1">
-              <SidebarTrigger className="flex-shrink-0 h-10 w-10 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded-lg transition-colors hover:bg-gray-100 mt-1 md:mt-0"/>
-              <div className="flex-1 min-w-0">
-                <nav className="flex items-start md:items-center gap-x-2 gap-y-1 flex-wrap" aria-label="Breadcrumb">
-                  <div className="flex-shrink-0">
+          <header className="flex items-center justify-between min-h-[3.5rem] md:min-h-[4rem] py-2 px-3 md:px-6 bg-white border-b border-gray-200 flex-shrink-0 z-10 w-full">
+            <div className="flex items-center gap-2 md:gap-4 flex-1">
+              <SidebarTrigger className="flex-shrink-0 h-9 w-9 md:h-10 md:w-10 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded-lg transition-colors hover:bg-gray-100"/>
+              <div className="flex-1 min-w-0 overflow-hidden">
+                <nav className="flex items-center" aria-label="Breadcrumb">
+                  {/* Show only first and last breadcrumb on mobile, all on desktop */}
+                  <div className="flex items-center gap-1 md:gap-2">
                     {titleOnClick
-                      ? <button className="cursor-pointer text-lg font-semibold text-gray-700 hover:text-gray-900 underline focus:outline-none focus:ring-2 focus:ring-blue-600 rounded px-2 py-1 transition-all" onClick={titleOnClick}>{title}</button>
-                      : <span className="text-lg font-semibold text-gray-900">{title}</span>}
+                      ? <button className="cursor-pointer text-xs md:text-lg font-semibold text-gray-700 hover:text-gray-900 underline focus:outline-none focus:ring-2 focus:ring-blue-600 rounded px-1 md:px-2 py-0.5 md:py-1 transition-all whitespace-nowrap" onClick={titleOnClick}>{title}</button>
+                      : <span className="text-xs md:text-lg font-semibold text-gray-900 whitespace-nowrap">{title}</span>}
                   </div>
-                  {titleBreadcrumbs?.map((b, i) => (
-                    <div key={i} className="flex items-center gap-2 flex-shrink-0">
-                      <span className="text-gray-400 font-medium">/</span>
-                      {b.onClick
-                        ? <button className="cursor-pointer text-base font-medium text-gray-700 hover:text-gray-900 underline focus:outline-none focus:ring-2 focus:ring-blue-600 rounded px-2 py-1 transition-all break-all" onClick={b.onClick}>{b.label}</button>
-                        : <span className="text-base font-medium text-gray-600 break-all">{b.label}</span>}
-                    </div>
-                  ))}
+                  {titleBreadcrumbs && titleBreadcrumbs.length > 0 && (
+                    <>
+                      {/* Mobile: Show ellipsis if more than 2 breadcrumbs */}
+                      {titleBreadcrumbs.length > 2 && (
+                        <div className="flex md:hidden items-center gap-1">
+                          <span className="text-gray-400 text-xs px-1">/ ...</span>
+                        </div>
+                      )}
+                      {/* Mobile: Show only last breadcrumb or first 2 if total is 2 or less */}
+                      <div className="flex md:hidden items-center gap-1">
+                        {titleBreadcrumbs.slice(titleBreadcrumbs.length > 2 ? -1 : 0).map((b, i) => (
+                          <div key={i} className="flex items-center gap-1">
+                            <span className="text-gray-400 text-xs">/</span>
+                            {b.onClick
+                              ? <button className="cursor-pointer text-xs font-medium text-gray-700 hover:text-gray-900 underline focus:outline-none focus:ring-2 focus:ring-blue-600 rounded px-1 py-0.5 transition-all whitespace-nowrap" onClick={b.onClick}>{b.label}</button>
+                              : <span className="text-xs font-medium text-gray-600 whitespace-nowrap">{b.label}</span>}
+                          </div>
+                        ))}
+                      </div>
+                      {/* Desktop: Show all breadcrumbs */}
+                      <div className="hidden md:flex items-center gap-2">
+                        {titleBreadcrumbs.map((b, i) => (
+                          <div key={i} className="flex items-center gap-2">
+                            <span className="text-gray-400">/</span>
+                            {b.onClick
+                              ? <button className="cursor-pointer text-base font-medium text-gray-700 hover:text-gray-900 underline focus:outline-none focus:ring-2 focus:ring-blue-600 rounded px-2 py-1 transition-all" onClick={b.onClick}>{b.label}</button>
+                              : <span className="text-base font-medium text-gray-600">{b.label}</span>}
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </nav>
               </div>
             </div>
-            <div className="flex items-center flex-shrink-0 gap-2 ml-4">
+            <div className="flex items-center flex-shrink-0 gap-1 md:gap-2 ml-2 md:ml-4">
               {onFilterClicked && (
                 <button
                   onClick={onFilterClicked}
-                  className="h-10 w-10 flex items-center justify-center rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="h-9 w-9 md:h-10 md:w-10 flex items-center justify-center rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-600"
                   aria-label="Filter"
                 >
-                  <Filter className="h-5 w-5 text-gray-600" />
+                  <Filter className="h-4 w-4 md:h-5 md:w-5 text-gray-600" />
                 </button>
               )}
               {onAdd && (
-                <Button type="button" variant="outline" size="sm" onClick={onAdd} className="h-10 font-normal focus:outline-none focus:ring-2 focus:ring-blue-600">
-                  <Plus className="mr-2 h-4 w-4"/>
-                  {t('add')}
+                <Button type="button" variant="outline" size="sm" onClick={onAdd} className="h-9 md:h-10 font-normal focus:outline-none focus:ring-2 focus:ring-blue-600 px-2 md:px-3">
+                  <Plus className="mr-1 md:mr-2 h-4 w-4"/>
+                  <span className="hidden sm:inline">{t('add')}</span>
                 </Button>
               )}
               {onExportExcel && (
                 <button
                   onClick={onExportExcel}
-                  className="h-10 w-10 flex items-center justify-center rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="h-9 w-9 md:h-10 md:w-10 flex items-center justify-center rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-600"
                   aria-label="Export to Excel"
                 >
-                  <FileSpreadsheet className="h-5 w-5 text-green-600"/>
+                  <FileSpreadsheet className="h-4 w-4 md:h-5 md:w-5 text-green-600"/>
                 </button>
               )}
             </div>
@@ -136,7 +161,7 @@ const ContentTheme: React.FC<ContentThemeProps> = (
           )}
 
           {/* Scrollable content */}
-          <main className="flex-1 overflow-auto p-2 py-4 w-full min-w-0">
+          <main className="flex-1 overflow-auto p-0 md:p-2 md:py-4 w-full min-w-0">
             <div className="w-full min-w-0">
               {children}
             </div>

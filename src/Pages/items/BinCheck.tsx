@@ -41,12 +41,14 @@ export function BinCheck() {
 
   if (!user?.binLocations) return (
     <ContentTheme title={t("binCheck")}>
+      <div className="px-3 pt-3 md:px-0 md:pt-0">
       <Alert className="border-red-200 bg-red-50">
         <AlertTriangle className="h-4 w-4 text-red-600"/>
         <AlertDescription>
           You're not connected to a bin managed warehouse.
         </AlertDescription>
       </Alert>
+    </div>
     </ContentTheme>
   )
 
@@ -55,7 +57,7 @@ export function BinCheck() {
                        titleBreadcrumbs={binContent ? [{label: bin!.code}] : undefined}
                        onExportExcel={binContent != null ? handleExportExcel : undefined}
   >
-    <div className="space-y-4">
+    <div className="space-y-4 px-3 pt-3 md:px-0 md:pt-0">
       {binContent && <BinCheckResult content={binContent}/>}
       {!bin && <BinLocationScanner ref={binRef} onScan={handleScanAndNavigate} onClear={handleClearAndNavigate}/>}
     </div>
