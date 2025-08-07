@@ -31,9 +31,11 @@ interface AuthContextType {
   unitSelection: boolean;
   enableUseBaseUn: boolean;
   defaultUnit: UnitType;
+  displayVendor: boolean;
 }
 
 const AuthContextDefaultValues: AuthContextType = {
+  displayVendor: false,
   isAuthenticated: false,
   isDeviceActive: false,
   isValidAccount: false,
@@ -57,7 +59,7 @@ const AuthContextDefaultValues: AuthContextType = {
   },
   unitSelection: true,
   enableUseBaseUn: true,
-  defaultUnit: UnitType.Pack,
+  defaultUnit: UnitType.Pack
 };
 
 export const AuthContext = createContext<AuthContextType>(
@@ -174,6 +176,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   const unitSelection = user?.settings?.enableUnitSelection ?? true;
   const enableUseBaseUn = user?.settings?.enableUseBaseUn ?? true;
   const defaultUnit = user?.settings?.defaultUnitType ?? UnitType.Pack;
+  const displayVendor = user?.settings?.displayVendor ?? true;
 
   const value = {
     isAuthenticated,
@@ -191,6 +194,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     unitSelection,
     enableUseBaseUn,
     defaultUnit,
+    displayVendor,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -8,7 +8,7 @@ import {FullInfoBox, InfoBoxValue} from "@/components/InfoBox";
 import {
   useGoodsReceiptProcessDifferenceReportData
 } from "@/features/goods-receipt/hooks/useGoodsReceiptProcessDifferenceReportData";
-import {Button} from "@/components";
+import {Button, useAuth} from "@/components";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {ProcessType} from "@/features/shared/data";
 
@@ -18,6 +18,7 @@ interface GoodsReceiptProcessDifferenceReportProps {
 
 export default function GoodsReceiptProcessDifferenceReport({processType = ProcessType.Regular}: GoodsReceiptProcessDifferenceReportProps) {
   const {t} = useTranslation();
+  const {displayVendor} = useAuth();
   const navigate = useNavigate();
   const {
     info,
@@ -77,7 +78,7 @@ export default function GoodsReceiptProcessDifferenceReport({processType = Proce
           <TableHeader>
             <TableRow>
               <TableHead>{t('document')}</TableHead>
-              {processType !== ProcessType.TransferConfirmation && (
+              {processType !== ProcessType.TransferConfirmation && displayVendor && (
                 <>
                   <TableHead className="hidden sm:table-cell">{t('supplier')}</TableHead>
                   <TableHead>{t('supplierName')}</TableHead>
@@ -91,7 +92,7 @@ export default function GoodsReceiptProcessDifferenceReport({processType = Proce
               <>
                 <TableRow key={`${value.documentNumber}-doc`}>
                   <TableCell>{`${o(value.baseType)}: ${value.documentNumber}`}</TableCell>
-                  {processType !== ProcessType.TransferConfirmation && (
+                  {processType !== ProcessType.TransferConfirmation && displayVendor && (
                     <>
                       <TableCell>{value.vendor.id}</TableCell>
                       <TableCell className="hidden sm:table-cell">{value.vendor.name}</TableCell>
@@ -101,7 +102,7 @@ export default function GoodsReceiptProcessDifferenceReport({processType = Proce
                     <Button variant="outline" size="sm" onClick={() => setReport(value)}>{t('details')}</Button>
                   </TableCell>
                 </TableRow>
-                {processType !== ProcessType.TransferConfirmation && (
+                {processType !== ProcessType.TransferConfirmation && displayVendor && (
                   <TableRow className="sm:hidden" key={`${value.documentNumber}-vendor`}>
                     <TableCell className="bg-gray-100 border-b-1"
                                colSpan={3}>{t('supplierName')}: {value.vendor.name}</TableCell>
@@ -113,7 +114,7 @@ export default function GoodsReceiptProcessDifferenceReport({processType = Proce
         </Table>
       )}
       {report && <>
-          {processType !== ProcessType.TransferConfirmation && (
+          {processType !== ProcessType.TransferConfirmation && displayVendor && (
             <FullInfoBox>
                 <InfoBoxValue label={t("supplier")} value={report.vendor.id}/>
                 <InfoBoxValue label={t("supplierName")} value={(report.vendor.name)}/>

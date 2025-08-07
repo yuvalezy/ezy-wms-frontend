@@ -30,7 +30,7 @@ interface GoodsReceiptReportProps {
 
 export function GoodsReceiptReport({processType = ProcessType.Regular}: GoodsReceiptReportProps) {
   const {loading, setLoading, setError} = useThemeContext();
-  const {user} = useAuth();
+  const {user, displayVendor} = useAuth();
   const {t} = useTranslation();
   const [documents, setDocuments] = useState<ReceiptDocument[]>([]);
   const [lastId, setLastID] = useState("");
@@ -161,7 +161,7 @@ export function GoodsReceiptReport({processType = ProcessType.Regular}: GoodsRec
                 <TableRow>
                   <TableHead>{t('id')}</TableHead>
                   <TableHead>{t('number')}</TableHead>
-                  <TableHead>{t('vendor')}</TableHead>
+                  {displayVendor && <TableHead>{t('vendor')}</TableHead>}
                   <TableHead>{t('documentsList')}</TableHead>
                   <TableHead>{t('docDate')}</TableHead>
                   <TableHead>{t('createdBy')}</TableHead>
@@ -175,7 +175,7 @@ export function GoodsReceiptReport({processType = ProcessType.Regular}: GoodsRec
                   <TableRow key={doc.id}>
                     <TableCell>{doc.name || '-'}</TableCell>
                     <TableCell>{doc.number}</TableCell>
-                    <TableCell>{doc.vendor?.name ?? doc.vendor?.id ?? '-'}</TableCell>
+                    {displayVendor && <TableCell>{doc.vendor?.name ?? doc.vendor?.id ?? '-'}</TableCell>}
                     <TableCell>
                       {doc.documents && doc.documents?.length > 0 ? (
                         <a href="#" onClick={(e) => {
