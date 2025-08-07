@@ -10,6 +10,7 @@ export interface HomeInfo {
   picking: number;
   counting: number;
   transfers: number;
+  transfersConfirmation: number;
 }
 
 export interface KpiItem {
@@ -123,6 +124,17 @@ export const kpiItems: KpiItem[] = [
     backgroundColor: "bg-lime-100",
     iconColor: "text-lime-700",
     borderColor: "border-l-lime-500"
+  },
+  {
+    id: 'transferConfirmation',
+    title: 'transferConfirmation',
+    value: 30,
+    icon: Move,
+    authorizations: [RoleType.TRANSFER_CONFIRMATION, RoleType.TRANSFER_CONFIRMATION_SUPERVISOR],
+    route: "/transferConfirmation",
+    backgroundColor: "bg-purple-100",
+    iconColor: "text-purple-700",
+    borderColor: "border-l-purple-500"
   }
 ]; // Function to filter KPI items based on user authorizations
 export function getKpiItems(userAuthorizations: RoleType[] | undefined, info: HomeInfo): KpiItem[] {
@@ -163,6 +175,9 @@ export function getKpiItems(userAuthorizations: RoleType[] | undefined, info: Ho
         break;
       case 'transfer':
         value = info.transfers;
+        break;
+      case 'transferConfirmation':
+        value = info.transfersConfirmation;
         break;
       default:
         value = 0; // Default to 0 if no match
