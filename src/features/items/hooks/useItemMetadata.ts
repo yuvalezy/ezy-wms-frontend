@@ -34,23 +34,102 @@ export const useItemMetadata = (itemData?: ItemDetails, metadataDefinitions?: It
     hasChanges: false
   });
 
+  // Helper function to evaluate calculated field formulas
+  const evaluateFormula = useCallback((formula: string, fieldValues: Record<string, any>): number | null => {
+    try {
+      // Simple formula evaluator - supports basic arithmetic with field references
+      let expression = formula;
+      
+      // Replace field references in curly braces (e.g., {PurchaseUnitLength}) with actual values
+      Object.entries(fieldValues).forEach(([fieldId, value]) => {
+        if (value !== null && value !== undefined && !isNaN(Number(value))) {
+          // Replace both {FieldName} and plain FieldName patterns
+          expression = expression.replace(new RegExp(`\\{${fieldId}\\}`, 'g'), String(value));
+          expression = expression.replace(new RegExp(`\\b${fieldId}\\b`, 'g'), String(value));
+        }
+      });
+      
+      // Basic validation - only allow numbers, operators, and parentheses
+      if (!/^[\d\s+\-*/.()]+$/.test(expression)) {
+        return null;
+      }
+      
+      // Evaluate the expression
+      const result = Function(`"use strict"; return (${expression})`)();
+      
+      return typeof result === 'number' && !isNaN(result) ? result : null;
+    } catch (error) {
+      console.warn('Formula evaluation error:', error);
+      return null;
+    }
+  }, []);
+
+  // Helper function to get all field values as a record
+  const getFieldValuesRecord = useCallback((fields: MetadataFieldValue[]): Record<string, any> => {
+    const values: Record<string, any> = {};
+    fields.forEach(field => {
+      values[field.fieldId] = field.value;
+    });
+    return values;
+  }, []);
+
   const initializeFormState = useCallback((
     defs: ItemMetadataDefinition[], 
     currentValues: Record<string, any>
   ) => {
-    const fields = defs.map(def => ({
+    let fields = defs.map(def => ({
       fieldId: def.id,
       value: currentValues[def.id] || null,
       isValid: true
     }));
 
+    // Recalculate any calculated fields on initialization using the passed definitions
+    let updatedFields = [...fields];
+    const calculatedDefinitions = defs.filter(def => def.calculated);
+    
+    calculatedDefinitions.forEach(definition => {
+      if (!definition.calculated) return;
+      
+      const { formula, dependencies, precision } = definition.calculated;
+      const fieldValues = getFieldValuesRecord(updatedFields);
+      
+      // Check if all dependencies have valid values
+      const allDependenciesValid = dependencies.every(depId => {
+        const depValue = fieldValues[depId];
+        return depValue !== null && depValue !== undefined && !isNaN(Number(depValue));
+      });
+      
+      if (allDependenciesValid) {
+        // Calculate new value
+        const calculatedValue = evaluateFormula(formula, fieldValues);
+        
+        if (calculatedValue !== null) {
+          // Apply precision rounding
+          const roundedValue = Number(calculatedValue.toFixed(precision));
+          
+          // Update the calculated field
+          updatedFields = updatedFields.map(field => {
+            if (field.fieldId === definition.id) {
+              return {
+                ...field,
+                value: roundedValue,
+                isValid: true,
+                errorMessage: undefined
+              };
+            }
+            return field;
+          });
+        }
+      }
+    });
+
     setFormState({
-      fields,
+      fields: updatedFields,
       isValid: true,
       isLoading: false,
       hasChanges: false
     });
-  }, []);
+  }, [evaluateFormula, getFieldValuesRecord]);
 
   const validateFieldValue = useCallback((fieldId: string, value: any, defs: ItemMetadataDefinition[]) => {
     const definition = defs.find(def => def.id === fieldId);
@@ -117,9 +196,75 @@ export const useItemMetadata = (itemData?: ItemDetails, metadataDefinitions?: It
     });
   }, []);
 
+  // Helper function to recalculate all calculated fields
+  const recalculateFields = useCallback((fields: MetadataFieldValue[]): MetadataFieldValue[] => {
+    let updatedFields = [...fields];
+    let hasChanges = false;
+    
+    // Find all calculated field definitions
+    const calculatedDefinitions = definitions.filter(def => def.calculated);
+    
+    calculatedDefinitions.forEach(definition => {
+      if (!definition.calculated) return;
+      
+      const { formula, dependencies, precision } = definition.calculated;
+      const fieldValues = getFieldValuesRecord(updatedFields);
+      
+      // Check if all dependencies have valid values
+      const allDependenciesValid = dependencies.every(depId => {
+        const depValue = fieldValues[depId];
+        return depValue !== null && depValue !== undefined && !isNaN(Number(depValue));
+      });
+      
+      if (allDependenciesValid) {
+        // Calculate new value
+        const calculatedValue = evaluateFormula(formula, fieldValues);
+        
+        if (calculatedValue !== null) {
+          // Apply precision rounding
+          const roundedValue = Number(calculatedValue.toFixed(precision));
+          
+          // Update the calculated field
+          updatedFields = updatedFields.map(field => {
+            if (field.fieldId === definition.id) {
+              const currentValue = field.value;
+              if (currentValue !== roundedValue) {
+                hasChanges = true;
+                return {
+                  ...field,
+                  value: roundedValue,
+                  isValid: true,
+                  errorMessage: undefined
+                };
+              }
+            }
+            return field;
+          });
+        }
+      } else {
+        // Clear calculated field if dependencies are not met
+        updatedFields = updatedFields.map(field => {
+          if (field.fieldId === definition.id && field.value !== null) {
+            hasChanges = true;
+            return {
+              ...field,
+              value: null,
+              isValid: true,
+              errorMessage: undefined
+            };
+          }
+          return field;
+        });
+      }
+    });
+    
+    return hasChanges ? updatedFields : fields;
+  }, [definitions, evaluateFormula, getFieldValuesRecord]);
+
   const updateFieldValue = useCallback((fieldId: string, value: string | number | Date | null) => {
     setFormState(prev => {
-      const updatedFields = prev.fields.map(field => {
+      // First, update the changed field
+      let updatedFields = prev.fields.map(field => {
         if (field.fieldId === fieldId) {
           const validation = validateFieldValue(fieldId, value, definitions);
           return {
@@ -132,6 +277,9 @@ export const useItemMetadata = (itemData?: ItemDetails, metadataDefinitions?: It
         return field;
       });
 
+      // Then recalculate any dependent calculated fields
+      updatedFields = recalculateFields(updatedFields);
+
       const isValid = updatedFields.every(f => f.isValid);
       const hasChanges = checkForChanges(updatedFields, itemData?.customAttributes || {});
 
@@ -142,7 +290,7 @@ export const useItemMetadata = (itemData?: ItemDetails, metadataDefinitions?: It
         hasChanges
       };
     });
-  }, [itemData?.customAttributes, definitions, validateFieldValue, checkForChanges]);
+  }, [itemData?.customAttributes, definitions, validateFieldValue, checkForChanges, recalculateFields]);
 
   // Initialize form state when definitions or item data changes
   useEffect(() => {

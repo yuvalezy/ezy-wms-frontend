@@ -17,6 +17,12 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Info } from 'lucide-react';
 import { ItemDetails } from '../data/items';
 import { ItemMetadataDefinition } from '../types/ItemMetadataDefinition.dto';
 import { MetadataFieldType } from '../../packages/types/MetadataFieldType.enum';
@@ -57,7 +63,9 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
   useEffect(() => {
     const initialValues: FormData = {};
     definitions.forEach(def => {
-      const currentValue = itemData.customAttributes?.[def.id];
+      // Use the current value from the hook (which may be calculated) or the item's stored value
+      const hookValue = getFieldValue(def.id);
+      const currentValue = hookValue !== null ? hookValue : itemData.customAttributes?.[def.id];
       
       // Format values for form inputs
       if (currentValue !== null && currentValue !== undefined) {
@@ -80,7 +88,38 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
     });
     
     form.reset(initialValues);
-  }, [definitions, itemData.customAttributes, form]);
+  }, [definitions, itemData.customAttributes, form, getFieldValue]);
+
+  // Update form values when calculated fields change
+  useEffect(() => {
+    definitions.forEach(def => {
+      const hookValue = getFieldValue(def.id);
+      const currentFormValue = form.getValues(def.id) || '';
+      
+      let formattedValue = '';
+      if (hookValue !== null && hookValue !== undefined) {
+        switch (def.type) {
+          case MetadataFieldType.Date:
+            const date = hookValue instanceof Date ? hookValue : new Date(hookValue);
+            formattedValue = date.toISOString().split('T')[0];
+            break;
+          case MetadataFieldType.Decimal:
+          case MetadataFieldType.Integer:
+            // For numbers, convert to string
+            formattedValue = String(hookValue);
+            break;
+          default:
+            formattedValue = String(hookValue);
+            break;
+        }
+      }
+      
+      // Update form value if different
+      if (currentFormValue !== formattedValue) {
+        form.setValue(def.id, formattedValue, { shouldValidate: false });
+      }
+    });
+  }, [metadataFormState.fields, definitions, form, getFieldValue]);
 
   const handleFieldChange = (fieldId: string, value: string) => {
     const definition = definitions.find(def => def.id === fieldId);
@@ -145,6 +184,8 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
 
   const renderField = (definition: ItemMetadataDefinition) => {
     const validation = getFieldValidation(definition.id);
+    const isCalculated = !!definition.calculated;
+    const isFieldDisabled = definition.readOnly || isCalculated || metadataFormState.isLoading;
     
     return (
       <FormField
@@ -153,60 +194,104 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
         name={definition.id}
         render={({ field }) => (
           <FormItem>
-            <FormLabel>
+            <FormLabel className="flex items-center gap-1">
               {definition.description}
-              {definition.required && <span className="text-red-500 ml-1">*</span>}
-              {definition.readOnly && <span className="text-gray-500 ml-1">(Read Only)</span>}
+              {definition.required && <span className="text-red-500">*</span>}
+              {definition.readOnly && !isCalculated && <span className="text-gray-500">(Read Only)</span>}
+              {isCalculated && <span className="text-blue-500">(Calculated)</span>}
+              {isCalculated && definition.calculated && (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="h-4 w-4 p-0 hover:bg-transparent"
+                    >
+                      <Info className="h-3 w-3 text-muted-foreground" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-80">
+                    <div className="space-y-3">
+                      <div>
+                        <p className="font-medium text-sm mb-1">Formula:</p>
+                        <code className="block text-xs bg-muted p-2 rounded font-mono">
+                          {definition.calculated.formula}
+                        </code>
+                      </div>
+                      <div>
+                        <p className="font-medium text-sm mb-1">Depends on:</p>
+                        <ul className="text-sm text-muted-foreground space-y-1">
+                          {definition.calculated.dependencies.map(depId => {
+                            const depDefinition = definitions.find(d => d.id === depId);
+                            return (
+                              <li key={depId}>• {depDefinition?.description || depId}</li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              )}
             </FormLabel>
             <FormControl>
               {definition.type === MetadataFieldType.Date ? (
                 <Input
                   type="date"
                   {...field}
-                  disabled={definition.readOnly || metadataFormState.isLoading}
+                  disabled={isFieldDisabled}
                   onChange={(e) => {
-                    field.onChange(e);
-                    handleFieldChange(definition.id, e.target.value);
+                    if (!isCalculated) {
+                      field.onChange(e);
+                      handleFieldChange(definition.id, e.target.value);
+                    }
                   }}
-                  className={!validation.isValid ? 'border-red-500' : ''}
+                  className={`${!validation.isValid ? 'border-red-500' : ''} ${isCalculated ? 'bg-blue-50' : ''}`}
                 />
               ) : definition.type === MetadataFieldType.Decimal ? (
                 <Input
                   type="number"
                   step="any"
-                  placeholder={`${t('enterValue')} ${definition.description.toLowerCase()}`}
+                  placeholder={isCalculated ? 'Automatically calculated' : `${t('enterValue')} ${definition.description.toLowerCase()}`}
                   {...field}
-                  disabled={definition.readOnly || metadataFormState.isLoading}
+                  disabled={isFieldDisabled}
                   onChange={(e) => {
-                    field.onChange(e);
-                    handleFieldChange(definition.id, e.target.value);
+                    if (!isCalculated) {
+                      field.onChange(e);
+                      handleFieldChange(definition.id, e.target.value);
+                    }
                   }}
-                  className={!validation.isValid ? 'border-red-500' : ''}
+                  className={`${!validation.isValid ? 'border-red-500' : ''} ${isCalculated ? 'bg-blue-50' : ''}`}
                 />
               ) : definition.type === MetadataFieldType.Integer ? (
                 <Input
                   type="number"
                   step="1"
-                  placeholder={`${t('enterValue')} ${definition.description.toLowerCase()}`}
+                  placeholder={isCalculated ? 'Automatically calculated' : `${t('enterValue')} ${definition.description.toLowerCase()}`}
                   {...field}
-                  disabled={definition.readOnly || metadataFormState.isLoading}
+                  disabled={isFieldDisabled}
                   onChange={(e) => {
-                    field.onChange(e);
-                    handleFieldChange(definition.id, e.target.value);
+                    if (!isCalculated) {
+                      field.onChange(e);
+                      handleFieldChange(definition.id, e.target.value);
+                    }
                   }}
-                  className={!validation.isValid ? 'border-red-500' : ''}
+                  className={`${!validation.isValid ? 'border-red-500' : ''} ${isCalculated ? 'bg-blue-50' : ''}`}
                 />
               ) : (
                 <Input
                   type="text"
-                  placeholder={`${t('enterValue')} ${definition.description.toLowerCase()}`}
+                  placeholder={isCalculated ? 'Automatically calculated' : `${t('enterValue')} ${definition.description.toLowerCase()}`}
                   {...field}
-                  disabled={definition.readOnly || metadataFormState.isLoading}
+                  disabled={isFieldDisabled}
                   onChange={(e) => {
-                    field.onChange(e);
-                    handleFieldChange(definition.id, e.target.value);
+                    if (!isCalculated) {
+                      field.onChange(e);
+                      handleFieldChange(definition.id, e.target.value);
+                    }
                   }}
-                  className={!validation.isValid ? 'border-red-500' : ''}
+                  className={`${!validation.isValid ? 'border-red-500' : ''} ${isCalculated ? 'bg-blue-50' : ''}`}
                 />
               )}
             </FormControl>

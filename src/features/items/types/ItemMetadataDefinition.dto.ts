@@ -1,4 +1,4 @@
-import { MetadataFieldType } from '../../packages/types/MetadataFieldType.enum';
+import {MetadataFieldType} from '@/features/packages/types';
 
 export interface ItemMetadataDefinition {
   id: string;
@@ -6,4 +6,11 @@ export interface ItemMetadataDefinition {
   type: MetadataFieldType;
   required: boolean;
   readOnly: boolean;
+  calculated?: Calculated;
+}
+
+export interface Calculated {
+  formula: string;
+  dependencies: string[];
+  precision: number;
 }
