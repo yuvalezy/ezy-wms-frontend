@@ -102,7 +102,11 @@
   "bin": "Ubicación",
   "changeBin": "Selección de Ubicación",
   "item": "Articulo",
-  "items": "Artículos",
+  "items": {
+    "items": "Artículos",
+    "editMetadata": "Editar metadatos",
+    "metadata": "Metadatos"
+  },
   "vendor": "Proveedor",
   "number": "Número",
   "docDate": "Fecha",

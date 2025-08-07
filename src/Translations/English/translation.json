@@ -104,7 +104,11 @@
   "bin": "Bin Location",
   "changeBin": "Change Bin",
   "item": "Item",
-  "items": "Items",
+  "items": {
+    "items": "Items",
+    "editMetadata": "Edit metadata",
+    "metadata": "Metadata"
+  },
   "binLocations": "Bin Locations",
   "vendor": "Vendor",
   "number": "Number",
