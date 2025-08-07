@@ -22,7 +22,7 @@ type DocumentReportCardProps = {
 
 const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc, docDetails, processType = ProcessType.Regular}) => {
   const {t} = useTranslation();
-  const {user} = useAuth();
+  const {user, displayVendor} = useAuth();
   const {dateFormat} = useDateTimeFormat();
   const documentStatusToString = useDocumentStatusToString();
   const handleOpen = useGoodsReceiptHandleOpen(processType);
@@ -43,7 +43,7 @@ const DocumentReportCard: React.FC<DocumentReportCardProps> = ({doc, docDetails,
         <div className="grid gap-2">
           <FullInfoBox>
             {doc.name && <InfoBoxValue label={t('id')} value={doc.name}/>}
-            {doc.vendor &&
+            {doc.vendor && displayVendor &&
                 <InfoBoxValue label={processType === ProcessType.TransferConfirmation ? t('from') : t('vendor')} value={doc.vendor.name ?? doc.vendor.id}/>}
             {doc.documents && doc.documents.length > 0 &&
                 <InfoBoxValue label={processType === ProcessType.TransferConfirmation ? t('transfersList') : t('documentsList')} value={formatDocumentsList(doc.documents)}

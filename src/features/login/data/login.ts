@@ -25,6 +25,7 @@ export interface ApplicationSettings {
   // General
   enableUseBaseUn: boolean;
   scannerMode: ScannerMode;
+  displayVendor: boolean;
   // Goods Receipt
   goodsReceiptDraft: boolean;
   goodsReceiptModificationSupervisor: boolean;

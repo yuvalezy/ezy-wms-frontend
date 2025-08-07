@@ -29,7 +29,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
   const {t} = useTranslation();
   const o = useObjectName();
   const {dateFormat} = useDateTimeFormat();
-  const {user} = useAuth();
+  const {user, displayVendor} = useAuth();
   const handleOpen = useGoodsReceiptHandleOpen(processType);
   const navigate = useNavigate();
 
@@ -76,8 +76,8 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
           <InfoBoxValue label={t('createdBy')} value={doc.createdByUserName}/>
           <InfoBoxValue label={t('status')} value={documentStatusToString(doc.status)}/>
         </FullInfoBox>
-        {(doc.vendor || doc.documents) && <FullInfoBox>
-          {doc.vendor && (
+        {(doc.vendor && displayVendor || doc.documents) && <FullInfoBox>
+          {doc.vendor && displayVendor && (
             <InfoBoxValue label={t('vendor')} value={doc.vendor.name ?? doc.vendor.id}/>
           )}
           {doc.documents && doc.documents?.length > 0 && (

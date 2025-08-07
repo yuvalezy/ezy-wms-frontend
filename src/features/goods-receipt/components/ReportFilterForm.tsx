@@ -29,6 +29,7 @@ import {BusinessPartner, GoodsReceiptReportFilter} from "@/features/goods-receip
 import {useDocumentStatusOptions} from "@/hooks/useDocumentStatusOptions";
 import {goodsReceiptService} from "@/features/goods-receipt/data/goods-receipt-service";
 import {ProcessType} from "@/features/shared/data";
+import {useAuth} from "@/components";
 
 interface ReportFilterFormProps {
   onSubmit: (filters: GoodsReceiptReportFilter) => void,
@@ -53,6 +54,7 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
     const [vendorName, setVendorName] = useState<string>("");
     const [isDateFromPopoverOpen, setIsDateFromPopoverOpen] = useState(false);
     const [isDateToPopoverOpen, setIsDateToPopoverOpen] = useState(false);
+    const {displayVendor} = useAuth();
 
     // Expose togglePanel method to parent component
     useImperativeHandle(ref, () => ({
@@ -110,7 +112,7 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
           <AccordionContent>
             <form className="space-y-4 p-1">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div>
+                {displayVendor && (<div>
                   <Label htmlFor="vendor">{processType === ProcessType.TransferConfirmation ? t("from") : t("vendor")}</Label>
                   <Select value={filters.vendor || ""} onValueChange={handleVendorChange}>
                     <SelectTrigger id="vendor">
@@ -118,13 +120,13 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
                     </SelectTrigger>
                     <SelectContent>
                       {vendors.map((vendor) => (
-                        <SelectItem key={vendor.id} value={vendor.id}>
-                          {vendor.name}
-                        </SelectItem>
-                      ))}
+                      <SelectItem key={vendor.id} value={vendor.id}>
+                        {vendor.name}
+                      </SelectItem>
+                        ))}
                     </SelectContent>
                   </Select>
-                </div>
+                </div>)}
                 <div>
                   <Label htmlFor="docNumber">{processType === ProcessType.TransferConfirmation ? t("transferNumber") : t("number")}</Label>
                   <Input

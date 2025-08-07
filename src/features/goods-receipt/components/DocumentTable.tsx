@@ -35,7 +35,7 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
   const o = useObjectName();
   const documentStatusToString = useDocumentStatusToString();
   const {dateFormat} = useDateTimeFormat();
-  const {user} = useAuth();
+  const {user, displayVendor} = useAuth();
   const handleOpen = useGoodsReceiptHandleOpen(processType);
   const navigate = useNavigate();
 
@@ -136,7 +136,7 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
             <TableHead className="whitespace-nowrap">{t('docDate')}</TableHead>
             <TableHead className="whitespace-nowrap">{t('createdBy')}</TableHead>
             <TableHead className="whitespace-nowrap">{t('status')}</TableHead>
-            {processType === ProcessType.Regular && <TableHead className="whitespace-nowrap">{t('vendor')}</TableHead>}
+            {processType === ProcessType.Regular && displayVendor && <TableHead className="whitespace-nowrap">{t('vendor')}</TableHead>}
             <TableHead className="whitespace-nowrap">{t('documentsList')}</TableHead>
             {supervisor && <TableHead className="text-right whitespace-nowrap w-16"></TableHead>}
           </TableRow>
@@ -160,7 +160,7 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
               <TableCell className="whitespace-nowrap">{dateFormat(doc.date)}</TableCell>
               <TableCell className="whitespace-nowrap">{doc.createdByUserName}</TableCell>
               <TableCell className="whitespace-nowrap">{documentStatusToString(doc.status)}</TableCell>
-              {processType === ProcessType.Regular && <TableCell className="whitespace-nowrap">
+              {processType === ProcessType.Regular && displayVendor && <TableCell className="whitespace-nowrap">
                 {doc.vendor?.name ?? doc.vendor?.id ?? '-'}
               </TableCell>}
               <TableCell className="min-w-0">
