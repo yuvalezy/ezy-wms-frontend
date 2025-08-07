@@ -104,11 +104,9 @@
   "bin": "Bin Location",
   "changeBin": "Change Bin",
   "item": "Item",
-  "items": {
-    "items": "Items",
-    "editMetadata": "Edit metadata",
-    "metadata": "Metadata"
-  },
+  "items": "Items",
+  "editMetadata": "Edit metadata",
+  "metadata": "Metadata",
   "binLocations": "Bin Locations",
   "vendor": "Vendor",
   "number": "Number",
@@ -394,6 +392,10 @@
   "name": "Name",
   "authorizations": {
     "title": "Authorizations",
+    "itemManagement": "Item Management",
+    "itemManagementDescription": "Manage item data, barcodes, and metadata",
+    "itemManagementSupervisor": "Item Management Supervisor",
+    "itemManagementSupervisorDescription": "Supervise item management operations and generate reports",
     "roleGoodsReceipt": "Goods Receipt",
     "roleGoodsReceiptDescription": "Process incoming goods and update inventory",
     "roleGoodsReceiptSupervisor": "Goods Receipt Supervisor",

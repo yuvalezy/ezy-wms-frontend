@@ -14,6 +14,8 @@ export enum RoleType {
   TRANSFER_CONFIRMATION_SUPERVISOR = 'TransferConfirmationSupervisor',
   PACKAGE_MANAGEMENT = 'PackageManagement',
   PACKAGE_MANAGEMENT_SUPERVISOR = 'PackageManagementSupervisor',
+  ITEM_MANAGEMENT = 'ItemManagement',
+  ITEM_MANAGEMENT_SUPERVISOR = 'ItemManagementSupervisor',
 }
 
 export interface AuthorizationGroup {

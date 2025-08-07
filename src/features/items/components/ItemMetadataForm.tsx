@@ -319,7 +319,7 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
   return (
     <Card className={className}>
       <CardHeader>
-        <CardTitle>{t('items.metadata')}</CardTitle>
+        <CardTitle>{t('metadata')}</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>

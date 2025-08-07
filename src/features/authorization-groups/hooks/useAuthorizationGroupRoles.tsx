@@ -8,6 +8,19 @@ export const useAuthorizationGroupRoles = () => {
   const {user} = useAuth();
 
   const roleInfoMap = new Map<RoleType, RoleInfo>([
+    // Item Management
+    [RoleType.ITEM_MANAGEMENT, {
+      role: RoleType.ITEM_MANAGEMENT,
+      displayName: t("authorizations.itemManagement"),
+      description: t("authorizations.itemManagementDescription"),
+      category: "Operations"
+    }],
+    [RoleType.ITEM_MANAGEMENT_SUPERVISOR, {
+      role: RoleType.ITEM_MANAGEMENT_SUPERVISOR,
+      displayName: t("authorizations.itemManagementSupervisor"),
+      description: t("authorizations.itemManagementSupervisorDescription"),
+      category: "Supervision"
+    }],
     // Goods Receipt
     ...(user?.settings?.goodsReceiptType !== GoodsReceiptDocumentType.Confirmation ? [[RoleType.GOODS_RECEIPT, {
       role: RoleType.GOODS_RECEIPT,

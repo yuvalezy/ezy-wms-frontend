@@ -18,6 +18,7 @@ import { ItemMetadataForm } from './ItemMetadataForm';
 import { getItemMetadata } from '../data/items-service';
 import { useAuth } from "@/Components";
 import { useThemeContext } from '@/components/ThemeContext';
+import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 
 interface ItemMetadataDisplayProps {
   itemData: ItemDetails;
@@ -38,7 +39,7 @@ export const ItemMetadataDisplay: React.FC<ItemMetadataDisplayProps> = ({
   const [metadataValues, setMetadataValues] = useState<Record<string, any>>({});
   const definitions = user!.itemMetaData;
   const hasMetadata = definitions && definitions.length > 0;
-  const hasEditableFields = definitions && definitions.some(def => !def.readOnly);
+  const hasEditableFields = definitions && definitions.some(def => !def.readOnly) && (user!.superUser || user?.roles?.includes(RoleType.ITEM_MANAGEMENT));
 
   const formatValue = (value: any, fieldType: MetadataFieldType): string => {
     if (value === null || value === undefined) {
@@ -138,7 +139,7 @@ export const ItemMetadataDisplay: React.FC<ItemMetadataDisplayProps> = ({
         </DialogTrigger>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>{t('items.editMetadata')}</DialogTitle>
+            <DialogTitle>{t('editMetadata')}</DialogTitle>
           </DialogHeader>
           <ItemMetadataForm
             itemData={{

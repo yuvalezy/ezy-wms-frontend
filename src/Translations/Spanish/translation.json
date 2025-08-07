@@ -102,11 +102,9 @@
   "bin": "Ubicación",
   "changeBin": "Selección de Ubicación",
   "item": "Articulo",
-  "items": {
-    "items": "Artículos",
-    "editMetadata": "Editar metadatos",
-    "metadata": "Metadatos"
-  },
+  "items": "Artículos",
+  "editMetadata": "Editar metadatos",
+  "metadata": "Metadatos",
   "vendor": "Proveedor",
   "number": "Número",
   "docDate": "Fecha",
@@ -394,6 +392,10 @@
   "name": "Nombre",
   "authorizations": {
     "title": "Autorizaciones",
+    "itemManagement": "Gestión de Artículos",
+    "itemManagementDescription": "Gestionar datos de artículos, códigos de barras y metadatos",
+    "itemManagementSupervisor": "Supervisor de Gestión de Artículos",
+    "itemManagementSupervisorDescription": "Supervisar operaciones de gestión de artículos y generar reportes",
     "roleGoodsReceipt": "Entrada de Mercancías",
     "roleGoodsReceiptDescription": "Procesar mercancías entrantes y actualizar inventario",
     "roleGoodsReceiptSupervisor": "Supervisor de Entrada de Mercancías",
