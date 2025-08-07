@@ -5,7 +5,6 @@ import BinLocationScanner from "../../components/BinLocationScanner";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import {AlertTriangle} from 'lucide-react';
 import {useBinCheckData} from "@/features/items/hooks/useBinCheckData";
-import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage} from "@/components/ui/breadcrumb";
 import {BinCheckResult} from "@/features/items/components/BinCheckResult";
 import {useParams, useNavigate} from "react-router-dom";
 

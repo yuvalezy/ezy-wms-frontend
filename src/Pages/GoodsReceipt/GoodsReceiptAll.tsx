@@ -5,7 +5,6 @@ import {useTranslation} from "react-i18next";
 import {Alert, AlertDescription} from "@/components/ui/alert"; // Added AlertTitle
 import GoodsReceiptAllDialog from "@/features/goods-receipt/components/GoodsReceiptAllDetail";
 import {useGoodsReceiptAllData} from "@/features/goods-receipt/hooks/useGoodsReceiptAllData";
-import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage} from "@/components/ui/breadcrumb";
 import {useNavigate} from "react-router-dom";
 import {ProcessType} from "@/features/shared/data";
 

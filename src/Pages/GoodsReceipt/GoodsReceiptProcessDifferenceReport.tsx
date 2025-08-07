@@ -1,15 +1,14 @@
 import React from "react";
 import ContentTheme from "@/components/ContentTheme";
-import {Link, useNavigate} from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import GoodsReceiptProcessDifferenceTable from "@/features/goods-receipt/components/GoodsReceiptProcessDifferenceTable";
-import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage} from "@/components/ui/breadcrumb";
-import InfoBox, {FullInfoBox, InfoBoxValue} from "@/components/InfoBox";
+import {FullInfoBox, InfoBoxValue} from "@/components/InfoBox";
 import {
   useGoodsReceiptProcessDifferenceReportData
 } from "@/features/goods-receipt/hooks/useGoodsReceiptProcessDifferenceReportData";
-import {Button, Card, CardContent, CardHeader} from "@/components";
+import {Button} from "@/components";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {ProcessType} from "@/features/shared/data";
 

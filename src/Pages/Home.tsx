@@ -6,6 +6,7 @@ import {Alert, AlertDescription} from "@/components/ui/alert";
 import {KpiBox} from "@/components/KpiBox";
 import {axiosInstance} from "@/utils/axios-instance";
 import {getKpiItems, HomeInfo, KpiItem} from "@/features/home/data/home";
+import {HomeIcon} from "lucide-react";
 
 export default function Home() {
   const {user} = useAuth();
@@ -34,7 +35,7 @@ export default function Home() {
     <ContentTheme title={t('home')}>
       {kpiItems.length > 0 && (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 p-6 mt-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 md:gap-6 px-4 md:px-6 py-6">
             {kpiItems.map((item) => (
               <KpiBox
                 key={item.id}
@@ -49,27 +50,40 @@ export default function Home() {
             ))}
           </div>
           
-          {/* Dashboard Strip */}
-          <div className="mt-8 p-4 border-t border-gray-200 bg-gray-50">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('dashboardOverview')}</h2>
-            
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-white p-4 rounded-lg border border-gray-200">
-                <div className="text-sm text-gray-600">{t('totalItems')}</div>
-                <div className="text-2xl font-semibold text-gray-900">
-                  {kpiItems.reduce((sum, item) => sum + item.value, 0)}
+          {/* Dashboard Summary */}
+          <div className="mx-4 md:mx-6 mt-6 p-4 md:p-6 border border-gray-200 rounded-xl bg-gradient-to-br from-gray-50 to-white shadow-sm">
+            <div className="flex items-center gap-2 mb-6">
+              <div className="h-1 w-8 bg-blue-500 rounded-full"></div>
+              <h2 className="text-lg font-semibold text-gray-900">{t('dashboardOverview')}</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+              <div className="bg-white p-4 md:p-5 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors group">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="text-sm font-medium text-gray-600">{t('totalItems')}</div>
+                  <div className="h-2 w-2 bg-blue-500 rounded-full group-hover:scale-125 transition-transform"></div>
                 </div>
+                <div className="text-2xl md:text-3xl font-bold text-gray-900">
+                  {kpiItems.reduce((sum, item) => sum + item.value, 0).toLocaleString()}
+                </div>
+                <div className="text-xs text-gray-500 mt-1">Across all modules</div>
               </div>
-              <div className="bg-white p-4 rounded-lg border border-gray-200">
-                <div className="text-sm text-gray-600">{t('activeModules')}</div>
-                <div className="text-2xl font-semibold text-gray-900">{kpiItems.length}</div>
+              <div className="bg-white p-4 md:p-5 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors group">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="text-sm font-medium text-gray-600">{t('activeModules')}</div>
+                  <div className="h-2 w-2 bg-green-500 rounded-full group-hover:scale-125 transition-transform"></div>
+                </div>
+                <div className="text-2xl md:text-3xl font-bold text-gray-900">{kpiItems.length}</div>
+                <div className="text-xs text-gray-500 mt-1">Authorized for user</div>
               </div>
-              <div className="bg-white p-4 rounded-lg border border-gray-200">
-                <div className="text-sm text-gray-600">{t('warehouse')}</div>
-                <div className="text-sm font-medium text-gray-900">
+              <div className="bg-white p-4 md:p-5 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors group">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="text-sm font-medium text-gray-600">{t('warehouse')}</div>
+                  <div className="h-2 w-2 bg-purple-500 rounded-full group-hover:scale-125 transition-transform"></div>
+                </div>
+                <div className="text-base md:text-lg font-semibold text-gray-900 truncate">
                   {user?.warehouses?.find(v => v.id === user?.currentWarehouse)?.name || 'N/A'}
                 </div>
+                <div className="text-xs text-gray-500 mt-1">Current location</div>
               </div>
             </div>
             
@@ -77,13 +91,19 @@ export default function Home() {
         </>
       )}
       {kpiItems.length === 0 && (
-        <div className="p-4">
-          <Alert className="border-blue-200 bg-blue-50">
-            <AlertDescription>
-              <p className="font-semibold">{t("information")}</p>
-              <p>{t("noAuthorizationOptions")}</p>
-            </AlertDescription>
-          </Alert>
+        <div className="flex flex-col items-center justify-center min-h-[50vh] p-8">
+          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
+            <HomeIcon className="w-8 h-8 text-blue-600" />
+          </div>
+          <div className="text-center max-w-md">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">{t("information")}</h3>
+            <p className="text-gray-600 mb-6">{t("noAuthorizationOptions")}</p>
+            <Alert className="border-blue-200 bg-blue-50 text-left">
+              <AlertDescription className="text-sm text-blue-700">
+                Contact your administrator to request access to warehouse modules.
+              </AlertDescription>
+            </Alert>
+          </div>
         </div>
       )}
     </ContentTheme>
