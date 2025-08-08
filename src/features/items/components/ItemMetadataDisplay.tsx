@@ -2,23 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
 import { Edit } from 'lucide-react';
 import InfoBox from '@/components/InfoBox';
 import { ItemDetails } from '../data/items';
-import { ItemMetadataDefinition } from '../types/ItemMetadataDefinition.dto';
-import { MetadataFieldType } from '../../packages/types/MetadataFieldType.enum';
-import { ItemMetadataForm } from './ItemMetadataForm';
-import { getItemMetadata } from '../data/items-service';
+import { MetadataFieldType } from '@/features/packages/types';
+import { ItemMetadataEditDialog, canEditMetadata } from '@/features/items';
+import { getItemMetadata } from '@/features/items';
 import { useAuth } from "@/Components";
 import { useThemeContext } from '@/components/ThemeContext';
-import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 
 interface ItemMetadataDisplayProps {
   itemData: ItemDetails;
@@ -34,12 +25,11 @@ export const ItemMetadataDisplay: React.FC<ItemMetadataDisplayProps> = ({
   const { t } = useTranslation();
   const { user } = useAuth();
   const { setError } = useThemeContext();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [metadataValues, setMetadataValues] = useState<Record<string, any>>({});
   const definitions = user!.itemMetaData;
   const hasMetadata = definitions && definitions.length > 0;
-  const hasEditableFields = definitions && definitions.some(def => !def.readOnly) && (user!.superUser || user?.roles?.includes(RoleType.ITEM_MANAGEMENT));
+  const hasEditableFields = canEditMetadata(user);
 
   const formatValue = (value: any, fieldType: MetadataFieldType): string => {
     if (value === null || value === undefined) {
@@ -98,14 +88,13 @@ export const ItemMetadataDisplay: React.FC<ItemMetadataDisplayProps> = ({
     loadMetadata();
   }, [itemData.itemCode, hasMetadata, setError]);
 
-  const handleSave = async (updatedItem: ItemDetails) => {
+  const handleItemUpdate = async (updatedItem: ItemDetails) => {
     // Merge the updated item with the existing item data to preserve other properties
     const mergedItem: ItemDetails = {
       ...itemData,
       ...updatedItem,
     };
     onItemUpdate?.(mergedItem);
-    setIsDialogOpen(false);
     
     // Reload metadata to show updated values
     try {
@@ -114,10 +103,6 @@ export const ItemMetadataDisplay: React.FC<ItemMetadataDisplayProps> = ({
     } catch (error) {
       console.error('Failed to reload item metadata:', error);
     }
-  };
-
-  const handleCancel = () => {
-    setIsDialogOpen(false);
   };
 
   if (!hasMetadata) {
@@ -130,29 +115,10 @@ export const ItemMetadataDisplay: React.FC<ItemMetadataDisplayProps> = ({
     }
 
     return (
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogTrigger asChild>
-          <Button variant="ghost" size="sm" className="h-8 px-2">
-            <Edit className="h-4 w-4" />
-            <span className="ml-2">{t('edit')}</span>
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>{t('editMetadata')}</DialogTitle>
-          </DialogHeader>
-          <ItemMetadataForm
-            itemData={{
-              ...itemData,
-              customAttributes: metadataValues,
-              metadataDefinitions: definitions
-            }}
-            onSave={handleSave}
-            onCancel={handleCancel}
-            className="border-0 shadow-none"
-          />
-        </DialogContent>
-      </Dialog>
+      <ItemMetadataEditDialog
+        itemCode={itemData.itemCode}
+        onItemUpdate={handleItemUpdate}
+      />
     );
   };
 

@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useSwipeable} from "react-swipeable";
-import {Edit3, MessageCircle, Package2} from "lucide-react";
+import {Edit3, MessageCircle, Package2, Edit} from "lucide-react";
 import {AddItemResponseMultipleValue, UnitType} from "@/features/shared/data";
 import {useAuth} from "@/components/AppContext";
 import {ItemCustomFields} from "@/features/items/components/ItemDetailsList";
@@ -13,6 +13,7 @@ import {Card} from "@/components/ui/card";
 import ClickableItemCode from "@/components/ClickableItemCode";
 import {useStockInfo} from "@/utils/stock-info";
 import {ScannerMode} from "@/features/login/data/login";
+import {ItemMetadataEditDialog, canEditMetadata} from "@/features/items/components/ItemMetadataEditDialog";
 
 export type AlertSeverity = "Information" | "Positive" | "Negative" | "Warning";
 
@@ -67,6 +68,7 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
   const [swiped, setSwiped] = useState(false);
   const [showPackageContents, setShowPackageContents] = useState(false);
   const stockInfo = useStockInfo();
+  const canEditItemMetadata = alert.itemCode && canEditMetadata(user);
 
   const handlers = useSwipeable({
     onSwipedLeft: () => {
@@ -143,7 +145,20 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
         {alert.itemCode && user!.settings.scannerMode === ScannerMode.ItemCode && (
           <div className="mb-3">
             <div className="text-xs text-gray-500 mt-1">{t('item')}</div>
-            <h4 className="font-bold text-lg text-gray-800">{alert.itemCode}</h4>
+            <div className="flex items-center justify-between">
+              <h4 className="font-bold text-lg text-gray-800">{alert.itemCode}</h4>
+              {canEditItemMetadata && (
+                <ItemMetadataEditDialog
+                  itemCode={alert.itemCode}
+                  triggerButton={
+                    <Button variant="outline" size="sm" className="flex items-center gap-1">
+                      <Edit className="w-4 h-4" />
+                      {t('editMetadata')}
+                    </Button>
+                  }
+                />
+              )}
+            </div>
           </div>
         )}
         {alert.barcode && user!.settings.scannerMode === ScannerMode.ItemBarcode && (
@@ -182,7 +197,19 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
             {alert.itemCode && user!.settings.scannerMode === ScannerMode.ItemBarcode && (
               <div>
                 <div className="text-xs text-gray-500 uppercase tracking-wide">{t('item')}</div>
-                <div className="font-medium">{alert.itemCode}</div>
+                <div className="flex items-center gap-2">
+                  <div className="font-medium">{alert.itemCode}</div>
+                  {canEditItemMetadata && (
+                    <ItemMetadataEditDialog
+                      itemCode={alert.itemCode}
+                      triggerButton={
+                        <Button variant="ghost" size="sm" className="h-6 px-2">
+                          <Edit className="w-3 h-3" />
+                        </Button>
+                      }
+                    />
+                  )}
+                </div>
               </div>
             )}
           </div>
