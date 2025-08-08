@@ -34,7 +34,7 @@ export const useItemMetadata = (itemData?: ItemDetails, metadataDefinitions?: It
     hasChanges: false
   });
 
-  // Helper function to evaluate calculated field formulas
+  // Helper function to evaluate calculated field formulas without using eval
   const evaluateFormula = useCallback((formula: string, fieldValues: Record<string, any>): number | null => {
     try {
       // Simple formula evaluator - supports basic arithmetic with field references
@@ -54,9 +54,84 @@ export const useItemMetadata = (itemData?: ItemDetails, metadataDefinitions?: It
         return null;
       }
       
-      // Evaluate the expression
-      const result = Function(`"use strict"; return (${expression})`)();
+      // Safe evaluation without using eval or Function constructor
+      // This implementation handles basic arithmetic: +, -, *, /, and parentheses
+      const safeCalculate = (expr: string): number => {
+        // Remove all whitespace
+        expr = expr.replace(/\s/g, '');
+        
+        // Helper function to find matching closing parenthesis
+        const findClosingParen = (str: string, start: number): number => {
+          let count = 1;
+          for (let i = start + 1; i < str.length; i++) {
+            if (str[i] === '(') count++;
+            if (str[i] === ')') count--;
+            if (count === 0) return i;
+          }
+          return -1;
+        };
+        
+        // Process parentheses recursively
+        let parenIndex = expr.indexOf('(');
+        while (parenIndex !== -1) {
+          const closeIndex = findClosingParen(expr, parenIndex);
+          if (closeIndex === -1) throw new Error('Mismatched parentheses');
+          
+          const innerExpr = expr.substring(parenIndex + 1, closeIndex);
+          const innerResult = safeCalculate(innerExpr);
+          expr = expr.substring(0, parenIndex) + innerResult + expr.substring(closeIndex + 1);
+          parenIndex = expr.indexOf('(');
+        }
+        
+        // Split by operators while keeping them
+        const tokens: (string | number)[] = [];
+        let currentNumber = '';
+        
+        for (let i = 0; i < expr.length; i++) {
+          const char = expr[i];
+          // Handle negative numbers at the start or after an operator
+          const isNegative = char === '-' && (i === 0 || '+-*/('.includes(expr[i-1]));
+          
+          if ('+-*/'.includes(char) && !isNegative && i > 0) {
+            if (currentNumber) {
+              tokens.push(parseFloat(currentNumber));
+              currentNumber = '';
+            }
+            tokens.push(char);
+          } else {
+            currentNumber += char;
+          }
+        }
+        if (currentNumber) {
+          tokens.push(parseFloat(currentNumber));
+        }
+        
+        // Process multiplication and division first (left to right)
+        for (let i = 1; i < tokens.length - 1; i += 2) {
+          if (tokens[i] === '*' || tokens[i] === '/') {
+            const left = Number(tokens[i - 1]);
+            const right = Number(tokens[i + 1]);
+            const result = tokens[i] === '*' ? left * right : left / right;
+            tokens.splice(i - 1, 3, result);
+            i -= 2;
+          }
+        }
+        
+        // Process addition and subtraction (left to right)
+        for (let i = 1; i < tokens.length - 1; i += 2) {
+          if (tokens[i] === '+' || tokens[i] === '-') {
+            const left = Number(tokens[i - 1]);
+            const right = Number(tokens[i + 1]);
+            const result = tokens[i] === '+' ? left + right : left - right;
+            tokens.splice(i - 1, 3, result);
+            i -= 2;
+          }
+        }
+        
+        return Number(tokens[0]);
+      };
       
+      const result = safeCalculate(expression);
       return typeof result === 'number' && !isNaN(result) ? result : null;
     } catch (error) {
       console.warn('Formula evaluation error:', error);
