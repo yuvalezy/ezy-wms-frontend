@@ -549,6 +549,9 @@
     "enterValue": "Ingrese",
     "editMetadata": "Editar metadatos"
   },
+  "calculated": "Calculado",
+  "formula": "Fórmula",
+  "dependsOn": "Depende de",
   "scan": "Escanear",
   "offlineTitle": "Señal de Internet Perdida",
   "offlineMessage": "Por favor verifique su conexión a internet e intente de nuevo.",

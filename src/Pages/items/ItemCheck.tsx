@@ -19,6 +19,14 @@ export default function ItemCheck() {
   const {code} = useParams();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (code) {
+      const decodedCode = decodeURIComponent(code);
+      setItemCodeInput(decodedCode);
+    }
+  }, [code]);
+
+
   const {
     barcodeInput,
     setBarcodeInput,
@@ -37,7 +45,7 @@ export default function ItemCheck() {
     if (code && !result) {
       handleCheckSubmit();
     }
-  }, [code, result]);
+  }, [code, result, handleCheckSubmit]);
 
   const handleClearAndNavigate = () => {
     handleClear();

@@ -198,7 +198,7 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
               {definition.description}
               {definition.required && <span className="text-red-500">*</span>}
               {definition.readOnly && !isCalculated && <span className="text-gray-500">(Read Only)</span>}
-              {isCalculated && <span className="text-blue-500">(Calculated)</span>}
+              {isCalculated && <span className="text-blue-500">({t('calculated')})</span>}
               {isCalculated && definition.calculated && (
                 <Popover>
                   <PopoverTrigger asChild>
@@ -214,13 +214,13 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
                   <PopoverContent className="w-80">
                     <div className="space-y-3">
                       <div>
-                        <p className="font-medium text-sm mb-1">Formula:</p>
+                        <p className="font-medium text-sm mb-1">{t('formula')}:</p>
                         <code className="block text-xs bg-muted p-2 rounded font-mono">
                           {definition.calculated.formula}
                         </code>
                       </div>
                       <div>
-                        <p className="font-medium text-sm mb-1">Depends on:</p>
+                        <p className="font-medium text-sm mb-1">{t('dependsOn')}:</p>
                         <ul className="text-sm text-muted-foreground space-y-1">
                           {definition.calculated.dependencies.map(depId => {
                             const depDefinition = definitions.find(d => d.id === depId);
