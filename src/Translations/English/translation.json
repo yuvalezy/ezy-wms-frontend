@@ -500,12 +500,12 @@
     "mixedBoxes": "Mixed Boxes",
     "units": {
       "box": {
-        "label": "Packaging UoM",
-        "abbr": "B"
+        "label": "Pack",
+        "abbr": "P"
       },
       "dozen": {
-        "label": "Purchasing UoM",
-        "abbr": "P"
+        "label": "Dozen",
+        "abbr": "D"
       },
       "unit": {
         "label": "Unit",

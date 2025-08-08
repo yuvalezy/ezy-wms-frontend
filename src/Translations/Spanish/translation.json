@@ -500,12 +500,12 @@
     "mixedBoxes": "Paquetes Mixtos",
     "units": {
       "box": {
-        "label": "Unidad de embalaje",
-        "abbr": "E"
+        "label": "Caja",
+        "abbr": "C"
       },
       "dozen": {
-        "label": "Unidad de compras",
-        "abbr": "C"
+        "label": "Docena",
+        "abbr": "D"
       },
       "unit": {
         "label": "Unidad",
