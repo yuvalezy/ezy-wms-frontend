@@ -31,4 +31,25 @@ i18next
         },
     });
 
+// Load translation overrides if they exist
+fetch('/translations/overrides.json')
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        }
+        return {}; // Return empty object if file doesn't exist
+    })
+    .then(overrides => {
+        // Apply overrides for each language
+        Object.keys(overrides).forEach(lng => {
+            if (overrides[lng]) {
+                i18next.addResourceBundle(lng, 'translation', overrides[lng], true, true);
+            }
+        });
+    })
+    .catch(() => {
+        // Silently fail if no override file exists
+        console.log('No translation overrides found, using default translations');
+    });
+
 export default i18next;
