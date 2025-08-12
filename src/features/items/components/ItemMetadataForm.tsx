@@ -52,7 +52,9 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
     saveMetadata,
     resetForm,
     getFieldValue,
-    getFieldValidation
+    getFieldValidation,
+    onFieldFocus,
+    onFieldBlur
   } = useItemMetadata(itemData, itemData.metadataDefinitions);
 
   const form = useForm<FormData>({
@@ -125,6 +127,14 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
     const definition = definitions.find(def => def.id === fieldId);
     if (!definition) return;
 
+    console.log('🖊️ handleFieldChange:', { 
+      fieldId, 
+      rawValue: value, 
+      type: definition.type,
+      isCalculated: !!definition.calculated,
+      clearDependenciesOnManualEdit: definition.calculated?.clearDependenciesOnManualEdit
+    });
+
     let convertedValue: string | number | Date | null = null;
 
     if (value.trim() !== '') {
@@ -146,6 +156,7 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
       }
     }
 
+    console.log('  Converted value:', convertedValue);
     updateFieldValue(fieldId, convertedValue);
   };
 
@@ -185,7 +196,8 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
   const renderField = (definition: ItemMetadataDefinition) => {
     const validation = getFieldValidation(definition.id);
     const isCalculated = !!definition.calculated;
-    const isFieldDisabled = definition.readOnly || isCalculated || metadataFormState.isLoading;
+    const allowManualEdit = definition.calculated?.clearDependenciesOnManualEdit || false;
+    const isFieldDisabled = definition.readOnly || metadataFormState.isLoading || (isCalculated && !allowManualEdit);
     
     return (
       <FormField
@@ -197,8 +209,9 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
             <FormLabel className="flex items-center gap-1">
               {definition.description}
               {definition.required && <span className="text-red-500">*</span>}
-              {definition.readOnly && !isCalculated && <span className="text-gray-500">(Read Only)</span>}
-              {isCalculated && <span className="text-blue-500">({t('calculated')})</span>}
+              {definition.readOnly && <span className="text-gray-500">(Read Only)</span>}
+              {isCalculated && !allowManualEdit && <span className="text-blue-500">({t('calculated')})</span>}
+              {isCalculated && allowManualEdit && <span className="text-green-500">({t('calculated')} - {t('editable')})</span>}
               {isCalculated && definition.calculated && (
                 <Popover>
                   <PopoverTrigger asChild>
@@ -230,6 +243,12 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
                           })}
                         </ul>
                       </div>
+                      {definition.calculated.clearDependenciesOnManualEdit && (
+                        <div className="text-sm text-amber-600 border-t pt-2">
+                          <p className="font-medium">{t('note')}:</p>
+                          <p>{t('manualEditWillClearDependents')}</p>
+                        </div>
+                      )}
                     </div>
                   </PopoverContent>
                 </Popover>
@@ -242,56 +261,64 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
                   {...field}
                   disabled={isFieldDisabled}
                   onChange={(e) => {
-                    if (!isCalculated) {
+                    if (!isCalculated || allowManualEdit) {
                       field.onChange(e);
                       handleFieldChange(definition.id, e.target.value);
                     }
                   }}
-                  className={`${!validation.isValid ? 'border-red-500' : ''} ${isCalculated ? 'bg-blue-50' : ''}`}
+                  onFocus={() => onFieldFocus(definition.id)}
+                  onBlur={() => onFieldBlur(definition.id)}
+                  className={`${!validation.isValid ? 'border-red-500' : ''} ${isCalculated && !allowManualEdit ? 'bg-blue-50' : ''} ${isCalculated && allowManualEdit ? 'bg-green-50' : ''}`}
                 />
               ) : definition.type === MetadataFieldType.Decimal ? (
                 <Input
                   type="number"
                   step="any"
-                  placeholder={isCalculated ? 'Automatically calculated' : `${t('enterValue')} ${definition.description.toLowerCase()}`}
+                  placeholder={isCalculated && !allowManualEdit ? 'Automatically calculated' : `${t('enterValue')} ${definition.description.toLowerCase()}`}
                   {...field}
                   disabled={isFieldDisabled}
                   onChange={(e) => {
-                    if (!isCalculated) {
+                    if (!isCalculated || allowManualEdit) {
                       field.onChange(e);
                       handleFieldChange(definition.id, e.target.value);
                     }
                   }}
-                  className={`${!validation.isValid ? 'border-red-500' : ''} ${isCalculated ? 'bg-blue-50' : ''}`}
+                  onFocus={() => onFieldFocus(definition.id)}
+                  onBlur={() => onFieldBlur(definition.id)}
+                  className={`${!validation.isValid ? 'border-red-500' : ''} ${isCalculated && !allowManualEdit ? 'bg-blue-50' : ''} ${isCalculated && allowManualEdit ? 'bg-green-50' : ''}`}
                 />
               ) : definition.type === MetadataFieldType.Integer ? (
                 <Input
                   type="number"
                   step="1"
-                  placeholder={isCalculated ? 'Automatically calculated' : `${t('enterValue')} ${definition.description.toLowerCase()}`}
+                  placeholder={isCalculated && !allowManualEdit ? 'Automatically calculated' : `${t('enterValue')} ${definition.description.toLowerCase()}`}
                   {...field}
                   disabled={isFieldDisabled}
                   onChange={(e) => {
-                    if (!isCalculated) {
+                    if (!isCalculated || allowManualEdit) {
                       field.onChange(e);
                       handleFieldChange(definition.id, e.target.value);
                     }
                   }}
-                  className={`${!validation.isValid ? 'border-red-500' : ''} ${isCalculated ? 'bg-blue-50' : ''}`}
+                  onFocus={() => onFieldFocus(definition.id)}
+                  onBlur={() => onFieldBlur(definition.id)}
+                  className={`${!validation.isValid ? 'border-red-500' : ''} ${isCalculated && !allowManualEdit ? 'bg-blue-50' : ''} ${isCalculated && allowManualEdit ? 'bg-green-50' : ''}`}
                 />
               ) : (
                 <Input
                   type="text"
-                  placeholder={isCalculated ? 'Automatically calculated' : `${t('enterValue')} ${definition.description.toLowerCase()}`}
+                  placeholder={isCalculated && !allowManualEdit ? 'Automatically calculated' : `${t('enterValue')} ${definition.description.toLowerCase()}`}
                   {...field}
                   disabled={isFieldDisabled}
                   onChange={(e) => {
-                    if (!isCalculated) {
+                    if (!isCalculated || allowManualEdit) {
                       field.onChange(e);
                       handleFieldChange(definition.id, e.target.value);
                     }
                   }}
-                  className={`${!validation.isValid ? 'border-red-500' : ''} ${isCalculated ? 'bg-blue-50' : ''}`}
+                  onFocus={() => onFieldFocus(definition.id)}
+                  onBlur={() => onFieldBlur(definition.id)}
+                  className={`${!validation.isValid ? 'border-red-500' : ''} ${isCalculated && !allowManualEdit ? 'bg-blue-50' : ''} ${isCalculated && allowManualEdit ? 'bg-green-50' : ''}`}
                 />
               )}
             </FormControl>

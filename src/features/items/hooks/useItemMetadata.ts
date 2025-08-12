@@ -6,9 +6,9 @@ import {
 } from '../types';
 import { 
   MetadataFieldType 
-} from '../../packages/types/MetadataFieldType.enum';
+} from '@/features/packages/types';
 import { ItemDetails } from '../data/items';
-import { updateItemMetadata } from '../data/items-service';
+import { updateItemMetadata } from '@/features/items';
 
 export interface MetadataFieldValue {
   fieldId: string;
@@ -33,6 +33,7 @@ export const useItemMetadata = (itemData?: ItemDetails, metadataDefinitions?: It
     isLoading: false,
     hasChanges: false
   });
+  const [focusedFieldId, setFocusedFieldId] = useState<string | null>(null);
 
   // Helper function to evaluate calculated field formulas without using eval
   const evaluateFormula = useCallback((formula: string, fieldValues: Record<string, any>): number | null => {
@@ -278,22 +279,40 @@ export const useItemMetadata = (itemData?: ItemDetails, metadataDefinitions?: It
     
     // Find all calculated field definitions
     const calculatedDefinitions = definitions.filter(def => def.calculated);
+    console.log('🔢 Recalculating fields. Calculated definitions:', calculatedDefinitions.map(d => d.id));
     
     calculatedDefinitions.forEach(definition => {
       if (!definition.calculated) return;
       
+      // Skip recalculation if this field is currently focused and has clearDependenciesOnManualEdit
+      if (focusedFieldId === definition.id && definition.calculated.clearDependenciesOnManualEdit) {
+        console.log(`⏭️ Skipping recalculation for focused field: ${definition.id}`);
+        return;
+      }
+      
       const { formula, dependencies, precision } = definition.calculated;
       const fieldValues = getFieldValuesRecord(updatedFields);
+      
+      console.log(`📐 Calculating ${definition.id}:`, {
+        formula,
+        dependencies,
+        fieldValues: Object.fromEntries(dependencies.map(d => [d, fieldValues[d]]))
+      });
       
       // Check if all dependencies have valid values
       const allDependenciesValid = dependencies.every(depId => {
         const depValue = fieldValues[depId];
-        return depValue !== null && depValue !== undefined && !isNaN(Number(depValue));
+        const isValid = depValue !== null && depValue !== undefined && !isNaN(Number(depValue));
+        if (!isValid) {
+          console.log(`  ❌ Dependency ${depId} is invalid:`, depValue);
+        }
+        return isValid;
       });
       
       if (allDependenciesValid) {
         // Calculate new value
         const calculatedValue = evaluateFormula(formula, fieldValues);
+        console.log(`  ✅ Calculated value for ${definition.id}:`, calculatedValue);
         
         if (calculatedValue !== null) {
           // Apply precision rounding
@@ -304,6 +323,7 @@ export const useItemMetadata = (itemData?: ItemDetails, metadataDefinitions?: It
             if (field.fieldId === definition.id) {
               const currentValue = field.value;
               if (currentValue !== roundedValue) {
+                console.log(`  📝 Updating ${definition.id}: ${currentValue} -> ${roundedValue}`);
                 hasChanges = true;
                 return {
                   ...field,
@@ -317,6 +337,7 @@ export const useItemMetadata = (itemData?: ItemDetails, metadataDefinitions?: It
           });
         }
       } else {
+        console.log(`  ⚠️ Not all dependencies valid for ${definition.id}`);  
         // Clear calculated field if dependencies are not met
         updatedFields = updatedFields.map(field => {
           if (field.fieldId === definition.id && field.value !== null) {
@@ -334,14 +355,40 @@ export const useItemMetadata = (itemData?: ItemDetails, metadataDefinitions?: It
     });
     
     return hasChanges ? updatedFields : fields;
-  }, [definitions, evaluateFormula, getFieldValuesRecord]);
+  }, [definitions, evaluateFormula, getFieldValuesRecord, focusedFieldId]);
+
+  // Helper function to find all fields that depend on a given field (with cycle detection)
+  const findDependentFields = useCallback((fieldId: string, visited: Set<string> = new Set()): string[] => {
+    // Prevent infinite loops by tracking visited fields
+    if (visited.has(fieldId)) {
+      console.warn(`Circular dependency detected involving field: ${fieldId}`);
+      return [];
+    }
+    
+    visited.add(fieldId);
+    const dependents: string[] = [];
+    
+    definitions.forEach(def => {
+      if (def.calculated && def.calculated.dependencies.includes(fieldId)) {
+        dependents.push(def.id);
+        // Recursively find fields that depend on this dependent field
+        const transitiveDependents = findDependentFields(def.id, new Set(visited));
+        dependents.push(...transitiveDependents);
+      }
+    });
+    
+    return [...new Set(dependents)]; // Remove duplicates
+  }, [definitions]);
 
   const updateFieldValue = useCallback((fieldId: string, value: string | number | Date | null) => {
+    console.log('🔄 updateFieldValue called:', { fieldId, value, focusedFieldId });
+    
     setFormState(prev => {
       // First, update the changed field
       let updatedFields = prev.fields.map(field => {
         if (field.fieldId === fieldId) {
           const validation = validateFieldValue(fieldId, value, definitions);
+          console.log('✏️ Updating field:', { fieldId, value, validation });
           return {
             ...field,
             value,
@@ -352,8 +399,67 @@ export const useItemMetadata = (itemData?: ItemDetails, metadataDefinitions?: It
         return field;
       });
 
-      // Then recalculate any dependent calculated fields
-      updatedFields = recalculateFields(updatedFields);
+      // Check if the EDITED field itself is a calculated field with clearDependenciesOnManualEdit
+      const editedFieldDef = definitions.find(def => def.id === fieldId);
+      const isManualEditOfCalculatedField = editedFieldDef?.calculated?.clearDependenciesOnManualEdit;
+      
+      console.log('🔍 Checking edited field:', { 
+        fieldId, 
+        isCalculated: !!editedFieldDef?.calculated, 
+        clearDependenciesOnManualEdit: editedFieldDef?.calculated?.clearDependenciesOnManualEdit 
+      });
+
+      if (isManualEditOfCalculatedField) {
+        // This is a manual edit of a calculated field with clearDependenciesOnManualEdit
+        // Clear the fields that THIS calculated field depends on (its dependencies)
+        const fieldsToClear = editedFieldDef.calculated?.dependencies || [];
+        
+        console.log('🗑️ Manual edit of calculated field - clearing its dependencies:', fieldsToClear);
+        
+        // Clear the dependency fields
+        updatedFields = updatedFields.map(field => {
+          if (fieldsToClear.includes(field.fieldId)) {
+            console.log(`  - Clearing dependency field: ${field.fieldId}`);
+            return {
+              ...field,
+              value: null,
+              isValid: true,
+              errorMessage: undefined
+            };
+          }
+          return field;
+        });
+        
+        // Also clear any fields that depend on the cleared fields (cascade)
+        // BUT exclude the originally edited field to preserve the manual value
+        const cascadedFieldsToClear: string[] = [];
+        fieldsToClear.forEach(clearedFieldId => {
+          const dependents = findDependentFields(clearedFieldId);
+          // Filter out the originally edited field from cascade
+          const filteredDependents = dependents.filter(depId => depId !== fieldId);
+          cascadedFieldsToClear.push(...filteredDependents);
+        });
+        
+        if (cascadedFieldsToClear.length > 0) {
+          console.log('  🌊 Cascading clear to (excluding edited field):', cascadedFieldsToClear);
+          updatedFields = updatedFields.map(field => {
+            if (cascadedFieldsToClear.includes(field.fieldId)) {
+              console.log(`    - Clearing cascaded field: ${field.fieldId}`);
+              return {
+                ...field,
+                value: null,
+                isValid: true,
+                errorMessage: undefined
+              };
+            }
+            return field;
+          });
+        }
+      } else {
+        console.log('📊 Recalculating fields (normal flow)');
+        // Normal flow: recalculate any dependent calculated fields
+        updatedFields = recalculateFields(updatedFields);
+      }
 
       const isValid = updatedFields.every(f => f.isValid);
       const hasChanges = checkForChanges(updatedFields, itemData?.customAttributes || {});
@@ -365,7 +471,7 @@ export const useItemMetadata = (itemData?: ItemDetails, metadataDefinitions?: It
         hasChanges
       };
     });
-  }, [itemData?.customAttributes, definitions, validateFieldValue, checkForChanges, recalculateFields]);
+  }, [itemData?.customAttributes, definitions, validateFieldValue, checkForChanges, recalculateFields, findDependentFields]);
 
   // Initialize form state when definitions or item data changes
   useEffect(() => {
@@ -456,6 +562,49 @@ export const useItemMetadata = (itemData?: ItemDetails, metadataDefinitions?: It
     };
   }, [formState.fields]);
 
+  const setFieldFocus = useCallback((fieldId: string | null) => {
+    setFocusedFieldId(fieldId);
+  }, []);
+
+  const onFieldFocus = useCallback((fieldId: string) => {
+    const definition = definitions.find(def => def.id === fieldId);
+    console.log(`🎯 Field focused: ${fieldId}`, {
+      isCalculated: !!definition?.calculated,
+      clearDependenciesOnManualEdit: definition?.calculated?.clearDependenciesOnManualEdit
+    });
+    // Only set focus state for calculated fields with clearDependenciesOnManualEdit
+    if (definition?.calculated?.clearDependenciesOnManualEdit) {
+      console.log(`  ✅ Setting focus for editable calculated field: ${fieldId}`);
+      setFieldFocus(fieldId);
+    }
+  }, [definitions, setFieldFocus]);
+
+  const onFieldBlur = useCallback((fieldId: string) => {
+    const definition = definitions.find(def => def.id === fieldId);
+    console.log(`👋 Field blur: ${fieldId}`, {
+      isCalculated: !!definition?.calculated,
+      clearDependenciesOnManualEdit: definition?.calculated?.clearDependenciesOnManualEdit,
+      wasFocused: focusedFieldId === fieldId
+    });
+    // Clear focus state and recalculate if needed
+    if (definition?.calculated?.clearDependenciesOnManualEdit && focusedFieldId === fieldId) {
+      console.log(`  🔄 Clearing focus for: ${fieldId}`);
+      setFieldFocus(null);
+      
+      // After clearing focus, recalculate fields if the manual value should be overridden
+      // Only recalculate if the field is empty or invalid
+      const field = formState.fields.find(f => f.fieldId === fieldId);
+      console.log(`  Field state:`, { value: field?.value, isValid: field?.isValid });
+      if (field && (field.value === null || field.value === '' || !field.isValid)) {
+        console.log(`  🔢 Triggering recalculation after blur`);
+        setFormState(prev => ({
+          ...prev,
+          fields: recalculateFields(prev.fields)
+        }));
+      }
+    }
+  }, [definitions, focusedFieldId, setFieldFocus, formState.fields, recalculateFields]);
+
   return {
     definitions,
     formState,
@@ -464,6 +613,8 @@ export const useItemMetadata = (itemData?: ItemDetails, metadataDefinitions?: It
     resetForm,
     getFieldDefinition,
     getFieldValue,
-    getFieldValidation
+    getFieldValidation,
+    onFieldFocus,
+    onFieldBlur
   };
 };

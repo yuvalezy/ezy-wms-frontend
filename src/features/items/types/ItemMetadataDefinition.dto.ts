@@ -13,4 +13,5 @@ export interface Calculated {
   formula: string;
   dependencies: string[];
   precision: number;
+  clearDependenciesOnManualEdit: boolean;
 }
