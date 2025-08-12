@@ -43,22 +43,38 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
   const excelHeaders = [
     t("code"),
     t("description"),
+    t("scannedQuantity"),
+    ...getExcelQuantityHeaders(t, true, user?.settings.enableUseBaseUn),
+    t("documentQuantity"),
     ...getExcelQuantityHeaders(t, true, user?.settings.enableUseBaseUn),
   ];
 
   function excelData() {
-    const itemMap: { [key: string]: { itemCode: string, itemName: string, quantity: number, numInBuy: number, buyUnitMsr: string, purPackUn: number, purPackMsr: string } } = {};
+    const itemMap: {
+      [key: string]: {
+        itemCode: string,
+        itemName: string,
+        quantity: number,
+        documentQuantity: number,
+        numInBuy: number,
+        buyUnitMsr: string,
+        purPackUn: number,
+        purPackMsr: string
+      }
+    } = {};
     const issueFoundMap: { [key: string]: boolean } = {};
 
     data?.forEach(value => {
       value.lines.forEach((line) => {
         let itemCode = line.itemCode;
         let quantity = line.quantity;
+        let documentQuantity = line.documentQuantity;
         if (!itemMap[itemCode]) {
           itemMap[itemCode] = {
             itemCode: itemCode,
             itemName: line.itemName,
             quantity: quantity,
+            documentQuantity: documentQuantity,
             numInBuy: line.numInBuy,
             buyUnitMsr: line.buyUnitMsr ?? t('dozen'),
             purPackUn: line.purPackUn,
@@ -66,6 +82,7 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
           };
         } else {
           itemMap[itemCode].quantity += quantity;
+          itemMap[itemCode].documentQuantity += documentQuantity;
         }
         if (line.lineStatus !== ProcessLineStatus.OK && line.lineStatus !== ProcessLineStatus.ClosedLine) {
           issueFoundMap[itemCode] = true;
@@ -81,11 +98,19 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
           numInBuy: item.numInBuy,
           purPackUn: item.purPackUn,
         });
-        
+        const documentQuantities = formatQuantityForExcel({
+          quantity: item.documentQuantity,
+          numInBuy: item.numInBuy,
+          purPackUn: item.purPackUn,
+        });
+
         return [
           item.itemCode,
           item.itemName,
+          "",
           ...getExcelQuantityValuesFromResult(quantities, user?.settings.enableUseBaseUn),
+          "",
+          ...getExcelQuantityValuesFromResult(documentQuantities, user?.settings.enableUseBaseUn),
         ];
       });
   }

@@ -39,7 +39,7 @@ fetch('/translations/overrides.json')
         }
         return {}; // Return empty object if file doesn't exist
     })
-    .then(overrides => {
+    .then((overrides: Record<string, any>) => {
         // Apply overrides for each language
         Object.keys(overrides).forEach(lng => {
             if (overrides[lng]) {

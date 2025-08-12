@@ -96,7 +96,7 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
             </DropdownMenuItem>
           )}
 
-          {processStatuses.includes(doc.status) && (
+          {[Status.InProgress, Status.Processing, Status.Open].includes(doc.status) && (
             <DropdownMenuItem onClick={() => handleOpen('diff', doc.id)}>
               <ArrowRightLeft className="mr-2 h-4 w-4" />
               {t('differencesReport')}

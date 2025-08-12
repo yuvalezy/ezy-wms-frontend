@@ -100,7 +100,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
                   {processType === ProcessType.Regular ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}
                 </Button>
               )}
-              {processStatuses.includes(doc.status) && (
+              {[Status.InProgress, Status.Processing, Status.Open].includes(doc.status) && (
                 <Button variant="outline" className="w-full" onClick={() => handleOpen('diff', doc.id)}>
                   <ArrowRightLeft className="mr-2 h-4 w-4"/>
                   {t('differencesReport')}
