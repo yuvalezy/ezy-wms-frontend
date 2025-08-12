@@ -123,7 +123,7 @@ export default function GoodsReceiptProcessDifferenceReport({processType = Proce
                 <InfoBoxValue label={t("supplierName")} value={(report.vendor.name)}/>
             </FullInfoBox>
           )}
-          <div className="flex items-center space-x-2 mb-4">
+          <div className="flex items-center space-x-2 mb-4 ml-4 md:ml-0">
             <Checkbox 
               id="showOnlyDifferences" 
               checked={showOnlyDifferences}

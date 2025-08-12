@@ -92,6 +92,35 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
     }
   };
 
+  const getDifferenceStyle = (difference: number): CSSProperties => {
+    // Returns style for difference value matching the status colors
+    if (difference === 0) {
+      return {
+        color: '#155724',
+        backgroundColor: '#d4edda',
+        padding: '2px 6px',
+        borderRadius: '4px',
+        display: 'inline-block'
+      }; // Green for zero (exact match - same as OK status)
+    } else if (difference > 0) {
+      return {
+        color: '#721c24',
+        backgroundColor: '#f8d7da',
+        padding: '2px 6px',
+        borderRadius: '4px',
+        display: 'inline-block'
+      }; // Red for positive (more scanned than ordered - same as LessScan status)
+    } else {
+      return {
+        color: '#856404',
+        backgroundColor: '#fff3cd',
+        padding: '2px 6px',
+        borderRadius: '4px',
+        display: 'inline-block'
+      }; // Yellow for negative (less scanned than ordered - same as MoreScan status)
+    }
+  };
+
   function getRowStatusLabel(status: ProcessLineStatus) {
     switch (status) {
       case ProcessLineStatus.OK:
@@ -143,6 +172,8 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
       <div className="block sm:hidden flex flex-col gap-2">
         {data.lines.map((row) => {
           const statusTextStyle = getStatusTextStyle(row.lineStatus);
+          const difference = row.quantity - row.documentQuantity;
+          const differenceStyle = getDifferenceStyle(difference);
 
           return (
             <Card key={row.lineNumber}>
@@ -169,6 +200,18 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
                     purPackUn: row.purPackUn,
                     purPackMsr: row.purPackMsr,
                   })}/>
+                  <InfoBoxValue label={t('difference')}
+                                value={
+                                  <span style={differenceStyle}>
+                                    {stockInfo({
+                                      quantity: difference,
+                                      numInBuy: row.numInBuy,
+                                      buyUnitMsr: row.buyUnitMsr,
+                                      purPackUn: row.purPackUn,
+                                      purPackMsr: row.purPackMsr,
+                                    })}
+                                  </span>
+                                }/>
                   <InfoBoxValue label={t('status')}
                                 value={<span style={statusTextStyle}>{getRowStatusLabel(row.lineStatus)}</span>}/>
                 </FullInfoBox>
@@ -197,6 +240,7 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
               <TableHead>{t('description')}</TableHead>
               <TableHead>{t('scannedQuantity')}</TableHead>
               <TableHead>{t('documentQuantity')}</TableHead>
+              <TableHead>{t('difference')}</TableHead>
               <TableHead>{t('status')}</TableHead>
               <TableHead></TableHead>
             </TableRow>
@@ -204,6 +248,8 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
           <TableBody>
             {data.lines.map((row) => {
               const statusTextStyle = getStatusTextStyle(row.lineStatus);
+              const difference = row.quantity - row.documentQuantity;
+              const differenceStyle = getDifferenceStyle(difference);
 
               return (
                 <TableRow key={row.lineNumber}>
@@ -226,6 +272,17 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
                     purPackUn: row.purPackUn,
                     purPackMsr: row.purPackMsr,
                   })}</TableCell>
+                  <TableCell>
+                    <span style={differenceStyle}>
+                      {stockInfo({
+                        quantity: difference,
+                        numInBuy: row.numInBuy,
+                        buyUnitMsr: row.buyUnitMsr,
+                        purPackUn: row.purPackUn,
+                        purPackMsr: row.purPackMsr,
+                      })}
+                    </span>
+                  </TableCell>
                   <TableCell>
                     <span style={statusTextStyle}>{getRowStatusLabel(row.lineStatus)}</span>
                   </TableCell>
