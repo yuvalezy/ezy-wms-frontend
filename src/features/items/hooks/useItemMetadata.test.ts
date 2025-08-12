@@ -62,7 +62,8 @@ describe('useItemMetadata Hook', () => {
       calculated: {
         formula: 'PurchaseUnitLength * PurchaseUnitWidth * PurchaseUnitHeight',
         dependencies: ['PurchaseUnitLength', 'PurchaseUnitWidth', 'PurchaseUnitHeight'],
-        precision: 2
+        precision: 2,
+        clearDependenciesOnManualEdit: false
       }
     }
   ];
@@ -119,7 +120,8 @@ describe('useItemMetadata Hook', () => {
         calculated: {
           formula: 'PurchaseUnitLength * PurchaseUnitWidth * PurchaseUnitHeight / 3',
           dependencies: ['PurchaseUnitLength', 'PurchaseUnitWidth', 'PurchaseUnitHeight'],
-          precision: 2
+          precision: 2,
+          clearDependenciesOnManualEdit: false
         }
       };
 
@@ -175,7 +177,8 @@ describe('useItemMetadata Hook', () => {
         calculated: {
           formula: '2 * (PurchaseUnitLength * PurchaseUnitWidth + PurchaseUnitLength * PurchaseUnitHeight + PurchaseUnitWidth * PurchaseUnitHeight)',
           dependencies: ['PurchaseUnitLength', 'PurchaseUnitWidth', 'PurchaseUnitHeight'],
-          precision: 2
+          precision: 2,
+          clearDependenciesOnManualEdit: false
         }
       }
     ];
@@ -223,7 +226,8 @@ describe('useItemMetadata Hook', () => {
         calculated: {
           formula: 'PurchaseUnitLength + invalidFunction()', // Invalid formula
           dependencies: ['PurchaseUnitLength'],
-          precision: 2
+          precision: 2,
+          clearDependenciesOnManualEdit: false
         }
       }
     ];

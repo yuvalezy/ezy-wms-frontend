@@ -372,12 +372,12 @@ export const useItemMetadata = (itemData?: ItemDetails, metadataDefinitions?: It
       if (def.calculated && def.calculated.dependencies.includes(fieldId)) {
         dependents.push(def.id);
         // Recursively find fields that depend on this dependent field
-        const transitiveDependents = findDependentFields(def.id, new Set(visited));
+        const transitiveDependents = findDependentFields(def.id, new Set(Array.from(visited)));
         dependents.push(...transitiveDependents);
       }
     });
     
-    return [...new Set(dependents)]; // Remove duplicates
+    return Array.from(new Set(dependents)); // Remove duplicates
   }, [definitions]);
 
   const updateFieldValue = useCallback((fieldId: string, value: string | number | Date | null) => {
