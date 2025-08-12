@@ -11,6 +11,7 @@ import {
 import {Button, useAuth} from "@/components";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {ProcessType} from "@/features/shared/data";
+import {Checkbox} from "@/components/ui/checkbox";
 
 interface GoodsReceiptProcessDifferenceReportProps {
   processType?: ProcessType
@@ -27,6 +28,8 @@ export default function GoodsReceiptProcessDifferenceReport({processType = Proce
     report,
     setReport,
     handleExportExcel,
+    showOnlyDifferences,
+    setShowOnlyDifferences,
   } = useGoodsReceiptProcessDifferenceReportData();
 
   if (!info)
@@ -120,6 +123,19 @@ export default function GoodsReceiptProcessDifferenceReport({processType = Proce
                 <InfoBoxValue label={t("supplierName")} value={(report.vendor.name)}/>
             </FullInfoBox>
           )}
+          <div className="flex items-center space-x-2 mb-4">
+            <Checkbox 
+              id="showOnlyDifferences" 
+              checked={showOnlyDifferences}
+              onCheckedChange={(checked) => setShowOnlyDifferences(checked as boolean)}
+            />
+            <label 
+              htmlFor="showOnlyDifferences" 
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              {t("showOnlyDifferences")}
+            </label>
+          </div>
           <GoodsReceiptProcessDifferenceTable id={info.id} data={report}/>
       </>}
       {data && data.length === 0 && (

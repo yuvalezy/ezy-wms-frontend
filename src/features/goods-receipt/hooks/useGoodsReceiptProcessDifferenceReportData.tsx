@@ -23,6 +23,7 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
   const [data, setData] = useState<GoodsReceiptValidateProcess[] | null>(null);
   const [report, setReport] = useState<GoodsReceiptValidateProcess | null>(null);
   const [info, setInfo] = useState<ReceiptDocument | null>(null);
+  const [showOnlyDifferences, setShowOnlyDifferences] = useState<boolean>(false);
 
   useEffect(() => {
     if (scanCode === null || scanCode === undefined) {
@@ -93,7 +94,13 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
     });
 
     return Object.values(itemMap)
-      .filter((item) => issueFoundMap[item.itemCode])
+      .filter((item) => {
+        if (!issueFoundMap[item.itemCode]) return false;
+        if (showOnlyDifferences) {
+          return item.quantity !== item.documentQuantity;
+        }
+        return true;
+      })
       .map((item) => {
         const quantities = formatQuantityForExcel({
           quantity: item.quantity,
@@ -137,14 +144,28 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
     e.preventDefault();
     setReport(report);
   }
+
+  const getFilteredReport = () => {
+    if (!report || !showOnlyDifferences) {
+      return report;
+    }
+    
+    return {
+      ...report,
+      lines: report.lines.filter(line => line.quantity !== line.documentQuantity)
+    };
+  };
+
   return {
     info,
     scanCode,
     o,
     data,
-    report,
+    report: getFilteredReport(),
     setReport,
     handleExportExcel,
     openReport,
+    showOnlyDifferences,
+    setShowOnlyDifferences,
   }
 }
