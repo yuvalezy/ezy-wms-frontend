@@ -47,6 +47,8 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
     ...getExcelQuantityHeaders(t, true, user?.settings.enableUseBaseUn),
     t("documentQuantity"),
     ...getExcelQuantityHeaders(t, true, user?.settings.enableUseBaseUn),
+    t("difference"),
+    ...getExcelQuantityHeaders(t, true, user?.settings.enableUseBaseUn),
   ];
 
   function excelData() {
@@ -103,6 +105,11 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
           numInBuy: item.numInBuy,
           purPackUn: item.purPackUn,
         });
+        const differenceQuantities = formatQuantityForExcel({
+          quantity: item.quantity - item.documentQuantity,
+          numInBuy: item.numInBuy,
+          purPackUn: item.purPackUn,
+        });
 
         return [
           item.itemCode,
@@ -111,6 +118,8 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
           ...getExcelQuantityValuesFromResult(quantities, user?.settings.enableUseBaseUn),
           "",
           ...getExcelQuantityValuesFromResult(documentQuantities, user?.settings.enableUseBaseUn),
+          "",
+          ...getExcelQuantityValuesFromResult(differenceQuantities, user?.settings.enableUseBaseUn),
         ];
       });
   }
