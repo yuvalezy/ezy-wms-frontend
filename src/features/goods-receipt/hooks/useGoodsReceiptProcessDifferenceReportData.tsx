@@ -42,6 +42,7 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
   }, []);
 
   const excelHeaders = [
+    t("document"),
     t("code"),
     t("description"),
     t("scannedQuantity"),
@@ -55,6 +56,7 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
   function excelData() {
     const itemMap: {
       [key: string]: {
+        document: string,
         itemCode: string,
         itemName: string,
         quantity: number,
@@ -68,12 +70,19 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
     const issueFoundMap: { [key: string]: boolean } = {};
 
     data?.forEach(value => {
+      const objectName = o(value.baseType);
+      const documentNumber = value.documentNumber;
+      const documentDisplay = `${objectName} ${documentNumber}`;
+      
       value.lines.forEach((line) => {
-        let itemCode = line.itemCode;
-        let quantity = line.quantity;
-        let documentQuantity = line.documentQuantity;
-        if (!itemMap[itemCode]) {
-          itemMap[itemCode] = {
+        const itemCode = line.itemCode;
+        const quantity = line.quantity;
+        const documentQuantity = line.documentQuantity;
+        const mapKey = `${value.baseType}_${documentNumber}_${itemCode}`;
+        
+        if (!itemMap[mapKey]) {
+          itemMap[mapKey] = {
+            document: documentDisplay,
             itemCode: itemCode,
             itemName: line.itemName,
             quantity: quantity,
@@ -84,24 +93,31 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
             purPackMsr: line.purPackMsr ?? t('pack')
           };
         } else {
-          itemMap[itemCode].quantity += quantity;
-          itemMap[itemCode].documentQuantity += documentQuantity;
+          itemMap[mapKey].quantity += quantity;
+          itemMap[mapKey].documentQuantity += documentQuantity;
         }
         if (line.lineStatus !== ProcessLineStatus.OK && line.lineStatus !== ProcessLineStatus.ClosedLine) {
-          issueFoundMap[itemCode] = true;
+          issueFoundMap[mapKey] = true;
         }
       })
     });
 
-    return Object.values(itemMap)
-      .filter((item) => {
-        if (!issueFoundMap[item.itemCode]) return false;
+    return Object.entries(itemMap)
+      .filter(([key, item]) => {
+        if (!issueFoundMap[key]) return false;
         if (showOnlyDifferences) {
           return item.quantity !== item.documentQuantity;
         }
         return true;
       })
-      .map((item) => {
+      .sort(([keyA, itemA], [keyB, itemB]) => {
+        // Sort by document first, then by item code
+        if (itemA.document !== itemB.document) {
+          return itemA.document.localeCompare(itemB.document);
+        }
+        return itemA.itemCode.localeCompare(itemB.itemCode);
+      })
+      .map(([key, item]) => {
         const quantities = formatQuantityForExcel({
           quantity: item.quantity,
           numInBuy: item.numInBuy,
@@ -119,6 +135,7 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
         });
 
         return [
+          item.document,
           item.itemCode,
           item.itemName,
           "",
