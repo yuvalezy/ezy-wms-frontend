@@ -25,6 +25,7 @@ import {
 import {transferService} from "@/features/transfer/data/transefer-service";
 import {TargetItemDetail, TransferContent, TransferContentBin} from "@/features/transfer/data/transfer";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
+import {Skeleton} from "@/components/ui/skeleton";
 
 export interface TransferTargetItemsDetailRef {
     show: (content: TransferContent, bin: TransferContentBin) => void;
@@ -39,7 +40,7 @@ export interface TransferTargetItemsDetailProps {
 const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsDetailProps, ref) => {
     const {t} = useTranslation();
     const { dateFormat, timeFormat } = useDateTimeFormat();
-    const {setLoading, setError} = useThemeContext();
+    const {setError} = useThemeContext();
     const [isOpen, setIsOpen] = useState(false);
     const [content, setContent] = useState<TransferContent | null>(null);
     const [bin, setBin] = useState<TransferContentBin | null>(null);
@@ -47,6 +48,7 @@ const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsD
     const [enableUpdate, setEnableUpdate] = useState(false);
     const [checkedRows, setCheckedRows] = useState<{ [key: string]: boolean }>({}); // State to store checked rows
     const [quantityChanges, setQuantityChanges] = useState<{ [key: string]: number }>({}); // State to store quantity changes
+    const [isLoading, setIsLoading] = useState(false);
 
     function update() {
         try {
@@ -59,7 +61,7 @@ const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsD
     }
 
     function loadDetails(contentArg: TransferContent, binArg: TransferContentBin) {
-        setLoading(true);
+        setIsLoading(true);
         setEnableUpdate(false);
         setCheckedRows({});
         setQuantityChanges({});
@@ -72,11 +74,11 @@ const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsD
                         setData(result);
                     })
                     .catch((error) => setError(error))
-                    .finally(() => setLoading(false));
+                    .finally(() => setIsLoading(false));
             })
             .catch((error) => {
                 setError(error);
-                setLoading(false);
+                setIsLoading(false);
             });
     }
 
@@ -118,7 +120,36 @@ const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsD
                     </DialogDescription>
                 </DialogHeader>
                 
-                {content && bin && data.length > 0 && (
+                {isLoading ? (
+                    <div className="max-h-[60vh] overflow-y-auto py-4" aria-label="Loading...">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead className="w-[50px]"><Skeleton className="h-4 w-12" /></TableHead>
+                                    <TableHead><Skeleton className="h-4 w-20" /></TableHead>
+                                    <TableHead><Skeleton className="h-4 w-16" /></TableHead>
+                                    <TableHead><Skeleton className="h-4 w-16" /></TableHead>
+                                    <TableHead className="text-right"><Skeleton className="h-4 w-20" /></TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {Array.from({ length: 3 }).map((_, index) => (
+                                    <TableRow key={index}>
+                                        <TableCell>
+                                            <Skeleton className="h-4 w-4" />
+                                        </TableCell>
+                                        <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                                        <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+                                        <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+                                        <TableCell className="text-right">
+                                            <Skeleton className="h-8 w-20 ml-auto" />
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </div>
+                ) : content && bin && data.length > 0 ? (
                     <div className="max-h-[60vh] overflow-y-auto py-4">
                         <Table>
                             <TableHeader>
@@ -161,8 +192,9 @@ const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsD
                             </TableBody>
                         </Table>
                     </div>
+                ) : (
+                    <p className="py-4 text-center text-muted-foreground">{t("noDetailsAvailable")}</p>
                 )}
-                {(!data || data.length === 0) && <p className="py-4 text-center text-muted-foreground">{t("noDetailsAvailable")}</p>}
 
                 <DialogFooter>
                     {enableUpdate && (

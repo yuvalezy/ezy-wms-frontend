@@ -23,22 +23,25 @@ export const useGoodsReceiptProcessData = (processType: ProcessType) => {
   const barcodeRef = useRef<BarCodeScannerRef>(null);
   const boxConfirmationDialogRef = useRef<BoxConfirmationDialogRef>(null);
   const [enable, setEnable] = useState(true);
-  const {setLoading, setError} = useThemeContext();
+  const {setError} = useThemeContext();
   const [acceptValues, setAcceptValues] = useState<ProcessAlertValue[]>([]);
   const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
   const processesRef = useRef<ProcessesRef>(null);
   const [info, setInfo] = useState<ReceiptDocument | null>(null);
   const [currentPackage, setCurrentPackage] = useState<PackageValue | null | undefined>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setTimeout(() => barcodeRef.current?.focus(), 1);
     if (scanCode === null || scanCode === undefined) {
+      setIsLoading(false);
       return;
     }
+    setIsLoading(true);
     goodsReceiptService.fetch(scanCode)
       .then((result) => setInfo(result))
       .catch((error) => setError(error))
-      .finally(() => setLoading(false));
+      .finally(() => setIsLoading(false));
   }, []);
 
   const alert = (alert: ProcessAlertValue) => {
@@ -52,7 +55,6 @@ export const useGoodsReceiptProcessData = (processType: ProcessType) => {
     const unit = value.unit;
     boxConfirmationDialogRef?.current?.show(false);
     barcodeRef.current?.clear();
-    setLoading(true);
     let barcode = item.barcode!;
     goodsReceiptService.addItem(info!.id, item.code, barcode, unit, value.createPackage, value.package?.id)
       .then((data) => {
@@ -123,7 +125,6 @@ export const useGoodsReceiptProcessData = (processType: ProcessType) => {
         alert({barcode: barcode, itemCode: item.code, message: errorMessage, severity: "Negative"});
       })
       .finally(function () {
-        setLoading(false);
         setTimeout(() => barcodeRef.current?.focus(), 100);
       });
   }
@@ -272,6 +273,7 @@ export const useGoodsReceiptProcessData = (processType: ProcessType) => {
     scanCode,
     info,
     enable,
+    isLoading,
     barcodeRef,
     processesRef,
     acceptValues,

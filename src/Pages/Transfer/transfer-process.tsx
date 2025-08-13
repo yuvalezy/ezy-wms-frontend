@@ -7,6 +7,7 @@ import BinLocationScanner from "@/components/BinLocationScanner";
 import TransferCard from "@/features/transfer/components/transfer-card";
 import {cn} from "@/utils/css-utils";
 import {useTransferProcessData} from "@/features/transfer/hooks/useTransferProcessData";
+import {Skeleton} from "@/components/ui/skeleton";
 
 export default function TransferProcess() {
   const {t} = useTranslation();
@@ -15,9 +16,72 @@ export default function TransferProcess() {
     id,
     info,
     finish,
-    user
+    user,
+    isLoading
   } = useTransferProcessData();
   const navigate = useNavigate();
+
+  // Skeleton component for loading state
+  const ProcessSkeleton = () => (
+    <div className="grid gap-2" aria-label="Loading...">
+      {/* Transfer card skeleton */}
+      <Card className="shadow-lg">
+        <CardContent className="py-4">
+          <div className="space-y-3">
+            <div className="flex justify-between">
+              <Skeleton className="h-4 w-16" />
+              <Skeleton className="h-4 w-24" />
+            </div>
+            <div className="flex justify-between">
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-4 w-20" />
+            </div>
+            <div className="flex justify-between">
+              <Skeleton className="h-4 w-18" />
+              <Skeleton className="h-4 w-28" />
+            </div>
+            <div className="flex justify-between">
+              <Skeleton className="h-4 w-14" />
+              <Skeleton className="h-4 w-20" />
+            </div>
+            <div className="pt-2">
+              <Skeleton className="h-2 w-full" />
+              <Skeleton className="h-3 w-20 mx-auto mt-1" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      {/* Scanner cards skeleton */}
+      <Card>
+        <CardContent className="p-6">
+          <div className="space-y-4">
+            <Skeleton className="h-4 w-48" />
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-32" />
+          </div>
+        </CardContent>
+      </Card>
+      
+      <Card>
+        <CardContent className="p-6">
+          <div className="space-y-4">
+            <Skeleton className="h-4 w-48" />
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-32" />
+          </div>
+        </CardContent>
+      </Card>
+      
+      {/* Optional target items link skeleton */}
+      <div className="space-y-4 p-2">
+        <div className="bg-white rounded-lg shadow-md p-4 flex items-center space-x-4">
+          <Skeleton className="h-6 w-6" />
+          <Skeleton className="h-6 w-48" />
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <ContentTheme title={t("transfer")} titleOnClick={() => navigate(`/transfer`)}
@@ -26,14 +90,17 @@ export default function TransferProcess() {
                     <div className="p-4">
                       <Button type="button"
                               className={cn("w-full bg-green-500", info?.isComplete ? 'hover:shadow-lg cursor-pointer' : 'opacity-50 cursor-not-allowed')}
-                              onClick={() => finish()}>
+                              onClick={() => finish()}
+                              disabled={isLoading}>
                         <Check className="h-6 w-6"/>
                         {t("finish")}
                       </Button>
                     </div>
                   }
     >
-      {id && (
+      {isLoading ? (
+        <ProcessSkeleton />
+      ) : id ? (
         <div className="grid gap-2">
           {info && <TransferCard header={false} doc={info}/>}
           <Card>
@@ -61,7 +128,7 @@ export default function TransferProcess() {
             )}
           </div>
         </div>
-      )}
+      ) : null}
     </ContentTheme>
   );
 }

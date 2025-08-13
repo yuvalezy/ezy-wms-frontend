@@ -7,6 +7,7 @@ import {useTranslation} from "react-i18next";
 import DocumentListDialog, {DocumentListDialogRef} from "@/features/goods-receipt/components/DocumentListDialog";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Button} from "@/components/ui/button";
+import {Skeleton} from "@/components/ui/skeleton";
 import {MoreVertical, ArrowRightLeft, FileText, Truck} from 'lucide-react';
 import {activeStatuses} from "@/features/goods-receipt/data/goods-receipt-utils";
 import {
@@ -145,6 +146,130 @@ export function GoodsReceiptReport({processType = ProcessType.Regular}: GoodsRec
         processType={processType}
         showTrigger={false}
       />
+      {/* Loading State */}
+      {loading && documents.length === 0 && (
+        <>
+          {/* Mobile view - Card skeletons */}
+          <div className="block sm:hidden flex flex-col gap-2" aria-label="Loading...">
+            {Array.from({length: 6}).map((_, index) => (
+              <div key={index} className="bg-card border rounded-lg p-4 space-y-3">
+                <div className="flex justify-between items-start">
+                  <Skeleton className="h-5 w-20" />
+                  <Skeleton className="h-8 w-8 rounded-full" />
+                </div>
+                <Skeleton className="h-4 w-32" />
+                <div className="grid grid-cols-2 gap-2">
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-full" />
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-4 w-1/2" />
+                </div>
+                <Skeleton className="h-4 w-full" />
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop view - Table skeleton */}
+          <div className="hidden sm:block" aria-label="Loading...">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t('id')}</TableHead>
+                  <TableHead>{t('number')}</TableHead>
+                  {displayVendor && <TableHead>{t('vendor')}</TableHead>}
+                  <TableHead>{t('documentsList')}</TableHead>
+                  <TableHead>{t('docDate')}</TableHead>
+                  <TableHead>{t('createdBy')}</TableHead>
+                  <TableHead>{t('status')}</TableHead>
+                  <TableHead>{t('statusDate')}</TableHead>
+                  <TableHead className="text-right"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {Array.from({length: 8}).map((_, index) => (
+                  <TableRow key={index}>
+                    <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+                    {displayVendor && <TableCell><Skeleton className="h-4 w-24" /></TableCell>}
+                    <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-18" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+                    <TableCell className="text-right"><Skeleton className="h-8 w-8 rounded" /></TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </>
+      )}
+
+      {/* Data Display */}
+      {/* Show skeleton loading when loading initial data and no documents yet */}
+      {loading && documents.length === 0 && filters && (
+        <>
+          {/* Mobile view - Card skeletons */}
+          <div className="block sm:hidden flex flex-col gap-2" aria-label="Loading...">
+            {Array.from({ length: 5 }).map((_, index) => (
+              <div key={index} className="p-4 border rounded-lg space-y-3">
+                <div className="flex justify-between items-start">
+                  <Skeleton className="h-5 w-24" />
+                  <Skeleton className="h-8 w-8 rounded" />
+                </div>
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="h-4 w-40" />
+                  <Skeleton className="h-4 w-28" />
+                </div>
+                <div className="flex justify-between items-center">
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-6 w-16 rounded-full" />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop view - Table skeleton */}
+          <div className="hidden sm:block">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t('id')}</TableHead>
+                  <TableHead>{t('number')}</TableHead>
+                  {displayVendor && <TableHead>{t('vendor')}</TableHead>}
+                  <TableHead>{t('documentsList')}</TableHead>
+                  <TableHead>{t('docDate')}</TableHead>
+                  <TableHead>{t('createdBy')}</TableHead>
+                  <TableHead>{t('status')}</TableHead>
+                  <TableHead>{t('statusDate')}</TableHead>
+                  <TableHead className="text-right"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <TableRow key={index}>
+                    <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+                    {displayVendor && <TableCell><Skeleton className="h-4 w-24" /></TableCell>}
+                    <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+                    <TableCell className="text-right">
+                      <Skeleton className="h-8 w-8 rounded ml-auto" />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </>
+      )}
+
       {documents.length > 0 && (
         <>
           {/* Mobile view - Cards */}

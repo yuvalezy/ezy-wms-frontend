@@ -15,11 +15,12 @@ export const useGoodsReceiptSupervisorData = (processType: ProcessType = Process
   const {t} = useTranslation();
   const {user} = useAuth();
   const [supervisor, setSupervisor] = useState(false);
-  const {setLoading, setError} = useThemeContext();
+  const {setError} = useThemeContext();
   const [documents, setDocuments] = useState<ReceiptDocument[]>([]);
   const [selectedDocument, setSelectedDocument] = useState<ReceiptDocument | null>(null);
   const [actionType, setActionType] = useState<ObjectAction | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const documentListDialogRef = useRef<DocumentListDialogRef>(null);
   const location = useLocation();
 
@@ -32,11 +33,11 @@ export const useGoodsReceiptSupervisorData = (processType: ProcessType = Process
       setSupervisor(user?.roles.filter((v) => v === RoleType.TRANSFER_SUPERVISOR).length === 1);
     }
     
-    setLoading(true);
+    setIsLoading(true);
     goodsReceiptService.search({statuses: [Status.Open, Status.InProgress], processType})
       .then((data) => setDocuments(data))
       .catch((error) => setError(error))
-      .finally(() => setLoading(false));
+      .finally(() => setIsLoading(false));
   }, [processType, user]);
 
   function handleDocDetails(doc: ReceiptDocument) {
@@ -51,7 +52,6 @@ export const useGoodsReceiptSupervisorData = (processType: ProcessType = Process
   };
 
   const handleConfirmAction = () => {
-    setLoading(true);
     setDialogOpen(false);
     const serviceCall = actionType === 'approve' ?
       goodsReceiptService.process(selectedDocument!.id) :
@@ -68,8 +68,7 @@ export const useGoodsReceiptSupervisorData = (processType: ProcessType = Process
           toast.error(response.errorMessage);
         }
       })
-      .catch((error) => setError(error))
-      .finally(() => setLoading(false));
+      .catch((error) => setError(error));
   };
 
   function getTitle(): string {
@@ -104,6 +103,7 @@ export const useGoodsReceiptSupervisorData = (processType: ProcessType = Process
     setDocuments,
     actionType,
     dialogOpen,
+    isLoading,
     documentListDialogRef,
     handleDocDetails,
     handleAction,

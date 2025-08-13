@@ -8,10 +8,11 @@ import {formatQuantityForExcel, getExcelQuantityHeaders, getExcelQuantityValues}
 import ContentTheme from "@/components/ContentTheme";
 import {countingService} from "@/features/counting/data/counting-service";
 import {CountingSummaryReportData} from "@/features/counting/data/counting";
+import {Skeleton} from "@/components/ui/skeleton";
 
 export default function CountingSummaryReport() {
   const {scanCode} = useParams();
-  const {setLoading, setError} = useThemeContext();
+  const {loading, setLoading, setError} = useThemeContext();
   const {t} = useTranslation();
   const {unitSelection, user} = useAuth();
   const [data, setData] = useState<CountingSummaryReportData | null>(null);
@@ -70,14 +71,34 @@ export default function CountingSummaryReport() {
                   titleBreadcrumbs={[{label: `${data?.number}`}, {label: t("countingSummaryReport")}]}
                   onExportExcel={handleExportExcel}>
       <div className="space-y-4">
-        {data?.name && (
-          <div className="flex flex-col space-y-2">
-            <h2 className="text-2xl font-semibold text-muted-foreground">
-              {t("id")}: {data?.name}
-            </h2>
+        {/* Loading State */}
+        {loading && !data && (
+          <div className="space-y-4" aria-label="Loading...">
+            <div className="flex flex-col space-y-2">
+              <Skeleton className="h-8 w-48" />
+            </div>
+            <div className="space-y-3">
+              <Skeleton className="h-10 w-full" />
+              {Array.from({length: 8}).map((_, index) => (
+                <Skeleton key={index} className="h-12 w-full" />
+              ))}
+            </div>
           </div>
         )}
-        {data && <CountingSummaryReportTable data={data.lines}/>}
+
+        {/* Data Display */}
+        {data && (
+          <>
+            {data?.name && (
+              <div className="flex flex-col space-y-2">
+                <h2 className="text-2xl font-semibold text-muted-foreground">
+                  {t("id")}: {data?.name}
+                </h2>
+              </div>
+            )}
+            <CountingSummaryReportTable data={data.lines}/>
+          </>
+        )}
       </div>
     </ContentTheme>
   )

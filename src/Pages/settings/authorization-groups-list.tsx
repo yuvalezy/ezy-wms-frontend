@@ -4,6 +4,7 @@ import {Button} from "@/components/ui/button";
 import {Card, CardContent} from "@/components/ui/card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Badge} from "@/components/ui/badge";
+import {Skeleton} from "@/components/ui/skeleton";
 import {Edit, Trash2} from "lucide-react";
 import {useThemeContext} from "@/components";
 import {AuthorizationGroup, AuthorizationGroupFilters} from "@/features/authorization-groups/data/authorization-group";
@@ -32,6 +33,7 @@ const AuthorizationGroupsList: React.FC = () => {
   const [filters, setFilters] = useState<AuthorizationGroupFilters>({});
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [groupToDelete, setGroupToDelete] = useState<AuthorizationGroup | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     loadGroups();
@@ -39,13 +41,13 @@ const AuthorizationGroupsList: React.FC = () => {
 
   const loadGroups = async () => {
     try {
-      setLoading(true);
+      setIsLoading(true);
       const data = await authorizationGroupService.getAll(filters);
       setGroups(data);
     } catch (error) {
       setError(`Failed to load authorization groups: ${error}`);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -74,7 +76,7 @@ const AuthorizationGroupsList: React.FC = () => {
     if (!groupToDelete) return;
 
     try {
-      setLoading(true);
+      setIsLoading(true);
       await authorizationGroupService.delete(groupToDelete.id);
       await loadGroups();
       setShowDeleteDialog(false);
@@ -82,7 +84,7 @@ const AuthorizationGroupsList: React.FC = () => {
     } catch (error) {
       setError(`Failed to delete authorization group: ${error}`);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -151,79 +153,117 @@ const AuthorizationGroupsList: React.FC = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {groups.map((group) => {
-                  const rolesByCategory = groupRolesByCategory(group.authorizations);
-                  // @ts-ignore
-                  return (
-                    <TableRow key={group.id}>
-                      <TableCell className="font-medium">
+                {isLoading ? (
+                  // Skeleton loading rows
+                  Array.from({ length: 5 }).map((_, index) => (
+                    <TableRow key={`skeleton-${index}`}>
+                      <TableCell>
                         <div className="flex items-center gap-2">
-                          {group.name}
-                          {!group.canDelete && (
-                            <Badge variant="outline" className="text-xs">
-                              {t('system')}
-                            </Badge>
-                          )}
+                          <Skeleton className="h-4 w-32" />
+                          <Skeleton className="h-5 w-12 rounded-full" />
                         </div>
                       </TableCell>
                       <TableCell className="max-w-xs">
-                        <div className="truncate" title={group.description}>
-                          {group.description || '-'}
-                        </div>
+                        <Skeleton className="h-4 w-40" />
                       </TableCell>
                       <TableCell className="max-w-md">
                         <div className="space-y-2">
-                          {Object.entries(rolesByCategory).map(([category, roles]) => (
-                            <div key={category} className="flex flex-wrap gap-1">
-                              <Badge
-                                variant={getCategoryBadgeVariant(category)}
-                                className="text-xs font-semibold mr-1"
-                              >
-                                {t(category.toLowerCase())}
-                              </Badge>
-                              <span className="text-xs text-gray-600">
-                              {(roles as any[]).length} {t('roles')}
-                            </span>
-                            </div>
-                          ))}
-                          {group.authorizations.length === 0 && (
-                            <span className="text-xs text-gray-500">{t('noRoles')}</span>
-                          )}
+                          <div className="flex flex-wrap gap-1">
+                            <Skeleton className="h-5 w-20 rounded-full" />
+                            <Skeleton className="h-4 w-16" />
+                          </div>
+                          <div className="flex flex-wrap gap-1">
+                            <Skeleton className="h-5 w-24 rounded-full" />
+                            <Skeleton className="h-4 w-14" />
+                          </div>
                         </div>
                       </TableCell>
-                      <TableCell>
-                        {group.createdAt ? new Date(group.createdAt).toLocaleDateString() : ''}
-                      </TableCell>
+                      <TableCell><Skeleton className="h-4 w-20" /></TableCell>
                       <TableCell className="text-right">
                         <div className="flex gap-2 justify-end">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleEdit(group)}
-                          >
-                            <Edit className="h-4 w-4 mr-1"/>
-                            {t('edit')}
-                          </Button>
-                          <Button
-                            variant="destructive"
-                            size="sm"
-                            onClick={() => handleDelete(group)}
-                            disabled={!group.canDelete}
-                          >
-                            <Trash2 className="h-4 w-4 mr-1"/>
-                            {t('delete')}
-                          </Button>
+                          <Skeleton className="h-8 w-16" />
+                          <Skeleton className="h-8 w-18" />
                         </div>
                       </TableCell>
                     </TableRow>
-                  );
-                })}
-                {groups.length === 0 && (
-                  <TableRow>
-                    <TableCell colSpan={5} className="text-center py-8">
-                      {t('noAuthorizationGroupsFound')}
-                    </TableCell>
-                  </TableRow>
+                  ))
+                ) : (
+                  <>
+                    {groups.map((group) => {
+                      const rolesByCategory = groupRolesByCategory(group.authorizations);
+                      // @ts-ignore
+                      return (
+                        <TableRow key={group.id}>
+                          <TableCell className="font-medium">
+                            <div className="flex items-center gap-2">
+                              {group.name}
+                              {!group.canDelete && (
+                                <Badge variant="outline" className="text-xs">
+                                  {t('system')}
+                                </Badge>
+                              )}
+                            </div>
+                          </TableCell>
+                          <TableCell className="max-w-xs">
+                            <div className="truncate" title={group.description}>
+                              {group.description || '-'}
+                            </div>
+                          </TableCell>
+                          <TableCell className="max-w-md">
+                            <div className="space-y-2">
+                              {Object.entries(rolesByCategory).map(([category, roles]) => (
+                                <div key={category} className="flex flex-wrap gap-1">
+                                  <Badge
+                                    variant={getCategoryBadgeVariant(category)}
+                                    className="text-xs font-semibold mr-1"
+                                  >
+                                    {t(category.toLowerCase())}
+                                  </Badge>
+                                  <span className="text-xs text-gray-600">
+                                  {(roles as any[]).length} {t('roles')}
+                                </span>
+                                </div>
+                              ))}
+                              {group.authorizations.length === 0 && (
+                                <span className="text-xs text-gray-500">{t('noRoles')}</span>
+                              )}
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            {group.createdAt ? new Date(group.createdAt).toLocaleDateString() : ''}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex gap-2 justify-end">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleEdit(group)}
+                              >
+                                <Edit className="h-4 w-4 mr-1"/>
+                                {t('edit')}
+                              </Button>
+                              <Button
+                                variant="destructive"
+                                size="sm"
+                                onClick={() => handleDelete(group)}
+                                disabled={!group.canDelete}
+                              >
+                                <Trash2 className="h-4 w-4 mr-1"/>
+                                {t('delete')}
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                    {!isLoading && groups.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={5} className="text-center py-8">
+                          {t('noAuthorizationGroupsFound')}
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </>
                 )}
               </TableBody>
             </Table>

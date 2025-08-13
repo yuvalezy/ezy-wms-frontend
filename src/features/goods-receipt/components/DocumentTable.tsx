@@ -21,16 +21,18 @@ import {DocumentItem, ReceiptDocument} from "@/features/goods-receipt/data/goods
 import {useGoodsReceiptHandleOpen} from "@/features/goods-receipt/hooks/useGoodsReceiptHandleOpen";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {ProcessType} from "@/features/shared/data";
+import {Skeleton} from "@/components/ui/skeleton";
 
 type DocumentTableProps = {
   documents: ReceiptDocument[],
   supervisor?: boolean,
   action?: (doc: ReceiptDocument, action: 'approve' | 'cancel') => void,
   docDetails: (doc: ReceiptDocument) => void,
-  processType?: ProcessType
+  processType?: ProcessType,
+  loading?: boolean
 }
 
-const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = false, action, docDetails, processType = ProcessType.Regular}) => {
+const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = false, action, docDetails, processType = ProcessType.Regular, loading = false}) => {
   const {t} = useTranslation();
   const o = useObjectName();
   const documentStatusToString = useDocumentStatusToString();
@@ -125,6 +127,63 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
       </DropdownMenu>
     );
   };
+
+  const TableSkeleton = () => (
+    <div className="w-full overflow-x-auto">
+      <Table className="min-w-full">
+        <TableHeader>
+          <TableRow>
+            <TableHead className="whitespace-nowrap">{t('id')}</TableHead>
+            <TableHead className="whitespace-nowrap">{t('number')}</TableHead>
+            <TableHead className="whitespace-nowrap">{t('docDate')}</TableHead>
+            <TableHead className="whitespace-nowrap">{t('createdBy')}</TableHead>
+            <TableHead className="whitespace-nowrap">{t('status')}</TableHead>
+            {processType === ProcessType.Regular && displayVendor && <TableHead className="whitespace-nowrap">{t('vendor')}</TableHead>}
+            <TableHead className="whitespace-nowrap">{t('documentsList')}</TableHead>
+            {supervisor && <TableHead className="text-right whitespace-nowrap w-16"></TableHead>}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {Array.from({ length: 5 }).map((_, index) => (
+            <TableRow key={index}>
+              <TableCell className="whitespace-nowrap">
+                <Skeleton className="h-4 w-12" aria-label="Loading..." />
+              </TableCell>
+              <TableCell className="whitespace-nowrap">
+                <Skeleton className="h-4 w-20" />
+              </TableCell>
+              <TableCell className="whitespace-nowrap">
+                <Skeleton className="h-4 w-24" />
+              </TableCell>
+              <TableCell className="whitespace-nowrap">
+                <Skeleton className="h-4 w-20" />
+              </TableCell>
+              <TableCell className="whitespace-nowrap">
+                <Skeleton className="h-4 w-16" />
+              </TableCell>
+              {processType === ProcessType.Regular && displayVendor && (
+                <TableCell className="whitespace-nowrap">
+                  <Skeleton className="h-4 w-24" />
+                </TableCell>
+              )}
+              <TableCell className="min-w-0">
+                <Skeleton className="h-4 w-32" />
+              </TableCell>
+              {supervisor && (
+                <TableCell className="text-right">
+                  <Skeleton className="h-8 w-8" />
+                </TableCell>
+              )}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+
+  if (loading) {
+    return <TableSkeleton />;
+  }
 
   return (
     <div className="w-full overflow-x-auto">

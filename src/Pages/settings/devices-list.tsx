@@ -6,6 +6,7 @@ import {Card, CardContent} from "@/components/ui/card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Badge} from "@/components/ui/badge";
+import {Skeleton} from "@/components/ui/skeleton";
 import {Eye, Edit, Activity, Search} from "lucide-react";
 import {useThemeContext} from "@/components";
 import {Device, DeviceFilters, DeviceStatus} from "@/features/devices/data/device";
@@ -21,6 +22,7 @@ const DevicesList: React.FC = () => {
   const [filters, setFilters] = useState<DeviceFilters>({});
   const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
   const [showDetails, setShowDetails] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     loadDevices();
@@ -28,13 +30,13 @@ const DevicesList: React.FC = () => {
 
   const loadDevices = async () => {
     try {
-      setLoading(true);
+      setIsLoading(true);
       const data = await deviceService.getAll(filters);
       setDevices(data);
     } catch (error) {
       setError(`Failed to load devices: ${error}`);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -100,31 +102,40 @@ const DevicesList: React.FC = () => {
       <div className="space-y-4">
         <Card>
           <CardContent>
-            <div className="flex gap-4 mb-4 flex-wrap">
-              <div className="flex-1 min-w-64">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4"/>
-                  <Input
-                    placeholder={t('searchDevices')}
-                    className="pl-10"
-                    onChange={(e) => handleSearch(e.target.value)}
-                  />
+            {isLoading ? (
+              <div className="flex gap-4 mb-4 flex-wrap">
+                <div className="flex-1 min-w-64">
+                  <Skeleton className="h-10 w-full" />
                 </div>
+                <Skeleton className="h-10 w-48" />
               </div>
-              <Select onValueChange={handleStatusFilter} defaultValue="all">
-                <SelectTrigger className="w-48">
-                  <SelectValue placeholder={t('status')}/>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('allStatuses')}</SelectItem>
-                  {Object.values(DeviceStatus).map(status => (
-                    <SelectItem key={status} value={status}>
-                      {status}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            ) : (
+              <div className="flex gap-4 mb-4 flex-wrap">
+                <div className="flex-1 min-w-64">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4"/>
+                    <Input
+                      placeholder={t('searchDevices')}
+                      className="pl-10"
+                      onChange={(e) => handleSearch(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <Select onValueChange={handleStatusFilter} defaultValue="all">
+                  <SelectTrigger className="w-48">
+                    <SelectValue placeholder={t('status')}/>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">{t('allStatuses')}</SelectItem>
+                    {Object.values(DeviceStatus).map(status => (
+                      <SelectItem key={status} value={status}>
+                        {status}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
 
             <Table>
               <TableHeader>
@@ -137,36 +148,55 @@ const DevicesList: React.FC = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {devices?.map((device) => (
-                  <TableRow key={device.id}>
-                    <TableCell className="font-medium">{device.deviceName}</TableCell>
-                    <TableCell className="font-mono text-sm">{device.deviceUuid}</TableCell>
-                    <TableCell>
-                      <Badge variant={getStatusBadgeVariant(device.status)}>
-                        {device.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{formatDate(device.registrationDate)}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex gap-2 justify-end">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleViewDetails(device)}
-                        >
-                          <Eye className="h-4 w-4 mr-1"/>
-                          {t('viewDetails')}
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-                {devices.length === 0 && (
-                  <TableRow>
-                    <TableCell colSpan={5} className="text-center py-8">
-                      {t('noDevicesFound')}
-                    </TableCell>
-                  </TableRow>
+                {isLoading ? (
+                  // Skeleton loading rows
+                  Array.from({ length: 5 }).map((_, index) => (
+                    <TableRow key={`skeleton-${index}`}>
+                      <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+                      <TableCell><Skeleton className="h-4 w-48 font-mono" /></TableCell>
+                      <TableCell><Skeleton className="h-5 w-20 rounded-full" /></TableCell>
+                      <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex gap-2 justify-end">
+                          <Skeleton className="h-8 w-24" />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <>
+                    {devices?.map((device) => (
+                      <TableRow key={device.id}>
+                        <TableCell className="font-medium">{device.deviceName}</TableCell>
+                        <TableCell className="font-mono text-sm">{device.deviceUuid}</TableCell>
+                        <TableCell>
+                          <Badge variant={getStatusBadgeVariant(device.status)}>
+                            {device.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{formatDate(device.registrationDate)}</TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex gap-2 justify-end">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleViewDetails(device)}
+                            >
+                              <Eye className="h-4 w-4 mr-1"/>
+                              {t('viewDetails')}
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                    {!isLoading && devices.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={5} className="text-center py-8">
+                          {t('noDevicesFound')}
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </>
                 )}
               </TableBody>
             </Table>

@@ -22,6 +22,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Info } from 'lucide-react';
 import { ItemDetails } from '../data/items';
 import { ItemMetadataDefinition } from '../types/ItemMetadataDefinition.dto';
@@ -338,6 +339,32 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
           <p className="text-muted-foreground text-center">
             {t('items.noMetadataFieldsConfigured')}
           </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Show skeleton while form is initially loading
+  if (metadataFormState.isLoading && !metadataFormState.hasChanges) {
+    return (
+      <Card className={className}>
+        <CardHeader>
+          <CardTitle>{t('metadata')}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4" aria-label="Loading...">
+            {definitions.slice(0, 3).map((_, index) => (
+              <div key={index} className="space-y-2">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+            ))}
+            <div className="flex gap-2 pt-4">
+              <Skeleton className="h-10 flex-1" />
+              <Skeleton className="h-10 flex-1" />
+              {onCancel && <Skeleton className="h-10 w-20" />}
+            </div>
+          </div>
         </CardContent>
       </Card>
     );

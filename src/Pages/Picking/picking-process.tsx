@@ -15,6 +15,7 @@ import {formatNumber, IsNumeric} from "@/utils/number-utils";
 import {PickingDocument, PickingDocumentDetail} from "@/features/picking/data/picking";
 import { useObjectName } from "@/hooks/useObjectName";
 import {pickingService} from "@/features/picking/data/picking-service";
+import {Skeleton} from "@/components/ui/skeleton";
 
 export default function PickingProcess() {
   const {idParam} = useParams();
@@ -22,6 +23,7 @@ export default function PickingProcess() {
   const [id, setID] = useState<number | null>();
   const {setLoading, setError} = useThemeContext();
   const [picking, setPicking] = useState<PickingDocument | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const o = useObjectName();
   const navigate = useNavigate();
 
@@ -34,6 +36,7 @@ export default function PickingProcess() {
     setID(id);
 
     setLoading(true);
+    setIsLoading(true);
     pickingService.fetchPicking({id})
       .then(value => {
         if (value == null) {
@@ -44,12 +47,76 @@ export default function PickingProcess() {
         setPicking(value);
       })
       .catch(error => setError(error))
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+        setIsLoading(false);
+      });
   }, []);
 
   function handleOpen(detail: PickingDocumentDetail) {
     navigate(`/pick/${id}/${detail.type}/${detail.entry}`);
   }
+
+  // Skeleton components
+  const ProcessMobileCardSkeleton = () => (
+    <Card className="mb-4" aria-label="Loading...">
+      <CardHeader>
+        <Skeleton className="h-6 w-32" />
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-3/4" />
+            <Skeleton className="h-4 w-1/2" />
+          </div>
+          <div className="pt-2">
+            <Skeleton className="h-2 w-full mb-2" />
+            <Skeleton className="h-4 w-16 mx-auto" />
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter className="flex justify-end space-x-2 pt-4 border-t">
+        <Skeleton className="h-8 w-20" />
+      </CardFooter>
+    </Card>
+  );
+
+  const ProcessTableSkeleton = () => (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>{t('type')}</TableHead>
+          <TableHead>{t('number')}</TableHead>
+          <TableHead>{t('customer')}</TableHead>
+          <TableHead className="text-right">{t('totalItems')}</TableHead>
+          <TableHead className="text-right">{t('totalOpenItems')}</TableHead>
+          <TableHead>{t('progress')}</TableHead>
+          <TableHead className="text-right"></TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {Array.from({ length: 3 }).map((_, index) => (
+          <TableRow key={index}>
+            <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+            <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+            <TableCell><Skeleton className="h-4 w-40" /></TableCell>
+            <TableCell className="text-right"><Skeleton className="h-4 w-8" /></TableCell>
+            <TableCell className="text-right"><Skeleton className="h-4 w-8" /></TableCell>
+            <TableCell>
+              <div className="flex items-center space-x-2">
+                <Skeleton className="h-2 w-20" />
+                <Skeleton className="h-4 w-8" />
+              </div>
+            </TableCell>
+            <TableCell className="text-right">
+              <Skeleton className="h-8 w-20" />
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
 
   return (
     <ContentTheme title={t("picking")}
@@ -57,7 +124,21 @@ export default function PickingProcess() {
                   titleBreadcrumbs={[{label: `${idParam}`}]}
     >
       <div className="contentStyle">
-        {picking?.detail && (
+        {isLoading ? (
+          <>
+            {/* Mobile view - Card skeletons */}
+            <div className="block sm:hidden">
+              {Array.from({ length: 3 }).map((_, index) => (
+                <ProcessMobileCardSkeleton key={index} />
+              ))}
+            </div>
+
+            {/* Desktop view - Table skeleton */}
+            <div className="hidden sm:block">
+              <ProcessTableSkeleton />
+            </div>
+          </>
+        ) : picking?.detail && (
           <>
             {/* Mobile view - Cards */}
             <div className="block sm:hidden">

@@ -7,6 +7,7 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/c
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Badge} from "@/components/ui/badge";
 import {Checkbox} from "@/components/ui/checkbox";
+import {Skeleton} from "@/components/ui/skeleton";
 import {Edit, Trash2, Search, UserX, UserCheck} from "lucide-react";
 import {useAuth, useThemeContext} from "@/components";
 import {User, UserFilters, AuthorizationGroup, Warehouse} from "@/features/users/data/user";
@@ -37,6 +38,7 @@ const UsersList: React.FC = () => {
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -48,7 +50,7 @@ const UsersList: React.FC = () => {
 
   const loadData = async () => {
     try {
-      setLoading(true);
+      setIsLoading(true);
       const [usersData, authGroupsData, warehousesData] = await Promise.all([
         userService.getAll(filters),
         userService.getAuthorizationGroups(),
@@ -60,19 +62,19 @@ const UsersList: React.FC = () => {
     } catch (error) {
       setError(`Failed to load data: ${error}`);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   const loadUsers = async () => {
     try {
-      setLoading(true);
+      setIsLoading(true);
       const data = await userService.getAll(filters);
       setUsers(data);
     } catch (error) {
       setError(`Failed to load users: ${error}`);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -117,7 +119,7 @@ const UsersList: React.FC = () => {
     if (!userToDelete) return;
 
     try {
-      setLoading(true);
+      setIsLoading(true);
       await userService.delete(userToDelete.id);
       await loadUsers();
       setShowDeleteDialog(false);
@@ -125,13 +127,13 @@ const UsersList: React.FC = () => {
     } catch (error) {
       setError(`Failed to delete user: ${error}`);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   const handleToggleStatus = async (user: User) => {
     try {
-      setLoading(true);
+      setIsLoading(true);
       if (user.active) {
         await userService.disable(user.id);
       } else {
@@ -141,7 +143,7 @@ const UsersList: React.FC = () => {
     } catch (error) {
       setError(`Failed to ${user.active ? 'disable' : 'enable'} user: ${error}`);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -220,76 +222,104 @@ const UsersList: React.FC = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {users?.map((u) => (
-                  <TableRow key={u.id}>
-                    <TableCell className="font-medium"> {u.fullName} </TableCell>
-                    <TableCell>{u.email || '-'}</TableCell>
-                    <TableCell>{u.position || '-'}</TableCell>
-                    <TableCell>{
-                      !u.superUser ?
-                        u.authorizationGroupName || '-' : (
-                        <Badge variant="destructive" className="text-xs">
-                          {t('superUser')}
-                        </Badge>
-                      )
-                    }</TableCell>
-                    <TableCell>
-                      <div className="flex flex-wrap gap-1">
-                        {u.warehouses.length > 0 &&
-                          warehouses.filter(warehouse => u.warehouses.includes(warehouse.id)).map(warehouse => (
-                            <Badge key={warehouse.id} variant="outline" className="text-xs">
-                              {warehouse.name}
+                {isLoading ? (
+                  // Skeleton loading rows
+                  Array.from({ length: 5 }).map((_, index) => (
+                    <TableRow key={`skeleton-${index}`}>
+                      <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+                      <TableCell><Skeleton className="h-4 w-40" /></TableCell>
+                      <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                      <TableCell><Skeleton className="h-5 w-20 rounded-full" /></TableCell>
+                      <TableCell>
+                        <div className="flex flex-wrap gap-1">
+                          <Skeleton className="h-5 w-16 rounded-full" />
+                          <Skeleton className="h-5 w-12 rounded-full" />
+                        </div>
+                      </TableCell>
+                      <TableCell><Skeleton className="h-5 w-16 rounded-full" /></TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex gap-2 justify-end">
+                          <Skeleton className="h-8 w-16" />
+                          <Skeleton className="h-8 w-20" />
+                          <Skeleton className="h-8 w-16" />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <>
+                    {users?.map((u) => (
+                      <TableRow key={u.id}>
+                        <TableCell className="font-medium"> {u.fullName} </TableCell>
+                        <TableCell>{u.email || '-'}</TableCell>
+                        <TableCell>{u.position || '-'}</TableCell>
+                        <TableCell>{
+                          !u.superUser ?
+                            u.authorizationGroupName || '-' : (
+                            <Badge variant="destructive" className="text-xs">
+                              {t('superUser')}
                             </Badge>
-                          ))}
-                        {u.warehouses.length > 2 && (
-                          <Badge variant="outline" className="text-xs">
-                            +{u.warehouses.length - 2}
+                          )
+                        }</TableCell>
+                        <TableCell>
+                          <div className="flex flex-wrap gap-1">
+                            {u.warehouses.length > 0 &&
+                              warehouses.filter(warehouse => u.warehouses.includes(warehouse.id)).map(warehouse => (
+                                <Badge key={warehouse.id} variant="outline" className="text-xs">
+                                  {warehouse.name}
+                                </Badge>
+                              ))}
+                            {u.warehouses.length > 2 && (
+                              <Badge variant="outline" className="text-xs">
+                                +{u.warehouses.length - 2}
+                              </Badge>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={u.active ? "default" : "secondary"}>
+                            {u.active ? t('active') : t('inactive')}
                           </Badge>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={u.active ? "default" : "secondary"}>
-                        {u.active ? t('active') : t('inactive')}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex gap-2 justify-end">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleEdit(u)}
-                        >
-                          <Edit className="h-4 w-4 mr-1"/>
-                          {t('edit')}
-                        </Button>
-                        <Button
-                          variant={u.active ? "secondary" : "default"}
-                          disabled={u.id === user?.id}
-                          size="sm"
-                          onClick={() => handleToggleStatus(u)}
-                        >
-                          {u.active ? <UserX className="h-4 w-4 mr-1"/> : <UserCheck className="h-4 w-4 mr-1"/>}
-                          {u.active ? t('disable') : t('enable')}
-                        </Button>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => handleDelete(u)}
-                        >
-                          <Trash2 className="h-4 w-4 mr-1"/>
-                          {t('delete')}
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-                {users.length === 0 && (
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8">
-                      {t('noUsersFound')}
-                    </TableCell>
-                  </TableRow>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex gap-2 justify-end">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleEdit(u)}
+                            >
+                              <Edit className="h-4 w-4 mr-1"/>
+                              {t('edit')}
+                            </Button>
+                            <Button
+                              variant={u.active ? "secondary" : "default"}
+                              disabled={u.id === user?.id}
+                              size="sm"
+                              onClick={() => handleToggleStatus(u)}
+                            >
+                              {u.active ? <UserX className="h-4 w-4 mr-1"/> : <UserCheck className="h-4 w-4 mr-1"/>}
+                              {u.active ? t('disable') : t('enable')}
+                            </Button>
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => handleDelete(u)}
+                            >
+                              <Trash2 className="h-4 w-4 mr-1"/>
+                              {t('delete')}
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                    {!isLoading && users.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={7} className="text-center py-8">
+                          {t('noUsersFound')}
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </>
                 )}
               </TableBody>
             </Table>

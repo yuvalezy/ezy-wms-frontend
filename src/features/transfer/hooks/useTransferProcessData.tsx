@@ -13,28 +13,30 @@ export const useTransferProcessData = () => {
   const {user} = useAuth();
   const [id, setID] = useState<string | null>();
   const [info, setInfo] = useState<TransferDocument | null>(null);
-  const {setLoading, setError} = useThemeContext();
+  const [isLoading, setIsLoading] = useState(true);
+  const {setError} = useThemeContext();
   const navigate = useNavigate();
 
   useEffect(() => {
-    setLoading(true);
+    setIsLoading(true);
     if (scanCode === null || scanCode === undefined) {
       setID(null);
+      setIsLoading(false);
       return;
     }
     setID(scanCode);
     transferService.getProcessInfo(scanCode)
       .then((result) => setInfo(result))
       .catch((error) => setError(error))
-      .finally(() => setLoading(false));
-  }, []);
+      .finally(() => setIsLoading(false));
+  }, [setError]);
 
 
   function finish() {
     if (!info?.isComplete || id == null)
       return;
     if (window.confirm(StringFormat(t("createTransferConfirm"), info?.number))) {
-      setLoading(true);
+      setIsLoading(true);
       transferService.process(id)
         .then((result) => {
           if (result.success) {
@@ -45,7 +47,7 @@ export const useTransferProcessData = () => {
         .catch((error) => {
           setError(error);
         })
-        .finally(() => setLoading(false));
+        .finally(() => setIsLoading(false));
     }
   }
   return {
@@ -53,6 +55,7 @@ export const useTransferProcessData = () => {
     info,
     finish,
     scanCode,
-    user
+    user,
+    isLoading
   }
 }

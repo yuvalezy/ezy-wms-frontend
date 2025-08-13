@@ -6,6 +6,7 @@ import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Badge} from "@/components/ui/badge";
+import {Skeleton} from "@/components/ui/skeleton";
 import {Plus, Edit, Trash2, Search, X} from "lucide-react";
 import {CancellationReason, CancellationReasonFilters} from "@/features/cancellation-reasons/data/cancellation-reason";
 import {cancellationReasonService} from "@/features/cancellation-reasons/data/cancellation-reason-service";
@@ -33,6 +34,7 @@ const CancellationReasonsList: React.FC = () => {
   const [editingReason, setEditingReason] = useState<CancellationReason | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [reasonToDelete, setReasonToDelete] = useState<CancellationReason | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     loadReasons();
@@ -40,13 +42,13 @@ const CancellationReasonsList: React.FC = () => {
 
   const loadReasons = async () => {
     try {
-      setLoading(true);
+      setIsLoading(true);
       const data = await cancellationReasonService.getAll(filters);
       setReasons(data);
     } catch (error) {
       setError(`Failed to load cancellation reasons: ${error}`);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -80,7 +82,7 @@ const CancellationReasonsList: React.FC = () => {
     if (!reasonToDelete) return;
 
     try {
-      setLoading(true);
+      setIsLoading(true);
       await cancellationReasonService.delete(reasonToDelete.id);
       await loadReasons();
       setShowDeleteDialog(false);
@@ -88,7 +90,7 @@ const CancellationReasonsList: React.FC = () => {
     } catch (error) {
       setError(`Failed to delete cancellation reason: ${error}`);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -105,30 +107,42 @@ const CancellationReasonsList: React.FC = () => {
       <div className="space-y-4">
         <Card>
           <CardContent>
-            <div className="flex gap-4 mb-4">
-              <div className="flex-1">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4"/>
-                  {(filters?.searchTerm && filters?.searchTerm?.length > 0) && <X className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer h-4 w-4" onClick={() => setFilters({...filters, searchTerm: ''})}/>}
-                  <Input
-                    placeholder={t('searchCancellationReasons')}
-                    className="pl-10"
-                    onChange={(e) => handleSearch(e.target.value)}
-                    value={filters?.searchTerm}
-                  />
+            {isLoading ? (
+              <div className="flex gap-4 mb-4">
+                <div className="flex-1">
+                  <Skeleton className="h-10 w-full" />
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Skeleton className="h-4 w-4" />
+                  <Skeleton className="h-4 w-20" />
                 </div>
               </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="includeInactive"
-                  checked={filters.includeDisabled}
-                  onCheckedChange={handleActiveFilter}
-                />
-                <label htmlFor="includeInactive" className="text-sm font-medium">
-                  {t('includeInactive')}
-                </label>
+            ) : (
+              <div className="flex gap-4 mb-4">
+                <div className="flex-1">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4"/>
+                    {(filters?.searchTerm && filters?.searchTerm?.length > 0) && <X className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer h-4 w-4" onClick={() => setFilters({...filters, searchTerm: ''})}/>}
+                    <Input
+                      placeholder={t('searchCancellationReasons')}
+                      className="pl-10"
+                      onChange={(e) => handleSearch(e.target.value)}
+                      value={filters?.searchTerm}
+                    />
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="includeInactive"
+                    checked={filters.includeDisabled}
+                    onCheckedChange={handleActiveFilter}
+                  />
+                  <label htmlFor="includeInactive" className="text-sm font-medium">
+                    {t('includeInactive')}
+                  </label>
+                </div>
               </div>
-            </div>
+            )}
 
             <Table>
               <TableHeader>
@@ -142,57 +156,78 @@ const CancellationReasonsList: React.FC = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {reasons.map((reason) => (
-                  <TableRow key={reason.id}>
-                    <TableCell className="font-medium">{reason.name}</TableCell>
-                    <TableCell>
-                      <Badge variant={reason.isEnabled ? "default" : "secondary"}>
-                        {reason.isEnabled ? t('active') : t('inactive')}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={reason.goodsReceipt ? "default" : "secondary"}>
-                        {reason.goodsReceipt ? t('active') : t('inactive')}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={reason.transfer ? "default" : "secondary"}>
-                        {reason.transfer ? t('active') : t('inactive')}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={reason.counting ? "default" : "secondary"}>
-                        {reason.counting ? t('active') : t('inactive')}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex gap-2 justify-end">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleEdit(reason)}
-                        >
-                          <Edit className="h-4 w-4 mr-1"/>
-                          {t('edit')}
-                        </Button>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => handleDelete(reason)}
-                        >
-                          <Trash2 className="h-4 w-4 mr-1"/>
-                          {t('delete')}
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-                {reasons.length === 0 && (
-                  <TableRow>
-                    <TableCell colSpan={5} className="text-center py-8">
-                      {t('noCancellationReasonsFound')}
-                    </TableCell>
-                  </TableRow>
+                {isLoading ? (
+                  // Skeleton loading rows
+                  Array.from({ length: 5 }).map((_, index) => (
+                    <TableRow key={`skeleton-${index}`}>
+                      <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+                      <TableCell><Skeleton className="h-5 w-16 rounded-full" /></TableCell>
+                      <TableCell><Skeleton className="h-5 w-16 rounded-full" /></TableCell>
+                      <TableCell><Skeleton className="h-5 w-16 rounded-full" /></TableCell>
+                      <TableCell><Skeleton className="h-5 w-16 rounded-full" /></TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex gap-2 justify-end">
+                          <Skeleton className="h-8 w-16" />
+                          <Skeleton className="h-8 w-18" />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <>
+                    {reasons.map((reason) => (
+                      <TableRow key={reason.id}>
+                        <TableCell className="font-medium">{reason.name}</TableCell>
+                        <TableCell>
+                          <Badge variant={reason.isEnabled ? "default" : "secondary"}>
+                            {reason.isEnabled ? t('active') : t('inactive')}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={reason.goodsReceipt ? "default" : "secondary"}>
+                            {reason.goodsReceipt ? t('active') : t('inactive')}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={reason.transfer ? "default" : "secondary"}>
+                            {reason.transfer ? t('active') : t('inactive')}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={reason.counting ? "default" : "secondary"}>
+                            {reason.counting ? t('active') : t('inactive')}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex gap-2 justify-end">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleEdit(reason)}
+                            >
+                              <Edit className="h-4 w-4 mr-1"/>
+                              {t('edit')}
+                            </Button>
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => handleDelete(reason)}
+                            >
+                              <Trash2 className="h-4 w-4 mr-1"/>
+                              {t('delete')}
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                    {!isLoading && reasons.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={6} className="text-center py-8">
+                          {t('noCancellationReasonsFound')}
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </>
                 )}
               </TableBody>
             </Table>

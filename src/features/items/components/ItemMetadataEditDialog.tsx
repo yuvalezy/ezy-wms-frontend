@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Edit } from 'lucide-react';
 import { ItemDetails } from '../data/items';
 import { ItemMetadataDefinition } from '@/features/items';
@@ -114,8 +115,18 @@ export const ItemMetadataEditDialog: React.FC<ItemMetadataEditDialogProps> = ({
           <DialogTitle>{t('editMetadata')}</DialogTitle>
         </DialogHeader>
         {isLoading ? (
-          <div className="flex items-center justify-center py-8">
-            <span>{t('loading')}...</span>
+          <div className="space-y-4 p-4" aria-label="Loading...">
+            {definitions?.slice(0, 3).map((_, index) => (
+              <div key={index} className="space-y-2">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+            ))}
+            <div className="flex gap-2 pt-4">
+              <Skeleton className="h-10 flex-1" />
+              <Skeleton className="h-10 flex-1" />
+              <Skeleton className="h-10 w-20" />
+            </div>
           </div>
         ) : itemData ? (
           <ItemMetadataForm

@@ -9,9 +9,11 @@ import {
   useGoodsReceiptProcessDifferenceReportData
 } from "@/features/goods-receipt/hooks/useGoodsReceiptProcessDifferenceReportData";
 import {Button, useAuth} from "@/components";
+import {useThemeContext} from "@/components/ThemeContext";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {ProcessType} from "@/features/shared/data";
 import {Checkbox} from "@/components/ui/checkbox";
+import {Skeleton} from "@/components/ui/skeleton";
 
 interface GoodsReceiptProcessDifferenceReportProps {
   processType?: ProcessType
@@ -20,6 +22,7 @@ interface GoodsReceiptProcessDifferenceReportProps {
 export default function GoodsReceiptProcessDifferenceReport({processType = ProcessType.Regular}: GoodsReceiptProcessDifferenceReportProps) {
   const {t} = useTranslation();
   const {displayVendor} = useAuth();
+  const {loading} = useThemeContext();
   const navigate = useNavigate();
   const {
     info,
@@ -76,7 +79,51 @@ export default function GoodsReceiptProcessDifferenceReport({processType = Proce
   return (
     <ContentTheme title={title} titleOnClick={() => navigate(titleLink)} titleBreadcrumbs={titleBreadcrumbs}
                   onExportExcel={handleExportExcel}>
-      {!report && (
+      {/* Loading State for Document List */}
+      {!report && loading && (
+        <Table aria-label="Loading...">
+          <TableHeader>
+            <TableRow>
+              <TableHead>{t('document')}</TableHead>
+              {processType !== ProcessType.TransferConfirmation && displayVendor && (
+                <>
+                  <TableHead className="hidden sm:table-cell">{t('supplier')}</TableHead>
+                  <TableHead>{t('supplierName')}</TableHead>
+                </>
+              )}
+              <TableHead className="text-right"></TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {Array.from({length: 5}).map((_, index) => (
+              <>
+                <TableRow key={`skeleton-${index}-doc`}>
+                  <TableCell><Skeleton className="h-4 w-40" /></TableCell>
+                  {processType !== ProcessType.TransferConfirmation && displayVendor && (
+                    <>
+                      <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+                      <TableCell className="hidden sm:table-cell"><Skeleton className="h-4 w-32" /></TableCell>
+                    </>
+                  )}
+                  <TableCell className="text-right">
+                    <Skeleton className="h-8 w-16 rounded" />
+                  </TableCell>
+                </TableRow>
+                {processType !== ProcessType.TransferConfirmation && displayVendor && (
+                  <TableRow className="sm:hidden" key={`skeleton-${index}-vendor`}>
+                    <TableCell className="bg-gray-100 border-b-1" colSpan={3}>
+                      <Skeleton className="h-4 w-48" />
+                    </TableCell>
+                  </TableRow>
+                )}
+              </>
+            ))}
+          </TableBody>
+        </Table>
+      )}
+
+      {/* Document List */}
+      {!report && !loading && (
         <Table>
           <TableHeader>
             <TableRow>
@@ -116,7 +163,37 @@ export default function GoodsReceiptProcessDifferenceReport({processType = Proce
           </TableBody>
         </Table>
       )}
-      {report && <>
+      {/* Loading State for Report Details */}
+      {report && loading && (
+        <>
+          {processType !== ProcessType.TransferConfirmation && displayVendor && (
+            <FullInfoBox>
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-4 w-32" />
+              </div>
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-4 w-40" />
+              </div>
+            </FullInfoBox>
+          )}
+          <div className="flex items-center space-x-2 mb-4 ml-4 md:ml-0">
+            <Skeleton className="h-4 w-4 rounded" />
+            <Skeleton className="h-4 w-32" />
+          </div>
+          <div className="space-y-4" aria-label="Loading...">
+            <Skeleton className="h-8 w-full" />
+            {Array.from({length: 6}).map((_, index) => (
+              <Skeleton key={index} className="h-12 w-full" />
+            ))}
+          </div>
+        </>
+      )}
+
+      {/* Report Details */}
+      {report && !loading && (
+        <>
           {processType !== ProcessType.TransferConfirmation && displayVendor && (
             <FullInfoBox>
                 <InfoBoxValue label={t("supplier")} value={report.vendor.id}/>
@@ -137,7 +214,8 @@ export default function GoodsReceiptProcessDifferenceReport({processType = Proce
             </label>
           </div>
           <GoodsReceiptProcessDifferenceTable id={info.id} data={report}/>
-      </>}
+        </>
+      )}
       {data && data.length === 0 && (
         <Alert variant="default" className="mt-4 bg-yellow-100 border-yellow-400 text-yellow-700">
           <AlertDescription>{t("nodata")}</AlertDescription>

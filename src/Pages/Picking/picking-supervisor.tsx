@@ -14,6 +14,7 @@ import {useNavigate} from "react-router-dom";
 import {useAuth} from "@/components/AppContext";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
 import {MessageBox} from "@/components";
+import {Skeleton} from "@/components/ui/skeleton";
 
 import {PickingDocument, SyncStatus} from "@/features/picking/data/picking";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
@@ -24,6 +25,7 @@ import {PickingCheckButton} from "@/features/picking/components/picking-check-bu
 export default function PickingSupervisor() {
   const {t} = useTranslation();
   const [pickings, setPickings] = useState<PickingDocument[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const {setLoading, setError} = useThemeContext();
   const navigate = useNavigate();
   const {user} = useAuth();
@@ -42,10 +44,14 @@ export default function PickingSupervisor() {
 
   const loadData = () => {
     setLoading(true);
+    setIsLoading(true);
     pickingService.fetchPickings({displayCompleted: true})
       .then(values => setPickings(values))
       .catch((error) => setError(error))
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+        setIsLoading(false);
+      });
   }
 
   const handleUpdatePick = (picking: PickingDocument) => {
@@ -100,9 +106,88 @@ export default function PickingSupervisor() {
   const displayInvoices = pickings.find(picking => picking.invoices > 0) != null;
   const displayTransfers = pickings.find(picking => picking.transfers > 0) != null;
 
+  // Skeleton components
+  const SupervisorMobileCardSkeleton = () => (
+    <div className="bg-white rounded-lg border p-4 space-y-3 mb-4" aria-label="Loading...">
+      <div className="flex justify-between items-start">
+        <Skeleton className="h-6 w-20" />
+        <Skeleton className="h-4 w-16" />
+      </div>
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-3/4" />
+        <div className="flex items-center space-x-2">
+          <Skeleton className="h-2 w-20" />
+          <Skeleton className="h-4 w-8" />
+        </div>
+      </div>
+      <div className="flex justify-end space-x-2">
+        <Skeleton className="h-8 w-16" />
+        <Skeleton className="h-8 w-16" />
+        <Skeleton className="h-8 w-16" />
+      </div>
+    </div>
+  );
+
+  const SupervisorTableSkeleton = () => (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>{t('number')}</TableHead>
+          <TableHead>{t('date')}</TableHead>
+          <TableHead>{t('salesOrders')}</TableHead>
+          <TableHead>{t('invoices')}</TableHead>
+          <TableHead>{t('transferRequests')}</TableHead>
+          <TableHead>{t('progress')}</TableHead>
+          <TableHead>{t('comment')}</TableHead>
+          <TableHead></TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {Array.from({ length: 5 }).map((_, index) => (
+          <TableRow key={index}>
+            <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+            <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+            <TableCell><Skeleton className="h-4 w-12" /></TableCell>
+            <TableCell><Skeleton className="h-4 w-12" /></TableCell>
+            <TableCell><Skeleton className="h-4 w-12" /></TableCell>
+            <TableCell>
+              <div className="flex items-center space-x-2">
+                <Skeleton className="h-2 w-20" />
+                <Skeleton className="h-4 w-8" />
+              </div>
+            </TableCell>
+            <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+            <TableCell className="text-right">
+              <div className="flex justify-end gap-2 flex-wrap">
+                <Skeleton className="h-8 w-16" />
+                <Skeleton className="h-8 w-16" />
+                <Skeleton className="h-8 w-16" />
+              </div>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+
   return (
     <ContentTheme title={t("pickSupervisor")}>
-      {pickings.length > 0 ? (
+      {isLoading ? (
+        <>
+          {/* Mobile view - Card skeletons */}
+          <div className="block sm:hidden">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <SupervisorMobileCardSkeleton key={index} />
+            ))}
+          </div>
+
+          {/* Desktop view - Table skeleton */}
+          <div className="hidden sm:block">
+            <SupervisorTableSkeleton />
+          </div>
+        </>
+      ) : pickings.length > 0 ? (
         <>
           {/* Mobile view - Cards */}
           <div className="block sm:hidden">

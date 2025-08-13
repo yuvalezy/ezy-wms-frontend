@@ -11,21 +11,23 @@ import {AlertCircle} from "lucide-react";
 import {ReceiptDocument} from "@/features/goods-receipt/data/goods-receipt";
 import {goodsReceiptService} from "@/features/goods-receipt/data/goods-receipt-service";
 import {ProcessType} from "@/features/shared/data";
+import {Skeleton} from "@/components/ui/skeleton";
 
 export default function GoodsReceipt({processType = ProcessType.Regular}: { processType?: ProcessType }) {
-  const {setLoading, setError} = useThemeContext();
+  const {setError} = useThemeContext();
   const {t} = useTranslation();
   const documentListDialogRef = useRef<DocumentListDialogRef>(null);
   const [selectedDocument, setSelectedDocument] = useState<ReceiptDocument | null>(null);
   const [documents, setDocuments] = useState<ReceiptDocument[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
+    setIsLoading(true);
     goodsReceiptService.search({statuses: [Status.Open, Status.InProgress], processType})
       .then((data) => setDocuments(data))
       .catch((err) => setError(err))
-      .finally(() => setLoading(false))
-  }, [setError, setLoading, processType]);
+      .finally(() => setIsLoading(false))
+  }, [setError, processType]);
 
   function handleDocDetails(doc: ReceiptDocument) {
     setSelectedDocument(doc);
@@ -43,11 +45,42 @@ export default function GoodsReceipt({processType = ProcessType.Regular}: { proc
     }
   };
 
-  const confirm = processType === ProcessType.Confirmation || processType === ProcessType.TransferConfirmation;
+  const CardsSkeleton = () => (
+    <div className="space-y-4">
+      {Array.from({ length: 3 }).map((_, index) => (
+        <div key={index} className="p-4 border rounded-lg">
+          <div className="space-y-3">
+            <div className="flex justify-between items-start">
+              <Skeleton className="h-5 w-24" aria-label="Loading..." />
+              <Skeleton className="h-4 w-16" />
+            </div>
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-4 w-40" />
+            <div className="flex gap-2 mt-3">
+              <Skeleton className="h-8 w-20" />
+              <Skeleton className="h-8 w-24" />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <ContentTheme title={getTitle()}>
-      {documents.length > 0 ? (
+      {isLoading ? (
+        <>
+          {/* Mobile view - Cards Skeleton */}
+          <div className="block sm:hidden">
+            <CardsSkeleton />
+          </div>
+          
+          {/* Desktop view - Table Skeleton */}
+          <div className="hidden sm:block">
+            <DocumentTable documents={[]} docDetails={handleDocDetails} processType={processType} supervisor={false} loading={true} />
+          </div>
+        </>
+      ) : documents.length > 0 ? (
         <>
           {/* Mobile view - Cards */}
           <div className="block sm:hidden">
@@ -58,7 +91,7 @@ export default function GoodsReceipt({processType = ProcessType.Regular}: { proc
           
           {/* Desktop view - Table */}
           <div className="hidden sm:block">
-            <DocumentTable documents={documents} docDetails={handleDocDetails} processType={processType} supervisor={false} />
+            <DocumentTable documents={documents} docDetails={handleDocDetails} processType={processType} supervisor={false} loading={false} />
           </div>
         </>
       ) : (
