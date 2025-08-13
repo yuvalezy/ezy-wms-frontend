@@ -9,6 +9,7 @@ import {Save, X} from "lucide-react";
 import {useThemeContext} from "@/components";
 import {CancellationReason, CancellationReasonFormData} from "../data/cancellation-reason";
 import {cancellationReasonService} from "../data/cancellation-reason-service";
+import {CancellationReasonFormSkeleton} from "./CancellationReasonFormSkeleton";
 
 interface CancellationReasonFormProps {
   reason?: CancellationReason | null;
@@ -35,7 +36,6 @@ const CancellationReasonForm: React.FC<CancellationReasonFormProps> = ({reason, 
   const onSubmit = async (data: CancellationReasonFormData) => {
     try {
       setIsSubmitting(true);
-      setLoading(true);
 
       if (isEditing) {
         await cancellationReasonService.update(reason.id, data);
@@ -48,13 +48,17 @@ const CancellationReasonForm: React.FC<CancellationReasonFormProps> = ({reason, 
       setError(`Failed to ${isEditing ? 'update' : 'create'} cancellation reason: ${error}`);
     } finally {
       setIsSubmitting(false);
-      setLoading(false);
     }
   };
 
   const handleCancel = () => {
     onClose(false);
   };
+
+  // Show skeleton while form is submitting
+  if (isSubmitting) {
+    return <CancellationReasonFormSkeleton />;
+  }
 
   return (
     <div className="max-w-2xl mx-auto">

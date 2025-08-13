@@ -11,6 +11,7 @@ import {itemsService} from "@/features/items/data/items-service";
 import {useAuth} from "@/components";
 import {UnitType} from "@/features/shared/data";
 import {InventoryUnitIndicators} from "@/components/InventoryUnitIndicators";
+import {ItemCheckStockSkeleton} from "./ItemCheckStockSkeleton";
 
 interface StockTableProps {
   result: ItemCheckResponse
@@ -19,24 +20,25 @@ interface StockTableProps {
 const ItemCheckStock: React.FC<StockTableProps> = ({result}) => {
   const {t} = useTranslation();
   const {user, unitSelection, defaultUnit} = useAuth();
-  const {setLoading, setError} = useThemeContext();
+  const {setError} = useThemeContext();
   const stockInfo = useStockInfo();
   const [data, setData] = useState<ItemBinStockResponse[]>([]);
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
+  const [isLoadingStock, setIsLoadingStock] = useState<boolean>(false);
 
   useEffect(() => {
     if (result && result.itemCode) {
-      setLoading(true);
+      setIsLoadingStock(true);
       if (user!.binLocations) {
         itemsService.itemBinStock(result.itemCode)
           .then((data) => setData(data))
           .catch((e) => setError(e))
-          .finally(() => setLoading(false));
+          .finally(() => setIsLoadingStock(false));
       } else {
         itemsService.itemStock(result.itemCode)
           .then((data) => setData(data))
           .catch((e) => setError(e))
-          .finally(() => setLoading(false));
+          .finally(() => setIsLoadingStock(false));
       }
     }
   }, [result]);
@@ -99,6 +101,10 @@ const ItemCheckStock: React.FC<StockTableProps> = ({result}) => {
 
   if (!result) {
     return null;
+  }
+
+  if (isLoadingStock) {
+    return <ItemCheckStockSkeleton />;
   }
 
   const totals = calculateTotals();

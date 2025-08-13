@@ -12,6 +12,7 @@ import {useAuth} from "@/components/AppContext";
 import {Device, UpdateDeviceStatusRequest, DeviceStatus} from "../data/device";
 import {deviceService} from "../data/device-service";
 import {getOrCreateDeviceUUID} from "@/utils/deviceUtils";
+import {DeviceStatusFormSkeleton} from "./DeviceStatusFormSkeleton";
 
 interface DeviceStatusFormProps {
   device: Device;
@@ -36,7 +37,6 @@ const DeviceStatusForm: React.FC<DeviceStatusFormProps> = ({device, open, onOpen
   const onSubmit = async (data: UpdateDeviceStatusRequest) => {
     try {
       setIsSubmitting(true);
-      setLoading(true);
       
       await deviceService.updateStatus(device.deviceUuid, data);
       
@@ -51,7 +51,6 @@ const DeviceStatusForm: React.FC<DeviceStatusFormProps> = ({device, open, onOpen
       setError(`Failed to update device status: ${error}`);
     } finally {
       setIsSubmitting(false);
-      setLoading(false);
     }
   };
 
@@ -60,6 +59,11 @@ const DeviceStatusForm: React.FC<DeviceStatusFormProps> = ({device, open, onOpen
   };
 
   const availableStatuses = Object.values(DeviceStatus).filter(status => status !== device.status);
+
+  // Show skeleton while form is submitting
+  if (isSubmitting) {
+    return <DeviceStatusFormSkeleton open={open} />;
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

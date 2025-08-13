@@ -16,6 +16,7 @@ import {UnitType} from "@/features/shared/data/shared";
 import {Card, CardContent} from "@/components/ui/card";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
+import GoodsReceiptAllDetailSkeleton from "@/features/goods-receipt/components/GoodsReceiptAllDetailSkeleton";
 
 import {
   GRPOAllDetailProps,
@@ -41,7 +42,8 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
     update,
     handleCheckboxChange,
     handleQuantityChange,
-    setIsOpen
+    setIsOpen,
+    isLoadingDetails
   } = useGoodsReceiptAllDetailsData(props);
 
   useImperativeHandle(ref, () => ({
@@ -51,7 +53,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
     }
   }));
 
-  const displayBarcode = useMemo(() => currentData && data && data.find((v) => v.package != null), [currentData, data]);
+  const displayBarcode = useMemo(() => !!(currentData && data && data.find((v) => v.package != null)), [currentData, data]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -63,7 +65,12 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
           </DialogDescription>
         </DialogHeader>
 
-        {currentData && data && data.length > 0 && (
+        {isLoadingDetails ? (
+          <GoodsReceiptAllDetailSkeleton 
+            displayBarcode={displayBarcode}
+            enableUpdate={enableUpdate}
+          />
+        ) : currentData && data && data.length > 0 ? (
           <>
             {/* Mobile view - Card layout */}
             <div className="block sm:hidden">
@@ -210,9 +217,9 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
               </ScrollArea>
             </div>
           </>
+        ) : (
+          <p className="py-4 text-center text-muted-foreground">{t("noDetailsAvailable")}</p>
         )}
-        {(!data || data.length === 0) &&
-            <p className="py-4 text-center text-muted-foreground">{t("noDetailsAvailable")}</p>}
 
         <DialogFooter>
           {enableUpdate && (

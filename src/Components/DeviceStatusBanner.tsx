@@ -11,6 +11,7 @@ import { deviceService } from '@/features/devices/data/device-service';
 import { getOrCreateDeviceUUID } from '@/utils/deviceUtils';
 import { useAuth } from '@/components/AppContext';
 import {useThemeContext} from "@/components/ThemeContext";
+import DeviceStatusBannerSkeleton from '@/components/skeletons/DeviceStatusBannerSkeleton';
 
 interface DeviceStatusBannerProps {
   deviceStatus: DeviceStatus;
@@ -42,7 +43,6 @@ const DeviceStatusBanner: React.FC<DeviceStatusBannerProps> = ({
   const handleActivateDevice = async (data: { reason?: string }) => {
     try {
       setIsActivating(true);
-      setLoading(true);
       
       const currentDeviceUUID = getOrCreateDeviceUUID();
       await deviceService.updateStatus(currentDeviceUUID, {
@@ -60,7 +60,6 @@ const DeviceStatusBanner: React.FC<DeviceStatusBannerProps> = ({
       setError(t('deviceStatusBanner.activationError', 'Failed to activate device. Please try again.'));
     } finally {
       setIsActivating(false);
-      setLoading(false);
     }
   };
 
@@ -142,51 +141,55 @@ const DeviceStatusBanner: React.FC<DeviceStatusBannerProps> = ({
             </DialogDescription>
           </DialogHeader>
           
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleActivateDevice)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="reason"
-                rules={{
-                  maxLength: {
-                    value: 500,
-                    message: t('deviceStatusBanner.reasonMaxLength', 'Reason must not exceed 500 characters')
-                  }
-                }}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('deviceStatusBanner.reasonLabel', 'Reason (Optional)')}</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder={t('deviceStatusBanner.reasonPlaceholder', 'Enter the reason for activating this device...')}
-                        className="resize-none"
-                        rows={4}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+          {isActivating ? (
+            <DeviceStatusBannerSkeleton showDialog={false} />
+          ) : (
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(handleActivateDevice)} className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="reason"
+                  rules={{
+                    maxLength: {
+                      value: 500,
+                      message: t('deviceStatusBanner.reasonMaxLength', 'Reason must not exceed 500 characters')
+                    }
+                  }}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('deviceStatusBanner.reasonLabel', 'Reason (Optional)')}</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder={t('deviceStatusBanner.reasonPlaceholder', 'Enter the reason for activating this device...')}
+                          className="resize-none"
+                          rows={4}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <DialogFooter>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setShowActivateDialog(false)}
-                  disabled={isActivating}
-                >
-                  {t('cancel', 'Cancel')}
-                </Button>
-                <Button type="submit" disabled={isActivating}>
-                  <ShieldCheck className="h-4 w-4 mr-2" />
-                  {isActivating 
-                    ? t('deviceStatusBanner.activating', 'Activating...') 
-                    : t('deviceStatusBanner.activate', 'Activate')}
-                </Button>
-              </DialogFooter>
-            </form>
-          </Form>
+                <DialogFooter>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowActivateDialog(false)}
+                    disabled={isActivating}
+                  >
+                    {t('cancel', 'Cancel')}
+                  </Button>
+                  <Button type="submit" disabled={isActivating}>
+                    <ShieldCheck className="h-4 w-4 mr-2" />
+                    {isActivating 
+                      ? t('deviceStatusBanner.activating', 'Activating...') 
+                      : t('deviceStatusBanner.activate', 'Activate')}
+                  </Button>
+                </DialogFooter>
+              </form>
+            </Form>
+          )}
         </DialogContent>
       </Dialog>
     </>

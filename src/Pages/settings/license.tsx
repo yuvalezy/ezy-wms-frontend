@@ -6,13 +6,17 @@ import {LicenseStatusResponse, QueueStatusResponse} from "@/features/license/dat
 import {licenseService} from "@/features/license/data/license-service";
 import {LicenseStatus} from "@/features/license/components/LicenseStatus";
 import {QueueStatus} from "@/features/license/components/QueueStatus";
+import {LicenseStatusSkeleton} from "@/features/license/components/LicenseStatusSkeleton";
+import {QueueStatusSkeleton} from "@/features/license/components/QueueStatusSkeleton";
 
 export const License: React.FC = () => {
   const {t} = useTranslation();
-  const {setLoading, setError} = useThemeContext();
+  const {setError} = useThemeContext();
 
   const [licenseData, setLicenseData] = useState<LicenseStatusResponse | null>(null);
   const [queueData, setQueueData] = useState<QueueStatusResponse | null>(null);
+  const [isLoadingLicense, setIsLoadingLicense] = useState(false);
+  const [isUpdatingLicense, setIsUpdatingLicense] = useState(false);
 
   useEffect(() => {
     loadLicenseData();
@@ -21,13 +25,13 @@ export const License: React.FC = () => {
 
   const loadLicenseData = async () => {
     try {
-      setLoading(true);
+      setIsLoadingLicense(true);
       const data = await licenseService.getLicenseStatus();
       setLicenseData(data);
     } catch (error) {
       setError(`Failed to load license status: ${error}`);
     } finally {
-      setLoading(false);
+      setIsLoadingLicense(false);
     }
   };
 
@@ -42,32 +46,38 @@ export const License: React.FC = () => {
 
   const handleForceSync = async () => {
     try {
-      setLoading(true);
+      setIsUpdatingLicense(true);
       await licenseService.forceSync();
       await loadQueueData();
     } catch (error) {
       setError(`Failed to force sync: ${error}`);
     } finally {
-      setLoading(false);
+      setIsUpdatingLicense(false);
     }
   };
 
   return (
     <ContentTheme title={t("settings")} titleBreadcrumbs={[{label: t("license.title")}]}>
       <div className="space-y-6">
-        {licenseData && (
+        {isLoadingLicense ? (
+          <LicenseStatusSkeleton />
+        ) : licenseData ? (
           <LicenseStatus
             data={licenseData}
             onRefresh={loadLicenseData}
+            isLoading={isLoadingLicense}
           />
-        )}
+        ) : null}
         
-        {queueData && (
+        {isLoadingLicense ? (
+          <QueueStatusSkeleton />
+        ) : queueData ? (
           <QueueStatus
             data={queueData}
             onForceSync={handleForceSync}
+            isLoading={isUpdatingLicense}
           />
-        )}
+        ) : null}
       </div>
     </ContentTheme>);
 };

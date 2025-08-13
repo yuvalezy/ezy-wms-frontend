@@ -11,6 +11,7 @@ import {useThemeContext} from "@/components";
 import {User, UserFormData, AuthorizationGroup, Warehouse, ExternalUser} from "../data/user";
 import {userService} from "../data/user-service";
 import {None} from "@/utils/axios-instance";
+import {UserFormSkeleton} from "./UserFormSkeleton";
 
 interface UserFormProps {
   user?: User | null;
@@ -57,7 +58,6 @@ const UserForm: React.FC<UserFormProps> = ({user, authorizationGroups, warehouse
   const onSubmit = async (data: UserFormData) => {
     try {
       setIsSubmitting(true);
-      setLoading(true);
 
       // Validate that at least one warehouse is selected
       if (!data.superUser && data.warehouses.length === 0) {
@@ -88,7 +88,6 @@ const UserForm: React.FC<UserFormProps> = ({user, authorizationGroups, warehouse
       setError(`Failed to ${isEditing ? 'update' : 'create'} user: ${error}`);
     } finally {
       setIsSubmitting(false);
-      setLoading(false);
     }
   };
 
@@ -104,6 +103,11 @@ const UserForm: React.FC<UserFormProps> = ({user, authorizationGroups, warehouse
       form.setValue("warehouses", currentWarehouses.filter(id => id !== warehouseId));
     }
   };
+
+  // Show skeleton while form is submitting
+  if (isSubmitting) {
+    return <UserFormSkeleton />;
+  }
 
   return (
     <div>

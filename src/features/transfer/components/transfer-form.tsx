@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { PlusCircle } from "lucide-react";
 import {TransferDocument} from "@/features/transfer/data/transfer";
 import {transferService} from "@/features/transfer/data/transefer-service";
+import {TransferFormSkeleton} from "./TransferFormSkeleton";
 
 interface TransferFormProps {
     onNewTransfer: (transfer: TransferDocument) => void;
@@ -17,9 +18,10 @@ const TransferForm: React.FC<TransferFormProps> = ({onNewTransfer,}) => {
     const {t} = useTranslation();
     const [docNameInput, setDocNameInput] = useState<string>("");
     const [commentsInput, setCommentsInput] = useState<string>("");
-    const {setLoading, setError} = useThemeContext();
+    const {setError} = useThemeContext();
+    const [isCreatingTransfer, setIsCreatingTransfer] = useState<boolean>(false);
     function create() {
-        setLoading(true);
+        setIsCreatingTransfer(true);
         try {
             transferService.create(docNameInput, commentsInput)
                 .then((response) => {
@@ -30,7 +32,7 @@ const TransferForm: React.FC<TransferFormProps> = ({onNewTransfer,}) => {
                 .catch((e) => {
                     setError(e);
 
-                }).finally(() => setLoading(false));
+                }).finally(() => setIsCreatingTransfer(false));
         } catch (e: any) {
             setError(e);
         }
@@ -40,6 +42,10 @@ const TransferForm: React.FC<TransferFormProps> = ({onNewTransfer,}) => {
         e.preventDefault();
         create();
     };
+
+    if (isCreatingTransfer) {
+        return <TransferFormSkeleton />;
+    }
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4 p-4 border rounded-lg shadow">

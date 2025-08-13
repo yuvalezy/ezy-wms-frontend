@@ -15,11 +15,13 @@ import {AuthorizationGroupFormData, RoleType} from "../data/authorization-group"
 import {authorizationGroupService} from "../data/authorization-group-service";
 import {useNavigate, useParams} from "react-router-dom";
 import {useAuthorizationGroupRoles} from "@/features/authorization-groups/hooks/useAuthorizationGroupRoles";
+import {AuthorizationGroupFormSkeleton} from "./AuthorizationGroupFormSkeleton";
 
 const AuthorizationGroupForm = () => {
   const {t} = useTranslation();
   const {setLoading, setError} = useThemeContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoadingGroup, setIsLoadingGroup] = useState(false);
   const navigate = useNavigate();
   const {id} = useParams<{ id: string }>();
 
@@ -39,7 +41,7 @@ const AuthorizationGroupForm = () => {
       if (!isEditing) return;
 
       try {
-        setLoading(true);
+        setIsLoadingGroup(true);
         const groupData = await authorizationGroupService.getById(id);
 
         // Update form with loaded data
@@ -52,12 +54,12 @@ const AuthorizationGroupForm = () => {
         setError(`Failed to load authorization group: ${error}`);
         navigate('/settings/authorizationGroups');
       } finally {
-        setLoading(false);
+        setIsLoadingGroup(false);
       }
     };
 
     loadGroup();
-  }, [id, isEditing, form, navigate, setError, setLoading]);
+  }, [id, isEditing, form, navigate, setError]);
 
 
   const {getRoleInfo} = useAuthorizationGroupRoles();
@@ -75,7 +77,6 @@ const AuthorizationGroupForm = () => {
   const onSubmit = async (data: AuthorizationGroupFormData) => {
     try {
       setIsSubmitting(true);
-      setLoading(true);
 
       if (isEditing) {
         await authorizationGroupService.update(id, data);
@@ -88,7 +89,6 @@ const AuthorizationGroupForm = () => {
       setError(`Failed to ${isEditing ? 'update' : 'create'} authorization group: ${error}`);
     } finally {
       setIsSubmitting(false);
-      setLoading(false);
     }
   };
 
@@ -144,6 +144,11 @@ const AuthorizationGroupForm = () => {
     const currentAuthorizations = form.watch("authorizations");
     return categoryRoles.some(role => currentAuthorizations.includes(role.role)) && !isCategoryFullySelected(category);
   };
+
+  // Show skeleton while loading group data or submitting
+  if (isLoadingGroup || isSubmitting) {
+    return <AuthorizationGroupFormSkeleton isEditing={isEditing} />;
+  }
 
   return (
     <ContentTheme title={t("settings")}

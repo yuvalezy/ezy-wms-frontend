@@ -18,6 +18,7 @@ import {useStockInfo} from "@/utils/stock-info";
 import {diff} from "node:util";
 import {useAuth} from "@/components";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
+import {PickingCheckSkeleton} from '@/features/picking/components/PickingCheckSkeleton';
 
 export default function PickingCheck() {
   const {id} = useParams<{ id: string }>();
@@ -30,6 +31,9 @@ export default function PickingCheck() {
   const [pickList, setPickList] = useState<PickingDocument | null>(null);
   const [checkSummary, setCheckSummary] = useState<PickListCheckSummaryResponse | null>(null);
   const [isCompleting, setIsCompleting] = useState(false);
+  const [isLoadingPickList, setIsLoadingPickList] = useState(false);
+  const [isCheckingItem, setIsCheckingItem] = useState(false);
+  const [isCheckingPackage, setIsCheckingPackage] = useState(false);
   const stockInfo = useStockInfo();
 
   useEffect(() => {
@@ -40,14 +44,14 @@ export default function PickingCheck() {
   }, [id]);
 
   const loadPickList = async () => {
-    setLoading(true);
+    setIsLoadingPickList(true);
     try {
       const data = await pickingService.fetchPicking({id: parseInt(id!)});
       setPickList(data);
     } catch (error) {
       setError(error);
     } finally {
-      setLoading(false);
+      setIsLoadingPickList(false);
     }
   };
 
@@ -61,6 +65,7 @@ export default function PickingCheck() {
   };
 
   const handleAddItem = async (value: AddItemValue) => {
+    setIsCheckingItem(true);
     try {
       const response = await pickingService.checkItem(parseInt(id!), {
         itemCode: value.item.code,
@@ -78,11 +83,12 @@ export default function PickingCheck() {
     } catch (error) {
       setError(error);
     } finally {
-      setLoading(false)
+      setIsCheckingItem(false);
     }
   };
 
   const handleAddPackage = async (value: PackageValue) => {
+    setIsCheckingPackage(true);
     try {
       const response = await pickingService.checkPackage(parseInt(id!), value.id);
 
@@ -95,7 +101,7 @@ export default function PickingCheck() {
     } catch (error) {
       setError(error);
     } finally {
-      setLoading(false)
+      setIsCheckingPackage(false);
     }
   }
 
@@ -153,7 +159,9 @@ export default function PickingCheck() {
         />
       }
     >
-      {checkSummary && (
+      {(isLoadingPickList || isCheckingItem || isCheckingPackage) ? (
+        <PickingCheckSkeleton />
+      ) : checkSummary ? (
         <>
           <div className="mb-4 p-4 bg-gray-100 rounded">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -237,7 +245,7 @@ export default function PickingCheck() {
             </TableBody>
           </Table>
         </>
-      )}
+      ) : null}
     </ContentTheme>
   );
 }

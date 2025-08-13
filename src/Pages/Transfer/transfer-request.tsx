@@ -2,6 +2,7 @@ import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import BarCodeScanner, {AddItemValue, BarCodeScannerRef} from "../../components/BarCodeScanner";
 import React, {useEffect, useRef, useState} from "react";
+import { TransferRequestFormSkeleton } from "./components/TransferRequestFormSkeleton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -32,6 +33,7 @@ export default function TransferRequest() {
     const navigate = useNavigate();
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
     const [itemToRemoveIndex, setItemToRemoveIndex] = useState<number | null>(null);
+    const [isSubmittingRequest, setIsSubmittingRequest] = useState(false);
 
     function handleAddItem(value: AddItemValue) {
         const item = value.item;
@@ -98,14 +100,14 @@ export default function TransferRequest() {
 
     function create() {
         try {
-            setLoading(true);
+            setIsSubmittingRequest(true);
             transferService.createRequest(rows)
                 .then((v) => {
                     toast.success(StringFormat(t('transferRequestCreated'), v));
                     navigate('/');
                 })
                 .catch((e) => setError(e))
-                .finally(() => setLoading(false));
+                .finally(() => setIsSubmittingRequest(false));
         } catch (e) {
             setError(e);
         }
@@ -113,59 +115,63 @@ export default function TransferRequest() {
 
     return (
         <ContentTheme title={t("transferRequest")}>
-            <div className="space-y-4">
-                {rows.length > 0 && (
-                    <ScrollArea className="h-64 w-full rounded-md border">
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>{t('code')}</TableHead>
-                                    <TableHead>{t('description')}</TableHead>
-                                    <TableHead className="w-24">{t('quantity')}</TableHead>
-                                    <TableHead className="w-16"></TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {rows.map((row, index) => (
-                                    <TableRow key={index}>
-                                        <TableCell>{row.itemCode}</TableCell>
-                                        <TableCell>{row.itemName}</TableCell>
-                                        <TableCell>
-                                            <Input
-                                                type="number"
-                                                value={row.quantity.toString()}
-                                                ref={el => quantityRefs.current[index] = el}
-                                                onChange={(e) => handleQuantityChange(index, e.target.value)}
-                                            />
-                                        </TableCell>
-                                        <TableCell>
-                                            <Button variant="destructive" size="sm" onClick={() => confirmRemoveRow(index)}>
-                                                <Trash2 className="h-4 w-4" />
-                                            </Button>
-                                        </TableCell>
+            {isSubmittingRequest ? (
+                <TransferRequestFormSkeleton />
+            ) : (
+                <div className="space-y-4">
+                    {rows.length > 0 && (
+                        <ScrollArea className="h-64 w-full rounded-md border">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>{t('code')}</TableHead>
+                                        <TableHead>{t('description')}</TableHead>
+                                        <TableHead className="w-24">{t('quantity')}</TableHead>
+                                        <TableHead className="w-16"></TableHead>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </ScrollArea>
-                )}
-                {rows.length > 0 && (
-                    <div className="text-center">
-                        <Button onClick={() => create()}>
-                            <Plus className="h-4 w-4 mr-2" />
-                            {t('create')}
-                        </Button>
-                    </div>
-                )}
-                {rows.length === 0 && (
-                    <Alert className="border-blue-200 bg-blue-50">
-                        <AlertDescription>
-                            {t("scanItemBarCodeStart")}
-                        </AlertDescription>
-                    </Alert>
-                )}
-                <BarCodeScanner ref={barcodeRef} onAddItem={handleAddItem} item={true} enabled={true}/>
-            </div>
+                                </TableHeader>
+                                <TableBody>
+                                    {rows.map((row, index) => (
+                                        <TableRow key={index}>
+                                            <TableCell>{row.itemCode}</TableCell>
+                                            <TableCell>{row.itemName}</TableCell>
+                                            <TableCell>
+                                                <Input
+                                                    type="number"
+                                                    value={row.quantity.toString()}
+                                                    ref={el => quantityRefs.current[index] = el}
+                                                    onChange={(e) => handleQuantityChange(index, e.target.value)}
+                                                />
+                                            </TableCell>
+                                            <TableCell>
+                                                <Button variant="destructive" size="sm" onClick={() => confirmRemoveRow(index)}>
+                                                    <Trash2 className="h-4 w-4" />
+                                                </Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </ScrollArea>
+                    )}
+                    {rows.length > 0 && (
+                        <div className="text-center">
+                            <Button onClick={() => create()}>
+                                <Plus className="h-4 w-4 mr-2" />
+                                {t('create')}
+                            </Button>
+                        </div>
+                    )}
+                    {rows.length === 0 && (
+                        <Alert className="border-blue-200 bg-blue-50">
+                            <AlertDescription>
+                                {t("scanItemBarCodeStart")}
+                            </AlertDescription>
+                        </Alert>
+                    )}
+                    <BarCodeScanner ref={barcodeRef} onAddItem={handleAddItem} item={true} enabled={true}/>
+                </div>
+            )}
 
             <Dialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
                 <DialogContent>

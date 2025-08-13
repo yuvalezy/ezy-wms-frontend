@@ -21,6 +21,7 @@
 // } from "@/components/ui/table";
 // import {SourceTarget} from "@/assets";
 // import { ArrowRightCircle } from "lucide-react"; // Icon for select/begin
+// import { TransferProcessTargetItemsSkeleton } from "./components/TransferProcessTargetItemsSkeleton";
 //
 export default function TransferProcessTargetItems() { // Renamed component
   return null;
@@ -28,7 +29,8 @@ export default function TransferProcessTargetItems() { // Renamed component
 //     const {t} = useTranslation();
 //     const [id, setID] = useState<number | null>();
 //     const [enable, setEnable] = useState(false);
-//     const {setLoading, setError} = useThemeContext();
+//     const [isLoadingItems, setIsLoadingItems] = useState(false); // Replace setLoading(true) with granular state
+//     const {setError} = useThemeContext(); // Remove setLoading from destructuring
 //     const {user} = useAuth();
 //     const barcodeRef = useRef<BarCodeScannerRef>(null);
 //     const [rows, setRows] = useState<TransferContent[] | null>(null);
@@ -45,7 +47,7 @@ export default function TransferProcessTargetItems() { // Renamed component
 //             setID(null);
 //             return;
 //         }
-//         setLoading(true);
+//         setIsLoadingItems(true); // Use granular loading state instead of setLoading(true)
 //         let value = parseInt(scanCode);
 //         setID(value);
 //         loadRows(value);
@@ -58,7 +60,7 @@ export default function TransferProcessTargetItems() { // Renamed component
 //                 setError(e);
 //                 setRows([]);
 //             })
-//             .finally(() => setLoading(false));
+//             .finally(() => setIsLoadingItems(false)); // Use granular loading state
 //     }
 //
 //     function navigateBack() {
@@ -71,6 +73,8 @@ export default function TransferProcessTargetItems() { // Renamed component
 //
 //     return (
 //         <ContentTheme title={title}>
+//             {/* SKELETON: Replace with TransferProcessTargetItemsSkeleton when loading */}
+//             {/* {isLoadingItems && <TransferProcessTargetItemsSkeleton />} */}
 //             {rows &&
 //                 <ScrollableContent>
 //                     <div className="rounded-md border">

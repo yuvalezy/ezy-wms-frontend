@@ -28,6 +28,7 @@
 // import TransferTargetItemsDetailsDialog, {TransferTargetItemsDetailRef} from "@/pages/transfer/components/transfer-target-item-details";
 // import {Authorization}from "@/assets";
 // import {useDateTimeFormat} from "@/assets";
+// import { TransferProcessTargetItemSkeleton } from "./components/TransferProcessTargetItemSkeleton";
 //
 export default function TransferProcessTargetItem() {
     return null;
@@ -36,7 +37,10 @@ export default function TransferProcessTargetItem() {
 //     const { dateTimeFormat } = useDateTimeFormat();
 //     const [id, setID] = useState<number | null>();
 //     const [supervisor, setSupervisor] = useState<boolean>(false);
-//     const {setLoading, setError} = useThemeContext();
+//     const [isLoadingData, setIsLoadingData] = useState(false); // Replace setLoading(true) with granular state
+//     const [isAddingItem, setIsAddingItem] = useState(false); // Additional loading state for adding items
+//     const [isUpdatingItem, setIsUpdatingItem] = useState(false); // Additional loading state for updating items  
+//     const {setError} = useThemeContext(); // Remove setLoading from destructuring
 //     const {user} = useAuth();
 //     const [content, setContent] = useState<TransferContent | null>(null);
 //     const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
@@ -52,7 +56,7 @@ export default function TransferProcessTargetItem() {
 //             setID(null);
 //             return;
 //         }
-//         setLoading(true);
+//         setIsLoadingData(true); // Use granular loading state instead of setLoading(true)
 //         let value = parseInt(scanCode);
 //         setID(value);
 //         setSupervisor(user?.authorizations?.filter((v) => v === Authorization.TRANSFER_SUPERVISOR)?.length === 1);
@@ -72,13 +76,14 @@ export default function TransferProcessTargetItem() {
 //             .catch((e) => {
 //                 setError(e);
 //             })
-//             .finally(() => setLoading(false));
+//             .finally(() => setIsLoadingData(false)); // Use granular loading state
 //     }
 //
 //     function onScan(bin: BinLocation) {
 //         if (id == null || itemCode == null) {
 //             return;
 //         }
+//         setIsAddingItem(true); // Use granular loading state for adding item
 //         addItem({id, itemCode, type: SourceTarget.Target, binEntry: bin.entry})
 //             .then((v) => {
 //                 if (v.errorMessage != null) {
@@ -100,7 +105,7 @@ export default function TransferProcessTargetItem() {
 //             .catch((error) => {
 //                 setError(error);
 //             })
-//             .finally(() => setLoading(false));
+//             .finally(() => setIsAddingItem(false)); // Use granular loading state
 //     }
 //
 //     function handleQuantityChanged(quantity: number) {
@@ -141,7 +146,7 @@ export default function TransferProcessTargetItem() {
 //         if (id == null) {
 //             return;
 //         }
-//         setLoading(true);
+//         setIsUpdatingItem(true); // Use granular loading state for updating item
 //         updateTransferTargetItem(data)
 //             .then(() => {
 //                 detailDialogRef?.current?.hide();
@@ -149,12 +154,14 @@ export default function TransferProcessTargetItem() {
 //             })
 //             .catch((error) => {
 //                 setError(error);
-//                 setLoading(false);
-//             });
+//             })
+//             .finally(() => setIsUpdatingItem(false)); // Use granular loading state
 //     }
 //
 //     return (
 //         <ContentTheme title={title}>
+//             {/* SKELETON: Replace with TransferProcessTargetItemSkeleton when loading */}
+//             {/* {(isLoadingData || isAddingItem || isUpdatingItem) && <TransferProcessTargetItemSkeleton />} */}
 //             {content &&
 //                 <ScrollableContent>
 //                     <Card className="mb-4">

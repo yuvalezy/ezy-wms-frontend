@@ -10,6 +10,7 @@ import {Save, X} from "lucide-react";
 import {useThemeContext} from "@/components";
 import {Device, UpdateDeviceNameRequest} from "../data/device";
 import {deviceService} from "../data/device-service";
+import {DeviceNameFormSkeleton} from "./DeviceNameFormSkeleton";
 
 interface DeviceNameFormProps {
   device: Device;
@@ -32,7 +33,6 @@ const DeviceNameForm: React.FC<DeviceNameFormProps> = ({device, open, onOpenChan
   const onSubmit = async (data: UpdateDeviceNameRequest) => {
     try {
       setIsSubmitting(true);
-      setLoading(true);
       
       await deviceService.updateName(device.deviceUuid, data);
       
@@ -48,13 +48,17 @@ const DeviceNameForm: React.FC<DeviceNameFormProps> = ({device, open, onOpenChan
       }
     } finally {
       setIsSubmitting(false);
-      setLoading(false);
     }
   };
 
   const handleCancel = () => {
     onClose(false);
   };
+
+  // Show skeleton while form is submitting
+  if (isSubmitting) {
+    return <DeviceNameFormSkeleton open={open} />;
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

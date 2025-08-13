@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import ProcessCommentSkeleton from "@/components/skeletons/ProcessCommentSkeleton";
 
 export interface ProcessCommentRef {
     show: (show: boolean) => void;
@@ -30,12 +31,12 @@ export interface ProcessCommentProps {
 const ProcessComment = forwardRef((props: ProcessCommentProps, ref) => {
     const {t} = useTranslation();
     const {setError} =  useThemeContext();
-    const {setLoading} = useThemeContext();
     const [comment, setComment] = useState(props.alert?.comment || "");
     const [isOpen, setIsOpen] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
 
     const handleSave = () => {
-        setLoading(true);
+        setIsSaving(true);
         if (props.alert?.lineId == null) {
             throw new Error("Line ID is not defined");
         }
@@ -48,14 +49,14 @@ const ProcessComment = forwardRef((props: ProcessCommentProps, ref) => {
                 props.onAccept(comment);
                 setIsOpen(false);
                 if (props.updateComplete == null) {
-                    setLoading(false);
+                    setIsSaving(false);
                 } else {
                     props.updateComplete();
                 }
             })
             .catch((error) => {
                 setError(error);
-                setLoading(false);
+                setIsSaving(false);
             });
     };
 
@@ -77,24 +78,31 @@ const ProcessComment = forwardRef((props: ProcessCommentProps, ref) => {
                         </DialogDescription>
                     }
                 </DialogHeader>
-                <div className="space-y-2 py-4">
-                    <Label htmlFor="commentArea">{t("comment")}</Label>
-                    <Textarea
-                        id="commentArea"
-                        value={comment}
-                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setComment(e.target.value)}
-                        rows={5}
-                        className="w-full"
-                    />
-                </div>
-                <DialogFooter>
-                    <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
-                        {t("cancel")}
-                    </Button>
-                    <Button type="button" onClick={handleSave}>
-                        {t("accept")}
-                    </Button>
-                </DialogFooter>
+                
+                {isSaving ? (
+                    <ProcessCommentSkeleton />
+                ) : (
+                    <>
+                        <div className="space-y-2 py-4">
+                            <Label htmlFor="commentArea">{t("comment")}</Label>
+                            <Textarea
+                                id="commentArea"
+                                value={comment}
+                                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setComment(e.target.value)}
+                                rows={5}
+                                className="w-full"
+                            />
+                        </div>
+                        <DialogFooter>
+                            <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
+                                {t("cancel")}
+                            </Button>
+                            <Button type="button" onClick={handleSave}>
+                                {t("accept")}
+                            </Button>
+                        </DialogFooter>
+                    </>
+                )}
             </DialogContent>
         </Dialog>
     );

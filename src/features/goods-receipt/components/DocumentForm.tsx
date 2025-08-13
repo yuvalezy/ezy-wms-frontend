@@ -31,6 +31,7 @@ import {
   ReceiptDocument
 } from "@/features/goods-receipt/data/goods-receipt";
 import {ProcessType} from "@/features/shared/data";
+import {DocumentFormSkeleton} from "./DocumentFormSkeleton";
 
 interface DocumentFormProps {
   onNewDocument: (document: ReceiptDocument) => void,
@@ -40,8 +41,10 @@ interface DocumentFormProps {
 const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, processType = ProcessType.Regular}) => {
   const {t} = useTranslation();
   const o = useObjectName();
-  const {setLoading, setError} = useThemeContext();
+  const {setError} = useThemeContext();
   const documentListRef = useRef<DocumentListRef>(null); // Keep as is for DocumentList
+  const [isCreatingDocument, setIsCreatingDocument] = useState<boolean>(false);
+  const [isLoadingVendors, setIsLoadingVendors] = useState<boolean>(false);
 
   // Use string values for TabsTrigger, matching GoodsReceiptType enum keys for clarity
   const TAB_AUTOCONFIRM = GoodsReceiptType.All.toString();
@@ -54,9 +57,11 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, processType =
   const [vendors, setVendors] = useState<BusinessPartner[]>([]);
 
   useEffect(() => {
+    setIsLoadingVendors(true);
     goodsReceiptService.fetchVendors()
       .then((data) => setVendors(data))
-      .catch((error) => setError(error));
+      .catch((error) => setError(error))
+      .finally(() => setIsLoadingVendors(false));
   }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -87,7 +92,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, processType =
         break;
     }
 
-    setLoading(true);
+    setIsCreatingDocument(true);
     goodsReceiptService.create(selectedType, vendorInput, docNameInput, items)
       .then((response) => {
         if (!response.error) {
@@ -130,7 +135,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, processType =
         }
         setError(errorMessage);
       })
-      .finally(() => setLoading(false));
+      .finally(() => setIsCreatingDocument(false));
   };
 
   const renderSpecificOrders = () => {
@@ -154,6 +159,10 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, processType =
         </Button>
       </div>
     </form>
+  }
+
+  if (isCreatingDocument || isLoadingVendors) {
+    return <DocumentFormSkeleton showTabs={processType === ProcessType.Regular} />;
   }
 
   if (processType !== ProcessType.Regular)

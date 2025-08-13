@@ -11,6 +11,7 @@ import {Device, DeviceAuditEntry} from "../data/device";
 import {deviceService} from "../data/device-service";
 import DeviceStatusForm from "./device-status-form";
 import DeviceNameForm from "./device-name-form";
+import {DeviceDetailsSkeleton} from "./DeviceDetailsSkeleton";
 
 interface DeviceDetailsProps {
   device: Device;
@@ -26,6 +27,7 @@ const DeviceDetails: React.FC<DeviceDetailsProps> = ({device, open, onOpenChange
   const [showStatusForm, setShowStatusForm] = useState(false);
   const [showNameForm, setShowNameForm] = useState(false);
   const [activeTab, setActiveTab] = useState("details");
+  const [isLoadingAudit, setIsLoadingAudit] = useState(false);
 
   useEffect(() => {
     if (open && device) {
@@ -35,13 +37,13 @@ const DeviceDetails: React.FC<DeviceDetailsProps> = ({device, open, onOpenChange
 
   const loadAuditHistory = async () => {
     try {
-      setLoading(true);
+      setIsLoadingAudit(true);
       const data = await deviceService.getAuditHistory(device.deviceUuid);
       setAuditHistory(data);
     } catch (error) {
       setError(`Failed to load audit history: ${error}`);
     } finally {
-      setLoading(false);
+      setIsLoadingAudit(false);
     }
   };
 
@@ -74,6 +76,11 @@ const DeviceDetails: React.FC<DeviceDetailsProps> = ({device, open, onOpenChange
       onUpdate();
     }
   };
+
+  // Show skeleton while loading audit data
+  if (isLoadingAudit) {
+    return <DeviceDetailsSkeleton open={open} onOpenChange={onOpenChange} />;
+  }
 
   return (
     <>

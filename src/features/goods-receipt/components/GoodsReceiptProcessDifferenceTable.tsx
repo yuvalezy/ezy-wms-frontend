@@ -27,6 +27,7 @@ import {useStockInfo} from "@/utils/stock-info";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
 import {goodsReceiptReportService} from "@/features/goods-receipt/data/goods-receipt-report-service";
 import {formatNumber} from "@/utils/number-utils";
+import {GoodsReceiptProcessDifferenceTableSkeleton} from "./GoodsReceiptProcessDifferenceTableSkeleton";
 
 interface GoodsReceiptProcessDifferenceTableProps {
   id: string,
@@ -40,8 +41,9 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
   }) => {
   const {t} = useTranslation();
   const {dateFormat, timeFormat} = useDateTimeFormat();
-  const {setLoading, setError} = useThemeContext(); // Removed setAlert as it's not used
+  const {setError} = useThemeContext(); // Removed setAlert as it's not used
   const stockInfo = useStockInfo();
+  const [isLoadingDetails, setIsLoadingDetails] = useState<boolean>(false);
 
   const [expandedRowsData, setExpandedRowsData] = useState<{
     [key: number]: GoodsReceiptValidateProcessLineDetails[]
@@ -140,11 +142,11 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
 
   const handleOpenDetailDialog = (line: GoodsReceiptValidateProcessLine) => {
     setSelectedLineForDetail(line);
-    setLoading(true);
+    setIsLoadingDetails(true);
     if (expandedRowsData[line.lineNumber]) {
       setDetailDataForDialog(expandedRowsData[line.lineNumber]);
       setIsDetailDialogOpen(true);
-      setLoading(false);
+      setIsLoadingDetails(false);
     } else {
       goodsReceiptReportService.fetchValidateProcessLineDetails(id, data.baseType, data.baseEntry, line.lineNumber)
         .then((details) => {
@@ -156,7 +158,7 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
           setIsDetailDialogOpen(true);
         })
         .catch((e) => setError(e))
-        .finally(() => setLoading(false));
+        .finally(() => setIsLoadingDetails(false));
     }
   };
 
@@ -165,6 +167,10 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
     setSelectedLineForDetail(null);
     setDetailDataForDialog(null);
   };
+
+  if (isLoadingDetails) {
+    return <GoodsReceiptProcessDifferenceTableSkeleton />;
+  }
 
   return (
     <>

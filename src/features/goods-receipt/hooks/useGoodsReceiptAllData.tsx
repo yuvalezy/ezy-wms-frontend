@@ -22,9 +22,11 @@ export const useGoodsReceiptAllData = (processType: ProcessType = ProcessType.Re
   const {t} = useTranslation();
   const {unitSelection} = useAuth();
   const {scanCode} = useParams();
-  const {setLoading, setError} = useThemeContext();
+  const {setError} = useThemeContext();
   const [data, setData] = useState<GoodsReceiptAll | null>(null);
   const [info, setInfo] = useState<ReceiptDocument | null>(null);
+  const [isLoadingReportData, setIsLoadingReportData] = useState(false);
+  const [isRefreshingDetail, setIsRefreshingDetail] = useState(false);
   const title = `${t("goodsReceiptReport")} #${scanCode}`;
   const detailRef = useRef<GRPOAllDetailRef>();
   const {user} = useAuth();
@@ -42,14 +44,13 @@ export const useGoodsReceiptAllData = (processType: ProcessType = ProcessType.Re
     }
     goodsReceiptService.fetch(scanCode)
       .then((result) => setInfo(result))
-      .catch((error) => setError(error))
-      .finally(() => setLoading(false));
+      .catch((error) => setError(error));
     setData(null);
-    setLoading(true);
+    setIsLoadingReportData(true);
     goodsReceiptReportService.fetchReportAll(scanCode)
       .then((result) => setData(result))
       .catch((error) => setError(error))
-      .finally(() => setLoading(false))
+      .finally(() => setIsLoadingReportData(false))
     ;
   }
 
@@ -110,13 +111,14 @@ export const useGoodsReceiptAllData = (processType: ProcessType = ProcessType.Re
     if (scanCode == null) {
       return;
     }
-    setLoading(true);
+    setIsRefreshingDetail(true);
     goodsReceiptReportService.updateReport(data)
       .then(() => loadData())
       .catch((error) => {
         setError(error);
-        setLoading(false);
-      });
+        setIsRefreshingDetail(false);
+      })
+      .finally(() => setIsRefreshingDetail(false));
   }
 
   return {
@@ -126,6 +128,8 @@ export const useGoodsReceiptAllData = (processType: ProcessType = ProcessType.Re
     handleExportExcel,
     openDetails,
     onDetailUpdate,
-    info
+    info,
+    isLoadingReportData,
+    isRefreshingDetail
   }
 }

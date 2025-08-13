@@ -9,13 +9,14 @@ import {goodsReceiptService} from "@/features/goods-receipt/data/goods-receipt-s
 import {goodsReceiptReportService} from "@/features/goods-receipt/data/goods-receipt-report-service";
 
 export const useGoodsReceiptAllDetailsData = (props: GRPOAllDetailProps) => {
-  const {setLoading, setError} = useThemeContext();
+  const {setError} = useThemeContext();
   const [isOpen, setIsOpen] = useState(false);
   const [currentData, setCurrentData] = useState<GoodsReceiptAllLine | null>(null);
   const [data, setData] = useState<GoodsReceiptAllDetail[] | null>([]);
   const [enableUpdate, setEnableUpdate] = useState(false);
   const [checkedRows, setCheckedRows] = useState<{ [key: string]: boolean }>({}); // State to store checked rows
   const [quantityChanges, setQuantityChanges] = useState<{ [key: string]: number }>({}); // State to store quantity changes
+  const [isLoadingDetails, setIsLoadingDetails] = useState(false);
 
   function update() {
     try {
@@ -28,7 +29,7 @@ export const useGoodsReceiptAllDetailsData = (props: GRPOAllDetailProps) => {
   }
 
   function loadDetails(data: GoodsReceiptAllLine) {
-    setLoading(true);
+    setIsLoadingDetails(true);
     setEnableUpdate(false);
     setCheckedRows({})
     setQuantityChanges({})
@@ -41,11 +42,11 @@ export const useGoodsReceiptAllDetailsData = (props: GRPOAllDetailProps) => {
             setData(result);
           })
           .catch((error) => setError(error))
-          .finally(() => setLoading(false));
+          .finally(() => setIsLoadingDetails(false));
       })
       .catch((error) => {
         setError(error);
-        setLoading(false);
+        setIsLoadingDetails(false);
       });
   }
 
@@ -78,7 +79,8 @@ export const useGoodsReceiptAllDetailsData = (props: GRPOAllDetailProps) => {
     update,
     handleCheckboxChange,
     handleQuantityChange,
-    setIsOpen
+    setIsOpen,
+    isLoadingDetails
   }
 }
 

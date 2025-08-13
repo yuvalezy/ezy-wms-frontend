@@ -22,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import ProcessCancelSkeleton from "@/components/skeletons/ProcessCancelSkeleton";
 
 export interface ProcessCancelRef {
   show: (show: boolean) => void;
@@ -43,17 +44,19 @@ export interface ProcessCancelProps {
 
 const ProcessCancel = forwardRef((props: ProcessCancelProps, ref) => {
   const {t} = useTranslation();
-  const {setLoading, setError} = useThemeContext();
+  const {setError} = useThemeContext();
   const [comment, setComment] = useState(props.alert?.comment || "");
   const [userName, setUserName] = useState("");
   const [reason, setReason] = useState<ReasonValue | null>(null);
   const [reasons, setReasons] = useState<ReasonValue[]>([]);
   const usernameRef = useRef<HTMLInputElement>(null); // Changed to HTMLInputElement
   const [isOpen, setIsOpen] = useState(false); // State to control dialog visibility
+  const [isLoadingReasons, setIsLoadingReasons] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
+    setIsSubmitting(true);
     if (props.alert?.lineId == null) {
       throw new Error("Line ID is not defined");
     }
@@ -86,21 +89,21 @@ const ProcessCancel = forwardRef((props: ProcessCancelProps, ref) => {
         if (message !== null) {
           setError(message);
           setUserName("");
-          setLoading(false);
+          setIsSubmitting(false);
           setTimeout(() => usernameRef.current?.focus(), 100);
           return;
         }
         props.onAccept(comment, true);
         setIsOpen(false); // Close dialog
         if (props.updateComplete == null) {
-          setLoading(false);
+          setIsSubmitting(false);
         } else {
           props.updateComplete();
         }
       })
       .catch((error) => {
         setError(error);
-        setLoading(false);
+        setIsSubmitting(false);
       });
   }
 
@@ -110,7 +113,7 @@ const ProcessCancel = forwardRef((props: ProcessCancelProps, ref) => {
         setComment(props.alert?.comment || ""); // Reset comment based on alert
         setReason(null);
         setUserName("");
-        setLoading(true);
+        setIsLoadingReasons(true);
         fetchReasons(props.reasonType)
           .then((fetchedReasons) => {
             setReasons(fetchedReasons);
@@ -119,7 +122,7 @@ const ProcessCancel = forwardRef((props: ProcessCancelProps, ref) => {
           .catch((error) => {
             setError(error);
           })
-          .finally(() => setLoading(false));
+          .finally(() => setIsLoadingReasons(false));
       } else {
         setIsOpen(false); // Close dialog
       }
@@ -145,59 +148,64 @@ const ProcessCancel = forwardRef((props: ProcessCancelProps, ref) => {
             <strong>{t("item")}: </strong>{props.alert?.itemCode}
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="comment">{t("comment")}</Label>
-            <Textarea
-              id="comment"
-              value={comment}
-              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setComment(e.target.value)}
-              rows={3}
-              className="w-full"
-            />
-          </div>
-          {(props.supervisorPassword ?? false) &&
-              <div className="space-y-2">
-                  <Label htmlFor="supervisorCode">{t("supervisorCode")}</Label>
-                  <Input
-                      required
-                      id="supervisorCode"
-                      name="username"
-                      ref={usernameRef}
-                      type="password"
-                      value={userName}
-                      onChange={(e) => setUserName(e.target.value)}
-                      className="w-full"
-                  />
-              </div>
-          }
-          <div className="space-y-2">
-            <Label htmlFor="reason">{t("reason")}</Label>
-            <Select
-              value={reason?.value?.toString() || ""}
-              onValueChange={handleReasonChange}
-            >
-              <SelectTrigger id="reason" className="w-full">
-                <SelectValue placeholder={t("selectReason")}/>
-              </SelectTrigger>
-              <SelectContent>
-                {reasons.map((r) => (
-                  <SelectItem key={r.value} value={r.value.toString()}>
-                    {r.description}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
-              {t("cancel")}
-            </Button>
-            <Button type="submit">
-              {t("accept")}
-            </Button>
-          </DialogFooter>
-        </form>
+        
+        {isLoadingReasons || isSubmitting ? (
+          <ProcessCancelSkeleton showSupervisorField={props.supervisorPassword ?? false} />
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="comment">{t("comment")}</Label>
+              <Textarea
+                id="comment"
+                value={comment}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setComment(e.target.value)}
+                rows={3}
+                className="w-full"
+              />
+            </div>
+            {(props.supervisorPassword ?? false) &&
+                <div className="space-y-2">
+                    <Label htmlFor="supervisorCode">{t("supervisorCode")}</Label>
+                    <Input
+                        required
+                        id="supervisorCode"
+                        name="username"
+                        ref={usernameRef}
+                        type="password"
+                        value={userName}
+                        onChange={(e) => setUserName(e.target.value)}
+                        className="w-full"
+                    />
+                </div>
+            }
+            <div className="space-y-2">
+              <Label htmlFor="reason">{t("reason")}</Label>
+              <Select
+                value={reason?.value?.toString() || ""}
+                onValueChange={handleReasonChange}
+              >
+                <SelectTrigger id="reason" className="w-full">
+                  <SelectValue placeholder={t("selectReason")}/>
+                </SelectTrigger>
+                <SelectContent>
+                  {reasons.map((r) => (
+                    <SelectItem key={r.value} value={r.value.toString()}>
+                      {r.description}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
+                {t("cancel")}
+              </Button>
+              <Button type="submit">
+                {t("accept")}
+              </Button>
+            </DialogFooter>
+          </form>
+        )}
       </DialogContent>
     </Dialog>
   );

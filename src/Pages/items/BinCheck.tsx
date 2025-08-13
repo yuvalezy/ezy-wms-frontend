@@ -6,6 +6,8 @@ import {Alert, AlertDescription} from "@/components/ui/alert";
 import {AlertTriangle} from 'lucide-react';
 import {useBinCheckData} from "@/features/items/hooks/useBinCheckData";
 import {BinCheckResult} from "@/features/items/components/BinCheckResult";
+import {BinCheckFormSkeleton} from "@/features/items/components/BinCheckFormSkeleton";
+import {BinCheckResultSkeleton} from "@/features/items/components/BinCheckResultSkeleton";
 import {useParams, useNavigate} from "react-router-dom";
 
 export function BinCheck() {
@@ -21,7 +23,8 @@ export function BinCheck() {
     onScan,
     onBinClear,
     handleExportExcel,
-    executeBinCheck
+    executeBinCheck,
+    isCheckingBin
   } = useBinCheckData();
 
   useEffect(() => {
@@ -57,9 +60,18 @@ export function BinCheck() {
                        titleBreadcrumbs={binContent ? [{label: bin!.code}] : undefined}
                        onExportExcel={binContent != null ? handleExportExcel : undefined}
   >
-    <div className="space-y-4 px-3 pt-3 md:px-0 md:pt-0">
-      {binContent && <BinCheckResult content={binContent}/>}
-      {!bin && <BinLocationScanner ref={binRef} onScan={handleScanAndNavigate} onClear={handleClearAndNavigate}/>}
+    <div className="space-y-4">
+      {/* Show skeleton when checking bin content */}
+      {isCheckingBin && !binContent && <BinCheckResultSkeleton />}
+      
+      {/* Show bin content when available */}
+      {binContent && !isCheckingBin && <BinCheckResult content={binContent}/>}
+      
+      {/* Show form skeleton when scanning bin */}
+      {!bin && isCheckingBin && <BinCheckFormSkeleton />}
+      
+      {/* Show scanner when no bin is selected and not loading */}
+      {!bin && !isCheckingBin && <BinLocationScanner ref={binRef} onScan={handleScanAndNavigate} onClear={handleClearAndNavigate}/>}
     </div>
   </ContentTheme>
 }

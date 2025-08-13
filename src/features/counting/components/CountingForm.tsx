@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { PlusCircle } from "lucide-react";
 import {Counting} from "@/features/counting/data/counting";
 import {countingService} from "@/features/counting/data/counting-service";
+import {CountingFormSkeleton} from "./CountingFormSkeleton";
 
 interface CountingFormProps {
     onNewCounting: (document: Counting) => void;
@@ -14,8 +15,9 @@ interface CountingFormProps {
 
 const CountingForm: React.FC<CountingFormProps> = ({onNewCounting,}) => {
     const {t} = useTranslation();
-    const {setLoading, setError} = useThemeContext();
+    const {setError} = useThemeContext();
     const [docNameInput, setDocNameInput] = useState<string>("");
+    const [isCreatingCounting, setIsCreatingCounting] = useState<boolean>(false);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -23,7 +25,7 @@ const CountingForm: React.FC<CountingFormProps> = ({onNewCounting,}) => {
         //     toast.warning(t("idRequired")); // Changed alert to toast
         //     return;
         // }
-        setLoading(true);
+        setIsCreatingCounting(true);
         try {
             countingService.create(docNameInput)
                 .then((response) => {
@@ -37,11 +39,15 @@ const CountingForm: React.FC<CountingFormProps> = ({onNewCounting,}) => {
                     setError(errorMessage); // setError will now use toast.error
                 })
                 .catch((e) => setError(e))
-                .finally(() => setLoading(false));
+                .finally(() => setIsCreatingCounting(false));
         } catch (e: any) {
             setError(e);
         }
     };
+
+    if (isCreatingCounting) {
+        return <CountingFormSkeleton />;
+    }
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4 p-4 border rounded-lg shadow">

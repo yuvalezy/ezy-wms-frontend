@@ -16,19 +16,21 @@ export const useBinCheckData = () => {
   const binRef = useRef<BinLocationScannerRef>(null);
   const [binContent, setBinContent] = useState<BinContentResponse[] | null>(null);
   const [bin, setBin] = useState<BinLocation | null>(null);
+  const [isCheckingBin, setIsCheckingBin] = useState(false);
 
   const onScan = useCallback((bin: BinLocation) => {
     setBin(bin);
+    setIsCheckingBin(true);
     try {
       itemsService.binCheck(bin.entry)
         .then((v) => setBinContent(v))
         .catch((error) => setError(error))
-        .finally(() => setLoading(false));
+        .finally(() => setIsCheckingBin(false));
     } catch (e) {
       setError(e);
-      setLoading(false);
+      setIsCheckingBin(false);
     }
-  }, [setError, setLoading]);
+  }, [setError]);
 
   const executeBinCheck = useCallback((binEntry: string, binCode: string) => {
     // Create a BinLocation object from the parameters
@@ -43,6 +45,7 @@ export const useBinCheckData = () => {
   function onBinClear() {
     setBin(null);
     setBinContent(null);
+    setIsCheckingBin(false);
     setTimeout(() => {
       binRef?.current?.focus();
     }, 1)
@@ -93,6 +96,7 @@ export const useBinCheckData = () => {
     excelData,
     handleExportExcel,
     bin,
-    executeBinCheck
+    executeBinCheck,
+    isCheckingBin
   }
 }
