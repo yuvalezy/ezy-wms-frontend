@@ -14,13 +14,15 @@ export const usePackageCheckData = () => {
   const packageRef = useRef<PackageScannerRef>(null);
   const {user} = useAuth();
   const [packageData, setPackageData] = useState<PackageDto | null>(null);
+  const [isCheckingPackage, setIsCheckingPackage] = useState(false);
+  const [isRefreshingPackage, setIsRefreshingPackage] = useState(false);
 
   const onScan = useCallback((packageData: PackageDto) => {
     setPackageData(packageData);
   }, []);
 
   const executePackageCheck = useCallback(async (id: string, barcode: string) => {
-    setLoading(true);
+    setIsCheckingPackage(true);
     try {
       const result = await getPackageByBarcode({
         barcode,
@@ -41,9 +43,9 @@ export const usePackageCheckData = () => {
         setError(error);
       }
     } finally {
-      setLoading(false);
+      setIsCheckingPackage(false);
     }
-  }, [setLoading, setError, t]);
+  }, [setError, t]);
 
   function onPackageClear() {
     setPackageData(null);
@@ -55,7 +57,7 @@ export const usePackageCheckData = () => {
   async function refreshPackageData() {
     if (!packageData) return;
 
-    setLoading(true);
+    setIsRefreshingPackage(true);
     try {
       const result = await getPackageByBarcode({
         barcode: packageData.barcode,
@@ -76,7 +78,7 @@ export const usePackageCheckData = () => {
         setError(error);
       }
     } finally {
-      setLoading(false);
+      setIsRefreshingPackage(false);
     }
   }
 
@@ -134,6 +136,8 @@ export const usePackageCheckData = () => {
     user,
     packageData,
     setPackageData,
+    isCheckingPackage,
+    isRefreshingPackage,
     onScan,
     onPackageClear,
     refreshPackageData,

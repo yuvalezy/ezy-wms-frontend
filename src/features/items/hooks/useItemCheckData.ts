@@ -14,6 +14,9 @@ export const useItemCheckData = () => {
   const [barcodeInput, setBarcodeInput] = React.useState("");
   const [itemCodeInput, setItemCodeInput] = React.useState("");
   const [result, setResult] = React.useState<ItemCheckResponse[] | null>(null);
+  const [isChecking, setIsChecking] = React.useState(false);
+  const [isUpdating, setIsUpdating] = React.useState(false);
+  const [isSettingBarcode, setIsSettingBarcode] = React.useState(false);
   const {setLoading, setError} = useThemeContext();
   const barcodeInputRef = useRef<HTMLInputElement>(null);
   const codeInputRef = useRef<HTMLInputElement>(null);
@@ -38,7 +41,7 @@ export const useItemCheckData = () => {
       return;
     }
 
-    setLoading(true);
+    setIsChecking(true);
     executeItemCheck(itemCodeInput, barcodeInput);
   }
 
@@ -55,11 +58,15 @@ export const useItemCheckData = () => {
         }
       })
       .catch((error) => setError(error))
-      .finally(() => setLoading(false));
-  }, [setError, setLoading, t]);
+      .finally(() => {
+        setIsChecking(false);
+        setIsSettingBarcode(false);
+        setIsUpdating(false);
+      });
+  }, [setError, t]);
 
   function handleUpdateSubmit(itemCode: string, checkedBarcodes: string[], newBarcode: string) {
-    setLoading(true);
+    setIsUpdating(true);
     executeUpdateItemBarcode(itemCode, checkedBarcodes, newBarcode);
   }
 
@@ -80,12 +87,12 @@ export const useItemCheckData = () => {
             errorMessage = response.errorMessage ?? "Unknown error";
           }
           setError(errorMessage);
-          setLoading(false);
+          setIsUpdating(false);
         }
       })
       .catch((error) => {
         setError(error);
-        setLoading(false);
+        setIsUpdating(false);
       })
       .finally(function () {
         setResult(result);
@@ -102,18 +109,23 @@ export const useItemCheckData = () => {
     ) {
       return;
     }
-    setLoading(true);
-    for (let i = 0; i < result.length; i++) {
-      if (i === index) {
-        continue;
+    setIsSettingBarcode(true);
+    try {
+      for (let i = 0; i < result.length; i++) {
+        if (i === index) {
+          continue;
+        }
+        await itemsService.updateItemBarCode(
+          result[i].itemCode,
+          [barcodeInput],
+          ""
+        );
       }
-      await itemsService.updateItemBarCode(
-        result[i].itemCode,
-        [barcodeInput],
-        ""
-      );
+      executeItemCheck(itemCode, "");
+    } catch (error) {
+      setError(error);
+      setIsSettingBarcode(false);
     }
-    executeItemCheck(itemCode, "");
   }
 
   function handleClear() {
@@ -131,6 +143,9 @@ export const useItemCheckData = () => {
     setResult,
     barcodeInputRef,
     codeInputRef,
+    isChecking,
+    isUpdating,
+    isSettingBarcode,
     handleCheckSubmit,
     executeItemCheck,
     handleUpdateSubmit,

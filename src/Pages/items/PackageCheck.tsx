@@ -6,6 +6,8 @@ import {Alert, AlertDescription} from "@/components/ui/alert";
 import {AlertTriangle} from 'lucide-react';
 import {usePackageCheckData} from "../../features/items/hooks/usePackageCheckData";
 import {PackageCheckResult} from "../../features/items/components/PackageCheckResult";
+import {PackageCheckFormSkeleton} from "../../features/items/components/PackageCheckFormSkeleton";
+import {PackageCheckResultSkeleton} from "../../features/items/components/PackageCheckResultSkeleton";
 import {useParams, useNavigate} from "react-router-dom";
 
 export function PackageCheck() {
@@ -17,6 +19,8 @@ export function PackageCheck() {
     packageData,
     packageRef,
     user,
+    isCheckingPackage,
+    isRefreshingPackage,
     onScan,
     onPackageClear,
     handleExportExcel,
@@ -59,8 +63,17 @@ export function PackageCheck() {
       onExportExcel={packageData ? handleExportExcel : undefined}
     >
       <div className="space-y-4 px-3 pt-3 md:px-0 md:pt-0">
-        {packageData && <PackageCheckResult packageData={packageData} />}
-        {!packageData && (
+        {/* Show result skeleton while refreshing existing package data */}
+        {packageData && isRefreshingPackage && <PackageCheckResultSkeleton />}
+        
+        {/* Show actual result when package data is loaded and not refreshing */}
+        {packageData && !isRefreshingPackage && <PackageCheckResult packageData={packageData} />}
+        
+        {/* Show form skeleton when checking package (URL params case) */}
+        {!packageData && isCheckingPackage && <PackageCheckFormSkeleton />}
+        
+        {/* Show form when no package data and not checking */}
+        {!packageData && !isCheckingPackage && (
           <PackageScanner 
             ref={packageRef} 
             onScan={handleScanAndNavigate} 

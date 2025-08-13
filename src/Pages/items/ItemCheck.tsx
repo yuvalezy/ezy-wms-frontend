@@ -2,6 +2,8 @@ import ContentTheme from "../../components/ContentTheme";
 import React, {useEffect} from "react";
 import ItemCheckMultipleResult from "../../features/items/components/ItemCheckMultipleResult";
 import ItemCheckResult from "../../features/items/components/ItemCheckResult";
+import {ItemCheckFormSkeleton} from "../../features/items/components/ItemCheckFormSkeleton";
+import {ItemCheckResultSkeleton} from "../../features/items/components/ItemCheckResultSkeleton";
 import {useTranslation} from "react-i18next";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
@@ -35,6 +37,9 @@ export default function ItemCheck() {
     result,
     barcodeInputRef,
     codeInputRef,
+    isChecking,
+    isUpdating,
+    isSettingBarcode,
     handleUpdateSubmit,
     handleSetBarcodeItem,
     handleClear,
@@ -60,11 +65,15 @@ export default function ItemCheck() {
   };
 
   const hasData = result && result.length > 0;
+  const isLoading = isChecking || isUpdating || isSettingBarcode;
+
   return (
     <ContentTheme title={t("itemCheck")}
                   titleOnClick={hasData ? handleClearAndNavigate : undefined}
                   titleBreadcrumbs={hasData ? [{label: result[0].itemCode}] : undefined}>
-      {!hasData ? (
+      {isChecking && !hasData ? (
+        <ItemCheckFormSkeleton />
+      ) : !hasData ? (
         <>
           <div className="flex justify-center px-3 pt-3 md:px-0 md:pt-0">
             <form onSubmit={(e) => {
@@ -119,6 +128,8 @@ export default function ItemCheck() {
             </form>
           </div>
         </>
+      ) : isLoading ? (
+        <ItemCheckResultSkeleton />
       ) : (
         <div className="px-3 pt-3 md:px-0 md:pt-0">
           {result.length === 0 && (

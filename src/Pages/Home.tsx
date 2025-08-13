@@ -7,17 +7,19 @@ import {KpiBox} from "@/components/KpiBox";
 import {axiosInstance} from "@/utils/axios-instance";
 import {getKpiItems, HomeInfo, KpiItem} from "@/features/home/data/home";
 import {HomeIcon} from "lucide-react";
+import {HomeSkeleton} from "@/features/home/components/HomeSkeleton";
 
 export default function Home() {
   const {user} = useAuth();
   const {t} = useTranslation();
-  const {setLoading, setError} = useThemeContext();
+  const {setError} = useThemeContext();
   const [kpiItems, setKpiItems] = React.useState<KpiItem[]>([]);
+  const [isLoadingData, setIsLoadingData] = React.useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);
+        setIsLoadingData(true);
         
         const response = await axiosInstance.get<HomeInfo>(`General/HomeInfo`);
         setKpiItems(getKpiItems(user!.settings, user!.roles, response.data));
@@ -25,7 +27,7 @@ export default function Home() {
         console.error(`Failed to home info: ${error}`);
         setError(error);
       } finally {
-        setLoading(false)
+        setIsLoadingData(false);
       }
     };
     fetchData();
@@ -33,7 +35,9 @@ export default function Home() {
 
   return (
     <ContentTheme title={t('home')}>
-      {kpiItems.length > 0 && (
+      {isLoadingData ? (
+        <HomeSkeleton />
+      ) : kpiItems.length > 0 ? (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 md:gap-6 px-2 md:px-6 py-3 md:py-6">
             {kpiItems.map((item) => (
@@ -89,8 +93,7 @@ export default function Home() {
             
           </div>
         </>
-      )}
-      {kpiItems.length === 0 && (
+      ) : (
         <div className="flex flex-col items-center justify-center min-h-[50vh] p-4 md:p-8">
           <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
             <HomeIcon className="w-8 h-8 text-blue-600" />
