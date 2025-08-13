@@ -10,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ResponsiveTableActions, TableAction } from '@/components/ui/responsive-table-actions';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/components/AppContext";
 import { useDateTimeFormat } from "@/hooks/useDateTimeFormat";
@@ -37,6 +38,42 @@ export default function CountingTable({ countings, supervisor = false, onAction 
     navigate(`/counting/${id}`);
   }
 
+  const getCountingActions = (doc: Counting): TableAction[] => {
+    const actions: TableAction[] = [];
+
+    // Summary report action
+    actions.push({
+      key: 'summary-report',
+      label: t('countingSummaryReport'),
+      icon: FileText,
+      onClick: () => navigate(`/countingSummaryReport/${doc.id}`),
+      variant: 'outline'
+    });
+
+    // Finish action (conditional)
+    if (doc.status === Status.InProgress) {
+      actions.push({
+        key: 'finish',
+        label: t('finish'),
+        icon: CheckCircle,
+        onClick: () => onAction?.(doc, 'approve'),
+        variant: 'default'
+      });
+    }
+
+    // Cancel action (always available)
+    actions.push({
+      key: 'cancel',
+      label: t('cancel'),
+      icon: XCircle,
+      onClick: () => onAction?.(doc, 'cancel'),
+      variant: 'destructive',
+      separator: true
+    });
+
+    return actions;
+  };
+
   return (
     <Table>
       <TableHeader>
@@ -46,7 +83,7 @@ export default function CountingTable({ countings, supervisor = false, onAction 
           <TableHead>{t('docDate')}</TableHead>
           <TableHead>{t('createdBy')}</TableHead>
           <TableHead>{t('status')}</TableHead>
-          {supervisor && <TableHead className="text-right"></TableHead>}
+          {supervisor && <TableHead className="text-right min-w-[100px] w-auto"></TableHead>}
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -74,32 +111,7 @@ export default function CountingTable({ countings, supervisor = false, onAction 
             <TableCell>{documentStatusToString(doc.status)}</TableCell>
             {supervisor && (
               <TableCell className="text-right">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                      <MoreVertical className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => navigate(`/countingSummaryReport/${doc.id}`)}>
-                      <FileText className="mr-2 h-4 w-4" />
-                      {t('countingSummaryReport')}
-                    </DropdownMenuItem>
-                    {doc.status === Status.InProgress && (
-                      <DropdownMenuItem onClick={() => onAction?.(doc, 'approve')}>
-                        <CheckCircle className="mr-2 h-4 w-4" />
-                        {t('finish')}
-                      </DropdownMenuItem>
-                    )}
-                    <DropdownMenuItem 
-                      onClick={() => onAction?.(doc, 'cancel')}
-                      className="text-destructive"
-                    >
-                      <XCircle className="mr-2 h-4 w-4" />
-                      {t('cancel')}
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <ResponsiveTableActions actions={getCountingActions(doc)} />
               </TableCell>
             )}
           </TableRow>

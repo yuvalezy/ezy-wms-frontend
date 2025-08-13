@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {Check, X, FileText, Truck, ArrowRightLeft, MoreVertical} from 'lucide-react';
+import {ResponsiveTableActions, TableAction} from '@/components/ui/responsive-table-actions';
 import {useObjectName} from "@/hooks/useObjectName";
 import {useDocumentStatusToString} from "@/hooks/useDocumentStatusToString";
 import {Status} from "@/features/shared/data/shared";
@@ -77,55 +78,63 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
     return returnValue;
   }
 
-  const ActionsMenu = ({doc}: {doc: ReceiptDocument}) => {
-    return (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-            <MoreVertical className="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-48">
-          <DropdownMenuItem onClick={() => handleOpen('all', doc.id)}>
-            <FileText className="mr-2 h-4 w-4" />
-            {processType === ProcessType.Regular ? t('goodsReceiptReport') : t('confirmationReport')}
-          </DropdownMenuItem>
+  const getDocumentActions = (doc: ReceiptDocument): TableAction[] => {
+    const actions: TableAction[] = [];
 
-          {user?.settings?.goodsReceiptTargetDocuments && activeStatuses.includes(doc.status) && (
-            <DropdownMenuItem onClick={() => handleOpen('vs', doc.id)}>
-              <Truck className="mr-2 h-4 w-4" />
-              {processType === ProcessType.Regular ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit')}
-            </DropdownMenuItem>
-          )}
+    // Primary report action
+    actions.push({
+      key: 'report',
+      label: processType === ProcessType.Regular ? t('goodsReceiptReport') : t('confirmationReport'),
+      icon: FileText,
+      onClick: () => handleOpen('all', doc.id),
+      variant: 'outline'
+    });
 
-          {[Status.InProgress, Status.Processing, Status.Open].includes(doc.status) && (
-            <DropdownMenuItem onClick={() => handleOpen('diff', doc.id)}>
-              <ArrowRightLeft className="mr-2 h-4 w-4" />
-              {t('differencesReport')}
-            </DropdownMenuItem>
-          )}
+    // VS Exit report (conditional)
+    if (user?.settings?.goodsReceiptTargetDocuments && activeStatuses.includes(doc.status)) {
+      actions.push({
+        key: 'vs-exit',
+        label: processType === ProcessType.Regular ? t('goodsReceiptVSExit') : t('confirmationReceiptVSExit'),
+        icon: Truck,
+        onClick: () => handleOpen('vs', doc.id),
+        variant: 'outline'
+      });
+    }
 
-          {doc.status === Status.InProgress && (
-            <>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => action?.(doc, 'approve')}>
-                <Check className="mr-2 h-4 w-4" />
-                {t('finish')}
-              </DropdownMenuItem>
-            </>
-          )}
+    // Differences report (conditional)
+    if ([Status.InProgress, Status.Processing, Status.Open].includes(doc.status)) {
+      actions.push({
+        key: 'differences',
+        label: t('differencesReport'),
+        icon: ArrowRightLeft,
+        onClick: () => handleOpen('diff', doc.id),
+        variant: 'outline'
+      });
+    }
 
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => action?.(doc, 'cancel')}
-            className="text-red-600 focus:text-red-600"
-          >
-            <X className="mr-2 h-4 w-4" />
-            {t('cancel')}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    );
+    // Finish action (conditional)
+    if (doc.status === Status.InProgress) {
+      actions.push({
+        key: 'finish',
+        label: t('finish'),
+        icon: Check,
+        onClick: () => action?.(doc, 'approve'),
+        variant: 'default',
+        separator: true
+      });
+    }
+
+    // Cancel action (always available)
+    actions.push({
+      key: 'cancel',
+      label: t('cancel'),
+      icon: X,
+      onClick: () => action?.(doc, 'cancel'),
+      variant: 'destructive',
+      separator: true
+    });
+
+    return actions;
   };
 
   const TableSkeleton = () => (
@@ -140,7 +149,7 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
             <TableHead className="whitespace-nowrap">{t('status')}</TableHead>
             {processType === ProcessType.Regular && displayVendor && <TableHead className="whitespace-nowrap">{t('vendor')}</TableHead>}
             <TableHead className="whitespace-nowrap">{t('documentsList')}</TableHead>
-            {supervisor && <TableHead className="text-right whitespace-nowrap w-16"></TableHead>}
+            {supervisor && <TableHead className="text-right whitespace-nowrap min-w-[100px] w-auto"></TableHead>}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -197,7 +206,7 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
             <TableHead className="whitespace-nowrap">{t('status')}</TableHead>
             {processType === ProcessType.Regular && displayVendor && <TableHead className="whitespace-nowrap">{t('vendor')}</TableHead>}
             <TableHead className="whitespace-nowrap">{t('documentsList')}</TableHead>
-            {supervisor && <TableHead className="text-right whitespace-nowrap w-16"></TableHead>}
+            {supervisor && <TableHead className="text-right whitespace-nowrap min-w-[100px] w-auto"></TableHead>}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -234,7 +243,7 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
               </TableCell>
               {supervisor && (
                 <TableCell className="text-right">
-                  <ActionsMenu doc={doc} />
+                  <ResponsiveTableActions actions={getDocumentActions(doc)} />
                 </TableCell>
               )}
             </TableRow>

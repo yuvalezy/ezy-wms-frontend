@@ -11,6 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ResponsiveTableActions, TableAction } from '@/components/ui/responsive-table-actions';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/components/AppContext";
 import { useDateTimeFormat } from "@/hooks/useDateTimeFormat";
@@ -39,6 +40,33 @@ export default function TransferTable({ transfers, supervisor = false, onAction 
     navigate(`/transfer/${transfer.id}`);
   }
 
+  const getTransferActions = (doc: TransferDocument): TableAction[] => {
+    const actions: TableAction[] = [];
+
+    // Finish action (conditional - only when in progress and 100% complete)
+    if (doc.status === Status.InProgress && doc.progress === 100) {
+      actions.push({
+        key: 'finish',
+        label: t('finish'),
+        icon: CheckCircle,
+        onClick: () => onAction?.(doc, 'approve'),
+        variant: 'default'
+      });
+    }
+
+    // Cancel action (always available)
+    actions.push({
+      key: 'cancel',
+      label: t('cancel'),
+      icon: XCircle,
+      onClick: () => onAction?.(doc, 'cancel'),
+      variant: 'destructive',
+      separator: doc.status === Status.InProgress && doc.progress === 100
+    });
+
+    return actions;
+  };
+
   return (
     <Table>
       <TableHeader>
@@ -50,7 +78,7 @@ export default function TransferTable({ transfers, supervisor = false, onAction 
           <TableHead>{t('status')}</TableHead>
           <TableHead>{t('progress')}</TableHead>
           <TableHead>{t('comment')}</TableHead>
-          {supervisor && <TableHead className="text-right"></TableHead>}
+          {supervisor && <TableHead className="text-right min-w-[100px] w-auto"></TableHead>}
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -87,28 +115,7 @@ export default function TransferTable({ transfers, supervisor = false, onAction 
               <TableCell>{doc.comments || '-'}</TableCell>
               {supervisor && (
                 <TableCell className="text-right">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                        <MoreVertical className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      {doc.status === Status.InProgress && doc.progress === 100 && (
-                        <DropdownMenuItem onClick={() => onAction?.(doc, 'approve')}>
-                          <CheckCircle className="mr-2 h-4 w-4" />
-                          {t('finish')}
-                        </DropdownMenuItem>
-                      )}
-                      <DropdownMenuItem 
-                        onClick={() => onAction?.(doc, 'cancel')}
-                        className="text-destructive"
-                      >
-                        <XCircle className="mr-2 h-4 w-4" />
-                        {t('cancel')}
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <ResponsiveTableActions actions={getTransferActions(doc)} />
                 </TableCell>
               )}
             </TableRow>
