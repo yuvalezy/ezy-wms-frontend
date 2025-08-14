@@ -68,7 +68,7 @@ export default function GoodsReceiptProcessDifferenceReport({processType = Proce
   const titleLink = getTitleLink();
   const subTitle = getSubTitle();
   const titleBreadcrumbs = [
-    {label: `${info?.number}`},
+    {label: `${info?.number?.toString() ?? t('loading')}`},
     {label: subTitle, onClick: report ? () => setReport(null) : undefined}
   ];
 
