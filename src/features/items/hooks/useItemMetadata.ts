@@ -11,7 +11,8 @@ import {
   MetadataFieldValue,
   ExtendedMetadataDefinition,
   validateFieldValue,
-  getFieldValuesRecord
+  getFieldValuesRecord,
+  convertFieldValueForApi
 } from '@/features/metadata';
 
 // Map MetadataDefinition to ExtendedMetadataDefinition
@@ -162,7 +163,8 @@ export const useItemMetadata = (
     
     baseHook.formState.fields.forEach(field => {
       if (field.value !== null && field.value !== undefined && field.value !== '') {
-        metadata[field.fieldId] = field.value;
+        // Convert field value to appropriate type for API
+        metadata[field.fieldId] = convertFieldValueForApi(field.fieldId, field.value, extendedDefinitions);
       } else {
         metadata[field.fieldId] = null;
       }
@@ -178,7 +180,7 @@ export const useItemMetadata = (
     }));
     
     return updatedItem;
-  }, [baseHook.formState.fields, baseHook.setFormState]);
+  }, [baseHook.formState.fields, baseHook.setFormState, extendedDefinitions]);
 
   // Handle field focus
   const onFieldFocus = useCallback((fieldId: string) => {

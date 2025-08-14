@@ -68,7 +68,7 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
     definitions.forEach(def => {
       // Use the current value from the hook (which may be calculated) or the item's stored value
       const hookValue = getFieldValue(def.id);
-      const currentValue = hookValue !== null ? hookValue : itemData.customAttributes?.[def.id];
+      const currentValue = hookValue !== null && hookValue !== undefined ? hookValue : itemData.customAttributes?.[def.id];
       
       // Format values for form inputs
       if (currentValue !== null && currentValue !== undefined) {
@@ -97,7 +97,7 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
   useEffect(() => {
     definitions.forEach(def => {
       const hookValue = getFieldValue(def.id);
-      const currentFormValue = form.getValues(def.id) || '';
+      const currentFormValue = form.getValues(def.id) ?? '';
       
       let formattedValue = '';
       if (hookValue !== null && hookValue !== undefined) {
@@ -261,6 +261,7 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
                 <Input
                   type="date"
                   {...field}
+                  required={definition.required}
                   disabled={isFieldDisabled}
                   onChange={(e) => {
                     if (!isCalculated || allowManualEdit) {
@@ -279,6 +280,7 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
                   pattern="[0-9]*[.,]?[0-9]*"
                   placeholder={isCalculated && !allowManualEdit ? 'Automatically calculated' : `${t('enterValue')} ${definition.description.toLowerCase()}`}
                   {...field}
+                  required={definition.required}
                   disabled={isFieldDisabled}
                   onChange={(e) => {
                     if (!isCalculated || allowManualEdit) {
@@ -304,6 +306,7 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
                   pattern="[0-9]*"
                   placeholder={isCalculated && !allowManualEdit ? 'Automatically calculated' : `${t('enterValue')} ${definition.description.toLowerCase()}`}
                   {...field}
+                  required={definition.required}
                   disabled={isFieldDisabled}
                   onChange={(e) => {
                     if (!isCalculated || allowManualEdit) {
@@ -329,6 +332,7 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
                   type="text"
                   placeholder={isCalculated && !allowManualEdit ? 'Automatically calculated' : `${t('enterValue')} ${definition.description.toLowerCase()}`}
                   {...field}
+                  required={definition.required}
                   disabled={isFieldDisabled}
                   onChange={(e) => {
                     if (!isCalculated || allowManualEdit) {

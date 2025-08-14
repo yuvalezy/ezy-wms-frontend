@@ -22,8 +22,13 @@ export function validateFieldValue<T extends BaseMetadataDefinition>(
   // Check if field is required (for ExtendedMetadataDefinition)
   const isRequired = (definition as ExtendedMetadataDefinition).required;
   
-  // Allow null/empty values unless field is required
-  if (value === null || value === undefined || value === '') {
+  // Check for empty values - including strings that are just whitespace
+  const isEmpty = value === null || 
+                  value === undefined || 
+                  value === '' || 
+                  (typeof value === 'string' && value.trim() === '');
+  
+  if (isEmpty) {
     if (isRequired) {
       return { isValid: false, errorMessage: 'This field is required' };
     }
@@ -42,8 +47,17 @@ export function validateFieldValue<T extends BaseMetadataDefinition>(
         if (!decimalPattern.test(value)) {
           return { isValid: false, errorMessage: 'Must be a valid number' };
         }
+        // Check if it's just an incomplete number entry
+        if (value === '.' || value === '-' || value === '-.') {
+          // For required fields, these incomplete states are invalid
+          if (isRequired) {
+            return { isValid: false, errorMessage: 'Please enter a valid number' };
+          }
+          // For optional fields, allow these as intermediate states
+          return { isValid: true };
+        }
         // Only validate as number if it looks complete (not ending with '.')
-        if (!value.endsWith('.') && value !== '-') {
+        if (!value.endsWith('.')) {
           const numValue = parseFloat(value);
           if (isNaN(numValue)) {
             return { isValid: false, errorMessage: 'Must be a valid number' };
@@ -63,8 +77,17 @@ export function validateFieldValue<T extends BaseMetadataDefinition>(
         if (!intPattern.test(value)) {
           return { isValid: false, errorMessage: 'Must be a valid integer' };
         }
-        // Only validate as integer if not empty and not just minus sign
-        if (value !== '' && value !== '-') {
+        // Check if it's just an incomplete entry
+        if (value === '-') {
+          // For required fields, this incomplete state is invalid
+          if (isRequired) {
+            return { isValid: false, errorMessage: 'Please enter a valid integer' };
+          }
+          // For optional fields, allow this as intermediate state
+          return { isValid: true };
+        }
+        // Validate as integer if not empty
+        if (value !== '') {
           const intValue = parseInt(value);
           if (isNaN(intValue)) {
             return { isValid: false, errorMessage: 'Must be a valid integer' };

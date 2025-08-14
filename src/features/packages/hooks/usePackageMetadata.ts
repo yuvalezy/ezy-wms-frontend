@@ -7,7 +7,8 @@ import {
 import { updatePackageMetadata } from './usePackages';
 import {
   useMetadataBase,
-  BaseMetadataDefinition
+  BaseMetadataDefinition,
+  convertFieldValueForApi
 } from '@/features/metadata';
 import {MetadataDefinition} from "@/features/items";
 
@@ -51,7 +52,8 @@ export const usePackageMetadata = (packageData?: PackageDto) => {
     
     baseHook.formState.fields.forEach(field => {
       if (field.value !== null && field.value !== undefined && field.value !== '') {
-        metadata[field.fieldId] = field.value;
+        // Convert field value to appropriate type for API
+        metadata[field.fieldId] = convertFieldValueForApi(field.fieldId, field.value, definitions);
       } else {
         metadata[field.fieldId] = null;
       }
@@ -67,7 +69,7 @@ export const usePackageMetadata = (packageData?: PackageDto) => {
     }));
     
     return updatedPackage;
-  }, [baseHook.formState.fields, baseHook.setFormState]);
+  }, [baseHook.formState.fields, baseHook.setFormState, definitions]);
 
   return {
     definitions: packageDefinitions,
