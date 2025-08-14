@@ -12,6 +12,7 @@ import {useAuth} from "@/components";
 import {ObjectType} from "@/features/packages/types";
 import {ProcessType} from "@/features/shared/data";
 import {ProcessSkeleton} from "@/features/goods-receipt/components/ProcessSkeleton";
+import {Loader2} from "lucide-react";
 
 export default function GoodsReceiptProcess({processType = ProcessType.Regular}: { processType?: ProcessType }) {
   const {t} = useTranslation();
@@ -29,6 +30,7 @@ export default function GoodsReceiptProcess({processType = ProcessType.Regular}:
     handleUpdateLine,
     currentPackage,
     setCurrentPackage,
+    isProcessing,
   } = useGoodsReceiptProcessData(processType);
   const navigate = useNavigate();
   const {user} = useAuth();
@@ -76,6 +78,14 @@ export default function GoodsReceiptProcess({processType = ProcessType.Regular}:
                     />
                   )}
     >
+      {isProcessing && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 flex flex-col items-center space-y-4">
+            <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+            <p className="text-sm text-gray-600 dark:text-gray-300">{t('processingItem')}</p>
+          </div>
+        </div>
+      )}
       {isLoading ? (
         <ProcessSkeleton />
       ) : info ? (

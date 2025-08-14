@@ -27,6 +27,7 @@ export const useGoodsReceiptAllData = (processType: ProcessType = ProcessType.Re
   const [info, setInfo] = useState<ReceiptDocument | null>(null);
   const [isLoadingReportData, setIsLoadingReportData] = useState(false);
   const [isRefreshingDetail, setIsRefreshingDetail] = useState(false);
+  const [isLoadingDetail, setIsLoadingDetail] = useState(false);
   const title = `${t("goodsReceiptReport")} #${scanCode}`;
   const detailRef = useRef<GRPOAllDetailRef>();
   const {user} = useAuth();
@@ -104,7 +105,22 @@ export const useGoodsReceiptAllData = (processType: ProcessType = ProcessType.Re
   };
 
   function openDetails(newData: GoodsReceiptAllLine) {
-    detailRef?.current?.show(newData);
+    if (scanCode == null) {
+      return;
+    }
+    setIsLoadingDetail(true);
+    
+    // Pre-load dialog data
+    Promise.all([
+      goodsReceiptService.fetch(scanCode),
+      goodsReceiptReportService.fetchReportAllDetails(scanCode, newData.itemCode)
+    ])
+      .then(([doc, details]) => {
+        const enableUpdate = doc.status === 'Open' || doc.status === 'InProgress';
+        detailRef?.current?.show(newData, details, enableUpdate);
+      })
+      .catch((error) => setError(error))
+      .finally(() => setIsLoadingDetail(false));
   }
 
   function onDetailUpdate(data: DetailUpdateParameters) {
@@ -130,6 +146,7 @@ export const useGoodsReceiptAllData = (processType: ProcessType = ProcessType.Re
     onDetailUpdate,
     info,
     isLoadingReportData,
-    isRefreshingDetail
+    isRefreshingDetail,
+    isLoadingDetail
   }
 }

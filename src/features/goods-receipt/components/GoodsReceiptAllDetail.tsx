@@ -38,18 +38,17 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
     checkedRows,
     quantityChanges,
     setCurrentData,
-    loadDetails,
+    showWithData,
     update,
     handleCheckboxChange,
     handleQuantityChange,
-    setIsOpen,
-    isLoadingDetails
+    setIsOpen
   } = useGoodsReceiptAllDetailsData(props);
 
   useImperativeHandle(ref, () => ({
-    show(data: GoodsReceiptAllLine) {
+    show(data: GoodsReceiptAllLine, details: any[], enableUpdate: boolean) {
       setCurrentData(data);
-      loadDetails(data);
+      showWithData(data, details, enableUpdate);
     }
   }));
 
@@ -65,12 +64,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
           </DialogDescription>
         </DialogHeader>
 
-        {isLoadingDetails ? (
-          <GoodsReceiptAllDetailSkeleton 
-            displayBarcode={displayBarcode}
-            enableUpdate={enableUpdate}
-          />
-        ) : currentData && data && data.length > 0 ? (
+        {currentData && data && data.length > 0 ? (
           <>
             {/* Mobile view - Card layout */}
             <div className="block sm:hidden">

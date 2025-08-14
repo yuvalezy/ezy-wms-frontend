@@ -5,8 +5,6 @@ import {
 } from "@/features/goods-receipt/data/goods-receipt-reports";
 import {useThemeContext} from "@/components/ThemeContext";
 import {useState} from "react";
-import {goodsReceiptService} from "@/features/goods-receipt/data/goods-receipt-service";
-import {goodsReceiptReportService} from "@/features/goods-receipt/data/goods-receipt-report-service";
 
 export const useGoodsReceiptAllDetailsData = (props: GRPOAllDetailProps) => {
   const {setError} = useThemeContext();
@@ -28,26 +26,12 @@ export const useGoodsReceiptAllDetailsData = (props: GRPOAllDetailProps) => {
     }
   }
 
-  function loadDetails(data: GoodsReceiptAllLine) {
-    setIsLoadingDetails(true);
-    setEnableUpdate(false);
-    setCheckedRows({})
-    setQuantityChanges({})
-    goodsReceiptService.fetch(props.id)
-      .then((doc) => {
-        setEnableUpdate(doc.status === Status.Open || doc.status === Status.InProgress);
-        goodsReceiptReportService.fetchReportAllDetails(props.id, data.itemCode)
-          .then((result) => {
-            setIsOpen(true);
-            setData(result);
-          })
-          .catch((error) => setError(error))
-          .finally(() => setIsLoadingDetails(false));
-      })
-      .catch((error) => {
-        setError(error);
-        setIsLoadingDetails(false);
-      });
+  function showWithData(lineData: GoodsReceiptAllLine, details: GoodsReceiptAllDetail[], enableUpdateFlag: boolean) {
+    setEnableUpdate(enableUpdateFlag);
+    setCheckedRows({});
+    setQuantityChanges({});
+    setData(details);
+    setIsOpen(true);
   }
 
   function handleCheckboxChange(lineId: string, checked: boolean) {
@@ -75,7 +59,7 @@ export const useGoodsReceiptAllDetailsData = (props: GRPOAllDetailProps) => {
     checkedRows,
     quantityChanges,
     setCurrentData,
-    loadDetails,
+    showWithData,
     update,
     handleCheckboxChange,
     handleQuantityChange,
@@ -85,7 +69,7 @@ export const useGoodsReceiptAllDetailsData = (props: GRPOAllDetailProps) => {
 }
 
 export interface GRPOAllDetailRef {
-  show: (data: GoodsReceiptAllLine) => void;
+  show: (data: GoodsReceiptAllLine, details: GoodsReceiptAllDetail[], enableUpdate: boolean) => void;
 }
 
 export interface GRPOAllDetailProps {
