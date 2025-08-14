@@ -7,26 +7,24 @@ import {
 import { updatePackageMetadata } from './usePackages';
 import {
   useMetadataBase,
-  BaseMetadataDefinition,
+  useCalculatedFields,
+  ExtendedMetadataDefinition,
   convertFieldValueForApi
 } from '@/features/metadata';
 import {MetadataDefinition} from "@/features/items";
 
-// Map MetadataDefinition to BaseMetadataDefinition
-function mapToBaseDefinition(def: MetadataDefinition): BaseMetadataDefinition {
-  return {
-    id: def.id,
-    description: def.description,
-    type: def.type
-  };
-}
-
-export const usePackageMetadata = (packageData?: PackageDto) => {
+export const usePackageMetadata = (packageData?: PackageDto, metadataDefinitions?: MetadataDefinition[]) => {
   const { user } = useAuth();
-  const packageDefinitions = user!.packageMetaData;
+  const packageDefinitions = metadataDefinitions || user!.packageMetaData || [];
   
-  const definitions = useMemo(
-    () => packageDefinitions ? packageDefinitions.map(mapToBaseDefinition) : [],
+  // Convert to ExtendedMetadataDefinition for base hook
+  const extendedDefinitions = useMemo<ExtendedMetadataDefinition[]>(
+    () => packageDefinitions.map(def => ({
+      ...def,
+      required: def.required || false,
+      readOnly: def.readOnly || false,
+      calculated: def.calculated
+    })),
     [packageDefinitions]
   );
 
@@ -41,9 +39,21 @@ export const usePackageMetadata = (packageData?: PackageDto) => {
 
   // Use base metadata hook
   const baseHook = useMetadataBase({
-    definitions,
+    definitions: extendedDefinitions,
     initialValues: packageData?.customAttributes || {},
     onSave: handleSave
+  });
+
+  // Use calculated fields hook for formula evaluation
+  const calculatedFields = useCalculatedFields({
+    definitions: extendedDefinitions,
+    onFieldsUpdate: (fields) => {
+      // Update form state with calculated fields
+      baseHook.setFormState(prev => ({
+        ...prev,
+        fields
+      }));
+    }
   });
 
   // Save metadata wrapper to ensure package ID is passed
@@ -53,7 +63,7 @@ export const usePackageMetadata = (packageData?: PackageDto) => {
     baseHook.formState.fields.forEach(field => {
       if (field.value !== null && field.value !== undefined && field.value !== '') {
         // Convert field value to appropriate type for API
-        metadata[field.fieldId] = convertFieldValueForApi(field.fieldId, field.value, definitions);
+        metadata[field.fieldId] = convertFieldValueForApi(field.fieldId, field.value, extendedDefinitions);
       } else {
         metadata[field.fieldId] = null;
       }
@@ -69,7 +79,7 @@ export const usePackageMetadata = (packageData?: PackageDto) => {
     }));
     
     return updatedPackage;
-  }, [baseHook.formState.fields, baseHook.setFormState, definitions]);
+  }, [baseHook.formState.fields, baseHook.setFormState, extendedDefinitions]);
 
   return {
     definitions: packageDefinitions,
@@ -79,6 +89,16 @@ export const usePackageMetadata = (packageData?: PackageDto) => {
     resetForm: baseHook.resetForm,
     getFieldDefinition: (fieldId: string) => packageDefinitions?.find(def => def.id === fieldId),
     getFieldValue: baseHook.getFieldValue,
-    getFieldValidation: baseHook.getFieldValidation
+    getFieldValidation: baseHook.getFieldValidation,
+    onFieldFocus: calculatedFields.onFieldFocus,
+    onFieldBlur: (fieldId: string) => {
+      const updatedFields = calculatedFields.onFieldBlur(fieldId, baseHook.formState.fields);
+      if (updatedFields !== baseHook.formState.fields) {
+        baseHook.setFormState(prev => ({
+          ...prev,
+          fields: updatedFields
+        }));
+      }
+    }
   };
 };
