@@ -30,6 +30,7 @@ export const useGoodsReceiptProcessData = (processType: ProcessType) => {
   const [info, setInfo] = useState<ReceiptDocument | null>(null);
   const [currentPackage, setCurrentPackage] = useState<PackageValue | null | undefined>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     setTimeout(() => barcodeRef.current?.focus(), 1);
@@ -56,6 +57,7 @@ export const useGoodsReceiptProcessData = (processType: ProcessType) => {
     boxConfirmationDialogRef?.current?.show(false);
     barcodeRef.current?.clear();
     let barcode = item.barcode!;
+    setIsProcessing(true);
     goodsReceiptService.addItem(info!.id, item.code, barcode, unit, value.createPackage, value.package?.id)
       .then((data) => {
         if (isClosedDocument(data, item.code, barcode)) {
@@ -125,6 +127,7 @@ export const useGoodsReceiptProcessData = (processType: ProcessType) => {
         alert({barcode: barcode, itemCode: item.code, message: errorMessage, severity: "Negative"});
       })
       .finally(function () {
+        setIsProcessing(false);
         setTimeout(() => barcodeRef.current?.focus(), 100);
       });
   }
@@ -284,5 +287,6 @@ export const useGoodsReceiptProcessData = (processType: ProcessType) => {
     handleUpdateLine,
     currentPackage,
     setCurrentPackage,
+    isProcessing,
   }
 }

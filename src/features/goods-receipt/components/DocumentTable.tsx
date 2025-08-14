@@ -142,7 +142,6 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
       <Table className="min-w-full">
         <TableHeader>
           <TableRow>
-            <TableHead className="whitespace-nowrap">{t('id')}</TableHead>
             <TableHead className="whitespace-nowrap">{t('number')}</TableHead>
             <TableHead className="whitespace-nowrap">{t('docDate')}</TableHead>
             <TableHead className="whitespace-nowrap">{t('createdBy')}</TableHead>
@@ -157,9 +156,6 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
             <TableRow key={index}>
               <TableCell className="whitespace-nowrap">
                 <Skeleton className="h-4 w-12" aria-label="Loading..." />
-              </TableCell>
-              <TableCell className="whitespace-nowrap">
-                <Skeleton className="h-4 w-20" />
               </TableCell>
               <TableCell className="whitespace-nowrap">
                 <Skeleton className="h-4 w-24" />
@@ -194,7 +190,7 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
     return <TableSkeleton />;
   }
 
-  const displayId = documents.find(v => v.id != null) != null;
+  const displayId = documents.find(v => v.name != null && v.name != "") != null;
 
   return (
     <div className="w-full overflow-x-auto">

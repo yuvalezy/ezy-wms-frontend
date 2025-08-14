@@ -23,7 +23,7 @@ export const goodsReceiptReportService = {
 
   async fetchReportAllDetails(id: string, item: string): Promise<GoodsReceiptAllDetail[]> {
     try {
-      const url = `goodsReceipt/${id}/report/all/${item}`;
+      const url = `goodsReceipt/${id}/report/all/${encodeURIComponent(item)}`;
 
       const response = await axiosInstance.get<any[]>(url,);
 
