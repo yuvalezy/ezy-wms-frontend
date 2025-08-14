@@ -640,5 +640,6 @@
   "enterValue": "Ingrese valor",
   "itemNotFoundInSource": "El artículo no fue encontrado en ninguno de los documentos fuente",
   "processingItem": "Procesando Articulo",
-  "loadingValues": "Cargando Valores"
+  "loadingValues": "Cargando Valores",
+  "processing": "Procesando"
 }

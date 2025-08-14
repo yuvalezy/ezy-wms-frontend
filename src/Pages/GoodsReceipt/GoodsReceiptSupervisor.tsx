@@ -10,6 +10,7 @@ import DocumentForm from "@/features/goods-receipt/components/DocumentForm";
 import DocumentListDialog from "@/features/goods-receipt/components/DocumentListDialog";
 import {ProcessType} from "@/features/shared/data";
 import {Skeleton} from "@/components/ui/skeleton";
+import {Loader2} from "lucide-react";
 
 export default function GoodsReceiptSupervisor({processType = ProcessType.Regular}: {processType?: ProcessType}) {
   const {t} = useTranslation();
@@ -21,6 +22,7 @@ export default function GoodsReceiptSupervisor({processType = ProcessType.Regula
     actionType,
     dialogOpen,
     isLoading,
+    isProcessing,
     documentListDialogRef,
     handleDocDetails,
     handleAction,
@@ -89,6 +91,15 @@ export default function GoodsReceiptSupervisor({processType = ProcessType.Regula
                            docDetails={handleDocDetails} processType={processType} loading={false} />
           </div>
         </>
+      )}
+      
+      {isProcessing && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 flex flex-col items-center space-y-4">
+            <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+            <p className="text-sm text-gray-600 dark:text-gray-300">{t('processing')}</p>
+          </div>
+        </div>
       )}
       
       <MessageBox

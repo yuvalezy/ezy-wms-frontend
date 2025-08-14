@@ -16,6 +16,7 @@ import {User} from "@/features/users/data/user";
 import {Skeleton} from "@/components/ui/skeleton";
 import {Card, CardContent, CardHeader} from "@/components/ui/card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
+import {Loader2} from "lucide-react";
 
 export default function CountingSupervisor() {
   const {t} = useTranslation();
@@ -28,6 +29,7 @@ export default function CountingSupervisor() {
   const [actionType, setActionType] = useState<ObjectAction | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
@@ -46,8 +48,11 @@ export default function CountingSupervisor() {
   };
 
   const handleConfirmAction = () => {
-    setIsLoading(true);
     setDialogOpen(false);
+    
+    if (actionType === "approve") {
+      setIsProcessing(true);
+    }
 
     const serviceCall = actionType === "cancel"
       ? countingService.cancel(selected!.id)
@@ -63,7 +68,11 @@ export default function CountingSupervisor() {
         }
       })
       .catch((error) => setError(error))
-      .finally(() => setIsLoading(false));
+      .finally(() => {
+        if (actionType === "approve") {
+          setIsProcessing(false);
+        }
+      });
   };
 
   // Skeleton components
@@ -209,6 +218,16 @@ export default function CountingSupervisor() {
           </div>
         </>
       )}
+      
+      {isProcessing && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 flex flex-col items-center space-y-4">
+            <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+            <p className="text-sm text-gray-600 dark:text-gray-300">{t('processing')}</p>
+          </div>
+        </div>
+      )}
+      
       <MessageBox
         onConfirm={handleConfirmAction}
         onOpenChange={setDialogOpen}

@@ -640,5 +640,6 @@
   "enterValue": "Enter Value",
   "itemNotFoundInSource": "Item was not found in any of the source documents",
   "processingItem": "Processing Item",
-  "loadingValues": "Loading Values"
+  "loadingValues": "Loading Values",
+  "processing": "Processing"
 }

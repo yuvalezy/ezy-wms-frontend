@@ -24,6 +24,7 @@ import {Skeleton} from "@/components/ui/skeleton";
 import {Card, CardContent, CardHeader, CardFooter} from "@/components/ui/card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Progress} from "@/components/ui/progress";
+import {Loader2} from "lucide-react";
 
 export default function TransferSupervisor() {
     const {t} = useTranslation();
@@ -34,6 +35,7 @@ export default function TransferSupervisor() {
     const [actionType, setActionType] = useState<ObjectAction | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [isProcessing, setIsProcessing] = useState(false);
 
     useEffect(() => {
         setIsLoading(true);
@@ -43,8 +45,12 @@ export default function TransferSupervisor() {
             .finally(() => setIsLoading(false));
     }, [setError]);
     const handleConfirmAction = () => {
-        setIsLoading(true);
         setDialogOpen(false);
+        
+        if (actionType === "approve") {
+            setIsProcessing(true);
+        }
+        
         const id = selectedTransfer?.id!;
 
         const serviceCall = actionType === "cancel"
@@ -63,7 +69,11 @@ export default function TransferSupervisor() {
             .catch((error) => {
                 setError(error);
             })
-            .finally(() => setIsLoading(false));
+            .finally(() => {
+                if (actionType === "approve") {
+                    setIsProcessing(false);
+                }
+            });
     };
 
     function handleAction(transfer: TransferDocument, action: 'approve' | 'cancel') {
@@ -198,6 +208,16 @@ export default function TransferSupervisor() {
                     </>
                 )}
             </div>
+            
+            {isProcessing && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg p-6 flex flex-col items-center space-y-4">
+                        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+                        <p className="text-sm text-gray-600 dark:text-gray-300">{t('processing')}</p>
+                    </div>
+                </div>
+            )}
+            
             <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
