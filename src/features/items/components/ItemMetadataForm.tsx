@@ -144,12 +144,13 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
           convertedValue = value;
           break;
         case MetadataFieldType.Decimal:
-          const numValue = parseFloat(value);
-          convertedValue = isNaN(numValue) ? null : numValue;
+          // Keep as string while typing to allow intermediate states like "0." or "1.000"
+          // The validation will handle checking if it's a valid number
+          convertedValue = value;
           break;
         case MetadataFieldType.Integer:
-          const intValue = parseInt(value);
-          convertedValue = isNaN(intValue) ? null : intValue;
+          // Keep as string while typing to allow intermediate states
+          convertedValue = value;
           break;
         case MetadataFieldType.Date:
           convertedValue = new Date(value);
@@ -273,8 +274,9 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
                 />
               ) : definition.type === MetadataFieldType.Decimal ? (
                 <Input
-                  type="number"
-                  step={definition.step != null ? (1 / Math.pow(10, definition.step)).toString() : "0.01"}
+                  type="text"
+                  inputMode="decimal"
+                  pattern="[0-9]*[.,]?[0-9]*"
                   placeholder={isCalculated && !allowManualEdit ? 'Automatically calculated' : `${t('enterValue')} ${definition.description.toLowerCase()}`}
                   {...field}
                   disabled={isFieldDisabled}
@@ -285,24 +287,41 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
                     }
                   }}
                   onFocus={() => onFieldFocus(definition.id)}
-                  onBlur={() => onFieldBlur(definition.id)}
+                  onBlur={(e) => {
+                    onFieldBlur(definition.id);
+                    // Convert to number on blur for validation
+                    const numValue = parseFloat(e.target.value);
+                    if (!isNaN(numValue)) {
+                      handleFieldChange(definition.id, e.target.value);
+                    }
+                  }}
                   className={`${!validation.isValid ? 'border-red-500' : ''} ${isCalculated && !allowManualEdit ? 'bg-blue-50' : ''} ${isCalculated && allowManualEdit ? 'bg-green-50' : ''}`}
                 />
               ) : definition.type === MetadataFieldType.Integer ? (
                 <Input
-                  type="number"
-                  step="1"
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                   placeholder={isCalculated && !allowManualEdit ? 'Automatically calculated' : `${t('enterValue')} ${definition.description.toLowerCase()}`}
                   {...field}
                   disabled={isFieldDisabled}
                   onChange={(e) => {
                     if (!isCalculated || allowManualEdit) {
-                      field.onChange(e);
-                      handleFieldChange(definition.id, e.target.value);
+                      // Only allow integer input
+                      const value = e.target.value.replace(/[^0-9-]/g, '');
+                      field.onChange(value);
+                      handleFieldChange(definition.id, value);
                     }
                   }}
                   onFocus={() => onFieldFocus(definition.id)}
-                  onBlur={() => onFieldBlur(definition.id)}
+                  onBlur={(e) => {
+                    onFieldBlur(definition.id);
+                    // Convert to number on blur for validation
+                    const intValue = parseInt(e.target.value);
+                    if (!isNaN(intValue)) {
+                      handleFieldChange(definition.id, e.target.value);
+                    }
+                  }}
                   className={`${!validation.isValid ? 'border-red-500' : ''} ${isCalculated && !allowManualEdit ? 'bg-blue-50' : ''} ${isCalculated && allowManualEdit ? 'bg-green-50' : ''}`}
                 />
               ) : (

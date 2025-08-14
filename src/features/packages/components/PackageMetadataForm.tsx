@@ -170,8 +170,9 @@ export const PackageMetadataForm: React.FC<PackageMetadataFormProps> = ({
                 />
               ) : definition.type === MetadataFieldType.Decimal ? (
                 <Input
-                  type="number"
-                  step={definition.step != null ? (1 / Math.pow(10, definition.step)).toString() : "0.01"}
+                  type="text"
+                  inputMode="decimal"
+                  pattern="[0-9]*[.,]?[0-9]*"
                   placeholder={`${t('enterValue')} ${definition.description.toLowerCase()}`}
                   {...field}
                   disabled={metadataFormState.isLoading}
@@ -179,18 +180,35 @@ export const PackageMetadataForm: React.FC<PackageMetadataFormProps> = ({
                     field.onChange(e);
                     handleFieldChange(definition.id, e.target.value);
                   }}
+                  onBlur={(e) => {
+                    // Convert to number on blur for final validation
+                    const numValue = parseFloat(e.target.value);
+                    if (!isNaN(numValue)) {
+                      handleFieldChange(definition.id, e.target.value);
+                    }
+                  }}
                   className={!validation.isValid ? 'border-red-500' : ''}
                 />
               ) : definition.type === MetadataFieldType.Integer ? (
                 <Input
-                  type="number"
-                  step="1"
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                   placeholder={`${t('enterValue')} ${definition.description.toLowerCase()}`}
                   {...field}
                   disabled={metadataFormState.isLoading}
                   onChange={(e) => {
-                    field.onChange(e);
-                    handleFieldChange(definition.id, e.target.value);
+                    // Only allow integer input
+                    const value = e.target.value.replace(/[^0-9-]/g, '');
+                    field.onChange(value);
+                    handleFieldChange(definition.id, value);
+                  }}
+                  onBlur={(e) => {
+                    // Convert to number on blur for final validation
+                    const intValue = parseInt(e.target.value);
+                    if (!isNaN(intValue)) {
+                      handleFieldChange(definition.id, e.target.value);
+                    }
                   }}
                   className={!validation.isValid ? 'border-red-500' : ''}
                 />

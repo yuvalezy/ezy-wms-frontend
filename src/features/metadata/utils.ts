@@ -35,18 +35,46 @@ export function validateFieldValue<T extends BaseMetadataDefinition>(
       return { isValid: typeof value === 'string' };
     
     case MetadataFieldType.Decimal:
-      const numValue = typeof value === 'string' ? parseFloat(value) : value;
-      if (isNaN(numValue)) {
-        return { isValid: false, errorMessage: 'Must be a valid number' };
+      // Allow string values during typing (like "0." or "1.000")
+      if (typeof value === 'string') {
+        // Allow intermediate states while typing
+        const decimalPattern = /^-?\d*\.?\d*$/;
+        if (!decimalPattern.test(value)) {
+          return { isValid: false, errorMessage: 'Must be a valid number' };
+        }
+        // Only validate as number if it looks complete (not ending with '.')
+        if (!value.endsWith('.') && value !== '-') {
+          const numValue = parseFloat(value);
+          if (isNaN(numValue)) {
+            return { isValid: false, errorMessage: 'Must be a valid number' };
+          }
+        }
+        return { isValid: true };
+      } else {
+        // If it's already a number, it's valid
+        return { isValid: typeof value === 'number' && !isNaN(value) };
       }
-      return { isValid: true };
     
     case MetadataFieldType.Integer:
-      const intValue = typeof value === 'string' ? parseInt(value) : value;
-      if (isNaN(intValue) || !Number.isInteger(intValue)) {
-        return { isValid: false, errorMessage: 'Must be a valid integer' };
+      // Allow string values during typing
+      if (typeof value === 'string') {
+        // Allow intermediate states while typing
+        const intPattern = /^-?\d*$/;
+        if (!intPattern.test(value)) {
+          return { isValid: false, errorMessage: 'Must be a valid integer' };
+        }
+        // Only validate as integer if not empty and not just minus sign
+        if (value !== '' && value !== '-') {
+          const intValue = parseInt(value);
+          if (isNaN(intValue)) {
+            return { isValid: false, errorMessage: 'Must be a valid integer' };
+          }
+        }
+        return { isValid: true };
+      } else {
+        // If it's already a number, check if it's an integer
+        return { isValid: typeof value === 'number' && Number.isInteger(value) };
       }
-      return { isValid: true };
     
     case MetadataFieldType.Date:
       const dateValue = value instanceof Date ? value : new Date(value);
@@ -79,10 +107,27 @@ export function convertFieldValueForApi<T extends BaseMetadataDefinition>(
 
   switch (definition.type) {
     case MetadataFieldType.Decimal:
-      return typeof value === 'string' ? parseFloat(value) : value;
+      if (typeof value === 'string') {
+        // Handle string values that might have trailing zeros or dots
+        const trimmed = value.trim();
+        if (trimmed === '' || trimmed === '.' || trimmed === '-' || trimmed === '-.') {
+          return null;
+        }
+        const parsed = parseFloat(trimmed);
+        return isNaN(parsed) ? null : parsed;
+      }
+      return value;
     
     case MetadataFieldType.Integer:
-      return typeof value === 'string' ? parseInt(value) : value;
+      if (typeof value === 'string') {
+        const trimmed = value.trim();
+        if (trimmed === '' || trimmed === '-') {
+          return null;
+        }
+        const parsed = parseInt(trimmed);
+        return isNaN(parsed) ? null : parsed;
+      }
+      return value;
     
     case MetadataFieldType.Date:
       return value instanceof Date 
