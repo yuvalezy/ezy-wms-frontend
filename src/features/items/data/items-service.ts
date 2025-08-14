@@ -140,7 +140,7 @@ export const itemsService = {
 
   async getItemMetadata(itemCode: string): Promise<{ metadata: Record<string, any> }> {
     try {
-      const url = `items/${itemCode}/metadata`;
+      const url = `items/${encodeURIComponent(itemCode)}/metadata`;
 
       const response = await axiosInstance.get<{ metadata: Record<string, any> }>(url);
 
@@ -153,7 +153,7 @@ export const itemsService = {
 
   async updateItemMetadata(itemCode: string, request: UpdateItemMetadataRequest): Promise<ItemDetails> {
     try {
-      const url = `items/${itemCode}/metadata`;
+      const url = `items/${encodeURIComponent(itemCode)}/metadata`;
 
       const response = await axiosInstance.put<ItemDetails>(url, request);
 

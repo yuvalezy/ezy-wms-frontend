@@ -35,9 +35,6 @@ export default function GoodsReceiptProcessDifferenceReport({processType = Proce
     setShowOnlyDifferences,
   } = useGoodsReceiptProcessDifferenceReportData();
 
-  if (!info)
-    return null;
-
   const getTitle = () => {
     switch (processType) {
       case ProcessType.Confirmation:
@@ -68,7 +65,7 @@ export default function GoodsReceiptProcessDifferenceReport({processType = Proce
   const titleLink = getTitleLink();
   const subTitle = getSubTitle();
   const titleBreadcrumbs = [
-    {label: `${info?.number?.toString() ?? t('loading')}`},
+    {label: `${info?.number?.toString() || t('loading')}`},
     {label: subTitle, onClick: report ? () => setReport(null) : undefined}
   ];
 
@@ -213,7 +210,7 @@ export default function GoodsReceiptProcessDifferenceReport({processType = Proce
               {t("showOnlyDifferences")}
             </label>
           </div>
-          <GoodsReceiptProcessDifferenceTable id={info.id} data={report}/>
+          {info && <GoodsReceiptProcessDifferenceTable id={info.id} data={report}/>}
         </>
       )}
       {data && data.length === 0 && (
