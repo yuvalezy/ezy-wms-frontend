@@ -2,7 +2,7 @@ import React, {forwardRef, useImperativeHandle} from 'react';
 import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
-import {Check} from 'lucide-react';
+import {Check, Loader2} from 'lucide-react';
 import {useTranslation} from 'react-i18next';
 import {PackageDisplay} from './PackageDisplay';
 import {ScanModeControls} from './ScanModeControls';
@@ -50,7 +50,8 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
     handleSubmit,
     handleUnitChanged,
     handleScanModeChange,
-    handleClearPackage
+    handleClearPackage,
+    isProcessing
   } = useBarCodeScanner({
     enabled,
     item,
@@ -91,19 +92,25 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
         createPackage={createPackage}
         onScanModeChange={handleScanModeChange}
         onCreatePackageChange={setCreatePackage}
+        disabled={isProcessing}
       />
 
-      <PackageDisplay onClear={handleClearPackage} loadedPackage={loadedPackage}/>
+      <PackageDisplay onClear={handleClearPackage} loadedPackage={loadedPackage} disabled={isProcessing}/>
 
       <div className="space-y-2">
-        <Label htmlFor="barcode-input">{barcodeLabel}</Label>
+        <Label 
+          htmlFor="barcode-input" 
+          className={isProcessing ? "text-muted-foreground" : ""}
+        >
+          {barcodeLabel}
+        </Label>
         <Input
           id="barcode-input"
           required
           value={barcodeInput}
           ref={barcodeRef}
           onChange={(e) => setBarcodeInput(e.target.value)}
-          disabled={!enabled}
+          disabled={!enabled || isProcessing}
         />
       </div>
 
@@ -112,19 +119,28 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
         pickPackOnly={pickPackOnly}
         selectedUnit={selectedUnit}
         onUnitChange={handleUnitChanged}
+        disabled={isProcessing}
       />
 
       <div className="flex space-x-2">
         {onAddAction == null && (
-          <Button type="submit" disabled={!enabled} className="w-full">
-            <Check className="mr-2 h-4 w-4"/>
+          <Button type="submit" disabled={!enabled || isProcessing} className="w-full">
+            {isProcessing ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
+            ) : (
+              <Check className="mr-2 h-4 w-4"/>
+            )}
             {scanMode === 'package' ? t('scanPackage') : t('accept')}
           </Button>
         )}
         {onAddAction && (
           <>
-            <Button type="submit" disabled={!enabled} className="flex-1">
-              <Check className="mr-2 h-4 w-4"/>
+            <Button type="submit" disabled={!enabled || isProcessing} className="flex-1">
+              {isProcessing ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
+              ) : (
+                <Check className="mr-2 h-4 w-4"/>
+              )}
               {scanMode === 'package' ? t('scanPackage') : t('accept')}
             </Button>
             <Button variant="secondary" onClick={onAddAction} className="flex-1">

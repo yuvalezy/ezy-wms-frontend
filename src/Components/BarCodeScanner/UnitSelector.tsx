@@ -10,13 +10,15 @@ interface UnitSelectorProps {
   pickPackOnly: boolean;
   selectedUnit: UnitType;
   onUnitChange: (value: string) => void;
+  disabled?: boolean;
 }
 
 export const UnitSelector: React.FC<UnitSelectorProps> = ({
   visible,
   pickPackOnly,
   selectedUnit,
-  onUnitChange
+  onUnitChange,
+  disabled = false
 }) => {
   const { t } = useTranslation();
   const {user} = useAuth();
@@ -35,9 +37,14 @@ export const UnitSelector: React.FC<UnitSelectorProps> = ({
 
   return (
     <div className="space-y-2">
-      <Label htmlFor="unit-select">{t('unit')}</Label>
+      <Label 
+        htmlFor="unit-select" 
+        className={disabled ? "text-muted-foreground" : ""}
+      >
+        {t('unit')}
+      </Label>
       <Select 
-        disabled={pickPackOnly} 
+        disabled={pickPackOnly || disabled} 
         onValueChange={onUnitChange} 
         value={selectedUnit.toString()}
       >

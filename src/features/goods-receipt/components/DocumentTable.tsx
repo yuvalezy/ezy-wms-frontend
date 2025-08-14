@@ -194,12 +194,14 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
     return <TableSkeleton />;
   }
 
+  const displayId = documents.find(v => v.id != null) != null;
+
   return (
     <div className="w-full overflow-x-auto">
       <Table className="min-w-full">
         <TableHeader>
           <TableRow>
-            <TableHead className="whitespace-nowrap">{t('id')}</TableHead>
+            {displayId && <TableHead className="whitespace-nowrap">{t('id')}</TableHead>}
             <TableHead className="whitespace-nowrap">{t('number')}</TableHead>
             <TableHead className="whitespace-nowrap">{t('docDate')}</TableHead>
             <TableHead className="whitespace-nowrap">{t('createdBy')}</TableHead>
@@ -212,7 +214,7 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
         <TableBody>
           {documents.map((doc) => (
             <TableRow key={doc.id}>
-              <TableCell className="whitespace-nowrap">{doc.name || '-'}</TableCell>
+              {displayId && <TableCell className="whitespace-nowrap">{doc.name || '-'}</TableCell>}
               <TableCell className="whitespace-nowrap">
                 {handleOpenLink ? (
                   <a href="#" onClick={(e) => {

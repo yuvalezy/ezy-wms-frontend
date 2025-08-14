@@ -48,8 +48,9 @@ export const useBarCodeScanner = ({
   const [scanMode, setScanMode] = useState<'item' | 'package'>('item');
   const [createPackage, setCreatePackage] = useState(false);
   const [loadedPackage, setLoadedPackage] = useState<PackageValue | null | undefined>(currentPackage);
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  const {setLoading, setError} = useThemeContext();
+  const {setError} = useThemeContext();
   const {t} = useTranslation();
 
   // Sync loadedPackage with currentPackage prop
@@ -73,16 +74,16 @@ export const useBarCodeScanner = ({
         return;
       }
 
-      setLoading(true);
+      setIsProcessing(true);
       itemsService.scanBarcode(barcode, item || user!.settings.scannerMode === ScannerMode.ItemCode)
         .then((items) => handleItems(items))
         .catch((error) => {
           setError(error);
-          setLoading(false);
+          setIsProcessing(false);
         });
     } catch (e) {
       setError(e);
-      setLoading(false);
+      setIsProcessing(false);
     }
   };
 
@@ -92,7 +93,7 @@ export const useBarCodeScanner = ({
       const template = !item ? t("barcodeNotFound") : t("codeNotFound");
       setError(StringFormat(template, barcode));
       clearBarCode();
-      setLoading(false);
+      setIsProcessing(false);
       return;
     }
     if (items.length === 1) {
@@ -108,12 +109,15 @@ export const useBarCodeScanner = ({
           createPackage: createPackage,
           package: loadedPackage,
         });
+        setIsProcessing(false);
       }
       else {
         if (onAddPackage != null) {
           onAddPackage({barcode, id: item.code});
+          setIsProcessing(false);
         } else {
           setError('Add Package handler not implemented!');
+          setIsProcessing(false);
         }
         barcodeRef?.current?.blur();
       }
@@ -134,11 +138,11 @@ export const useBarCodeScanner = ({
     if (distinctCodes.length !== 1) {
       const codes = distinctCodes.map((v) => `"${v}"`).join(", ");
       setError(StringFormat(t("multipleItemsError"), codes));
-      setLoading(false);
+      setIsProcessing(false);
       return;
     }
     window.alert(t('multipleBoxesNotImplemented'));
-    setLoading(false);
+    setIsProcessing(false);
   };
 
   const handleScanPackage = (barcode: string) => {
@@ -147,10 +151,13 @@ export const useBarCodeScanner = ({
       return;
     }
 
+    setIsProcessing(true);
+
     getPackageByBarcode({barcode, history: true, objectId, objectType, binEntry})
       .then((response) => {
         if (response == null) {
           toast.error(t('scanPackageNotFound', {barcode}));
+          setIsProcessing(false);
           return;
         }
         if (objectType === ObjectType.GoodsReceipt) {
@@ -161,6 +168,7 @@ export const useBarCodeScanner = ({
           );
           if (!checkCreationObject) {
             toast.error(t('scanPackageSourceDoc', {barcode, number: objectNumber}));
+            setIsProcessing(false);
             return;
           }
         }
@@ -173,6 +181,7 @@ export const useBarCodeScanner = ({
         if (!isEphemeralPackage) {
           setTimeout(() => barcodeRef?.current?.focus(), 1);
         }
+        setIsProcessing(false);
       })
       .catch((error) => {
         if (error.response?.data?.error === "Package is already counted in another bin location") {
@@ -182,6 +191,7 @@ export const useBarCodeScanner = ({
         } else {
           toast.error(error.message);
         }
+        setIsProcessing(false);
       });
     clearBarCode();
   };
@@ -225,6 +235,7 @@ export const useBarCodeScanner = ({
     handleUnitChanged,
     handleScanModeChange,
     enabled,
-    handleClearPackage
+    handleClearPackage,
+    isProcessing
   };
 };

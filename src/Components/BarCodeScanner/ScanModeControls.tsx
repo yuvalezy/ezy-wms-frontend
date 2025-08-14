@@ -11,7 +11,8 @@ interface ScanModeControlsProps {
   createPackage: boolean,
   onScanModeChange: (checked: boolean) => void,
   onCreatePackageChange: (value: boolean) => void,
-  enablePackageCreate?: boolean
+  enablePackageCreate?: boolean,
+  disabled?: boolean
 }
 
 export const ScanModeControls: React.FC<ScanModeControlsProps> = ({
@@ -20,7 +21,8 @@ export const ScanModeControls: React.FC<ScanModeControlsProps> = ({
                                                                     createPackage,
                                                                     onScanModeChange,
                                                                     onCreatePackageChange,
-                                                                    enablePackageCreate
+                                                                    enablePackageCreate,
+                                                                    disabled = false
                                                                   }) => {
   const {t} = useTranslation();
 
@@ -32,6 +34,7 @@ export const ScanModeControls: React.FC<ScanModeControlsProps> = ({
         <Button
           type="button"
           variant="ghost"
+          disabled={disabled}
           className={`flex-1 rounded-r-none flex items-center justify-center gap-2 ${
             scanMode === 'item' ? 'bg-green-600 text-white hover:bg-green-700' : 'hover:bg-gray-100'
           }`}
@@ -43,6 +46,7 @@ export const ScanModeControls: React.FC<ScanModeControlsProps> = ({
         <Button
           type="button"
           variant="ghost"
+          disabled={disabled}
           className={`flex-1 rounded-l-none flex items-center justify-center gap-2 ${
             scanMode === 'package' ? 'bg-green-600 text-white hover:bg-green-700' : 'hover:bg-gray-100'
           }`}
@@ -57,6 +61,7 @@ export const ScanModeControls: React.FC<ScanModeControlsProps> = ({
           <Checkbox
             id="create-package"
             checked={createPackage}
+            disabled={disabled}
             onCheckedChange={() => onCreatePackageChange(!createPackage)}
           />
           <Label htmlFor="create-package">{t('createNewPackage')}</Label>

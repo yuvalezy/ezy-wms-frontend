@@ -8,9 +8,10 @@ import {Button} from "@/components";
 interface PackageDisplayProps {
   loadedPackage: PackageValue | null | undefined;
   onClear: () => void;
+  disabled?: boolean;
 }
 
-export const PackageDisplay: React.FC<PackageDisplayProps> = ({loadedPackage, onClear}) => {
+export const PackageDisplay: React.FC<PackageDisplayProps> = ({loadedPackage, onClear, disabled = false}) => {
   const {t} = useTranslation();
 
   if (!loadedPackage) return null;
@@ -21,7 +22,7 @@ export const PackageDisplay: React.FC<PackageDisplayProps> = ({loadedPackage, on
                   <span className="font-medium text-sm text-slate-700 dark:text-slate-300 truncate">
                       {t("currentPackage")}: {loadedPackage.barcode}
                   </span>
-      <Button type="button" variant="outline" size="sm" onClick={onClear} className="w-full sm:w-auto shrink-0">
+      <Button type="button" variant="outline" size="sm" onClick={onClear} disabled={disabled} className="w-full sm:w-auto shrink-0">
         {t("clearPackage")}
       </Button>
     </div>
