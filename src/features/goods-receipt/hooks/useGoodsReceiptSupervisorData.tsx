@@ -21,6 +21,7 @@ export const useGoodsReceiptSupervisorData = (processType: ProcessType = Process
   const [actionType, setActionType] = useState<ObjectAction | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
   const documentListDialogRef = useRef<DocumentListDialogRef>(null);
   const location = useLocation();
 
@@ -53,6 +54,7 @@ export const useGoodsReceiptSupervisorData = (processType: ProcessType = Process
 
   const handleConfirmAction = () => {
     setDialogOpen(false);
+    setIsProcessing(true);
     const serviceCall = actionType === 'approve' ?
       goodsReceiptService.process(selectedDocument!.id) :
       goodsReceiptService.cancel(selectedDocument!.id);
@@ -68,7 +70,8 @@ export const useGoodsReceiptSupervisorData = (processType: ProcessType = Process
           toast.error(response.errorMessage);
         }
       })
-      .catch((error) => setError(error));
+      .catch((error) => setError(error))
+      .finally(() => setIsProcessing(false));
   };
 
   function getTitle(): string {
@@ -104,6 +107,7 @@ export const useGoodsReceiptSupervisorData = (processType: ProcessType = Process
     actionType,
     dialogOpen,
     isLoading,
+    isProcessing,
     documentListDialogRef,
     handleDocDetails,
     handleAction,

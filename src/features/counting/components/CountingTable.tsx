@@ -74,11 +74,13 @@ export default function CountingTable({ countings, supervisor = false, onAction 
     return actions;
   };
 
+  const displayId = countings.find(v => v.name != null && v.name != "") != null;
+
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>{t('id')}</TableHead>
+          {displayId && <TableHead>{t('id')}</TableHead>}
           <TableHead>{t('number')}</TableHead>
           <TableHead>{t('docDate')}</TableHead>
           <TableHead>{t('createdBy')}</TableHead>
@@ -89,7 +91,7 @@ export default function CountingTable({ countings, supervisor = false, onAction 
       <TableBody>
         {countings.map((doc) => (
           <TableRow key={doc.id}>
-            <TableCell>{doc.name || '-'}</TableCell>
+            {displayId && <TableCell>{doc.name || '-'}</TableCell>}
             <TableCell>
               {handleOpenLink ? (
                 <a 

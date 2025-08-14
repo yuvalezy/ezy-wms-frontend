@@ -9,7 +9,7 @@ interface ClickableItemCodeProps {
 const ClickableItemCode: React.FC<ClickableItemCodeProps> = ({ itemCode, className = "" }) => {
   return (
     <Link
-      to={`/itemCheck/${itemCode}`}
+      to={`/itemCheck/${encodeURIComponent(itemCode)}`}
       className={`text-blue-600 hover:underline hover:text-blue-800 transition-colors ${className}`}
     >
       {itemCode}
