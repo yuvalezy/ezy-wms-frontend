@@ -4,7 +4,7 @@ import {Card} from "@/components/ui/card";
 import {useStockInfo} from "@/utils/stock-info";
 import ClickableItemCode from "@/components/ClickableItemCode";
 import ClickablePackageBarcode from "@/components/ClickablePackageBarcode";
-import {ChevronRight, Package, Box, Grid3x3} from "lucide-react";
+import {ChevronRight, Package, Box, Grid3x3, Inbox, ArrowRight} from "lucide-react";
 import {BinContentResponse} from "@/features/items/data/items";
 import {useAuth} from "@/components";
 import {UnitType} from "@/features/shared/data";
@@ -85,11 +85,52 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
     return {totalItems, totalBoxes, mixedBoxes};
   };
 
-  if (!content || content.length === 0) {
-    return <p className="text-center text-muted-foreground">{t('noBinContentFound')}</p>;
-  }
-
   const totals = calculateTotals();
+
+  if (!content || content.length === 0) {
+    return (
+      <div className="space-y-4">
+        <div className="flex flex-col items-center justify-center py-12 px-4">
+          <div className="bg-gray-100 dark:bg-gray-800 rounded-full p-6 mb-4">
+            <Inbox className="w-12 h-12 text-gray-400" />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+            {t('binIsEmpty')}
+          </h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400 text-center max-w-sm">
+            {t('noBinContentFound')}
+          </p>
+        </div>
+
+        <div className={`grid grid-cols-${(user?.settings?.enablePackages ? "3" : "2")} gap-4`}>
+          <Card className="p-4 text-center">
+            <div className="flex justify-center mb-2">
+              <Grid3x3 className="w-6 h-6 text-gray-400"/>
+            </div>
+            <p className="text-2xl font-bold text-gray-900">0</p>
+            <p className="text-xs text-gray-500 mt-1">{t('totalItems')}</p>
+          </Card>
+
+          <Card className="p-4 text-center">
+            <div className="flex justify-center mb-2">
+              <Package className="w-6 h-6 text-gray-400"/>
+            </div>
+            <p className="text-2xl font-bold text-gray-900">0</p>
+            <p className="text-xs text-gray-500 mt-1">{unitSelection ? t('inventory.totalBoxes') : t('totalItems')}</p>
+          </Card>
+
+          {user?.settings?.enablePackages &&
+              <Card className="p-4 text-center">
+                  <div className="flex justify-center mb-2">
+                      <Box className="w-6 h-6 text-gray-400"/>
+                  </div>
+                  <p className="text-2xl font-bold text-gray-900">0</p>
+                  <p className="text-xs text-gray-500 mt-1">{t('inventory.mixedBoxes')}</p>
+              </Card>}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
