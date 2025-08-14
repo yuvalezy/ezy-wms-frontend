@@ -4,6 +4,7 @@ import GoodsReceiptAllReportTable from "@/features/goods-receipt/components/Good
 import GoodsReceiptAllSkeleton from "@/features/goods-receipt/components/GoodsReceiptAllSkeleton";
 import {useTranslation} from "react-i18next";
 import {Alert, AlertDescription} from "@/components/ui/alert"; // Added AlertTitle
+import {Loader2} from "lucide-react";
 import GoodsReceiptAllDialog from "@/features/goods-receipt/components/GoodsReceiptAllDetail";
 import {useGoodsReceiptAllData} from "@/features/goods-receipt/hooks/useGoodsReceiptAllData";
 import {useNavigate} from "react-router-dom";
@@ -26,7 +27,8 @@ export default function GoodsReceiptReportAll({processType = ProcessType.Regular
     onDetailUpdate,
     info,
     isLoadingReportData,
-    isRefreshingDetail
+    isRefreshingDetail,
+    isLoadingDetail
   } = useGoodsReceiptAllData(processType);
 
   const getTitle = () => {
@@ -75,9 +77,17 @@ export default function GoodsReceiptReportAll({processType = ProcessType.Regular
                   titleOnClick={() => navigate(titleLink)}
                   onExportExcel={handleExportExcel}
                   titleBreadcrumbs={[
-                    {label: `${info?.number}`},
+                    {label: `${info?.number?.toString() || t('loading')}`},
                     {label: subTitle}
                   ]}>
+      {isLoadingDetail && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 flex flex-col items-center space-y-4">
+            <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+            <p className="text-sm text-gray-600 dark:text-gray-300">{t('loadingValues')}</p>
+          </div>
+        </div>
+      )}
       {isLoadingReportData ? (
         <GoodsReceiptAllSkeleton 
           showTarget={showTarget} 
