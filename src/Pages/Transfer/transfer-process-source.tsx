@@ -9,7 +9,7 @@ import BinLocationScanner from "@/components/BinLocationScanner";
 import ProcessAlert from "@/components/ProcessAlert";
 import {ReasonType} from "@/features/shared/data";
 import Processes from "@/components/Processes";
-import {AlertCircle} from "lucide-react";
+import {AlertCircle, Loader2} from "lucide-react";
 import {useTransferProcessSourceData} from "@/features/transfer/hooks/useTransferProcessSourceData";
 import {useStockInfo} from "@/utils/stock-info";
 import React from "react";
@@ -28,6 +28,7 @@ export default function TransferProcessSource() {
     barcodeRef,
     rows,
     currentAlert,
+    isProcessingItem,
     processesRef,
     processAlertRef,
     onBinChanged,
@@ -71,6 +72,14 @@ export default function TransferProcessSource() {
                           onPackageChanged={handleAddPackage}
                       />}
     >
+      {isProcessingItem && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 flex flex-col items-center space-y-4">
+            <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+            <p className="text-sm text-gray-600 dark:text-gray-300">{t('processingItem')}</p>
+          </div>
+        </div>
+      )}
       {user?.binLocations && !binLocation &&
           <BinLocationScanner showLabel={false} onChanged={onBinChanged} onClear={onBinClear}/>}
       <div className="contentStyle">

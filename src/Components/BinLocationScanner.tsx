@@ -4,7 +4,7 @@ import {Button} from "@/components/ui/button";
 import {Label} from "@/components/ui/label";
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "./ThemeContext";
-import {BoxIcon, Check} from 'lucide-react';
+import {BoxIcon, Check, Loader2} from 'lucide-react';
 
 import {BinLocation} from "@/features/items/data/items";
 import {itemsService} from "@/features/items/data/items-service";
@@ -39,11 +39,12 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
     enablePackageCreate,
     onCreatePackageClicked
   }, ref) => {
-  const {setLoading, setError} = useThemeContext();
+  const {setError} = useThemeContext();
   const {t} = useTranslation();
   const binRef = useRef<HTMLInputElement>(null);
   const [binInput, setBinInput] = useState('');
   const [binLocation, setBinLocation] = useState<BinLocation | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // Auto-focus the input when component mounts and when binLocation is cleared
   useEffect(() => {
@@ -71,14 +72,14 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
     if (binInput.length === 0) {
       return;
     }
-    setLoading(true);
+    setIsProcessing(true);
     try {
       itemsService.scanBinLocation(binInput)
         .then((v) => {
           if (v == null) {
             setError(StringFormat(t(`binLocationNotFound`), binInput));
             setBinInput('');
-            setLoading(false);
+            setIsProcessing(false);
             return;
           }
           if (onChanged) {
@@ -88,14 +89,15 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
           if (onScan) {
             onScan(v);
           }
+          setIsProcessing(false);
         })
         .catch((e) => {
           setError(e);
-          setLoading(false);
+          setIsProcessing(false);
         })
     } catch (e) {
       setError(e);
-      setLoading(false);
+      setIsProcessing(false);
     }
   };
 
@@ -111,7 +113,7 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
     <div>
       {enablePackageCreate &&
           <div className="flex justify-center">
-              <Button type="button" onClick={onCreatePackageClicked}>
+              <Button type="button" onClick={onCreatePackageClicked} disabled={isProcessing}>
                   <BoxIcon className="h-4 w-4 mr-2"/>
                 {t("createNewPackage")}
               </Button>
@@ -124,7 +126,7 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
                   <span className="font-medium text-sm text-slate-700 dark:text-slate-300 truncate">
                       {t("bin")}: {binLocation.code}
                   </span>
-              <Button variant="outline" size="sm" onClick={clear} className="w-full sm:w-auto shrink-0">
+              <Button variant="outline" size="sm" onClick={clear} className="w-full sm:w-auto shrink-0" disabled={isProcessing}>
                 {t("changeBinLocation")}
               </Button>
           </div>
@@ -134,18 +136,24 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
               <form onSubmit={handleSubmit} className="w-full max-w-md">
                   <div className="space-y-4">
                       <div className="space-y-2">
-                        {showLabel && <Label htmlFor="bin-input">{label ?? t("bin")}</Label>}
+                        {showLabel && <Label htmlFor="bin-input" className={isProcessing ? "text-muted-foreground" : ""}>{label ?? t("bin")}</Label>}
                           <Input
                               id="bin-input"
                               value={binInput}
                               ref={binRef}
                               onChange={(e) => setBinInput(e.target.value)}
-                              placeholder={t("scanBinLocation")} maxLength={255}
+                              placeholder={t("scanBinLocation")} 
+                              maxLength={255}
+                              disabled={isProcessing}
                           />
                       </div>
                       <div>
-                          <Button type="submit" disabled={!binInput.trim()} className="w-full">
+                          <Button type="submit" disabled={!binInput.trim() || isProcessing} className="w-full">
+                            {isProcessing ? (
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
+                            ) : (
                               <Check className="h-4 w-4 mr-2"/>
+                            )}
                             {t("accept")}
                           </Button>
                       </div>

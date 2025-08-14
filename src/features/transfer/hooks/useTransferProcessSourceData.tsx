@@ -35,6 +35,7 @@ export const useTransferProcessSourceData = () => {
   const barcodeRef = useRef<BarCodeScannerRef>(null);
   const [rows, setRows] = useState<TransferContent[] | null>(null);
   const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
+  const [isProcessingItem, setIsProcessingItem] = useState(false);
   const processesRef = useRef<ProcessesRef>(null);
   const processAlertRef = useRef<HTMLDivElement>(null);
   const {t} = useTranslation();
@@ -112,6 +113,7 @@ export const useTransferProcessSourceData = () => {
   function handleAddItem(value: AddItemValue) {
     if (id == null)
       return;
+    setIsProcessingItem(true);
     const item = value.item;
     const unit = value.unit;
     const params: AddItemParameters = {
@@ -152,12 +154,13 @@ export const useTransferProcessSourceData = () => {
       .catch((error) => {
         setError(error);
       })
-      .finally(() => setLoading(false));
+      .finally(() => setIsProcessingItem(false));
   }
 
   function handleAddPackage(value: PackageValue) {
     if (id == null)
       return;
+    setIsProcessingItem(true);
     const params: TransferAddSourcePackageRequest = {transferId: id, packageId: value.id, binEntry: binLocation?.entry};
     transferService.addSourcePackage(params)
       .then((r) => {
@@ -190,7 +193,7 @@ export const useTransferProcessSourceData = () => {
         }
         setError(error);
       })
-      .finally(() => setLoading(false))
+      .finally(() => setIsProcessingItem(false))
   }
 
   function handleQuantityChanged(quantity: number) {
@@ -224,6 +227,7 @@ export const useTransferProcessSourceData = () => {
     barcodeRef,
     rows,
     currentAlert,
+    isProcessingItem,
     processesRef,
     processAlertRef,
     onBinChanged,

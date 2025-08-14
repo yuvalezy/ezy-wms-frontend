@@ -19,7 +19,7 @@ import {ReasonType} from "@/features/shared/data";
 import Processes from "@/components/Processes";
 import {useTransferProcessTargetBinsData} from "@/features/transfer/hooks/useTransferProcessTargetBinsData";
 import {Card, CardContent, InfoBoxValue} from "@/components";
-import {AlertCircle} from "lucide-react";
+import {AlertCircle, Loader2} from "lucide-react";
 import {useStockInfo} from "@/utils/stock-info";
 import InfoBox from "@/components/InfoBox";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
@@ -36,6 +36,7 @@ export default function TransferProcessTargetBins() {
     barcodeRef,
     rows,
     currentAlert,
+    isProcessingItem,
     processesRef,
     processAlertRef,
     onBinChanged,
@@ -79,6 +80,14 @@ export default function TransferProcessTargetBins() {
                           onPackageChanged={handleAddPackage}
                       />}
     >
+      {isProcessingItem && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 flex flex-col items-center space-y-4">
+            <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+            <p className="text-sm text-gray-600 dark:text-gray-300">{t('processingItem')}</p>
+          </div>
+        </div>
+      )}
       {user?.binLocations && !binLocation && <BinLocationScanner onChanged={onBinChanged} onClear={onBinClear}/>}
       <div className="contentStyle">
         {currentAlert &&
