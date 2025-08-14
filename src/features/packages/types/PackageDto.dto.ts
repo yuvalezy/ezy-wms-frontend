@@ -1,7 +1,7 @@
 import { PackageStatus } from './PackageStatus.enum';
 import { PackageContentDto } from './PackageContentDto.dto';
 import { PackageLocationHistoryDto } from './PackageLocationHistoryDto.dto';
-import { PackageMetadataDefinition } from './PackageMetadataDefinition.dto';
+import { MetadataDefinition } from '@/features/items/types';
 
 import {UserAuditResponse} from "@/features/packages/types/UserAuditResponse.dto";
 

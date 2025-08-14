@@ -33,11 +33,12 @@ export const useItemCheckData = () => {
     setTimeout(() => barcodeInputRef?.current?.focus(), 1);
   }
 
-  function handleCheckSubmit() {
+  function handleCheckSubmit(emptyAlert: boolean = true) {
     let barcodeLength = barcodeInput.length === 0;
     let itemCodeLength = itemCodeInput.length === 0;
     if (barcodeLength && itemCodeLength) {
-      toast.warning(t("barcodeOrItemRequired"));
+      if (emptyAlert)
+        toast.warning(t("barcodeOrItemRequired"));
       return;
     }
 

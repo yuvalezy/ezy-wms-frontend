@@ -48,7 +48,7 @@ export default function ItemCheck() {
 
   useEffect(() => {
     if (code && !result) {
-      handleCheckSubmit();
+      handleCheckSubmit(false);
     }
   }, [code, result, handleCheckSubmit]);
 

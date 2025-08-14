@@ -11,7 +11,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { Edit } from 'lucide-react';
 import { ItemDetails } from '../data/items';
-import { ItemMetadataDefinition } from '@/features/items';
+import { MetadataDefinition } from '@/features/items';
 import { ItemMetadataForm } from '@/features/items';
 import { getItemMetadata } from '@/features/items';
 import { useAuth } from "@/Components";
@@ -149,7 +149,7 @@ export const ItemMetadataEditDialog: React.FC<ItemMetadataEditDialogProps> = ({
 export const canEditMetadata = (user: any): boolean => {
   const definitions = user?.itemMetaData;
   const hasMetadata = definitions && definitions.length > 0;
-  const hasEditableFields = definitions && definitions.some((def: ItemMetadataDefinition) => !def.readOnly);
+  const hasEditableFields = definitions && definitions.some((def: MetadataDefinition) => !def.readOnly);
   const hasPermission = user?.superUser || user?.roles?.includes(RoleType.ITEM_MANAGEMENT);
 
   return !!(hasMetadata && hasEditableFields && hasPermission);

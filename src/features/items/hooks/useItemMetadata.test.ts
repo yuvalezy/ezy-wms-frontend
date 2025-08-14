@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 import { useItemMetadata } from './useItemMetadata';
-import { ItemMetadataDefinition } from '../types/ItemMetadataDefinition.dto';
+import { MetadataDefinition } from '../types';
 import { MetadataFieldType } from '../../packages/types/MetadataFieldType.enum';
 import { ItemDetails } from '../data/items';
 
@@ -31,7 +31,7 @@ describe('useItemMetadata Hook', () => {
     }
   };
 
-  const metadataDefinitions: ItemMetadataDefinition[] = [
+  const metadataDefinitions: MetadataDefinition[] = [
     {
       id: 'PurchaseUnitLength',
       description: 'Length (cm)',
@@ -166,7 +166,7 @@ describe('useItemMetadata Hook', () => {
   });
 
   describe('Multiple Calculated Fields', () => {
-    const extendedDefinitions: ItemMetadataDefinition[] = [
+    const extendedDefinitions: MetadataDefinition[] = [
       ...metadataDefinitions,
       {
         id: 'SurfaceArea',
@@ -215,7 +215,7 @@ describe('useItemMetadata Hook', () => {
   });
 
   describe('Error Handling', () => {
-    const invalidFormulaDefinitions: ItemMetadataDefinition[] = [
+    const invalidFormulaDefinitions: MetadataDefinition[] = [
       ...metadataDefinitions.slice(0, 3), // Keep dependency fields
       {
         id: 'InvalidCalculation',

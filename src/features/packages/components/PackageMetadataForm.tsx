@@ -19,10 +19,10 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { 
   PackageDto, 
-  PackageMetadataDefinition, 
-  MetadataFieldType 
+  MetadataFieldType
 } from '../types';
 import { usePackageMetadata } from '../hooks';
+import {MetadataDefinition} from "@/features/items";
 
 interface PackageMetadataFormProps {
   packageData: PackageDto;
@@ -145,7 +145,7 @@ export const PackageMetadataForm: React.FC<PackageMetadataFormProps> = ({
     form.reset(initialValues);
   };
 
-  const renderField = (definition: PackageMetadataDefinition) => {
+  const renderField = (definition: MetadataDefinition) => {
     const validation = getFieldValidation(definition.id);
     
     return (
@@ -171,7 +171,7 @@ export const PackageMetadataForm: React.FC<PackageMetadataFormProps> = ({
               ) : definition.type === MetadataFieldType.Decimal ? (
                 <Input
                   type="number"
-                  step="any"
+                  step={definition.step != null ? (1 / Math.pow(10, definition.step)).toString() : "0.01"}
                   placeholder={`${t('enterValue')} ${definition.description.toLowerCase()}`}
                   {...field}
                   disabled={metadataFormState.isLoading}

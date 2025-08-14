@@ -3,8 +3,7 @@ import {Warehouse} from "@/features/users/data/user";
 import {CustomField} from "@/features/items/data/items";
 import {DeviceStatus} from "@/features/devices/data/device";
 import {UnitType} from "@/features/shared/data";
-import {ItemMetadataDefinition} from "@/features/items/types/ItemMetadataDefinition.dto";
-import {PackageMetadataDefinition} from "@/features/packages/types";
+import {MetadataDefinition} from "@/features/items/types";
 
 export interface UserInfo {
   id: string;
@@ -14,8 +13,8 @@ export interface UserInfo {
   currentWarehouse: string;
   binLocations: boolean;
   settings: ApplicationSettings;
-  itemMetaData: ItemMetadataDefinition[],
-  packageMetaData: PackageMetadataDefinition[],
+  itemMetaData: MetadataDefinition[],
+  packageMetaData: MetadataDefinition[],
   customFields: Record<string, CustomField[]>;
   superUser: boolean;
   deviceStatus?: DeviceStatus;

@@ -1,9 +1,10 @@
 import {MetadataFieldType} from '@/features/packages/types';
 
-export interface ItemMetadataDefinition {
+export interface MetadataDefinition {
   id: string;
   description: string;
   type: MetadataFieldType;
+  step?: number;
   required: boolean;
   readOnly: boolean;
   calculated?: Calculated;

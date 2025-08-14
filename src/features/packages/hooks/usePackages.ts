@@ -7,8 +7,8 @@ import {
   MovePackageRequest,
   PackageValidationResult, ObjectType,
   UpdatePackageMetadataRequest,
-  PackageMetadataDefinition
 } from '../types';
+import {MetadataDefinition} from "@/features/items";
 
 export const createPackage = async (request: CreatePackageRequest): Promise<PackageDto> => {
   try {
@@ -140,9 +140,9 @@ export const updatePackageMetadata = async (id: string, request: UpdatePackageMe
   }
 };
 
-export const getPackageMetadataDefinitions = async (): Promise<PackageMetadataDefinition[]> => {
+export const getMetadataDefinitions = async (): Promise<MetadataDefinition[]> => {
   try {
-    const response = await axiosInstance.get<PackageMetadataDefinition[]>('General/package-metadata-definitions');
+    const response = await axiosInstance.get<MetadataDefinition[]>('General/package-metadata-definitions');
     return response.data;
   } catch (error) {
     console.error('Error getting metadata definitions:', error);

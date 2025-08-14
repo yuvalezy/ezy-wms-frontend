@@ -8,7 +8,7 @@ import {
   UpdateItemBarCodeResponse,
   ItemDetails
 } from "@/features/items/data/items";
-import {ItemMetadataDefinition} from "../types/ItemMetadataDefinition.dto";
+import {MetadataDefinition} from "../types";
 import {UpdateItemMetadataRequest} from "../types/UpdateItemMetadataRequest.dto";
 import axios from "axios";
 
@@ -125,11 +125,11 @@ export const itemsService = {
     }
   },
 
-  async getItemMetadataDefinitions(): Promise<ItemMetadataDefinition[]> {
+  async getItemMetadataDefinitions(): Promise<MetadataDefinition[]> {
     try {
       const url = `general/item-metadata-definitions`;
 
-      const response = await axiosInstance.get<ItemMetadataDefinition[]>(url);
+      const response = await axiosInstance.get<MetadataDefinition[]>(url);
 
       return response.data;
     } catch (error) {

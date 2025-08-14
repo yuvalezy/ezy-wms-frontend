@@ -25,12 +25,12 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { Info } from 'lucide-react';
 import { ItemDetails } from '../data/items';
-import { ItemMetadataDefinition } from '../types/ItemMetadataDefinition.dto';
-import { MetadataFieldType } from '../../packages/types/MetadataFieldType.enum';
-import { useItemMetadata } from '../hooks/useItemMetadata';
+import { MetadataDefinition } from '@/features/items';
+import { MetadataFieldType } from '@/features/packages/types';
+import { useItemMetadata } from '@/features/items';
 
 interface ItemMetadataFormProps {
-  itemData: ItemDetails & { metadataDefinitions?: ItemMetadataDefinition[] };
+  itemData: ItemDetails & { metadataDefinitions?: MetadataDefinition[] };
   onSave?: (updatedItem: ItemDetails) => void;
   onCancel?: () => void;
   className?: string;
@@ -194,7 +194,7 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
     form.reset(initialValues);
   };
 
-  const renderField = (definition: ItemMetadataDefinition) => {
+  const renderField = (definition: MetadataDefinition) => {
     const validation = getFieldValidation(definition.id);
     const isCalculated = !!definition.calculated;
     const allowManualEdit = definition.calculated?.clearDependenciesOnManualEdit || false;
@@ -274,7 +274,7 @@ export const ItemMetadataForm: React.FC<ItemMetadataFormProps> = ({
               ) : definition.type === MetadataFieldType.Decimal ? (
                 <Input
                   type="number"
-                  step="any"
+                  step={definition.step != null ? (1 / Math.pow(10, definition.step)).toString() : "0.01"}
                   placeholder={isCalculated && !allowManualEdit ? 'Automatically calculated' : `${t('enterValue')} ${definition.description.toLowerCase()}`}
                   {...field}
                   disabled={isFieldDisabled}

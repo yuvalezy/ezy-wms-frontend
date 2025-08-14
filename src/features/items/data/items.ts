@@ -1,5 +1,5 @@
 import {PackageStockValue} from "@/components";
-import { ItemMetadataDefinition } from '../types/ItemMetadataDefinition.dto';
+import { MetadataDefinition } from '../types';
 
 export type BinLocation = {
   entry: number;

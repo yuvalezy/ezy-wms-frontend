@@ -1,7 +1,8 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { PackageMetadataDisplay } from './PackageMetadataDisplay';
-import { PackageDto, PackageStatus, MetadataFieldType, PackageMetadataDefinition } from '../types';
+import { PackageDto, PackageStatus, MetadataFieldType } from '../types';
+import {MetadataDefinition} from "@/features/items";
 
 // Mock i18n
 jest.mock('react-i18next', () => ({
@@ -23,7 +24,7 @@ jest.mock('react-i18next', () => ({
 }));
 
 const createMockPackage = (
-  metadataDefinitions: PackageMetadataDefinition[] = [],
+  metadataDefinitions: MetadataDefinition[] = [],
   customAttributes = {}
 ): PackageDto => ({
   id: '123e4567-e89b-12d3-a456-426614174000',
@@ -56,9 +57,9 @@ describe('PackageMetadataDisplay', () => {
 
   test('renders metadata fields with values', () => {
     const metadataDefinitions = [
-      { id: 'volume', description: 'Volume', type: MetadataFieldType.Decimal },
-      { id: 'note', description: 'Note', type: MetadataFieldType.String },
-      { id: 'expiryDate', description: 'Expiry Date', type: MetadataFieldType.Date }
+      { id: 'volume', description: 'Volume', type: MetadataFieldType.Decimal, required: false, readOnly: false },
+      { id: 'note', description: 'Note', type: MetadataFieldType.String, required: false, readOnly: false },
+      { id: 'expiryDate', description: 'Expiry Date', type: MetadataFieldType.Date, required: false, readOnly: false }
     ];
 
     const customAttributes = {
@@ -80,7 +81,7 @@ describe('PackageMetadataDisplay', () => {
 
   test('renders no values message when fields exist but no values set', () => {
     const metadataDefinitions = [
-      { id: 'volume', description: 'Volume', type: MetadataFieldType.Decimal }
+      { id: 'volume', description: 'Volume', type: MetadataFieldType.Decimal, required: false, readOnly: false }
     ];
 
     const packageData = createMockPackage(metadataDefinitions, {});
@@ -92,9 +93,9 @@ describe('PackageMetadataDisplay', () => {
 
   test('renders field type badges correctly', () => {
     const metadataDefinitions = [
-      { id: 'volume', description: 'Volume', type: MetadataFieldType.Decimal },
-      { id: 'note', description: 'Note', type: MetadataFieldType.String },
-      { id: 'expiryDate', description: 'Expiry Date', type: MetadataFieldType.Date }
+      { id: 'volume', description: 'Volume', type: MetadataFieldType.Decimal, required: false, readOnly: false },
+      { id: 'note', description: 'Note', type: MetadataFieldType.String, required: false, readOnly: false },
+      { id: 'expiryDate', description: 'Expiry Date', type: MetadataFieldType.Date, required: false, readOnly: false }
     ];
 
     const customAttributes = {
@@ -113,8 +114,8 @@ describe('PackageMetadataDisplay', () => {
   });
 
   test('handles null values gracefully', () => {
-    const metadataDefinitions = [
-      { id: 'volume', description: 'Volume', type: MetadataFieldType.Decimal }
+    const metadataDefinitions  = [
+      { id: 'volume', description: 'Volume', type: MetadataFieldType.Decimal, required: false, readOnly: false }
     ];
 
     const customAttributes = {
@@ -131,7 +132,7 @@ describe('PackageMetadataDisplay', () => {
 
   test('renders metadata title', () => {
     const metadataDefinitions = [
-      { id: 'volume', description: 'Volume', type: MetadataFieldType.Decimal }
+      { id: 'volume', description: 'Volume', type: MetadataFieldType.Decimal, required: false, readOnly: false }
     ];
 
     const customAttributes = { volume: 10.5 };
