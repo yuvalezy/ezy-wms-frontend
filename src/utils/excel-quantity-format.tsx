@@ -18,20 +18,29 @@ export interface ExcelQuantityResult {
  * Based on the same logic as stock-info but returns individual numeric values
  */
 export const formatQuantityForExcel = (params: ExcelQuantityFormatParams): ExcelQuantityResult => {
-  const { quantity, numInBuy, purPackUn } = params;
+  const { numInBuy, purPackUn } = params;
+  let { quantity } = params;
+  const isNegative = quantity < 0;
+  quantity *= -1;
   
   // Calculate packages (packs)
-  const pack = Math.floor(quantity / (numInBuy * purPackUn));
+  let pack = Math.floor(quantity / (numInBuy * purPackUn));
   
   // Calculate remaining quantity after removing full packages
   const remainingForDozens = quantity % (numInBuy * purPackUn);
   
   // Calculate dozens from remaining quantity
-  const dozen = Math.floor(remainingForDozens / numInBuy);
+  let dozen = Math.floor(remainingForDozens / numInBuy);
   
   // Calculate units from remaining quantity after dozens
-  const unit = remainingForDozens % numInBuy;
-  
+  let unit = remainingForDozens % numInBuy;
+
+  if (isNegative) {
+    pack *= -1;
+    dozen *= -1;
+    unit *= -1;
+  }
+
   return {
     pack,
     dozen,
