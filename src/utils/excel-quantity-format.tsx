@@ -14,39 +14,38 @@ export interface ExcelQuantityResult {
 }
 
 /**
- * Formats quantity into separate pack, dozen, and unit values for Excel export
- * Based on the same logic as stock-info but returns individual numeric values
+ * Formats quantity into separate pack, dozen, and unit values for Excel export.
+ * Handles both positive and negative quantities.
  */
 export const formatQuantityForExcel = (params: ExcelQuantityFormatParams): ExcelQuantityResult => {
-  const { numInBuy, purPackUn } = params;
-  let { quantity } = params;
-  const isNegative = quantity < 0;
-  quantity *= -1;
-  
-  // Calculate packages (packs)
-  let pack = Math.floor(quantity / (numInBuy * purPackUn));
-  
-  // Calculate remaining quantity after removing full packages
-  const remainingForDozens = quantity % (numInBuy * purPackUn);
-  
-  // Calculate dozens from remaining quantity
-  let dozen = Math.floor(remainingForDozens / numInBuy);
-  
-  // Calculate units from remaining quantity after dozens
-  let unit = remainingForDozens % numInBuy;
+  let { quantity, numInBuy, purPackUn } = params;
 
-  if (isNegative) {
-    pack *= -1;
-    dozen *= -1;
-    unit *= -1;
-  }
+  const isNegative = quantity < 0;
+  quantity = Math.abs(quantity);
+
+  // Calculate packages (packs)
+  const pack = Math.floor(quantity / (numInBuy * purPackUn));
+
+  // Remaining after full packages
+  const remainingForDozens = quantity % (numInBuy * purPackUn);
+
+  // Dozens
+  const dozen = Math.floor(remainingForDozens / numInBuy);
+
+  // Units
+  const unit = remainingForDozens % numInBuy;
+
+  const applySign = (value: number): number => {
+    return value === 0 ? 0 : value * (isNegative ? -1 : 1);
+  };
 
   return {
-    pack,
-    dozen,
-    unit
+    pack: applySign(pack),
+    dozen: applySign(dozen),
+    unit: applySign(unit)
   };
 };
+
 
 /**
  * Returns Excel headers for quantity columns based on unit selection settings
