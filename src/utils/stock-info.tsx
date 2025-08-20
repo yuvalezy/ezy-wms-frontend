@@ -16,12 +16,15 @@ export const useStockInfo = () => {
 
   return (params: StockInfoParams) => {
     const isNegative = params.quantity < 0;
-    const quantity = Math.abs(params.quantity);
+    let quantity = Math.abs(params.quantity);
     const purPackMsr = params.purPackMsr && params.purPackMsr.length > 0 ? params.purPackMsr : t('packUnit');
     const buyUnitMsr = params.buyUnitMsr && params.buyUnitMsr.length > 0 ? params.buyUnitMsr : t('buyUnit');
     const unitMsr = t('units');
     if (!unitSelection) {
       const defaultUnitMsr = defaultUnit === UnitType.Pack ? purPackMsr : defaultUnit === UnitType.Dozen ? buyUnitMsr : unitMsr;
+      if (defaultUnit === UnitType.Pack) {
+        quantity = Math.floor(quantity / params.purPackUn);
+      }
       return `${isNegative ? '-' : ''}${quantity} ${defaultUnitMsr}`;
     }
     const packages = Math.floor(quantity / (params.numInBuy * params.purPackUn));
