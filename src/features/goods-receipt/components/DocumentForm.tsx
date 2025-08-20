@@ -123,6 +123,9 @@ const DocumentForm: React.FC<DocumentFormProps> = ({onNewDocument, processType =
                 case "W":
                   errorType = t("noLinesForWarehouse");
                   break;
+                case "F":
+                  errorType = t("documentProcessed");
+                  break;
                 default:
                   errorType = t("isNotOpen");
                   break;

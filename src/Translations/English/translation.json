@@ -481,6 +481,7 @@
   "purchasingUoM": "Purchasing UoM",
   "packagingUoM": "Packaging UoM",
   "noLinesForWarehouse": "No lines found in selected document for current connected warehouse",
+  "documentProcessed": "Document has been processed",
   "loginError": "Error during login",
   "invalidGrant": "Invalid password or account disabled",
   "itemEntryNotFoundPicking": "Item {0} was not found in Picking {1}",
