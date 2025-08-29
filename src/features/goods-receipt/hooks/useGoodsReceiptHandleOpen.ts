@@ -1,4 +1,4 @@
-import {useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router";
 import {ProcessType} from "@/features/shared/data";
 
 export const useGoodsReceiptHandleOpen = (processType: ProcessType = ProcessType.Regular) => {

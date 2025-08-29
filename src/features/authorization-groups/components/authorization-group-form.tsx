@@ -13,7 +13,7 @@ import {useThemeContext} from "@/components";
 import ContentTheme from "@/components/ContentTheme";
 import {AuthorizationGroupFormData, RoleType} from "../data/authorization-group";
 import {authorizationGroupService} from "../data/authorization-group-service";
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router";
 import {useAuthorizationGroupRoles} from "@/features/authorization-groups/hooks/useAuthorizationGroupRoles";
 import {AuthorizationGroupFormSkeleton} from "./AuthorizationGroupFormSkeleton";
 

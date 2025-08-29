@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import './App.css';
-import {BrowserRouter, Route, Routes, useNavigate} from "react-router-dom";
+import {BrowserRouter, Route, Routes, useNavigate} from "react-router";
 import Login from "./Pages/Login";
 import HomePage from "./Pages/Home";
 import {AuthProvider, useAuth} from "@/components";

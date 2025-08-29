@@ -11,7 +11,7 @@ import {activeStatuses, processStatuses} from "@/features/goods-receipt/data/goo
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
 import {Separator} from "@/components/ui/separator";
 import InfoBox, {FullInfoBox, InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
-import {useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router";
 import {DocumentItem, ReceiptDocument} from "@/features/goods-receipt/data/goods-receipt";
 import {useGoodsReceiptHandleOpen} from "@/features/goods-receipt/hooks/useGoodsReceiptHandleOpen";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";

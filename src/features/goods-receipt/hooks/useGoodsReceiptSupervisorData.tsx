@@ -1,7 +1,7 @@
 import {useTranslation} from "react-i18next";
 import {useAuth} from "@/components/AppContext";
 import {useEffect, useRef, useState} from "react";
-import {useLocation} from "react-router-dom";
+import {useLocation} from "react-router";
 import {useThemeContext} from "@/components/ThemeContext";
 import { toast } from "sonner";
 import {ObjectAction, Status} from "@/features/shared/data/shared";

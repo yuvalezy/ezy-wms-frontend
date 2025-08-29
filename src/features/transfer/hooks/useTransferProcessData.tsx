@@ -1,4 +1,4 @@
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router";
 import {useAuth, useThemeContext} from "@/components";
 import {useEffect, useState} from "react";
 import {toast} from "sonner";

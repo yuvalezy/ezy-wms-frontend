@@ -1,6 +1,6 @@
 import {useTranslation} from "react-i18next";
 import React, {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import {useParams} from "react-router";
 import {useObjectName} from "@/hooks/useObjectName";
 import {useThemeContext} from "@/components/ThemeContext";
 import {useAuth} from "@/components";
