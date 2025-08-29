@@ -92,8 +92,8 @@ export const useGoodsReceiptAllData = (processType: ProcessType = ProcessType.Re
     }) ?? [];
   };
 
-  const handleExportExcel = () => {
-    exportToExcel({
+  const handleExportExcel = async () => {
+    await exportToExcel({
       name: "GoodsReceiptData",
       headers: getExcelHeaders,
       getData: excelData,

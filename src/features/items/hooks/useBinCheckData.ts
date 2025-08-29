@@ -75,8 +75,8 @@ export const useBinCheckData = () => {
     return headers;
   }
 
-  const handleExportExcel = () => {
-    exportToExcel({
+  const handleExportExcel = async () => {
+    await exportToExcel({
       name: "BinCheck",
       headers: getExcelHeaders,
       getData: excelData,

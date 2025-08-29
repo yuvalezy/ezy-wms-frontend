@@ -1,4 +1,4 @@
-import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
 import {saveAs} from "file-saver";
 
 interface ExportToExcelOptions {
@@ -8,20 +8,24 @@ interface ExportToExcelOptions {
     getData: () => (string | number)[][];
 }
 
-export function exportToExcel({name, fileName, headers, getData}: ExportToExcelOptions) {
-    let dataRows = getData();
-
-    const wb = XLSX.utils.book_new();
+export async function exportToExcel({name, fileName, headers, getData}: ExportToExcelOptions) {
+    const dataRows = getData();
     const wsHeaders = headers instanceof Function ? headers() : headers;
-    const wsData = [wsHeaders, ...dataRows];
 
-    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    // Create a new workbook and worksheet
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet(name);
 
-    // Add the worksheet to the workbook
-    XLSX.utils.book_append_sheet(wb, ws, name);
+    // Add headers
+    worksheet.addRow(wsHeaders);
 
-    // Generate a Blob containing the Excel file
-    const excelBuffer = XLSX.write(wb, {bookType: "xlsx", type: "array"});
-    const excelData = new Blob([excelBuffer], {type: ".xlsx"});
+    // Add data rows
+    dataRows.forEach(row => {
+        worksheet.addRow(row);
+    });
+
+    // Generate Excel buffer
+    const excelBuffer = await workbook.xlsx.writeBuffer();
+    const excelData = new Blob([excelBuffer], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
     saveAs(excelData, `${fileName}.xlsx`);
 }

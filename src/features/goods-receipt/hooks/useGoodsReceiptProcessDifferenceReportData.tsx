@@ -145,8 +145,8 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
       });
   }
 
-  const handleExportExcel = () => {
-    exportToExcel({
+  const handleExportExcel = async () => {
+    await exportToExcel({
       name: "DifferenceReport",
       headers: excelHeaders,
       getData: excelData,

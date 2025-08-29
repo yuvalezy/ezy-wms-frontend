@@ -118,10 +118,10 @@ export const usePackageCheckData = () => {
     t("createdBy")
   ];
 
-  const handleExportExcel = () => {
+  const handleExportExcel = async () => {
     if (!packageData) return;
 
-    exportToExcel({
+    await exportToExcel({
       name: "PackageCheck",
       headers: excelHeaders,
       getData: excelData,

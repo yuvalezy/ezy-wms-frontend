@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
-import {useSwipeable} from "react-swipeable";
 import {Edit, Edit3, MessageCircle, Package2} from "lucide-react";
 import {AddItemResponseMultipleValue, UnitType} from "@/features/shared/data";
 import {useAuth} from "@/components/AppContext";
@@ -65,27 +64,15 @@ export enum AlertActionType {
 const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComment}) => {
   const {t} = useTranslation();
   const {user} = useAuth();
-  const [swiped, setSwiped] = useState(false);
   const [showPackageContents, setShowPackageContents] = useState(false);
   const stockInfo = useStockInfo();
   const canEditItemMetadata = alert.itemCode && canEditMetadata(user);
 
-  const handlers = useSwipeable({
-    onSwipedLeft: () => {
-      setSwiped(true);
-      setTimeout(() => {
-        onAction(AlertActionType.Cancel);
-        setSwiped(false);
-      }, 200); // Show red background briefly
-    },
-    trackMouse: true
-  });
 
   const alertSeverity = mapSeverity(alert.severity);
 
   const getAlertClasses = () => {
-    let baseClasses = "p-4 rounded-md relative transition-transform duration-200";
-    if (swiped) baseClasses += " transform -translate-x-24";
+    let baseClasses = "p-4 rounded-md relative";
 
     let cancelled = alert.canceled ?? false;
     if (cancelled || (alert.multiple != null && alert.multiple.length > 0)) {
@@ -137,11 +124,8 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
   const hasPackageContents = alert.packageContents && alert.packageContents.length > 0;
 
   return (
-    <div className="relative p-1 rounded-md overflow-hidden" {...handlers}>
-      {swiped && (
-        <div className="absolute top-0 left-0 right-0 bottom-0 bg-red-500 opacity-70 transition-opacity duration-200 z-0"/>
-      )}
-      <div className={`relative z-10 ${getAlertClasses()}`}>
+    <div className="relative p-1 rounded-md overflow-hidden">
+      <div className={getAlertClasses()}>
         {alert.itemCode && user!.settings.scannerMode === ScannerMode.ItemCode && (
           <div className="mb-3">
             <div className="text-xs text-gray-500 mt-1">{t('item')}</div>
@@ -282,7 +266,7 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
             </div>
           )}
         </div>
-        {!(alert.canceled ?? false) && alertSeverity !== 'Negative' && !swiped && !alert.packageContents &&
+        {!(alert.canceled ?? false) && alertSeverity !== 'Negative' && !alert.packageContents &&
             <div className="absolute top-2 right-2 flex flex-col space-y-2">
                 <Edit3 className="h-5 w-5 cursor-pointer hover:text-blue-500" onClick={() => onAction(AlertActionType.Quantity)}/>
               {enableComment &&

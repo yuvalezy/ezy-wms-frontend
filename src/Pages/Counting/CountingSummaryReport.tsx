@@ -56,8 +56,8 @@ export default function CountingSummaryReport() {
     }) ?? [];
   };
 
-  const handleExportExcel = () => {
-    exportToExcel({
+  const handleExportExcel = async () => {
+    await exportToExcel({
       name: "CountingData",
       headers: getExcelHeaders,
       getData: excelData,
