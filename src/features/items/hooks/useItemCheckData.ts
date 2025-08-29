@@ -17,13 +17,9 @@ export const useItemCheckData = () => {
   const [isChecking, setIsChecking] = React.useState(false);
   const [isUpdating, setIsUpdating] = React.useState(false);
   const [isSettingBarcode, setIsSettingBarcode] = React.useState(false);
-  const {setLoading, setError} = useThemeContext();
+  const { setError} = useThemeContext();
   const barcodeInputRef = useRef<HTMLInputElement>(null);
   const codeInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    setCodeFocus();
-  }, [barcodeInputRef, codeInputRef]);
 
   const setCodeFocus = () => {
     if (user!.settings.scannerMode === ScannerMode.ItemCode) {
@@ -32,6 +28,10 @@ export const useItemCheckData = () => {
     }
     setTimeout(() => barcodeInputRef?.current?.focus(), 1);
   }
+
+  useEffect(() => {
+    setCodeFocus();
+  }, [barcodeInputRef, codeInputRef, setCodeFocus]);
 
   function handleCheckSubmit(emptyAlert: boolean = true) {
     let barcodeLength = barcodeInput.length === 0;

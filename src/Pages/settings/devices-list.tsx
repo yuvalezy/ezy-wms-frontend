@@ -16,7 +16,7 @@ import ContentTheme from "@/components/ContentTheme";
 
 const DevicesList: React.FC = () => {
   const {t} = useTranslation();
-  const {setLoading, setError} = useThemeContext();
+  const {setError} = useThemeContext();
 
   const [devices, setDevices] = useState<Device[]>([]);
   const [filters, setFilters] = useState<DeviceFilters>({});

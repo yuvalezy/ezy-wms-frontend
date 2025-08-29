@@ -12,7 +12,6 @@ export const useGoodsReceiptAllDetailsData = (props: GRPOAllDetailProps) => {
   const [enableUpdate, setEnableUpdate] = useState(false);
   const [checkedRows, setCheckedRows] = useState<{ [key: string]: boolean }>({}); // State to store checked rows
   const [quantityChanges, setQuantityChanges] = useState<{ [key: string]: number }>({}); // State to store quantity changes
-  const [isLoadingDetails, setIsLoadingDetails] = useState(false);
 
   function update() {
     try {
@@ -62,7 +61,6 @@ export const useGoodsReceiptAllDetailsData = (props: GRPOAllDetailProps) => {
     handleCheckboxChange,
     handleQuantityChange,
     setIsOpen,
-    isLoadingDetails
   }
 }
 

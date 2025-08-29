@@ -1,7 +1,7 @@
 import {act, renderHook} from '@testing-library/react';
-import {useItemMetadata} from './useItemMetadata';
+import {useItemMetadata} from '@/features/items';
 import {MetadataDefinition} from '../types';
-import {MetadataFieldType} from '../../packages/types/MetadataFieldType.enum';
+import {MetadataFieldType} from '@/features/packages/types';
 import {ItemDetails} from '../data/items';
 
 // Mock ThemeContext

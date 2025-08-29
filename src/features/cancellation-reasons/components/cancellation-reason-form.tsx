@@ -18,7 +18,7 @@ interface CancellationReasonFormProps {
 
 const CancellationReasonForm: React.FC<CancellationReasonFormProps> = ({reason, onClose}) => {
   const {t} = useTranslation();
-  const {setLoading, setError} = useThemeContext();
+  const {setError} = useThemeContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<CancellationReasonFormData>({

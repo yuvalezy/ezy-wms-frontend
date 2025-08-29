@@ -1,7 +1,7 @@
 import {axiosInstance} from "@/utils/axios-instance";
 import {BinContentResponse, BinLocation, ItemBinStockResponse, ItemCheckResponse, ItemDetails, ItemInfoResponse, UpdateItemBarCodeResponse} from "@/features/items/data/items";
 import {MetadataDefinition} from "../types";
-import {UpdateItemMetadataRequest} from "../types/UpdateItemMetadataRequest.dto";
+import {UpdateItemMetadataRequest} from "@/features/items";
 import axios from "axios";
 
 export const itemsService = {

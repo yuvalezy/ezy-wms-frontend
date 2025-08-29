@@ -21,7 +21,7 @@ interface DeviceNameFormProps {
 
 const DeviceNameForm: React.FC<DeviceNameFormProps> = ({device, open, onOpenChange, onClose}) => {
   const {t} = useTranslation();
-  const {setLoading, setError} = useThemeContext();
+  const {setError} = useThemeContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<UpdateDeviceNameRequest>({

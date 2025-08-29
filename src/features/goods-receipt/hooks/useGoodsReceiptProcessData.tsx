@@ -12,7 +12,7 @@ import {StringFormat} from "@/utils/string-utils";
 import {DocumentAddItemResponse, ReceiptDocument} from "@/features/goods-receipt/data/goods-receipt";
 import {goodsReceiptService} from "@/features/goods-receipt/data/goods-receipt-service";
 
-export const useGoodsReceiptProcessData = (processType: ProcessType) => {
+export const useGoodsReceiptProcessData = () => {
   const {scanCode} = useParams();
   const {t} = useTranslation();
   const {dateTimeFormat} = useDateTimeFormat();

@@ -31,7 +31,7 @@ export default function GoodsReceiptProcess({processType = ProcessType.Regular}:
     currentPackage,
     setCurrentPackage,
     isProcessing,
-  } = useGoodsReceiptProcessData(processType);
+  } = useGoodsReceiptProcessData();
   const navigate = useNavigate();
   const {user} = useAuth();
 

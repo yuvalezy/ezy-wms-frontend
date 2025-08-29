@@ -29,7 +29,6 @@ export function ResponsiveTableActions({
 }: ResponsiveTableActionsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [visibleCount, setVisibleCount] = useState(0);
-  const [containerWidth, setContainerWidth] = useState(0);
 
   // Filter out hidden actions
   const visibleActions = actions.filter(action => !action.hidden);
@@ -43,7 +42,6 @@ export function ResponsiveTableActions({
       if (!container) return;
 
       const width = container.offsetWidth;
-      setContainerWidth(width);
 
       // Constants for calculation
       const dropdownButtonWidth = 32; // Width of the "..." button

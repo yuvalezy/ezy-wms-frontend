@@ -12,7 +12,6 @@ export * from './ProcessComment';
 export * from './Processes';
 export * from './ProcessQuantity';
 export * from './ProtectedRoute';
-export * from './ScrollableContent';
 export * from './ThemeContext';
 export * from './Unauthorized';
 export * from './ui';

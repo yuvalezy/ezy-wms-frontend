@@ -80,7 +80,7 @@ export const useBinCheckData = () => {
       name: "BinCheck",
       headers: getExcelHeaders,
       getData: excelData,
-      fileName: `bincheck_${binRef?.current?.getBin()}`
+      fileName: `binCheck_${binRef?.current?.getBin()}`
     });
   };
 

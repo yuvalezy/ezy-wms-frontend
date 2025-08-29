@@ -9,19 +9,19 @@ export const cancellationReasonService = {
     if (filters?.includeDisabled !== undefined) params.IncludeDisabled = filters.includeDisabled;
     if (filters?.searchTerm !== undefined && filters.searchTerm.length > 0) params.searchTerm = filters.searchTerm;
 
-    const response = await axiosInstance.get<CancellationReason[]>("cancellationreason", { params });
+    const response = await axiosInstance.get<CancellationReason[]>("cancellationReason", { params });
     return response.data;
   },
 
   // Get a single cancellation reason by ID
   async getById(id: string): Promise<CancellationReason> {
-    const response = await axiosInstance.get<CancellationReason>(`cancellationreason/${id}`);
+    const response = await axiosInstance.get<CancellationReason>(`cancellationReason/${id}`);
     return response.data;
   },
 
   // Create a new cancellation reason
   async create(data: CancellationReasonFormData): Promise<CancellationReason> {
-    const response = await axiosInstance.post<CancellationReason>("cancellationreason", data);
+    const response = await axiosInstance.post<CancellationReason>("cancellationReason", data);
     return response.data;
   },
 
@@ -32,12 +32,12 @@ export const cancellationReasonService = {
       ...data
     };
     
-    const response = await axiosInstance.put<CancellationReason>("cancellationreason", updateRequest);
+    const response = await axiosInstance.put<CancellationReason>("cancellationReason", updateRequest);
     return response.data;
   },
 
   // Delete a cancellation reason
   async delete(id: string): Promise<void> {
-    await axiosInstance.delete(`cancellationreason/${id}`);
+    await axiosInstance.delete(`cancellationReason/${id}`);
   }
 };

@@ -3,7 +3,7 @@ import {ServerUrl} from '@/utils/axios-instance';
 
 export const useBrowserUnload = () => {
   useEffect(() => {
-    const handleBeforeUnload = async (event: BeforeUnloadEvent) => {
+    const handleBeforeUnload = async () => {
       // Attempt to call logout when browser is closing
       try {
         // Use sendBeacon for more reliable API call on page unload

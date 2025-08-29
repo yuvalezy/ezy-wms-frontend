@@ -63,7 +63,7 @@ export const userService = {
 
   // Get authorization groups
   async getAuthorizationGroups(): Promise<AuthorizationGroup[]> {
-    const response = await axiosInstance.get<AuthorizationGroup[]>("authorizationgroup");
+    const response = await axiosInstance.get<AuthorizationGroup[]>("authorizationGroup");
     return response.data;
   },
 

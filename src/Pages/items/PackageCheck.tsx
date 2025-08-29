@@ -2,10 +2,10 @@ import React, {useEffect} from "react";
 import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import PackageScanner from "../../components/PackageScanner";
-import {usePackageCheckData} from "../../features/items/hooks/usePackageCheckData";
-import {PackageCheckResult} from "../../features/items/components/PackageCheckResult";
-import {PackageCheckFormSkeleton} from "../../features/items/components/PackageCheckFormSkeleton";
-import {PackageCheckResultSkeleton} from "../../features/items/components/PackageCheckResultSkeleton";
+import {usePackageCheckData} from "@/features/items";
+import {PackageCheckResult} from "@/features/items";
+import {PackageCheckFormSkeleton} from "@/features/items/components/PackageCheckFormSkeleton";
+import {PackageCheckResultSkeleton} from "@/features/items/components/PackageCheckResultSkeleton";
 import {useNavigate, useParams} from "react-router";
 
 export function PackageCheck() {
@@ -16,10 +16,8 @@ export function PackageCheck() {
   const {
     packageData,
     packageRef,
-    user,
     isCheckingPackage,
     isRefreshingPackage,
-    onScan,
     onPackageClear,
     handleExportExcel,
     executePackageCheck

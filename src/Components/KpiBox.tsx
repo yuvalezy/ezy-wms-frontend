@@ -13,7 +13,7 @@ interface KpiBoxProps {
   borderColor?: string;
 }
 
-export function KpiBox({ title, value, icon: Icon, className, backgroundColor, iconColor, route, borderColor }: KpiBoxProps) {
+export function KpiBox({ title, value, icon: Icon, className, iconColor, route, borderColor }: KpiBoxProps) {
   const cardContent = (
     <Card className={`${className || ''} group relative overflow-hidden bg-white hover:shadow-lg hover:shadow-gray-200/50 transition-all duration-300 cursor-pointer min-h-[140px] md:min-h-[160px] border border-gray-200 hover:border-gray-300 rounded-xl ${borderColor || 'border-l-blue-500'} border-l-4 hover:border-l-8 hover:-translate-y-1 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-offset-2 flex flex-col`}>
       <CardHeader className="flex flex-row items-start justify-between py-3 px-4 md:px-6 flex-shrink-0">
