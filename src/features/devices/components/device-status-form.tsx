@@ -9,7 +9,7 @@ import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/
 import {Save, X} from "lucide-react";
 import {useThemeContext} from "@/components";
 import {useAuth} from "@/components/AppContext";
-import {Device, UpdateDeviceStatusRequest, DeviceStatus} from "../data/device";
+import {Device, DeviceStatus, UpdateDeviceStatusRequest} from "../data/device";
 import {deviceService} from "../data/device-service";
 import {getOrCreateDeviceUUID} from "@/utils/deviceUtils";
 import {DeviceStatusFormSkeleton} from "./DeviceStatusFormSkeleton";

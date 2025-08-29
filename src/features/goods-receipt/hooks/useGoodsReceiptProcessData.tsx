@@ -5,11 +5,7 @@ import {useEffect, useRef, useState} from "react";
 import {AddItemValue, BarCodeScannerRef, PackageValue} from "@/components/BarCodeScanner";
 import {BoxConfirmationDialogRef} from "@/components/BoxConfirmationDialog";
 import {useThemeContext} from "@/components/ThemeContext";
-import {
-  AddItemResponseMultipleValue, ProcessType,
-  UpdateLineParameters,
-  UpdateLineReturnValue
-} from "@/features/shared/data/shared";
+import {AddItemResponseMultipleValue, ProcessType, UpdateLineParameters, UpdateLineReturnValue} from "@/features/shared/data/shared";
 import {AlertActionType, AlertSeverity, ProcessAlertValue} from "@/components/ProcessAlert";
 import {ProcessesRef} from "@/components/Processes";
 import {StringFormat} from "@/utils/string-utils";

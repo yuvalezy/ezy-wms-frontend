@@ -9,7 +9,7 @@ import PickingCard from "@/features/picking/components/picking-card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Button} from "@/components/ui/button";
 import {Progress} from "@/components/ui/progress";
-import {CheckCircle, RefreshCw, XCircle, Eye} from "lucide-react";
+import {CheckCircle, Eye, RefreshCw, XCircle} from "lucide-react";
 import {useNavigate} from "react-router";
 import {useAuth} from "@/components/AppContext";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";

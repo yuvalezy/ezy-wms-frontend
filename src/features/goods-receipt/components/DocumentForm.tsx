@@ -5,31 +5,14 @@ import {useTranslation} from "react-i18next";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
+import {Tabs, TabsContent, TabsList, TabsTrigger,} from "@/components/ui/tabs";
 import {PlusCircle} from "lucide-react"; // Icon for create button
-
 import {useObjectName} from "@/hooks/useObjectName";
 import {StringFormat} from "@/utils/string-utils";
 import {Card} from "@/components";
 import {goodsReceiptService} from "@/features/goods-receipt/data/goods-receipt-service";
-import {
-  BusinessPartner,
-  DocumentItem,
-  GoodsReceiptType,
-  ReceiptDocument
-} from "@/features/goods-receipt/data/goods-receipt";
+import {BusinessPartner, DocumentItem, GoodsReceiptType, ReceiptDocument} from "@/features/goods-receipt/data/goods-receipt";
 import {ProcessType} from "@/features/shared/data";
 import {DocumentFormSkeleton} from "./DocumentFormSkeleton";
 

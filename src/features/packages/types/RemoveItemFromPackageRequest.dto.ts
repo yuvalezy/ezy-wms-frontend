@@ -1,4 +1,4 @@
-import { ObjectType } from './ObjectType.enum';
+import {ObjectType} from './ObjectType.enum';
 
 export interface RemoveItemFromPackageRequest {
   packageId: string;

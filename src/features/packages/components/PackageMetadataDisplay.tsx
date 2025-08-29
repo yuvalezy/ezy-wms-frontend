@@ -1,20 +1,11 @@
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import { Edit } from 'lucide-react';
+import React, {useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {Button} from '@/components/ui/button';
+import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,} from '@/components/ui/dialog';
+import {Edit} from 'lucide-react';
 import InfoBox from '@/components/InfoBox';
-import { 
-  PackageDto, 
-  MetadataFieldType
-} from '../types';
-import { PackageMetadataForm } from './PackageMetadataForm';
+import {MetadataFieldType, PackageDto} from '../types';
+import {PackageMetadataForm} from './PackageMetadataForm';
 import {useAuth} from "@/Components";
 
 interface PackageMetadataDisplayProps {

@@ -1,13 +1,11 @@
 import React from "react";
 import ContentTheme from "@/components/ContentTheme";
-import { useNavigate} from "react-router";
+import {useNavigate} from "react-router";
 import {useTranslation} from "react-i18next";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import GoodsReceiptProcessDifferenceTable from "@/features/goods-receipt/components/GoodsReceiptProcessDifferenceTable";
 import {FullInfoBox, InfoBoxValue} from "@/components/InfoBox";
-import {
-  useGoodsReceiptProcessDifferenceReportData
-} from "@/features/goods-receipt/hooks/useGoodsReceiptProcessDifferenceReportData";
+import {useGoodsReceiptProcessDifferenceReportData} from "@/features/goods-receipt/hooks/useGoodsReceiptProcessDifferenceReportData";
 import {Button, useAuth} from "@/components";
 import {useThemeContext} from "@/components/ThemeContext";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";

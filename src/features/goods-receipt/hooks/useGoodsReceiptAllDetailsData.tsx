@@ -1,8 +1,6 @@
-import {DetailUpdateParameters, Status} from "@/features/shared/data/shared";
+import {DetailUpdateParameters} from "@/features/shared/data/shared";
 import {ProcessType} from "@/features/shared/data";
-import {
-  GoodsReceiptAllDetail, GoodsReceiptAllLine
-} from "@/features/goods-receipt/data/goods-receipt-reports";
+import {GoodsReceiptAllDetail, GoodsReceiptAllLine} from "@/features/goods-receipt/data/goods-receipt-reports";
 import {useThemeContext} from "@/components/ThemeContext";
 import {useState} from "react";
 

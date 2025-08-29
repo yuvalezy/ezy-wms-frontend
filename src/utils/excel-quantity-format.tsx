@@ -1,4 +1,4 @@
-import { TFunction } from "i18next";
+import {TFunction} from "i18next";
 import {formatNumber} from "@/utils/number-utils";
 
 export interface ExcelQuantityFormatParams {

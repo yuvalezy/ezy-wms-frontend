@@ -1,11 +1,6 @@
-import {axiosInstance, None} from "@/utils/axios-instance";
+import {axiosInstance} from "@/utils/axios-instance";
 
-import {
-  Counting,
-  CountingActionResponse,
-  CountingAddItemResponse, CountingContent,
-  CountingSummaryReportData, OrderBy
-} from "@/features/counting/data/counting";
+import {Counting, CountingActionResponse, CountingAddItemResponse, CountingContent, CountingSummaryReportData, OrderBy} from "@/features/counting/data/counting";
 import {Status, UnitType, UpdateLineParameters, UpdateLineReturnValue} from "@/features/shared/data";
 
 export const countingService = {

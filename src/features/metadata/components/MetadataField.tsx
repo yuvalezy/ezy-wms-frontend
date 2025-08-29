@@ -1,23 +1,13 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import { Info } from 'lucide-react';
-import { MetadataDefinition } from '@/features/items';
-import { MetadataFieldType } from '@/features/packages/types';
-import { Control } from 'react-hook-form';
+import {useTranslation} from 'react-i18next';
+import {FormControl, FormField, FormItem, FormLabel, FormMessage,} from '@/components/ui/form';
+import {Input} from '@/components/ui/input';
+import {Button} from '@/components/ui/button';
+import {Popover, PopoverContent, PopoverTrigger,} from '@/components/ui/popover';
+import {Info} from 'lucide-react';
+import {MetadataDefinition} from '@/features/items';
+import {MetadataFieldType} from '@/features/packages/types';
+import {Control} from 'react-hook-form';
 
 interface MetadataFieldProps {
   definition: MetadataDefinition;

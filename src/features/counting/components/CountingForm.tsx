@@ -1,10 +1,10 @@
 import React, {useState} from "react";
 import {useThemeContext} from "@/components/ThemeContext";
 import {useTranslation} from "react-i18next";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { PlusCircle } from "lucide-react";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
+import {PlusCircle} from "lucide-react";
 import {Counting} from "@/features/counting/data/counting";
 import {countingService} from "@/features/counting/data/counting-service";
 import {CountingFormSkeleton} from "./CountingFormSkeleton";

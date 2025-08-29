@@ -1,14 +1,12 @@
-import React, { useEffect } from "react";
+import React, {useEffect} from "react";
 import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import PackageScanner from "../../components/PackageScanner";
-import {Alert, AlertDescription} from "@/components/ui/alert";
-import {AlertTriangle} from 'lucide-react';
 import {usePackageCheckData} from "../../features/items/hooks/usePackageCheckData";
 import {PackageCheckResult} from "../../features/items/components/PackageCheckResult";
 import {PackageCheckFormSkeleton} from "../../features/items/components/PackageCheckFormSkeleton";
 import {PackageCheckResultSkeleton} from "../../features/items/components/PackageCheckResultSkeleton";
-import {useParams, useNavigate} from "react-router";
+import {useNavigate, useParams} from "react-router";
 
 export function PackageCheck() {
   const {t} = useTranslation();

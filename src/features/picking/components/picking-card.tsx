@@ -2,7 +2,7 @@ import React from "react";
 import {useNavigate} from "react-router";
 import {useAuth} from "@/components/AppContext";
 import {useTranslation} from "react-i18next";
-import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardContent, CardFooter} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {Progress} from "@/components/ui/progress";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";

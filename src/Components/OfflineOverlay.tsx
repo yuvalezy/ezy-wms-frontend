@@ -1,6 +1,6 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { WifiOff } from 'lucide-react';
+import {useTranslation} from 'react-i18next';
+import {WifiOff} from 'lucide-react';
 
 export const OfflineOverlay: React.FC = () => {
   const { t } = useTranslation();

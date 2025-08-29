@@ -1,6 +1,6 @@
 import React from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {Skeleton} from '@/components/ui/skeleton';
+import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
 
 export const ItemCheckResultSkeleton: React.FC = () => {
   return (

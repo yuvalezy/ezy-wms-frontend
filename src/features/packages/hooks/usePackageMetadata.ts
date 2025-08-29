@@ -1,16 +1,8 @@
-import { useCallback, useMemo } from 'react';
-import { useAuth } from "@/Components";
-import {
-  UpdatePackageMetadataRequest,
-  PackageDto
-} from '../types';
-import { updatePackageMetadata } from './usePackages';
-import {
-  useMetadataBase,
-  useCalculatedFields,
-  ExtendedMetadataDefinition,
-  convertFieldValueForApi
-} from '@/features/metadata';
+import {useCallback, useMemo} from 'react';
+import {useAuth} from "@/Components";
+import {PackageDto, UpdatePackageMetadataRequest} from '../types';
+import {updatePackageMetadata} from './usePackages';
+import {convertFieldValueForApi, ExtendedMetadataDefinition, useCalculatedFields, useMetadataBase} from '@/features/metadata';
 import {MetadataDefinition} from "@/features/items";
 
 export const usePackageMetadata = (packageData?: PackageDto, metadataDefinitions?: MetadataDefinition[]) => {

@@ -1,6 +1,6 @@
 import React, {createContext, useCallback, useContext, useState} from "react";
-import { Loader2 } from "lucide-react";
-import { toast } from "sonner";
+import {Loader2} from "lucide-react";
+import {toast} from "sonner";
 
 const ThemeContext = createContext<{
     loading: boolean;

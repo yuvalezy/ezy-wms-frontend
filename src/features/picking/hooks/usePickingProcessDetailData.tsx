@@ -1,13 +1,6 @@
 import {useNavigate, useParams} from "react-router";
 import {useEffect, useRef, useState} from "react";
-import {
-  AddItemValue,
-  BarCodeScannerRef,
-  BinLocationScannerRef,
-  BoxConfirmationDialogRef,
-  PackageValue, useAuth,
-  useThemeContext
-} from "@/components";
+import {AddItemValue, BarCodeScannerRef, BinLocationScannerRef, BoxConfirmationDialogRef, PackageValue, useAuth, useThemeContext} from "@/components";
 import {toast} from "sonner";
 import {useTranslation} from "react-i18next";
 

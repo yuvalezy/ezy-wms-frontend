@@ -1,5 +1,5 @@
-import { axiosInstance } from '@/utils/axios-instance';
-import { PackageLocationHistoryDto } from '../types';
+import {axiosInstance} from '@/utils/axios-instance';
+import {PackageLocationHistoryDto} from '../types';
 
 export const getPackageMovements = async (id: string): Promise<PackageLocationHistoryDto[]> => {
   try {

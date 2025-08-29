@@ -1,4 +1,4 @@
-import { AddItemReturnValueType } from "@/features/shared/data";
+import {AddItemReturnValueType} from "@/features/shared/data";
 import {StringFormat} from "@/utils/string-utils";
 
 export interface ErrorData {

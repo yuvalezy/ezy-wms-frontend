@@ -9,7 +9,7 @@ import {AddItemValue, PackageValue} from './types';
 import {ItemInfoResponse} from "@/features/items/data/items";
 import {itemsService} from "@/features/items/data/items-service";
 import {StringFormat} from "@/utils/string-utils";
-import { ScannerMode } from '@/features/login/data/login';
+import {ScannerMode} from '@/features/login/data/login';
 
 interface UseBarCodeScannerProps {
   enabled: boolean;

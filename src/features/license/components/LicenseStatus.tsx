@@ -3,7 +3,7 @@ import {useTranslation} from "react-i18next";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";
 import {Button} from "@/components/ui/button";
-import {Shield, AlertCircle, CheckCircle, Clock, X, RefreshCw} from "lucide-react";
+import {AlertCircle, CheckCircle, Clock, RefreshCw, Shield, X} from "lucide-react";
 import {LicenseStatusResponse, LicenseWarning, LicenseWarningType} from "../data/license";
 import {AccountStatus} from "@/features/account/data/account";
 

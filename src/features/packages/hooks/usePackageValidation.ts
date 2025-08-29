@@ -1,5 +1,5 @@
-import { axiosInstance } from '@/utils/axios-instance';
-import { PackageInconsistencyDto } from '../types';
+import {axiosInstance} from '@/utils/axios-instance';
+import {PackageInconsistencyDto} from '../types';
 
 export const validateConsistency = async (whsCode?: string): Promise<PackageInconsistencyDto[]> => {
   try {

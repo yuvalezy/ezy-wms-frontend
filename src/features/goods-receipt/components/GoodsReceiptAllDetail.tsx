@@ -2,28 +2,15 @@ import React, {forwardRef, useImperativeHandle, useMemo} from "react";
 import {useTranslation} from "react-i18next";
 import {Button} from "@/components/ui/button";
 import {Checkbox} from "@/components/ui/checkbox";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,} from "@/components/ui/dialog";
 import {Input} from "@/components/ui/input";
 import {GoodsReceiptAllLine} from "@/features/goods-receipt/data/goods-receipt-reports";
 import {UnitType} from "@/features/shared/data/shared";
-import {Card, CardContent} from "@/components/ui/card";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import GoodsReceiptAllDetailSkeleton from "@/features/goods-receipt/components/GoodsReceiptAllDetailSkeleton";
 
-import {
-  GRPOAllDetailProps,
-  useGoodsReceiptAllDetailsData
-} from "@/features/goods-receipt/hooks/useGoodsReceiptAllDetailsData";
+import {GRPOAllDetailProps, useGoodsReceiptAllDetailsData} from "@/features/goods-receipt/hooks/useGoodsReceiptAllDetailsData";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
-import InfoBox, {FullInfoBox, InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
 import {Label} from "@/components";
 import {formatNumber} from "@/utils/number-utils";
 

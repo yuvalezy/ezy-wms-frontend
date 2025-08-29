@@ -3,7 +3,7 @@ import {useAuth} from "@/components/AppContext";
 import {useEffect, useRef, useState} from "react";
 import {useLocation} from "react-router";
 import {useThemeContext} from "@/components/ThemeContext";
-import { toast } from "sonner";
+import {toast} from "sonner";
 import {ObjectAction, Status} from "@/features/shared/data/shared";
 import {DocumentListDialogRef} from "@/features/goods-receipt/components/DocumentListDialog";
 import {ReceiptDocument} from "@/features/goods-receipt/data/goods-receipt";

@@ -1,6 +1,6 @@
 import React from "react";
-import { Link } from "react-router";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {Link} from "react-router";
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 
 interface KpiBoxProps {
   title: string;

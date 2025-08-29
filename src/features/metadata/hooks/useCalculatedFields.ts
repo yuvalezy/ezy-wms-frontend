@@ -1,10 +1,6 @@
-import { useState, useCallback } from 'react';
-import { 
-  MetadataFieldValue, 
-  ExtendedMetadataDefinition,
-  CalculatedFieldConfig 
-} from '../types';
-import { getFieldValuesRecord } from '../utils';
+import {useCallback, useState} from 'react';
+import {ExtendedMetadataDefinition, MetadataFieldValue} from '../types';
+import {getFieldValuesRecord} from '../utils';
 
 export interface UseCalculatedFieldsOptions {
   definitions: ExtendedMetadataDefinition[];

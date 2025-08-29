@@ -1,5 +1,5 @@
 import {axiosInstance} from "@/utils/axios-instance";
-import {Device, DeviceFilters, DeviceAuditEntry, UpdateDeviceStatusRequest, UpdateDeviceNameRequest} from "./device";
+import {Device, DeviceAuditEntry, DeviceFilters, UpdateDeviceNameRequest, UpdateDeviceStatusRequest} from "./device";
 
 export const deviceService = {
   // Get all devices with optional filters

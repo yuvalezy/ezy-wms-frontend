@@ -1,9 +1,8 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { BaseMetadataForm } from '@/features/metadata/components';
-import { ItemDetails } from '../data/items';
-import { MetadataDefinition } from '@/features/items';
-import { useItemMetadata } from '@/features/items';
+import {useTranslation} from 'react-i18next';
+import {BaseMetadataForm} from '@/features/metadata/components';
+import {ItemDetails} from '../data/items';
+import {MetadataDefinition, useItemMetadata} from '@/features/items';
 
 interface ItemMetadataFormProps {
   itemData: ItemDetails & { metadataDefinitions?: MetadataDefinition[] };

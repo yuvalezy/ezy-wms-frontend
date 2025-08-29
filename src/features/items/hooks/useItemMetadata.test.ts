@@ -1,8 +1,8 @@
-import { renderHook, act } from '@testing-library/react';
-import { useItemMetadata } from './useItemMetadata';
-import { MetadataDefinition } from '../types';
-import { MetadataFieldType } from '../../packages/types/MetadataFieldType.enum';
-import { ItemDetails } from '../data/items';
+import {act, renderHook} from '@testing-library/react';
+import {useItemMetadata} from './useItemMetadata';
+import {MetadataDefinition} from '../types';
+import {MetadataFieldType} from '../../packages/types/MetadataFieldType.enum';
+import {ItemDetails} from '../data/items';
 
 // Mock ThemeContext
 const mockSetError = jest.fn();

@@ -1,15 +1,9 @@
-import React, {forwardRef, useImperativeHandle, useRef} from 'react';
+import React, {forwardRef, useImperativeHandle} from 'react';
 import {useTranslation} from "react-i18next";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { ScrollArea, Separator } from "@/components/ui";
-import { X, ArrowRight } from 'lucide-react';
+import {Button} from "@/components/ui/button";
+import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle,} from "@/components/ui/dialog";
+import {ScrollArea, Separator} from "@/components/ui";
+import {ArrowRight, X} from 'lucide-react';
 
 import {ItemInfoResponse} from "@/features/items/data/items";
 

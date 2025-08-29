@@ -2,26 +2,12 @@ import React, {forwardRef, useImperativeHandle, useState} from "react";
 import {useThemeContext} from "@/components";
 import {useTranslation} from "react-i18next";
 import {DetailUpdateParameters, Status} from "@/features/shared/data";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
+import {Button} from "@/components/ui/button";
+import {Checkbox} from "@/components/ui/checkbox";
+import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,} from "@/components/ui/dialog";
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
 import {transferService} from "@/features/transfer/data/transefer-service";
 import {TargetItemDetail, TransferContent, TransferContentBin} from "@/features/transfer/data/transfer";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";

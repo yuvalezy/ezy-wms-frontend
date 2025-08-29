@@ -1,7 +1,7 @@
 import React from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Card } from '@/components/ui/card';
-import { Grid3x3, Package, Box } from 'lucide-react';
+import {Skeleton} from '@/components/ui/skeleton';
+import {Card} from '@/components/ui/card';
+import {Box, Grid3x3, Package} from 'lucide-react';
 
 export const ItemCheckStockSkeleton: React.FC = () => {
   return (

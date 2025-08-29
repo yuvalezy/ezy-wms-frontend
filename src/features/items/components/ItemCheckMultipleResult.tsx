@@ -1,9 +1,9 @@
 import React from "react";
 import {useTranslation} from "react-i18next";
-import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertTriangle, X } from 'lucide-react';
+import {Button} from "@/components/ui/button";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
+import {Alert, AlertDescription} from "@/components/ui/alert";
+import {AlertTriangle, X} from 'lucide-react';
 import {ItemCheckResponse} from "@/features/items/data/items";
 
 interface ItemCheckMultipleResultProps {

@@ -1,24 +1,7 @@
 import {useTranslation} from 'react-i18next';
 import {useMemo} from 'react'; // Import useMemo
 import {useAuth} from "@/components";
-import {
-  BarChart3,
-  Boxes,
-  CheckCircle,
-  ClipboardList,
-  Factory,
-  Move,
-  Package,
-  PackageCheckIcon,
-  Shield,
-  ShoppingCart,
-  Smartphone,
-  TrendingUp,
-  Truck,
-  Users,
-  SendHorizontal,
-} from 'lucide-react';
-import {AccountState} from "@/features/account/data/account";
+import {BarChart3, Boxes, CheckCircle, ClipboardList, Factory, Move, Package, PackageCheckIcon, Shield, ShoppingCart, Smartphone, TrendingUp, Truck, Users,} from 'lucide-react';
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {GoodsReceiptDocumentType} from "@/features/login/data/login";
 

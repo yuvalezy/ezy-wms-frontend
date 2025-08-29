@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import {useCallback} from 'react';
 
 export function useDateTimeFormat() {
     const userLocale = navigator.language || 'en-US';

@@ -1,4 +1,4 @@
-import { axiosInstance } from '@/utils/axios-instance';
+import {axiosInstance} from '@/utils/axios-instance';
 import {LicenseStatusResponse, QueueStatusResponse} from './license';
 
 export const licenseService = {

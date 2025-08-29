@@ -1,8 +1,8 @@
 import React from "react";
-import { Link, useSearchParams } from 'react-router';
+import {Link, useSearchParams} from 'react-router';
 import ContentTheme from "@/components/ContentTheme";
-import { Card } from "@/components/ui/card";
-import { useTranslation } from "react-i18next";
+import {Card} from "@/components/ui/card";
+import {useTranslation} from "react-i18next";
 import {useAuth} from "@/components/AppContext";
 import {DeviceStatus} from "@/features/devices/data/device";
 

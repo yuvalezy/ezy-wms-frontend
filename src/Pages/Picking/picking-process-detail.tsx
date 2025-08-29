@@ -1,7 +1,7 @@
 import ContentTheme from "@/components/ContentTheme";
 import {useNavigate} from "react-router";
 import React from "react";
-import {Alert, AlertDescription, AlertTitle, PackageValue, useAuth} from "@/components";
+import {Alert, AlertDescription, AlertTitle, useAuth} from "@/components";
 import {useTranslation} from "react-i18next";
 import BarCodeScanner from "@/components/BarCodeScanner";
 import PickingProcessDetailContent from "@/features/picking/components/picking-process-detail-content";

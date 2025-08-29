@@ -1,10 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import axios from 'axios';
-import { ServerUrl } from '@/utils/axios-instance';
-import { getOrCreateDeviceUUID } from '@/utils/deviceUtils';
-import { DeviceStatus } from '@/features/devices/data/device';
-import { LicenseWarning } from '@/features/license/data/license';
-import { AccountState } from '@/features/account/data/account';
+import {ServerUrl} from '@/utils/axios-instance';
+import {getOrCreateDeviceUUID} from '@/utils/deviceUtils';
+import {DeviceStatus} from '@/features/devices/data/device';
+import {LicenseWarning} from '@/features/license/data/license';
+import {AccountState} from '@/features/account/data/account';
 
 export interface CompanyInfoResponse {
   companyName: string;

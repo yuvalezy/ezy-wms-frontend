@@ -1,11 +1,11 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {Button} from "@/components/ui/button";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
-import {Clock, User, Activity, Smartphone, Calendar} from "lucide-react";
+import {Activity, Calendar, Clock, Smartphone, User} from "lucide-react";
 import {useThemeContext} from "@/components";
 import {Device, DeviceAuditEntry} from "../data/device";
 import {deviceService} from "../data/device-service";

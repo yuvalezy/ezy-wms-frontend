@@ -4,10 +4,7 @@ import {useParams} from "react-router";
 import {useObjectName} from "@/hooks/useObjectName";
 import {useThemeContext} from "@/components/ThemeContext";
 import {useAuth} from "@/components";
-import {
-  GoodsReceiptValidateProcess,
-  ProcessLineStatus
-} from "@/features/goods-receipt/data/goods-receipt-reports";
+import {GoodsReceiptValidateProcess, ProcessLineStatus} from "@/features/goods-receipt/data/goods-receipt-reports";
 import {exportToExcel} from "@/utils/excelExport";
 import {formatQuantityForExcel, getExcelQuantityHeaders, getExcelQuantityValuesFromResult} from "@/utils/excel-quantity-format";
 import {ReceiptDocument} from "@/features/goods-receipt/data/goods-receipt";

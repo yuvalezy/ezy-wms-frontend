@@ -3,7 +3,7 @@ import {useTranslation} from "react-i18next";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";
 import {Button} from "@/components/ui/button";
-import {Clock, CheckCircle, AlertCircle, RefreshCw} from "lucide-react";
+import {AlertCircle, CheckCircle, Clock, RefreshCw} from "lucide-react";
 import {QueueStatusResponse} from "../data/license";
 
 interface QueueStatusProps {

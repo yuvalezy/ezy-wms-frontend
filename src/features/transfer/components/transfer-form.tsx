@@ -1,11 +1,11 @@
 import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "@/components";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { PlusCircle } from "lucide-react";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
+import {Textarea} from "@/components/ui/textarea";
+import {PlusCircle} from "lucide-react";
 import {TransferDocument} from "@/features/transfer/data/transfer";
 import {transferService} from "@/features/transfer/data/transefer-service";
 import {TransferFormSkeleton} from "./TransferFormSkeleton";

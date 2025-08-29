@@ -8,14 +8,9 @@ import DocumentListDialog, {DocumentListDialogRef} from "@/features/goods-receip
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Button} from "@/components/ui/button";
 import {Skeleton} from "@/components/ui/skeleton";
-import {MoreVertical, ArrowRightLeft, FileText, Truck} from 'lucide-react';
+import {ArrowRightLeft, FileText, MoreVertical, Truck} from 'lucide-react';
 import {activeStatuses} from "@/features/goods-receipt/data/goods-receipt-utils";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,} from "@/components/ui/dropdown-menu";
 import {useAuth} from "@/components";
 import {DocumentItem, GoodsReceiptReportFilter, ReceiptDocument} from "@/features/goods-receipt/data/goods-receipt";
 import {goodsReceiptService} from "@/features/goods-receipt/data/goods-receipt-service";

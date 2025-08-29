@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { X, AlertTriangle, ShieldCheck } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { DeviceStatus } from '@/features/devices/data/device';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Textarea } from '@/components/ui/textarea';
-import { useForm } from 'react-hook-form';
-import { deviceService } from '@/features/devices/data/device-service';
-import { getOrCreateDeviceUUID } from '@/utils/deviceUtils';
-import { useAuth } from '@/components/AppContext';
+import React, {useState} from 'react';
+import {AlertTriangle, ShieldCheck, X} from 'lucide-react';
+import {useTranslation} from 'react-i18next';
+import {DeviceStatus} from '@/features/devices/data/device';
+import {Button} from '@/components/ui/button';
+import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from '@/components/ui/dialog';
+import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from '@/components/ui/form';
+import {Textarea} from '@/components/ui/textarea';
+import {useForm} from 'react-hook-form';
+import {deviceService} from '@/features/devices/data/device-service';
+import {getOrCreateDeviceUUID} from '@/utils/deviceUtils';
+import {useAuth} from '@/components/AppContext';
 import {useThemeContext} from "@/components/ThemeContext";
 import DeviceStatusBannerSkeleton from '@/components/skeletons/DeviceStatusBannerSkeleton';
 

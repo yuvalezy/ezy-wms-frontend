@@ -1,17 +1,10 @@
-import React, { forwardRef, useImperativeHandle, useState } from "react";
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogFooter,
-    DialogClose, // For a simple close button
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useTranslation } from "react-i18next";
+import React, {forwardRef, useImperativeHandle, useState} from "react";
+import {Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle,} from "@/components/ui/dialog";
+import {Button} from "@/components/ui/button";
+import {ScrollArea} from "@/components/ui/scroll-area";
+import {useTranslation} from "react-i18next";
 // Assuming this type is correct
-import { useObjectName } from "@/hooks/useObjectName";
+import {useObjectName} from "@/hooks/useObjectName";
 import {ReceiptDocument} from "@/features/goods-receipt/data/goods-receipt";
 
 export interface DocumentListDialogRef {

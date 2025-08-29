@@ -1,10 +1,5 @@
-import { MetadataFieldType } from '@/features/packages/types';
-import { 
-  MetadataFieldValue, 
-  ValidationResult, 
-  BaseMetadataDefinition,
-  ExtendedMetadataDefinition 
-} from './types';
+import {MetadataFieldType} from '@/features/packages/types';
+import {BaseMetadataDefinition, ExtendedMetadataDefinition, MetadataFieldValue, ValidationResult} from './types';
 
 /**
  * Validates a field value against its definition

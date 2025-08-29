@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, {useEffect} from "react";
 import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import BinLocationScanner from "../../components/BinLocationScanner";
@@ -8,7 +8,7 @@ import {useBinCheckData} from "@/features/items/hooks/useBinCheckData";
 import {BinCheckResult} from "@/features/items/components/BinCheckResult";
 import {BinCheckFormSkeleton} from "@/features/items/components/BinCheckFormSkeleton";
 import {BinCheckResultSkeleton} from "@/features/items/components/BinCheckResultSkeleton";
-import {useParams, useNavigate} from "react-router";
+import {useNavigate, useParams} from "react-router";
 
 export function BinCheck() {
   const {t} = useTranslation();

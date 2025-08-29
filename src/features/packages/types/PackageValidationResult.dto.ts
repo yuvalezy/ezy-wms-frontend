@@ -1,4 +1,4 @@
-import { PackageInconsistencyDto } from './PackageInconsistencyDto.dto';
+import {PackageInconsistencyDto} from './PackageInconsistencyDto.dto';
 
 export interface PackageValidationResult {
   isValid: boolean;

@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Edit } from 'lucide-react';
+import React, {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {Button} from '@/components/ui/button';
+import {Skeleton} from '@/components/ui/skeleton';
+import {Edit} from 'lucide-react';
 import InfoBox from '@/components/InfoBox';
-import { ItemDetails } from '../data/items';
-import { MetadataFieldType } from '@/features/packages/types';
-import { ItemMetadataEditDialog, canEditMetadata } from '@/features/items';
-import { getItemMetadata } from '@/features/items';
-import { useAuth } from "@/Components";
-import { useThemeContext } from '@/components/ThemeContext';
+import {ItemDetails} from '../data/items';
+import {MetadataFieldType} from '@/features/packages/types';
+import {canEditMetadata, getItemMetadata, ItemMetadataEditDialog} from '@/features/items';
+import {useAuth} from "@/Components";
+import {useThemeContext} from '@/components/ThemeContext';
 
 interface ItemMetadataDisplayProps {
   itemData: ItemDetails;

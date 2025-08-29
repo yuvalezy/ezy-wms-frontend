@@ -1,8 +1,8 @@
 import ContentTheme from "@/components/ContentTheme";
-import {Link, useNavigate, useSearchParams} from "react-router";
+import {Link, useNavigate} from "react-router";
 import {Button, Card, CardContent} from "@/components";
 import {useTranslation} from "react-i18next";
-import {Map, Check} from 'lucide-react';
+import {Check, Map} from 'lucide-react';
 import BinLocationScanner from "@/components/BinLocationScanner";
 import TransferCard from "@/features/transfer/components/transfer-card";
 import {cn} from "@/utils/css-utils";

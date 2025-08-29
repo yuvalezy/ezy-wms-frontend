@@ -1,6 +1,6 @@
 import ItemDetailsList from './ItemDetailsList';
 import React from 'react';
-import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose} from "@/components/ui/dialog";
+import {Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import {X} from "lucide-react";
 import {useTranslation} from "react-i18next";
 import {ItemDetails} from "@/features/items/data/items";

@@ -1,15 +1,8 @@
 import ContentTheme from "@/components/ContentTheme";
-import {Link, useNavigate} from "react-router";
+import {useNavigate} from "react-router";
 import React from "react";
 import {useTranslation} from "react-i18next";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import {Progress} from "@/components/ui/progress";
 import BarCodeScanner from "@/components/BarCodeScanner";

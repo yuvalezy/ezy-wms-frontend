@@ -1,4 +1,4 @@
-import React, {forwardRef, useImperativeHandle, useRef, useState, useEffect} from 'react';
+import React, {forwardRef, useEffect, useImperativeHandle, useRef, useState} from 'react';
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {Label} from "@/components/ui/label";
@@ -9,7 +9,6 @@ import {BoxIcon, Check, Loader2} from 'lucide-react';
 import {BinLocation} from "@/features/items/data/items";
 import {itemsService} from "@/features/items/data/items-service";
 import {StringFormat} from "@/utils/string-utils";
-import {PackageValue} from "@/components/BarCodeScanner";
 
 export interface BinLocationScannerProps {
   label?: string | boolean;

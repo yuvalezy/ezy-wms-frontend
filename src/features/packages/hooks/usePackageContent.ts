@@ -1,10 +1,5 @@
-import { axiosInstance } from '@/utils/axios-instance';
-import { 
-  PackageContentDto, 
-  AddItemToPackageRequest, 
-  RemoveItemFromPackageRequest,
-  PackageTransactionDto 
-} from '../types';
+import {axiosInstance} from '@/utils/axios-instance';
+import {AddItemToPackageRequest, PackageContentDto, PackageTransactionDto, RemoveItemFromPackageRequest} from '../types';
 
 export const addItemToPackage = async (id: string, request: AddItemToPackageRequest): Promise<PackageContentDto> => {
   try {

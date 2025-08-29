@@ -2,10 +2,7 @@ import {useTranslation} from "react-i18next";
 import {useEffect, useRef, useState} from "react";
 import {useParams} from "react-router";
 import {useThemeContext} from "@/components/ThemeContext";
-import {
-  GoodsReceiptAll,
-  GoodsReceiptAllLine,
-} from "@/features/goods-receipt/data/goods-receipt-reports";
+import {GoodsReceiptAll, GoodsReceiptAllLine,} from "@/features/goods-receipt/data/goods-receipt-reports";
 import {DetailUpdateParameters} from "@/features/shared/data/shared";
 import {ProcessType} from "@/features/shared/data";
 import {GRPOAllDetailRef} from "@/features/goods-receipt/hooks/useGoodsReceiptAllDetailsData";

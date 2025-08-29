@@ -1,6 +1,6 @@
 import React from 'react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
+import {Alert, AlertDescription} from '@/components/ui/alert';
+import {AlertCircle} from 'lucide-react';
 
 interface DeviceNameFieldProps {
   requiresDeviceName: boolean;

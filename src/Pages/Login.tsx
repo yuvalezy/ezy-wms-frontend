@@ -1,15 +1,6 @@
 import React from 'react';
-import { useLoginData } from '@/features/login/hooks/useLoginData';
-import {
-  LoginHeader,
-  LoginErrorAlert,
-  PasswordField,
-  LanguageSelector,
-  WarehouseSelector,
-  DeviceNameField,
-  LoginButton,
-  StatusBanners
-} from '@/features/login/components';
+import {useLoginData} from '@/features/login/hooks/useLoginData';
+import {DeviceNameField, LanguageSelector, LoginButton, LoginErrorAlert, LoginHeader, PasswordField, StatusBanners, WarehouseSelector} from '@/features/login/components';
 
 export default function Login() {
   const {

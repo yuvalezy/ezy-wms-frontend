@@ -1,9 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {PickingDocumentDetailItem} from "@/features/picking/data/picking";
 import {PickingProcessDetailContentBins} from "@/features/picking/components/picking-process-detail-content-bins";
-import {
-  PickingProcessDetailContentAvailable
-} from "@/features/picking/components/picking-process-detail-content-available";
+import {PickingProcessDetailContentAvailable} from "@/features/picking/components/picking-process-detail-content-available";
 import {Skeleton} from "@/components/ui/skeleton";
 
 export interface PickingProcessDetailContentProps {

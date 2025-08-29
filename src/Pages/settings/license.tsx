@@ -1,5 +1,5 @@
 import ContentTheme from '@/components/ContentTheme';
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "@/components";
 import {LicenseStatusResponse, QueueStatusResponse} from "@/features/license/data/license";

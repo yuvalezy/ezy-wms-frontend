@@ -1,4 +1,4 @@
-import { CancellationReason } from "./cancellation-reason";
+import {CancellationReason} from "./cancellation-reason";
 
 export const mockCancellationReasons: CancellationReason[] = [
   {

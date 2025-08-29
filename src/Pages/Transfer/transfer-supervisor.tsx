@@ -7,21 +7,14 @@ import TransferTable from "@/features/transfer/components/transfer-table";
 import {ObjectAction} from "@/features/shared/data/shared";
 import {StringFormat} from "@/utils/string-utils";
 import TransferForm from "@/features/transfer/components/transfer-form";
-import {
-    AlertDialog,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import {AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,} from "@/components/ui/alert-dialog";
+import {Button} from "@/components/ui/button";
+import {toast} from "sonner";
 import {TransferDocument} from "@/features/transfer/data/transfer";
 import {transferService} from "@/features/transfer/data/transefer-service";
 import {User} from "@/features/users/data/user";
 import {Skeleton} from "@/components/ui/skeleton";
-import {Card, CardContent, CardHeader, CardFooter} from "@/components/ui/card";
+import {Card, CardContent, CardFooter, CardHeader} from "@/components/ui/card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Progress} from "@/components/ui/progress";
 import {Loader2} from "lucide-react";

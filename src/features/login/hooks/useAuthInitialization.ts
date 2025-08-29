@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
+import {useEffect} from 'react';
 import axios from 'axios';
-import { axiosInstance } from '@/utils/axios-instance';
-import { UserInfo } from '../data/login';
+import {axiosInstance} from '@/utils/axios-instance';
+import {UserInfo} from '../data/login';
 
 interface UseAuthInitializationProps {
   setUser: (user: UserInfo | null) => void;

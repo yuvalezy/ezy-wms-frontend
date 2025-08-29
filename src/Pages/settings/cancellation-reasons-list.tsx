@@ -1,26 +1,16 @@
-import React, {useState, useEffect, useContext} from "react";
+import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardContent} from "@/components/ui/card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Badge} from "@/components/ui/badge";
 import {Skeleton} from "@/components/ui/skeleton";
-import {Plus, Edit, Trash2, Search, X} from "lucide-react";
+import {Edit, Search, Trash2, X} from "lucide-react";
 import {CancellationReason, CancellationReasonFilters} from "@/features/cancellation-reasons/data/cancellation-reason";
 import {cancellationReasonService} from "@/features/cancellation-reasons/data/cancellation-reason-service";
 import CancellationReasonForm from "@/features/cancellation-reasons/components/cancellation-reason-form";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle
-} from "@/components/ui/alert-dialog";
+import {AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle} from "@/components/ui/alert-dialog";
 import {Checkbox, useThemeContext} from "@/components";
 import ContentTheme from "@/components/ContentTheme";
 

@@ -1,22 +1,14 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
-import { CheckCircle, XCircle } from "lucide-react";
-import { MoreVertical } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { ResponsiveTableActions, TableAction } from '@/components/ui/responsive-table-actions';
-import { useNavigate } from "react-router";
-import { useAuth } from "@/components/AppContext";
-import { useDateTimeFormat } from "@/hooks/useDateTimeFormat";
-import { useDocumentStatusToString } from "@/hooks/useDocumentStatusToString";
-import { Status } from "@/features/shared/data/shared";
+import {useTranslation} from "react-i18next";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
+import {Progress} from "@/components/ui/progress";
+import {CheckCircle, XCircle} from "lucide-react";
+import {ResponsiveTableActions, TableAction} from '@/components/ui/responsive-table-actions';
+import {useNavigate} from "react-router";
+import {useAuth} from "@/components/AppContext";
+import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
+import {useDocumentStatusToString} from "@/hooks/useDocumentStatusToString";
+import {Status} from "@/features/shared/data/shared";
 import {TransferDocument} from "@/features/transfer/data/transfer";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {formatNumber} from "@/utils/number-utils";

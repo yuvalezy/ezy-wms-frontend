@@ -2,7 +2,7 @@ import React from "react";
 import {SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
 import {AppSidebar} from "@/components/AppSidebar";
 import {Button} from "@/components/ui";
-import {Filter, Plus, FileSpreadsheet} from "lucide-react";
+import {FileSpreadsheet, Filter, Plus} from "lucide-react";
 import {useTranslation} from "react-i18next";
 import {useAuth} from "@/components/AppContext";
 import DeviceStatusBanner from "@/components/DeviceStatusBanner";

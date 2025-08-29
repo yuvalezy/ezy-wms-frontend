@@ -1,6 +1,6 @@
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "@/components/ThemeContext";
-import {useRef, useState, useCallback} from "react";
+import {useCallback, useRef, useState} from "react";
 import {BinLocationScannerRef} from "@/components/BinLocationScanner";
 import {useAuth} from "@/components/AppContext";
 import {exportToExcel} from "@/utils/excelExport";

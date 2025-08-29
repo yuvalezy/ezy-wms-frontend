@@ -1,13 +1,5 @@
 import {axiosInstance} from "@/utils/axios-instance";
-import {
-  BinContentResponse,
-  BinLocation,
-  ItemInfoResponse,
-  ItemCheckResponse,
-  ItemBinStockResponse,
-  UpdateItemBarCodeResponse,
-  ItemDetails
-} from "@/features/items/data/items";
+import {BinContentResponse, BinLocation, ItemBinStockResponse, ItemCheckResponse, ItemDetails, ItemInfoResponse, UpdateItemBarCodeResponse} from "@/features/items/data/items";
 import {MetadataDefinition} from "../types";
 import {UpdateItemMetadataRequest} from "../types/UpdateItemMetadataRequest.dto";
 import axios from "axios";

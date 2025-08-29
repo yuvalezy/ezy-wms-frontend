@@ -1,19 +1,12 @@
-import React, {useState, forwardRef, useImperativeHandle} from "react";
+import React, {forwardRef, useImperativeHandle, useState} from "react";
 import {ProcessAlertValue} from "@/components/ProcessAlert";
 import {useThemeContext} from "./ThemeContext";
 import {useTranslation} from "react-i18next";
 import {UpdateLineParameters, UpdateLineReturnValue} from "@/features/shared/data";
-import { Button } from "@/components/ui/button";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
+import {Button} from "@/components/ui/button";
+import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,} from "@/components/ui/dialog";
+import {Textarea} from "@/components/ui/textarea";
+import {Label} from "@/components/ui/label";
 import ProcessCommentSkeleton from "@/components/skeletons/ProcessCommentSkeleton";
 
 export interface ProcessCommentRef {

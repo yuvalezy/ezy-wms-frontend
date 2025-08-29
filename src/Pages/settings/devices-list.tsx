@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
@@ -7,7 +7,7 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/c
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Badge} from "@/components/ui/badge";
 import {Skeleton} from "@/components/ui/skeleton";
-import {Eye, Edit, Activity, Search} from "lucide-react";
+import {Eye, Search} from "lucide-react";
 import {useThemeContext} from "@/components";
 import {Device, DeviceFilters, DeviceStatus} from "@/features/devices/data/device";
 import {deviceService} from "@/features/devices/data/device-service";

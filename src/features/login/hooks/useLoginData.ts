@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router';
-import { useTranslation } from 'react-i18next';
+import {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router';
+import {useTranslation} from 'react-i18next';
 import Cookies from 'universal-cookie';
-import { useAuth, useThemeContext } from '@/components';
-import { DeviceStatus } from '@/features/devices/data/device';
-import { AccountState } from '@/features/account/data/account';
+import {useAuth, useThemeContext} from '@/components';
+import {DeviceStatus} from '@/features/devices/data/device';
+import {AccountState} from '@/features/account/data/account';
 
 export type Warehouse = {
   id: string;

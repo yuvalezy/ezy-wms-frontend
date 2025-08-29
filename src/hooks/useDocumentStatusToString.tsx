@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 
 import {Status} from "@/features/shared/data/shared";
 

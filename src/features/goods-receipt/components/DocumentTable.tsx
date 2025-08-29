@@ -2,20 +2,12 @@ import React from "react";
 import {useAuth} from "@/components/AppContext";
 import {useTranslation} from "react-i18next";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import {Button} from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {Check, X, FileText, Truck, ArrowRightLeft, MoreVertical} from 'lucide-react';
+import {ArrowRightLeft, Check, FileText, Truck, X} from 'lucide-react';
 import {ResponsiveTableActions, TableAction} from '@/components/ui/responsive-table-actions';
 import {useObjectName} from "@/hooks/useObjectName";
 import {useDocumentStatusToString} from "@/hooks/useDocumentStatusToString";
 import {Status} from "@/features/shared/data/shared";
-import {activeStatuses, processStatuses} from "@/features/goods-receipt/data/goods-receipt-utils";
+import {activeStatuses} from "@/features/goods-receipt/data/goods-receipt-utils";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
 import {useNavigate} from "react-router";
 import {DocumentItem, ReceiptDocument} from "@/features/goods-receipt/data/goods-receipt";

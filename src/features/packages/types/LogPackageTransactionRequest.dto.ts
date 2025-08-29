@@ -1,5 +1,5 @@
-import { PackageTransactionType } from './PackageTransactionType.enum';
-import { ObjectType } from './ObjectType.enum';
+import {PackageTransactionType} from './PackageTransactionType.enum';
+import {ObjectType} from './ObjectType.enum';
 import {UnitType} from "@/features/shared/data";
 
 export interface LogPackageTransactionRequest {

@@ -1,17 +1,7 @@
-import { useState, useCallback, useEffect } from 'react';
-import { useThemeContext } from '@/components/ThemeContext';
-import {
-  MetadataFieldValue,
-  MetadataFormState,
-  BaseMetadataDefinition,
-  ValidationResult
-} from '../types';
-import {
-  validateFieldValue,
-  checkForChanges,
-  initializeFields,
-  fieldsToMetadata
-} from '../utils';
+import {useCallback, useEffect, useState} from 'react';
+import {useThemeContext} from '@/components/ThemeContext';
+import {BaseMetadataDefinition, MetadataFormState, ValidationResult} from '../types';
+import {checkForChanges, fieldsToMetadata, initializeFields, validateFieldValue} from '../utils';
 
 export interface UseMetadataBaseOptions<T extends BaseMetadataDefinition> {
   definitions: T[];

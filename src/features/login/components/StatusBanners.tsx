@@ -1,8 +1,8 @@
 import React from 'react';
 import DeviceStatusBanner from '@/components/DeviceStatusBanner';
 import AccountStatusBanner from '@/components/AccountStatusBanner';
-import { DeviceStatus } from '@/features/devices/data/device';
-import { AccountState } from '@/features/account/data/account';
+import {DeviceStatus} from '@/features/devices/data/device';
+import {AccountState} from '@/features/account/data/account';
 
 interface StatusBannersProps {
   shouldShowAccountStatusBanner: boolean;

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useForm} from "react-hook-form";
 import {Button} from "@/components/ui/button";
@@ -6,9 +6,9 @@ import {Input} from "@/components/ui/input";
 import {Checkbox} from "@/components/ui/checkbox";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
-import {Save, X, Eye, EyeOff} from "lucide-react";
+import {Eye, EyeOff, Save, X} from "lucide-react";
 import {useThemeContext} from "@/components";
-import {User, UserFormData, AuthorizationGroup, Warehouse, ExternalUser} from "../data/user";
+import {AuthorizationGroup, ExternalUser, User, UserFormData, Warehouse} from "../data/user";
 import {userService} from "../data/user-service";
 import {None} from "@/utils/axios-instance";
 import {UserFormSkeleton} from "./UserFormSkeleton";

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
+import {Skeleton} from '@/components/ui/skeleton';
 
 export const ProcessSkeleton = () => (
   <div className="space-y-4" aria-label="Loading...">

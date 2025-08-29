@@ -1,5 +1,5 @@
-import { describe, test, expect } from 'vitest';
-import { formatQuantityForExcel, ExcelQuantityFormatParams } from './excel-quantity-format';
+import {describe, expect, test} from 'vitest';
+import {ExcelQuantityFormatParams, formatQuantityForExcel} from './excel-quantity-format';
 
 describe('formatQuantityForExcel', () => {
   const baseParams = {

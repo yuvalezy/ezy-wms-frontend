@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { ServerUrl } from '@/utils/axios-instance';
+import {useEffect} from 'react';
+import {ServerUrl} from '@/utils/axios-instance';
 
 export const useBrowserUnload = () => {
   useEffect(() => {

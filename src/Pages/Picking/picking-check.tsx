@@ -1,5 +1,5 @@
-import React, {useEffect, useState, useRef} from 'react';
-import {useParams, useNavigate} from 'react-router';
+import React, {useEffect, useRef, useState} from 'react';
+import {useNavigate, useParams} from 'react-router';
 import {useTranslation} from 'react-i18next';
 import ContentTheme from '@/components/ContentTheme';
 import BarCodeScanner, {PackageValue} from '@/components/BarCodeScanner';
@@ -8,14 +8,11 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/c
 import {Button} from '@/components/ui/button';
 import {Badge} from '@/components/ui/badge';
 import {Alert, AlertDescription} from '@/components/ui/alert';
-import {Check, AlertCircle} from 'lucide-react';
+import {AlertCircle, Check} from 'lucide-react';
 import {pickingService} from '@/features/picking/data/picking-service';
-import {PickListCheckSummaryResponse, PickingDocument, PickListCheckItemDetail} from '@/features/picking/data/picking';
-import {UnitType} from '@/features/shared/data';
-import {formatNumber} from '@/utils/number-utils';
+import {PickingDocument, PickListCheckItemDetail, PickListCheckSummaryResponse} from '@/features/picking/data/picking';
 import {AddItemValue} from '@/components/BarCodeScanner/types';
 import {useStockInfo} from "@/utils/stock-info";
-import {diff} from "node:util";
 import {useAuth} from "@/components";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {PickingCheckSkeleton} from '@/features/picking/components/PickingCheckSkeleton';

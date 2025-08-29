@@ -1,6 +1,6 @@
-import { LucideIcon } from 'lucide-react';
-import { UnitType } from '@/features/shared/data';
-import { ObjectType } from '@/features/packages/types';
+import {LucideIcon} from 'lucide-react';
+import {UnitType} from '@/features/shared/data';
+import {ObjectType} from '@/features/packages/types';
 import {ItemInfoResponse} from "@/features/items/data/items";
 
 export interface PackageValue {

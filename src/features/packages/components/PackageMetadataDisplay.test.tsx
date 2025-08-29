@@ -1,7 +1,7 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { PackageMetadataDisplay } from './PackageMetadataDisplay';
-import { PackageDto, PackageStatus, MetadataFieldType } from '../types';
+import {render, screen} from '@testing-library/react';
+import {PackageMetadataDisplay} from './PackageMetadataDisplay';
+import {MetadataFieldType, PackageDto, PackageStatus} from '../types';
 import {MetadataDefinition} from "@/features/items";
 
 // Mock i18n

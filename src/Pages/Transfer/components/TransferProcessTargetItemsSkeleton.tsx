@@ -1,6 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton";
-import { Card } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import {Skeleton} from "@/components/ui/skeleton";
 
 export function TransferProcessTargetItemsSkeleton() {
   return (

@@ -1,5 +1,5 @@
-import { InconsistencyType } from './InconsistencyType.enum';
-import { InconsistencySeverity } from './InconsistencySeverity.enum';
+import {InconsistencyType} from './InconsistencyType.enum';
+import {InconsistencySeverity} from './InconsistencySeverity.enum';
 
 export interface PackageInconsistencyDto {
   id: string;

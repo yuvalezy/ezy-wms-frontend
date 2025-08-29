@@ -1,9 +1,9 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { BaseMetadataForm } from '@/features/metadata/components';
-import { PackageDto } from '../types';
-import { usePackageMetadata } from '../hooks';
-import { MetadataDefinition } from "@/features/items";
+import {useTranslation} from 'react-i18next';
+import {BaseMetadataForm} from '@/features/metadata/components';
+import {PackageDto} from '../types';
+import {usePackageMetadata} from '../hooks';
+import {MetadataDefinition} from "@/features/items";
 
 interface PackageMetadataFormProps {
   packageData: PackageDto & { metadataDefinitions?: MetadataDefinition[] };

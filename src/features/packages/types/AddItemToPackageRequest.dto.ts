@@ -1,4 +1,4 @@
-import { ObjectType } from './ObjectType.enum';
+import {ObjectType} from './ObjectType.enum';
 import {UnitType} from "@/features/shared/data";
 
 export interface AddItemToPackageRequest {

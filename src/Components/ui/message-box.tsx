@@ -11,7 +11,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import {Button, buttonVariantTypes} from "@/components/ui/button";
-import { Info, AlertTriangle, CheckCircle, XCircle, HelpCircle, ShieldAlert } from "lucide-react"; // Assuming lucide-react is used
+import {AlertTriangle, CheckCircle, HelpCircle, Info, ShieldAlert, XCircle} from "lucide-react"; // Assuming lucide-react is used
 
 type MessageBoxType = "info" | "warning" | "success" | "error" | "confirm" | "alert";
 

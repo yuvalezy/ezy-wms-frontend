@@ -1,5 +1,5 @@
-import { axiosInstance } from "@/utils/axios-instance";
-import { AuthorizationGroup, AuthorizationGroupFormData, AuthorizationGroupFilters, RoleInfo } from "./authorization-group";
+import {axiosInstance} from "@/utils/axios-instance";
+import {AuthorizationGroup, AuthorizationGroupFilters, AuthorizationGroupFormData} from "./authorization-group";
 
 export const authorizationGroupService = {
   // Get all authorization groups with optional filters

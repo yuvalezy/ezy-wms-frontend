@@ -6,7 +6,7 @@ import {useStockInfo} from "@/utils/stock-info";
 import ClickableBinCode from "@/components/ClickableBinCode";
 import ClickablePackageBarcode from "@/components/ClickablePackageBarcode";
 import {Box, ChevronRight, Grid3x3, Package} from "lucide-react";
-import {ItemCheckResponse, ItemBinStockResponse} from "@/features/items/data/items";
+import {ItemBinStockResponse, ItemCheckResponse} from "@/features/items/data/items";
 import {itemsService} from "@/features/items/data/items-service";
 import {useAuth} from "@/components";
 import {UnitType} from "@/features/shared/data";

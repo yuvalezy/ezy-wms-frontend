@@ -2,8 +2,11 @@ import {axiosInstance} from "@/utils/axios-instance";
 
 import {
   BusinessPartner,
-  DocumentActionResponse, DocumentAddItemResponse,
-  DocumentItem, DocumentOrderBy, DocumentUpdateLineQuantityResponse,
+  DocumentActionResponse,
+  DocumentAddItemResponse,
+  DocumentItem,
+  DocumentOrderBy,
+  DocumentUpdateLineQuantityResponse,
   GoodsReceiptReportFilter,
   GoodsReceiptType,
   ReceiptDocument

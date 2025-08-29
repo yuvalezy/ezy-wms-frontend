@@ -1,16 +1,10 @@
-import React, {useRef, useState, forwardRef, useImperativeHandle} from "react";
+import React, {forwardRef, useImperativeHandle, useRef, useState} from "react";
 import {ProcessAlertValue} from "@/components/ProcessAlert";
 import {useTranslation} from "react-i18next";
 import {UnitType, UpdateLineParameters, UpdateLineReturnValue} from "@/features/shared/data/shared";
 import {useThemeContext} from "./ThemeContext";
 import {Button} from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle,} from "@/components/ui/dialog";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import {InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";

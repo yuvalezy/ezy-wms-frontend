@@ -2,24 +2,17 @@ import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import BarCodeScanner, {AddItemValue, BarCodeScannerRef} from "../../components/BarCodeScanner";
 import React, {useEffect, useRef, useState} from "react";
-import { TransferRequestFormSkeleton } from "./components/TransferRequestFormSkeleton";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Trash2, Plus } from 'lucide-react';
+import {TransferRequestFormSkeleton} from "./components/TransferRequestFormSkeleton";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
+import {Alert, AlertDescription} from "@/components/ui/alert";
+import {Plus, Trash2} from 'lucide-react';
 import {useThemeContext} from "@/components";
 import {useNavigate} from "react-router";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { toast } from "sonner";
-import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription, // Add DialogDescription here
-} from "@/components/ui/dialog";
+import {ScrollArea} from "@/components/ui/scroll-area";
+import {toast} from "sonner";
+import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,} from "@/components/ui/dialog";
 import {TransferContent} from "@/features/transfer/data/transfer";
 import {transferService} from "@/features/transfer/data/transefer-service";
 import {StringFormat} from "@/utils/string-utils";

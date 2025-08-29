@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { UserInfo } from '../data/login';
+import {useEffect, useRef} from 'react';
+import {UserInfo} from '../data/login';
 
 interface UseIdleTimeoutProps {
   user: UserInfo | null;

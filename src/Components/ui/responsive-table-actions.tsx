@@ -1,14 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { MoreVertical, LucideIcon } from 'lucide-react';
-import { cn } from '@/utils/css-utils';
+import React, {useEffect, useRef, useState} from 'react';
+import {Button} from '@/components/ui/button';
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,} from '@/components/ui/dropdown-menu';
+import {LucideIcon, MoreVertical} from 'lucide-react';
+import {cn} from '@/utils/css-utils';
 
 export interface TableAction {
   key: string;

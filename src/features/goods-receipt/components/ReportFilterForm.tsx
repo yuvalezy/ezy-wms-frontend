@@ -3,28 +3,13 @@ import {useTranslation} from "react-i18next";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
+import {Accordion, AccordionContent, AccordionItem, AccordionTrigger,} from "@/components/ui/accordion";
 import {Calendar} from "@/components/ui/calendar"; // For DatePicker
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"; // For DatePicker
+import {Popover, PopoverContent, PopoverTrigger,} from "@/components/ui/popover"; // For DatePicker
 import {cn} from "@/utils/css-utils"; // For DatePicker
 import {format} from "date-fns"; // For DatePicker
-import {CalendarIcon, BarChart2, Eraser, X} from "lucide-react";
+import {BarChart2, CalendarIcon, Eraser, X} from "lucide-react";
 import {BusinessPartner, GoodsReceiptReportFilter} from "@/features/goods-receipt/data/goods-receipt";
 import {useDocumentStatusOptions} from "@/hooks/useDocumentStatusOptions";
 import {goodsReceiptService} from "@/features/goods-receipt/data/goods-receipt-service";

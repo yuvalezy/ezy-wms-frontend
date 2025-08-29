@@ -1,22 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Edit } from 'lucide-react';
-import { ItemDetails } from '../data/items';
-import { MetadataDefinition } from '@/features/items';
-import { ItemMetadataForm } from '@/features/items';
-import { getItemMetadata } from '@/features/items';
-import { useAuth } from "@/Components";
-import { useThemeContext } from '@/components/ThemeContext';
-import { RoleType } from "@/features/authorization-groups/data/authorization-group";
+import React, {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {Button} from '@/components/ui/button';
+import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,} from '@/components/ui/dialog';
+import {Skeleton} from '@/components/ui/skeleton';
+import {Edit} from 'lucide-react';
+import {ItemDetails} from '../data/items';
+import {getItemMetadata, ItemMetadataForm, MetadataDefinition} from '@/features/items';
+import {useAuth} from "@/Components";
+import {useThemeContext} from '@/components/ThemeContext';
+import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 
 interface ItemMetadataEditDialogProps {
   itemCode: string;

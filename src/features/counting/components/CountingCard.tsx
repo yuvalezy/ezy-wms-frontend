@@ -7,7 +7,7 @@ import {Button} from "@/components/ui/button";
 import {useDocumentStatusToString} from "@/hooks/useDocumentStatusToString";
 import {Status} from "@/features/shared/data/shared";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
-import {CheckCircle, XCircle, FileText} from "lucide-react";
+import {CheckCircle, FileText, XCircle} from "lucide-react";
 import {FullInfoBox, InfoBoxValue, Separator} from "@/components";
 import {Counting} from "@/features/counting/data/counting";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";

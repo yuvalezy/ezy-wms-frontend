@@ -1,7 +1,7 @@
 import React from 'react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
-import { Warehouse } from '../hooks/useLoginData';
+import {Alert, AlertDescription} from '@/components/ui/alert';
+import {AlertCircle} from 'lucide-react';
+import {Warehouse} from '../hooks/useLoginData';
 
 interface WarehouseSelectorProps {
   warehouses: Warehouse[];

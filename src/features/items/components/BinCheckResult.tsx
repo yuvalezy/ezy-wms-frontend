@@ -4,7 +4,7 @@ import {Card} from "@/components/ui/card";
 import {useStockInfo} from "@/utils/stock-info";
 import ClickableItemCode from "@/components/ClickableItemCode";
 import ClickablePackageBarcode from "@/components/ClickablePackageBarcode";
-import {ChevronRight, Package, Box, Grid3x3, Inbox, ArrowRight} from "lucide-react";
+import {Box, ChevronRight, Grid3x3, Inbox, Package} from "lucide-react";
 import {BinContentResponse} from "@/features/items/data/items";
 import {useAuth} from "@/components";
 import {UnitType} from "@/features/shared/data";

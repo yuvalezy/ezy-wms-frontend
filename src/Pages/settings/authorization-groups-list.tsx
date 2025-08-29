@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {Button} from "@/components/ui/button";
 import {Card, CardContent} from "@/components/ui/card";
@@ -9,16 +9,7 @@ import {Edit, Trash2} from "lucide-react";
 import {useThemeContext} from "@/components";
 import {AuthorizationGroup, AuthorizationGroupFilters} from "@/features/authorization-groups/data/authorization-group";
 import {authorizationGroupService} from "@/features/authorization-groups/data/authorization-group-service";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle
-} from "@/components/ui/alert-dialog";
+import {AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle} from "@/components/ui/alert-dialog";
 import ContentTheme from "@/components/ContentTheme";
 import {useNavigate} from "react-router";
 import {useAuthorizationGroupRoles} from "@/features/authorization-groups/hooks/useAuthorizationGroupRoles";

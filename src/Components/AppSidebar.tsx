@@ -1,30 +1,12 @@
-import {LogOutIcon, SettingsIcon, HomeIcon, UserIcon, ChevronDownIcon} from "lucide-react"
+import {ChevronDownIcon, HomeIcon, LogOutIcon, UserIcon} from "lucide-react"
 import {useLocation, useNavigate} from "react-router";
 import {useEffect, useState} from "react";
 import {MenuItem, useMenus} from "@/hooks/useMenus";
 
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarHeader,
-} from "@/components/ui/sidebar"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import {Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem,} from "@/components/ui/sidebar"
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,} from "@/components/ui/dropdown-menu"
 import {useAuth} from "@/components/AppContext";
 import {useTranslation} from "react-i18next";
-import {DeviceStatus} from "@/features/devices/data/device";
 
 
 export function AppSidebar() {

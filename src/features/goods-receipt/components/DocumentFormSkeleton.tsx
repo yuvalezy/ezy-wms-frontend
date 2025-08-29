@@ -1,6 +1,6 @@
 import React from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Card } from '@/components/ui/card';
+import {Skeleton} from '@/components/ui/skeleton';
+import {Card} from '@/components/ui/card';
 
 interface DocumentFormSkeletonProps {
   showTabs?: boolean;

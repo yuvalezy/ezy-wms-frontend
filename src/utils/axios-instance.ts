@@ -1,6 +1,6 @@
 import axios from "axios";
-import { convertUTCStringsToDates } from "./date-helpers";
-import { getOrCreateDeviceUUID } from "./deviceUtils";
+import {convertUTCStringsToDates} from "./date-helpers";
+import {getOrCreateDeviceUUID} from "./deviceUtils";
 
 // Navigation callback for routing outside of React components
 let navigateCallback: ((path: string) => void) | null = null;

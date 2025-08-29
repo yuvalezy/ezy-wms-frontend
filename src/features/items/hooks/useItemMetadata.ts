@@ -1,19 +1,8 @@
-import { useCallback, useMemo } from 'react';
-import { 
-  MetadataDefinition,
-  UpdateItemMetadataRequest 
-} from '../types';
-import { ItemDetails } from '../data/items';
-import { updateItemMetadata } from '@/features/items';
-import {
-  useMetadataBase,
-  useCalculatedFields,
-  MetadataFieldValue,
-  ExtendedMetadataDefinition,
-  validateFieldValue,
-  getFieldValuesRecord,
-  convertFieldValueForApi
-} from '@/features/metadata';
+import {useCallback, useMemo} from 'react';
+import {MetadataDefinition, UpdateItemMetadataRequest} from '../types';
+import {ItemDetails} from '../data/items';
+import {updateItemMetadata} from '@/features/items';
+import {convertFieldValueForApi, ExtendedMetadataDefinition, getFieldValuesRecord, useCalculatedFields, useMetadataBase, validateFieldValue} from '@/features/metadata';
 
 // Map MetadataDefinition to ExtendedMetadataDefinition
 function mapToExtendedDefinition(def: MetadataDefinition): ExtendedMetadataDefinition {

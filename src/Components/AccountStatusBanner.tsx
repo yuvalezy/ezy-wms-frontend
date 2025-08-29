@@ -1,7 +1,7 @@
 import React from 'react';
-import { AlertTriangle, XCircle, Clock, AlertCircle } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { AccountState } from '@/features/account/data/account';
+import {AlertCircle, AlertTriangle, Clock, XCircle} from 'lucide-react';
+import {useTranslation} from 'react-i18next';
+import {AccountState} from '@/features/account/data/account';
 
 interface AccountStatusBannerProps {
   accountStatus: AccountState;

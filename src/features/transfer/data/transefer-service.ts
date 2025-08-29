@@ -2,21 +2,18 @@ import {axiosInstance} from "@/utils/axios-instance";
 
 import {
   AddItemParameters,
-  TargetItemDetail, TransferActionResponse,
-  TransferAddItemResponse, TransferContent, transferContentParameters,
+  TargetItemDetail,
+  TransferActionResponse,
+  TransferAddItemResponse,
+  TransferAddSourcePackageRequest,
+  TransferAddTargetPackageRequest,
+  TransferContent,
+  transferContentParameters,
   TransferDocument,
   TransfersOrderBy,
-  TransferUpdateParameters,
-  TransferAddSourcePackageRequest,
-  TransferAddTargetPackageRequest
+  TransferUpdateParameters
 } from "@/features/transfer/data/transfer";
-import {
-  AddItemReturnValueType,
-  DetailUpdateParameters,
-  Status,
-  UpdateLineParameters,
-  UpdateLineReturnValue
-} from "@/features/shared/data";
+import {AddItemReturnValueType, DetailUpdateParameters, Status, UpdateLineParameters, UpdateLineReturnValue} from "@/features/shared/data";
 import axios from "axios";
 import {getAddItemErrorMessage} from "@/utils/error-handler";
 

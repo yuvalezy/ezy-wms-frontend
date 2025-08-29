@@ -1,18 +1,13 @@
-import React, { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { 
-  Card, 
-  CardContent, 
-  CardHeader, 
-  CardTitle 
-} from '@/components/ui/card';
-import { Form } from '@/components/ui/form';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import { MetadataDefinition } from '@/features/items';
-import { MetadataFieldType } from '@/features/packages/types';
-import { MetadataField } from './MetadataField';
+import React, {useEffect} from 'react';
+import {useForm} from 'react-hook-form';
+import {useTranslation} from 'react-i18next';
+import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
+import {Form} from '@/components/ui/form';
+import {Button} from '@/components/ui/button';
+import {Skeleton} from '@/components/ui/skeleton';
+import {MetadataDefinition} from '@/features/items';
+import {MetadataFieldType} from '@/features/packages/types';
+import {MetadataField} from './MetadataField';
 
 export interface BaseMetadataFormProps {
   title: string;

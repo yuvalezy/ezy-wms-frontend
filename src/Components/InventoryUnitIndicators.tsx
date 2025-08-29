@@ -1,6 +1,6 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
-import { useAuth } from "@/components";
+import {useTranslation} from "react-i18next";
+import {useAuth} from "@/components";
 
 interface InventoryUnitIndicatorsProps {
   packages: number;

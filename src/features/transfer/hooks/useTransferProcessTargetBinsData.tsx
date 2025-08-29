@@ -1,23 +1,10 @@
 import {useParams} from "react-router";
 import {useEffect, useRef, useState} from "react";
-import {
-  AddItemValue,
-  BarCodeScannerRef,
-  PackageValue,
-  ProcessAlertValue,
-  ProcessesRef,
-  useAuth,
-  useThemeContext
-} from "@/components";
+import {AddItemValue, BarCodeScannerRef, PackageValue, ProcessAlertValue, ProcessesRef, useAuth, useThemeContext} from "@/components";
 import {useTranslation} from "react-i18next";
 
 import {BinLocation} from "@/features/items/data/items";
-import {
-  SourceTarget,
-  TransferAddTargetPackageRequest,
-  TransferContent,
-  TransferDocument
-} from "@/features/transfer/data/transfer";
+import {SourceTarget, TransferAddTargetPackageRequest, TransferContent, TransferDocument} from "@/features/transfer/data/transfer";
 import {transferService} from "@/features/transfer/data/transefer-service";
 import axios from "axios";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";

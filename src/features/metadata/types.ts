@@ -1,4 +1,4 @@
-import { MetadataFieldType } from '@/features/packages/types';
+import {MetadataFieldType} from '@/features/packages/types';
 
 // Common metadata field value interface
 export interface MetadataFieldValue {

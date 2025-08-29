@@ -2,7 +2,9 @@ import {axiosInstance} from "@/utils/axios-instance";
 import {DetailUpdateParameters} from "@/features/shared/data";
 import {
   GoodsReceiptAll,
-  GoodsReceiptAllDetail, GoodsReceiptValidateProcess, GoodsReceiptValidateProcessLineDetails,
+  GoodsReceiptAllDetail,
+  GoodsReceiptValidateProcess,
+  GoodsReceiptValidateProcessLineDetails,
   GoodsReceiptVSExitReportData
 } from "@/features/goods-receipt/data/goods-receipt-reports";
 

@@ -1,15 +1,15 @@
-import React, {createContext, ReactNode, useCallback, useContext, useEffect, useState,} from "react";
+import React, {createContext, ReactNode, useCallback, useContext, useState,} from "react";
 import axios, {AxiosError} from "axios";
 import {axiosInstance, ServerUrl} from "@/utils/axios-instance";
 import {getOrCreateDeviceUUID} from "@/utils/deviceUtils";
 import {DeviceStatus} from "@/features/devices/data/device";
 import {AccountState} from "@/features/account/data/account";
-import {UserInfo, LoginRequest, ErrorResponse} from "@/features/login/data/login";
+import {ErrorResponse, LoginRequest, UserInfo} from "@/features/login/data/login";
 import {UnitType} from "@/features/shared/data";
-import { useIdleTimeout } from '@/features/login/hooks/useIdleTimeout';
-import { useCompanyInfo, CompanyInfoResponse } from '@/features/login/hooks/useCompanyInfo';
-import { useBrowserUnload } from '@/features/login/hooks/useBrowserUnload';
-import { useAuthInitialization } from '@/features/login/hooks/useAuthInitialization';
+import {useIdleTimeout} from '@/features/login/hooks/useIdleTimeout';
+import {CompanyInfoResponse, useCompanyInfo} from '@/features/login/hooks/useCompanyInfo';
+import {useBrowserUnload} from '@/features/login/hooks/useBrowserUnload';
+import {useAuthInitialization} from '@/features/login/hooks/useAuthInitialization';
 
 // Define the shape of the context
 interface AuthContextType {

@@ -1,5 +1,5 @@
-import { axiosInstance } from "@/utils/axios-instance";
-import { CancellationReason, CancellationReasonFormData, CancellationReasonFilters } from "./cancellation-reason";
+import {axiosInstance} from "@/utils/axios-instance";
+import {CancellationReason, CancellationReasonFilters, CancellationReasonFormData} from "./cancellation-reason";
 
 export const cancellationReasonService = {
   // Get all cancellation reasons with optional filters

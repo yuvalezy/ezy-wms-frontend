@@ -1,6 +1,6 @@
 import React from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import {Skeleton} from '@/components/ui/skeleton';
+import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from '@/components/ui/dialog';
 
 interface DeviceStatusBannerSkeletonProps {
   showDialog?: boolean;

@@ -1,4 +1,4 @@
-import { onCLS, onFCP, onLCP, onTTFB, onINP, type Metric } from 'web-vitals';
+import {type Metric, onCLS, onFCP, onINP, onLCP, onTTFB} from 'web-vitals';
 
 const reportWebVitals = (onPerfEntry?: (metric: Metric) => void) => {
   if (onPerfEntry && onPerfEntry instanceof Function) {

@@ -4,7 +4,7 @@ import {useTranslation} from "react-i18next";
 import {useNavigate, useParams} from "react-router";
 import CountingSummaryReportTable from "@/features/counting/components/CountingSummaryReportTable";
 import {exportToExcel} from "@/utils/excelExport";
-import {formatQuantityForExcel, getExcelQuantityHeaders, getExcelQuantityValues} from "@/utils/excel-quantity-format";
+import {getExcelQuantityHeaders, getExcelQuantityValues} from "@/utils/excel-quantity-format";
 import ContentTheme from "@/components/ContentTheme";
 import {countingService} from "@/features/counting/data/counting-service";
 import {CountingSummaryReportData} from "@/features/counting/data/counting";

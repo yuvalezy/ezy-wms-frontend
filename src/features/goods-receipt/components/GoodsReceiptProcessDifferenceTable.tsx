@@ -1,27 +1,15 @@
 import * as React from 'react';
 import {CSSProperties, useState} from 'react';
-import {
-  GoodsReceiptValidateProcess,
-  GoodsReceiptValidateProcessLine,
-  GoodsReceiptValidateProcessLineDetails,
-  ProcessLineStatus,
-} from "@/features/goods-receipt/data/goods-receipt-reports";
+import {GoodsReceiptValidateProcess, GoodsReceiptValidateProcessLine, GoodsReceiptValidateProcessLineDetails, ProcessLineStatus,} from "@/features/goods-receipt/data/goods-receipt-reports";
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "@/components/ThemeContext";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
 import {Button} from "@/components/ui/button";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle
-} from "@/components/ui/dialog";
+import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {UnitType} from "@/features/shared/data/shared";
-import InfoBox, {FullInfoBox, InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
+import {FullInfoBox, InfoBoxValue} from "@/components/InfoBox";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {useStockInfo} from "@/utils/stock-info";
 import ItemDetailsLink from "@/components/ItemDetailsLink";

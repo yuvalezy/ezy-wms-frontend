@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useSwipeable} from "react-swipeable";
-import {Edit3, MessageCircle, Package2, Edit} from "lucide-react";
+import {Edit, Edit3, MessageCircle, Package2} from "lucide-react";
 import {AddItemResponseMultipleValue, UnitType} from "@/features/shared/data";
 import {useAuth} from "@/components/AppContext";
 import {ItemCustomFields} from "@/features/items/components/ItemDetailsList";
@@ -13,7 +13,7 @@ import {Card} from "@/components/ui/card";
 import ClickableItemCode from "@/components/ClickableItemCode";
 import {useStockInfo} from "@/utils/stock-info";
 import {ScannerMode} from "@/features/login/data/login";
-import {ItemMetadataEditDialog, canEditMetadata} from "@/features/items/components/ItemMetadataEditDialog";
+import {canEditMetadata, ItemMetadataEditDialog} from "@/features/items/components/ItemMetadataEditDialog";
 
 export type AlertSeverity = "Information" | "Positive" | "Negative" | "Warning";
 

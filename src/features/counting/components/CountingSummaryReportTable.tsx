@@ -2,7 +2,7 @@ import * as React from 'react';
 import {useTranslation} from "react-i18next";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {useStockInfo} from "@/utils/stock-info";
-import InfoBox, {FullInfoBox, InfoBoxValue} from "@/components/InfoBox";
+import {FullInfoBox, InfoBoxValue} from "@/components/InfoBox";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
 import {CountingSummaryReportLine} from "@/features/counting/data/counting";
 

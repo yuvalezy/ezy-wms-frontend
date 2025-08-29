@@ -1,16 +1,14 @@
 import React, {useEffect, useState} from "react";
 import ContentTheme from "../../components/ContentTheme";
-import {Link, useNavigate, useParams} from "react-router";
-import {
-  GoodsReceiptVSExitReportData,
-} from "@/features/goods-receipt/data/goods-receipt-reports";
+import {useNavigate, useParams} from "react-router";
+import {GoodsReceiptVSExitReportData,} from "@/features/goods-receipt/data/goods-receipt-reports";
 import GoodsReceiptVSExitReportTable from "@/features/goods-receipt/components/GoodsReceiptVSExitReportTable";
 import GoodsReceiptVSExitReportSkeleton from "@/features/goods-receipt/components/GoodsReceiptVSExitReportSkeleton";
 import {useThemeContext} from "@/components/ThemeContext";
 import {useTranslation} from "react-i18next";
 import {useObjectName} from "@/hooks/useObjectName";
 import {Alert, AlertDescription} from "@/components/ui/alert";
-import  {FullInfoBox, InfoBoxValue} from "@/components/InfoBox";
+import {FullInfoBox, InfoBoxValue} from "@/components/InfoBox";
 import {Button, Card, CardContent, CardHeader} from "@/components";
 import {goodsReceiptReportService} from "@/features/goods-receipt/data/goods-receipt-report-service";
 import {ProcessType} from "@/features/shared/data";

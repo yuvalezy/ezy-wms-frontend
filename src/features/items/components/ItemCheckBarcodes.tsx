@@ -5,7 +5,6 @@ import {Input} from "@/components/ui/input";
 import {Checkbox} from "@/components/ui/checkbox";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Save} from 'lucide-react';
-import {Label} from "@/components/ui/label";
 
 interface BarcodeTableProps {
   itemCode: string;

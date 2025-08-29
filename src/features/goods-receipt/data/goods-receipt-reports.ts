@@ -1,5 +1,4 @@
-import {DetailUpdateParameters, Status, UnitType} from "@/features/shared/data";
-import {axiosInstance} from "@/utils/axios-instance";
+import {Status, UnitType} from "@/features/shared/data";
 import {PackageValue} from "@/components";
 import {ItemDetails} from "@/features/items/data/items";
 

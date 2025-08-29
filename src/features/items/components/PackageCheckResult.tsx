@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import {PackageDto, PackageStatus, PackageContentDto} from "@/features/packages/types";
+import React, {useEffect, useState} from "react";
+import {PackageContentDto, PackageDto, PackageStatus} from "@/features/packages/types";
 import {useTranslation} from "react-i18next";
 import {Card} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";
 import ClickableItemCode from "@/components/ClickableItemCode";
 import ClickableBinCode from "@/components/ClickableBinCode";
-import {Package, MapPin, Calendar, User, Box, Grid3x3} from "lucide-react";
+import {Box, Calendar, Grid3x3, MapPin, Package, User} from "lucide-react";
 import {formatDistance} from "date-fns";
 import {PackageMetadataDisplay} from "@/features/packages/components";
 import {useAuth} from "@/Components";

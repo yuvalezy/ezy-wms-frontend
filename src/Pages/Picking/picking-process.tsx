@@ -1,19 +1,14 @@
 import ContentTheme from "../../components/ContentTheme";
 import {useNavigate, useParams} from "react-router";
-import React, {CSSProperties, useEffect, useState} from "react";
-import {
-  Card, CardContent, CardFooter, CardHeader, FullInfoBox,
-  InfoBoxValue,
-  Progress, SecondaryInfoBox,
-  useThemeContext
-} from "@/components";
+import React, {useEffect, useState} from "react";
+import {Card, CardContent, CardFooter, CardHeader, FullInfoBox, InfoBoxValue, Progress, useThemeContext} from "@/components";
 import {useTranslation} from "react-i18next";
 import {Button} from "@/components/ui/button";
 import {BarChart3, Play} from "lucide-react";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {formatNumber, IsNumeric} from "@/utils/number-utils";
 import {PickingDocument, PickingDocumentDetail} from "@/features/picking/data/picking";
-import { useObjectName } from "@/hooks/useObjectName";
+import {useObjectName} from "@/hooks/useObjectName";
 import {pickingService} from "@/features/picking/data/picking-service";
 import {Skeleton} from "@/components/ui/skeleton";
 

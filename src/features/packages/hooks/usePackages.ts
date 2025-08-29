@@ -1,13 +1,5 @@
-import { axiosInstance } from '@/utils/axios-instance';
-import {
-  PackageDto,
-  CreatePackageRequest,
-  CancelPackageRequest,
-  LockPackageRequest,
-  MovePackageRequest,
-  PackageValidationResult, ObjectType,
-  UpdatePackageMetadataRequest,
-} from '../types';
+import {axiosInstance} from '@/utils/axios-instance';
+import {CancelPackageRequest, CreatePackageRequest, LockPackageRequest, MovePackageRequest, ObjectType, PackageDto, PackageValidationResult, UpdatePackageMetadataRequest,} from '../types';
 import {MetadataDefinition} from "@/features/items";
 
 export const createPackage = async (request: CreatePackageRequest): Promise<PackageDto> => {

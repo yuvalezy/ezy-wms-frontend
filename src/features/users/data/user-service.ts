@@ -1,5 +1,5 @@
 import {axiosInstance, None} from "@/utils/axios-instance";
-import {User, UserFormData, UserFilters, ExternalUser, AuthorizationGroup, Warehouse} from "./user";
+import {AuthorizationGroup, ExternalUser, User, UserFilters, UserFormData, Warehouse} from "./user";
 
 export const userService = {
   // Get all users with optional filters
