@@ -1,5 +1,5 @@
 // import ContentTheme from "../../components/ContentTheme";
-// import {useNavigate, useParams} from "react-router-dom";
+// import {useNavigate, useParams} from "react-router";
 // import React, {useEffect, useRef, useState} from "react";
 // import {useThemeContext} from "@/components";
 // import {useTranslation} from "react-i18next";

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import ContentTheme from "../../components/ContentTheme";
-import {Link, useNavigate, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router";
 import {
   GoodsReceiptVSExitReportData,
 } from "@/features/goods-receipt/data/goods-receipt-reports";

@@ -9,7 +9,7 @@ import Processes from "../../components/Processes";
 import ContentTheme from "@/components/ContentTheme";
 import {AlertCircle} from "lucide-react";
 import {useCountingProcessData} from "@/features/counting/hooks/useCountingProcessData";
-import {useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {useStockInfo} from "@/utils/stock-info";
 import ItemDetailsLink from "@/components/ItemDetailsLink";

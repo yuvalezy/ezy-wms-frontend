@@ -9,7 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Trash2, Plus } from 'lucide-react';
 import {useThemeContext} from "@/components";
-import {useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import {

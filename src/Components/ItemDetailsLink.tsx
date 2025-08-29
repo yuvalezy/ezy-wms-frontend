@@ -1,4 +1,4 @@
-import {Link} from "react-router-dom";
+import {Link} from "react-router";
 import React, {useState} from "react";
 import ItemDetailsListPopup from "@/features/items/components/ItemDetailsListPopup";
 import {ItemDetails} from "@/features/items/data/items";

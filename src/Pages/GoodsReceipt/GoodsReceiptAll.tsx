@@ -7,7 +7,7 @@ import {Alert, AlertDescription} from "@/components/ui/alert"; // Added AlertTit
 import {Loader2} from "lucide-react";
 import GoodsReceiptAllDialog from "@/features/goods-receipt/components/GoodsReceiptAllDetail";
 import {useGoodsReceiptAllData} from "@/features/goods-receipt/hooks/useGoodsReceiptAllData";
-import {useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router";
 import {ProcessType, Status} from "@/features/shared/data";
 import {useAuth} from "@/components";
 

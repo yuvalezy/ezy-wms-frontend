@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {useParams, useNavigate} from 'react-router-dom';
+import {useParams, useNavigate} from 'react-router';
 import {useTranslation} from 'react-i18next';
 import ContentTheme from '@/components/ContentTheme';
 import BarCodeScanner, {PackageValue} from '@/components/BarCodeScanner';

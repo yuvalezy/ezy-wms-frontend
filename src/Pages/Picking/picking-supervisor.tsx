@@ -10,7 +10,7 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/c
 import {Button} from "@/components/ui/button";
 import {Progress} from "@/components/ui/progress";
 import {CheckCircle, RefreshCw, XCircle, Eye} from "lucide-react";
-import {useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router";
 import {useAuth} from "@/components/AppContext";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
 import {MessageBox} from "@/components";

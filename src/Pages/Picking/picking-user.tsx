@@ -6,7 +6,7 @@ import PickingCard from "@/features/picking/components/picking-card";
 import {AlertCircle, CheckCircle} from "lucide-react";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Progress} from "@/components/ui/progress";
-import {useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router";
 import {useAuth} from "@/components/AppContext";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";

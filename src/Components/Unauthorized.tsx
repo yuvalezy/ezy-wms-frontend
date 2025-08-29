@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router';
 import ContentTheme from "@/components/ContentTheme";
 import { Card } from "@/components/ui/card";
 import { useTranslation } from "react-i18next";

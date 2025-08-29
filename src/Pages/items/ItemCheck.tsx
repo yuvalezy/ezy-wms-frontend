@@ -11,7 +11,7 @@ import {Label} from "@/components/ui/label";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import {AlertTriangle, Check} from 'lucide-react';
 import {useItemCheckData} from "@/features/items/hooks/useItemCheckData";
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router";
 import {useAuth} from "@/components";
 import {ScannerMode} from "@/features/login/data/login";
 

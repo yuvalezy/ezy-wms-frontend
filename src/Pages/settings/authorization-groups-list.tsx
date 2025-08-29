@@ -20,7 +20,7 @@ import {
   AlertDialogTitle
 } from "@/components/ui/alert-dialog";
 import ContentTheme from "@/components/ContentTheme";
-import {useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router";
 import {useAuthorizationGroupRoles} from "@/features/authorization-groups/hooks/useAuthorizationGroupRoles";
 
 const AuthorizationGroupsList: React.FC = () => {

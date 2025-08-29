@@ -1,5 +1,5 @@
 import ContentTheme from "@/components/ContentTheme";
-import {Link, useNavigate, useSearchParams} from "react-router-dom";
+import {Link, useNavigate, useSearchParams} from "react-router";
 import {Button, Card, CardContent} from "@/components";
 import {useTranslation} from "react-i18next";
 import {Map, Check} from 'lucide-react';

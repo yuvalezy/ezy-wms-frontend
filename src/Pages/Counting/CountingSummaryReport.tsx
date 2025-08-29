@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {useAuth, useThemeContext} from "@/components";
 import {useTranslation} from "react-i18next";
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router";
 import CountingSummaryReportTable from "@/features/counting/components/CountingSummaryReportTable";
 import {exportToExcel} from "@/utils/excelExport";
 import {formatQuantityForExcel, getExcelQuantityHeaders, getExcelQuantityValues} from "@/utils/excel-quantity-format";

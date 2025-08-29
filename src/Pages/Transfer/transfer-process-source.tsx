@@ -1,5 +1,5 @@
 import ContentTheme from "@/components/ContentTheme";
-import {useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router";
 import {Button} from "@/components";
 import {useTranslation} from "react-i18next";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";

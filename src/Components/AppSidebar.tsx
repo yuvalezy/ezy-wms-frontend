@@ -1,5 +1,5 @@
 import {LogOutIcon, SettingsIcon, HomeIcon, UserIcon, ChevronDownIcon} from "lucide-react"
-import {useLocation, useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router";
 import {useEffect, useState} from "react";
 import {MenuItem, useMenus} from "@/hooks/useMenus";
 

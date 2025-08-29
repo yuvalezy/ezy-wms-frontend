@@ -1,5 +1,5 @@
 import ContentTheme from "../../components/ContentTheme";
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router";
 import React, {CSSProperties, useEffect, useState} from "react";
 import {
   Card, CardContent, CardFooter, CardHeader, FullInfoBox,

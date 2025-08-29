@@ -8,7 +8,7 @@ import {usePackageCheckData} from "../../features/items/hooks/usePackageCheckDat
 import {PackageCheckResult} from "../../features/items/components/PackageCheckResult";
 import {PackageCheckFormSkeleton} from "../../features/items/components/PackageCheckFormSkeleton";
 import {PackageCheckResultSkeleton} from "../../features/items/components/PackageCheckResultSkeleton";
-import {useParams, useNavigate} from "react-router-dom";
+import {useParams, useNavigate} from "react-router";
 
 export function PackageCheck() {
   const {t} = useTranslation();

@@ -499,6 +499,7 @@
   "selectUnit": "Seleccionar Unidad",
   "barcodeRequired": "Se requiere código de barras",
   "clearPackage": "Limpiar Paquete",
+  "unloadPackage": "Liberar Paquete",
   "package": "Paquete",
   "inventory": {
     "totalLocations": "Total Ubicaciones",

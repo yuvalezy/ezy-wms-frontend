@@ -7,7 +7,7 @@ import {ReasonType} from "@/features/shared/data/reasons";
 import Processes from "../../components/Processes";
 import BarCodeScanner from "../../components/BarCodeScanner";
 import {useGoodsReceiptProcessData} from "@/features/goods-receipt/hooks/useGoodsReceiptProcessData";
-import {useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router";
 import {useAuth} from "@/components";
 import {ObjectType} from "@/features/packages/types";
 import {ProcessType} from "@/features/shared/data";

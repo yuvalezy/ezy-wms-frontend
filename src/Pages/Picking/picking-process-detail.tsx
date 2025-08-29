@@ -1,5 +1,5 @@
 import ContentTheme from "@/components/ContentTheme";
-import {useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router";
 import React from "react";
 import {Alert, AlertDescription, AlertTitle, PackageValue, useAuth} from "@/components";
 import {useTranslation} from "react-i18next";
@@ -91,7 +91,7 @@ export default function PickingProcessDetail() {
                     onClick={() => setPickingPackage(null)}
                     className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm font-medium"
                 >
-                  {t('clearPackage')}
+                  {t('unloadPackage')}
                 </button>
             </div>}
               <PickingProcessDetailContent items={detail.items}/>

@@ -8,7 +8,7 @@ import {useBinCheckData} from "@/features/items/hooks/useBinCheckData";
 import {BinCheckResult} from "@/features/items/components/BinCheckResult";
 import {BinCheckFormSkeleton} from "@/features/items/components/BinCheckFormSkeleton";
 import {BinCheckResultSkeleton} from "@/features/items/components/BinCheckResultSkeleton";
-import {useParams, useNavigate} from "react-router-dom";
+import {useParams, useNavigate} from "react-router";
 
 export function BinCheck() {
   const {t} = useTranslation();
