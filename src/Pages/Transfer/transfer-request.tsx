@@ -132,7 +132,7 @@ export default function TransferRequest() {
                                                 <Input
                                                     type="number"
                                                     value={row.quantity.toString()}
-                                                    ref={el => quantityRefs.current[index] = el}
+                                                    ref={el => { quantityRefs.current[index] = el; }}
                                                     onChange={(e) => handleQuantityChange(index, e.target.value)}
                                                 />
                                             </TableCell>

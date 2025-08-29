@@ -26,7 +26,7 @@ export const useGoodsReceiptAllData = (processType: ProcessType = ProcessType.Re
   const [isRefreshingDetail, setIsRefreshingDetail] = useState(false);
   const [isLoadingDetail, setIsLoadingDetail] = useState(false);
   const title = `${t("goodsReceiptReport")} #${scanCode}`;
-  const detailRef = useRef<GRPOAllDetailRef>();
+  const detailRef = useRef<GRPOAllDetailRef>(null);
   const {user} = useAuth();
 
   useEffect(() => {

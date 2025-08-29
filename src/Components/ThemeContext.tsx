@@ -46,7 +46,7 @@ export const ThemeContextProvider: React.FC<{ children: React.ReactNode }> = ({ 
     }, []);
 
     return (
-        <ThemeContext.Provider value={{ loading, setLoading, setError }}>
+        <ThemeContext value={{ loading, setLoading, setError }}>
             {children}
             {loading && (
                 <div
@@ -55,6 +55,6 @@ export const ThemeContextProvider: React.FC<{ children: React.ReactNode }> = ({ 
                     <Loader2 className="h-12 w-12 animate-spin text-primary" /> {/* Added size and color */}
                 </div>
             )}
-        </ThemeContext.Provider>
+        </ThemeContext>
     );
 };
