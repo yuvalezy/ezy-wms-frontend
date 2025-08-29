@@ -5,11 +5,8 @@ import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger,} from "@/components/ui/accordion";
-import {Calendar} from "@/components/ui/calendar"; // For DatePicker
-import {Popover, PopoverContent, PopoverTrigger,} from "@/components/ui/popover"; // For DatePicker
-import {cn} from "@/utils/css-utils"; // For DatePicker
-import {format} from "date-fns"; // For DatePicker
-import {BarChart2, CalendarIcon, Eraser, X} from "lucide-react";
+import {DatePicker} from "@/components/ui/date-picker";
+import {BarChart2, Eraser, X} from "lucide-react";
 import {BusinessPartner, GoodsReceiptReportFilter} from "@/features/goods-receipt/data/goods-receipt";
 import {useDocumentStatusOptions} from "@/hooks/useDocumentStatusOptions";
 import {goodsReceiptService} from "@/features/goods-receipt/data/goods-receipt-service";
@@ -35,10 +32,6 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
     const {t} = useTranslation();
     const documentStatusOptions = useDocumentStatusOptions();
     const [isPanelOpen, setIsPanelOpen] = useState(true); // Control accordion state
-    const [statusValue, setStatusValue] = useState<string>("");
-    const [vendorName, setVendorName] = useState<string>("");
-    const [isDateFromPopoverOpen, setIsDateFromPopoverOpen] = useState(false);
-    const [isDateToPopoverOpen, setIsDateToPopoverOpen] = useState(false);
     const {displayVendor} = useAuth();
 
     // Expose togglePanel method to parent component
@@ -52,7 +45,6 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
 
     function clearForm() {
       setFilters(newFilters());
-      setStatusValue("");
       onClear();
     }
 
@@ -63,7 +55,6 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
 
     const handleVendorChange = (value: string) => { // value is string from Select
       const selectedVendor = vendors.find((v) => v.id === value);
-      setVendorName(selectedVendor?.name || "");
       setFilters((prevFilters) => ({
         ...prevFilters,
         vendor: selectedVendor?.id,
@@ -72,7 +63,6 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
 
     const handleStatusChange = (value: string) => {
       const selectedOption = documentStatusOptions.find(opt => opt.code === value);
-      setStatusValue(selectedOption?.name || "");
       setFilters((prevFilters) => ({
         ...prevFilters,
         statuses: selectedOption ? [selectedOption.status] : undefined,
@@ -135,28 +125,11 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
                 <div>
                   <Label htmlFor="dateFrom">{`${t("status")} - ${t("fromDate")}`}</Label>
                   <div className="relative">
-                    <Popover open={isDateFromPopoverOpen} onOpenChange={setIsDateFromPopoverOpen}>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant={"outline"}
-                          className={cn("w-full justify-start text-left font-normal", !filters.dateFrom && "text-muted-foreground")}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4"/>
-                          {filters.dateFrom ? format(filters.dateFrom, "PPP") : <span>{t("pickADate")}</span>}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0">
-                        <Calendar
-                          mode="single"
-                          selected={filters.dateFrom || undefined}
-                          onSelect={(date: Date | undefined) => {
-                            setFilters(pf => ({...pf, dateFrom: date || null}));
-                            setIsDateFromPopoverOpen(false); // Close popover on date selection
-                          }}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
+                    <DatePicker
+                      date={filters.dateFrom || undefined}
+                      onSelect={(date) => setFilters(pf => ({...pf, dateFrom: date || null}))}
+                      placeholder={t("pickADate")}
+                    />
                     {filters.dateFrom && (
                       <Button
                         type="button"
@@ -173,28 +146,11 @@ export default forwardRef<ReportFilterFormRef, ReportFilterFormProps>(
                 <div>
                   <Label htmlFor="dateTo">{`${t("status")} - ${t("toDate")}`}</Label>
                   <div className="relative">
-                    <Popover open={isDateToPopoverOpen} onOpenChange={setIsDateToPopoverOpen}>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant={"outline"}
-                          className={cn("w-full justify-start text-left font-normal", !filters.dateTo && "text-muted-foreground")}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4"/>
-                          {filters.dateTo ? format(filters.dateTo, "PPP") : <span>{t("pickADate")}</span>}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0">
-                        <Calendar
-                          mode="single"
-                          selected={filters.dateTo || undefined}
-                          onSelect={(date: Date | undefined) => {
-                            setFilters(pf => ({...pf, dateTo: date || null}));
-                            setIsDateToPopoverOpen(false); // Close popover on date selection
-                          }}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
+                    <DatePicker
+                      date={filters.dateTo || undefined}
+                      onSelect={(date) => setFilters(pf => ({...pf, dateTo: date || null}))}
+                      placeholder={t("pickADate")}
+                    />
                     {filters.dateTo && (
                       <Button
                         type="button"

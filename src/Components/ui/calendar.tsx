@@ -1,76 +1,235 @@
 import * as React from "react"
 import {ChevronLeft, ChevronRight} from "lucide-react"
-import {DayPicker} from "react-day-picker"
-
 import {cn} from "@/utils/css-utils"
-import {buttonVariants} from "@/components/ui/button"
+import {Button} from "@/components/ui/button"
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select"
+
+interface CalendarProps {
+  selected?: Date
+  onSelect?: (date: Date | undefined) => void
+  mode?: "single" | "range"
+  className?: string
+  disabled?: (date: Date) => boolean
+  showYearMonthSelector?: boolean
+}
+
+const MONTHS = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+]
+
+const WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
 
 function Calendar({
+  selected,
+  onSelect,
+  mode = "single",
   className,
-  classNames,
-  showOutsideDays = true,
+  disabled,
+  showYearMonthSelector = true,
   ...props
-}: React.ComponentProps<typeof DayPicker>) {
+}: CalendarProps) {
+  const [currentDate, setCurrentDate] = React.useState(() => selected || new Date())
+  
+  const currentYear = currentDate.getFullYear()
+  const currentMonth = currentDate.getMonth()
+  
+  // Generate year range (current year ± 10 years)
+  const years = Array.from({ length: 21 }, (_, i) => currentYear - 10 + i)
+  
+  const goToPreviousMonth = () => {
+    setCurrentDate(new Date(currentYear, currentMonth - 1, 1))
+  }
+  
+  const goToNextMonth = () => {
+    setCurrentDate(new Date(currentYear, currentMonth + 1, 1))
+  }
+  
+  const handleMonthChange = (month: string) => {
+    const monthIndex = MONTHS.indexOf(month)
+    setCurrentDate(new Date(currentYear, monthIndex, 1))
+  }
+  
+  const handleYearChange = (year: string) => {
+    setCurrentDate(new Date(parseInt(year), currentMonth, 1))
+  }
+  
+  const handleDateSelect = (day: number) => {
+    const newDate = new Date(currentYear, currentMonth, day)
+    if (disabled && disabled(newDate)) return
+    onSelect?.(newDate)
+  }
+  
+  // Get days in current month
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate()
+  const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay()
+  
+  // Get days from previous month to fill the grid
+  const prevMonthDays = new Date(currentYear, currentMonth, 0).getDate()
+  const leadingDays = firstDayOfMonth
+  
+  // Calculate total cells needed (always 42 for 6 rows)
+  const totalCells = 42
+  const remainingCells = totalCells - leadingDays - daysInMonth
+  
+  const isSelected = (day: number) => {
+    if (!selected) return false
+    return selected.getDate() === day && 
+           selected.getMonth() === currentMonth && 
+           selected.getFullYear() === currentYear
+  }
+  
+  const isToday = (day: number) => {
+    const today = new Date()
+    return today.getDate() === day && 
+           today.getMonth() === currentMonth && 
+           today.getFullYear() === currentYear
+  }
+  
+  const isDisabled = (day: number, isCurrentMonth = true) => {
+    if (!disabled) return false
+    const date = isCurrentMonth 
+      ? new Date(currentYear, currentMonth, day)
+      : new Date(currentYear, currentMonth - 1, day)
+    return disabled(date)
+  }
+  
   return (
-    <DayPicker
-      showOutsideDays={showOutsideDays}
-      className={cn("p-3", className)}
-      classNames={{
-        months: "flex flex-col sm:flex-row gap-2",
-        month: "flex flex-col gap-4",
-        caption: "flex justify-center pt-1 relative items-center w-full",
-        caption_label: "text-sm font-medium",
-        nav: "flex items-center gap-1",
-        nav_button: cn(
-          buttonVariants({ variant: "outline" }),
-          "size-7 bg-transparent p-0 opacity-50 hover:opacity-100"
-        ),
-        nav_button_previous: "absolute left-1",
-        nav_button_next: "absolute right-1",
-        table: "w-full border-collapse",
-        head_row: "", // Removed flex w-full gap-1
-        head_cell:
-          "text-muted-foreground rounded-md w-8 font-normal text-[0.8rem] text-center", // Added text-center, removed flex items-center justify-center
-        row: "mt-2", // Removed flex w-full gap-1
-        cell: cn(
-          "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent [&:has([aria-selected].day-range-end)]:rounded-r-md w-8", // Added w-8 here
-          props.mode === "range"
-            ? "[&:has(>.day-range-end)]:rounded-r-md [&:has(>.day-range-start)]:rounded-l-md first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md"
-            : "[&:has([aria-selected])]:rounded-md"
-        ),
-        day: cn(
-          buttonVariants({ variant: "ghost" }),
-          "size-8 p-0 font-normal aria-selected:opacity-100"
-        ),
-        day_range_start:
-          "day-range-start aria-selected:bg-primary aria-selected:text-primary-foreground",
-        day_range_end:
-          "day-range-end aria-selected:bg-primary aria-selected:text-primary-foreground",
-        day_selected:
-          "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
-        day_today: "bg-accent text-accent-foreground",
-        day_outside:
-          "day-outside text-muted-foreground aria-selected:text-muted-foreground",
-        day_disabled: "text-muted-foreground opacity-50",
-        day_range_middle:
-          "aria-selected:bg-accent aria-selected:text-accent-foreground",
-        day_hidden: "invisible",
-        ...classNames,
-      }}
-      components={{
-        PreviousMonthButton: ({ className, ...props }) => (
-          <button className={cn(buttonVariants({ variant: "outline" }), "size-7 bg-transparent p-0 opacity-50 hover:opacity-100 absolute left-1", className)} {...props}>
-            <ChevronLeft className="size-4" />
-          </button>
-        ),
-        NextMonthButton: ({ className, ...props }) => (
-          <button className={cn(buttonVariants({ variant: "outline" }), "size-7 bg-transparent p-0 opacity-50 hover:opacity-100 absolute right-1", className)} {...props}>
-            <ChevronRight className="size-4" />
-          </button>
-        ),
-      }}
-      {...props}
-    />
+    <div className={cn("p-3", className)} {...props}>
+      {/* Header with navigation */}
+      <div className="flex justify-center items-center relative mb-4">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={goToPreviousMonth}
+          className="absolute left-0 h-7 w-7 p-0"
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </Button>
+        
+        {showYearMonthSelector ? (
+          <div className="flex items-center gap-2">
+            <Select value={MONTHS[currentMonth]} onValueChange={handleMonthChange}>
+              <SelectTrigger className="w-auto border-none bg-transparent hover:bg-accent">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {MONTHS.map((month) => (
+                  <SelectItem key={month} value={month}>
+                    {month}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            
+            <Select value={currentYear.toString()} onValueChange={handleYearChange}>
+              <SelectTrigger className="w-auto border-none bg-transparent hover:bg-accent">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {years.map((year) => (
+                  <SelectItem key={year} value={year.toString()}>
+                    {year}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        ) : (
+          <h2 className="text-sm font-medium">
+            {MONTHS[currentMonth]} {currentYear}
+          </h2>
+        )}
+        
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={goToNextMonth}
+          className="absolute right-0 h-7 w-7 p-0"
+        >
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+      </div>
+      
+      {/* Calendar grid */}
+      <div className="grid grid-cols-7 gap-1">
+        {/* Weekday headers */}
+        {WEEKDAYS.map((day) => (
+          <div
+            key={day}
+            className="h-8 w-8 text-center text-xs font-medium text-muted-foreground flex items-center justify-center"
+          >
+            {day}
+          </div>
+        ))}
+        
+        {/* Previous month trailing days */}
+        {Array.from({ length: leadingDays }, (_, i) => {
+          const day = prevMonthDays - leadingDays + i + 1
+          return (
+            <Button
+              key={`prev-${day}`}
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0 text-muted-foreground opacity-50"
+              onClick={() => {
+                setCurrentDate(new Date(currentYear, currentMonth - 1, day))
+                handleDateSelect(day)
+              }}
+              disabled={isDisabled(day, false)}
+            >
+              {day}
+            </Button>
+          )
+        })}
+        
+        {/* Current month days */}
+        {Array.from({ length: daysInMonth }, (_, i) => {
+          const day = i + 1
+          const selected = isSelected(day)
+          const today = isToday(day)
+          const disabled = isDisabled(day)
+          
+          return (
+            <Button
+              key={day}
+              variant={selected ? "default" : "ghost"}
+              size="sm"
+              className={cn(
+                "h-8 w-8 p-0",
+                today && !selected && "bg-accent text-accent-foreground",
+                selected && "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground",
+                disabled && "opacity-50 cursor-not-allowed"
+              )}
+              onClick={() => handleDateSelect(day)}
+              disabled={disabled}
+            >
+              {day}
+            </Button>
+          )
+        })}
+        
+        {/* Next month leading days */}
+        {Array.from({ length: remainingCells }, (_, i) => {
+          const day = i + 1
+          return (
+            <Button
+              key={`next-${day}`}
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0 text-muted-foreground opacity-50"
+              onClick={() => {
+                setCurrentDate(new Date(currentYear, currentMonth + 1, day))
+                handleDateSelect(day)
+              }}
+              disabled={isDisabled(day, false)}
+            >
+              {day}
+            </Button>
+          )
+        })}
+      </div>
+    </div>
   )
 }
 
