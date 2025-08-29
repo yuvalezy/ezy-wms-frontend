@@ -1,4 +1,3 @@
-import {describe, expect, test} from 'vitest';
 import {ExcelQuantityFormatParams, formatQuantityForExcel} from './excel-quantity-format';
 
 describe('formatQuantityForExcel', () => {
