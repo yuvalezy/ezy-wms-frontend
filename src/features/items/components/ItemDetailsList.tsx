@@ -2,8 +2,9 @@ import {useTranslation} from "react-i18next";
 import React from "react";
 import {InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
 import {useAuth} from "@/components";
-import {CustomField, CustomFieldType, ItemDetails} from "@/features/items/data/items";
+import {CustomField, ItemDetails} from "@/features/items/data/items";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
+import {renderCustomFields} from "@/utils/custom-fields-utils";
 import {UnitType} from "@/features/shared/data";
 
 const ItemDetailsList = ({details}: { details: ItemDetails }) => {
@@ -41,24 +42,10 @@ export const ItemCustomFields = ({
   const {user} = useAuth();
   const {dateFormat} = useDateTimeFormat();
 
-  return (
-    <>
-      {(user?.customFields?.["Items"] ?? []).map((field, index) => {
-        let customFieldValue = customFields?.[field.key];
-        if (customFieldValue != null) {
-          switch (field.type) {
-            case CustomFieldType.Date:
-              customFieldValue = dateFormat(customFieldValue as Date);
-              break;
-            default:
-              customFieldValue = customFieldValue.toString();
-              break;
-          }
-        }
-        return render(field, customFieldValue as string | null, index);
-      })}
-    </>
-  );
+  const availableFields = user?.customFields?.["Items"] ?? [];
+  const renderedFields = renderCustomFields(customFields, availableFields, dateFormat, render);
+
+  return <>{renderedFields}</>;
 };
 
 export default ItemDetailsList;

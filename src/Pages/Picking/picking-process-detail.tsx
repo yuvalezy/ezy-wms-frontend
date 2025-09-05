@@ -1,7 +1,7 @@
 import ContentTheme from "@/components/ContentTheme";
 import {useNavigate} from "react-router";
 import React from "react";
-import {Alert, AlertDescription, AlertTitle, useAuth} from "@/components";
+import {Alert, AlertDescription, AlertTitle, InfoBoxValue, useAuth} from "@/components";
 import {useTranslation} from "react-i18next";
 import BarCodeScanner from "@/components/BarCodeScanner";
 import PickingProcessDetailContent from "@/features/picking/components/picking-process-detail-content";
@@ -9,12 +9,15 @@ import BinLocationScanner from "@/components/BinLocationScanner";
 import {usePickingProcessDetailData} from "@/features/picking/hooks/usePickingProcessDetailData";
 import {AlertCircle} from "lucide-react";
 import {useObjectName} from "@/hooks/useObjectName";
+import {renderCustomFields} from "@/utils/custom-fields-utils";
+import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
 
 export default function PickingProcessDetail() {
   const {t} = useTranslation();
   const navigate = useNavigate();
   const o = useObjectName();
   const {user} = useAuth();
+  const {dateFormat} = useDateTimeFormat();
   const {
     idParam,
     type,
@@ -33,6 +36,9 @@ export default function PickingProcessDetail() {
     setPickingPackage,
     handleCreatePackage,
   } = usePickingProcessDetailData();
+
+  const customFields = user?.customFields?.["PickingDetails"] ?? [];
+
   const titleBreadcrumbs = [
     {label: `${idParam}`, onClick: () => navigate(`/pick/${idParam}`)},
     {label: o(type) + (detail ? `# ${detail?.number}` : ''), onClick: binLocation ? () => onBinClear() : undefined}
@@ -76,6 +82,21 @@ export default function PickingProcessDetail() {
                   <AlertDescription>
                     {detail.cardCode} - {detail.cardName}
                   </AlertDescription>
+                {renderCustomFields(
+                  detail.customFields,
+                  customFields,
+                  dateFormat,
+                  (field, value) => (
+                    <>
+                      <AlertTitle>
+                        {field.description}:
+                      </AlertTitle>
+                      <AlertDescription>
+                        {value}
+                      </AlertDescription>
+                    </>
+                  )
+                )}
                 {detail.totalOpenItems === 0 && <AlertDescription>
                   {t("pickingCompletedFor", {type: o(type), number: detail.number})}:
                 </AlertDescription>}

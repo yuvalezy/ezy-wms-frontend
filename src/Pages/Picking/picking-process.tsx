@@ -11,8 +11,8 @@ import {PickingDocument, PickingDocumentDetail} from "@/features/picking/data/pi
 import {useObjectName} from "@/hooks/useObjectName";
 import {pickingService} from "@/features/picking/data/picking-service";
 import {Skeleton} from "@/components/ui/skeleton";
-import {CustomFieldType} from "@/features/items";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
+import {renderCustomFields} from "@/utils/custom-fields-utils";
 
 export default function PickingProcess() {
   const {idParam} = useParams();
@@ -154,20 +154,14 @@ export default function PickingProcess() {
                         <InfoBoxValue label={t("customer")} value={`${item.cardCode} - ${item.cardName}`}></InfoBoxValue>
                         <InfoBoxValue label={t("totalItems")} value={item.totalItems}></InfoBoxValue>
                         <InfoBoxValue label={t("totalOpenItems")} value={item.totalOpenItems}></InfoBoxValue>
-                        {customFields.map((field) => {
-                          let customFieldValue = item.customFields?.[field.key] ?? null;
-                          if (customFieldValue != null) {
-                            switch (field.type) {
-                              case CustomFieldType.Date:
-                                customFieldValue = dateFormat(customFieldValue as Date);
-                                break;
-                              default:
-                                customFieldValue = customFieldValue.toString();
-                                break;
-                            }
-                          }
-                          return <InfoBoxValue label={field.description} value={customFieldValue}></InfoBoxValue>;
-                        })}
+                        {renderCustomFields(
+                          item.customFields,
+                          customFields,
+                          dateFormat,
+                          (field, value) => (
+                            <InfoBoxValue key={field.key} label={field.description} value={value}></InfoBoxValue>
+                          )
+                        )}
                       </FullInfoBox>
                       <ul className="space-y-2 text-sm">
                         <li className="pt-2">
@@ -219,22 +213,16 @@ export default function PickingProcess() {
                         <TableCell className="font-medium">{o(item.type)}</TableCell>
                         <TableCell>{item.number}</TableCell>
                         <TableCell>{`${item.cardCode} - ${item.cardName}`}</TableCell>
-                        {customFields.map((field) => {
-                          let customFieldValue = item.customFields?.[field.key] ?? null;
-                          if (customFieldValue != null) {
-                            switch (field.type) {
-                              case CustomFieldType.Date:
-                                customFieldValue = dateFormat(customFieldValue as Date);
-                                break;
-                              default:
-                                customFieldValue = customFieldValue.toString();
-                                break;
-                            }
-                          }
-                          return <TableCell>
-                            {`${customFieldValue ?? ''}`}
-                          </TableCell>;
-                        })}
+                        {renderCustomFields(
+                          item.customFields,
+                          customFields,
+                          dateFormat,
+                          (field, value) => (
+                            <TableCell key={field.key}>
+                              {`${value ?? ''}`}
+                            </TableCell>
+                          )
+                        )}
                         <TableCell className="text-right">{item.totalItems}</TableCell>
                         <TableCell className="text-right">{item.totalOpenItems}</TableCell>
                         <TableCell>
