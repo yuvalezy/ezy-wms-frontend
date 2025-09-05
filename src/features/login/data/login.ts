@@ -25,6 +25,7 @@ export interface ApplicationSettings {
   enableUseBaseUn: boolean;
   scannerMode: ScannerMode;
   displayVendor: boolean;
+  whsCodeBinSuffix: boolean;
   // Goods Receipt
   goodsReceiptDraft: boolean;
   goodsReceiptModificationSupervisor: boolean;
