@@ -1,7 +1,7 @@
 import ContentTheme from "../../components/ContentTheme";
 import {useNavigate, useParams} from "react-router";
 import React, {useEffect, useState} from "react";
-import {Card, CardContent, CardFooter, CardHeader, FullInfoBox, InfoBoxValue, Progress, useThemeContext} from "@/components";
+import {Card, CardContent, CardFooter, CardHeader, FullInfoBox, InfoBoxValue, Progress, useAuth, useThemeContext} from "@/components";
 import {useTranslation} from "react-i18next";
 import {Button} from "@/components/ui/button";
 import {BarChart3, Play} from "lucide-react";
@@ -11,9 +11,12 @@ import {PickingDocument, PickingDocumentDetail} from "@/features/picking/data/pi
 import {useObjectName} from "@/hooks/useObjectName";
 import {pickingService} from "@/features/picking/data/picking-service";
 import {Skeleton} from "@/components/ui/skeleton";
+import {CustomFieldType} from "@/features/items";
+import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
 
 export default function PickingProcess() {
   const {idParam} = useParams();
+  const {user} = useAuth();
   const {t} = useTranslation();
   const [id, setID] = useState<number | null>();
   const {setLoading, setError} = useThemeContext();
@@ -21,6 +24,8 @@ export default function PickingProcess() {
   const [isLoading, setIsLoading] = useState(true);
   const o = useObjectName();
   const navigate = useNavigate();
+  const customFields = user?.customFields?.["PickingDetails"] ?? [];
+  const {dateFormat} = useDateTimeFormat();
 
   useEffect(() => {
     if (idParam === null || idParam === undefined || !IsNumeric(idParam)) {
@@ -56,23 +61,23 @@ export default function PickingProcess() {
   const ProcessMobileCardSkeleton = () => (
     <Card className="mb-4" aria-label="Loading...">
       <CardHeader>
-        <Skeleton className="h-6 w-32" />
+        <Skeleton className="h-6 w-32"/>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           <div className="space-y-2">
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-3/4" />
-            <Skeleton className="h-4 w-1/2" />
+            <Skeleton className="h-4 w-full"/>
+            <Skeleton className="h-4 w-3/4"/>
+            <Skeleton className="h-4 w-1/2"/>
           </div>
           <div className="pt-2">
-            <Skeleton className="h-2 w-full mb-2" />
-            <Skeleton className="h-4 w-16 mx-auto" />
+            <Skeleton className="h-2 w-full mb-2"/>
+            <Skeleton className="h-4 w-16 mx-auto"/>
           </div>
         </div>
       </CardContent>
       <CardFooter className="flex justify-end space-x-2 pt-4 border-t">
-        <Skeleton className="h-8 w-20" />
+        <Skeleton className="h-8 w-20"/>
       </CardFooter>
     </Card>
   );
@@ -91,21 +96,21 @@ export default function PickingProcess() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {Array.from({ length: 3 }).map((_, index) => (
+        {Array.from({length: 3}).map((_, index) => (
           <TableRow key={index}>
-            <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-            <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-            <TableCell><Skeleton className="h-4 w-40" /></TableCell>
-            <TableCell className="text-right"><Skeleton className="h-4 w-8" /></TableCell>
-            <TableCell className="text-right"><Skeleton className="h-4 w-8" /></TableCell>
+            <TableCell><Skeleton className="h-4 w-20"/></TableCell>
+            <TableCell><Skeleton className="h-4 w-16"/></TableCell>
+            <TableCell><Skeleton className="h-4 w-40"/></TableCell>
+            <TableCell className="text-right"><Skeleton className="h-4 w-8"/></TableCell>
+            <TableCell className="text-right"><Skeleton className="h-4 w-8"/></TableCell>
             <TableCell>
               <div className="flex items-center space-x-2">
-                <Skeleton className="h-2 w-20" />
-                <Skeleton className="h-4 w-8" />
+                <Skeleton className="h-2 w-20"/>
+                <Skeleton className="h-4 w-8"/>
               </div>
             </TableCell>
             <TableCell className="text-right">
-              <Skeleton className="h-8 w-20" />
+              <Skeleton className="h-8 w-20"/>
             </TableCell>
           </TableRow>
         ))}
@@ -123,14 +128,14 @@ export default function PickingProcess() {
           <>
             {/* Mobile view - Card skeletons */}
             <div className="block sm:hidden">
-              {Array.from({ length: 3 }).map((_, index) => (
-                <ProcessMobileCardSkeleton key={index} />
+              {Array.from({length: 3}).map((_, index) => (
+                <ProcessMobileCardSkeleton key={index}/>
               ))}
             </div>
 
             {/* Desktop view - Table skeleton */}
             <div className="hidden sm:block">
-              <ProcessTableSkeleton />
+              <ProcessTableSkeleton/>
             </div>
           </>
         ) : picking?.detail && (
@@ -149,10 +154,24 @@ export default function PickingProcess() {
                         <InfoBoxValue label={t("customer")} value={`${item.cardCode} - ${item.cardName}`}></InfoBoxValue>
                         <InfoBoxValue label={t("totalItems")} value={item.totalItems}></InfoBoxValue>
                         <InfoBoxValue label={t("totalOpenItems")} value={item.totalOpenItems}></InfoBoxValue>
+                        {customFields.map((field) => {
+                          let customFieldValue = item.customFields?.[field.key] ?? null;
+                          if (customFieldValue != null) {
+                            switch (field.type) {
+                              case CustomFieldType.Date:
+                                customFieldValue = dateFormat(customFieldValue as Date);
+                                break;
+                              default:
+                                customFieldValue = customFieldValue.toString();
+                                break;
+                            }
+                          }
+                          return <InfoBoxValue label={field.description} value={customFieldValue}></InfoBoxValue>;
+                        })}
                       </FullInfoBox>
                       <ul className="space-y-2 text-sm">
                         <li className="pt-2">
-                          <Progress value={progressValue} />
+                          <Progress value={progressValue}/>
                           <p className="text-xs text-muted-foreground text-center mt-1">{formatNumber(progressValue, 0)}% {t('progress')}</p>
                         </li>
                       </ul>
@@ -176,7 +195,7 @@ export default function PickingProcess() {
                 );
               })}
             </div>
-            
+
             {/* Desktop view - Table */}
             <div className="hidden sm:block">
               <Table>
@@ -185,6 +204,7 @@ export default function PickingProcess() {
                     <TableHead>{t('type')}</TableHead>
                     <TableHead>{t('number')}</TableHead>
                     <TableHead>{t('customer')}</TableHead>
+                    {customFields.map((field) => <TableHead>{field.description}</TableHead>)}
                     <TableHead className="text-right">{t('totalItems')}</TableHead>
                     <TableHead className="text-right">{t('totalOpenItems')}</TableHead>
                     <TableHead>{t('progress')}</TableHead>
@@ -199,11 +219,27 @@ export default function PickingProcess() {
                         <TableCell className="font-medium">{o(item.type)}</TableCell>
                         <TableCell>{item.number}</TableCell>
                         <TableCell>{`${item.cardCode} - ${item.cardName}`}</TableCell>
+                        {customFields.map((field) => {
+                          let customFieldValue = item.customFields?.[field.key] ?? null;
+                          if (customFieldValue != null) {
+                            switch (field.type) {
+                              case CustomFieldType.Date:
+                                customFieldValue = dateFormat(customFieldValue as Date);
+                                break;
+                              default:
+                                customFieldValue = customFieldValue.toString();
+                                break;
+                            }
+                          }
+                          return <TableCell>
+                            {`${customFieldValue ?? ''}`}
+                          </TableCell>;
+                        })}
                         <TableCell className="text-right">{item.totalItems}</TableCell>
                         <TableCell className="text-right">{item.totalOpenItems}</TableCell>
                         <TableCell>
                           <div className="flex items-center space-x-2">
-                            <Progress value={progressValue} className="w-20" />
+                            <Progress value={progressValue} className="w-20"/>
                             <span className="text-xs">{formatNumber(progressValue, 0)}%</span>
                           </div>
                         </TableCell>

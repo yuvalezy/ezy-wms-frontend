@@ -50,6 +50,7 @@ export type PickingDocumentDetail = {
   items?: PickingDocumentDetailItem[];
   totalItems: number;
   totalOpenItems: number;
+  customFields?: Record<string, unknown>;
 }
 
 export interface PickingDocumentDetailItem extends ItemDetails {

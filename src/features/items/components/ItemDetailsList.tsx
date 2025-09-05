@@ -8,7 +8,7 @@ import {UnitType} from "@/features/shared/data";
 
 const ItemDetailsList = ({details}: { details: ItemDetails }) => {
   const {t} = useTranslation();
-  const {user, defaultUnit, unitSelection} = useAuth();
+  const {defaultUnit, unitSelection} = useAuth();
   return <SecondaryInfoBox>
     <InfoBoxValue label={t("code")} value={details.itemCode}/>
     <InfoBoxValue label={t("description")} value={details.itemName}/>
