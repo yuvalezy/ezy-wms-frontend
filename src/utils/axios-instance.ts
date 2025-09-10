@@ -11,7 +11,8 @@ export const setNavigateCallback = (callback: (path: string) => void) => {
 
 // @ts-ignore
 const envServerUrl = window.__env?.VITE_APP_SERVER_URL || import.meta.env.VITE_APP_SERVER_URL;
-export const ServerUrl = envServerUrl || window.location.origin;
+const isDevelopment = import.meta.env.DEV;
+export const ServerUrl = isDevelopment ? envServerUrl : window.location.origin;
 export const None = "|none|";
 
 export const axiosInstance = axios.create({
