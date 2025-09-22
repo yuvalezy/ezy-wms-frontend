@@ -11,6 +11,7 @@ import {AuthorizationGroup, User, UserFilters, Warehouse} from "@/features/users
 import {userService} from "@/features/users/data/user-service";
 import UserForm from "@/features/users/components/user-form";
 import {AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle} from "@/components/ui/alert-dialog";
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import ContentTheme from "@/components/ContentTheme";
 
 const UsersList: React.FC = () => {
@@ -315,19 +316,21 @@ const UsersList: React.FC = () => {
         </Card>
 
         {showForm && (
-          <AlertDialog open={showForm} onOpenChange={setShowForm}>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>{!editingUser ? t('editUser') : t('addUser')}</AlertDialogTitle>
-              </AlertDialogHeader>
-              <UserForm
-                user={editingUser}
-                authorizationGroups={authorizationGroups}
-                warehouses={warehouses}
-                onClose={handleFormClose}
-              />
-            </AlertDialogContent>
-          </AlertDialog>
+          <Dialog open={showForm} onOpenChange={setShowForm}>
+            <DialogContent className="max-w-3xl max-h-[90vh] p-0">
+              <DialogHeader className="px-6 pt-6 pb-0">
+                <DialogTitle>{editingUser ? t('editUser') : t('addUser')}</DialogTitle>
+              </DialogHeader>
+              <div className="px-6 pb-6 max-h-[calc(90vh-5rem)] overflow-y-auto">
+                <UserForm
+                  user={editingUser}
+                  authorizationGroups={authorizationGroups}
+                  warehouses={warehouses}
+                  onClose={handleFormClose}
+                />
+              </div>
+            </DialogContent>
+          </Dialog>
         )}
 
         <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
