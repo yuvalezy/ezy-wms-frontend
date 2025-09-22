@@ -98,8 +98,8 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
       <PackageDisplay onClear={handleClearPackage} loadedPackage={loadedPackage} disabled={isProcessing}/>
 
       <div className="space-y-2">
-        <Label 
-          htmlFor="barcode-input" 
+        <Label
+          htmlFor="barcode-input"
           className={isProcessing ? "text-muted-foreground" : ""}
         >
           {barcodeLabel}

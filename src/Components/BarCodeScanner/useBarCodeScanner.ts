@@ -60,7 +60,7 @@ export const useBarCodeScanner = ({
 
   const clearBarCode = () => {
     setBarcodeInput('');
-    setSelectedUnit(UnitType.Pack);
+    setSelectedUnit(defaultUnit);
     setCreatePackage(false);
   };
 
