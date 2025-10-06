@@ -69,6 +69,7 @@ export function AppSidebar() {
       case "/settings/authorizationGroups":
       case "/settings/devices":
       case "/settings/license":
+      case "/settings/externalAlerts":
         groupLabel = t("settings");
         break;
       default:

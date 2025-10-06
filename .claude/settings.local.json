@@ -22,6 +22,9 @@
       "Bash(true)",
       "WebSearch"
     ],
-    "deny": []
+    "deny": [],
+    "additionalDirectories": [
+      "D:\\source\\NetFramework\\yuval08\\lw_server"
+    ]
   }
 }

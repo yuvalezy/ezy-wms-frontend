@@ -1,7 +1,7 @@
 import {useTranslation} from 'react-i18next';
 import {useMemo} from 'react'; // Import useMemo
 import {useAuth} from "@/components";
-import {BarChart3, Boxes, CheckCircle, ClipboardList, Factory, Move, Package, PackageCheckIcon, Shield, ShoppingCart, Smartphone, TrendingUp, Truck, Users,} from 'lucide-react';
+import {BarChart3, Bell, Boxes, CheckCircle, ClipboardList, Factory, Move, Package, PackageCheckIcon, SendHorizontal, Shield, ShoppingCart, Smartphone, TrendingUp, Truck, Users,} from 'lucide-react';
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {GoodsReceiptDocumentType} from "@/features/login/data/login";
 
@@ -136,13 +136,14 @@ export function useMenus() {
     //     Authorization: Authorization.COUNTING_SUPERVISOR,
     //     Icon: "manager-insight",
     // },
-    // {
-    //   Link: "/transferRequest",
-    //   Text: t('transferRequest'),
-    //   Authorization: RoleType.TRANSFER_REQUEST,
-    //   Icon: SendHorizontal,
-    //   Color: "text-lime-700",
-    // },
+    {
+      Link: "/transferRequest",
+      Text: t('transferRequest'),
+      Authorization: RoleType.TRANSFER_REQUEST,
+      Icon: SendHorizontal,
+      Color: "text-lime-700",
+      RequiresFeature: "TransferRequest"
+    },
     {
       Link: "/transfer",
       Text: t('transfer'),
@@ -217,6 +218,13 @@ export function useMenus() {
       Icon: Shield,
       Color: "text-gray-600",
     },
+    {
+      Link: "/settings/externalAlerts",
+      Text: t('externalAlerts'),
+      SuperUser: true,
+      Icon: Bell,
+      Color: "text-gray-600",
+    },
   ];
 
   const GetMenus = (authorizations: RoleType[] | undefined, superUser: boolean | undefined) => {
@@ -267,11 +275,15 @@ export function useMenus() {
             return false;
           break;
         case "EnableTransferConfirm":
-          if (!user?.settings?.enableTransferConfirm)
+          if (!user!.settings!.enableTransferConfirm)
             return false;
           break;
         case "BinLocation":
-          if (!user?.binLocations)
+          if (!user!.binLocations)
+            return false;
+          break;
+        case "TransferRequest":
+          if (!user!.settings!.enableTransferRequest)
             return false;
           break;
       }

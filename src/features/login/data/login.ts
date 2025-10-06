@@ -36,6 +36,7 @@ export interface ApplicationSettings {
   // Transfer
   transferTargetItems: boolean;
   enableTransferConfirm: boolean;
+  enableTransferRequest: boolean;
   // Packages & Units
   enablePackages: boolean;
   defaultUnitType: UnitType;

@@ -42,6 +42,7 @@ import {OfflineOverlay} from "./components/OfflineOverlay";
 import {useOfflineDetection} from "./hooks/useOfflineDetection";
 import DevicesList from "@/Pages/settings/devices-list";
 import {License} from "@/Pages/settings/license";
+import ExternalAlertsList from "@/Pages/settings/external-alerts-list";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {ProcessType} from "@/features/shared/data";
 
@@ -295,6 +296,7 @@ function AppRoutes() {
                element={<ProtectedRoute superUser element={<AuthorizationGroupForm/>}/>}/>
         <Route path="/settings/devices" element={<ProtectedRoute superUser element={<DevicesList/>}/>}/>
         <Route path="/settings/license" element={<ProtectedRoute superUser element={<License/>}/>}/>
+        <Route path="/settings/externalAlerts" element={<ProtectedRoute superUser element={<ExternalAlertsList/>}/>}/>
       </>
     );
   }
