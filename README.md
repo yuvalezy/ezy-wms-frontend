@@ -1,46 +1,224 @@
-# Getting Started with Create React App
+# Light WMS
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern Warehouse Management System built with React, TypeScript, and Vite. Light WMS streamlines warehouse operations including goods receipt, picking, counting, transfers, and inventory checks.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **Goods Receipt**: Manage incoming inventory with real-time tracking and reporting
+- **Picking**: Efficient order picking workflows with supervisor oversight
+- **Counting**: Inventory counting processes with summary reports
+- **Transfer**: Item and bin transfers between warehouse locations
+- **Inventory Check**: Real-time item, package, and bin verification
+- **User Management**: Role-based access control and authorization
+- **Multi-language Support**: English and Spanish translations
+- **Reports**: Comprehensive reporting including difference reports and receipt vs. exit analysis
 
-### `npm start`
+## Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:5001](http://localhost:5001) to view it in the browser.
+- **Frontend Framework**: React 19
+- **Language**: TypeScript 5.9
+- **Build Tool**: Vite 7
+- **Styling**: Tailwind CSS 4
+- **UI Components**: Radix UI (shadcn/ui)
+- **Forms**: React Hook Form 7.62
+- **HTTP Client**: Axios 1.11
+- **Internationalization**: i18next, react-i18next
+- **Icons**: Lucide React
+- **Date Handling**: date-fns
+- **Excel Export**: ExcelJS
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Getting Started
 
-### `npm test`
+### Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js (v18 or higher recommended)
+- npm or yarn
 
-### `npm run build`
+### Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd light_wms
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. Install dependencies:
+```bash
+npm install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. Create environment configuration:
+```bash
+cp .env.example .env
+```
 
-### `npm run eject`
+4. Configure environment variables in `.env`:
+```env
+VITE_APP_SERVER_URL=http://localhost:5000
+VITE_APP_DEBUG=false
+VITE_APP_TEST=true
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Development
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Start the development server:
+```bash
+npm start
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+The application will be available at `http://localhost:5001`
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Building
 
-## Learn More
+Build for production:
+```bash
+npm run build
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Build with production environment:
+```bash
+npm run build:prod
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Preview production build:
+```bash
+npm run preview
+```
+
+### Code Quality
+
+Run ESLint:
+```bash
+npm run lint
+```
+
+Run tests:
+```bash
+npm test
+```
+
+Run tests in watch mode:
+```bash
+npm test:watch
+```
+
+Generate coverage report:
+```bash
+npm test:coverage
+```
+
+## Project Structure
+
+```
+light_wms/
+├── src/
+│   ├── assets/          # Static assets and menu configurations
+│   ├── components/
+│   │   └── ui/          # Reusable UI components (shadcn/ui)
+│   ├── context/         # React Context providers (Auth, Theme)
+│   ├── pages/           # Application pages/modules
+│   │   ├── Counting/    # Inventory counting module
+│   │   ├── GoodsReceipt/ # Goods receipt module
+│   │   ├── picking/     # Order picking module
+│   │   ├── transfer/    # Transfer operations module
+│   │   ├── items/       # Item check utilities
+│   │   └── settings/    # System settings and configuration
+│   ├── types/           # TypeScript type definitions
+│   ├── utils/           # Utility functions and axios instance
+│   └── App.tsx          # Main application component
+├── public/              # Public static files
+└── package.json         # Project dependencies and scripts
+```
+
+## Architecture
+
+### Module Pattern
+
+Each business module follows a consistent structure:
+
+- `Module.tsx` - List/entry view
+- `ModuleProcess.tsx` - Process execution view
+- `ModuleSupervisor.tsx` - Supervisor dashboard
+- `components/` - Module-specific components
+- `data/` - API services and mock data
+
+### Authentication & Authorization
+
+- JWT-based authentication stored in localStorage
+- Role-based access control via `Authorization` enum
+- Protected routes enforce authorization checks
+
+### State Management
+
+- React Context API for global state (Auth, Theme)
+- No external state management library
+- Loading and error states managed through `ThemeContext`
+
+### Data Fetching
+
+Standard pattern used across the application:
+
+```typescript
+const fetchData = async (filters) => {
+  const response = await axiosInstance.post(url, filters);
+  return response.data;
+};
+```
+
+## Environment Configuration
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `VITE_APP_SERVER_URL` | Backend API endpoint | `http://localhost:5000` |
+| `VITE_APP_DEBUG` | Enable debug logging | `false` |
+| `VITE_APP_TEST` | Enable test mode with mock data | `true` |
+
+## Contributing
+
+### Adding a New Module
+
+1. Create folder structure under `src/pages/ModuleName/`
+2. Implement list, process, and supervisor views as needed
+3. Add routing in `App.tsx` with appropriate authorization
+4. Create data services following the pattern in other modules
+5. Add navigation menu items in `src/assets/useMenus.tsx`
+
+### Working with Forms
+
+- Use React Hook Form with existing form components
+- Follow validation patterns from existing modules
+- Handle errors through `ThemeContext.setError()`
+
+### API Integration
+
+- Use `axiosInstance` from `src/utils/axios-instance.ts`
+- Implement both real and mock data paths
+- Follow existing error handling patterns
+
+### Code Standards
+
+- Keep files under 500 lines (refactor if larger)
+- Follow SOLID principles
+- Never change enum number values
+- Include icons in buttons
+- Prefix placeholder comments with `TODO:`
+
+## Browser Support
+
+### Production
+- \>0.2% market share
+- Not dead browsers
+- Not Opera Mini
+
+### Development
+- Latest Chrome
+- Latest Firefox
+- Latest Safari
+
+## License
+
+Private - All rights reserved
+
+## Support
+
+For issues and feature requests, please contact the development team.
