@@ -45,6 +45,8 @@ export interface ApplicationSettings {
   idleLogoutTimeout?: number | null;
   // Pick List
   enablePickingCheck: boolean;
+  // Quantities
+  enableDecimalQuantities: boolean;
 }
 
 export enum GoodsReceiptDocumentType {

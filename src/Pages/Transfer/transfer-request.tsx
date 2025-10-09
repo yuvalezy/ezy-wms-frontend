@@ -8,7 +8,7 @@ import {Input} from "@/components/ui/input";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import {Plus, Trash2} from 'lucide-react';
-import {useThemeContext} from "@/components";
+import {useThemeContext, useAuth} from "@/components";
 import {useNavigate} from "react-router";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {toast} from "sonner";
@@ -16,17 +16,20 @@ import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, Di
 import {TransferContent} from "@/features/transfer/data/transfer";
 import {transferService} from "@/features/transfer/data/transefer-service";
 import {StringFormat} from "@/utils/string-utils";
+import {parseQuantity, getQuantityStep} from "@/utils/quantity-utils";
 
 export default function TransferRequest() {
     const {t} = useTranslation();
     const barcodeRef = useRef<BarCodeScannerRef>(null);
     const {setLoading, setError} = useThemeContext();
+    const {user} = useAuth();
     const [rows, setRows] = useState<TransferContent[]>([]);
     const quantityRefs = useRef<(HTMLInputElement | null)[]>([]);
     const navigate = useNavigate();
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
     const [itemToRemoveIndex, setItemToRemoveIndex] = useState<number | null>(null);
     const [isSubmittingRequest, setIsSubmittingRequest] = useState(false);
+    const enableDecimals = user?.settings?.enableDecimalQuantities ?? false;
 
     function handleAddItem(value: AddItemValue) {
         const item = value.item;
@@ -70,7 +73,7 @@ export default function TransferRequest() {
 
     function handleQuantityChange(index: number, newQuantity: string) {
         const updatedRows = rows.map((row, i) =>
-            i === index ? { ...row, quantity: parseInt(newQuantity, 10) } : row
+            i === index ? { ...row, quantity: parseQuantity(newQuantity, enableDecimals) } : row
         );
         setRows(updatedRows);
     }
@@ -131,6 +134,8 @@ export default function TransferRequest() {
                                             <TableCell>
                                                 <Input
                                                     type="number"
+                                                    step={getQuantityStep(enableDecimals)}
+                                                    min="0"
                                                     value={row.quantity.toString()}
                                                     ref={el => { quantityRefs.current[index] = el; }}
                                                     onChange={(e) => handleQuantityChange(index, e.target.value)}

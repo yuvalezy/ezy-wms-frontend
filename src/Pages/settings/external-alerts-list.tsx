@@ -53,9 +53,6 @@ const ExternalAlertsList: React.FC = () => {
   const [enabled, setEnabled] = useState<boolean>(true);
 
   const getObjectTypeName = (type: AlertableObjectType): string => {
-    // Handle both numeric and string enum values from backend
-    const typeValue = typeof type === 'string' ? type : type;
-
     // Check by enum value (number)
     switch (type) {
       case AlertableObjectType.Transfer:
@@ -70,24 +67,6 @@ const ExternalAlertsList: React.FC = () => {
         return t('confirmationAdjustments');
       case AlertableObjectType.PickListCancellation:
         return t('pickListCancellation');
-    }
-
-    // Check by enum name (string)
-    switch (typeValue) {
-      case 'Transfer':
-        return t('transfer');
-      case 'GoodsReceipt':
-        return t('goodsReceipt');
-      case 'InventoryCounting':
-        return t('inventoryCounting');
-      case 'PickList':
-        return t('pickList');
-      case 'ConfirmationAdjustments':
-        return t('confirmationAdjustments');
-      case 'PickListCancellation':
-        return t('pickListCancellation');
-      default:
-        return typeValue.toString();
     }
   };
 

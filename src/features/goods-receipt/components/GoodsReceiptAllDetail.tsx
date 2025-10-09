@@ -11,12 +11,14 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/c
 
 import {GRPOAllDetailProps, useGoodsReceiptAllDetailsData} from "@/features/goods-receipt/hooks/useGoodsReceiptAllDetailsData";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
-import {Label} from "@/components";
+import {Label, useAuth} from "@/components";
 import {formatNumber} from "@/utils/number-utils";
+import {getQuantityStep} from "@/utils/quantity-utils";
 
 const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
   const {t} = useTranslation();
   const {dateFormat, timeFormat} = useDateTimeFormat();
+  const {user} = useAuth();
   const {
     isOpen,
     currentData,
@@ -31,6 +33,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
     handleQuantityChange,
     setIsOpen
   } = useGoodsReceiptAllDetailsData(props);
+  const enableDecimals = user?.settings?.enableDecimalQuantities ?? false;
 
   useImperativeHandle(ref, () => ({
     show(data: GoodsReceiptAllLine, details: any[], enableUpdate: boolean) {
@@ -89,13 +92,13 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                                 type="number"
                                 className="w-20 text-center font-medium mt-1"
                                 value={(quantityChanges[row.lineId] ?? quantity).toString()}
-                                min={1}
-                                step={1}
+                                min={0}
+                                step={getQuantityStep(enableDecimals)}
                                 onFocus={(e) => e.target.select()}
                                 onChange={(e) => handleQuantityChange(row.lineId, e.target.value)}
                               />
                             ) : (
-                              <span className="ml-2 font-medium">{formatNumber(quantity, 0)}</span>
+                              <span className="ml-2 font-medium">{formatNumber(quantity, enableDecimals ? 2 : 0)}</span>
                             )}
                           </div>
                           {row.package && (
@@ -170,13 +173,13 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                                 type="number"
                                 className="w-24 text-right mx-auto"
                                 value={(quantityChanges[row.lineId] ?? quantity).toString()}
-                                min={1}
-                                step={1}
+                                min={0}
+                                step={getQuantityStep(enableDecimals)}
                                 onFocus={(e) => e.target.select()}
                                 onChange={(e) => handleQuantityChange(row.lineId, e.target.value)}
                               />
                             ) : (
-                              formatNumber(quantity, 0)
+                              formatNumber(quantity, enableDecimals ? 2 : 0)
                             )}
                           </TableCell>
                           {displayBarcode && (

@@ -1,5 +1,5 @@
 import React, {forwardRef, useImperativeHandle, useState} from "react";
-import {useThemeContext} from "@/components";
+import {useThemeContext, useAuth} from "@/components";
 import {useTranslation} from "react-i18next";
 import {DetailUpdateParameters, Status} from "@/features/shared/data";
 import {Button} from "@/components/ui/button";
@@ -12,6 +12,7 @@ import {transferService} from "@/features/transfer/data/transefer-service";
 import {TargetItemDetail, TransferContent, TransferContentBin} from "@/features/transfer/data/transfer";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
 import {Skeleton} from "@/components/ui/skeleton";
+import {parseQuantity, getQuantityStep} from "@/utils/quantity-utils";
 
 export interface TransferTargetItemsDetailRef {
     show: (content: TransferContent, bin: TransferContentBin) => void;
@@ -27,6 +28,7 @@ const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsD
     const {t} = useTranslation();
     const { dateFormat, timeFormat } = useDateTimeFormat();
     const {setError} = useThemeContext();
+    const {user} = useAuth();
     const [isOpen, setIsOpen] = useState(false);
     const [content, setContent] = useState<TransferContent | null>(null);
     const [bin, setBin] = useState<TransferContentBin | null>(null);
@@ -35,6 +37,7 @@ const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsD
     const [checkedRows, setCheckedRows] = useState<{ [key: string]: boolean }>({}); // State to store checked rows
     const [quantityChanges, setQuantityChanges] = useState<{ [key: string]: number }>({}); // State to store quantity changes
     const [isLoading, setIsLoading] = useState(false);
+    const enableDecimals = user?.settings?.enableDecimalQuantities ?? false;
 
     function update() {
         try {
@@ -88,10 +91,10 @@ const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsD
     }
 
     function handleQuantityChange(lineId: string, newValue: string) {
-        const numValue = parseInt(newValue, 10);
+        const numValue = parseQuantity(newValue, enableDecimals);
         setQuantityChanges(prevState => ({
             ...prevState,
-            [lineId]: isNaN(numValue) ? 0 : numValue,
+            [lineId]: numValue,
         }));
         // setEnableUpdate(true);
     }
@@ -165,6 +168,8 @@ const TransferTargetItemsDetailsDialog = forwardRef((props: TransferTargetItemsD
                                             {enableUpdate ? (
                                                 <Input
                                                     type="number"
+                                                    step={getQuantityStep(enableDecimals)}
+                                                    min="0"
                                                     className="w-20 text-right"
                                                     value={(quantityChanges[row.lineId] ?? row.quantity).toString()}
                                                     onChange={(e) => handleQuantityChange(row.lineId, e.target.value)}

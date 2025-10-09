@@ -8,6 +8,8 @@ import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle,} from "@
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import {InfoBoxValue, SecondaryInfoBox} from "@/components/InfoBox";
+import {useAuth} from "@/components";
+import {parseQuantity, getQuantityStep} from "@/utils/quantity-utils";
 
 export interface ProcessQuantityRef {
   show: (show: boolean) => void;
@@ -25,10 +27,12 @@ export interface ProcessQuantityProps {
 const ProcessQuantity = forwardRef((props: ProcessQuantityProps, ref) => {
   const {t} = useTranslation();
   const {setLoading, setError} = useThemeContext();
+  const {user} = useAuth();
   const [userName, setUserName] = useState("");
   const [quantity, setQuantity] = useState<number>(props.alert?.quantity ?? 1);
   const quantityRef = useRef<HTMLInputElement>(null); // Changed to HTMLInputElement
   const [isOpen, setIsOpen] = useState(false);
+  const enableDecimals = user?.settings?.enableDecimalQuantities ?? false;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -134,10 +138,12 @@ const ProcessQuantity = forwardRef((props: ProcessQuantityProps, ref) => {
               name="quantity"
               ref={quantityRef}
               type="number"
+              step={getQuantityStep(enableDecimals)}
+              min="0"
               value={quantity?.toString()}
               onChange={(e) => {
                 const val = e.target.value;
-                setQuantity(val === "" ? 0 : parseInt(val, 10));
+                setQuantity(val === "" ? 0 : parseQuantity(val, enableDecimals));
               }}
               className="w-full"
             />
