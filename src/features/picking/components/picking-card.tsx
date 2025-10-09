@@ -50,17 +50,17 @@ const PickingCard: React.FC<PickingCardProps> = ({picking, onUpdatePick, onStart
               </>
             )}
           </li>
-          {picking.salesOrders > 0 &&
+          {picking.salesOrders != null && picking.salesOrders != '' &&
               <li className="flex justify-between">
                   <span className="font-semibold">{t('salesOrders')}:</span> {picking.salesOrders}
               </li>
           }
-          {picking.invoices > 0 &&
+          {picking.invoices != null && picking.invoices != '' &&
               <li className="flex justify-between">
                   <span className="font-semibold">{t('invoices')}:</span> {picking.invoices}
               </li>
           }
-          {picking.transfers > 0 &&
+          {picking.transfers != null && picking.transfers != '' &&
               <li className="flex justify-between">
                   <span className="font-semibold">{t('transferRequests')}:</span> {picking.transfers}
               </li>

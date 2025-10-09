@@ -26,9 +26,9 @@ export enum PickStatus {
 export type PickingDocument = {
   entry: number;
   date: Date;
-  salesOrders: number;
-  invoices: number;
-  transfers: number;
+  salesOrders: string | null;
+  invoices: string | null;
+  transfers: string | null;
   remarks: String | null;
   status: PickStatus;
   syncStatus: SyncStatus;

@@ -102,9 +102,9 @@ export default function PickingSupervisor() {
     }
   };
 
-  const displaySalesOrders = pickings.find(picking => picking.salesOrders > 0) != null;
-  const displayInvoices = pickings.find(picking => picking.invoices > 0) != null;
-  const displayTransfers = pickings.find(picking => picking.transfers > 0) != null;
+  const displaySalesOrders = pickings.find(picking => picking.salesOrders != null && picking.salesOrders != '') != null;
+  const displayInvoices = pickings.find(picking => picking.invoices != null && picking.invoices != '') != null;
+  const displayTransfers = pickings.find(picking => picking.transfers != null && picking.transfers != '') != null;
 
   // Skeleton components
   const SupervisorMobileCardSkeleton = () => (
