@@ -1,6 +1,6 @@
 import ContentTheme from "@/components/ContentTheme";
 import {useTranslation} from "react-i18next";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {useThemeContext} from "@/components/ThemeContext";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import {StringFormat} from "@/utils/string-utils";
@@ -9,12 +9,14 @@ import PickingCard from "@/features/picking/components/picking-card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Button} from "@/components/ui/button";
 import {Progress} from "@/components/ui/progress";
-import {CheckCircle, Eye, RefreshCw, XCircle} from "lucide-react";
+import {CheckCircle, Eye, RefreshCw, Search, X, XCircle} from "lucide-react";
 import {useNavigate} from "react-router";
 import {useAuth} from "@/components/AppContext";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
 import {MessageBox} from "@/components";
 import {Skeleton} from "@/components/ui/skeleton";
+import {Input} from "@/components/ui/input";
+import {useDebounce} from "@/hooks/useDebounce";
 
 import {PickingDocument, SyncStatus} from "@/features/picking/data/picking";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
@@ -26,12 +28,15 @@ export default function PickingSupervisor() {
   const {t} = useTranslation();
   const [pickings, setPickings] = useState<PickingDocument[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
   const {setLoading, setError} = useThemeContext();
   const navigate = useNavigate();
   const {user} = useAuth();
   const {dateFormat} = useDateTimeFormat();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState<PickingDocument | null>(null);
+
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
   function handleOpen(id: number) {
     navigate(`/pick/${id}`);
@@ -102,9 +107,37 @@ export default function PickingSupervisor() {
     }
   };
 
-  const displaySalesOrders = pickings.find(picking => picking.salesOrders != null && picking.salesOrders != '') != null;
-  const displayInvoices = pickings.find(picking => picking.invoices != null && picking.invoices != '') != null;
-  const displayTransfers = pickings.find(picking => picking.transfers != null && picking.transfers != '') != null;
+  // Memoized filtered pickings based on search term
+  const filteredPickings = useMemo(() => {
+    if (!debouncedSearchTerm) {
+      return pickings;
+    }
+
+    const searchLower = debouncedSearchTerm.toLowerCase();
+    return pickings.filter((pick) => {
+      return (
+        pick.entry.toString().includes(searchLower) ||
+        pick.salesOrders?.toLowerCase().includes(searchLower) ||
+        pick.invoices?.toLowerCase().includes(searchLower) ||
+        pick.transfers?.toLowerCase().includes(searchLower) ||
+        pick.remarks?.toLowerCase().includes(searchLower)
+      );
+    });
+  }, [pickings, debouncedSearchTerm]);
+
+  // Memoized conditional display flags
+  const displaySalesOrders = useMemo(() =>
+    filteredPickings.find(picking => picking.salesOrders != null && picking.salesOrders != '') != null,
+    [filteredPickings]
+  );
+  const displayInvoices = useMemo(() =>
+    filteredPickings.find(picking => picking.invoices != null && picking.invoices != '') != null,
+    [filteredPickings]
+  );
+  const displayTransfers = useMemo(() =>
+    filteredPickings.find(picking => picking.transfers != null && picking.transfers != '') != null,
+    [filteredPickings]
+  );
 
   // Skeleton components
   const SupervisorMobileCardSkeleton = () => (
@@ -173,6 +206,29 @@ export default function PickingSupervisor() {
 
   return (
     <ContentTheme title={t("pickSupervisor")}>
+      {/* Search Input */}
+      <div className="mb-4">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Input
+            type="text"
+            placeholder={t("searchPickings")}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 pr-10"
+          />
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm("")}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              aria-label="Clear search"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+      </div>
+
       {isLoading ? (
         <>
           {/* Mobile view - Card skeletons */}
@@ -187,11 +243,11 @@ export default function PickingSupervisor() {
             <SupervisorTableSkeleton />
           </div>
         </>
-      ) : pickings.length > 0 ? (
+      ) : filteredPickings.length > 0 ? (
         <>
           {/* Mobile view - Cards */}
           <div className="block sm:hidden">
-            {pickings.map((pick) => (
+            {filteredPickings.map((pick) => (
               <PickingCard key={pick.entry} picking={pick} supervisor={true}
                            onUpdatePick={handleUpdatePick}
                            onStartCheck={handleStartCheck}/>
@@ -214,7 +270,7 @@ export default function PickingSupervisor() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {pickings.map((pick) => {
+                {filteredPickings.map((pick) => {
                   const progressValue = pick.quantity > 0 ? 100 - (pick.openQuantity * 100 / pick.quantity) : 0;
                   return (
                     <TableRow key={pick.entry}>
@@ -291,7 +347,9 @@ export default function PickingSupervisor() {
       ) : (
         <div className="p-4">
           <Alert variant="default" className="bg-blue-100 border-blue-400 text-blue-700">
-            <AlertDescription>{t("nodata")}</AlertDescription>
+            <AlertDescription>
+              {pickings.length === 0 ? t("nodata") : t("noSearchResults")}
+            </AlertDescription>
           </Alert>
         </div>
       )}

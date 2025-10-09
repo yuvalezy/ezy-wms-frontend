@@ -1,9 +1,9 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useMemo} from "react";
 import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import {Alert, AlertDescription, Button, useThemeContext} from "@/components";
 import PickingCard from "@/features/picking/components/picking-card";
-import {AlertCircle, CheckCircle} from "lucide-react";
+import {AlertCircle, CheckCircle, Search, X} from "lucide-react";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Progress} from "@/components/ui/progress";
 import {useNavigate} from "react-router";
@@ -14,15 +14,20 @@ import {formatNumber} from "@/utils/number-utils";
 import {PickingDocument, PickStatus} from "@/features/picking/data/picking";
 import {pickingService} from "@/features/picking/data/picking-service";
 import {Skeleton} from "@/components/ui/skeleton";
+import {Input} from "@/components/ui/input";
+import {useDebounce} from "@/hooks/useDebounce";
 
 export default function PickingUser() {
   const {setLoading, setError} = useThemeContext();
   const {t} = useTranslation();
   const [pickings, setPickings] = React.useState<PickingDocument[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [searchTerm, setSearchTerm] = React.useState("");
   const navigate = useNavigate();
   const {user} = useAuth();
   const {dateFormat} = useDateTimeFormat();
+
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
 
   useEffect(() => {
@@ -42,6 +47,24 @@ export default function PickingUser() {
   }
 
   let handleOpenLink = user?.roles?.includes(RoleType.PICKING);
+
+  // Memoized filtered pickings based on search term
+  const filteredPickings = useMemo(() => {
+    if (!debouncedSearchTerm) {
+      return pickings;
+    }
+
+    const searchLower = debouncedSearchTerm.toLowerCase();
+    return pickings.filter((pick) => {
+      return (
+        pick.entry.toString().includes(searchLower) ||
+        pick.salesOrders?.toLowerCase().includes(searchLower) ||
+        pick.invoices?.toLowerCase().includes(searchLower) ||
+        pick.transfers?.toLowerCase().includes(searchLower) ||
+        pick.remarks?.toLowerCase().includes(searchLower)
+      );
+    });
+  }, [pickings, debouncedSearchTerm]);
 
   // Skeleton components
   const MobileCardSkeleton = () => (
@@ -105,6 +128,29 @@ export default function PickingUser() {
   return (
     <ContentTheme title={t("picking")}>
       <div className="my-4">
+        {/* Search Input */}
+        <div className="mb-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Input
+              type="text"
+              placeholder={t("searchPickings")}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 pr-10"
+            />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm("")}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                aria-label="Clear search"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+        </div>
+
         {isLoading ? (
           <>
             {/* Mobile view - Card skeletons */}
@@ -119,11 +165,11 @@ export default function PickingUser() {
               <TableSkeleton />
             </div>
           </>
-        ) : pickings.length ? (
+        ) : filteredPickings.length ? (
           <>
             {/* Mobile view - Cards */}
             <div className="block sm:hidden">
-              {pickings.map((pick) => (
+              {filteredPickings.map((pick) => (
                 <PickingCard key={pick.entry} picking={pick}/>
               ))}
             </div>
@@ -144,7 +190,7 @@ export default function PickingUser() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {pickings.map((pick) => {
+                  {filteredPickings.map((pick) => {
                     const progressValue = pick.quantity > 0 ? 100 - (pick.openQuantity * 100 / pick.quantity) : 0;
                     return (
                       <TableRow key={pick.entry}>
@@ -193,7 +239,7 @@ export default function PickingUser() {
           <Alert variant="information">
             <AlertCircle className="h-4 w-4"/>
             <AlertDescription>
-              {t("noPickingData")}
+              {pickings.length === 0 ? t("noPickingData") : t("noSearchResults")}
             </AlertDescription>
           </Alert>
         )}

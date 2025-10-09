@@ -230,6 +230,8 @@
   "nextAction": "Siguiente Acción",
   "noExitData": "No tiene salidas o transferencias pendientes.",
   "noPickingData": "No tiene picking pendientes.",
+  "searchPickings": "Buscar por número, órdenes, facturas, transferencias o comentarios...",
+  "noSearchResults": "No se encontraron resultados para su búsqueda.",
   "noGoodsReceiptData": "No tiene entradas pendientes.",
   "noConfirmationData": "No tiene confirmaciones pendientes.",
   "noCountingData": "No tiene conteos de inventario pendientes.",

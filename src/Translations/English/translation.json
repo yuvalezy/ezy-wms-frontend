@@ -234,6 +234,8 @@
   "nextAction": "Next Action",
   "noExitData": "You have no pending exits or transfers.",
   "noPickingData": "You have no pending pickings.",
+  "searchPickings": "Search by number, orders, invoices, transfers, or comments...",
+  "noSearchResults": "No results found for your search.",
   "noGoodsReceiptData": "You have no pending goods receipts.",
   "noConfirmationData": "You have no pending confirmations.",
   "noCountingData": "You have no pending inventory counting.",
