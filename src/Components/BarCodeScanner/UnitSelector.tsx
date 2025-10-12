@@ -23,13 +23,14 @@ export const UnitSelector: React.FC<UnitSelectorProps> = ({
   const { t } = useTranslation();
   const {user} = useAuth();
 
+  let settings = user!.settings!;
   let units = [
-    { text: t("inventory.units.unit.label"), value: UnitType.Unit },
-    { text: t("inventory.units.dozen.label"), value: UnitType.Dozen },
-    { text: t("inventory.units.box.label"), value: UnitType.Pack }
+    { text: settings.unitLabel ?? t("inventory.units.unit.label"), value: UnitType.Unit },
+    { text: settings.dozensLabel ?? t("inventory.units.dozen.label"), value: UnitType.Dozen },
+    { text: settings.boxLabel ?? t("inventory.units.box.label"), value: UnitType.Pack }
   ];
 
-  if (!user?.settings.enableUseBaseUn)  {
+  if (!settings.enableUseBaseUn)  {
     units = units.filter(unit => unit.value !== UnitType.Unit);
   }
 

@@ -23,6 +23,9 @@ export interface UserInfo {
 export interface ApplicationSettings {
   // General
   enableUseBaseUn: boolean;
+  unitLabel?: string;
+  dozensLabel?: string;
+  boxLabel?: string;
   scannerMode: ScannerMode;
   displayVendor: boolean;
   whsCodeBinSuffix: boolean;
