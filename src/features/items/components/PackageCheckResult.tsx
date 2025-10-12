@@ -10,11 +10,13 @@ import {formatDistance} from "date-fns";
 import {PackageMetadataDisplay} from "@/features/packages/components";
 import {useAuth} from "@/Components";
 import {InventoryUnitIndicators} from "@/components/InventoryUnitIndicators";
+import {UnitType} from "@/features/shared/data";
 
 export const PackageCheckResult: React.FC<{ packageData: PackageDto; onPackageUpdate?: (updatedPackage: PackageDto) => void }> = ({packageData: initialPackageData, onPackageUpdate}) => {
   const {t} = useTranslation();
   const {user} = useAuth();
   const [packageData, setPackageData] = useState<PackageDto>(initialPackageData);
+  const settings = user!.settings;
 
   useEffect(() => {
     setPackageData(initialPackageData);
@@ -50,38 +52,53 @@ export const PackageCheckResult: React.FC<{ packageData: PackageDto; onPackageUp
     if (!content.itemData) {
       return `${content.quantity} ${t('units')}`;
     }
-    
-    const { quantityInUnit, quantityInPack } = content.itemData;
+
+    const {quantityInUnit, quantityInPack} = content.itemData;
     const totalUnits = content.quantity;
-    
+
     // Calculate breakdown: packs -> dozens -> units
-    const packs = Math.floor(totalUnits / (quantityInUnit * quantityInPack));
-    const remainingForDozens = totalUnits % (quantityInUnit * quantityInPack);
-    const dozens = Math.floor(remainingForDozens / quantityInUnit);
-    const units = remainingForDozens % quantityInUnit;
-    
+    const packs = quantityInPack == 1 ? 0 : Math.floor(totalUnits / (quantityInUnit * quantityInPack));
+    const remainingForDozens = quantityInPack == 1 ? totalUnits : totalUnits % (quantityInUnit * quantityInPack);
+    let dozens;
+    let units;
+    if (settings.maxUnitLevel === UnitType.Dozen) {
+      dozens = remainingForDozens / quantityInUnit;
+      units = 0;
+    }
+    else {
+      dozens = Math.floor(remainingForDozens / quantityInUnit);
+      units = remainingForDozens % quantityInUnit;
+    }
+
     const parts = [];
     if (packs > 0) parts.push(`${packs} ${content.itemData.packMeasure || 'Box'}`);
     if (dozens > 0) parts.push(`${dozens} ${content.itemData.unitMeasure || 'Doz'}`);
     if (units > 0) parts.push(`${units} ${t('units')}`);
-    
+
     return parts.join(', ') || '0';
   };
 
   const getStockBreakdown = (content: PackageContentDto) => {
     if (!content.itemData) {
-      return { packs: 0, dozens: 0, units: content.quantity };
+      return {packs: 0, dozens: 0, units: content.quantity};
     }
-    
-    const { quantityInUnit, quantityInPack } = content.itemData;
+
+    const {quantityInUnit, quantityInPack} = content.itemData;
     const totalUnits = content.quantity;
-    
-    const packs = Math.floor(totalUnits / (quantityInUnit * quantityInPack));
-    const remainingForDozens = totalUnits % (quantityInUnit * quantityInPack);
-    const dozens = Math.floor(remainingForDozens / quantityInUnit);
-    const units = remainingForDozens % quantityInUnit;
-    
-    return { packs, dozens, units };
+
+    const packs = quantityInPack == 1 ? 0 : Math.floor(totalUnits / (quantityInUnit * quantityInPack));
+    const remainingForDozens = quantityInPack == 1 ? totalUnits : totalUnits % (quantityInUnit * quantityInPack);
+    let dozens ;
+    let units ;
+    if (settings.maxUnitLevel === UnitType.Dozen) {
+      dozens = remainingForDozens / quantityInUnit;
+      units = 0;
+    } else {
+      dozens = Math.floor(remainingForDozens / quantityInUnit);
+      units = remainingForDozens % quantityInUnit;
+    }
+
+    return {packs, dozens, units};
   };
 
   const calculateTotals = () => {
@@ -90,15 +107,15 @@ export const PackageCheckResult: React.FC<{ packageData: PackageDto; onPackageUp
     let totalPacks = 0;
     let totalDozens = 0;
     let totalUnits = 0;
-    
+
     packageData.contents.forEach(content => {
       const breakdown = getStockBreakdown(content);
       totalPacks += breakdown.packs;
       totalDozens += breakdown.dozens;
       totalUnits += breakdown.units;
     });
-    
-    return { totalItems, totalQuantity, totalPacks, totalDozens, totalUnits };
+
+    return {totalItems, totalQuantity, totalPacks, totalDozens, totalUnits};
   };
 
   if (!packageData) {
@@ -122,27 +139,27 @@ export const PackageCheckResult: React.FC<{ packageData: PackageDto; onPackageUp
               </div>
               {packageData.binCode && packageData.binEntry && (
                 <div className="flex items-center gap-1">
-                  <MapPin className="h-4 w-4" />
-                  <ClickableBinCode 
-                    binEntry={packageData.binEntry} 
+                  <MapPin className="h-4 w-4"/>
+                  <ClickableBinCode
+                    binEntry={packageData.binEntry}
                     binCode={packageData.binCode}
                   />
                 </div>
               )}
               <div className="flex items-center gap-1">
-                <User className="h-4 w-4" />
+                <User className="h-4 w-4"/>
                 <span>{packageData.createdBy?.name}</span>
               </div>
             </div>
           </div>
           <div className="text-right text-sm text-gray-600">
             <div className="flex items-center gap-1 justify-end">
-              <Calendar className="h-4 w-4" />
+              <Calendar className="h-4 w-4"/>
               <span>{t('packages.packageCreated')}: {formatDistance(new Date(packageData.createdAt), new Date(), {addSuffix: true})}</span>
             </div>
             {packageData.closedAt && (
               <div className="flex items-center gap-1 justify-end mt-1">
-                <Calendar className="h-4 w-4" />
+                <Calendar className="h-4 w-4"/>
                 <span>{t('packages.packageClosed')}: {formatDistance(new Date(packageData.closedAt), new Date(), {addSuffix: true})}</span>
               </div>
             )}
@@ -152,20 +169,20 @@ export const PackageCheckResult: React.FC<{ packageData: PackageDto; onPackageUp
 
       {/* Package Metadata */}
       {user?.packageMetaData && user.packageMetaData.length > 0 && (
-        <PackageMetadataDisplay packageData={packageData} onPackageUpdate={handlePackageUpdate} />
+        <PackageMetadataDisplay packageData={packageData} onPackageUpdate={handlePackageUpdate}/>
       )}
 
       {/* Package Contents */}
       <Card className="p-0 gap-0">
         {packageData.contents.map((content, index) => {
-          const { packs, dozens, units } = getStockBreakdown(content);
+          const {packs, dozens, units} = getStockBreakdown(content);
 
           return (
             <div key={content.id} className={`${index !== 0 ? 'border-t' : ''}`}>
               <div className="flex items-center justify-between p-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <ClickableItemCode itemCode={content.itemCode} />
+                    <ClickableItemCode itemCode={content.itemCode}/>
                   </div>
                   <p className="text-sm text-gray-600 mt-1 truncate">
                     {content.itemData?.itemName || content.itemCode}
@@ -184,7 +201,7 @@ export const PackageCheckResult: React.FC<{ packageData: PackageDto; onPackageUp
             </div>
           );
         })}
-        
+
         {packageData.contents.length === 0 && (
           <div className="p-8 text-center text-gray-500">
             {t('packages.noPackageContentFound')}
@@ -196,23 +213,23 @@ export const PackageCheckResult: React.FC<{ packageData: PackageDto; onPackageUp
       <div className="grid grid-cols-3 gap-4">
         <Card className="p-4 text-center">
           <div className="flex justify-center mb-2">
-            <Grid3x3 className="w-6 h-6 text-gray-400" />
+            <Grid3x3 className="w-6 h-6 text-gray-400"/>
           </div>
           <p className="text-2xl font-bold text-gray-900">{totals.totalItems}</p>
           <p className="text-xs text-gray-500 mt-1">{t('totalItems')}</p>
         </Card>
-        
+
         <Card className="p-4 text-center">
           <div className="flex justify-center mb-2">
-            <Package className="w-6 h-6 text-gray-400" />
+            <Package className="w-6 h-6 text-gray-400"/>
           </div>
           <p className="text-2xl font-bold text-gray-900">{totals.totalPacks}</p>
           <p className="text-xs text-gray-500 mt-1">{t('inventory.totalBoxes')}</p>
         </Card>
-        
+
         <Card className="p-4 text-center">
           <div className="flex justify-center mb-2">
-            <Box className="w-6 h-6 text-gray-400" />
+            <Box className="w-6 h-6 text-gray-400"/>
           </div>
           <p className="text-2xl font-bold text-gray-900">{totals.totalQuantity}</p>
           <p className="text-xs text-gray-500 mt-1">{t('packages.totalQuantity')}</p>
