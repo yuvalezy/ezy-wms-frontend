@@ -94,14 +94,16 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
     }
   };
 
+  let settings = user!.settings!;
+
   const unitDesc = () => {
     switch (alert.unit) {
       case UnitType.Unit:
-        return ' ' + (alert.quantity === 1 ? t('unit') : t('units'));
+        return ' ' + (alert.quantity === 1 ? t("inventory.units.unit.label") : t("inventory.units.unit.multiple"));
       case UnitType.Dozen:
-        return ' ' + t('buyUnit');
+        return ' ' + (settings.dozensLabel ?? t("inventory.units.dozen.label"));
       case UnitType.Pack:
-        return ' ' + t('packUnit');
+        return ' ' + (settings.boxLabel ?? t("inventory.units.box.label"));
       default:
         return null;
     }

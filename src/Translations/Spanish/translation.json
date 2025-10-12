@@ -525,14 +525,17 @@
     "units": {
       "box": {
         "label": "Caja",
+        "multiple": "Cajas",
         "abbr": "C"
       },
       "dozen": {
         "label": "Docena",
+        "multiple": "Docenas",
         "abbr": "D"
       },
       "unit": {
         "label": "Unidad",
+        "multiple": "Unidades",
         "abbr": "U"
       }
     }
