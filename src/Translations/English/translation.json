@@ -163,6 +163,8 @@
   "inWarehouse": "In Warehouse",
   "stock": "Stock",
   "comment": "Comment",
+  "addComment": "Add Comment",
+  "editQuantity": "Edit Quantity",
   "process": "Process",
   "supervisorCode": "Supervisor Code",
   "reason": "Reason",

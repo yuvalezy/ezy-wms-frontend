@@ -159,6 +159,8 @@
   "inWarehouse": "En Bodega",
   "stock": "Inventario",
   "comment": "Comentario",
+  "addComment": "Agregar Comentario",
+  "editQuantity": "Editar Cantidad",
   "process": "Procesar",
   "supervisorCode": "Codigo de Supervisor",
   "reason": "Razón",

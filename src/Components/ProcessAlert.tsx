@@ -13,6 +13,7 @@ import ClickableItemCode from "@/components/ClickableItemCode";
 import {useStockInfo} from "@/utils/stock-info";
 import {ScannerMode} from "@/features/login/data/login";
 import {canEditMetadata, ItemMetadataEditDialog} from "@/features/items/components/ItemMetadataEditDialog";
+import {useIsMobile} from "@/hooks/use-mobile";
 
 export type AlertSeverity = "Information" | "Positive" | "Negative" | "Warning";
 
@@ -67,6 +68,7 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
   const [showPackageContents, setShowPackageContents] = useState(false);
   const stockInfo = useStockInfo();
   const canEditItemMetadata = alert.itemCode && canEditMetadata(user);
+  const isMobile = useIsMobile();
 
 
   const alertSeverity = mapSeverity(alert.severity);
@@ -181,19 +183,7 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
             {alert.itemCode && user!.settings.scannerMode === ScannerMode.ItemBarcode && (
               <div>
                 <div className="text-xs text-gray-500 uppercase tracking-wide">{t('item')}</div>
-                <div className="flex items-center gap-2">
-                  <div className="font-medium">{alert.itemCode}</div>
-                  {canEditItemMetadata && (
-                    <ItemMetadataEditDialog
-                      itemCode={alert.itemCode}
-                      triggerButton={
-                        <Button variant="ghost" size="sm" className="h-6 px-2">
-                          <Edit className="w-3 h-3" />
-                        </Button>
-                      }
-                    />
-                  )}
-                </div>
+                <div className="font-medium">{alert.itemCode}</div>
               </div>
             )}
           </div>
@@ -266,14 +256,50 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
             </div>
           )}
         </div>
-        {!(alert.canceled ?? false) && alertSeverity !== 'Negative' && !alert.packageContents &&
-            <div className="absolute top-2 right-2 flex flex-col space-y-2">
-                <Edit3 className="h-5 w-5 cursor-pointer hover:text-blue-500" onClick={() => onAction(AlertActionType.Quantity)}/>
-              {enableComment &&
-                  <MessageCircle className="h-5 w-5 cursor-pointer hover:text-blue-500" onClick={() => onAction(AlertActionType.Comments)}/>
-              }
-            </div>
-        }
+
+        {/* Action Buttons */}
+        {(!(alert.canceled ?? false) && alertSeverity !== 'Negative' && !alert.packageContents) || (canEditItemMetadata && user!.settings.scannerMode === ScannerMode.ItemBarcode) ? (
+          <div className="mt-4 pt-4 border-t border-gray-200 flex flex-col md:flex-row gap-2">
+            {!(alert.canceled ?? false) && alertSeverity !== 'Negative' && !alert.packageContents && (
+              <>
+                <Button
+                  variant="outline"
+                  onClick={() => onAction(AlertActionType.Quantity)}
+                  className="flex items-center justify-center gap-2 w-full md:w-auto"
+                >
+                  <Edit3 className="h-4 w-4" />
+                  <span>{t('editQuantity')}</span>
+                </Button>
+
+                {enableComment && (
+                  <Button
+                    variant="outline"
+                    onClick={() => onAction(AlertActionType.Comments)}
+                    className="flex items-center justify-center gap-2 w-full md:w-auto"
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                    <span>{t('addComment')}</span>
+                  </Button>
+                )}
+              </>
+            )}
+
+            {canEditItemMetadata && user!.settings.scannerMode === ScannerMode.ItemBarcode && alert.itemCode && (
+              <ItemMetadataEditDialog
+                itemCode={alert.itemCode}
+                triggerButton={
+                  <Button
+                    variant="outline"
+                    className="flex items-center justify-center gap-2 w-full md:w-auto"
+                  >
+                    <Edit className="h-4 w-4" />
+                    <span>{t('editMetadata')}</span>
+                  </Button>
+                }
+              />
+            )}
+          </div>
+        ) : null}
       </div>
 
       {/* Package Contents Dialog */}
