@@ -97,9 +97,9 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
       case UnitType.Unit:
         return ' ' + (alert.quantity === 1 ? t('unit') : t('units'));
       case UnitType.Dozen:
-        return ' ' + (alert.quantity === 1 ? t('dozen') : t('dozens'));
+        return ' ' + t('buyUnit');
       case UnitType.Pack:
-        return ' ' + (alert.quantity === 1 ? t('box') : t('boxes'));
+        return ' ' + t('packUnit');
       default:
         return null;
     }
