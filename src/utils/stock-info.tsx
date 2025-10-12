@@ -12,13 +12,14 @@ export interface StockInfoParams {
 
 export const useStockInfo = () => {
   const {t} = useTranslation();
-  const {defaultUnit, unitSelection} = useAuth();
+  const {defaultUnit, unitSelection, user} = useAuth();
+  const settings = user!.settings;
 
   return (params: StockInfoParams) => {
     const isNegative = params.quantity < 0;
     let quantity = Math.abs(params.quantity);
-    const purPackMsr = params.purPackMsr && params.purPackMsr.length > 0 ? params.purPackMsr : t('packUnit');
-    const buyUnitMsr = params.buyUnitMsr && params.buyUnitMsr.length > 0 ? params.buyUnitMsr : t('buyUnit');
+    const purPackMsr = params.purPackMsr && params.purPackMsr.length > 0 ? params.purPackMsr : settings.boxLabel ?? t('packUnit');
+    const buyUnitMsr = params.buyUnitMsr && params.buyUnitMsr.length > 0 ? params.buyUnitMsr : settings.dozensLabel ?? t('buyUnit');
     const unitMsr = t('units');
     if (!unitSelection) {
       const defaultUnitMsr = defaultUnit === UnitType.Pack ? purPackMsr : defaultUnit === UnitType.Dozen ? buyUnitMsr : unitMsr;
@@ -27,10 +28,17 @@ export const useStockInfo = () => {
       }
       return `${isNegative ? '-' : ''}${quantity} ${defaultUnitMsr}`;
     }
-    const packages = Math.floor(quantity / (params.numInBuy * params.purPackUn));
-    const remainingForDozens = quantity % (params.numInBuy * params.purPackUn);
-    const dozens = Math.floor(remainingForDozens / params.numInBuy);
-    const units = remainingForDozens % params.numInBuy;
+    const packages = params.purPackUn == 1 ? 0 : Math.floor(quantity / (params.numInBuy * params.purPackUn));
+    const remainingForDozens = params.purPackUn == 1 ? quantity : quantity % (params.numInBuy * params.purPackUn);
+    let dozens;
+    let units;
+    if (settings.maxUnitLevel === UnitType.Dozen) {
+      dozens = remainingForDozens / params.numInBuy;
+      units = 0;
+    } else {
+      dozens = Math.floor(remainingForDozens / params.numInBuy);
+      units = remainingForDozens % params.numInBuy;
+    }
     let response = '';
     if (packages > 0) {
       response = `${packages} ${purPackMsr} `;

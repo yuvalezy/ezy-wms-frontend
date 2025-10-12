@@ -6,3 +6,5 @@ export { WarehouseSelector } from './WarehouseSelector';
 export { DeviceNameField } from './DeviceNameField';
 export { LoginButton } from './LoginButton';
 export { StatusBanners } from './StatusBanners';
+export { ConnectionError } from './ConnectionError';
+export { LoadingOverlay } from './LoadingOverlay';

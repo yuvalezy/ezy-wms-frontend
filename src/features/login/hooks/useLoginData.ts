@@ -21,7 +21,7 @@ export const useLoginData = () => {
   
   const { setLoading } = useThemeContext();
   const navigate = useNavigate();
-  const { login, isValidAccount, companyInfo, reloadCompanyInfo } = useAuth();
+  const { login, isValidAccount, companyInfo, connectionError, isLoading: isCompanyInfoLoading, reloadCompanyInfo } = useAuth();
   const { t, i18n } = useTranslation();
 
 
@@ -158,18 +158,21 @@ export const useLoginData = () => {
     errorMessage,
     errorType,
     companyInfo,
+    connectionError,
+    isCompanyInfoLoading,
     currentLanguage: i18n.language,
-    
+
     // Actions
     handleSubmit,
     handleLanguageChange,
     clearError,
-    
+    reloadCompanyInfo,
+
     // Status checks
     shouldShowDeviceStatusBanner,
     shouldShowAccountStatusBanner,
     isAccountDisabled,
-    
+
     // Translation
     t,
   };

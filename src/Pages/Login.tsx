@@ -1,6 +1,6 @@
 import React from 'react';
 import {useLoginData} from '@/features/login/hooks/useLoginData';
-import {DeviceNameField, LanguageSelector, LoginButton, LoginErrorAlert, LoginHeader, PasswordField, StatusBanners, WarehouseSelector} from '@/features/login/components';
+import {ConnectionError, DeviceNameField, LanguageSelector, LoadingOverlay, LoginButton, LoginErrorAlert, LoginHeader, PasswordField, StatusBanners, WarehouseSelector} from '@/features/login/components';
 
 export default function Login() {
   const {
@@ -12,29 +12,45 @@ export default function Login() {
     errorMessage,
     errorType,
     companyInfo,
+    connectionError,
+    isCompanyInfoLoading,
     currentLanguage,
-    
+
     // Actions
     handleSubmit,
     handleLanguageChange,
-    
+    reloadCompanyInfo,
+
     // Status checks
     shouldShowDeviceStatusBanner,
     shouldShowAccountStatusBanner,
     isAccountDisabled,
-    
+
     // Translation
     t,
   } = useLoginData();
 
   return (
-    <div className="h-screen overflow-auto bg-gray-100">
-      <div className="min-h-full flex items-center justify-center px-4 py-8">
-        <div className="w-full max-w-md bg-white shadow-md rounded-xl p-8">
-        <LoginHeader
-          companyName={companyInfo?.companyName}
-          loginText={t('login') || 'Login'}
+    <>
+      {connectionError && !isCompanyInfoLoading && (
+        <ConnectionError
+          onRetry={reloadCompanyInfo}
+          retryText={t('retry') || 'Retry'}
+          errorTitle={t('connectionError') || 'Connection Error'}
+          errorMessage={t('cannotEstablishConnection') || 'Cannot establish connection to server'}
         />
+      )}
+      <div className="h-screen overflow-auto bg-gray-100">
+        <div className="min-h-full flex items-center justify-center px-4 py-8">
+          <div className="w-full max-w-md bg-white shadow-md rounded-xl p-8 relative">
+          {isCompanyInfoLoading && !connectionError && (
+            <LoadingOverlay loadingText={t('loading') || 'Loading...'} />
+          )}
+
+          <LoginHeader
+            companyName={companyInfo?.companyName}
+            loginText={t('login') || 'Login'}
+          />
 
         <LoginErrorAlert
           errorMessage={errorMessage}
@@ -46,14 +62,14 @@ export default function Login() {
         <form onSubmit={handleSubmit} className="space-y-5">
           <PasswordField
             label={t('code') || 'Code'}
-            disabled={isAccountDisabled()}
+            disabled={isAccountDisabled() || isCompanyInfoLoading}
           />
 
           <LanguageSelector
             label={t('language') || 'Language'}
             currentLanguage={currentLanguage}
             onLanguageChange={handleLanguageChange}
-            disabled={isAccountDisabled()}
+            disabled={isAccountDisabled() || isCompanyInfoLoading}
           />
 
           <WarehouseSelector
@@ -62,7 +78,7 @@ export default function Login() {
             warehouseLabel={t('warehouse') || 'Warehouse'}
             selectWarehouseText={t('selectWarehouse') || 'Select a warehouse'}
             multipleWarehousesText={t('multipleWarehousesAvailable') || 'Multiple warehouses available. Please select one to continue.'}
-            disabled={isAccountDisabled()}
+            disabled={isAccountDisabled() || isCompanyInfoLoading}
           />
 
           <DeviceNameField
@@ -72,12 +88,12 @@ export default function Login() {
             enterDeviceNameText={t('enterDeviceName') || 'Enter a device name (max 100 characters)'}
             newDeviceDetectedText={t('newDeviceDetected') || 'New device detected. Please provide a name for this device to continue.'}
             deviceNameTakenText={t('deviceNameTaken') || 'This device name is already taken. Please choose a different name.'}
-            disabled={isAccountDisabled()}
+            disabled={isAccountDisabled() || isCompanyInfoLoading}
           />
 
           <LoginButton
             text={t('enter') || 'Enter'}
-            disabled={isAccountDisabled()}
+            disabled={isAccountDisabled() || isCompanyInfoLoading}
           />
         </form>
 
@@ -87,8 +103,9 @@ export default function Login() {
           accountStatus={companyInfo?.accountStatus}
           deviceStatus={companyInfo?.deviceStatus}
         />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

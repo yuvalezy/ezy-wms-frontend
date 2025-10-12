@@ -18,6 +18,7 @@ interface AuthContextType {
   isValidAccount: boolean;
   user: UserInfo | null;
   companyInfo?: CompanyInfoResponse | null;
+  connectionError: boolean;
   login: (password: string, warehouse?: string, newDeviceName?: string) => Promise<{
     deviceStatus?: DeviceStatus,
     superUser: boolean
@@ -40,6 +41,7 @@ const AuthContextDefaultValues: AuthContextType = {
   isDeviceActive: false,
   isValidAccount: false,
   user: null,
+  connectionError: false,
   login: async (password: string, warehouse?: string, newDeviceName?: string) => {
     console.warn("Login method not implemented yet!");
     return {deviceStatus: undefined, superUser: false}
@@ -78,7 +80,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   const baseUrl = `${ServerUrl}/api/`;
 
   // Use custom hooks
-  const { companyInfo, reloadCompanyInfo } = useCompanyInfo();
+  const { companyInfo, connectionError, isLoading: isCompanyLoading, reloadCompanyInfo } = useCompanyInfo();
   useBrowserUnload();
 
   // Logout function
@@ -184,9 +186,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     isValidAccount,
     user,
     companyInfo,
+    connectionError,
     login,
     logout,
-    isLoading,
+    isLoading: isLoading || isCompanyLoading,
     updateDeviceStatus,
     showDeviceStatusBanner,
     setShowDeviceStatusBanner,

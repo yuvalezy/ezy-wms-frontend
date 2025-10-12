@@ -666,5 +666,8 @@
   "itemNotFoundInSource": "El artículo no fue encontrado en ninguno de los documentos fuente",
   "processingItem": "Procesando Articulo",
   "loadingValues": "Cargando Valores",
-  "processing": "Procesando"
+  "processing": "Procesando",
+  "retry": "Reintentar",
+  "connectionError": "Error de Conexión",
+  "cannotEstablishConnection": "No se puede establecer conexión con el servidor"
 }

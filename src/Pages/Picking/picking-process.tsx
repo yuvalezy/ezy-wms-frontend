@@ -198,7 +198,7 @@ export default function PickingProcess() {
                     <TableHead>{t('type')}</TableHead>
                     <TableHead>{t('number')}</TableHead>
                     <TableHead>{t('customer')}</TableHead>
-                    {customFields.map((field) => <TableHead>{field.description}</TableHead>)}
+                    {customFields.map((field, index) => <TableHead key={`custom-column-${index}`}>{field.description}</TableHead>)}
                     <TableHead className="text-right">{t('totalItems')}</TableHead>
                     <TableHead className="text-right">{t('totalOpenItems')}</TableHead>
                     <TableHead>{t('progress')}</TableHead>

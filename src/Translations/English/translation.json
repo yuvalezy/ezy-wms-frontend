@@ -666,5 +666,8 @@
   "itemNotFoundInSource": "Item was not found in any of the source documents",
   "processingItem": "Processing Item",
   "loadingValues": "Loading Values",
-  "processing": "Processing"
+  "processing": "Processing",
+  "retry": "Retry",
+  "connectionError": "Connection Error",
+  "cannotEstablishConnection": "Cannot establish connection to server"
 }

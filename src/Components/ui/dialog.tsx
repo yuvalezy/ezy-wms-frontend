@@ -56,9 +56,10 @@ function DialogContent({
   // Handle keyboard focus - scroll focused inputs into view
   React.useEffect(() => {
     const handleFocus = (e: FocusEvent) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+      if (e.target && (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement)) {
+        const target = e.target as HTMLElement
         setTimeout(() => {
-          e.target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          target.scrollIntoView({ behavior: 'smooth', block: 'center' })
         }, 300)
       }
     }

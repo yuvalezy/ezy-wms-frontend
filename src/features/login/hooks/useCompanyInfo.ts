@@ -16,11 +16,15 @@ export interface CompanyInfoResponse {
 
 export const useCompanyInfo = () => {
   const [companyInfo, setCompanyInfo] = useState<CompanyInfoResponse | null>(null);
+  const [connectionError, setConnectionError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const baseUrl = `${ServerUrl}/api/`;
 
   useEffect(() => {
     const fetchConfig = async () => {
       try {
+        setIsLoading(true);
+        setConnectionError(false);
         const deviceUUID = getOrCreateDeviceUUID();
         const response = await axios.get<CompanyInfoResponse>(`${baseUrl}Authentication/CompanyInfo`, {
           headers: {
@@ -28,8 +32,15 @@ export const useCompanyInfo = () => {
           }
         });
         setCompanyInfo(response.data);
-      } catch (error) {
+        setConnectionError(false);
+      } catch (error: any) {
         console.log(`Failed to load company name: ${error}`);
+        // Check if it's a network error (server unreachable)
+        if (error.code === 'ERR_NETWORK' || error.code === 'ERR_CONNECTION_REFUSED' || !error.response) {
+          setConnectionError(true);
+        }
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -38,6 +49,8 @@ export const useCompanyInfo = () => {
 
   const reloadCompanyInfo = useCallback(async () => {
     try {
+      setIsLoading(true);
+      setConnectionError(false);
       const deviceUUID = getOrCreateDeviceUUID();
       const response = await axios.get<CompanyInfoResponse>(`${baseUrl}Authentication/CompanyInfo`, {
         headers: {
@@ -45,13 +58,22 @@ export const useCompanyInfo = () => {
         }
       });
       setCompanyInfo(response.data);
-    } catch (error) {
+      setConnectionError(false);
+    } catch (error: any) {
       console.error("Failed to reload company info:", error);
+      // Check if it's a network error (server unreachable)
+      if (error.code === 'ERR_NETWORK' || error.code === 'ERR_CONNECTION_REFUSED' || !error.response) {
+        setConnectionError(true);
+      }
+    } finally {
+      setIsLoading(false);
     }
   }, [baseUrl]);
 
   return {
     companyInfo,
+    connectionError,
+    isLoading,
     reloadCompanyInfo
   };
 };
