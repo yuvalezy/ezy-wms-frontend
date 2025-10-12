@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import {useForm} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
+import {DialogFooter} from '@/components/ui/dialog';
 import {Form} from '@/components/ui/form';
 import {Button} from '@/components/ui/button';
 import {Skeleton} from '@/components/ui/skeleton';
@@ -229,26 +230,17 @@ export const BaseMetadataForm: React.FC<BaseMetadataFormProps> = ({
                 allDefinitions={definitions}
               />
             ))}
-            
-            <div className="flex gap-2 pt-4">
-              <Button
-                type="submit"
-                disabled={!formState.isValid || formState.isLoading || !formState.hasChanges}
-                className="flex-1"
-              >
-                {formState.isLoading ? t('saving') : t('save')}
-              </Button>
-              
+
+            <DialogFooter className="pt-4">
               <Button
                 type="button"
                 variant="outline"
                 onClick={handleReset}
                 disabled={formState.isLoading || !formState.hasChanges}
-                className="flex-1"
               >
                 {t('reset')}
               </Button>
-              
+
               {onCancel && (
                 <Button
                   type="button"
@@ -259,7 +251,14 @@ export const BaseMetadataForm: React.FC<BaseMetadataFormProps> = ({
                   {t('cancel')}
                 </Button>
               )}
-            </div>
+
+              <Button
+                type="submit"
+                disabled={!formState.isValid || formState.isLoading || !formState.hasChanges}
+              >
+                {formState.isLoading ? t('saving') : t('save')}
+              </Button>
+            </DialogFooter>
           </form>
         </Form>
       </CardContent>
