@@ -46,7 +46,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className={displayBarcode ? "sm:max-w-4xl" : "sm:max-w-xl"}>
+      <DialogContent className={displayBarcode ? "sm:max-w-4xl" : "sm:max-w-3xl"}>
         <DialogHeader>
           <DialogTitle>{t("detail")}</DialogTitle>
           <DialogDescription>

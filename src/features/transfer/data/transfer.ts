@@ -29,6 +29,7 @@ export type TransferUpdateParameters = {
 
 export interface TransferAddItemResponse {
   lineId: string;
+  quantity?: number;
   closedTransfer: boolean;
   unit: UnitType;
   unitMsr: string;

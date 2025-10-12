@@ -157,7 +157,7 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
   };
 
   if (isLoadingDetails) {
-    return <GoodsReceiptProcessDifferenceTableSkeleton />;
+    return <GoodsReceiptProcessDifferenceTableSkeleton/>;
   }
 
   return (
@@ -298,7 +298,7 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
 
       {selectedLineForDetail && isDetailDialogOpen && (
         <Dialog open={isDetailDialogOpen} onOpenChange={setIsDetailDialogOpen}>
-          <DialogContent className="sm:max-w-xl">
+          <DialogContent className="sm:max-w-3xl">
             <DialogHeader>
               <DialogTitle>{`${t('detailsFor')} ${selectedLineForDetail.itemCode} (#${selectedLineForDetail.visualLineNumber})`}</DialogTitle>
               <DialogDescription>{selectedLineForDetail.itemName}</DialogDescription>
@@ -312,37 +312,38 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
               </div>
 
               {detailDataForDialog && detailDataForDialog.length > 0 ? (
-                <ScrollArea className="h-[40vh]">
+                <>
                   {/* Mobile view - Cards */}
                   <div className="block sm:hidden space-y-2">
-                    {detailDataForDialog.map((detail) => {
-                      const timeStamp = new Date(detail.timeStamp);
-                      let scannedQuantity = detail.scannedQuantity;
-                      if (selectedLineForDetail?.numInBuy && detail.unit !== UnitType.Unit && selectedLineForDetail.numInBuy !== 0) {
-                        scannedQuantity /= selectedLineForDetail.numInBuy;
-                      }
-                      if (selectedLineForDetail?.purPackUn && detail.unit === UnitType.Pack && selectedLineForDetail.purPackUn !== 0) {
-                        scannedQuantity /= selectedLineForDetail.purPackUn;
-                      }
+                    <ScrollArea>
+                      {detailDataForDialog.map((detail) => {
+                        const timeStamp = new Date(detail.timeStamp);
+                        let scannedQuantity = detail.scannedQuantity;
+                        if (selectedLineForDetail?.numInBuy && detail.unit !== UnitType.Unit && selectedLineForDetail.numInBuy !== 0) {
+                          scannedQuantity /= selectedLineForDetail.numInBuy;
+                        }
+                        if (selectedLineForDetail?.purPackUn && detail.unit === UnitType.Pack && selectedLineForDetail.purPackUn !== 0) {
+                          scannedQuantity /= selectedLineForDetail.purPackUn;
+                        }
 
-                      const displayUnit = selectedLineForDetail?.unit === UnitType.Unit ? t('unit') :
-                        selectedLineForDetail?.unit === UnitType.Dozen ? (selectedLineForDetail?.buyUnitMsr || t("qtyInUn")) :
-                          (selectedLineForDetail?.purPackMsr || t('packUn'));
-                      return (
-                        <Card
-                          key={`${detail.timeStamp}-${detail.createdByUserName}-${detail.scannedQuantity}`}> {/* Adjusted key for more uniqueness */}
-                          <CardContent>
-                            <FullInfoBox>
-                              <InfoBoxValue label={t('date')} value={dateFormat(timeStamp)}/>
-                              <InfoBoxValue label={t('time')} value={timeFormat(timeStamp)}/>
-                              <InfoBoxValue label={t('employee')} value={detail.createdByUserName}/>
-                              <InfoBoxValue label={t('unit')} value={displayUnit}/>
-                              <InfoBoxValue label={t('scannedQuantity')} value={formatNumber(scannedQuantity, 2)}/>
-                            </FullInfoBox>
-                          </CardContent>
-                        </Card>
-                      );
-                    })}
+                        const displayUnit = selectedLineForDetail?.unit === UnitType.Unit ? t('unit') :
+                          selectedLineForDetail?.unit === UnitType.Dozen ? (selectedLineForDetail?.buyUnitMsr || t("qtyInUn")) :
+                            (selectedLineForDetail?.purPackMsr || t('packUn'));
+                        return (
+                          <Card
+                            key={`${detail.timeStamp}-${detail.createdByUserName}-${detail.scannedQuantity}`}> {/* Adjusted key for more uniqueness */}
+                            <CardContent>
+                              <FullInfoBox>
+                                <InfoBoxValue label={t('date')} value={dateFormat(timeStamp)}/>
+                                <InfoBoxValue label={t('time')} value={timeFormat(timeStamp)}/>
+                                <InfoBoxValue label={t('employee')} value={detail.createdByUserName}/>
+                                <InfoBoxValue label={t('unit')} value={displayUnit}/>
+                                <InfoBoxValue label={t('scannedQuantity')} value={formatNumber(scannedQuantity, 2)}/>
+                              </FullInfoBox>
+                            </CardContent>
+                          </Card>
+                        );
+                      })}</ScrollArea>
                   </div>
 
                   {/* Desktop view - Table */}
@@ -385,7 +386,7 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
                       </TableBody>
                     </Table>
                   </div>
-                </ScrollArea>
+                </>
               ) : (
                 <p className="text-center text-muted-foreground">{t('noDetailsAvailable')}</p>
               )}
