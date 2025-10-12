@@ -79,7 +79,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                           <h3 className="text-lg font-bold text-gray-900 mb-1">{row.createdByUserName}</h3>
                           <p className="text-sm text-gray-600">{dateFormat(row.timeStamp)} • {timeFormat(row.timeStamp)}</p>
                         </div>
-                        
+
                         <div className="grid grid-cols-2 gap-4 text-sm mb-4">
                           <div>
                             <span className="text-gray-500">{t('unit')}:</span>
@@ -108,7 +108,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                             </div>
                           )}
                         </div>
-                        
+
                         {enableUpdate && (
                           <div className="flex items-center pt-2 border-t border-gray-100">
                             <Checkbox
@@ -130,7 +130,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
 
             {/* Desktop view - Table layout */}
             <div className="hidden sm:block">
-              <ScrollArea className="h-[60vh]">
+              <div className="h-[60vh]">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -198,7 +198,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                     })}
                   </TableBody>
                 </Table>
-              </ScrollArea>
+              </div>
             </div>
           </>
         ) : (
