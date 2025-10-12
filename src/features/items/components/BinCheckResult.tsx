@@ -17,6 +17,8 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const stockInfo = useStockInfo();
 
+  const settings = user!.settings;
+
   useEffect(() => {
     if (content) {
       setData(content);
@@ -44,10 +46,18 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
           return `${binContent.onHand / binContent.numInBuy / binContent.purPackUn} ${t('units')}`;
       }
     }
-    const packages = Math.floor(binContent.onHand / (binContent.numInBuy * binContent.purPackUn));
-    const remainingForDozens = binContent.onHand % (binContent.numInBuy * binContent.purPackUn);
-    const dozens = Math.floor(remainingForDozens / binContent.numInBuy);
-    const units = remainingForDozens % binContent.numInBuy;
+    const packages = binContent.purPackUn == 1 ? 0 : Math.floor(binContent.onHand / (binContent.numInBuy * binContent.purPackUn));
+    const remainingForDozens = binContent.purPackUn == 1 ? binContent.onHand : binContent.onHand % (binContent.numInBuy * binContent.purPackUn);
+    let dozens;
+    let units;
+
+    if (settings.maxUnitLevel === UnitType.Dozen) {
+      dozens = remainingForDozens / binContent.numInBuy;
+      units = 0;
+    } else {
+      dozens = Math.floor(remainingForDozens / binContent.numInBuy);
+      units = remainingForDozens % binContent.numInBuy;
+    }
 
     const parts = [];
     if (packages > 0) parts.push(`${packages} ${binContent.purPackMsr || 'Box'}`);
@@ -57,10 +67,17 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
   };
 
   const getStockBreakdown = (binContent: BinContentResponse) => {
-    const packages = Math.floor(binContent.onHand / (binContent.numInBuy * binContent.purPackUn));
-    const remainingForDozens = binContent.onHand % (binContent.numInBuy * binContent.purPackUn);
-    const dozens = Math.floor(remainingForDozens / binContent.numInBuy);
-    const units = remainingForDozens % binContent.numInBuy;
+    const packages = binContent.purPackUn == 1 ? 0 : Math.floor(binContent.onHand / (binContent.numInBuy * binContent.purPackUn));
+    const remainingForDozens = binContent.purPackUn == 1 ? binContent.onHand : binContent.onHand % (binContent.numInBuy * binContent.purPackUn);
+    let dozens;
+    let units;
+    if (settings.maxUnitLevel === UnitType.Dozen) {
+      dozens = remainingForDozens / binContent.numInBuy;
+      units = 0;
+    } else {
+      dozens = Math.floor(remainingForDozens / binContent.numInBuy);
+      units = remainingForDozens % binContent.numInBuy;
+    }
     return {packages, dozens, units};
   };
 
@@ -92,7 +109,7 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
       <div className="space-y-4">
         <div className="flex flex-col items-center justify-center py-12 px-4">
           <div className="bg-gray-100 dark:bg-gray-800 rounded-full p-6 mb-4">
-            <Inbox className="w-12 h-12 text-gray-400" />
+            <Inbox className="w-12 h-12 text-gray-400"/>
           </div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
             {t('binIsEmpty')}

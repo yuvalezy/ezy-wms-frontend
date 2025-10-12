@@ -68,8 +68,15 @@ const ItemCheckStock: React.FC<StockTableProps> = ({result}) => {
     }
     const packages = result.purPackUn === 1 ? 0 : Math.floor(binStock.quantity / (result.numInBuy * result.purPackUn));
     const remainingForDozens = result.purPackUn === 1 ? binStock.quantity : binStock.quantity % (result.numInBuy * result.purPackUn);
-    const dozens = Math.floor(remainingForDozens / result.numInBuy);
-    const units = remainingForDozens % result.numInBuy;
+    let dozens;
+    let units;
+    if (settings.maxUnitLevel === UnitType.Dozen) {
+      dozens = remainingForDozens / result.numInBuy;
+      units = 0;
+    } else {
+      dozens = Math.floor(remainingForDozens / result.numInBuy);
+      units = remainingForDozens % result.numInBuy;
+    }
 
     const parts = [];
     if (packages > 0) parts.push(`${packages} ${result.purPackMsr || 'Box'}`);
@@ -79,10 +86,17 @@ const ItemCheckStock: React.FC<StockTableProps> = ({result}) => {
   };
 
   const getStockBreakdown = (binStock: ItemBinStockResponse) => {
-    const packages = Math.floor(binStock.quantity / (result.numInBuy * result.purPackUn));
-    const remainingForDozens = binStock.quantity % (result.numInBuy * result.purPackUn);
-    const dozens = Math.floor(remainingForDozens / result.numInBuy);
-    const units = remainingForDozens % result.numInBuy;
+    const packages = result.purPackUn === 1 ? 0 : Math.floor(binStock.quantity / (result.numInBuy * result.purPackUn));
+    const remainingForDozens = result.purPackUn === 1 ? binStock.quantity : binStock.quantity % (result.numInBuy * result.purPackUn);
+    let dozens;
+    let units;
+    if (settings.maxUnitLevel === UnitType.Dozen) {
+      dozens = remainingForDozens / result.numInBuy;
+      units = 0;
+    } else {
+      dozens = Math.floor(remainingForDozens / result.numInBuy);
+      units = remainingForDozens % result.numInBuy;
+    }
     return {packages, dozens, units};
   };
 
@@ -106,7 +120,7 @@ const ItemCheckStock: React.FC<StockTableProps> = ({result}) => {
   }
 
   if (isLoadingStock) {
-    return <ItemCheckStockSkeleton />;
+    return <ItemCheckStockSkeleton/>;
   }
 
   const totals = calculateTotals();
