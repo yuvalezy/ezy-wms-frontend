@@ -26,6 +26,8 @@ const ItemCheckStock: React.FC<StockTableProps> = ({result}) => {
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
   const [isLoadingStock, setIsLoadingStock] = useState<boolean>(false);
 
+  const settings = user!.settings;
+
   useEffect(() => {
     if (result && result.itemCode) {
       setIsLoadingStock(true);
@@ -64,8 +66,8 @@ const ItemCheckStock: React.FC<StockTableProps> = ({result}) => {
           return `${binStock.quantity / result.numInBuy / result.purPackUn} ${t('units')}`;
       }
     }
-    const packages = Math.floor(binStock.quantity / (result.numInBuy * result.purPackUn));
-    const remainingForDozens = binStock.quantity % (result.numInBuy * result.purPackUn);
+    const packages = result.purPackUn === 1 ? 0 : Math.floor(binStock.quantity / (result.numInBuy * result.purPackUn));
+    const remainingForDozens = result.purPackUn === 1 ? binStock.quantity : binStock.quantity % (result.numInBuy * result.purPackUn);
     const dozens = Math.floor(remainingForDozens / result.numInBuy);
     const units = remainingForDozens % result.numInBuy;
 

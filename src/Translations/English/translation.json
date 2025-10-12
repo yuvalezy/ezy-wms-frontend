@@ -525,14 +525,17 @@
     "units": {
       "box": {
         "label": "Pack",
+        "multiple": "Packs",
         "abbr": "P"
       },
       "dozen": {
         "label": "Dozen",
+        "multiple": "Dozens",
         "abbr": "D"
       },
       "unit": {
         "label": "Unit",
+        "multiple": "Units",
         "abbr": "U"
       }
     }

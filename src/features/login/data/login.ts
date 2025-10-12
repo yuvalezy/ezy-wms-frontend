@@ -22,13 +22,18 @@ export interface UserInfo {
 
 export interface ApplicationSettings {
   // General
-  enableUseBaseUn: boolean;
-  unitLabel?: string;
-  dozensLabel?: string;
-  boxLabel?: string;
   scannerMode: ScannerMode;
   displayVendor: boolean;
   whsCodeBinSuffix: boolean;
+  // Unit
+  enableUseBaseUn: boolean;
+  unitLabel?: string;
+  unitAbbr?: string;
+  dozensLabel?: string;
+  dozensAbbr?: string;
+  boxLabel?: string;
+  boxAbbr?: string;
+  maxUnitLevel?: UnitType;
   // Goods Receipt
   goodsReceiptDraft: boolean;
   goodsReceiptModificationSupervisor: boolean;
