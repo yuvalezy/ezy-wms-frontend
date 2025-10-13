@@ -7,6 +7,7 @@ import {ItemCheckResponse, ResponseStatus} from "@/features/items/data/items";
 import {itemsService} from "@/features/items/data/items-service";
 import {useAuth} from "@/components";
 import {ScannerMode} from "@/features/login/data/login";
+import {useNavigate} from "react-router";
 
 export const useItemCheckData = () => {
   const {t} = useTranslation();
@@ -20,6 +21,7 @@ export const useItemCheckData = () => {
   const { setError} = useThemeContext();
   const barcodeInputRef = useRef<HTMLInputElement>(null);
   const codeInputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
   const setCodeFocus = () => {
     if (user!.settings.scannerMode === ScannerMode.ItemCode) {
@@ -56,6 +58,7 @@ export const useItemCheckData = () => {
           setItemCodeInput("");
           setResult(null);
           setCodeFocus();
+          navigate('/itemCheck');
         }
       })
       .catch((error) => setError(error))
