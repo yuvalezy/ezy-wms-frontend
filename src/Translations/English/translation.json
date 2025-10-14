@@ -688,5 +688,11 @@
   "processing": "Processing",
   "retry": "Retry",
   "connectionError": "Connection Error",
-  "cannotEstablishConnection": "Cannot establish connection to server"
+  "cannotEstablishConnection": "Cannot establish connection to server",
+  "notifications": "Notifications",
+  "noNotifications": "No notifications",
+  "markAllAsRead": "Mark all as read",
+  "alertPending": "Pending",
+  "alertApproved": "Approved",
+  "alertRejected": "Rejected"
 }

@@ -688,5 +688,11 @@
   "processing": "Procesando",
   "retry": "Reintentar",
   "connectionError": "Error de Conexión",
-  "cannotEstablishConnection": "No se puede establecer conexión con el servidor"
+  "cannotEstablishConnection": "No se puede establecer conexión con el servidor",
+  "notifications": "Notificaciones",
+  "noNotifications": "Sin notificaciones",
+  "markAllAsRead": "Marcar todo como leído",
+  "alertPending": "Pendiente",
+  "alertApproved": "Aprobado",
+  "alertRejected": "Rechazado"
 }

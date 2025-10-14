@@ -14,8 +14,10 @@ import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router";
 import { formatDistanceToNow } from "date-fns";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useTranslation } from "react-i18next";
 
 export const NotificationBell: React.FC = () => {
+  const { t } = useTranslation();
   const { alerts, unreadCount, fetchAlerts, markAsRead, markAllAsRead, refreshUnreadCount } = useNotifications();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
@@ -79,7 +81,7 @@ export const NotificationBell: React.FC = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-80 md:w-96">
         <div className="flex items-center justify-between px-3 py-2">
-          <DropdownMenuLabel className="p-0">Notifications</DropdownMenuLabel>
+          <DropdownMenuLabel className="p-0">{t('notifications')}</DropdownMenuLabel>
           {unreadCount > 0 && (
             <Button
               variant="ghost"
@@ -87,7 +89,7 @@ export const NotificationBell: React.FC = () => {
               onClick={handleMarkAllAsRead}
               className="text-xs h-7"
             >
-              Mark all as read
+              {t('markAllAsRead')}
             </Button>
           )}
         </div>
@@ -95,7 +97,7 @@ export const NotificationBell: React.FC = () => {
 
         {alerts.length === 0 ? (
           <div className="px-4 py-8 text-center text-sm text-gray-500">
-            No notifications
+            {t('noNotifications')}
           </div>
         ) : (
           <ScrollArea className="h-[400px]">
@@ -122,10 +124,10 @@ export const NotificationBell: React.FC = () => {
                         )}`}
                       >
                         {alert.alertType === 0
-                          ? "Pending"
+                          ? t('alertPending')
                           : alert.alertType === 1
-                          ? "Approved"
-                          : "Rejected"}
+                          ? t('alertApproved')
+                          : t('alertRejected')}
                       </span>
                     </div>
                     <p className="text-xs text-gray-600 line-clamp-2 mb-1">{alert.message}</p>
