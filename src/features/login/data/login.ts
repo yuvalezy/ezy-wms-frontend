@@ -46,6 +46,7 @@ export interface ApplicationSettings {
   enableTransferConfirm: boolean;
   enableTransferRequest: boolean;
   enableWarehouseTransfer: boolean;
+  transferCreateSupervisorRequired: boolean;
   // Packages & Units
   enablePackages: boolean;
   defaultUnitType: UnitType;

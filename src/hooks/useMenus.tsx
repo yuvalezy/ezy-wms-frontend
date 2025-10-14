@@ -23,6 +23,7 @@ export function useMenus() {
 
   const goodsReceiptSupervisorRoute = "/goodsReceiptSupervisor"
   const goodsReceiptConfirmationSupervisorRoute = "/goodsReceiptConfirmationSupervisor"
+  const transferSupervisorRoute = "/transferSupervisor"
 
   const MenuItems: MenuItem[] = [
     {
@@ -153,9 +154,9 @@ export function useMenus() {
       RequiresFeature: "EnableInventoryTransfer"
     },
     {
-      Link: "/transferSupervisor",
+      Link: transferSupervisorRoute,
       Text: t('transferSupervisor'),
-      Authorization: RoleType.TRANSFER_SUPERVISOR,
+      Authorizations: [RoleType.TRANSFER_SUPERVISOR],
       Icon: Truck,
       Color: "text-lime-700",
       RequiresFeature: "EnableInventoryTransfer"
@@ -297,24 +298,33 @@ export function useMenus() {
 
 
   function applySettings(authorizations: RoleType[]) {
-    if (user?.settings?.goodsReceiptCreateSupervisorRequired) {
-      return;
-    }
     // Goods Receipt Supervisor
-    let menuItem = MenuItems.filter((v) => v.Link === goodsReceiptSupervisorRoute)[0];
-    if (menuItem.Authorizations != null) {
-      menuItem.Authorizations.push(RoleType.GOODS_RECEIPT)
-    }
-    let isSupervisor = authorizations.filter((v) => v === RoleType.GOODS_RECEIPT_SUPERVISOR).length === 1;
-    menuItem.Text = !isSupervisor ? t('goodsReceiptCreation') : t('goodsReceiptSupervisor');
+    if (!user?.settings?.goodsReceiptCreateSupervisorRequired) {
+      let menuItem = MenuItems.filter((v) => v.Link === goodsReceiptSupervisorRoute)[0];
+      if (menuItem.Authorizations != null) {
+        menuItem.Authorizations.push(RoleType.GOODS_RECEIPT)
+      }
+      let isSupervisor = authorizations.filter((v) => v === RoleType.GOODS_RECEIPT_SUPERVISOR).length === 1;
+      menuItem.Text = !isSupervisor ? t('goodsReceiptCreation') : t('goodsReceiptSupervisor');
 
-    // Goods Receipt Confirmation Supervisor
-    menuItem = MenuItems.filter((v) => v.Link === goodsReceiptConfirmationSupervisorRoute)[0];
-    if (menuItem.Authorizations != null) {
-      menuItem.Authorizations.push(RoleType.GOODS_RECEIPT_CONFIRMATION);
+      // Goods Receipt Confirmation Supervisor
+      menuItem = MenuItems.filter((v) => v.Link === goodsReceiptConfirmationSupervisorRoute)[0];
+      if (menuItem.Authorizations != null) {
+        menuItem.Authorizations.push(RoleType.GOODS_RECEIPT_CONFIRMATION);
+      }
+      isSupervisor = authorizations.filter((v) => v === RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR).length === 1;
+      menuItem.Text = !isSupervisor ? t('goodsReceiptConfirmationCreation') : t('goodsReceiptConfirmationSupervisor');
     }
-    isSupervisor = authorizations.filter((v) => v === RoleType.GOODS_RECEIPT_CONFIRMATION_SUPERVISOR).length === 1;
-    menuItem.Text = !isSupervisor ? t('goodsReceiptConfirmationCreation') : t('goodsReceiptConfirmationSupervisor');
+
+    // Transfer Supervisor
+    if (!user?.settings?.transferCreateSupervisorRequired) {
+      let menuItem = MenuItems.filter((v) => v.Link === transferSupervisorRoute)[0];
+      if (menuItem.Authorizations != null) {
+        menuItem.Authorizations.push(RoleType.TRANSFER);
+      }
+      const isSupervisor = authorizations.filter((v) => v === RoleType.TRANSFER_SUPERVISOR).length === 1;
+      menuItem.Text = !isSupervisor ? t('transferCreation') : t('transferSupervisor');
+    }
   }
 
   // It's common to return objects directly rather than an object with properties.

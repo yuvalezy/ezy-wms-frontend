@@ -75,6 +75,15 @@ function AppRoutes() {
     return authorizations;
   }
 
+  function getTransferSupervisorAuthorizations() {
+    let authorizations = [RoleType.TRANSFER_SUPERVISOR];
+    if (user?.settings?.transferCreateSupervisorRequired) {
+      return authorizations;
+    }
+    authorizations.push(RoleType.TRANSFER)
+    return authorizations;
+  }
+
   function getAuthenticationRoutes() {
     return (
       <>
@@ -247,7 +256,7 @@ function AppRoutes() {
                    }
                  />
                }/>
-        <Route path="/transferSupervisor" element={<ProtectedRoute authorization={RoleType.TRANSFER_SUPERVISOR}
+        <Route path="/transferSupervisor" element={<ProtectedRoute authorizations={getTransferSupervisorAuthorizations()}
                                                                    element={<TransferSupervisor/>}/>}/>
         <Route path="/transferRequest"
                element={<ProtectedRoute authorization={RoleType.TRANSFER_REQUEST} element={<TransferRequest/>}/>}/>
