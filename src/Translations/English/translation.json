@@ -210,6 +210,7 @@
   "scanTransferSourceBin": "Scan pickup bin location",
   "scanTransferTargetBin": "Scan destination bin location",
   "selectTransferSource": "Choose Pickup Location",
+  "selectSourceItems": "Select source items",
   "selectItemsForTransfers": "Select Items for Transfer #{0}",
   "selectTransferTargetItems": "Choose Items for Destination",
   "selectTransferTargetBins": "Choose Bins for Destination",

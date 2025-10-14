@@ -4,7 +4,6 @@ import {Button} from "@/components";
 import {useTranslation} from "react-i18next";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
 import {Alert, AlertDescription} from "@/components/ui/alert";
-import BarCodeScanner from "@/components/BarCodeScanner";
 import BinLocationScanner from "@/components/BinLocationScanner";
 import ProcessAlert from "@/components/ProcessAlert";
 import {ReasonType} from "@/features/shared/data";
@@ -14,9 +13,9 @@ import {useStockInfo} from "@/utils/stock-info";
 import React from "react";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
 import {transferService} from "@/features/transfer/data/transefer-service";
-import {ObjectType} from "@/features/packages/types";
 import {useTransferProcess} from "@/features/transfer/context/TransferProcessContext";
 import {SourceTarget} from "@/features/transfer/data/transfer";
+import TransferProcessSourceItem from "./transfer-process-source-item";
 
 export default function TransferProcessSource() {
   const {t} = useTranslation();
@@ -27,7 +26,6 @@ export default function TransferProcessSource() {
     id,
     scanCode,
     binLocation,
-    barcodeRef,
     rows,
     currentAlert,
     isProcessingItem,
@@ -36,8 +34,6 @@ export default function TransferProcessSource() {
     onBinChanged,
     onBinClear,
     loadRows,
-    handleAddItem,
-    handleAddPackage,
     handleQuantityChanged,
     handleCancel,
     user,
@@ -62,21 +58,7 @@ export default function TransferProcessSource() {
   return (
     <ContentTheme title={t("transfer")} titleOnClick={() => navigate(`/transfer`)}
                   titleBreadcrumbs={titleBreadcrumbs}
-                  footer={binLocation &&
-                      <BarCodeScanner
-                          unit
-                          ref={barcodeRef}
-                          onAddItem={(value) => handleAddItem(SourceTarget.Source, value)}
-                          enabled
-                          enablePackage={user!.settings!.enablePackages}
-                          enablePackageCreate={false}
-                          isEphemeralPackage={false}
-                          objectType={ObjectType.Transfer}
-                          objectId={info?.id}
-                          objectNumber={info?.number}
-                          binEntry={binLocation?.entry}
-                          onPackageChanged={(value) => handleAddPackage(SourceTarget.Source, value)}
-                      />}
+                  footer={binLocation && <TransferProcessSourceItem />}
     >
       {isProcessingItem && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">

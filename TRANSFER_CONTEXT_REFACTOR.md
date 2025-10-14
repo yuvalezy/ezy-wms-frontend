@@ -149,6 +149,32 @@ Added a new useEffect that watches for navigation to the main transfer page:
 
 **Files Modified**: `src/features/transfer/context/TransferProcessContext.tsx`
 
+---
+
+### Fix: Bin location not clearing when clicking breadcrumb (2025-10-14)
+**Problem**: When clicking the "Elija la ubicación de recogida" (Select source location) breadcrumb, `onBinClear` was being called but the bin location wasn't actually clearing. The bin remained selected and the scanner didn't appear.
+
+**Root Cause**: Circular dependencies between callbacks in the context were causing issues:
+- `loadRows` depended on `binLocation?.entry`
+- `onBinChanged` depended on `loadRows`
+- This created a dependency cycle that interfered with state updates
+
+**Solution**:
+1. **Removed circular dependencies**:
+   - Changed `loadRows` to accept `binEntry` as a parameter instead of reading from state
+   - Removed `binLocation?.entry` from `loadRows` dependencies
+   - Updated all callers to pass `binLocation?.entry` explicitly
+
+2. **Fixed bin parameter useEffect**:
+   - Removed `onBinChanged` from dependencies to prevent circular updates
+   - Set bin location directly instead of using callback
+
+3. **Improved navigation clearing logic**:
+   - Made the clearing more explicit and less prone to edge cases
+   - Check for actual page type changes instead of just pathname changes
+
+**Files Modified**: `src/features/transfer/context/TransferProcessContext.tsx`
+
 ## Next Steps
 1. Delete old deprecated hook files after confirming everything works
 2. Consider creating smaller sub-components using the context

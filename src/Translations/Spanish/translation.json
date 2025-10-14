@@ -206,6 +206,7 @@
   "scanTransferSourceBin": "Escanear la ubicación de recogida",
   "scanTransferTargetBin": "Escanear la ubicación de destino",
   "selectTransferSource": "Elija la ubicación de recogida",
+  "selectSourceItems": "Seleccionar artículos de origen",
   "selectItemsForTransfers": "Seleccionar artículos para transferencia #{0}",
   "selectTransferTargetItems": "Elija artículos para el destino",
   "selectTransferTargetBins": "Elija ubicaciones para el destino",

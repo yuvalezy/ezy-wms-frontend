@@ -76,17 +76,16 @@ export const TransferProcessProvider: React.FC<TransferProcessProviderProps> = (
   const processesRef = useRef<any>(null);
   const processAlertRef = useRef<HTMLDivElement>(null);
 
-  // Load rows based on type
+  // Load rows based on type - removed binLocation?.entry from dependencies to break circular dependency
   const loadRows = useCallback((type: SourceTarget, binEntry?: number) => {
     if (id == null) return;
 
-    const entry = binEntry ?? binLocation?.entry;
     setLoading(true);
 
     const params: any = {
       id,
       type,
-      binEntry: entry
+      binEntry: binEntry
     };
 
     // Add targetBinQuantity for target operations
@@ -101,7 +100,7 @@ export const TransferProcessProvider: React.FC<TransferProcessProviderProps> = (
         setRows([]);
       })
       .finally(() => setLoading(false));
-  }, [id, binLocation?.entry, setLoading, setError]);
+  }, [id, setLoading, setError]);
 
   // Bin location handlers
   const onBinChanged = useCallback((bin: BinLocation, type: SourceTarget) => {
@@ -146,7 +145,7 @@ export const TransferProcessProvider: React.FC<TransferProcessProviderProps> = (
       });
   }, [scanCode, user?.binLocations, setError, setLoading]);
 
-  // Handle bin query parameter
+  // Handle bin query parameter - removed onBinChanged from dependencies to prevent circular updates
   useEffect(() => {
     if (!id) return;
 
@@ -158,7 +157,14 @@ export const TransferProcessProvider: React.FC<TransferProcessProviderProps> = (
         const bin = JSON.parse(binParam);
         // Determine type based on current path
         const type = location.pathname.includes('/source') ? SourceTarget.Source : SourceTarget.Target;
-        onBinChanged(bin, type);
+
+        // Set bin location directly instead of using onBinChanged to avoid circular updates
+        setBinLocation(bin);
+        setEnable(true);
+        loadRows(type, bin.entry);
+        setTimeout(() => {
+          barcodeRef?.current?.focus();
+        }, 1);
 
         // Clean up URL
         window.history.replaceState({}, '', location.pathname);
@@ -166,7 +172,7 @@ export const TransferProcessProvider: React.FC<TransferProcessProviderProps> = (
         setError(e);
       }
     }
-  }, [id, location.search, location.pathname, onBinChanged, setError]);
+  }, [id, location.search, location.pathname, setError, loadRows]);
 
   // Focus barcode scanner when enabled
   useEffect(() => {
@@ -177,19 +183,20 @@ export const TransferProcessProvider: React.FC<TransferProcessProviderProps> = (
 
   // Clear bin location and rows when navigating between source and target pages
   useEffect(() => {
-    // Only clear if we're navigating between /source and /targetBins
-    // Don't clear if there's a bin parameter (we want to process that)
-    const params = new URLSearchParams(location.search);
-    const hasBinParam = params.has('bin');
+    // Only clear when actually navigating between different page types
+    // Check if the pathname has changed from source to target or vice versa
+    const isSourcePage = location.pathname.includes('/source');
+    const isTargetPage = location.pathname.includes('/targetBins');
 
-    if (!hasBinParam) {
-      // Clear bin location state when switching pages
+    // Clear state when switching between source and target
+    if ((isSourcePage || isTargetPage) && !location.search.includes('bin=')) {
+      // Clear bin location state when switching pages without a bin parameter
       setBinLocation(null);
       setRows(null);
       setEnable(false);
       setCurrentAlert(null);
     }
-  }, [location.pathname]);
+  }, [location.pathname, location.search]);
 
   // Reload transfer info when navigating back to main transfer page
   useEffect(() => {
@@ -248,7 +255,7 @@ export const TransferProcessProvider: React.FC<TransferProcessProviderProps> = (
         });
 
         barcodeRef?.current?.clear();
-        loadRows(type);
+        loadRows(type, binLocation?.entry);
         barcodeRef?.current?.focus();
 
         setTimeout(() => {
@@ -292,7 +299,7 @@ export const TransferProcessProvider: React.FC<TransferProcessProviderProps> = (
         });
 
         barcodeRef?.current?.clear();
-        loadRows(type);
+        loadRows(type, binLocation?.entry);
         barcodeRef?.current?.focus();
 
         setTimeout(() => {
@@ -324,8 +331,8 @@ export const TransferProcessProvider: React.FC<TransferProcessProviderProps> = (
     // Reload rows after quantity change is accepted
     const path = window.location.pathname;
     const type = path.includes('/source') ? SourceTarget.Source : SourceTarget.Target;
-    loadRows(type);
-  }, [currentAlert, loadRows]);
+    loadRows(type, binLocation?.entry);
+  }, [currentAlert, loadRows, binLocation?.entry]);
 
   // Cancel handler
   const handleCancel = useCallback((comment: string, cancel: boolean) => {
@@ -340,8 +347,8 @@ export const TransferProcessProvider: React.FC<TransferProcessProviderProps> = (
     // Reload rows after cancel
     const path = window.location.pathname;
     const type = path.includes('/source') ? SourceTarget.Source : SourceTarget.Target;
-    loadRows(type);
-  }, [currentAlert, loadRows]);
+    loadRows(type, binLocation?.entry);
+  }, [currentAlert, loadRows, binLocation?.entry]);
 
   // Finish operation (for main process page)
   const finish = useCallback(() => {
