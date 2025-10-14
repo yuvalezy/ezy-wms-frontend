@@ -46,6 +46,7 @@ import {License} from "@/Pages/settings/license";
 import ExternalAlertsList from "@/Pages/settings/external-alerts-list";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {ProcessType} from "@/features/shared/data";
+import {TransferProcessProvider} from "@/features/transfer/context/TransferProcessContext";
 
 function AppRoutes() {
   const {user} = useAuth();
@@ -231,13 +232,21 @@ function AppRoutes() {
       <>
         <Route path="/transfer"
                element={<ProtectedRoute authorization={RoleType.TRANSFER} element={<TransferUser/>}/>}/>
-        <Route path="/transfer/:scanCode"
-               element={<ProtectedRoute authorization={RoleType.TRANSFER} element={<TransferProcess/>}/>}/>
-        <Route path="/transfer/:scanCode/source"
-               element={<ProtectedRoute authorization={RoleType.TRANSFER} element={<TransferProcessSource/>}/>}/>
-        <Route path="/transfer/:scanCode/targetBins" element={<ProtectedRoute authorization={RoleType.TRANSFER}
-                                                                              element={
-                                                                                <TransferProcessTargetBins/>}/>}/>
+        <Route path="/transfer/:scanCode/*"
+               element={
+                 <ProtectedRoute
+                   authorization={RoleType.TRANSFER}
+                   element={
+                     <TransferProcessProvider>
+                       <Routes>
+                         <Route path="/" element={<TransferProcess/>}/>
+                         <Route path="/source" element={<TransferProcessSource/>}/>
+                         <Route path="/targetBins" element={<TransferProcessTargetBins/>}/>
+                       </Routes>
+                     </TransferProcessProvider>
+                   }
+                 />
+               }/>
         <Route path="/transferSupervisor" element={<ProtectedRoute authorization={RoleType.TRANSFER_SUPERVISOR}
                                                                    element={<TransferSupervisor/>}/>}/>
         <Route path="/transferRequest"

@@ -6,12 +6,14 @@ import {Check, Map, Clock, AlertCircle} from 'lucide-react';
 import BinLocationScanner from "@/components/BinLocationScanner";
 import TransferCard from "@/features/transfer/components/transfer-card";
 import {cn} from "@/utils/css-utils";
-import {useTransferProcessData} from "@/features/transfer/hooks/useTransferProcessData";
 import {Skeleton} from "@/components/ui/skeleton";
 import {Status} from "@/features/shared/data";
+import {useTransferProcess} from "@/features/transfer/context/TransferProcessContext";
+import {SourceTarget} from "@/features/transfer/data/transfer";
 
 export default function TransferProcess() {
   const {t} = useTranslation();
+  const navigate = useNavigate();
 
   const {
     id,
@@ -19,8 +21,7 @@ export default function TransferProcess() {
     finish,
     user,
     isLoading
-  } = useTransferProcessData();
-  const navigate = useNavigate();
+  } = useTransferProcess();
 
   // Skeleton component for loading state
   const ProcessSkeleton = () => (

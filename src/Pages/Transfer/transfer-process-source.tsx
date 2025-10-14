@@ -10,12 +10,13 @@ import ProcessAlert from "@/components/ProcessAlert";
 import {ReasonType} from "@/features/shared/data";
 import Processes from "@/components/Processes";
 import {AlertCircle, Loader2} from "lucide-react";
-import {useTransferProcessSourceData} from "@/features/transfer/hooks/useTransferProcessSourceData";
 import {useStockInfo} from "@/utils/stock-info";
 import React from "react";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
 import {transferService} from "@/features/transfer/data/transefer-service";
 import {ObjectType} from "@/features/packages/types";
+import {useTransferProcess} from "@/features/transfer/context/TransferProcessContext";
+import {SourceTarget} from "@/features/transfer/data/transfer";
 
 export default function TransferProcessSource() {
   const {t} = useTranslation();
@@ -24,6 +25,7 @@ export default function TransferProcessSource() {
 
   const {
     id,
+    scanCode,
     binLocation,
     barcodeRef,
     rows,
@@ -38,10 +40,10 @@ export default function TransferProcessSource() {
     handleAddPackage,
     handleQuantityChanged,
     handleCancel,
-    scanCode,
     user,
     info
-  } = useTransferProcessSourceData();
+  } = useTransferProcess();
+
   if (!id)
     return null;
 
@@ -64,7 +66,7 @@ export default function TransferProcessSource() {
                       <BarCodeScanner
                           unit
                           ref={barcodeRef}
-                          onAddItem={handleAddItem}
+                          onAddItem={(value) => handleAddItem(SourceTarget.Source, value)}
                           enabled
                           enablePackage={user!.settings!.enablePackages}
                           enablePackageCreate={false}
@@ -73,7 +75,7 @@ export default function TransferProcessSource() {
                           objectId={info?.id}
                           objectNumber={info?.number}
                           binEntry={binLocation?.entry}
-                          onPackageChanged={handleAddPackage}
+                          onPackageChanged={(value) => handleAddPackage(SourceTarget.Source, value)}
                       />}
     >
       {isProcessingItem && (
@@ -85,7 +87,7 @@ export default function TransferProcessSource() {
         </div>
       )}
       {user?.binLocations && !binLocation &&
-          <BinLocationScanner showLabel={false} onChanged={onBinChanged} onClear={onBinClear}/>}
+          <BinLocationScanner showLabel={false} onChanged={(bin) => onBinChanged(bin, SourceTarget.Source)} onClear={onBinClear}/>}
       <div className="contentStyle">
         {currentAlert &&
             <div ref={processAlertRef}><ProcessAlert alert={currentAlert}
@@ -151,7 +153,7 @@ export default function TransferProcessSource() {
           onCancel={handleCancel}
           onQuantityChanged={handleQuantityChanged}
           onUpdateLine={transferService.updateLine}
-          onUpdateComplete={loadRows}
+          onUpdateComplete={() => loadRows(SourceTarget.Source)}
       />}
     </ContentTheme>
   );
