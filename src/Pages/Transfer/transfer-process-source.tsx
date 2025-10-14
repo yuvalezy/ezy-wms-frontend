@@ -10,7 +10,7 @@ import {ReasonType} from "@/features/shared/data";
 import Processes from "@/components/Processes";
 import {AlertCircle, Loader2} from "lucide-react";
 import {useStockInfo} from "@/utils/stock-info";
-import React from "react";
+import React, {useEffect} from "react";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
 import {transferService} from "@/features/transfer/data/transefer-service";
 import {useTransferProcess} from "@/features/transfer/context/TransferProcessContext";
@@ -40,6 +40,13 @@ export default function TransferProcessSource() {
     info
   } = useTransferProcess();
 
+  // Load rows on mount for non-bin-managed warehouses
+  useEffect(() => {
+    if (id && !user?.binLocations) {
+      loadRows(SourceTarget.Source);
+    }
+  }, [id, user?.binLocations, loadRows]);
+
   if (!id)
     return null;
 
@@ -49,7 +56,10 @@ export default function TransferProcessSource() {
 
   const titleBreadcrumbs = [
     {label: info?.number?.toString() ?? '', onClick: () => navigate(`/transfer/${scanCode}`)},
-    {label: t("selectTransferSource"), onClick: binLocation ? onBinClear : undefined}
+    {
+      label: user?.binLocations ? t("selectTransferSource") : t("selectSourceItems"),
+      onClick: binLocation ? onBinClear : undefined
+    }
   ];
   if (binLocation) {
     titleBreadcrumbs.push({label: binLocation.code, onClick: undefined});
@@ -58,7 +68,7 @@ export default function TransferProcessSource() {
   return (
     <ContentTheme title={t("transfer")} titleOnClick={() => navigate(`/transfer`)}
                   titleBreadcrumbs={titleBreadcrumbs}
-                  footer={binLocation && <TransferProcessSourceItem />}
+                  footer={(!user?.binLocations || binLocation) && <TransferProcessSourceItem />}
     >
       {isProcessingItem && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
