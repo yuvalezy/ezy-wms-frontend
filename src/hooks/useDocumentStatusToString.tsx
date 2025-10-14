@@ -17,6 +17,8 @@ export const useDocumentStatusToString = () => {
                 return t('cancelledStatus');
             case Status.InProgress:
                 return t('inProgressStatus');
+          case Status.WaitingForApproval:
+            return t('waitingForApprovalStatus');
             default:
                 return '';
         }

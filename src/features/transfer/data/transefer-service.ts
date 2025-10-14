@@ -71,7 +71,7 @@ export const transferService = {
 
   async search(params: TransferUpdateParameters): Promise<TransferDocument[]> {
     if (params.statuses == null)
-      params.statuses = params.id == null ? [Status.Open, Status.InProgress] : [];
+      params.statuses = params.id == null ? [Status.Open, Status.InProgress, Status.WaitingForApproval] : [];
     if (params.orderBy == null)
       params.orderBy = TransfersOrderBy.ID;
     if (params.desc == null)

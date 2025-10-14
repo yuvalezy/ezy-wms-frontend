@@ -2,6 +2,7 @@ import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import React, {useEffect, useState} from "react";
 import {useAuth, useThemeContext} from "@/components";
+import {useTransferSupervisorData} from "@/features/transfer/hooks/useTransferSupervisorData";
 import TransferCard from "@/features/transfer/components/transfer-card";
 import TransferTable from "@/features/transfer/components/transfer-table";
 import {ObjectAction} from "@/features/shared/data/shared";
@@ -23,6 +24,7 @@ export default function TransferSupervisor() {
     const {t} = useTranslation();
     const {user} = useAuth();
     const {setError} = useThemeContext();
+    const {supervisor, getTitle} = useTransferSupervisorData();
     const [transfers, setTransfers] = useState<TransferDocument[]>([]);
     const [selectedTransfer, setSelectedTransfer] = useState<TransferDocument | null>(null);
     const [actionType, setActionType] = useState<ObjectAction | null>(null);
@@ -159,7 +161,7 @@ export default function TransferSupervisor() {
     );
 
     return (
-        <ContentTheme title={t("transferSupervisor")}>
+        <ContentTheme title={getTitle()}>
             <TransferForm onNewTransfer={transfer => {
                 const createByUser: User = {
                     fullName: user!.name, id: user!.id, deleted: false,

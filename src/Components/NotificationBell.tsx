@@ -48,17 +48,16 @@ export const NotificationBell: React.FC = () => {
     await markAllAsRead();
   };
 
-  const getAlertTypeColor = (alertType: number) => {
-    switch (alertType) {
-      case 0: // TransferApprovalRequest
-        return "bg-yellow-100 text-yellow-800";
-      case 1: // TransferApproved
-        return "bg-green-100 text-green-800";
-      case 2: // TransferRejected
-        return "bg-red-100 text-red-800";
-      default:
-        return "bg-gray-100 text-gray-800";
+  const getAlertTypeColor = (alertType: any) => {
+    // Handle both string and numeric enum values
+    if (alertType === "TransferApprovalRequest" || alertType === 0) {
+      return "bg-yellow-100 text-yellow-800";
+    } else if (alertType === "TransferApproved" || alertType === 1) {
+      return "bg-green-100 text-green-800";
+    } else if (alertType === "TransferRejected" || alertType === 2) {
+      return "bg-red-100 text-red-800";
     }
+    return "bg-gray-100 text-gray-800";
   };
 
   return (
@@ -123,9 +122,9 @@ export const NotificationBell: React.FC = () => {
                           alert.alertType
                         )}`}
                       >
-                        {alert.alertType === 0
+                        {alert.alertType === "TransferApprovalRequest" || alert.alertType === 0
                           ? t('alertPending')
-                          : alert.alertType === 1
+                          : alert.alertType === "TransferApproved" || alert.alertType === 1
                           ? t('alertApproved')
                           : t('alertRejected')}
                       </span>
