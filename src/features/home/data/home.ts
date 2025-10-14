@@ -1,5 +1,5 @@
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
-import {Boxes, CheckCircle, ClipboardList, Move, Package, PackageCheckIcon, ShoppingCart} from "lucide-react";
+import {Boxes, CheckCircle, ClipboardCheck, ClipboardList, Move, Package, PackageCheckIcon, ShoppingCart} from "lucide-react";
 import {ApplicationSettings} from "@/features/login/data/login";
 
 export interface HomeInfo {
@@ -11,6 +11,7 @@ export interface HomeInfo {
   picking: number;
   counting: number;
   transfers: number;
+  transfersApproval: number;
   transfersConfirmation: number;
 }
 
@@ -128,6 +129,17 @@ export const kpiItems: KpiItem[] = [
     borderColor: "border-l-lime-500"
   },
   {
+    id: 'transfersApproval',
+    title: 'transfersApproval',
+    value: 29,
+    icon: ClipboardCheck,
+    authorizations: [RoleType.TRANSFER_SUPERVISOR],
+    route: "/transfer",
+    backgroundColor: "bg-emerald-100",
+    iconColor: "text-emerald-700",
+    borderColor: "border-l-emerald-500"
+  },
+  {
     id: 'transferConfirmation',
     title: 'transferConfirmation',
     value: 30,
@@ -185,8 +197,11 @@ export function getKpiItems(settings: ApplicationSettings, userAuthorizations: R
       case 'counting':
         value = info.counting;
         break;
+      case 'transfersApproval':
+        value = info.transfersApproval;
+        break;
       case 'transfer':
-        value = info.transfers;
+        value = info.transfersApproval;
         break;
       case 'transferConfirmation':
         value = info.transfersConfirmation;
