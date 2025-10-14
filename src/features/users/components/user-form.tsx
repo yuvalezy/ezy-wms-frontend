@@ -6,7 +6,8 @@ import {Input} from "@/components/ui/input";
 import {Checkbox} from "@/components/ui/checkbox";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
-import {Eye, EyeOff, Save, X} from "lucide-react";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {Eye, EyeOff, Save, X, Lock} from "lucide-react";
 import {useThemeContext} from "@/components";
 import {AuthorizationGroup, ExternalUser, User, UserFormData, Warehouse} from "../data/user";
 import {userService} from "../data/user-service";
@@ -181,48 +182,55 @@ const UserForm: React.FC<UserFormProps> = ({user, authorizationGroups, warehouse
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="password"
-                  rules={!isEditing ? {
-                    required: t('passwordRequired'),
-                    minLength: {
-                      value: 6,
-                      message: t('passwordMinLength')
-                    }
-                  } : {}}
-                  render={({field}) => (
-                    <FormItem>
-                      <FormLabel>
-                        {t('password')} {!isEditing && ' *'}
-                        {isEditing && (
-                          <span className="text-sm text-gray-500 font-normal ml-2">
-                              ({t('leaveEmptyToKeepCurrent')})
-                            </span>
-                        )}
-                      </FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input
-                            type={showPassword ? "text" : "password"}
-                            placeholder={isEditing ? t('enterNewPassword') : t('enterPassword')}
-                            {...field}
-                          />
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className="absolute right-0 top-0 h-full px-3"
-                            onClick={() => setShowPassword(!showPassword)}
-                          >
-                            {showPassword ? <EyeOff className="h-4 w-4"/> : <Eye className="h-4 w-4"/>}
-                          </Button>
-                        </div>
-                      </FormControl>
-                      <FormMessage/>
-                    </FormItem>
-                  )}
-                />
+                <Card className="border-muted">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm flex items-center gap-2">
+                      <Lock className="h-4 w-4" />
+                      {t('password')} {!isEditing && ' *'}
+                    </CardTitle>
+                    {isEditing && (
+                      <CardDescription className="text-xs">
+                        {t('leaveEmptyToKeepCurrent')}
+                      </CardDescription>
+                    )}
+                  </CardHeader>
+                  <CardContent>
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      rules={!isEditing ? {
+                        required: t('passwordRequired'),
+                        minLength: {
+                          value: 6,
+                          message: t('passwordMinLength')
+                        }
+                      } : {}}
+                      render={({field}) => (
+                        <FormItem>
+                          <FormControl>
+                            <div className="relative">
+                              <Input
+                                type={showPassword ? "text" : "password"}
+                                placeholder={isEditing ? t('enterNewPassword') : t('enterPassword')}
+                                {...field}
+                              />
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                className="absolute right-0 top-0 h-full px-3"
+                                onClick={() => setShowPassword(!showPassword)}
+                              >
+                                {showPassword ? <EyeOff className="h-4 w-4"/> : <Eye className="h-4 w-4"/>}
+                              </Button>
+                            </div>
+                          </FormControl>
+                          <FormMessage/>
+                        </FormItem>
+                      )}
+                    />
+                  </CardContent>
+                </Card>
               </div>
               {/*/!* Right Column *!/*/}
               <div className="space-y-4">
