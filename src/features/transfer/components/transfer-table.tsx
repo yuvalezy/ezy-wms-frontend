@@ -25,6 +25,7 @@ export default function TransferTable({ transfers, supervisor = false, onAction 
   const { user } = useAuth();
   const { dateFormat } = useDateTimeFormat();
   const documentStatusToString = useDocumentStatusToString();
+  const settings = user!.settings;
 
   const handleOpenLink = user?.roles?.includes(RoleType.TRANSFER);
 
@@ -68,8 +69,7 @@ export default function TransferTable({ transfers, supervisor = false, onAction 
           <TableHead>{t('docDate')}</TableHead>
           <TableHead>{t('createdBy')}</TableHead>
           <TableHead>{t('status')}</TableHead>
-          <TableHead>{t('sourceWarehouse')}</TableHead>
-          <TableHead>{t('targetWarehouse')}</TableHead>
+          {settings.enableWarehouseTransfer && <TableHead>{t('targetWarehouse')}</TableHead>}
           <TableHead>{t('progress')}</TableHead>
           <TableHead>{t('comment')}</TableHead>
           {supervisor && <TableHead className="text-right min-w-[100px] w-auto"></TableHead>}
@@ -100,8 +100,7 @@ export default function TransferTable({ transfers, supervisor = false, onAction 
               <TableCell>{dateFormat(doc.date)}</TableCell>
               <TableCell>{doc.createdByUser?.fullName}</TableCell>
               <TableCell>{documentStatusToString(doc.status)}</TableCell>
-              <TableCell>{doc.sourceWhsCode || '-'}</TableCell>
-              <TableCell>{doc.targetWhsCode || '-'}</TableCell>
+              {settings.enableWarehouseTransfer && <TableCell>{doc.targetWhsCode || '-'}</TableCell>}
               <TableCell>
                 <div className="flex items-center space-x-2">
                   <Progress value={progressDisplayValue} className="w-20" />

@@ -55,6 +55,7 @@
   "sourceWarehouse": "Source Warehouse",
   "selectTargetWarehouse": "Select target warehouse",
   "crossWarehouseTransfer": "Cross-Warehouse Transfer",
+  "mustSelectDifferentWarehouse": "You must select a target warehouse",
   "waitingForApprovalStatus": "Waiting for Approval",
   "approveTransfer": "Approve Transfer",
   "rejectTransfer": "Reject Transfer",

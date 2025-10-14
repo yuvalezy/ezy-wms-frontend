@@ -63,6 +63,13 @@ export enum ProcessType {
   TransferConfirmation = 'transferConfirmation'
 }
 
+export enum LineStatus {
+  Open = 0,
+  Closed = 1,
+  Processing = 2,
+  Finished = 3
+}
+
 export enum AddItemReturnValueType {
   Ok = 0,
   ItemCodeNotFound = -1,

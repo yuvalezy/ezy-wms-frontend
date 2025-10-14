@@ -45,6 +45,10 @@ export default function TransferProcessSource() {
   if (!id)
     return null;
 
+  // Check if this is a cross-warehouse transfer
+  const sourceWhs = info?.sourceWhsCode || info?.whsCode;
+  const isCrossWarehouseTransfer = info?.targetWhsCode && info?.targetWhsCode !== sourceWhs;
+
   const titleBreadcrumbs = [
     {label: info?.number?.toString() ?? '', onClick: () => navigate(`/transfer/${scanCode}`)},
     {label: t("selectTransferSource"), onClick: binLocation ? onBinClear : undefined}
@@ -88,9 +92,12 @@ export default function TransferProcessSource() {
                                                      onAction={(type) => processesRef?.current?.open(type)}/></div>}
         {rows != null && rows.length > 0 && (
           <div className="flex flex-col gap-4">
-            <Button type="button" variant="default" onClick={() => navigate(`/transfer/${id}/targetBins`)}>
-              {t("selectTransferTargetBins") || "Select Target Bins"}
-            </Button>
+            {/* Only show target bins button for same-warehouse transfers */}
+            {!isCrossWarehouseTransfer && (
+              <Button type="button" variant="default" onClick={() => navigate(`/transfer/${id}/targetBins`)}>
+                {t("selectTransferTargetBins") || "Select Target Bins"}
+              </Button>
+            )}
 
             {/* Desktop view - Table */}
             <Table>

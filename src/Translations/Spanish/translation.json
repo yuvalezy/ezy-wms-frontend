@@ -55,6 +55,7 @@
   "sourceWarehouse": "Almacén Origen",
   "selectTargetWarehouse": "Seleccione almacén destino",
   "crossWarehouseTransfer": "Transferencia entre Almacenes",
+  "mustSelectDifferentWarehouse": "Debe seleccionar un almacén destino",
   "waitingForApprovalStatus": "Esperando Aprobación",
   "approveTransfer": "Aprobar Transferencia",
   "rejectTransfer": "Rechazar Transferencia",

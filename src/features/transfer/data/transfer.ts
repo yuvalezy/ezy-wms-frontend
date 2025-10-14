@@ -1,6 +1,36 @@
-import {BaseEntity, Status, UnitType} from "@/features/shared/data";
+import {BaseEntity, LineStatus, Status, UnitType} from "@/features/shared/data";
 import {ItemDetails} from "@/features/items/data/items";
 import {PackageContentDto} from "@/features/packages/types";
+
+export enum SourceTarget {
+  Source = "Source",
+  Target = "Target"
+}
+
+export interface TransferLineResponse {
+  barCode: string;
+  itemCode: string;
+  id: string;
+  quantity: number;
+  lineStatus: LineStatus;
+  type: SourceTarget;
+  unitType: UnitType;
+  date: Date;
+  binEntry?: number;
+  comments?: string;
+  statusReason?: number;
+  cancellationReasonId?: string;
+  cancellationReasonName?: string;
+  transferId: string;
+  transferNumber?: number;
+  transferName?: string;
+  createdAt: Date;
+  createdByUserId?: string;
+  createdByUserName?: string;
+  updatedAt?: Date;
+  updatedByUserId?: string;
+  updatedByUserName?: string;
+}
 
 export interface TransferDocument extends BaseEntity {
   name?: string;
@@ -10,8 +40,10 @@ export interface TransferDocument extends BaseEntity {
   progress?: number;
   comments?: string;
   isComplete?: boolean;
-  sourceWhsCode?: string;
+  whsCode?: string; // Source warehouse code
+  sourceWhsCode?: string; // Alternative source warehouse code field
   targetWhsCode?: string;
+  lines?: TransferLineResponse[];
 }
 
 export enum TransfersOrderBy {
@@ -55,11 +87,6 @@ export type TransferContentBin = {
   entry: number;
   code: string;
   quantity: number;
-}
-
-export enum SourceTarget {
-  Source = "Source",
-  Target = "Target"
 }
 
 export type AddItemParameters = {

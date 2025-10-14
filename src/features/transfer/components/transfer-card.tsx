@@ -35,7 +35,10 @@ const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = 
   let handleOpenLink = user?.roles?.includes(RoleType.TRANSFER);
 
   const documentStatusToString = useDocumentStatusToString();
-  const progressDisplayValue = doc.progress ?? 0;
+  // For cross-warehouse transfers, show 100% if any source items added (progress > 0)
+  const sourceWhs = doc.sourceWhsCode || doc.whsCode;
+  const isCrossWarehouseTransfer = doc.targetWhsCode && doc.targetWhsCode !== sourceWhs;
+  const progressDisplayValue = isCrossWarehouseTransfer && (doc.lines?.length ?? 0) > 0 ? 100 : (doc.progress ?? 0);
 
   return (
     <Card key={doc.id} className={header ? "mb-4 shadow-lg" : "shadow-lg"}>
@@ -64,7 +67,7 @@ const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = 
       </CardContent>
       {supervisor && (
         <CardFooter className="flex justify-end space-x-2 pt-4 border-t">
-          {doc.status === Status.InProgress && doc.progress === 100 && (
+          {doc.status === Status.InProgress && progressDisplayValue === 100 && (
             <Button variant="default" onClick={() => onAction?.(doc, 'approve')}
                     className="bg-green-500 hover:bg-green-600 text-white">
               <CheckCircle className="mr-2 h-4 w-4"/>{t('finish')}

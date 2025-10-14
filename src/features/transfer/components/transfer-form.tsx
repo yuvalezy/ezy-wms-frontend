@@ -54,6 +54,9 @@ const TransferForm: React.FC<TransferFormProps> = ({onNewTransfer,}) => {
     const enableWarehouseTransfer = user?.settings?.enableWarehouseTransfer ?? false;
     const warehouses = user?.warehouses || [];
 
+    // Validation: if target warehouse is same as current warehouse and user doesn't have binLocations enabled, show error
+    const isInvalidSelection = targetWhsCode === user?.currentWarehouse && !user?.binLocations;
+
     return (
         <form onSubmit={handleSubmit} className="space-y-4 p-4 border rounded-lg shadow">
             <div className="space-y-2">
@@ -73,7 +76,7 @@ const TransferForm: React.FC<TransferFormProps> = ({onNewTransfer,}) => {
                         {t("targetWarehouse")}
                     </Label>
                     <Select value={targetWhsCode} onValueChange={setTargetWhsCode}>
-                        <SelectTrigger id="targetWarehouse">
+                        <SelectTrigger id="targetWarehouse" className={isInvalidSelection ? "border-red-500" : ""}>
                             <SelectValue placeholder={t("selectTargetWarehouse")} />
                         </SelectTrigger>
                         <SelectContent>
@@ -84,9 +87,9 @@ const TransferForm: React.FC<TransferFormProps> = ({onNewTransfer,}) => {
                             ))}
                         </SelectContent>
                     </Select>
-                    {targetWhsCode !== user?.currentWarehouse && (
-                        <p className="text-xs text-orange-600 dark:text-orange-400">
-                            {t("crossWarehouseTransfer")}
+                    {isInvalidSelection && (
+                        <p className="text-xs text-red-600 dark:text-red-400">
+                            {t("mustSelectDifferentWarehouse")}
                         </p>
                     )}
                 </div>
@@ -103,7 +106,7 @@ const TransferForm: React.FC<TransferFormProps> = ({onNewTransfer,}) => {
                 />
             </div>
             <div>
-                <Button type="submit">
+                <Button type="submit" disabled={isInvalidSelection}>
                      <PlusCircle className="mr-2 h-4 w-4" />
                     {t("create")}
                 </Button>

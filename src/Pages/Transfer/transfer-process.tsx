@@ -85,7 +85,10 @@ export default function TransferProcess() {
   );
 
   const isWaitingForApproval = info?.status === Status.WaitingForApproval;
-  const canFinish = info?.isComplete && !isWaitingForApproval;
+  // For cross-warehouse transfers, we don't need target bins, so consider complete if there are source items
+  const sourceWhs = info?.sourceWhsCode || info?.whsCode;
+  const isCrossWarehouseTransfer = info?.targetWhsCode && info?.targetWhsCode !== sourceWhs;
+  const canFinish = (isCrossWarehouseTransfer ? (info?.progress ?? 0) > 0 : info?.isComplete) && !isWaitingForApproval;
 
   return (
     <ContentTheme title={t("transfer")} titleOnClick={() => navigate(`/transfer`)}
@@ -145,13 +148,16 @@ export default function TransferProcess() {
                                       onScan={(bin) => navigate(`/transfer/${id}/source?bin=${JSON.stringify(bin)}`)}/>
                 </CardContent>
               </Card>
-              <Card>
-                <CardContent>
-                  <BinLocationScanner label={t("scanTransferTargetBin")}
-                                      autofocus={false}
-                                      onScan={(bin) => navigate(`/transfer/${id}/targetBins?bin=${JSON.stringify(bin)}`)}/>
-                </CardContent>
-              </Card>
+              {/* Only show target bin scanner if transfer is within the same warehouse */}
+              {!isCrossWarehouseTransfer && (
+                <Card>
+                  <CardContent>
+                    <BinLocationScanner label={t("scanTransferTargetBin")}
+                                        autofocus={false}
+                                        onScan={(bin) => navigate(`/transfer/${id}/targetBins?bin=${JSON.stringify(bin)}`)}/>
+                  </CardContent>
+                </Card>
+              )}
               <div className="space-y-4 p-2">
                 {user?.settings.transferTargetItems && (
                   <Link to={`/transfer/${id}/targetItems`} className="block">

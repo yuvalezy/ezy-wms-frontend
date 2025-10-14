@@ -150,7 +150,7 @@ export function useMenus() {
       Authorization: RoleType.TRANSFER,
       Icon: Move,
       Color: "text-lime-700",
-      RequiresFeature: "BinLocation"
+      RequiresFeature: "EnableInventoryTransfer"
     },
     {
       Link: "/transferSupervisor",
@@ -158,7 +158,7 @@ export function useMenus() {
       Authorization: RoleType.TRANSFER_SUPERVISOR,
       Icon: Truck,
       Color: "text-lime-700",
-      RequiresFeature: "BinLocation"
+      RequiresFeature: "EnableInventoryTransfer"
     },
     {
       Link: "/transferConfirmation",
@@ -276,6 +276,10 @@ export function useMenus() {
           break;
         case "EnableTransferConfirm":
           if (!user!.settings!.enableTransferConfirm)
+            return false;
+          break;
+        case "EnableInventoryTransfer":
+          if (!user!.binLocations && !user!.settings.enableWarehouseTransfer)
             return false;
           break;
         case "BinLocation":
