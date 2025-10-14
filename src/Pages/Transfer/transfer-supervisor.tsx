@@ -86,6 +86,8 @@ export default function TransferSupervisor() {
                     <TableHead><Skeleton className="h-4 w-20" /></TableHead>
                     <TableHead><Skeleton className="h-4 w-16" /></TableHead>
                     <TableHead><Skeleton className="h-4 w-20" /></TableHead>
+                    <TableHead><Skeleton className="h-4 w-20" /></TableHead>
+                    <TableHead><Skeleton className="h-4 w-20" /></TableHead>
                     <TableHead><Skeleton className="h-4 w-24" /></TableHead>
                     <TableHead className="text-right"><Skeleton className="h-4 w-8 ml-auto" /></TableHead>
                 </TableRow>
@@ -98,6 +100,8 @@ export default function TransferSupervisor() {
                         <TableCell><Skeleton className="h-4 w-20" /></TableCell>
                         <TableCell><Skeleton className="h-4 w-24" /></TableCell>
                         <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+                        <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+                        <TableCell><Skeleton className="h-4 w-16" /></TableCell>
                         <TableCell>
                             <div className="flex items-center space-x-2">
                                 <Progress value={0} className="w-20" />

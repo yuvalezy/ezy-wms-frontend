@@ -68,6 +68,8 @@ export default function TransferTable({ transfers, supervisor = false, onAction 
           <TableHead>{t('docDate')}</TableHead>
           <TableHead>{t('createdBy')}</TableHead>
           <TableHead>{t('status')}</TableHead>
+          <TableHead>{t('sourceWarehouse')}</TableHead>
+          <TableHead>{t('targetWarehouse')}</TableHead>
           <TableHead>{t('progress')}</TableHead>
           <TableHead>{t('comment')}</TableHead>
           {supervisor && <TableHead className="text-right min-w-[100px] w-auto"></TableHead>}
@@ -81,12 +83,12 @@ export default function TransferTable({ transfers, supervisor = false, onAction 
               <TableCell>{doc.name || '-'}</TableCell>
               <TableCell>
                 {handleOpenLink ? (
-                  <a 
-                    href="#" 
-                    onClick={(e) => { 
-                      e.preventDefault(); 
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
                       handleOpen(doc);
-                    }} 
+                    }}
                     className="text-blue-600 hover:underline"
                   >
                     {doc.number}
@@ -98,6 +100,8 @@ export default function TransferTable({ transfers, supervisor = false, onAction 
               <TableCell>{dateFormat(doc.date)}</TableCell>
               <TableCell>{doc.createdByUser?.fullName}</TableCell>
               <TableCell>{documentStatusToString(doc.status)}</TableCell>
+              <TableCell>{doc.sourceWhsCode || '-'}</TableCell>
+              <TableCell>{doc.targetWhsCode || '-'}</TableCell>
               <TableCell>
                 <div className="flex items-center space-x-2">
                   <Progress value={progressDisplayValue} className="w-20" />

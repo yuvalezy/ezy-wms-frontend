@@ -1,11 +1,12 @@
 import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
-import {useThemeContext} from "@/components";
+import {useThemeContext, useAuth} from "@/components";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import {Textarea} from "@/components/ui/textarea";
-import {PlusCircle} from "lucide-react";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import {PlusCircle, Warehouse} from "lucide-react";
 import {TransferDocument} from "@/features/transfer/data/transfer";
 import {transferService} from "@/features/transfer/data/transefer-service";
 import {TransferFormSkeleton} from "./TransferFormSkeleton";
@@ -16,18 +17,21 @@ interface TransferFormProps {
 
 const TransferForm: React.FC<TransferFormProps> = ({onNewTransfer,}) => {
     const {t} = useTranslation();
+    const {user} = useAuth();
     const [docNameInput, setDocNameInput] = useState<string>("");
     const [commentsInput, setCommentsInput] = useState<string>("");
+    const [targetWhsCode, setTargetWhsCode] = useState<string>(user?.currentWarehouse || "");
     const {setError} = useThemeContext();
     const [isCreatingTransfer, setIsCreatingTransfer] = useState<boolean>(false);
     function create() {
         setIsCreatingTransfer(true);
         try {
-            transferService.create(docNameInput, commentsInput)
+            transferService.create(docNameInput, commentsInput, targetWhsCode !== user?.currentWarehouse ? targetWhsCode : undefined)
                 .then((response) => {
                     onNewTransfer(response);
                     setDocNameInput('');
                     setCommentsInput('');
+                    setTargetWhsCode(user?.currentWarehouse || "");
                 })
                 .catch((e) => {
                     setError(e);
@@ -47,6 +51,9 @@ const TransferForm: React.FC<TransferFormProps> = ({onNewTransfer,}) => {
         return <TransferFormSkeleton />;
     }
 
+    const enableWarehouseTransfer = user?.settings?.enableWarehouseTransfer ?? false;
+    const warehouses = user?.warehouses || [];
+
     return (
         <form onSubmit={handleSubmit} className="space-y-4 p-4 border rounded-lg shadow">
             <div className="space-y-2">
@@ -59,6 +66,31 @@ const TransferForm: React.FC<TransferFormProps> = ({onNewTransfer,}) => {
                     placeholder={t("enterDocumentId") || "Enter Document ID"}
                 />
             </div>
+            {enableWarehouseTransfer && warehouses.length > 1 && (
+                <div className="space-y-2">
+                    <Label htmlFor="targetWarehouse" className="flex items-center gap-2">
+                        <Warehouse className="h-4 w-4" />
+                        {t("targetWarehouse")}
+                    </Label>
+                    <Select value={targetWhsCode} onValueChange={setTargetWhsCode}>
+                        <SelectTrigger id="targetWarehouse">
+                            <SelectValue placeholder={t("selectTargetWarehouse")} />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {warehouses.map((whs) => (
+                                <SelectItem key={whs.id} value={whs.id}>
+                                    {whs.id} - {whs.name}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                    {targetWhsCode !== user?.currentWarehouse && (
+                        <p className="text-xs text-orange-600 dark:text-orange-400">
+                            {t("crossWarehouseTransfer")}
+                        </p>
+                    )}
+                </div>
+            )}
             <div className="space-y-2">
                 <Label htmlFor="transferComments">{t("comment")}</Label>
                 <Textarea

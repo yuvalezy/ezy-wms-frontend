@@ -10,6 +10,8 @@ export interface TransferDocument extends BaseEntity {
   progress?: number;
   comments?: string;
   isComplete?: boolean;
+  sourceWhsCode?: string;
+  targetWhsCode?: string;
 }
 
 export enum TransfersOrderBy {

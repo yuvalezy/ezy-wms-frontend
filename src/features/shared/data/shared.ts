@@ -36,6 +36,7 @@ export enum Status {
   Finished = "Finished",
   Cancelled = "Cancelled",
   InProgress = "InProgress",
+  WaitingForApproval = "WaitingForApproval",
 }
 
 export type AddItemResponseMultipleValue = {

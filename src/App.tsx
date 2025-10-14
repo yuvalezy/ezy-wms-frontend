@@ -4,6 +4,7 @@ import {BrowserRouter, Route, Routes, useNavigate} from "react-router";
 import Login from "./Pages/Login";
 import HomePage from "./Pages/Home";
 import {AuthProvider, useAuth} from "@/components";
+import {NotificationProvider} from "@/components/NotificationContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Unauthorized from "./components/Unauthorized";
 import NotFound from "./components/NotFound";
@@ -333,9 +334,11 @@ function AppRoutes() {
 export default function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <AppRoutes/>
-      </BrowserRouter>
+      <NotificationProvider>
+        <BrowserRouter>
+          <AppRoutes/>
+        </BrowserRouter>
+      </NotificationProvider>
     </AuthProvider>
   );
 }

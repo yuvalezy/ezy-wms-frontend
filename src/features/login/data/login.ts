@@ -45,6 +45,7 @@ export interface ApplicationSettings {
   transferTargetItems: boolean;
   enableTransferConfirm: boolean;
   enableTransferRequest: boolean;
+  enableWarehouseTransfer: boolean;
   // Packages & Units
   enablePackages: boolean;
   defaultUnitType: UnitType;

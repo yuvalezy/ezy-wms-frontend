@@ -5,6 +5,7 @@ import {Button} from "@/components/ui";
 import {FileSpreadsheet, Filter, Plus} from "lucide-react";
 import {useTranslation} from "react-i18next";
 import {useAuth} from "@/components/AppContext";
+import {NotificationBell} from "@/components/NotificationBell";
 import DeviceStatusBanner from "@/components/DeviceStatusBanner";
 import AccountStatusBanner from "@/components/AccountStatusBanner";
 import {DeviceStatus} from "@/features/devices/data/device";
@@ -112,6 +113,7 @@ const ContentTheme: React.FC<ContentThemeProps> = (
               </div>
             </div>
             <div className="flex items-center flex-shrink-0 gap-1 md:gap-2 ml-2 md:ml-4">
+              <NotificationBell />
               {onFilterClicked && (
                 <button
                   onClick={onFilterClicked}

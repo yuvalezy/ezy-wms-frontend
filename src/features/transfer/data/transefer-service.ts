@@ -18,10 +18,10 @@ import axios from "axios";
 import {getAddItemErrorMessage} from "@/utils/error-handler";
 
 export const transferService = {
-  async create(name: string, comments: string,): Promise<TransferDocument> {
+  async create(name: string, comments: string, targetWhsCode?: string): Promise<TransferDocument> {
     try {
       const response = await axiosInstance.post<TransferDocument>(
-        `transfer/create`, {name, comments},
+        `transfer/create`, {name, comments, targetWhsCode},
       );
 
       return response.data;
