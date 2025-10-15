@@ -2,13 +2,13 @@ import ContentTheme from "@/components/ContentTheme";
 import {Link, useNavigate} from "react-router";
 import {Button, Card, CardContent} from "@/components";
 import {useTranslation} from "react-i18next";
-import {Check, Map, Clock, AlertCircle} from 'lucide-react';
+import {AlertCircle, Check, Clock, Map} from 'lucide-react';
 import BinLocationScanner from "@/components/BinLocationScanner";
 import TransferCard from "@/features/transfer/components/transfer-card";
 import {cn} from "@/utils/css-utils";
-import {Skeleton} from "@/components/ui/skeleton";
 import {Status} from "@/features/shared/data";
 import {useTransferProcess} from "@/features/transfer/context/TransferProcessContext";
+import {TransferProcessSkeleton} from "@/features/transfer/components/transfer-process-skeleton";
 
 export default function TransferProcess() {
   const {t} = useTranslation();
@@ -22,93 +22,34 @@ export default function TransferProcess() {
     isLoading
   } = useTransferProcess();
 
-  // Skeleton component for loading state
-  const ProcessSkeleton = () => (
-    <div className="grid gap-2" aria-label="Loading...">
-      {/* Transfer card skeleton */}
-      <Card className="shadow-lg">
-        <CardContent className="py-4">
-          <div className="space-y-3">
-            <div className="flex justify-between">
-              <Skeleton className="h-4 w-16"/>
-              <Skeleton className="h-4 w-24"/>
-            </div>
-            <div className="flex justify-between">
-              <Skeleton className="h-4 w-20"/>
-              <Skeleton className="h-4 w-20"/>
-            </div>
-            <div className="flex justify-between">
-              <Skeleton className="h-4 w-18"/>
-              <Skeleton className="h-4 w-28"/>
-            </div>
-            <div className="flex justify-between">
-              <Skeleton className="h-4 w-14"/>
-              <Skeleton className="h-4 w-20"/>
-            </div>
-            <div className="pt-2">
-              <Skeleton className="h-2 w-full"/>
-              <Skeleton className="h-3 w-20 mx-auto mt-1"/>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Scanner cards skeleton */}
-      <Card>
-        <CardContent className="p-6">
-          <div className="space-y-4">
-            <Skeleton className="h-4 w-48"/>
-            <Skeleton className="h-10 w-full"/>
-            <Skeleton className="h-10 w-32"/>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardContent className="p-6">
-          <div className="space-y-4">
-            <Skeleton className="h-4 w-48"/>
-            <Skeleton className="h-10 w-full"/>
-            <Skeleton className="h-10 w-32"/>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Optional target items link skeleton */}
-      <div className="space-y-4 p-2">
-        <div className="bg-white rounded-lg shadow-md p-4 flex items-center space-x-4">
-          <Skeleton className="h-6 w-6"/>
-          <Skeleton className="h-6 w-48"/>
-        </div>
-      </div>
-    </div>
-  );
-
   const isWaitingForApproval = info?.status === Status.WaitingForApproval;
   // For cross-warehouse transfers, we don't need target bins, so consider complete if there are source items
   const sourceWhs = info?.sourceWhsCode || info?.whsCode;
   const isCrossWarehouseTransfer = info?.targetWhsCode && info?.targetWhsCode !== sourceWhs;
   const canFinish = (isCrossWarehouseTransfer ? (info?.progress ?? 0) > 0 : info?.isComplete) && !isWaitingForApproval;
 
+  const finishButton = () => {
+    if (!info || info.status !== Status.Open)
+      return null;
+
+    return <div className="p-4">
+      <Button type="button"
+              className={cn("w-full bg-green-500", canFinish ? 'hover:shadow-lg cursor-pointer' : 'opacity-50 cursor-not-allowed')}
+              onClick={() => finish()}
+              disabled={isLoading || !canFinish}>
+        <Check className="h-6 w-6"/>
+        {t("finish")}
+      </Button>
+    </div>;
+  }
+
   return (
     <ContentTheme title={t("transfer")} titleOnClick={() => navigate(`/transfer`)}
                   titleBreadcrumbs={[{label: info?.number?.toString() ?? ''}]}
-                  footer={
-                    <>
-                      <div className="p-4">
-                        <Button type="button"
-                                className={cn("w-full bg-green-500", canFinish ? 'hover:shadow-lg cursor-pointer' : 'opacity-50 cursor-not-allowed')}
-                                onClick={() => finish()}
-                                disabled={isLoading || !canFinish}>
-                          <Check className="h-6 w-6"/>
-                          {t("finish")}
-                        </Button>
-                      </div>
-                    </>
-                  }
+                  footer={finishButton()}
     >
       {isLoading ? (
-        <ProcessSkeleton/>
+        <TransferProcessSkeleton/>
       ) : id ? (
         <div className="grid gap-2">
           {info && <TransferCard header={false} doc={info}/>}
@@ -142,7 +83,7 @@ export default function TransferProcess() {
                 </div>
               </CardContent>
             </Card>
-          ) : (
+          ) : info && info.status === Status.Open && (
             <>
               {user?.binLocations ? (
                 <Card>

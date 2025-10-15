@@ -2,7 +2,7 @@ import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import BarCodeScanner, {AddItemValue, BarCodeScannerRef} from "../../components/BarCodeScanner";
 import React, {useEffect, useRef, useState} from "react";
-import {TransferRequestFormSkeleton} from "./components/TransferRequestFormSkeleton";
+import {TransferRequestFormSkeleton} from "../../features/transfer/components/TransferRequestFormSkeleton";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";

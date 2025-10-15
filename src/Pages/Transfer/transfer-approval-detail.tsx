@@ -4,9 +4,9 @@ import {Button, Card, CardContent, useAuth, useThemeContext} from "@/components"
 import {useTranslation} from "react-i18next";
 import {Check, Loader2, X} from 'lucide-react';
 import TransferCard from "@/features/transfer/components/transfer-card";
-import {Skeleton} from "@/components/ui/skeleton";
 import {useEffect, useState} from "react";
 import {SourceTarget, TransferContent, TransferDocument} from "@/features/transfer/data/transfer";
+import {TransferApprovalDetailSkeleton} from "@/features/transfer/components/transfer-approval-detail-skeleton";
 import {transferService} from "@/features/transfer/data/transefer-service";
 import {AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle} from "@/components/ui/alert-dialog";
 import {Label} from "@/components/ui/label";
@@ -143,51 +143,6 @@ export default function TransferApprovalDetail() {
     );
   };
 
-  // Skeleton component for loading state
-  const ContentSkeleton = () => (
-    <div className="grid gap-2" aria-label="Loading...">
-      {/* Transfer card skeleton */}
-      <Card className="shadow-lg">
-        <CardContent className="py-4">
-          <div className="space-y-3">
-            <div className="flex justify-between">
-              <Skeleton className="h-4 w-16"/>
-              <Skeleton className="h-4 w-24"/>
-            </div>
-            <div className="flex justify-between">
-              <Skeleton className="h-4 w-20"/>
-              <Skeleton className="h-4 w-20"/>
-            </div>
-            <div className="flex justify-between">
-              <Skeleton className="h-4 w-18"/>
-              <Skeleton className="h-4 w-28"/>
-            </div>
-            <div className="pt-2">
-              <Skeleton className="h-2 w-full"/>
-              <Skeleton className="h-3 w-20 mx-auto mt-1"/>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Content table skeleton */}
-      <Card>
-        <CardContent className="p-6">
-          <div className="space-y-4">
-            <Skeleton className="h-6 w-48"/>
-            {Array.from({length: 3}).map((_, index) => (
-              <div key={index} className="space-y-2 border-b pb-4">
-                <Skeleton className="h-4 w-32"/>
-                <Skeleton className="h-4 w-full"/>
-                <Skeleton className="h-4 w-24"/>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-
   return (
     <ContentTheme
       title={t("transferApprovals")}
@@ -220,7 +175,7 @@ export default function TransferApprovalDetail() {
       }
     >
       {isLoading ? (
-        <ContentSkeleton/>
+        <TransferApprovalDetailSkeleton/>
       ) : transfer ? (
         <div className="grid gap-4">
           {/* Transfer header card */}

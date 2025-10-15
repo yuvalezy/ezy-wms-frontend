@@ -83,6 +83,7 @@
   "add": "Add",
   "approve": "Approve",
   "reject": "Reject",
+  "rejected": "Rejected",
   "cancel": "Cancel",
   "delete": "Delete",
   "select": "Select",

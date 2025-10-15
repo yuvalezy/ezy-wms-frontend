@@ -37,6 +37,7 @@ export enum Status {
   Cancelled = "Cancelled",
   InProgress = "InProgress",
   WaitingForApproval = "WaitingForApproval",
+  Rejected = "Rejected"
 }
 
 export type AddItemResponseMultipleValue = {
@@ -66,7 +67,8 @@ export enum LineStatus {
   Open = 0,
   Closed = 1,
   Processing = 2,
-  Finished = 3
+  Finished = 3,
+  Rejected = 4
 }
 
 export enum AddItemReturnValueType {

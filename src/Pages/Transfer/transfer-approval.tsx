@@ -12,14 +12,12 @@ import {Textarea} from "@/components/ui/textarea";
 import {toast} from "sonner";
 import {TransferDocument} from "@/features/transfer/data/transfer";
 import {transferService} from "@/features/transfer/data/transefer-service";
-import {Skeleton} from "@/components/ui/skeleton";
-import {Card, CardContent, CardFooter, CardHeader} from "@/components/ui/card";
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import {Progress} from "@/components/ui/progress";
 import {Loader2} from "lucide-react";
 import {Status} from "@/features/shared/data";
 import {useParams} from "react-router";
 import {ObjectAction} from "@/features/packages/types";
+import {TransferTableSkeleton} from "@/features/transfer/components/transfer-table-skeleton";
+import {TransferCardSkeleton} from "@/features/transfer/components/transfer-card-skeleton";
 
 export default function TransferApproval() {
     const {t} = useTranslation();
@@ -100,89 +98,6 @@ export default function TransferApproval() {
         setActionType(null);
     };
 
-    // Skeleton components
-    const TableSkeleton = () => (
-        <Table>
-            <TableHeader>
-                <TableRow>
-                    <TableHead><Skeleton className="h-4 w-12" /></TableHead>
-                    <TableHead><Skeleton className="h-4 w-20" /></TableHead>
-                    <TableHead><Skeleton className="h-4 w-24" /></TableHead>
-                    <TableHead><Skeleton className="h-4 w-20" /></TableHead>
-                    <TableHead><Skeleton className="h-4 w-16" /></TableHead>
-                    <TableHead><Skeleton className="h-4 w-20" /></TableHead>
-                    <TableHead><Skeleton className="h-4 w-20" /></TableHead>
-                    <TableHead><Skeleton className="h-4 w-20" /></TableHead>
-                    <TableHead><Skeleton className="h-4 w-24" /></TableHead>
-                    <TableHead className="text-right"><Skeleton className="h-4 w-8 ml-auto" /></TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {Array.from({ length: 5 }).map((_, index) => (
-                    <TableRow key={index}>
-                        <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                        <TableCell>
-                            <div className="flex items-center space-x-2">
-                                <Progress value={0} className="w-20" />
-                                <Skeleton className="h-3 w-8" />
-                            </div>
-                        </TableCell>
-                        <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-                        <TableCell className="text-right">
-                            <Skeleton className="h-8 w-8 ml-auto" />
-                        </TableCell>
-                    </TableRow>
-                ))}
-            </TableBody>
-        </Table>
-    );
-
-    const CardSkeleton = () => (
-        <Card className="mb-4 shadow-lg">
-            <CardHeader>
-                <Skeleton className="h-6 w-32" />
-            </CardHeader>
-            <CardContent className="py-4">
-                <div className="space-y-3">
-                    <div className="flex justify-between">
-                        <Skeleton className="h-4 w-16" />
-                        <Skeleton className="h-4 w-24" />
-                    </div>
-                    <div className="flex justify-between">
-                        <Skeleton className="h-4 w-20" />
-                        <Skeleton className="h-4 w-20" />
-                    </div>
-                    <div className="flex justify-between">
-                        <Skeleton className="h-4 w-18" />
-                        <Skeleton className="h-4 w-28" />
-                    </div>
-                    <div className="flex justify-between">
-                        <Skeleton className="h-4 w-14" />
-                        <Skeleton className="h-4 w-20" />
-                    </div>
-                    <div className="flex justify-between">
-                        <Skeleton className="h-4 w-16" />
-                        <Skeleton className="h-4 w-24" />
-                    </div>
-                    <div className="pt-2">
-                        <Progress value={0} className="w-full" />
-                        <Skeleton className="h-3 w-20 mx-auto mt-1" />
-                    </div>
-                </div>
-            </CardContent>
-            <CardFooter className="flex justify-end space-x-2 pt-4 border-t">
-                <Skeleton className="h-9 w-16" />
-                <Skeleton className="h-9 w-20" />
-            </CardFooter>
-        </Card>
-    );
-
     return (
         <ContentTheme title={t('transferApprovals')}>
             {transfers.length === 0 && !isLoading && (
@@ -197,13 +112,13 @@ export default function TransferApproval() {
                         {/* Mobile view - Card skeletons */}
                         <div className="block sm:hidden" aria-label="Loading...">
                             {Array.from({ length: 3 }).map((_, index) => (
-                                <CardSkeleton key={index} />
+                                <TransferCardSkeleton key={index} />
                             ))}
                         </div>
 
                         {/* Desktop view - Table skeleton */}
                         <div className="hidden sm:block" aria-label="Loading...">
-                            <TableSkeleton />
+                            <TransferTableSkeleton />
                         </div>
                     </>
                 ) : (
