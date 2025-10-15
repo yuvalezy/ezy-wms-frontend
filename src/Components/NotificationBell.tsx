@@ -125,9 +125,9 @@ export const NotificationBell: React.FC = () => {
                           alert.alertType
                         )}`}
                       >
-                        {alert.alertType === WmsAlertType.TransferApprovalRequest || alert.alertType === WmsAlertType.TransferApprovalRequest
+                        {alert.alertType === WmsAlertType.TransferApprovalRequest
                           ? t('alertPending')
-                          : alert.alertType === WmsAlertType.TransferApproved || alert.alertType === WmsAlertType.TransferApproved
+                          : alert.alertType === WmsAlertType.TransferApproved
                           ? t('alertApproved')
                           : t('alertRejected')}
                       </span>

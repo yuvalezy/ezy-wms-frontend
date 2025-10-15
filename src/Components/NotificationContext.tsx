@@ -5,13 +5,13 @@ import { useAuth } from "./AppContext";
 
 // Define alert types matching backend enums
 export enum WmsAlertType {
-  TransferApprovalRequest = 0,
-  TransferApproved = 1,
-  TransferRejected = 2
+  TransferApprovalRequest = "TransferApprovalRequest",
+  TransferApproved = "TransferApproved",
+  TransferRejected = "TransferRejected"
 }
 
 export enum WmsAlertObjectType {
-  Transfer = 0
+  Transfer = "Transfer"
 }
 
 // Define the alert interface
