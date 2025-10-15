@@ -46,7 +46,7 @@ export const transferService = {
     try {
       const response = await axiosInstance.post<TransferActionResponse>(`Transfer/Process`, {id});
 
-      if (!response.data.success) {
+      if (!response.data.success && response.data.errorMessage) {
         throw new Error(response.data.errorMessage);
       }
 
@@ -332,13 +332,15 @@ export const addItem = async (
         request
       );
 
-      if (!response.data.success) {
+      // For rejection (approved: false), success: false is expected and not an error
+      // Only throw if there's an actual error message
+      if (response.data.errorMessage) {
         throw new Error(response.data.errorMessage);
       }
 
       return response.data;
     } catch (error) {
-      console.error("Error approving transfer:", error);
+      console.error("Error approving/rejecting transfer:", error);
       throw error;
     }
   },

@@ -146,7 +146,8 @@ export interface TransferActionResponse {
   success: boolean;
   externalEntry: string | null;
   externalNumber: string | null;
-  errorMessage: string;
+  errorMessage: string | null;
+  message?: string;
   status: string;
 }
 
