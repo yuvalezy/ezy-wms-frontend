@@ -1,36 +1,45 @@
 import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import React, {useEffect, useState} from "react";
-import {useAuth, useThemeContext} from "@/components";
+import {useThemeContext} from "@/components";
 import TransferCard from "@/features/transfer/components/transfer-card";
 import TransferTable from "@/features/transfer/components/transfer-table";
-import {StringFormat} from "@/utils/string-utils";
-import {AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,} from "@/components/ui/alert-dialog";
-import {Button} from "@/components/ui/button";
-import {Label} from "@/components/ui/label";
-import {Textarea} from "@/components/ui/textarea";
-import {toast} from "sonner";
 import {TransferDocument} from "@/features/transfer/data/transfer";
 import {transferService} from "@/features/transfer/data/transefer-service";
-import {Loader2} from "lucide-react";
 import {Status} from "@/features/shared/data";
 import {useParams} from "react-router";
 import {ObjectAction} from "@/features/packages/types";
 import {TransferTableSkeleton} from "@/features/transfer/components/transfer-table-skeleton";
 import {TransferCardSkeleton} from "@/features/transfer/components/transfer-card-skeleton";
+import {TransferApprovalDialog} from "@/features/transfer/components/transfer-approval-dialog";
+import {useTransferApproval} from "@/features/transfer/hooks/use-transfer-approval";
 
 export default function TransferApproval() {
     const {t} = useTranslation();
     const {setError} = useThemeContext();
     const {id} = useParams<{id: string}>();
     const [transfers, setTransfers] = useState<TransferDocument[]>([]);
-    const [selectedTransfer, setSelectedTransfer] = useState<TransferDocument | null>(null);
-    const [actionType, setActionType] = useState<ObjectAction | null>(null);
-    const [dialogOpen, setDialogOpen] = useState(false);
-    const [rejectionReason, setRejectionReason] = useState("");
-    const [rejectionReasonError, setRejectionReasonError] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-    const [isProcessing, setIsProcessing] = useState(false);
+
+    const {
+        dialogOpen,
+        actionType,
+        rejectionReason,
+        rejectionReasonError,
+        dialogError,
+        isProcessing,
+        selectedTransferNumber,
+        handleAction,
+        handleRejectionReasonChange,
+        handleConfirmAction,
+        handleCancelDialog,
+        setDialogOpen,
+    } = useTransferApproval({
+        onSuccess: () => {
+            // Remove from list after successful action
+            fetchTransfers();
+        }
+    });
 
     useEffect(() => {
         fetchTransfers();
@@ -48,66 +57,11 @@ export default function TransferApproval() {
             .finally(() => setIsLoading(false));
     };
 
-    const handleRejectionReasonChange = (value: string) => {
-        setRejectionReason(value);
-        // Clear error when user starts typing
-        if (value.trim()) {
-            setRejectionReasonError(false);
+    function handleTransferAction(transfer: TransferDocument, action: ObjectAction) {
+        if (transfer.id) {
+            handleAction(transfer.id, transfer.number, action);
         }
-    };
-
-    const handleConfirmAction = async () => {
-        if (!selectedTransfer) return;
-
-        // Validate rejection reason on the frontend
-        if (actionType === 'reject' && !rejectionReason.trim()) {
-            setRejectionReasonError(true);
-            return;
-        }
-
-        setDialogOpen(false);
-        setIsProcessing(true);
-
-        const transferId = selectedTransfer.id!;
-
-        try {
-            if (actionType === 'approve') {
-                await transferService.approveTransfer(transferId);
-                toast.success(t("transferApprovedSuccess"));
-            } else {
-                await transferService.rejectTransfer(transferId, rejectionReason);
-                toast.success(t("transferRejectedSuccess"));
-            }
-
-            // Remove from list after successful action
-            setTransfers((prevTransfers) =>
-                prevTransfers.filter((transfer) => transfer.id !== transferId)
-            );
-
-            // Reset state
-            setRejectionReason("");
-        } catch (error) {
-            setError(error);
-        } finally {
-            setIsProcessing(false);
-        }
-    };
-
-    function handleAction(transfer: TransferDocument, action: ObjectAction) {
-        setSelectedTransfer(transfer);
-        setActionType(action);
-        setRejectionReason("");
-        setRejectionReasonError(false);
-        setDialogOpen(true);
     }
-
-    const handleCancelDialog = () => {
-        setDialogOpen(false);
-        setRejectionReason("");
-        setRejectionReasonError(false);
-        setSelectedTransfer(null);
-        setActionType(null);
-    };
 
     return (
         <ContentTheme title={t('transferApprovals')}>
@@ -141,7 +95,7 @@ export default function TransferApproval() {
                                         approval={true}
                                         key={transfer.id}
                                         doc={transfer}
-                                        onAction={handleAction}
+                                        onAction={handleTransferAction}
                                     />
                                 ))
                             )}
@@ -153,7 +107,7 @@ export default function TransferApproval() {
                                 transfers={transfers}
                                 supervisor={true}
                                 approval={true}
-                                onAction={handleAction}
+                                onAction={handleTransferAction}
                                 emptyMessage={t('noTransfersAwaitingApproval')}
                             />
                         </div>
@@ -161,59 +115,19 @@ export default function TransferApproval() {
                 )}
             </div>
 
-            {isProcessing && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg p-6 flex flex-col items-center space-y-4">
-                        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-                        <p className="text-sm text-gray-600 dark:text-gray-300">{t('processing')}</p>
-                    </div>
-                </div>
-            )}
-
-            <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>{t("confirmAction")}</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            {StringFormat(
-                                actionType === "approve"
-                                    ? t("confirmApproveTransfer")
-                                    : t("confirmRejectTransfer"),
-                                selectedTransfer?.number
-                            )}
-                            <br/> {t('actionCannotReverse')}
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-
-                    {actionType === 'reject' && (
-                        <div className="space-y-2">
-                            <Label htmlFor="rejectionReason">{t('rejectionReason')}</Label>
-                            <Textarea
-                                id="rejectionReason"
-                                placeholder={t('enterRejectionReason')}
-                                value={rejectionReason}
-                                onChange={(e) => handleRejectionReasonChange(e.target.value)}
-                                className={`min-h-[100px] ${rejectionReasonError ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
-                            />
-                            {rejectionReasonError && (
-                                <p className="text-sm text-red-500">{t('reasonRequired')}</p>
-                            )}
-                        </div>
-                    )}
-
-                    <AlertDialogFooter>
-                        <Button variant="outline" onClick={handleCancelDialog}>
-                            {t("cancel")}
-                        </Button>
-                        <Button
-                            onClick={handleConfirmAction}
-                            disabled={actionType === 'reject' && !rejectionReason.trim()}
-                        >
-                            {t("accept")}
-                        </Button>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+            <TransferApprovalDialog
+                open={dialogOpen}
+                onOpenChange={setDialogOpen}
+                actionType={actionType}
+                transferNumber={selectedTransferNumber}
+                rejectionReason={rejectionReason}
+                onReasonChange={handleRejectionReasonChange}
+                rejectionReasonError={rejectionReasonError}
+                dialogError={dialogError}
+                isProcessing={isProcessing}
+                onConfirm={handleConfirmAction}
+                onCancel={handleCancelDialog}
+            />
         </ContentTheme>
     );
 }

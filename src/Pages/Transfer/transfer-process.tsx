@@ -34,7 +34,7 @@ export default function TransferProcess() {
   const canFinish = canFinishTransfer(info, isWaitingForApproval);
 
   // Check if user has transfer supervisor role
-  const isSupervisor = user?.authorizationGroup?.authorizations?.includes(RoleType.TRANSFER_SUPERVISOR) || user?.superUser;
+  const isSupervisor = user?.roles?.includes(RoleType.TRANSFER_SUPERVISOR) || user?.superUser;
 
   const handleFinishClick = () => {
     setDialogOpen(true);

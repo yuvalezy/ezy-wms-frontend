@@ -1,20 +1,18 @@
 import ContentTheme from "@/components/ContentTheme";
 import {useNavigate, useParams} from "react-router";
-import {Button, Card, CardContent, useAuth, useThemeContext} from "@/components";
+import {Card, CardContent, useAuth, useThemeContext} from "@/components";
 import {useTranslation} from "react-i18next";
-import {Check, Loader2, X} from 'lucide-react';
 import TransferCard from "@/features/transfer/components/transfer-card";
 import {useEffect, useState} from "react";
 import {SourceTarget, TransferContent, TransferDocument} from "@/features/transfer/data/transfer";
 import {TransferApprovalDetailSkeleton} from "@/features/transfer/components/transfer-approval-detail-skeleton";
 import {transferService} from "@/features/transfer/data/transefer-service";
-import {AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle} from "@/components/ui/alert-dialog";
-import {Label} from "@/components/ui/label";
-import {Textarea} from "@/components/ui/textarea";
-import {toast} from "sonner";
-import {StringFormat} from "@/utils/string-utils";
 import {formatStock} from "@/features/items/utils/stock-calculations";
 import {Status, UnitType} from "@/features/shared/data";
+import {TransferApprovalDialog} from "@/features/transfer/components/transfer-approval-dialog";
+import {ApprovalActionButtons} from "@/features/transfer/components/approval-action-buttons";
+import {useTransferApproval} from "@/features/transfer/hooks/use-transfer-approval";
+import {ObjectAction} from "@/features/packages/types";
 
 export default function TransferApprovalDetail() {
   const {t} = useTranslation();
@@ -26,13 +24,28 @@ export default function TransferApprovalDetail() {
   const [transfer, setTransfer] = useState<TransferDocument | null>(null);
   const [content, setContent] = useState<TransferContent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [actionType, setActionType] = useState<'approve' | 'reject' | null>(null);
-  const [rejectionReason, setRejectionReason] = useState("");
-  const [rejectionReasonError, setRejectionReasonError] = useState(false);
 
   const settings = user?.settings;
+
+  const {
+    dialogOpen,
+    actionType,
+    rejectionReason,
+    rejectionReasonError,
+    dialogError,
+    isProcessing,
+    selectedTransferNumber,
+    handleAction,
+    handleRejectionReasonChange,
+    handleConfirmAction,
+    handleCancelDialog,
+    setDialogOpen,
+  } = useTransferApproval({
+    onSuccess: () => {
+      // Navigate back to approval list
+      navigate('/transfer/approve');
+    }
+  });
 
   useEffect(() => {
     if (id) {
@@ -75,56 +88,10 @@ export default function TransferApprovalDetail() {
     }
   };
 
-  const handleAction = (action: 'approve' | 'reject') => {
-    setActionType(action);
-    setRejectionReason("");
-    setRejectionReasonError(false);
-    setDialogOpen(true);
-  };
-
-  const handleRejectionReasonChange = (value: string) => {
-    setRejectionReason(value);
-    // Clear error when user starts typing
-    if (value.trim()) {
-      setRejectionReasonError(false);
+  const handleTransferAction = (action: ObjectAction) => {
+    if (id) {
+      handleAction(id, transfer?.number, action);
     }
-  };
-
-  const handleConfirmAction = async () => {
-    if (!transfer || !id) return;
-
-    // Validate rejection reason on the frontend
-    if (actionType === 'reject' && !rejectionReason.trim()) {
-      setRejectionReasonError(true);
-      return;
-    }
-
-    setDialogOpen(false);
-    setIsProcessing(true);
-
-    try {
-      if (actionType === 'approve') {
-        await transferService.approveTransfer(id);
-        toast.success(t("transferApprovedSuccess"));
-      } else {
-        await transferService.rejectTransfer(id, rejectionReason);
-        toast.success(t("transferRejectedSuccess"));
-      }
-
-      // Navigate back to approval list
-      navigate('/transfer/approve');
-    } catch (error) {
-      setError(error);
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
-  const handleCancelDialog = () => {
-    setDialogOpen(false);
-    setRejectionReason("");
-    setRejectionReasonError(false);
-    setActionType(null);
   };
 
   const formatQuantity = (item: TransferContent): string => {
@@ -161,26 +128,12 @@ export default function TransferApprovalDetail() {
       titleBreadcrumbs={transfer ? [{label: transfer.number?.toString() ?? ''}] : []}
       footer={
         !isLoading && transfer && transfer.status === Status.WaitingForApproval && (
-          <div className="p-4 flex gap-2">
-            <Button
-              type="button"
-              className="flex-1 bg-green-500 hover:bg-green-600"
-              onClick={() => handleAction('approve')}
-              disabled={isProcessing}
-            >
-              <Check className="h-5 w-5 mr-2"/>
-              {t("approve")}
-            </Button>
-            <Button
-              type="button"
-              variant="destructive"
-              className="flex-1"
-              onClick={() => handleAction('reject')}
-              disabled={isProcessing}
-            >
-              <X className="h-5 w-5 mr-2"/>
-              {t("reject")}
-            </Button>
+          <div className="p-4">
+            <ApprovalActionButtons
+              onApprove={() => handleTransferAction('approve')}
+              onReject={() => handleTransferAction('reject')}
+              isProcessing={isProcessing}
+            />
           </div>
         )
       }
@@ -233,61 +186,19 @@ export default function TransferApprovalDetail() {
         </div>
       )}
 
-      {/* Processing overlay */}
-      {isProcessing && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 flex flex-col items-center space-y-4">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-500"/>
-            <p className="text-sm text-gray-600 dark:text-gray-300">{t('processing')}</p>
-          </div>
-        </div>
-      )}
-
-      {/* Confirmation dialog */}
-      <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t("confirmAction")}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {StringFormat(
-                actionType === "approve"
-                  ? t("confirmApproveTransfer")
-                  : t("confirmRejectTransfer"),
-                transfer?.number
-              )}
-              <br/> {t('actionCannotReverse')}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-
-          {actionType === 'reject' && (
-            <div className="space-y-2">
-              <Label htmlFor="rejectionReason">{t('rejectionReason')}</Label>
-              <Textarea
-                id="rejectionReason"
-                placeholder={t('enterRejectionReason')}
-                value={rejectionReason}
-                onChange={(e) => handleRejectionReasonChange(e.target.value)}
-                className={`min-h-[100px] ${rejectionReasonError ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
-              />
-              {rejectionReasonError && (
-                <p className="text-sm text-red-500">{t('reasonRequired')}</p>
-              )}
-            </div>
-          )}
-
-          <AlertDialogFooter>
-            <Button variant="outline" onClick={handleCancelDialog}>
-              {t("cancel")}
-            </Button>
-            <Button
-              onClick={handleConfirmAction}
-              disabled={actionType === 'reject' && !rejectionReason.trim()}
-            >
-              {t("accept")}
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <TransferApprovalDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        actionType={actionType}
+        transferNumber={transfer?.number}
+        rejectionReason={rejectionReason}
+        onReasonChange={handleRejectionReasonChange}
+        rejectionReasonError={rejectionReasonError}
+        dialogError={dialogError}
+        isProcessing={isProcessing}
+        onConfirm={handleConfirmAction}
+        onCancel={handleCancelDialog}
+      />
     </ContentTheme>
   );
 }
