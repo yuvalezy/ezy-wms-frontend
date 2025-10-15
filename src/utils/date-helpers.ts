@@ -13,7 +13,7 @@ export const convertUTCStringsToDates = (data: any): any => {
   if (Array.isArray(data)) {
     return data.map(item => {
       if (isUTCDate(item)) {
-        return new Date(item.substring(0, item.length - 1)); // Convert to Date object
+        return new Date(item); // Keep the 'Z' to properly parse as UTC
       }
       return convertUTCStringsToDates(item);
     });
@@ -23,7 +23,7 @@ export const convertUTCStringsToDates = (data: any): any => {
     const value = data[key];
 
     if (isUTCDate(value)) {
-      acc[key] = new Date(value.substring(0, value.length - 1)); // Convert to Date object
+      acc[key] = new Date(value); // Keep the 'Z' to properly parse as UTC
     } else if (typeof value === "object" && value !== null) {
       acc[key] = convertUTCStringsToDates(value); // Recursively process objects
     } else {
