@@ -2,6 +2,9 @@ import {Card, CardContent} from "@/components";
 import {AlertCircle, Clock} from "lucide-react";
 import {useTranslation} from "react-i18next";
 import {TransferDocument} from "@/features/transfer/data/transfer";
+import {StatusBadge} from "@/components/ui/status-badge";
+import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
+import {getApprovalStatusVariant, getApprovalStatusText} from "@/features/transfer/utils/approval-utils";
 
 interface TransferApprovalMessageProps {
   transfer: TransferDocument;
@@ -10,9 +13,13 @@ interface TransferApprovalMessageProps {
 /**
  * Displays a warning message when a transfer is waiting for approval
  * Shows cross-warehouse transfer details if applicable
+ * Shows approval workflow information if available
  */
 export const TransferApprovalMessage = ({transfer}: TransferApprovalMessageProps) => {
   const {t} = useTranslation();
+  const {dateTimeFormat} = useDateTimeFormat();
+
+  const approvalWorkflow = transfer.approvalWorkflow;
 
   return (
     <Card className="border-orange-200 bg-orange-50">
@@ -38,6 +45,28 @@ export const TransferApprovalMessage = ({transfer}: TransferApprovalMessageProps
                   </div>
                   <div>
                     {t("targetWarehouse")}: <span className="font-medium">{transfer.targetWhsCode}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Display approval workflow details if available */}
+            {approvalWorkflow && (
+              <div className="text-sm bg-white rounded p-4 mt-4 border border-orange-200">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="font-semibold text-gray-700">{t('approvalStatus')}:</span>
+                  <StatusBadge variant={getApprovalStatusVariant(approvalWorkflow.approvalStatus)}>
+                    {getApprovalStatusText(approvalWorkflow.approvalStatus, t)}
+                  </StatusBadge>
+                </div>
+                <div className="space-y-2 text-gray-700">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">{t('requestedBy')}:</span>
+                    <span className="font-medium">{approvalWorkflow.requestedByUser?.fullName}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">{t('requestedAt')}:</span>
+                    <span className="font-medium">{dateTimeFormat(approvalWorkflow.requestedAt)}</span>
                   </div>
                 </div>
               </div>

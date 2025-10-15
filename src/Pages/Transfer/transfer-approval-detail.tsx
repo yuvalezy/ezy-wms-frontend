@@ -30,6 +30,7 @@ export default function TransferApprovalDetail() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [actionType, setActionType] = useState<'approve' | 'reject' | null>(null);
   const [rejectionReason, setRejectionReason] = useState("");
+  const [rejectionReasonError, setRejectionReasonError] = useState(false);
 
   const settings = user?.settings;
 
@@ -77,15 +78,24 @@ export default function TransferApprovalDetail() {
   const handleAction = (action: 'approve' | 'reject') => {
     setActionType(action);
     setRejectionReason("");
+    setRejectionReasonError(false);
     setDialogOpen(true);
+  };
+
+  const handleRejectionReasonChange = (value: string) => {
+    setRejectionReason(value);
+    // Clear error when user starts typing
+    if (value.trim()) {
+      setRejectionReasonError(false);
+    }
   };
 
   const handleConfirmAction = async () => {
     if (!transfer || !id) return;
 
-    // Validate rejection reason
+    // Validate rejection reason on the frontend
     if (actionType === 'reject' && !rejectionReason.trim()) {
-      setError(new Error(t('reasonRequired')));
+      setRejectionReasonError(true);
       return;
     }
 
@@ -113,6 +123,7 @@ export default function TransferApprovalDetail() {
   const handleCancelDialog = () => {
     setDialogOpen(false);
     setRejectionReason("");
+    setRejectionReasonError(false);
     setActionType(null);
   };
 
@@ -255,9 +266,12 @@ export default function TransferApprovalDetail() {
                 id="rejectionReason"
                 placeholder={t('enterRejectionReason')}
                 value={rejectionReason}
-                onChange={(e) => setRejectionReason(e.target.value)}
-                className="min-h-[100px]"
+                onChange={(e) => handleRejectionReasonChange(e.target.value)}
+                className={`min-h-[100px] ${rejectionReasonError ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
               />
+              {rejectionReasonError && (
+                <p className="text-sm text-red-500">{t('reasonRequired')}</p>
+              )}
             </div>
           )}
 
@@ -265,7 +279,10 @@ export default function TransferApprovalDetail() {
             <Button variant="outline" onClick={handleCancelDialog}>
               {t("cancel")}
             </Button>
-            <Button onClick={handleConfirmAction}>
+            <Button
+              onClick={handleConfirmAction}
+              disabled={actionType === 'reject' && !rejectionReason.trim()}
+            >
               {t("accept")}
             </Button>
           </AlertDialogFooter>

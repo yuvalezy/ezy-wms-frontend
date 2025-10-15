@@ -11,10 +11,12 @@ import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
 import {CheckCircle, XCircle} from "lucide-react";
 import {FullInfoBox, InfoBoxValue} from "@/components";
 import InfoBox from "@/components/InfoBox";
-import {TransferDocument} from "@/features/transfer/data/transfer";
+import {TransferDocument, ApprovalStatus} from "@/features/transfer/data/transfer";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {formatNumber} from "@/utils/number-utils";
 import {ObjectAction} from "@/features/packages/types";
+import {StatusBadge} from "@/components/ui/status-badge";
+import {getApprovalStatusVariant, getApprovalStatusText} from "@/features/transfer/utils/approval-utils";
 
 type TransferCardProps = {
   doc: TransferDocument,
@@ -29,7 +31,7 @@ const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = 
   const {t} = useTranslation();
   const navigate = useNavigate();
   const {user} = useAuth();
-  const {dateFormat} = useDateTimeFormat();
+  const {dateFormat, dateTimeFormat} = useDateTimeFormat();
 
   function handleOpen(transfer: TransferDocument) {
     if (!approval)
@@ -63,6 +65,53 @@ const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = 
             <InfoBox>
                 <InfoBoxValue label={t('comment')} value={doc.comments}/>
             </InfoBox>}
+        {/* Display approval workflow information if it exists */}
+        {doc.approvalWorkflow && (
+          <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-sm font-semibold text-gray-700">{t('approvalStatus')}:</span>
+              <StatusBadge variant={getApprovalStatusVariant(doc.approvalWorkflow.approvalStatus)}>
+                {getApprovalStatusText(doc.approvalWorkflow.approvalStatus, t)}
+              </StatusBadge>
+            </div>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-600">{t('requestedBy')}:</span>
+                <span className="font-medium">{doc.approvalWorkflow.requestedByUser?.fullName}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">{t('requestedAt')}:</span>
+                <span className="font-medium">{dateTimeFormat(doc.approvalWorkflow.requestedAt)}</span>
+              </div>
+              {doc.approvalWorkflow.reviewedByUser && (
+                <>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">{doc.approvalWorkflow.approvalStatus === ApprovalStatus.Approved ? t('approvedBy') : t('reviewedBy')}:</span>
+                    <span className="font-medium">{doc.approvalWorkflow.reviewedByUser.fullName}</span>
+                  </div>
+                  {doc.approvalWorkflow.reviewedAt && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">{doc.approvalWorkflow.approvalStatus === ApprovalStatus.Approved ? t('approvedAt') : t('reviewedAt')}:</span>
+                      <span className="font-medium">{dateTimeFormat(doc.approvalWorkflow.reviewedAt)}</span>
+                    </div>
+                  )}
+                </>
+              )}
+              {doc.approvalWorkflow.rejectionReason && (
+                <div className="mt-2 pt-2 border-t border-gray-300">
+                  <span className="text-gray-600">{t('rejectionReason')}:</span>
+                  <p className="mt-1 text-red-600 font-medium">{doc.approvalWorkflow.rejectionReason}</p>
+                </div>
+              )}
+              {doc.approvalWorkflow.reviewComments && (
+                <div className="mt-2 pt-2 border-t border-gray-300">
+                  <span className="text-gray-600">{t('reviewComments')}:</span>
+                  <p className="mt-1 text-gray-700">{doc.approvalWorkflow.reviewComments}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
         {displayProgress && (<ul className="space-y-2 text-sm">
           <li className="pt-2">
             <Progress value={progressDisplayValue} className="w-full"/>

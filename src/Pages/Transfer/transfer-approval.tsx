@@ -28,6 +28,7 @@ export default function TransferApproval() {
     const [actionType, setActionType] = useState<ObjectAction | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [rejectionReason, setRejectionReason] = useState("");
+    const [rejectionReasonError, setRejectionReasonError] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [isProcessing, setIsProcessing] = useState(false);
 
@@ -47,12 +48,20 @@ export default function TransferApproval() {
             .finally(() => setIsLoading(false));
     };
 
+    const handleRejectionReasonChange = (value: string) => {
+        setRejectionReason(value);
+        // Clear error when user starts typing
+        if (value.trim()) {
+            setRejectionReasonError(false);
+        }
+    };
+
     const handleConfirmAction = async () => {
         if (!selectedTransfer) return;
 
-        // Validate rejection reason
+        // Validate rejection reason on the frontend
         if (actionType === 'reject' && !rejectionReason.trim()) {
-            setError(new Error(t('reasonRequired')));
+            setRejectionReasonError(true);
             return;
         }
 
@@ -88,24 +97,20 @@ export default function TransferApproval() {
         setSelectedTransfer(transfer);
         setActionType(action);
         setRejectionReason("");
+        setRejectionReasonError(false);
         setDialogOpen(true);
     }
 
     const handleCancelDialog = () => {
         setDialogOpen(false);
         setRejectionReason("");
+        setRejectionReasonError(false);
         setSelectedTransfer(null);
         setActionType(null);
     };
 
     return (
         <ContentTheme title={t('transferApprovals')}>
-            {transfers.length === 0 && !isLoading && (
-                <div className="text-center py-8 text-gray-500">
-                    {t('noTransfersAwaitingApproval')}
-                </div>
-            )}
-
             <div className="my-4">
                 {isLoading ? (
                     <>
@@ -125,15 +130,21 @@ export default function TransferApproval() {
                     <>
                         {/* Mobile view - Cards */}
                         <div className="block sm:hidden">
-                            {transfers.map((transfer) => (
-                                <TransferCard
-                                    supervisor={true}
-                                    approval={true}
-                                    key={transfer.id}
-                                    doc={transfer}
-                                    onAction={handleAction}
-                                />
-                            ))}
+                            {transfers.length === 0 ? (
+                                <div className="text-center py-8 text-gray-500">
+                                    {t('noTransfersAwaitingApproval')}
+                                </div>
+                            ) : (
+                                transfers.map((transfer) => (
+                                    <TransferCard
+                                        supervisor={true}
+                                        approval={true}
+                                        key={transfer.id}
+                                        doc={transfer}
+                                        onAction={handleAction}
+                                    />
+                                ))
+                            )}
                         </div>
 
                         {/* Desktop view - Table */}
@@ -143,6 +154,7 @@ export default function TransferApproval() {
                                 supervisor={true}
                                 approval={true}
                                 onAction={handleAction}
+                                emptyMessage={t('noTransfersAwaitingApproval')}
                             />
                         </div>
                     </>
@@ -180,9 +192,12 @@ export default function TransferApproval() {
                                 id="rejectionReason"
                                 placeholder={t('enterRejectionReason')}
                                 value={rejectionReason}
-                                onChange={(e) => setRejectionReason(e.target.value)}
-                                className="min-h-[100px]"
+                                onChange={(e) => handleRejectionReasonChange(e.target.value)}
+                                className={`min-h-[100px] ${rejectionReasonError ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
                             />
+                            {rejectionReasonError && (
+                                <p className="text-sm text-red-500">{t('reasonRequired')}</p>
+                            )}
                         </div>
                     )}
 
@@ -190,7 +205,10 @@ export default function TransferApproval() {
                         <Button variant="outline" onClick={handleCancelDialog}>
                             {t("cancel")}
                         </Button>
-                        <Button onClick={handleConfirmAction}>
+                        <Button
+                            onClick={handleConfirmAction}
+                            disabled={actionType === 'reject' && !rejectionReason.trim()}
+                        >
                             {t("accept")}
                         </Button>
                     </AlertDialogFooter>

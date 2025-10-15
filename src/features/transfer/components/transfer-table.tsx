@@ -1,6 +1,6 @@
 import React from "react";
 import {useTranslation} from "react-i18next";
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
+import {Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Progress} from "@/components/ui/progress";
 import {CheckCircle, XCircle} from "lucide-react";
 import {ResponsiveTableActions, TableAction} from '@/components/ui/responsive-table-actions';
@@ -19,9 +19,10 @@ interface TransferTableProps {
   supervisor?: boolean;
   approval?: boolean;
   onAction?: (transfer: TransferDocument, action: ObjectAction) => void;
+  emptyMessage?: string;
 }
 
-export default function TransferTable({ transfers, supervisor = false, approval = false, onAction }: TransferTableProps) {
+export default function TransferTable({ transfers, supervisor = false, approval = false, onAction, emptyMessage }: TransferTableProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -30,6 +31,9 @@ export default function TransferTable({ transfers, supervisor = false, approval 
   const settings = user!.settings;
 
   const handleOpenLink = user?.roles?.includes(RoleType.TRANSFER);
+
+  // Calculate column count for empty state colspan
+  const columnCount = 8 + (settings.enableWarehouseTransfer ? 1 : 0) + (supervisor ? 1 : 0);
 
   function handleOpen(transfer: TransferDocument) {
     if (!approval)
@@ -142,6 +146,15 @@ export default function TransferTable({ transfers, supervisor = false, approval 
           );
         })}
       </TableBody>
+      {transfers.length === 0 && emptyMessage && (
+        <TableFooter>
+          <TableRow>
+            <TableCell colSpan={columnCount} className="text-center py-8 text-gray-500">
+              {emptyMessage}
+            </TableCell>
+          </TableRow>
+        </TableFooter>
+      )}
     </Table>
   );
 }

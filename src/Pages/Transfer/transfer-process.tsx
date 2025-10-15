@@ -11,10 +11,15 @@ import {useTransferProcess} from "@/features/transfer/context/TransferProcessCon
 import {TransferProcessSkeleton} from "@/features/transfer/components/transfer-process-skeleton";
 import {isCrossWarehouseTransfer, canFinishTransfer} from "@/features/transfer/utils/transfer-utils";
 import {TransferApprovalMessage} from "@/features/transfer/components/transfer-approval-message";
+import {RoleType} from "@/features/authorization-groups/data/authorization-group";
+import {AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle} from "@/components/ui/alert-dialog";
+import {StringFormat} from "@/utils/string-utils";
+import {useState} from "react";
 
 export default function TransferProcess() {
   const {t} = useTranslation();
   const navigate = useNavigate();
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const {
     id,
@@ -28,17 +33,36 @@ export default function TransferProcess() {
   const crossWarehouse = isCrossWarehouseTransfer(info);
   const canFinish = canFinishTransfer(info, isWaitingForApproval);
 
+  // Check if user has transfer supervisor role
+  const isSupervisor = user?.authorizationGroup?.authorizations?.includes(RoleType.TRANSFER_SUPERVISOR) || user?.superUser;
+
+  const handleFinishClick = () => {
+    setDialogOpen(true);
+  };
+
+  const handleConfirmFinish = () => {
+    setDialogOpen(false);
+    finish();
+  };
+
+  const handleCancelDialog = () => {
+    setDialogOpen(false);
+  };
+
   const finishButton = () => {
     if (!info || info.status !== Status.Open && info.status !== Status.InProgress)
       return null;
 
+    // Display "Request Approval" for non-supervisors, "Finish" for supervisors
+    const buttonText = isSupervisor ? t("finish") : t("requestApproval");
+
     return <div className="p-4">
       <Button type="button"
               className={cn("w-full bg-green-500", canFinish ? 'hover:shadow-lg cursor-pointer' : 'opacity-50 cursor-not-allowed')}
-              onClick={() => finish()}
+              onClick={handleFinishClick}
               disabled={isLoading || !canFinish}>
         <Check className="h-6 w-6"/>
-        {t("finish")}
+        {buttonText}
       </Button>
     </div>;
   }
@@ -94,6 +118,33 @@ export default function TransferProcess() {
           )}
         </div>
       ) : null}
+
+      {/* Confirmation dialog */}
+      <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("confirmAction")}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {StringFormat(
+                isSupervisor
+                  ? t("confirmFinishTransfer")
+                  : t("confirmRequestApprovalTransfer"),
+                info?.number
+              )}
+              <br/> {t('actionCannotReverse')}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <AlertDialogFooter>
+            <Button variant="outline" onClick={handleCancelDialog}>
+              {t("cancel")}
+            </Button>
+            <Button onClick={handleConfirmFinish}>
+              {t("accept")}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </ContentTheme>
   );
 }

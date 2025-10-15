@@ -1,10 +1,38 @@
 import {BaseEntity, LineStatus, Status, UnitType} from "@/features/shared/data";
 import {ItemDetails} from "@/features/items/data/items";
 import {PackageContentDto} from "@/features/packages/types";
+import {User} from "@/features/users/data/user";
 
 export enum SourceTarget {
   Source = "Source",
   Target = "Target"
+}
+
+export enum ApprovalStatus {
+  Pending = 0,
+  Approved = 1,
+  Rejected = 2,
+  Cancelled = 3
+}
+
+export enum ApprovalObjectType {
+  Transfer = 1,
+  GoodsReceipt = 2,
+  InventoryCounting = 3
+}
+
+export interface ApprovalWorkflow extends BaseEntity {
+  objectId: string;
+  objectType: ApprovalObjectType;
+  requestedByUserId: string;
+  requestedByUser?: User;
+  requestedAt: Date;
+  approvalStatus: ApprovalStatus;
+  reviewedByUserId?: string;
+  reviewedByUser?: User;
+  reviewedAt?: Date;
+  rejectionReason?: string;
+  reviewComments?: string;
 }
 
 export interface TransferLineResponse {
@@ -44,6 +72,7 @@ export interface TransferDocument extends BaseEntity {
   sourceWhsCode?: string; // Alternative source warehouse code field
   targetWhsCode?: string;
   lines?: TransferLineResponse[];
+  approvalWorkflow?: ApprovalWorkflow;
 }
 
 export enum TransfersOrderBy {

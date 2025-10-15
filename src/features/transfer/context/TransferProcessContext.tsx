@@ -351,23 +351,22 @@ export const TransferProcessProvider: React.FC<TransferProcessProviderProps> = (
   }, [currentAlert, loadRows, binLocation?.entry]);
 
   // Finish operation (for main process page)
+  // Note: Confirmation dialog is handled in the component
   const finish = useCallback(() => {
     if (!info?.isComplete || id == null) return;
 
-    if (window.confirm(StringFormat(t("createTransferConfirm"), info?.number))) {
-      setIsLoadingState(true);
-      transferService.process(id)
-        .then((result) => {
-          if (result.success) {
-            toast.success(t("transferApproved"));
-            navigate(`/transfer`);
-          }
-        })
-        .catch((error) => {
-          setError(error);
-        })
-        .finally(() => setIsLoadingState(false));
-    }
+    setIsLoadingState(true);
+    transferService.process(id)
+      .then((result) => {
+        if (result.success) {
+          toast.success(t("transferApproved"));
+          navigate(`/transfer`);
+        }
+      })
+      .catch((error) => {
+        setError(error);
+      })
+      .finally(() => setIsLoadingState(false));
   }, [info, id, t, navigate, setError]);
 
   const value: TransferProcessContextType = {
