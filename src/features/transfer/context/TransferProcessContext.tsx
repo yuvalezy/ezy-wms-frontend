@@ -54,6 +54,7 @@ interface TransferProcessProviderProps {
 
 export const TransferProcessProvider: React.FC<TransferProcessProviderProps> = ({children}) => {
   const {scanCode} = useParams();
+  console.log("scanCode", scanCode);
   const location = useLocation();
   const {t} = useTranslation();
   const {dateTimeFormat} = useDateTimeFormat();

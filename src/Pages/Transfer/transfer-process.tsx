@@ -9,7 +9,6 @@ import {cn} from "@/utils/css-utils";
 import {Skeleton} from "@/components/ui/skeleton";
 import {Status} from "@/features/shared/data";
 import {useTransferProcess} from "@/features/transfer/context/TransferProcessContext";
-import {SourceTarget} from "@/features/transfer/data/transfer";
 
 export default function TransferProcess() {
   const {t} = useTranslation();

@@ -261,8 +261,8 @@ function AppRoutes() {
                                                                    element={<TransferSupervisor/>}/>}/>
         <Route path="/transfer/approve"
                element={<ProtectedRoute authorization={RoleType.TRANSFER_SUPERVISOR} element={<TransferApproval/>}/>}/>
-        <Route path="/transfer/approve/:scanCode"
-               element={<ProtectedRoute authorization={RoleType.TRANSFER_SUPERVISOR} element={<TransferProcess/>}/>}/>
+        <Route path="/transfer/approve/:id"
+               element={<ProtectedRoute authorization={RoleType.TRANSFER_SUPERVISOR} element={<TransferApproval/>}/>}/>
         <Route path="/transferRequest"
                element={<ProtectedRoute authorization={RoleType.TRANSFER_REQUEST} element={<TransferRequest/>}/>}/>
       </>
