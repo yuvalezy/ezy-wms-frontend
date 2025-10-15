@@ -10,21 +10,17 @@ import DeviceStatusBanner from "@/components/DeviceStatusBanner";
 import AccountStatusBanner from "@/components/AccountStatusBanner";
 import {DeviceStatus} from "@/features/devices/data/device";
 import {AccountState} from "@/features/account/data/account";
+import {ResponsiveBreadcrumbs, BreadcrumbItem} from "@/components/ui/responsive-breadcrumbs";
 
 interface ContentThemeProps {
   title: string;
   titleOnClick?: () => void;
-  titleBreadcrumbs?: titleBreadcrumb[];
+  titleBreadcrumbs?: BreadcrumbItem[];
   onExportExcel?: () => void;
   onFilterClicked?: () => void;
   onAdd?: () => void;
   children?: React.ReactNode;
   footer?: React.ReactNode;
-}
-
-interface titleBreadcrumb {
-  label: string;
-  onClick?: () => void;
 }
 
 const ContentTheme: React.FC<ContentThemeProps> = (
@@ -70,46 +66,12 @@ const ContentTheme: React.FC<ContentThemeProps> = (
             <div className="flex items-center gap-2 md:gap-4 flex-1">
               <SidebarTrigger className="flex-shrink-0 h-9 w-9 md:h-10 md:w-10 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded-lg transition-colors hover:bg-gray-100"/>
               <div className="flex-1 min-w-0 overflow-hidden">
-                <nav className="flex items-center" aria-label="Breadcrumb">
-                  {/* Show only first and last breadcrumb on mobile, all on desktop */}
-                  <div className="flex items-center gap-1 md:gap-2">
-                    {titleOnClick
-                      ? <button className="cursor-pointer text-xs md:text-lg font-semibold text-gray-700 hover:text-gray-900 underline focus:outline-none focus:ring-2 focus:ring-blue-600 rounded px-1 md:px-2 py-0.5 md:py-1 transition-all whitespace-nowrap" onClick={titleOnClick}>{title}</button>
-                      : <span className="text-xs md:text-lg font-semibold text-gray-900 whitespace-nowrap">{title}</span>}
-                  </div>
-                  {titleBreadcrumbs && titleBreadcrumbs.length > 0 && (
-                    <>
-                      {/* Mobile: Show ellipsis if more than 2 breadcrumbs */}
-                      {titleBreadcrumbs.length > 2 && (
-                        <div className="flex md:hidden items-center gap-1">
-                          <span className="text-gray-400 text-xs px-1">/ ...</span>
-                        </div>
-                      )}
-                      {/* Mobile: Show only last breadcrumb or first 2 if total is 2 or less */}
-                      <div className="flex md:hidden items-center gap-1">
-                        {titleBreadcrumbs.slice(titleBreadcrumbs.length > 2 ? -1 : 0).map((b, i) => (
-                          <div key={i} className="flex items-center gap-1">
-                            <span className="text-gray-400 text-xs">/</span>
-                            {b.onClick
-                              ? <button className="cursor-pointer text-xs font-medium text-gray-700 hover:text-gray-900 underline focus:outline-none focus:ring-2 focus:ring-blue-600 rounded px-1 py-0.5 transition-all whitespace-nowrap" onClick={b.onClick}>{b.label}</button>
-                              : <span className="text-xs font-medium text-gray-600 whitespace-nowrap">{b.label}</span>}
-                          </div>
-                        ))}
-                      </div>
-                      {/* Desktop: Show all breadcrumbs */}
-                      <div className="hidden md:flex items-center gap-2">
-                        {titleBreadcrumbs.map((b, i) => (
-                          <div key={i} className="flex items-center gap-2">
-                            <span className="text-gray-400">/</span>
-                            {b.onClick
-                              ? <button className="cursor-pointer text-base font-medium text-gray-700 hover:text-gray-900 underline focus:outline-none focus:ring-2 focus:ring-blue-600 rounded px-2 py-1 transition-all" onClick={b.onClick}>{b.label}</button>
-                              : <span className="text-base font-medium text-gray-600">{b.label}</span>}
-                          </div>
-                        ))}
-                      </div>
-                    </>
-                  )}
-                </nav>
+                <ResponsiveBreadcrumbs
+                  homeLabel={title}
+                  onHomeClick={titleOnClick}
+                  items={titleBreadcrumbs || []}
+                  className="flex-1"
+                />
               </div>
             </div>
             <div className="flex items-center flex-shrink-0 gap-1 md:gap-2 ml-2 md:ml-4">

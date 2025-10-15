@@ -6,7 +6,7 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import BinLocationScanner from "@/components/BinLocationScanner";
 import ProcessAlert from "@/components/ProcessAlert";
-import {ReasonType} from "@/features/shared/data";
+import {ReasonType, Status} from "@/features/shared/data";
 import Processes from "@/components/Processes";
 import React, {useEffect} from "react";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
@@ -61,12 +61,44 @@ export default function TransferProcessSource() {
 
   if (!id) return null;
 
+  // Check if we're deep in navigation (when bin location is selected)
+  const showContextualActions = binLocation !== null && binLocation !== undefined;
+
   return (
     <ContentTheme title={t("transfer")} titleOnClick={() => navigate(`/transfer`)}
                   titleBreadcrumbs={titleBreadcrumbs}
                   footer={(!user?.binLocations || binLocation) && <TransferProcessSourceItem />}
     >
       {isProcessingItem && <ProcessingOverlay />}
+
+      {/* Contextual action buttons for mobile when deep in navigation */}
+      {showContextualActions && (
+        <div className="md:hidden mb-4 p-2 bg-gray-50 rounded-lg">
+          <div className="flex flex-col gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => navigate(`/transfer/${id}`)}
+              className="w-full justify-start"
+            >
+              ← {t("backToTransfer")}
+            </Button>
+            {info && (info.status === Status.Open || info.status === Status.InProgress) && (
+              <Button
+                type="button"
+                variant="default"
+                size="sm"
+                onClick={() => navigate(`/transfer/${id}`)}
+                className="w-full bg-green-500 hover:bg-green-600"
+              >
+                {t("requestApproval") || "Request Approval"}
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
+
       {user?.binLocations && !binLocation &&
           <BinLocationScanner showLabel={false} onChanged={(bin) => onBinChanged(bin, SourceTarget.Source)} onClear={onBinClear}/>}
       <div className="contentStyle">
