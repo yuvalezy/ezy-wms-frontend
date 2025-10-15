@@ -70,6 +70,19 @@ export const transferService = {
     }
   },
 
+  async getById(id: string): Promise<TransferDocument> {
+    try {
+      const response = await axiosInstance.get<TransferDocument>(
+        `transfer/${id}`,
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching transfer:", error);
+      throw error;
+    }
+  },
+
   async search(params: TransferUpdateParameters): Promise<TransferDocument[]> {
     if (params.statuses == null)
       params.statuses = params.id == null ? [Status.Open, Status.InProgress, Status.WaitingForApproval] : [];

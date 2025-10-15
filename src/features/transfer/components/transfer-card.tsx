@@ -21,10 +21,11 @@ type TransferCardProps = {
   onAction?: (transfer: TransferDocument, action: ObjectAction) => void,
   supervisor?: boolean,
   approval?: boolean,
-  header?: boolean
+  header?: boolean,
+  displayProgress?: boolean
 }
 
-const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = false, approval = false, header = true}) => {
+const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = false, approval = false, header = true, displayProgress = true}) => {
   const {t} = useTranslation();
   const navigate = useNavigate();
   const {user} = useAuth();
@@ -62,13 +63,13 @@ const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = 
             <InfoBox>
                 <InfoBoxValue label={t('comment')} value={doc.comments}/>
             </InfoBox>}
-        <ul className="space-y-2 text-sm">
+        {displayProgress && (<ul className="space-y-2 text-sm">
           <li className="pt-2">
             <Progress value={progressDisplayValue} className="w-full"/>
             <p
               className="text-xs text-muted-foreground text-center mt-1">{formatNumber(progressDisplayValue, 0)}% {t('progress')}</p>
           </li>
-        </ul>
+        </ul>)}
       </CardContent>
       {supervisor && (
         <CardFooter className="flex justify-end space-x-2 pt-4 border-t">

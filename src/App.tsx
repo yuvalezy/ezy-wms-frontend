@@ -27,6 +27,7 @@ import CountingSupervisor from "./Pages/Counting/CountingSupervisor";
 import TransferUser from "./Pages/Transfer/transfer-user";
 import TransferSupervisor from "./Pages/Transfer/transfer-supervisor";
 import TransferApproval from "./Pages/Transfer/transfer-approval";
+import TransferApprovalDetail from "./Pages/Transfer/transfer-approval-detail";
 import TransferProcess from "./Pages/Transfer/transfer-process";
 import TransferProcessSource from "./Pages/Transfer/transfer-process-source";
 import CountingSummaryReport from "./Pages/Counting/CountingSummaryReport";
@@ -262,7 +263,7 @@ function AppRoutes() {
         <Route path="/transfer/approve"
                element={<ProtectedRoute authorization={RoleType.TRANSFER_SUPERVISOR} element={<TransferApproval/>}/>}/>
         <Route path="/transfer/approve/:id"
-               element={<ProtectedRoute authorization={RoleType.TRANSFER_SUPERVISOR} element={<TransferApproval/>}/>}/>
+               element={<ProtectedRoute authorization={RoleType.TRANSFER_SUPERVISOR} element={<TransferApprovalDetail/>}/>}/>
         <Route path="/transferRequest"
                element={<ProtectedRoute authorization={RoleType.TRANSFER_REQUEST} element={<TransferRequest/>}/>}/>
       </>

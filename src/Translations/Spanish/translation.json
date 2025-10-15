@@ -232,6 +232,8 @@
   "goodsReceiptStatusError": "El estado de la entrada #{0} es {1}.\nNo se puede continuar.",
   "goodsReceiptIsClosed": "Entrada #{0} esta cerrada",
   "transferNotFound": "La transferencia #{0} no es válida",
+  "transferItems": "Artículos de Transferencia",
+  "noItemsFound": "No se encontraron artículos",
   "transferStatusError": "El estado de la transferencia #{0} es {1}.\nNo se puede continuar.",
   "transferIsClosed": "Transferencia #{0} esta cerrada",
   "countingNotFound": "El Conteo de Inventario #{0} no es válida",
