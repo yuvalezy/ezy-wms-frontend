@@ -5,3 +5,5 @@ export enum ObjectType {
   Picking = "Picking",
   Package = "Package"
 }
+
+export type ObjectAction = "approve" | "reject" | "cancel" | "process";

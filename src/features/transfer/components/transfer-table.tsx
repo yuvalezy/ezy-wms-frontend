@@ -12,14 +12,16 @@ import {Status} from "@/features/shared/data/shared";
 import {TransferDocument} from "@/features/transfer/data/transfer";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {formatNumber} from "@/utils/number-utils";
+import {ObjectAction} from "@/features/packages/types";
 
 interface TransferTableProps {
   transfers: TransferDocument[];
   supervisor?: boolean;
-  onAction?: (transfer: TransferDocument, action: 'approve' | 'cancel') => void;
+  approval?: boolean;
+  onAction?: (transfer: TransferDocument, action: ObjectAction) => void;
 }
 
-export default function TransferTable({ transfers, supervisor = false, onAction }: TransferTableProps) {
+export default function TransferTable({ transfers, supervisor = false, approval = false, onAction }: TransferTableProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -30,32 +32,55 @@ export default function TransferTable({ transfers, supervisor = false, onAction 
   const handleOpenLink = user?.roles?.includes(RoleType.TRANSFER);
 
   function handleOpen(transfer: TransferDocument) {
-    navigate(`/transfer/${transfer.id}`);
+    if (!approval)
+      navigate(`/transfer/${transfer.id}`);
+    else
+      navigate(`/transfer/approve/${transfer.id}`);
   }
 
   const getTransferActions = (doc: TransferDocument): TableAction[] => {
     const actions: TableAction[] = [];
 
-    // Finish action (conditional - only when in progress and 100% complete)
-    if (doc.status === Status.InProgress && doc.progress === 100) {
+    if (!approval) {
+      // Finish action (conditional - only when in progress and 100% complete)
+      if (doc.status === Status.InProgress && doc.progress === 100) {
+        actions.push({
+          key: 'finish',
+          label: t('finish'),
+          icon: CheckCircle,
+          onClick: () => onAction?.(doc, 'approve'),
+          variant: 'default'
+        });
+      }
+
+      // Cancel action (always available)
       actions.push({
-        key: 'finish',
-        label: t('finish'),
+        key: 'cancel',
+        label: t('cancel'),
+        icon: XCircle,
+        onClick: () => onAction?.(doc, 'cancel'),
+        variant: 'destructive',
+        separator: doc.status === Status.InProgress && doc.progress === 100
+      });
+    } else {
+      // Approve action (always available)
+      actions.push({
+        key: 'approve',
+        label: t('approve'),
         icon: CheckCircle,
         onClick: () => onAction?.(doc, 'approve'),
-        variant: 'default'
+        variant: 'default',
+      });
+      // Approve action (always available)
+      actions.push({
+        key: 'reject',
+        label: t('reject'),
+        icon: XCircle,
+        onClick: () => onAction?.(doc, 'reject'),
+        variant: 'destructive',
+        separator: true
       });
     }
-
-    // Cancel action (always available)
-    actions.push({
-      key: 'cancel',
-      label: t('cancel'),
-      icon: XCircle,
-      onClick: () => onAction?.(doc, 'cancel'),
-      variant: 'destructive',
-      separator: doc.status === Status.InProgress && doc.progress === 100
-    });
 
     return actions;
   };

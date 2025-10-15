@@ -133,3 +133,9 @@ export interface TransferAddTargetPackageRequest {
   targetBinEntry?: number;
 }
 
+export interface TransferApprovalRequest {
+  transferId: string;
+  approved: boolean;
+  rejectionReason?: string;
+}
+

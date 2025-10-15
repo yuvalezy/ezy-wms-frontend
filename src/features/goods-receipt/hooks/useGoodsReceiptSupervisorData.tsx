@@ -55,7 +55,7 @@ export const useGoodsReceiptSupervisorData = (processType: ProcessType = Process
   const handleConfirmAction = () => {
     setDialogOpen(false);
     setIsProcessing(true);
-    const serviceCall = actionType === 'approve' ?
+    const serviceCall = actionType === 'process' ?
       goodsReceiptService.process(selectedDocument!.id) :
       goodsReceiptService.cancel(selectedDocument!.id);
 
@@ -65,7 +65,7 @@ export const useGoodsReceiptSupervisorData = (processType: ProcessType = Process
           setDocuments((prevDocs) =>
             prevDocs.filter((doc) => doc.id !== selectedDocument?.id)
           );
-          toast.success(actionType === "approve" ? t("approved") : t("cancelled"));
+          toast.success(actionType === "process" ? t("approved") : t("cancelled"));
         } else {
           toast.error(response.errorMessage);
         }

@@ -43,7 +43,6 @@ export type AddItemResponseMultipleValue = {
   message: string;
   severity: AlertSeverity;
 };
-export type ObjectAction = "approve" | "cancel";
 
 export type DetailUpdateParameters = {
   id: string;

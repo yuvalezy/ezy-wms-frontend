@@ -14,22 +14,27 @@ import InfoBox from "@/components/InfoBox";
 import {TransferDocument} from "@/features/transfer/data/transfer";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {formatNumber} from "@/utils/number-utils";
+import {ObjectAction} from "@/features/packages/types";
 
 type TransferCardProps = {
   doc: TransferDocument,
-  onAction?: (transfer: TransferDocument, action: 'approve' | 'cancel') => void,
+  onAction?: (transfer: TransferDocument, action: ObjectAction) => void,
   supervisor?: boolean,
+  approval?: boolean,
   header?: boolean
 }
 
-const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = false, header = true}) => {
+const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = false, approval = false, header = true}) => {
   const {t} = useTranslation();
   const navigate = useNavigate();
   const {user} = useAuth();
   const {dateFormat} = useDateTimeFormat();
 
   function handleOpen(transfer: TransferDocument) {
-    navigate(`/transfer/${transfer.id}`);
+    if (!approval)
+      navigate(`/transfer/${transfer.id}`);
+    else
+      navigate(`/transfer/approve/${transfer.id}`);
   }
 
   let handleOpenLink = user?.roles?.includes(RoleType.TRANSFER);

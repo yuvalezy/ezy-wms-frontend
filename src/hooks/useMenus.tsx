@@ -146,6 +146,14 @@ export function useMenus() {
       RequiresFeature: "TransferRequest"
     },
     {
+      Link: "/transfer/approve",
+      Text: t('transferApprovals'),
+      Authorization: RoleType.TRANSFER_SUPERVISOR,
+      Icon: CheckCircle,
+      Color: "text-lime-700",
+      RequiresFeature: "EnableInventoryTransfer"
+    },
+    {
       Link: "/transfer",
       Text: t('transfer'),
       Authorization: RoleType.TRANSFER,

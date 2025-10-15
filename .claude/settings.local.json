@@ -20,7 +20,8 @@
       "Bash(npm run lint:*)",
       "Bash(timeout 10s npm start)",
       "Bash(true)",
-      "WebSearch"
+      "WebSearch",
+      "Read(//d/source/ezy-wms/ezy-wms-backend/**)"
     ],
     "deny": [],
     "additionalDirectories": [

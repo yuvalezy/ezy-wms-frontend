@@ -39,7 +39,10 @@ export const NotificationBell: React.FC = () => {
       await markAsRead(alert.id);
     }
     setIsOpen(false);
-    if (alert.actionUrl) {
+    // Navigate using the data field which contains the path
+    if (alert.data) {
+      navigate(alert.data);
+    } else if (alert.actionUrl) {
       navigate(alert.actionUrl);
     }
   };

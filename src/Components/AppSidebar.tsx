@@ -57,6 +57,7 @@ export function AppSidebar() {
         groupLabel = t("counting");
         break;
       case "/transfer":
+      case "/transfer/approve":
       case "/transferSupervisor":
       case "/transferRequest":
       case "/transferConfirmation":

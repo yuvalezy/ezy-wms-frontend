@@ -16,11 +16,12 @@ import {DocumentItem, ReceiptDocument} from "@/features/goods-receipt/data/goods
 import {useGoodsReceiptHandleOpen} from "@/features/goods-receipt/hooks/useGoodsReceiptHandleOpen";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {ProcessType} from "@/features/shared/data";
+import {ObjectAction} from "@/features/packages/types";
 
 type DocumentCardProps = {
   doc: ReceiptDocument,
   supervisor?: boolean,
-  action?: (doc: ReceiptDocument, action: 'approve' | 'cancel') => void,
+  action?: (doc: ReceiptDocument, action: ObjectAction) => void,
   docDetails: (doc: ReceiptDocument) => void,
   processType?: ProcessType
 }

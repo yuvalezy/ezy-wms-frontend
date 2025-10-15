@@ -10,11 +10,12 @@ import {useDocumentStatusToString} from "@/hooks/useDocumentStatusToString";
 import {Status} from "@/features/shared/data/shared";
 import {Counting} from "@/features/counting/data/counting";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
+import {ObjectAction} from "@/features/packages/types";
 
 interface CountingTableProps {
   countings: Counting[];
   supervisor?: boolean;
-  onAction?: (doc: Counting, action: 'approve' | 'cancel') => void;
+  onAction?: (doc: Counting, action: ObjectAction) => void;
 }
 
 export default function CountingTable({ countings, supervisor = false, onAction }: CountingTableProps) {

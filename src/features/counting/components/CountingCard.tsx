@@ -11,10 +11,11 @@ import {CheckCircle, FileText, XCircle} from "lucide-react";
 import {FullInfoBox, InfoBoxValue, Separator} from "@/components";
 import {Counting} from "@/features/counting/data/counting";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
+import {ObjectAction} from "@/features/packages/types";
 
 type CountingCardProps = {
   doc: Counting,
-  handleAction?: (action: 'approve' | 'cancel') => void,
+  handleAction?: (action: ObjectAction) => void,
   supervisor?: boolean
 }
 

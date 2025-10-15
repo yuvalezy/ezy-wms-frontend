@@ -15,11 +15,12 @@ import {useGoodsReceiptHandleOpen} from "@/features/goods-receipt/hooks/useGoods
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {ProcessType} from "@/features/shared/data";
 import {Skeleton} from "@/components/ui/skeleton";
+import {ObjectAction} from "@/features/packages/types";
 
 type DocumentTableProps = {
   documents: ReceiptDocument[],
   supervisor?: boolean,
-  action?: (doc: ReceiptDocument, action: 'approve' | 'cancel') => void,
+  action?: (doc: ReceiptDocument, action: ObjectAction) => void,
   docDetails: (doc: ReceiptDocument) => void,
   processType?: ProcessType,
   loading?: boolean

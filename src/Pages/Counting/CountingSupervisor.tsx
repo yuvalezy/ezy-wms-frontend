@@ -50,7 +50,7 @@ export default function CountingSupervisor() {
   const handleConfirmAction = () => {
     setDialogOpen(false);
     
-    if (actionType === "approve") {
+    if (actionType === "process") {
       setIsProcessing(true);
     }
 
@@ -64,12 +64,12 @@ export default function CountingSupervisor() {
           setCountings((prev) =>
             prev.filter((count) => count.id !== selected?.id)
           );
-          toast.success(actionType === "approve" ? t("approved") : t("cancelled"));
+          toast.success(actionType === "process" ? t("approved") : t("cancelled"));
         }
       })
       .catch((error) => setError(error))
       .finally(() => {
-        if (actionType === "approve") {
+        if (actionType === "process") {
           setIsProcessing(false);
         }
       });
@@ -234,7 +234,7 @@ export default function CountingSupervisor() {
         open={dialogOpen}
         type="confirm"
         title={StringFormat(
-          actionType === "approve"
+          actionType === "process"
             ? t("confirmFinishDocument")
             : t("confirmCancelDocument"),
           selected?.number

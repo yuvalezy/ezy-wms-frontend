@@ -108,7 +108,7 @@ export default function GoodsReceiptSupervisor({processType = ProcessType.Regula
         open={dialogOpen}
         type="confirm"
         title={StringFormat(
-          actionType === "approve"
+          actionType === "process"
             ? t("confirmFinishDocument")
             : t("confirmCancelDocument"),
           selectedDocument?.number

@@ -7,6 +7,7 @@ import {
   TransferAddItemResponse,
   TransferAddSourcePackageRequest,
   TransferAddTargetPackageRequest,
+  TransferApprovalRequest,
   TransferContent,
   transferContentParameters,
   TransferDocument,
@@ -309,5 +310,38 @@ export const addItem = async (
     }
 
     return response.data;
+  },
+
+  async approve(request: TransferApprovalRequest): Promise<TransferActionResponse> {
+    try {
+      const response = await axiosInstance.post<TransferActionResponse>(
+        `transfer/approve`,
+        request
+      );
+
+      if (!response.data.success) {
+        throw new Error(response.data.errorMessage);
+      }
+
+      return response.data;
+    } catch (error) {
+      console.error("Error approving transfer:", error);
+      throw error;
+    }
+  },
+
+  async approveTransfer(transferId: string): Promise<TransferActionResponse> {
+    return await transferService.approve({
+      transferId,
+      approved: true
+    });
+  },
+
+  async rejectTransfer(transferId: string, rejectionReason: string): Promise<TransferActionResponse> {
+    return await transferService.approve({
+      transferId,
+      approved: false,
+      rejectionReason
+    });
   },
 }
