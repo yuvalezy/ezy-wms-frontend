@@ -5,7 +5,6 @@ import {useTranslation} from "react-i18next";
 import {StringFormat} from "@/utils/string-utils";
 import {countingService} from "@/features/counting/data/counting-service";
 import CountingCard from "@/features/counting/components/CountingCard";
-import {ObjectAction} from "@/features/shared/data/shared";
 import {MessageBox} from "@/components/ui/message-box";
 import {toast} from "sonner";
 import CountingForm from "@/features/counting/components/CountingForm";
@@ -17,6 +16,7 @@ import {Skeleton} from "@/components/ui/skeleton";
 import {Card, CardContent, CardHeader} from "@/components/ui/card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Loader2} from "lucide-react";
+import {ObjectAction} from "@/features/packages/types";
 
 export default function CountingSupervisor() {
   const {t} = useTranslation();

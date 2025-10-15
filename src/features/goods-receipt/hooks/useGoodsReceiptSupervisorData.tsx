@@ -4,12 +4,13 @@ import {useEffect, useRef, useState} from "react";
 import {useLocation} from "react-router";
 import {useThemeContext} from "@/components/ThemeContext";
 import {toast} from "sonner";
-import {ObjectAction, Status} from "@/features/shared/data/shared";
+import {Status} from "@/features/shared/data/shared";
 import {DocumentListDialogRef} from "@/features/goods-receipt/components/DocumentListDialog";
 import {ReceiptDocument} from "@/features/goods-receipt/data/goods-receipt";
 import {goodsReceiptService} from "@/features/goods-receipt/data/goods-receipt-service";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {ProcessType} from "@/features/shared/data";
+import {ObjectAction} from "@/features/packages/types";
 
 export const useGoodsReceiptSupervisorData = (processType: ProcessType = ProcessType.Regular) => {
   const {t} = useTranslation();

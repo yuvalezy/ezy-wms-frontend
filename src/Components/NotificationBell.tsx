@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Bell } from "lucide-react";
-import { useNotifications } from "./NotificationContext";
+import {useNotifications, WmsAlertType} from "./NotificationContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -125,9 +125,9 @@ export const NotificationBell: React.FC = () => {
                           alert.alertType
                         )}`}
                       >
-                        {alert.alertType === "TransferApprovalRequest" || alert.alertType === 0
+                        {alert.alertType === WmsAlertType.TransferApprovalRequest || alert.alertType === WmsAlertType.TransferApprovalRequest
                           ? t('alertPending')
-                          : alert.alertType === "TransferApproved" || alert.alertType === 1
+                          : alert.alertType === WmsAlertType.TransferApproved || alert.alertType === WmsAlertType.TransferApproved
                           ? t('alertApproved')
                           : t('alertRejected')}
                       </span>

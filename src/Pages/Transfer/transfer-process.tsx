@@ -9,6 +9,7 @@ import {cn} from "@/utils/css-utils";
 import {Status} from "@/features/shared/data";
 import {useTransferProcess} from "@/features/transfer/context/TransferProcessContext";
 import {TransferProcessSkeleton} from "@/features/transfer/components/transfer-process-skeleton";
+import {isCrossWarehouseTransfer, canFinishTransfer} from "@/features/transfer/utils/transfer-utils";
 
 export default function TransferProcess() {
   const {t} = useTranslation();
@@ -23,10 +24,8 @@ export default function TransferProcess() {
   } = useTransferProcess();
 
   const isWaitingForApproval = info?.status === Status.WaitingForApproval;
-  // For cross-warehouse transfers, we don't need target bins, so consider complete if there are source items
-  const sourceWhs = info?.sourceWhsCode || info?.whsCode;
-  const isCrossWarehouseTransfer = info?.targetWhsCode && info?.targetWhsCode !== sourceWhs;
-  const canFinish = (isCrossWarehouseTransfer ? (info?.progress ?? 0) > 0 : info?.isComplete) && !isWaitingForApproval;
+  const crossWarehouse = isCrossWarehouseTransfer(info);
+  const canFinish = canFinishTransfer(info, isWaitingForApproval);
 
   const finishButton = () => {
     if (!info || info.status !== Status.Open)
@@ -96,7 +95,7 @@ export default function TransferProcess() {
                 <Button type="button" variant="default" onClick={() => navigate(`/transfer/${id}/source`)}>{t("selectSourceItems")}</Button>
               )}
               {/* Only show target bin scanner if transfer is within the same warehouse */}
-              {!isCrossWarehouseTransfer && (
+              {!crossWarehouse && (
                 <Card>
                   <CardContent>
                     <BinLocationScanner label={t("scanTransferTargetBin")}

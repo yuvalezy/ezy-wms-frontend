@@ -8,19 +8,21 @@ import BinLocationScanner from "@/components/BinLocationScanner";
 import ProcessAlert from "@/components/ProcessAlert";
 import {ReasonType} from "@/features/shared/data";
 import Processes from "@/components/Processes";
-import {AlertCircle, Loader2} from "lucide-react";
-import {useStockInfo} from "@/utils/stock-info";
 import React, {useEffect} from "react";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
 import {transferService} from "@/features/transfer/data/transefer-service";
 import {useTransferProcess} from "@/features/transfer/context/TransferProcessContext";
 import {SourceTarget} from "@/features/transfer/data/transfer";
 import TransferProcessSourceItem from "./transfer-process-source-item";
+import {ProcessingOverlay} from "@/features/transfer/components/processing-overlay";
+import {EmptyRowsAlert} from "@/features/transfer/components/empty-rows-alert";
+import {TransferRowStockInfo} from "@/features/transfer/components/transfer-row-stock-info";
+import {isCrossWarehouseTransfer} from "@/features/transfer/utils/transfer-utils";
+import {useTransferBreadcrumbs} from "@/features/transfer/hooks/useTransferBreadcrumbs";
 
 export default function TransferProcessSource() {
   const {t} = useTranslation();
   const navigate = useNavigate();
-  const stockInfo = useStockInfo();
 
   const {
     id,
@@ -47,37 +49,24 @@ export default function TransferProcessSource() {
     }
   }, [id, user?.binLocations, loadRows]);
 
-  if (!id)
-    return null;
+  const crossWarehouse = isCrossWarehouseTransfer(info);
+  const titleBreadcrumbs = useTransferBreadcrumbs({
+    info,
+    scanCode,
+    binLocation,
+    user,
+    onBinClear,
+    pageType: 'source'
+  });
 
-  // Check if this is a cross-warehouse transfer
-  const sourceWhs = info?.sourceWhsCode || info?.whsCode;
-  const isCrossWarehouseTransfer = info?.targetWhsCode && info?.targetWhsCode !== sourceWhs;
-
-  const titleBreadcrumbs = [
-    {label: info?.number?.toString() ?? '', onClick: () => navigate(`/transfer/${scanCode}`)},
-    {
-      label: user?.binLocations ? t("selectTransferSource") : t("selectSourceItems"),
-      onClick: binLocation ? onBinClear : undefined
-    }
-  ];
-  if (binLocation) {
-    titleBreadcrumbs.push({label: binLocation.code, onClick: undefined});
-  }
+  if (!id) return null;
 
   return (
     <ContentTheme title={t("transfer")} titleOnClick={() => navigate(`/transfer`)}
                   titleBreadcrumbs={titleBreadcrumbs}
                   footer={(!user?.binLocations || binLocation) && <TransferProcessSourceItem />}
     >
-      {isProcessingItem && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 flex flex-col items-center space-y-4">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-            <p className="text-sm text-gray-600 dark:text-gray-300">{t('processingItem')}</p>
-          </div>
-        </div>
-      )}
+      {isProcessingItem && <ProcessingOverlay />}
       {user?.binLocations && !binLocation &&
           <BinLocationScanner showLabel={false} onChanged={(bin) => onBinChanged(bin, SourceTarget.Source)} onClear={onBinClear}/>}
       <div className="contentStyle">
@@ -87,7 +76,7 @@ export default function TransferProcessSource() {
         {rows != null && rows.length > 0 && (
           <div className="flex flex-col gap-4">
             {/* Only show target bins button for same-warehouse transfers */}
-            {!isCrossWarehouseTransfer && (
+            {!crossWarehouse && (
               <Button type="button" variant="default" onClick={() => navigate(`/transfer/${id}/targetBins`)}>
                 {t("selectTransferTargetBins") || "Select Target Bins"}
               </Button>
@@ -111,13 +100,7 @@ export default function TransferProcessSource() {
                       </TableCell>
                       <TableCell className="hidden sm:table-cell">{row.itemName}</TableCell>
                       <TableCell>
-                        {stockInfo({
-                          quantity: row.quantity,
-                          numInBuy: row.numInBuy,
-                          buyUnitMsr: row.buyUnitMsr,
-                          purPackUn: row.purPackUn,
-                          purPackMsr: row.purPackMsr,
-                        })}
+                        <TransferRowStockInfo row={row} quantityField="quantity" />
                       </TableCell>
                     </TableRow>
                     <TableRow className="sm:hidden">
@@ -130,12 +113,7 @@ export default function TransferProcessSource() {
             </Table>
           </div>
         )}
-        {rows != null && rows.length === 0 &&
-            <Alert variant="information">
-                <AlertCircle className="h-4 w-4"/>
-                <AlertDescription>{t("nodata")}</AlertDescription>
-            </Alert>
-        }
+        {rows != null && rows.length === 0 && <EmptyRowsAlert />}
       </div>
       {currentAlert && id && <Processes
           ref={processesRef}

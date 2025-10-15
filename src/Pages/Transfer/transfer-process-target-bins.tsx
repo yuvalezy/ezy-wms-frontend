@@ -11,19 +11,20 @@ import ProcessAlert from "@/components/ProcessAlert";
 import {ReasonType} from "@/features/shared/data";
 import Processes from "@/components/Processes";
 import {Card, CardContent, InfoBoxValue} from "@/components";
-import {AlertCircle, Loader2} from "lucide-react";
-import {useStockInfo} from "@/utils/stock-info";
 import InfoBox from "@/components/InfoBox";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
 import {transferService} from "@/features/transfer/data/transefer-service";
 import {ObjectType} from "@/features/packages/types";
 import {useTransferProcess} from "@/features/transfer/context/TransferProcessContext";
 import {SourceTarget} from "@/features/transfer/data/transfer";
+import {ProcessingOverlay} from "@/features/transfer/components/processing-overlay";
+import {EmptyRowsAlert} from "@/features/transfer/components/empty-rows-alert";
+import {TransferRowStockInfo} from "@/features/transfer/components/transfer-row-stock-info";
+import {useTransferBreadcrumbs} from "@/features/transfer/hooks/useTransferBreadcrumbs";
 
 export default function TransferProcessTargetBins() {
   const {t} = useTranslation();
   const navigate = useNavigate();
-  const stockInfo = useStockInfo();
   const {
     id,
     scanCode,
@@ -45,16 +46,16 @@ export default function TransferProcessTargetBins() {
     info
   } = useTransferProcess();
 
-  if (!id)
-    return null;
+  const titleBreadcrumbs = useTransferBreadcrumbs({
+    info,
+    scanCode,
+    binLocation,
+    user,
+    onBinClear,
+    pageType: 'targetBins'
+  });
 
-  const titleBreadcrumbs = [
-    {label: info?.number?.toString() ?? '', onClick: () => navigate(`/transfer/${scanCode}`)},
-    {label: t("selectTransferTargetBins"), onClick: binLocation ? onBinClear : undefined}
-  ];
-  if (binLocation) {
-    titleBreadcrumbs.push({label: binLocation.code, onClick: undefined});
-  }
+  if (!id) return null;
 
   return (
     <ContentTheme title={t("transfer")} titleOnClick={() => navigate(`/transfer`)}
@@ -74,14 +75,7 @@ export default function TransferProcessTargetBins() {
                           onPackageChanged={(value) => handleAddPackage(SourceTarget.Target, value)}
                       />}
     >
-      {isProcessingItem && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 flex flex-col items-center space-y-4">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-            <p className="text-sm text-gray-600 dark:text-gray-300">{t('processingItem')}</p>
-          </div>
-        </div>
-      )}
+      {isProcessingItem && <ProcessingOverlay />}
       {user?.binLocations && !binLocation && <BinLocationScanner onChanged={(bin) => onBinChanged(bin, SourceTarget.Target)} onClear={onBinClear}/>}
       <div className="contentStyle">
         {currentAlert &&
@@ -97,20 +91,12 @@ export default function TransferProcessTargetBins() {
                     <InfoBox>
                       <InfoBoxValue label={t('code')} itemDetailsLink={row} value={row.itemCode}/>
                       <InfoBoxValue label={t('description')} value={row.itemName}/>
-                      <InfoBoxValue label={t('openQuantity')} value={stockInfo({
-                            quantity: row.openQuantity,
-                            numInBuy: row.numInBuy,
-                            buyUnitMsr: row.buyUnitMsr,
-                            purPackUn: row.purPackUn,
-                            purPackMsr: row.purPackMsr,
-                          })}/>
-                      <InfoBoxValue label={t('binQuantity')} value={stockInfo({
-                            quantity: row.binQuantity??0,
-                            numInBuy: row.numInBuy,
-                            buyUnitMsr: row.buyUnitMsr,
-                            purPackUn: row.purPackUn,
-                            purPackMsr: row.purPackMsr,
-                          })}/>
+                      <InfoBoxValue label={t('openQuantity')} value={
+                        <TransferRowStockInfo row={row} quantityField="openQuantity" />
+                      }/>
+                      <InfoBoxValue label={t('binQuantity')} value={
+                        <TransferRowStockInfo row={row} quantityField="binQuantity" />
+                      }/>
                     </InfoBox>
                     <Progress value={row.progress ?? 0} className="w-full h-2"/>
                     <p className="text-xs text-muted-foreground text-center">{`${row.progress ?? 0}%`}</p>
@@ -140,22 +126,10 @@ export default function TransferProcessTargetBins() {
                         </TableCell>
                         <TableCell>{row.itemName}</TableCell>
                         <TableCell>
-                          {stockInfo({
-                            quantity: row.openQuantity,
-                            numInBuy: row.numInBuy,
-                            buyUnitMsr: row.buyUnitMsr,
-                            purPackUn: row.purPackUn,
-                            purPackMsr: row.purPackMsr,
-                          })}
+                          <TransferRowStockInfo row={row} quantityField="openQuantity" />
                         </TableCell>
                         <TableCell>
-                          {stockInfo({
-                            quantity: row.binQuantity??0,
-                            numInBuy: row.numInBuy,
-                            buyUnitMsr: row.buyUnitMsr,
-                            purPackUn: row.purPackUn,
-                            purPackMsr: row.purPackMsr,
-                          })}
+                          <TransferRowStockInfo row={row} quantityField="binQuantity" />
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
@@ -171,14 +145,7 @@ export default function TransferProcessTargetBins() {
             </div>
           </div>
         )}
-        {rows != null && rows.length === 0 &&
-            <Alert variant="information">
-                <AlertCircle className="h-4 w-4"/>
-                <AlertDescription>
-                  {t("nodata")}
-                </AlertDescription>
-            </Alert>
-        }
+        {rows != null && rows.length === 0 && <EmptyRowsAlert />}
       </div>
       {currentAlert && id && <Processes
           ref={processesRef}
