@@ -48,6 +48,13 @@ const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = 
   const isCrossWarehouseTransfer = doc.targetWhsCode && doc.targetWhsCode !== sourceWhs;
   const progressDisplayValue = isCrossWarehouseTransfer && (doc.lines?.length ?? 0) > 0 ? 100 : (doc.progress ?? 0);
 
+  // Helper function to get warehouse display name
+  const getWarehouseDisplay = (whsCode?: string): string | undefined => {
+    if (!whsCode) return undefined;
+    const warehouse = user?.warehouses?.find(w => w.id === whsCode);
+    return warehouse ? `${warehouse.id} - ${warehouse.name}` : whsCode;
+  };
+
   return (
     <Card key={doc.id} className={header ? "mb-4 shadow-lg" : "shadow-lg"}>
       <CardContent className="py-4">
@@ -58,8 +65,8 @@ const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = 
           <InfoBoxValue label={t('docDate')} value={dateFormat(doc.date)}/>
           <InfoBoxValue label={t('createdBy')} value={doc.createdByUser?.fullName}/>
           <InfoBoxValue label={t('status')} value={documentStatusToString(doc.status)}/>
-          {doc.sourceWhsCode && <InfoBoxValue label={t('sourceWarehouse')} value={doc.sourceWhsCode}/>}
-          {doc.targetWhsCode && <InfoBoxValue label={t('targetWarehouse')} value={doc.targetWhsCode}/>}
+          {doc.sourceWhsCode && <InfoBoxValue label={t('sourceWarehouse')} value={getWarehouseDisplay(doc.sourceWhsCode)}/>}
+          {doc.targetWhsCode && <InfoBoxValue label={t('targetWarehouse')} value={getWarehouseDisplay(doc.targetWhsCode)}/>}
         </FullInfoBox>
         {doc.comments &&
             <InfoBox>
