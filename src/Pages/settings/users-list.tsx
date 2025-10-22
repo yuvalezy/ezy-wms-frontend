@@ -7,6 +7,7 @@ import {Badge} from "@/components/ui/badge";
 import {Skeleton} from "@/components/ui/skeleton";
 import {Edit, Trash2, UserCheck, UserX} from "lucide-react";
 import {useAuth, useThemeContext} from "@/components";
+import {useNotifications} from "@/components/NotificationContext";
 import {AuthorizationGroup, User, UserFilters, Warehouse} from "@/features/users/data/user";
 import {userService} from "@/features/users/data/user-service";
 import UserForm from "@/features/users/components/user-form";
@@ -18,6 +19,7 @@ const UsersList: React.FC = () => {
   const {t} = useTranslation();
   const {user} = useAuth();
   const {setLoading, setError} = useThemeContext();
+  const {onlineUserIds} = useNotifications();
 
   const [users, setUsers] = useState<User[]>([]);
   const [authorizationGroups, setAuthorizationGroups] = useState<AuthorizationGroup[]>([]);
@@ -207,6 +209,7 @@ const UsersList: React.FC = () => {
                   <TableHead>{t('authorizationGroup')}</TableHead>
                   <TableHead>{t('warehouses')}</TableHead>
                   <TableHead>{t('status')}</TableHead>
+                  <TableHead>{t('onlineStatus')}</TableHead>
                   <TableHead className="text-right">{t('actions')}</TableHead>
                 </TableRow>
               </TableHeader>
@@ -225,6 +228,7 @@ const UsersList: React.FC = () => {
                           <Skeleton className="h-5 w-12 rounded-full" />
                         </div>
                       </TableCell>
+                      <TableCell><Skeleton className="h-5 w-16 rounded-full" /></TableCell>
                       <TableCell><Skeleton className="h-5 w-16 rounded-full" /></TableCell>
                       <TableCell className="text-right">
                         <div className="flex gap-2 justify-end">
@@ -270,6 +274,11 @@ const UsersList: React.FC = () => {
                             {u.active ? t('active') : t('inactive')}
                           </Badge>
                         </TableCell>
+                        <TableCell>
+                          <Badge variant={onlineUserIds.has(u.id) ? "default" : "secondary"} className={onlineUserIds.has(u.id) ? "bg-green-600" : ""}>
+                            {onlineUserIds.has(u.id) ? t('online') : t('offline')}
+                          </Badge>
+                        </TableCell>
                         <TableCell className="text-right">
                           <div className="flex gap-2 justify-end">
                             <Button
@@ -303,7 +312,7 @@ const UsersList: React.FC = () => {
                     ))}
                     {!isLoading && users.length === 0 && (
                       <TableRow>
-                        <TableCell colSpan={7} className="text-center py-8">
+                        <TableCell colSpan={8} className="text-center py-8">
                           {t('noUsersFound')}
                         </TableCell>
                       </TableRow>

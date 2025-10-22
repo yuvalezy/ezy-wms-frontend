@@ -35,6 +35,7 @@ interface NotificationContextType {
   alerts: WmsAlert[];
   unreadCount: number;
   isConnected: boolean;
+  onlineUserIds: Set<string>;
   fetchAlerts: (unreadOnly?: boolean, limit?: number) => Promise<void>;
   markAsRead: (alertId: string) => Promise<void>;
   markAllAsRead: () => Promise<void>;
@@ -45,6 +46,7 @@ const NotificationContextDefaultValues: NotificationContextType = {
   alerts: [],
   unreadCount: 0,
   isConnected: false,
+  onlineUserIds: new Set<string>(),
   fetchAlerts: async () => {
     console.warn("fetchAlerts method not implemented yet!");
   },
@@ -72,6 +74,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
   const [unreadCount, setUnreadCount] = useState<number>(0);
   const [connection, setConnection] = useState<signalR.HubConnection | null>(null);
   const [isConnected, setIsConnected] = useState(false);
+  const [onlineUserIds, setOnlineUserIds] = useState<Set<string>>(new Set());
   const { isAuthenticated, user } = useAuth();
 
   // Initialize SignalR connection
@@ -112,15 +115,40 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
       setUnreadCount(count);
     });
 
+    // Presence tracking event handlers
+    newConnection.on("UserConnected", (userId: string) => {
+      console.log("User connected:", userId);
+      setOnlineUserIds(prev => new Set(prev).add(userId));
+    });
+
+    newConnection.on("UserDisconnected", (userId: string) => {
+      console.log("User disconnected:", userId);
+      setOnlineUserIds(prev => {
+        const updated = new Set(prev);
+        updated.delete(userId);
+        return updated;
+      });
+    });
+
     // Start connection
     newConnection
       .start()
-      .then(() => {
+      .then(async () => {
         console.log("SignalR connected");
         setIsConnected(true);
         setConnection(newConnection);
+
         // Fetch initial data
         refreshUnreadCount();
+
+        // Fetch initial online users
+        try {
+          const onlineUsers = await newConnection.invoke<string[]>("GetOnlineUsers");
+          console.log("Initial online users:", onlineUsers);
+          setOnlineUserIds(new Set(onlineUsers));
+        } catch (error) {
+          console.error("Failed to fetch initial online users:", error);
+        }
       })
       .catch((err) => {
         console.error("SignalR connection error:", err);
@@ -193,6 +221,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
     alerts,
     unreadCount,
     isConnected,
+    onlineUserIds,
     fetchAlerts,
     markAsRead,
     markAllAsRead,
