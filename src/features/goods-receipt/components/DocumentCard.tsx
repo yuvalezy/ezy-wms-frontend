@@ -108,7 +108,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({doc, supervisor = false, act
                 </Button>
               )}
               {doc.status === Status.InProgress && (
-                <Button className="w-full" onClick={() => action?.(doc, 'approve')}>
+                <Button className="w-full" onClick={() => action?.(doc, 'process')}>
                   <Check className="mr-2 h-4 w-4"/>
                   {t('finish')}
                 </Button>

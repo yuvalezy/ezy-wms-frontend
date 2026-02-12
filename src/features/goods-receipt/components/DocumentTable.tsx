@@ -111,7 +111,7 @@ const DocumentTable: React.FC<DocumentTableProps> = ({documents, supervisor = fa
         key: 'finish',
         label: t('finish'),
         icon: Check,
-        onClick: () => action?.(doc, 'approve'),
+        onClick: () => action?.(doc, 'process'),
         variant: 'default',
         separator: true
       });
