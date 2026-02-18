@@ -21,6 +21,8 @@ export const useDocumentStatusToString = () => {
         return t('waitingForApprovalStatus');
       case Status.Rejected:
         return t('rejected');
+      case Status.PartiallyProcessed:
+        return t('partiallyProcessedStatus');
       default:
         return '';
     }

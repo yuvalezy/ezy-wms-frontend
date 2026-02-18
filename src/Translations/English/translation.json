@@ -725,5 +725,14 @@
   "markAllAsRead": "Mark all as read",
   "alertPending": "Pending",
   "alertApproved": "Approved",
-  "alertRejected": "Rejected"
+  "alertRejected": "Rejected",
+  "batchProcessing": "Batch Processing",
+  "retryAllFailed": "Retry All Failed",
+  "sapDocNumber": "SAP Doc #",
+  "retries": "Retries",
+  "completed": "Completed",
+  "failed": "Failed",
+  "lines": "Lines",
+  "viewBatches": "View Batches",
+  "partiallyProcessedStatus": "Partially Processed"
 }

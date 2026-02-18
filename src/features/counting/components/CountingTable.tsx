@@ -1,7 +1,7 @@
 import React from "react";
 import {useTranslation} from "react-i18next";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import {CheckCircle, FileText, XCircle} from "lucide-react";
+import {CheckCircle, Eye, FileText, XCircle} from "lucide-react";
 import {ResponsiveTableActions, TableAction} from '@/components/ui/responsive-table-actions';
 import {useNavigate} from "react-router";
 import {useAuth} from "@/components/AppContext";
@@ -33,6 +33,7 @@ export default function CountingTable({ countings, supervisor = false, onAction 
 
   const getCountingActions = (doc: Counting): TableAction[] => {
     const actions: TableAction[] = [];
+    const isProcessingOrPartial = doc.status === Status.Processing || doc.status === Status.PartiallyProcessed;
 
     // Summary report action
     actions.push({
@@ -42,6 +43,18 @@ export default function CountingTable({ countings, supervisor = false, onAction 
       onClick: () => navigate(`/countingSummaryReport/${doc.id}`),
       variant: 'outline'
     });
+
+    // View Batches action for Processing/PartiallyProcessed
+    if (isProcessingOrPartial) {
+      actions.push({
+        key: 'view-batches',
+        label: t('viewBatches'),
+        icon: Eye,
+        onClick: () => onAction?.(doc, 'viewBatches'),
+        variant: 'outline',
+        className: 'bg-amber-500 hover:bg-amber-600 text-white'
+      });
+    }
 
     // Finish action (conditional)
     if (doc.status === Status.InProgress) {
@@ -54,14 +67,15 @@ export default function CountingTable({ countings, supervisor = false, onAction 
       });
     }
 
-    // Cancel action (always available)
+    // Cancel action
     actions.push({
       key: 'cancel',
       label: t('cancel'),
       icon: XCircle,
       onClick: () => onAction?.(doc, 'cancel'),
       variant: 'destructive',
-      separator: true
+      separator: true,
+      disabled: isProcessingOrPartial
     });
 
     return actions;
@@ -87,12 +101,12 @@ export default function CountingTable({ countings, supervisor = false, onAction 
             {displayId && <TableCell>{doc.name || '-'}</TableCell>}
             <TableCell>
               {handleOpenLink ? (
-                <a 
-                  href="#" 
-                  onClick={(e) => { 
-                    e.preventDefault(); 
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
                     handleOpen(doc.id);
-                  }} 
+                  }}
                   className="text-blue-600 hover:underline"
                 >
                   {doc.number}

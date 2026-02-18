@@ -11,12 +11,36 @@ export interface Counting extends BaseEntity {
   errorParameters?: any[];
 }
 
+export enum BatchStatus {
+  Pending = "Pending",
+  Processing = "Processing",
+  Completed = "Completed",
+  Failed = "Failed"
+}
+
+export interface CountingBatch {
+  id: string;
+  sequenceOrder: number;
+  status: BatchStatus;
+  isInitialBinBatch: boolean;
+  lineCount: number;
+  sapDocEntry?: number;
+  sapDocNumber?: number;
+  errorMessage?: string;
+  lastAttemptAt?: string;
+  retryCount: number;
+}
+
 export interface CountingActionResponse {
   success: boolean;
   externalEntry: string | null;
   externalNumber: string | null;
   errorMessage: string;
   status: string;
+  totalBatches: number;
+  completedBatches: number;
+  failedBatches: number;
+  batches?: CountingBatch[];
 }
 
 export interface CountingAddItemResponse {

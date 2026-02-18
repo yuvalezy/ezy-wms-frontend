@@ -6,4 +6,4 @@ export enum ObjectType {
   Package = "Package"
 }
 
-export type ObjectAction = "approve" | "reject" | "cancel" | "process";
+export type ObjectAction = "approve" | "reject" | "cancel" | "process" | "viewBatches";

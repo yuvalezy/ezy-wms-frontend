@@ -15,8 +15,11 @@ import {User} from "@/features/users/data/user";
 import {Skeleton} from "@/components/ui/skeleton";
 import {Card, CardContent, CardHeader} from "@/components/ui/card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import {Loader2} from "lucide-react";
 import {ObjectAction} from "@/features/packages/types";
+import {Status} from "@/features/shared/data/shared";
+import BatchStatusPanel from "@/features/counting/components/BatchStatusPanel";
+
+const SEARCH_STATUSES = [Status.Open, Status.InProgress, Status.PartiallyProcessed, Status.Processing];
 
 export default function CountingSupervisor() {
   const {t} = useTranslation();
@@ -29,19 +32,31 @@ export default function CountingSupervisor() {
   const [actionType, setActionType] = useState<ObjectAction | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [batchPanelOpen, setBatchPanelOpen] = useState(false);
+  const [batchCountingId, setBatchCountingId] = useState<string>("");
+  const [batchCountingNumber, setBatchCountingNumber] = useState<number>(0);
 
-  useEffect(() => {
-    setIsLoading(true);
-    countingService.search()
+  const fetchCountings = () => {
+    return countingService.search(undefined, SEARCH_STATUSES)
       .then((data) => {
         setCountings(data);
       })
-      .catch((error) => setError(error))
+      .catch((error) => setError(error));
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    fetchCountings()
       .finally(() => setIsLoading(false));
   }, [setError]);
 
   const handleAction = (doc: Counting, action: ObjectAction) => {
+    if (action === "viewBatches") {
+      setBatchCountingId(doc.id);
+      setBatchCountingNumber(doc.number);
+      setBatchPanelOpen(true);
+      return;
+    }
     setSelected(doc);
     setActionType(action);
     setDialogOpen(true);
@@ -49,10 +64,6 @@ export default function CountingSupervisor() {
 
   const handleConfirmAction = () => {
     setDialogOpen(false);
-    
-    if (actionType === "process") {
-      setIsProcessing(true);
-    }
 
     const serviceCall = actionType === "cancel"
       ? countingService.cancel(selected!.id)
@@ -60,19 +71,28 @@ export default function CountingSupervisor() {
 
     serviceCall
       .then((result) => {
-        if (typeof result === "boolean" || result.success) {
+        if (actionType === "cancel") {
+          if (typeof result === "boolean" && result) {
+            setCountings((prev) =>
+              prev.filter((count) => count.id !== selected?.id)
+            );
+            toast.success(t("cancelled"));
+          }
+        } else if (actionType === "process") {
+          // Open batch status panel
+          setBatchCountingId(selected!.id);
+          setBatchCountingNumber(selected!.number);
+          setBatchPanelOpen(true);
+          // Update counting status to Processing in the list
           setCountings((prev) =>
-            prev.filter((count) => count.id !== selected?.id)
+            prev.map((c) =>
+              c.id === selected?.id ? {...c, status: Status.Processing} : c
+            )
           );
-          toast.success(actionType === "process" ? t("approved") : t("cancelled"));
+          toast.success(t("approved"));
         }
       })
-      .catch((error) => setError(error))
-      .finally(() => {
-        if (actionType === "process") {
-          setIsProcessing(false);
-        }
-      });
+      .catch((error) => setError(error));
   };
 
   // Skeleton components
@@ -218,17 +238,22 @@ export default function CountingSupervisor() {
           </div>
         </>
       )}
-      
-      {isProcessing && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 flex flex-col items-center space-y-4">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-            <p className="text-sm text-gray-600 dark:text-gray-300">{t('processing')}</p>
-            <p className="text-xs text-gray-400 dark:text-gray-500">{t('processingPleaseWait')}</p>
-          </div>
-        </div>
-      )}
-      
+
+      <BatchStatusPanel
+        open={batchPanelOpen}
+        onOpenChange={(open) => {
+          setBatchPanelOpen(open);
+          if (!open) {
+            // Refetch countings when panel closes
+            countingService.search(undefined, SEARCH_STATUSES)
+              .then(setCountings)
+              .catch(setError);
+          }
+        }}
+        countingId={batchCountingId}
+        countingNumber={batchCountingNumber}
+      />
+
       <MessageBox
         onConfirm={handleConfirmAction}
         onOpenChange={setDialogOpen}

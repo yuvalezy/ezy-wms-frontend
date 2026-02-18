@@ -7,7 +7,7 @@ import {Button} from "@/components/ui/button";
 import {useDocumentStatusToString} from "@/hooks/useDocumentStatusToString";
 import {Status} from "@/features/shared/data/shared";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
-import {CheckCircle, FileText, XCircle} from "lucide-react";
+import {CheckCircle, Eye, FileText, XCircle} from "lucide-react";
 import {FullInfoBox, InfoBoxValue, Separator} from "@/components";
 import {Counting} from "@/features/counting/data/counting";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
@@ -33,6 +33,8 @@ const CountingCard: React.FC<CountingCardProps> = ({doc, handleAction, superviso
 
   const documentStatusToString = useDocumentStatusToString();
 
+  const isProcessingOrPartial = doc.status === Status.Processing || doc.status === Status.PartiallyProcessed;
+
   return (
     <Card key={doc.id} className="mb-4 shadow-lg">
       {doc.name && (
@@ -56,13 +58,20 @@ const CountingCard: React.FC<CountingCardProps> = ({doc, handleAction, superviso
                   <FileText className="h-4 w-4 mr-2"/>
                   {t('countingSummaryReport')}
                 </Button>
+                {isProcessingOrPartial && (
+                  <Button variant="outline" onClick={() => handleAction?.('viewBatches')}
+                          className="bg-amber-500 hover:bg-amber-600 text-white">
+                    <Eye className="mr-2 h-4 w-4"/>{t('viewBatches')}
+                  </Button>
+                )}
                 {doc.status === Status.InProgress && (
                   <Button variant="default" onClick={() => handleAction?.('process')}
                           className="bg-green-500 hover:bg-green-600 text-white">
                     <CheckCircle className="mr-2 h-4 w-4"/>{t('finish')}
                   </Button>
                 )}
-                <Button variant="destructive" onClick={() => handleAction?.('cancel')}>
+                <Button variant="destructive" onClick={() => handleAction?.('cancel')}
+                        disabled={isProcessingOrPartial}>
                   <XCircle className="mr-2 h-4 w-4"/>{t('cancel')}
                 </Button>
             </div>

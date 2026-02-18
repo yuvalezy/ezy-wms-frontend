@@ -1,6 +1,6 @@
 import {axiosInstance} from "@/utils/axios-instance";
 
-import {Counting, CountingActionResponse, CountingAddItemResponse, CountingContent, CountingSummaryReportData, OrderBy} from "@/features/counting/data/counting";
+import {Counting, CountingActionResponse, CountingAddItemResponse, CountingBatch, CountingContent, CountingSummaryReportData, OrderBy} from "@/features/counting/data/counting";
 import {Status, UnitType, UpdateLineParameters, UpdateLineReturnValue} from "@/features/shared/data";
 
 export const countingService = {
@@ -186,5 +186,18 @@ export const countingService = {
       console.error("Error fetching countings:", error);
       throw error;
     }
+  },
+
+  async fetchBatches(countingId: string): Promise<CountingBatch[]> {
+    const response = await axiosInstance.get<CountingBatch[]>(`Counting/batches/${countingId}`);
+    return response.data;
+  },
+
+  async retryBatches(countingId: string, batchId?: string): Promise<CountingActionResponse> {
+    const response = await axiosInstance.post<CountingActionResponse>(`Counting/retryBatches`, {
+      countingId,
+      batchId: batchId || null
+    });
+    return response.data;
   },
 }
