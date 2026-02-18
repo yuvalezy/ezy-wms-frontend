@@ -27,7 +27,7 @@ export const countingService = {
 
   async process(id: string): Promise<CountingActionResponse> {
     try {
-      const response = await axiosInstance.post<CountingActionResponse>(`Counting/Process`, {id});
+      const response = await axiosInstance.post<CountingActionResponse>(`Counting/Process`, {id}, {timeout: 300000});
 
       if (!response.data.success) {
         throw new Error(response.data.errorMessage);

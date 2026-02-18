@@ -716,6 +716,7 @@
   "processingItem": "Procesando Articulo",
   "loadingValues": "Cargando Valores",
   "processing": "Procesando",
+  "processingPleaseWait": "Esto puede tardar un momento, por favor espere...",
   "retry": "Reintentar",
   "connectionError": "Error de Conexión",
   "cannotEstablishConnection": "No se puede establecer conexión con el servidor",

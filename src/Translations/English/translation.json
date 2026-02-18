@@ -716,6 +716,7 @@
   "processingItem": "Processing Item",
   "loadingValues": "Loading Values",
   "processing": "Processing",
+  "processingPleaseWait": "This may take a while, please be patient...",
   "retry": "Retry",
   "connectionError": "Connection Error",
   "cannotEstablishConnection": "Cannot establish connection to server",

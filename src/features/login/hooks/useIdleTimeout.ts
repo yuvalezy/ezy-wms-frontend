@@ -1,5 +1,6 @@
 import {useEffect, useRef} from 'react';
 import {UserInfo} from '../data/login';
+import {hasActiveRequests} from '../../../utils/axios-instance';
 
 interface UseIdleTimeoutProps {
   user: UserInfo | null;
@@ -30,6 +31,11 @@ export const useIdleTimeout = ({ user, onTimeout }: UseIdleTimeoutProps) => {
       
       // Set new timer
       idleTimerRef.current = setTimeout(() => {
+        if (hasActiveRequests()) {
+          // API requests are in-flight — user is waiting, not idle
+          resetIdleTimer();
+          return;
+        }
         onTimeout();
       }, timeoutMs);
     };

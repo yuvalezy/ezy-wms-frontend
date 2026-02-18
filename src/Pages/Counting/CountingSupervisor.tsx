@@ -224,6 +224,7 @@ export default function CountingSupervisor() {
           <div className="bg-white dark:bg-gray-800 rounded-lg p-6 flex flex-col items-center space-y-4">
             <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
             <p className="text-sm text-gray-600 dark:text-gray-300">{t('processing')}</p>
+            <p className="text-xs text-gray-400 dark:text-gray-500">{t('processingPleaseWait')}</p>
           </div>
         </div>
       )}
