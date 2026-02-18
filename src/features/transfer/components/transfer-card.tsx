@@ -130,7 +130,7 @@ const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = 
       {supervisor && (
         <CardFooter className="flex justify-end space-x-2 pt-4 border-t">
           {doc.status === Status.InProgress && progressDisplayValue === 100 && (
-            <Button variant="default" onClick={() => onAction?.(doc, 'approve')}
+            <Button variant="default" onClick={() => onAction?.(doc, 'process')}
                     className="bg-green-500 hover:bg-green-600 text-white">
               <CheckCircle className="mr-2 h-4 w-4"/>{t('finish')}
             </Button>

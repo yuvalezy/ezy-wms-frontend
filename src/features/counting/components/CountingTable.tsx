@@ -49,7 +49,7 @@ export default function CountingTable({ countings, supervisor = false, onAction 
         key: 'finish',
         label: t('finish'),
         icon: CheckCircle,
-        onClick: () => onAction?.(doc, 'approve'),
+        onClick: () => onAction?.(doc, 'process'),
         variant: 'default'
       });
     }

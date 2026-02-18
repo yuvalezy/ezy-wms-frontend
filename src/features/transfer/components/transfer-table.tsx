@@ -52,7 +52,7 @@ export default function TransferTable({ transfers, supervisor = false, approval 
           key: 'finish',
           label: t('finish'),
           icon: CheckCircle,
-          onClick: () => onAction?.(doc, 'approve'),
+          onClick: () => onAction?.(doc, 'process'),
           variant: 'default'
         });
       }
@@ -72,7 +72,7 @@ export default function TransferTable({ transfers, supervisor = false, approval 
         key: 'approve',
         label: t('approve'),
         icon: CheckCircle,
-        onClick: () => onAction?.(doc, 'approve'),
+        onClick: () => onAction?.(doc, 'process'),
         variant: 'default',
       });
       // Approve action (always available)

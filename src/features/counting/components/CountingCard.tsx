@@ -57,7 +57,7 @@ const CountingCard: React.FC<CountingCardProps> = ({doc, handleAction, superviso
                   {t('countingSummaryReport')}
                 </Button>
                 {doc.status === Status.InProgress && (
-                  <Button variant="default" onClick={() => handleAction?.('approve')}
+                  <Button variant="default" onClick={() => handleAction?.('process')}
                           className="bg-green-500 hover:bg-green-600 text-white">
                     <CheckCircle className="mr-2 h-4 w-4"/>{t('finish')}
                   </Button>
