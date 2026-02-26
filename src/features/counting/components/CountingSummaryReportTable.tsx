@@ -5,14 +5,21 @@ import {useStockInfo} from "@/utils/stock-info";
 import {FullInfoBox, InfoBoxValue} from "@/components/InfoBox";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
 import {CountingSummaryReportLine} from "@/features/counting/data/counting";
+import {Status} from "@/features/shared/data";
+import {Button} from "@/components/ui/button";
 
 interface CountingSummaryReportTableProps {
   data: CountingSummaryReportLine[]
+  onClick?: (data: CountingSummaryReportLine) => void
+  status?: Status
 }
 
-const CountingSummaryReportTable: React.FC<CountingSummaryReportTableProps> = ({data}) => {
+const CountingSummaryReportTable: React.FC<CountingSummaryReportTableProps> = ({data, onClick, status}) => {
   const {t} = useTranslation();
   const stockInfo = useStockInfo();
+
+  const allowModify = status === Status.Open || status === Status.InProgress;
+
   return (
     <>
       {/* Mobile view - Cards */}
@@ -29,6 +36,17 @@ const CountingSummaryReportTable: React.FC<CountingSummaryReportTableProps> = ({
               purPackUn: row.purPackUn,
               purPackMsr: row.purPackMsr || "",
             })}/>
+            {allowModify && onClick && (
+              <div className="pt-2">
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={() => onClick(row)}
+                >
+                  {t('modifyValues')}
+                </Button>
+              </div>
+            )}
           </FullInfoBox>
         ))}
       </div>
@@ -42,6 +60,7 @@ const CountingSummaryReportTable: React.FC<CountingSummaryReportTableProps> = ({
               <TableHead>{t('code')}</TableHead>
               <TableHead>{t('description')}</TableHead>
               <TableHead>{t('counted')}</TableHead>
+              {allowModify && <TableHead className="border-l"></TableHead>}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -61,6 +80,17 @@ const CountingSummaryReportTable: React.FC<CountingSummaryReportTableProps> = ({
                     purPackMsr: row.purPackMsr,
                   })}
                 </TableCell>
+                {allowModify && onClick && (
+                  <TableCell className="border-l">
+                    <Button
+                      variant="default"
+                      size="sm"
+                      onClick={() => onClick(row)}
+                    >
+                      {t('modifyValues')}
+                    </Button>
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>

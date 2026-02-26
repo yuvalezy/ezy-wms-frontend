@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useAuth, useThemeContext} from "@/components";
 import {useTranslation} from "react-i18next";
 import {useNavigate, useParams} from "react-router";
@@ -7,8 +7,11 @@ import {exportToExcel} from "@/utils/excelExport";
 import {getExcelQuantityHeaders, getExcelQuantityValues} from "@/utils/excel-quantity-format";
 import ContentTheme from "@/components/ContentTheme";
 import {countingService} from "@/features/counting/data/counting-service";
-import {CountingSummaryReportData} from "@/features/counting/data/counting";
+import {CountingSummaryReportData, CountingSummaryReportLine} from "@/features/counting/data/counting";
 import {Skeleton} from "@/components/ui/skeleton";
+import {DetailUpdateParameters, Status} from "@/features/shared/data";
+import CountingAllDetail from "@/features/counting/components/CountingAllDetail";
+import {CountingAllDetailRef} from "@/features/counting/hooks/useCountingAllDetailsData";
 
 export default function CountingSummaryReport() {
   const {scanCode} = useParams();
@@ -16,19 +19,67 @@ export default function CountingSummaryReport() {
   const {t} = useTranslation();
   const {unitSelection, user} = useAuth();
   const [data, setData] = useState<CountingSummaryReportData | null>(null);
+  const [status, setStatus] = useState<Status | null>(null);
+  const [isLoadingDetail, setIsLoadingDetail] = useState(false);
+  const [isRefreshingDetail, setIsRefreshingDetail] = useState(false);
   const navigate = useNavigate();
+  const detailRef = useRef<CountingAllDetailRef>(null);
 
   useEffect(() => {
     if (scanCode === null || scanCode === undefined) {
       return;
     }
-    setLoading(true);
-    countingService.fetchCountingSummaryReport(scanCode)
-      .then((result) => setData(result))
-      .catch((error) => setError(error))
-      .finally(() => setLoading(false));
+    loadData();
   }, []);
 
+  function loadData() {
+    if (scanCode == null) {
+      return;
+    }
+    setLoading(true);
+    Promise.all([
+      countingService.fetchCountingSummaryReport(scanCode),
+      countingService.fetch(scanCode)
+    ])
+      .then(([reportResult, counting]) => {
+        setData(reportResult);
+        setStatus(counting.status);
+      })
+      .catch((error) => setError(error))
+      .finally(() => setLoading(false));
+  }
+
+  function openDetails(row: CountingSummaryReportLine) {
+    if (scanCode == null) {
+      return;
+    }
+    setIsLoadingDetail(true);
+
+    Promise.all([
+      countingService.fetch(scanCode),
+      countingService.fetchReportAllDetails(scanCode, row.itemCode, row.binEntry)
+    ])
+      .then(([doc, details]) => {
+        const enableUpdate = doc.status === Status.Open || doc.status === Status.InProgress;
+        detailRef?.current?.show(row, details, enableUpdate);
+      })
+      .catch((error) => setError(error))
+      .finally(() => setIsLoadingDetail(false));
+  }
+
+  function onDetailUpdate(updateData: DetailUpdateParameters) {
+    if (scanCode == null) {
+      return;
+    }
+    setIsRefreshingDetail(true);
+    countingService.updateAll(updateData)
+      .then(() => loadData())
+      .catch((error) => {
+        setError(error);
+        setIsRefreshingDetail(false);
+      })
+      .finally(() => setIsRefreshingDetail(false));
+  }
 
   const getExcelHeaders = () => {
     const headers = [
@@ -72,7 +123,7 @@ export default function CountingSummaryReport() {
                   onExportExcel={handleExportExcel}>
       <div className="space-y-4">
         {/* Loading State */}
-        {loading && !data && (
+        {(loading || isLoadingDetail || isRefreshingDetail) && !data && (
           <div className="space-y-4" aria-label="Loading...">
             <div className="flex flex-col space-y-2">
               <Skeleton className="h-8 w-48" />
@@ -96,10 +147,22 @@ export default function CountingSummaryReport() {
                 </h2>
               </div>
             )}
-            <CountingSummaryReportTable data={data.lines}/>
+            <CountingSummaryReportTable
+              data={data.lines}
+              onClick={openDetails}
+              status={status ?? undefined}
+            />
           </>
         )}
       </div>
+
+      {scanCode && (
+        <CountingAllDetail
+          ref={detailRef}
+          id={scanCode}
+          onUpdate={onDetailUpdate}
+        />
+      )}
     </ContentTheme>
   )
 }

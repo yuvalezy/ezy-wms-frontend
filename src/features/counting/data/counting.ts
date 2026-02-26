@@ -1,5 +1,6 @@
 import {BaseEntity, Status, UnitType} from "@/features/shared/data";
 import {ItemDetails} from "@/features/items/data/items";
+import {PackageValue} from "@/components";
 
 export interface Counting extends BaseEntity {
   name?: string;
@@ -73,7 +74,18 @@ export type CountingSummaryReportData = {
 
 export interface CountingSummaryReportLine extends ItemDetails {
   binCode: string;
+  binEntry?: number;
   quantity: number;
+}
+
+export type CountingAllDetail = {
+  lineId: string;
+  createdByUserName: string;
+  timeStamp: Date;
+  quantity: number;
+  unit: UnitType;
+  binCode?: string;
+  package?: PackageValue;
 }
 
 export enum OrderBy {

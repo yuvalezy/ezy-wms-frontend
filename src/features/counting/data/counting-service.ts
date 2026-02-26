@@ -1,7 +1,7 @@
 import {axiosInstance} from "@/utils/axios-instance";
 
-import {Counting, CountingActionResponse, CountingAddItemResponse, CountingBatch, CountingContent, CountingSummaryReportData, OrderBy} from "@/features/counting/data/counting";
-import {Status, UnitType, UpdateLineParameters, UpdateLineReturnValue} from "@/features/shared/data";
+import {Counting, CountingActionResponse, CountingAddItemResponse, CountingAllDetail, CountingBatch, CountingContent, CountingSummaryReportData, OrderBy} from "@/features/counting/data/counting";
+import {DetailUpdateParameters, Status, UnitType, UpdateLineParameters, UpdateLineReturnValue} from "@/features/shared/data";
 
 export const countingService = {
   async create(name: string): Promise<Counting> {
@@ -184,6 +184,30 @@ export const countingService = {
       return response.data;
     } catch (error) {
       console.error("Error fetching countings:", error);
+      throw error;
+    }
+  },
+
+  async fetchReportAllDetails(id: string, itemCode: string, binEntry?: number): Promise<CountingAllDetail[]> {
+    try {
+      let url = `Counting/${id}/report/all/${encodeURIComponent(itemCode)}`;
+      if (binEntry != null) {
+        url += `/${binEntry}`;
+      }
+      const response = await axiosInstance.get<CountingAllDetail[]>(url);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching counting details:", error);
+      throw error;
+    }
+  },
+
+  async updateAll(data: DetailUpdateParameters): Promise<boolean> {
+    try {
+      const response = await axiosInstance.post<boolean>(`Counting/updateAll`, data);
+      return response.data;
+    } catch (error) {
+      console.error("Error updating counting:", error);
       throw error;
     }
   },
