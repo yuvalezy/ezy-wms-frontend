@@ -6,7 +6,7 @@ import ItemCheckBarcodes from "@/features/items/components/ItemCheckBarcodes";
 import ItemCheckStock from "@/features/items/components/ItemCheckStock";
 import {ItemMetadataDisplay} from "@/features/items/components/ItemMetadataDisplay";
 import {ItemCheckResponse} from "@/features/items/data/items";
-import {useAuth} from "@/Components";
+import {useAuth} from "@/components";
 
 interface ItemCheckResultProps {
   result: ItemCheckResponse;

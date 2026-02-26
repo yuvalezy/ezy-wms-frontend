@@ -7,7 +7,7 @@ import InfoBox from '@/components/InfoBox';
 import {ItemDetails} from '../data/items';
 import {MetadataFieldType} from '@/features/packages/types';
 import {canEditMetadata, getItemMetadata, ItemMetadataEditDialog} from '@/features/items';
-import {useAuth} from "@/Components";
+import {useAuth} from "@/components";
 import {useThemeContext} from '@/components/ThemeContext';
 
 interface ItemMetadataDisplayProps {

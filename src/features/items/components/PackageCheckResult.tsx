@@ -8,7 +8,7 @@ import ClickableBinCode from "@/components/ClickableBinCode";
 import {Calendar, MapPin, User} from "lucide-react";
 import {formatDistance} from "date-fns";
 import {PackageMetadataDisplay} from "@/features/packages/components";
-import {useAuth} from "@/Components";
+import {useAuth} from "@/components";
 import {InventoryUnitIndicators} from "@/components/InventoryUnitIndicators";
 import {StockTotalsSummary} from "./StockTotalsSummary";
 import {formatStock, getStockBreakdown} from "../utils/stock-calculations";

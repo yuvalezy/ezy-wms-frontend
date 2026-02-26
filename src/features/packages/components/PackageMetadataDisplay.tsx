@@ -6,7 +6,7 @@ import {Edit} from 'lucide-react';
 import InfoBox from '@/components/InfoBox';
 import {MetadataFieldType, PackageDto} from '../types';
 import {PackageMetadataForm} from './PackageMetadataForm';
-import {useAuth} from "@/Components";
+import {useAuth} from "@/components";
 
 interface PackageMetadataDisplayProps {
   packageData: PackageDto;

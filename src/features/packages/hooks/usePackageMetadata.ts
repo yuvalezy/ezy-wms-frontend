@@ -1,5 +1,5 @@
 import {useCallback, useMemo} from 'react';
-import {useAuth} from "@/Components";
+import {useAuth} from "@/components";
 import {PackageDto, UpdatePackageMetadataRequest} from '../types';
 import {updatePackageMetadata} from './usePackages';
 import {convertFieldValueForApi, ExtendedMetadataDefinition, useCalculatedFields, useMetadataBase} from '@/features/metadata';

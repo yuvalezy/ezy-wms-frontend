@@ -6,7 +6,7 @@ import {Skeleton} from '@/components/ui/skeleton';
 import {Edit} from 'lucide-react';
 import {ItemDetails} from '../data/items';
 import {getItemMetadata, ItemMetadataForm, MetadataDefinition} from '@/features/items';
-import {useAuth} from "@/Components";
+import {useAuth} from "@/components";
 import {useThemeContext} from '@/components/ThemeContext';
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 
