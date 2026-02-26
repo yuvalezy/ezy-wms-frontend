@@ -60,6 +60,7 @@ export function AppSidebar() {
       case "/transfer/approve":
       case "/transferSupervisor":
       case "/transferRequest":
+      case "/directTransfer":
       case "/transferConfirmation":
       case "/transferConfirmationSupervisor":
       case "/transferConfirmationReport":

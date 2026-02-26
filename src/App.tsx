@@ -49,6 +49,7 @@ import ExternalAlertsList from "@/Pages/settings/external-alerts-list";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {ProcessType} from "@/features/shared/data";
 import {TransferProcessProvider} from "@/features/transfer/context/TransferProcessContext";
+import DirectTransfer from "@/Pages/DirectTransfer/DirectTransfer";
 
 function AppRoutes() {
   const {user} = useAuth();
@@ -347,6 +348,8 @@ function AppRoutes() {
         {getGoodsReceiptConfirmationRoutes()}
         {getPickingRoutes()}
         {getTransferRoutes()}
+        <Route path="/directTransfer"
+               element={<ProtectedRoute authorization={RoleType.DIRECT_TRANSFER} element={<DirectTransfer/>}/>}/>
         {getTransferConfirmationRoutes()}
         {getSettingsRoutes()}
         {getDefaultRoutes()}

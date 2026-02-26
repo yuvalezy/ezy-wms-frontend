@@ -480,7 +480,9 @@
     "roleTransferConfirmation": "Transfer Confirmation",
     "roleTransferConfirmationDescription": "Confirm and validate completed transfers",
     "roleTransferConfirmationSupervisor": "Transfer Confirmation Supervisor",
-    "roleTransferConfirmationSupervisorDescription": "Supervise transfer confirmation processes and resolve discrepancies"
+    "roleTransferConfirmationSupervisorDescription": "Supervise transfer confirmation processes and resolve discrepancies",
+    "roleDirectTransfer": "Direct Transfer",
+    "roleDirectTransferDescription": "Quick single-item transfer between bin locations"
   },
   "system": "System",
   "operations": "Operations",
@@ -734,5 +736,11 @@
   "failed": "Failed",
   "lines": "Lines",
   "viewBatches": "View Batches",
-  "partiallyProcessedStatus": "Partially Processed"
+  "partiallyProcessedStatus": "Partially Processed",
+  "directTransfer": "Direct Transfer",
+  "scanSourceBin": "Scan Source Bin",
+  "scanTargetBin": "Scan Target Bin",
+  "scanItemToTransfer": "Scan Item to Transfer",
+  "directTransferSuccess": "Direct transfer completed successfully",
+  "directTransferExecuting": "Executing direct transfer..."
 }

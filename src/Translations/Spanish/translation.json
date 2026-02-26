@@ -480,7 +480,9 @@
     "roleTransferConfirmation": "Confirmación de Transferencia",
     "roleTransferConfirmationDescription": "Confirmar y validar transferencias completadas",
     "roleTransferConfirmationSupervisor": "Supervisor de Confirmación de Transferencia",
-    "roleTransferConfirmationSupervisorDescription": "Supervisar procesos de confirmación de transferencia y resolver discrepancias"
+    "roleTransferConfirmationSupervisorDescription": "Supervisar procesos de confirmación de transferencia y resolver discrepancias",
+    "roleDirectTransfer": "Transferencia Directa",
+    "roleDirectTransferDescription": "Transferencia rápida de un artículo entre ubicaciones de almacén"
   },
   "system": "Sistema",
   "operations": "Operaciones",
@@ -734,5 +736,11 @@
   "failed": "Fallido",
   "lines": "Lineas",
   "viewBatches": "Ver Lotes",
-  "partiallyProcessedStatus": "Parcialmente Procesado"
+  "partiallyProcessedStatus": "Parcialmente Procesado",
+  "directTransfer": "Transferencia Directa",
+  "scanSourceBin": "Escanear Ubicación Origen",
+  "scanTargetBin": "Escanear Ubicación Destino",
+  "scanItemToTransfer": "Escanear Artículo a Transferir",
+  "directTransferSuccess": "Transferencia directa completada exitosamente",
+  "directTransferExecuting": "Ejecutando transferencia directa..."
 }

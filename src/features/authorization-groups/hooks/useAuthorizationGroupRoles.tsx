@@ -124,6 +124,13 @@ export const useAuthorizationGroupRoles = () => {
     //   description: t("authorizations.roleTransferRequestDescription"),
     //   category: "Operations"
     // }]
+    // Direct Transfer
+    ...(user?.binLocations ? [[RoleType.DIRECT_TRANSFER, {
+      role: RoleType.DIRECT_TRANSFER,
+      displayName: t("authorizations.roleDirectTransfer"),
+      description: t("authorizations.roleDirectTransferDescription"),
+      category: "Operations"
+    }] as [RoleType, RoleInfo]] : []),
   ]);
 
   const getRoleInfo = (): RoleInfo[] => {

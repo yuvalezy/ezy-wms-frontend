@@ -16,6 +16,7 @@ export enum RoleType {
   PACKAGE_MANAGEMENT_SUPERVISOR = 'PackageManagementSupervisor',
   ITEM_MANAGEMENT = 'ItemManagement',
   ITEM_MANAGEMENT_SUPERVISOR = 'ItemManagementSupervisor',
+  DIRECT_TRANSFER = 'DirectTransfer',
 }
 
 export interface AuthorizationGroup {

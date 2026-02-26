@@ -1,7 +1,7 @@
 import {useTranslation} from 'react-i18next';
 import {useMemo} from 'react'; // Import useMemo
 import {useAuth} from "@/components";
-import {BarChart3, Bell, Boxes, CheckCircle, ClipboardList, Factory, Move, Package, PackageCheckIcon, SendHorizontal, Shield, ShoppingCart, Smartphone, TrendingUp, Truck, Users,} from 'lucide-react';
+import {ArrowRightLeft, BarChart3, Bell, Boxes, CheckCircle, ClipboardList, Factory, Move, Package, PackageCheckIcon, SendHorizontal, Shield, ShoppingCart, Smartphone, TrendingUp, Truck, Users,} from 'lucide-react';
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {GoodsReceiptDocumentType} from "@/features/login/data/login";
 
@@ -168,6 +168,14 @@ export function useMenus() {
       Icon: Truck,
       Color: "text-lime-700",
       RequiresFeature: "EnableInventoryTransfer"
+    },
+    {
+      Link: "/directTransfer",
+      Text: t('directTransfer'),
+      Authorization: RoleType.DIRECT_TRANSFER,
+      Icon: ArrowRightLeft,
+      Color: "text-lime-700",
+      RequiresFeature: "BinLocation"
     },
     {
       Link: "/transferConfirmation",
