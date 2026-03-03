@@ -8,6 +8,7 @@ import PickingProcessDetailContent from "@/features/picking/components/picking-p
 import BinLocationScanner from "@/components/BinLocationScanner";
 import {usePickingProcessDetailData} from "@/features/picking/hooks/usePickingProcessDetailData";
 import {AlertCircle} from "lucide-react";
+import {ObjectType} from "@/features/packages/types";
 import {useObjectName} from "@/hooks/useObjectName";
 import {renderCustomFields} from "@/utils/custom-fields-utils";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
@@ -60,6 +61,7 @@ export default function PickingProcessDetail() {
                                         pickPackOnly={pickPackOnly}
                                         onAddItem={(value) => handleAddItem(value, t)}
                                         onAddPackage={handleAddPackage}
+                                        objectType={ObjectType.Picking}
                                         enabled={enable}/>}
                     {!binLocation && detail.totalOpenItems > 0 && user?.binLocations &&
                         <div className="space-y-4 p-2">

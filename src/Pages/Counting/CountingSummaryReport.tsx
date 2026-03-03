@@ -17,7 +17,8 @@ export default function CountingSummaryReport() {
   const {scanCode} = useParams();
   const {loading, setLoading, setError} = useThemeContext();
   const {t} = useTranslation();
-  const {unitSelection, user} = useAuth();
+  const {user, getUnitSettings: getUnitSettingsFn} = useAuth();
+  const {enableUnitSelection: unitSelection, enableUseBaseUn} = getUnitSettingsFn("InventoryCounting");
   const [data, setData] = useState<CountingSummaryReportData | null>(null);
   const [status, setStatus] = useState<Status | null>(null);
   const [isLoadingDetail, setIsLoadingDetail] = useState(false);
@@ -87,7 +88,7 @@ export default function CountingSummaryReport() {
       t("code"),
       t("description"),
     ];
-    headers.push(...getExcelQuantityHeaders(t, unitSelection, user?.settings.enableUseBaseUn));
+    headers.push(...getExcelQuantityHeaders(t, unitSelection, enableUseBaseUn));
     return headers;
   }
 
@@ -102,7 +103,7 @@ export default function CountingSummaryReport() {
         quantity: item.quantity,
         numInBuy: item.numInBuy,
         purPackUn: item.purPackUn,
-      }, unitSelection, user?.settings.enableUseBaseUn));
+      }, unitSelection, enableUseBaseUn));
       return values;
     }) ?? [];
   };

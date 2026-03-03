@@ -17,7 +17,9 @@ import {formatNumber} from "@/utils/number-utils";
 
 export const useGoodsReceiptAllData = (processType: ProcessType = ProcessType.Regular) => {
   const {t} = useTranslation();
-  const {unitSelection} = useAuth();
+  const {getUnitSettings: getUnitSettingsFn} = useAuth();
+  const grUnitSettings = getUnitSettingsFn("GoodsReceipt");
+  const unitSelection = grUnitSettings.enableUnitSelection;
   const {scanCode} = useParams();
   const {setError} = useThemeContext();
   const [data, setData] = useState<GoodsReceiptAll | null>(null);
@@ -57,7 +59,7 @@ export const useGoodsReceiptAllData = (processType: ProcessType = ProcessType.Re
       t("code"),
       t("description"),
     ];
-    headers.push(...getExcelQuantityHeaders(t, unitSelection, user?.settings.enableUseBaseUn));
+    headers.push(...getExcelQuantityHeaders(t, unitSelection, grUnitSettings.enableUseBaseUn));
     headers.push(
       t("delivery"),
       t("showroom"),
@@ -79,7 +81,7 @@ export const useGoodsReceiptAllData = (processType: ProcessType = ProcessType.Re
         quantity: item.quantity,
         numInBuy: item.numInBuy,
         purPackUn: item.purPackUn,
-      }, unitSelection, user?.settings.enableUseBaseUn));
+      }, unitSelection, grUnitSettings.enableUseBaseUn));
       
       values.push(
         formatNumber(item.delivery, 0),

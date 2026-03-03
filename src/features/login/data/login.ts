@@ -20,6 +20,20 @@ export interface UserInfo {
   deviceStatus?: DeviceStatus;
 }
 
+export interface DocumentUnitSettings {
+  defaultUnitType?: UnitType;
+  enableUnitSelection?: boolean;
+  enableUseBaseUn?: boolean;
+  maxUnitLevel?: UnitType;
+}
+
+export interface ResolvedUnitSettings {
+  defaultUnitType: UnitType;
+  enableUnitSelection: boolean;
+  enableUseBaseUn: boolean;
+  maxUnitLevel?: UnitType;
+}
+
 export interface ApplicationSettings {
   // General
   scannerMode: ScannerMode;
@@ -57,6 +71,8 @@ export interface ApplicationSettings {
   enablePickingCheck: boolean;
   // Quantities
   enableDecimalQuantities: boolean;
+  // Per-document-type unit overrides
+  documentUnitOverrides?: Record<string, DocumentUnitSettings>;
 }
 
 export enum GoodsReceiptDocumentType {

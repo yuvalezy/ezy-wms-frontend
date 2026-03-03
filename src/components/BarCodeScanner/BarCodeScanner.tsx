@@ -35,7 +35,9 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
   ref
 ) => {
   const {t} = useTranslation();
-  const {unitSelection, user} = useAuth();
+  const {user, getUnitSettings: getUnitSettingsFn} = useAuth();
+  const unitSettings = getUnitSettingsFn(objectType);
+  const unitSelection = unitSettings.enableUnitSelection;
 
   const {
     barcodeRef,
@@ -120,6 +122,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
         selectedUnit={selectedUnit}
         onUnitChange={handleUnitChanged}
         disabled={isProcessing}
+        enableUseBaseUn={unitSettings.enableUseBaseUn}
       />
 
       <div className="flex space-x-2">

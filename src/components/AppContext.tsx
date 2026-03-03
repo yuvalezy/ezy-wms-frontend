@@ -4,8 +4,9 @@ import {axiosInstance, ServerUrl} from "@/utils/axios-instance";
 import {getOrCreateDeviceUUID} from "@/utils/deviceUtils";
 import {DeviceStatus} from "@/features/devices/data/device";
 import {AccountState} from "@/features/account/data/account";
-import {ErrorResponse, LoginRequest, UserInfo} from "@/features/login/data/login";
+import {ErrorResponse, LoginRequest, ResolvedUnitSettings, UserInfo} from "@/features/login/data/login";
 import {UnitType} from "@/features/shared/data";
+import {getUnitSettings} from "@/utils/unit-settings";
 import {useIdleTimeout} from '@/features/login/hooks/useIdleTimeout';
 import {CompanyInfoResponse, useCompanyInfo} from '@/features/login/hooks/useCompanyInfo';
 import {useBrowserUnload} from '@/features/login/hooks/useBrowserUnload';
@@ -33,6 +34,7 @@ interface AuthContextType {
   enableUseBaseUn: boolean;
   defaultUnit: UnitType;
   displayVendor: boolean;
+  getUnitSettings: (objectType?: string) => ResolvedUnitSettings;
 }
 
 const AuthContextDefaultValues: AuthContextType = {
@@ -61,7 +63,13 @@ const AuthContextDefaultValues: AuthContextType = {
   },
   unitSelection: true,
   enableUseBaseUn: true,
-  defaultUnit: UnitType.Pack
+  defaultUnit: UnitType.Pack,
+  getUnitSettings: () => ({
+    defaultUnitType: UnitType.Pack,
+    enableUnitSelection: true,
+    enableUseBaseUn: true,
+    maxUnitLevel: undefined,
+  }),
 };
 
 export const AuthContext = createContext<AuthContextType>(
@@ -180,6 +188,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   const defaultUnit = user?.settings?.defaultUnitType ?? UnitType.Pack;
   const displayVendor = user?.settings?.displayVendor ?? true;
 
+  const getUnitSettingsForType = useCallback((objectType?: string): ResolvedUnitSettings => {
+    if (!user?.settings) {
+      return {
+        defaultUnitType: UnitType.Pack,
+        enableUnitSelection: true,
+        enableUseBaseUn: true,
+        maxUnitLevel: undefined,
+      };
+    }
+    return getUnitSettings(user.settings, objectType);
+  }, [user?.settings]);
+
   const value = {
     isAuthenticated,
     isDeviceActive,
@@ -198,6 +218,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     enableUseBaseUn,
     defaultUnit,
     displayVendor,
+    getUnitSettings: getUnitSettingsForType,
   };
 
   return <AuthContext value={value}>{children}</AuthContext>;

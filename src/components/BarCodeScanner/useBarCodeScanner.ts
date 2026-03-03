@@ -41,7 +41,9 @@ export const useBarCodeScanner = ({
                                     binEntry,
                                     isEphemeralPackage,
                                   }: UseBarCodeScannerProps) => {
-  const {defaultUnit, user} = useAuth();
+  const {user, getUnitSettings: getUnitSettingsFn} = useAuth();
+  const unitSettings = getUnitSettingsFn(objectType);
+  const defaultUnit = unitSettings.defaultUnitType;
   const barcodeRef = useRef<HTMLInputElement>(null);
   const [barcodeInput, setBarcodeInput] = useState('');
   const [selectedUnit, setSelectedUnit] = useState<UnitType>(defaultUnit);

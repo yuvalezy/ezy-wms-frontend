@@ -19,7 +19,8 @@ export default function TransferApprovalDetail() {
   const navigate = useNavigate();
   const {id} = useParams<{id: string}>();
   const {setError} = useThemeContext();
-  const {user, unitSelection, defaultUnit} = useAuth();
+  const {user, getUnitSettings: getUnitSettingsFn} = useAuth();
+  const {enableUnitSelection: unitSelection, defaultUnitType: defaultUnit} = getUnitSettingsFn("Transfer");
 
   const [transfer, setTransfer] = useState<TransferDocument | null>(null);
   const [content, setContent] = useState<TransferContent[]>([]);

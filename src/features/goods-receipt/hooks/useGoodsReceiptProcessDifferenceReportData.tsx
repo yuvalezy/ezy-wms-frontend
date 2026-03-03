@@ -16,7 +16,8 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
   const {scanCode} = useParams();
   const o = useObjectName();
   const {setLoading, setError} = useThemeContext();
-  const {user} = useAuth();
+  const {user, getUnitSettings: getUnitSettingsFn} = useAuth();
+  const grUnitSettings = getUnitSettingsFn("GoodsReceipt");
   const [data, setData] = useState<GoodsReceiptValidateProcess[] | null>(null);
   const [report, setReport] = useState<GoodsReceiptValidateProcess | null>(null);
   const [info, setInfo] = useState<ReceiptDocument | null>(null);
@@ -43,11 +44,11 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
     t("code"),
     t("description"),
     t("scannedQuantity"),
-    ...getExcelQuantityHeaders(t, true, user?.settings.enableUseBaseUn),
+    ...getExcelQuantityHeaders(t, true, grUnitSettings.enableUseBaseUn),
     t("documentQuantity"),
-    ...getExcelQuantityHeaders(t, true, user?.settings.enableUseBaseUn),
+    ...getExcelQuantityHeaders(t, true, grUnitSettings.enableUseBaseUn),
     t("difference"),
-    ...getExcelQuantityHeaders(t, true, user?.settings.enableUseBaseUn),
+    ...getExcelQuantityHeaders(t, true, grUnitSettings.enableUseBaseUn),
   ];
 
   function excelData() {
@@ -136,11 +137,11 @@ export const useGoodsReceiptProcessDifferenceReportData = () => {
           item.itemCode,
           item.itemName,
           "",
-          ...getExcelQuantityValuesFromResult(quantities, user?.settings.enableUseBaseUn),
+          ...getExcelQuantityValuesFromResult(quantities, grUnitSettings.enableUseBaseUn),
           "",
-          ...getExcelQuantityValuesFromResult(documentQuantities, user?.settings.enableUseBaseUn),
+          ...getExcelQuantityValuesFromResult(documentQuantities, grUnitSettings.enableUseBaseUn),
           "",
-          ...getExcelQuantityValuesFromResult(differenceQuantities, user?.settings.enableUseBaseUn),
+          ...getExcelQuantityValuesFromResult(differenceQuantities, grUnitSettings.enableUseBaseUn),
         ];
       });
   }

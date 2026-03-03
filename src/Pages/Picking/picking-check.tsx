@@ -9,6 +9,7 @@ import {Button} from '@/components/ui/button';
 import {Badge} from '@/components/ui/badge';
 import {Alert, AlertDescription} from '@/components/ui/alert';
 import {AlertCircle, Check} from 'lucide-react';
+import {ObjectType} from "@/features/packages/types";
 import {pickingService} from '@/features/picking/data/picking-service';
 import {PickingDocument, PickListCheckItemDetail, PickListCheckSummaryResponse} from '@/features/picking/data/picking';
 import {AddItemValue} from '@/components/BarCodeScanner/types';
@@ -153,6 +154,7 @@ export default function PickingCheck() {
           unit
           onAddItem={handleAddItem}
           onAddPackage={handleAddPackage}
+          objectType={ObjectType.Picking}
         />
       }
     >

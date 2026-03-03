@@ -15,13 +15,16 @@ import {BinLocation} from "@/features/items/data/items";
 import {UnitType} from "@/features/shared/data";
 import {directTransferService} from "@/features/direct-transfer/data/direct-transfer-service";
 import {ArrowDown, Box, MapPin} from "lucide-react";
+import {ObjectType} from "@/features/packages/types";
 import {parseQuantity, getQuantityStep} from "@/utils/quantity-utils";
 
 export default function DirectTransfer() {
   const {t} = useTranslation();
   const navigate = useNavigate();
   const {setError} = useThemeContext();
-  const {unitSelection, defaultUnit, user} = useAuth();
+  const {user, getUnitSettings: getUnitSettingsFn} = useAuth();
+  const transferUnitSettings = getUnitSettingsFn("Transfer");
+  const {enableUnitSelection: unitSelection, defaultUnitType: defaultUnit} = transferUnitSettings;
 
   const sourceBinRef = useRef<BinLocationScannerRef>(null);
   const targetBinRef = useRef<BinLocationScannerRef>(null);
@@ -148,6 +151,7 @@ export default function DirectTransfer() {
                 unit={true}
                 onAddItem={handleItemScanned}
                 binEntry={sourceBin?.entry}
+                objectType={ObjectType.Transfer}
               />
             </CardContent>
           </Card>
@@ -174,6 +178,7 @@ export default function DirectTransfer() {
                   pickPackOnly={false}
                   selectedUnit={selectedUnit}
                   onUnitChange={(v) => setSelectedUnit(v as UnitType)}
+                  enableUseBaseUn={transferUnitSettings.enableUseBaseUn}
                 />
               </CardContent>
             </Card>
