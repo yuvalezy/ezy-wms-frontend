@@ -742,5 +742,6 @@
   "scanTargetBin": "Scan Target Bin",
   "scanItemToTransfer": "Scan Item to Transfer",
   "directTransferSuccess": "Direct transfer completed successfully",
-  "directTransferExecuting": "Executing direct transfer..."
+  "directTransferExecuting": "Executing direct transfer...",
+  "transferAllStock": "Transfer All Stock"
 }

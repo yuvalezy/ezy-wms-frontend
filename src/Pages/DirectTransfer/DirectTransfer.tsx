@@ -11,6 +11,7 @@ import {UnitSelector} from "@/components/BarCodeScanner/UnitSelector";
 import {Card, CardContent} from "@/components/ui/card";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
+import {Switch} from "@/components/ui/switch";
 import {BinLocation} from "@/features/items/data/items";
 import {UnitType} from "@/features/shared/data";
 import {directTransferService} from "@/features/direct-transfer/data/direct-transfer-service";
@@ -37,6 +38,8 @@ export default function DirectTransfer() {
   const [selectedUnit, setSelectedUnit] = useState<UnitType>(defaultUnit);
   const [isExecuting, setIsExecuting] = useState(false);
   const enableDecimals = user?.settings?.enableDecimalQuantities ?? false;
+  const directTransferAllEnabled = user?.settings?.directTransferAll ?? false;
+  const [transferAll, setTransferAll] = useState(false);
 
   function reset() {
     setSourceBin(null);
@@ -44,6 +47,7 @@ export default function DirectTransfer() {
     setScannedItem(null);
     setQuantity("1");
     setSelectedUnit(defaultUnit);
+    setTransferAll(false);
   }
 
   function handleSourceBinScanned(bin: BinLocation) {
@@ -62,6 +66,28 @@ export default function DirectTransfer() {
 
   async function executeTransfer(target: BinLocation) {
     if (!sourceBin || !scannedItem) return;
+
+    if (transferAll) {
+      setIsExecuting(true);
+      try {
+        await directTransferService.execute({
+          sourceBinEntry: sourceBin.entry,
+          itemCode: scannedItem.item.code,
+          targetBinEntry: target.entry,
+          quantity: 0,
+          unitCode: selectedUnit,
+          transferAll: true,
+        });
+        toast.success(t("directTransferSuccess"));
+        reset();
+      } catch (error) {
+        setError(error);
+        setTargetBin(null);
+      } finally {
+        setIsExecuting(false);
+      }
+      return;
+    }
 
     const qty = parseQuantity(quantity, enableDecimals);
     if (qty <= 0) {
@@ -97,6 +123,21 @@ export default function DirectTransfer() {
         {/* Progress Summary */}
         <Card>
           <CardContent className="p-4 space-y-3">
+            {directTransferAllEnabled && (
+              <>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="transfer-all" className="text-sm font-medium cursor-pointer">
+                    {t("transferAllStock")}
+                  </Label>
+                  <Switch
+                    id="transfer-all"
+                    checked={transferAll}
+                    onCheckedChange={setTransferAll}
+                  />
+                </div>
+                <hr className="border-border"/>
+              </>
+            )}
             <div className="flex items-center gap-2 text-sm">
               <MapPin className={`h-4 w-4 ${sourceBin ? "text-green-600" : "text-muted-foreground"}`}/>
               <span className="font-medium">{t("scanSourceBin")}:</span>
@@ -111,7 +152,7 @@ export default function DirectTransfer() {
               <Box className={`h-4 w-4 ${scannedItem ? "text-green-600" : "text-muted-foreground"}`}/>
               <span className="font-medium">{t("scanItemToTransfer")}:</span>
               <span className={scannedItem ? "text-green-600 font-semibold" : "text-muted-foreground"}>
-                {scannedItem ? `${scannedItem.item.code} × ${quantity}` : "—"}
+                {scannedItem ? (transferAll ? `${scannedItem.item.code} — ${t("transferAllStock")}` : `${scannedItem.item.code} × ${quantity}`) : "—"}
               </span>
             </div>
 
@@ -148,7 +189,7 @@ export default function DirectTransfer() {
               <BarCodeScanner
                 ref={barcodeRef}
                 enabled={true}
-                unit={true}
+                unit={!transferAll}
                 onAddItem={handleItemScanned}
                 binEntry={sourceBin?.entry}
                 objectType={ObjectType.Transfer}
@@ -160,28 +201,30 @@ export default function DirectTransfer() {
         {/* Quantity + Unit override (shown after item scanned, before target bin) */}
         {step === 3 && (
           <>
-            <Card>
-              <CardContent className="p-4 space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="quantity-input">{t("quantity")}</Label>
-                  <Input
-                    id="quantity-input"
-                    type="number"
-                    min={enableDecimals ? "0.01" : "1"}
-                    step={getQuantityStep(enableDecimals)}
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
+            {!transferAll && (
+              <Card>
+                <CardContent className="p-4 space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="quantity-input">{t("quantity")}</Label>
+                    <Input
+                      id="quantity-input"
+                      type="number"
+                      min={enableDecimals ? "0.01" : "1"}
+                      step={getQuantityStep(enableDecimals)}
+                      value={quantity}
+                      onChange={(e) => setQuantity(e.target.value)}
+                    />
+                  </div>
+                  <UnitSelector
+                    visible={unitSelection}
+                    pickPackOnly={false}
+                    selectedUnit={selectedUnit}
+                    onUnitChange={(v) => setSelectedUnit(v as UnitType)}
+                    enableUseBaseUn={transferUnitSettings.enableUseBaseUn}
                   />
-                </div>
-                <UnitSelector
-                  visible={unitSelection}
-                  pickPackOnly={false}
-                  selectedUnit={selectedUnit}
-                  onUnitChange={(v) => setSelectedUnit(v as UnitType)}
-                  enableUseBaseUn={transferUnitSettings.enableUseBaseUn}
-                />
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            )}
             <Card>
               <CardContent className="p-4">
                 <BinLocationScanner

@@ -742,5 +742,6 @@
   "scanTargetBin": "Escanear Ubicación Destino",
   "scanItemToTransfer": "Escanear Artículo a Transferir",
   "directTransferSuccess": "Transferencia directa completada exitosamente",
-  "directTransferExecuting": "Ejecutando transferencia directa..."
+  "directTransferExecuting": "Ejecutando transferencia directa...",
+  "transferAllStock": "Transferir Todo el Stock"
 }

@@ -6,6 +6,7 @@ export interface DirectTransferRequest {
   targetBinEntry: number;
   quantity: number;
   unitCode: string;
+  transferAll?: boolean;
 }
 
 export interface DirectTransferResponse {
