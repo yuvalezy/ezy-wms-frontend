@@ -117,7 +117,7 @@ export default function PickingProcessDetail() {
                   {t('unloadPackage')}
                 </button>
             </div>}
-              <PickingProcessDetailContent items={detail.items}/>
+              <PickingProcessDetailContent items={detail.items} currentBinEntry={binLocation?.entry ?? null}/>
             {/*<BoxConfirmationDialog*/}
             {/*    onSelected={(itemCode: string) => handleAddItem(itemCode, barcodeRef?.current?.getValue() ?? "")}*/}
             {/*    ref={boxConfirmationDialogRef}*/}

@@ -63,6 +63,8 @@ export interface PickingDocumentDetailItem extends ItemDetails {
 }
 
 export interface PickingDocumentDetailItemBinQuantities extends BinLocation {
+  /** Numeric walk-order from the backend (IPickPathSequencer); lower comes first. */
+  sequence?: number;
   packages?: BinLocationPackageQuantityResponse[];
 }
 

@@ -70,6 +70,7 @@ export interface ApplicationSettings {
   idleLogoutTimeout?: number | null;
   // Pick List
   enablePickingCheck: boolean;
+  enablePickPathRouting: boolean;
   // Quantities
   enableDecimalQuantities: boolean;
   // Per-document-type unit overrides

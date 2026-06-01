@@ -2,14 +2,19 @@ import React, {useEffect, useState} from "react";
 import {PickingDocumentDetailItem} from "@/features/picking/data/picking";
 import {PickingProcessDetailContentBins} from "@/features/picking/components/picking-process-detail-content-bins";
 import {PickingProcessDetailContentAvailable} from "@/features/picking/components/picking-process-detail-content-available";
+import {PickingProcessDetailContentRoute} from "@/features/picking/components/picking-process-detail-content-route";
 import {Skeleton} from "@/components/ui/skeleton";
+import {useAuth} from "@/components";
 
 export interface PickingProcessDetailContentProps {
   items?: PickingDocumentDetailItem[];
   isLoading?: boolean;
+  currentBinEntry?: number | null;
 }
 
-export const PickingProcessDetailContent: React.FC<PickingProcessDetailContentProps> = ({items, isLoading = false}) => {
+export const PickingProcessDetailContent: React.FC<PickingProcessDetailContentProps> = ({items, isLoading = false, currentBinEntry}) => {
+  const {user} = useAuth();
+  const routingEnabled = user?.settings?.enablePickPathRouting ?? false;
   const [available, setAvailable] = useState(false);
 
   useEffect(() => {
@@ -47,9 +52,12 @@ export const PickingProcessDetailContent: React.FC<PickingProcessDetailContentPr
     <div className="contentStyle">
       {isLoading ? (
         <DetailContentSkeleton />
+      ) : available ? (
+        <PickingProcessDetailContentAvailable items={items} />
+      ) : routingEnabled ? (
+        <PickingProcessDetailContentRoute items={items} currentBinEntry={currentBinEntry} />
       ) : (
-        !available ? <PickingProcessDetailContentBins items={items} />:
-         <PickingProcessDetailContentAvailable items={items} />
+        <PickingProcessDetailContentBins items={items} />
       )}
     </div>
   )
