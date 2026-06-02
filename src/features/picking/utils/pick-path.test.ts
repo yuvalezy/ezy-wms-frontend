@@ -112,6 +112,69 @@ describe("buildPickPath", () => {
     expect(path.totalStops).toBe(0);
   });
 
+  test("caps quantity-to-pick at the remaining demand and drops bins beyond it", () => {
+    const items = [
+      item("A", {
+        quantity: 4,
+        openQuantity: 4,
+        binQuantities: [
+          bin(1, "BIN-P1-A1-N1", 10, 1_001_001),
+          bin(2, "BIN-P1-A2-N1", 6, 1_002_001),
+          bin(3, "BIN-P1-A3-N1", 6, 1_003_001),
+        ],
+      }),
+    ];
+    const path = buildPickPath(items);
+    expect(path.totalStops).toBe(1);
+    expect(path.stops[0].binCode).toBe("BIN-P1-A1-N1");
+    expect(path.stops[0].items[0].quantityToPick).toBe(4);
+  });
+
+  test("spreads remaining demand across bins in walk order until covered", () => {
+    const items = [
+      item("A", {
+        quantity: 8,
+        openQuantity: 8,
+        binQuantities: [
+          bin(1, "BIN-P1-A1-N1", 5, 1_001_001),
+          bin(2, "BIN-P1-A2-N1", 6, 1_002_001),
+          bin(3, "BIN-P1-A3-N1", 6, 1_003_001),
+        ],
+      }),
+    ];
+    const path = buildPickPath(items);
+    expect(path.stops.map((s) => s.binCode)).toEqual(["BIN-P1-A1-N1", "BIN-P1-A2-N1"]);
+    expect(path.stops[0].items[0].quantityToPick).toBe(5);
+    expect(path.stops[1].items[0].quantityToPick).toBe(3);
+  });
+
+  test("allocates nearest-first by sequence regardless of bin order in payload", () => {
+    const items = [
+      item("A", {
+        quantity: 4,
+        openQuantity: 4,
+        binQuantities: [
+          bin(2, "BIN-P1-A2-N1", 6, 1_002_001),
+          bin(1, "BIN-P1-A1-N1", 6, 1_001_001),
+        ],
+      }),
+    ];
+    const path = buildPickPath(items);
+    expect(path.totalStops).toBe(1);
+    expect(path.stops[0].binCode).toBe("BIN-P1-A1-N1");
+    expect(path.stops[0].items[0].quantityToPick).toBe(4);
+  });
+
+  test("a fully-picked item with stock still in its bins contributes no stops", () => {
+    const items = [
+      item("A", {quantity: 5, picked: 5, openQuantity: 0, binQuantities: [bin(1, "BIN-P1-A1-N1", 10, 1_001_001)]}),
+    ];
+    const path = buildPickPath(items);
+    expect(path.totalStops).toBe(0);
+    expect(path.totalQuantity).toBe(5);
+    expect(path.pickedQuantity).toBe(5);
+  });
+
   test("reports overall picked/total progress across all items", () => {
     const items = [
       item("A", {quantity: 12, picked: 6, openQuantity: 6, binQuantities: [bin(1, "BIN-P1-A1-N1", 6, 1_001_001)]}),

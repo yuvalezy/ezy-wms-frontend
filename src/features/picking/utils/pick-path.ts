@@ -53,6 +53,9 @@ export interface PickPath {
 // "No bin" items sort after every real bin.
 const NO_BIN_SEQUENCE = Number.MAX_SAFE_INTEGER;
 
+// Quantities are decimals; treat sub-unit residue as zero (mirrors backend QuantityTolerances.Completed).
+const QUANTITY_EPSILON = 0.0001;
+
 interface StopAccumulator {
   binEntry: number | null;
   binCode: string | null;
@@ -90,9 +93,10 @@ function compareStops(a: StopAccumulator, b: StopAccumulator): number {
 }
 
 /**
- * Build the ordered walk from the item-first detail. Items with stock in multiple bins contribute a
- * line to each of their bins; items with no bin info but still open are collected into a trailing
- * "no bin location" stop.
+ * Build the ordered walk from the item-first detail. Demand-driven: each item's remaining open
+ * quantity is allocated across its bins in walk order (nearest first), capping each stop's
+ * quantity-to-pick and dropping bins once the demand is covered. Fully-picked items contribute no
+ * stops; items still open with no bin info are collected into a trailing "no bin location" stop.
  */
 export function buildPickPath(items?: PickingDocumentDetailItem[]): PickPath {
   const byBin = new Map<string, StopAccumulator>();
@@ -104,18 +108,35 @@ export function buildPickPath(items?: PickingDocumentDetailItem[]): PickPath {
     totalQuantity += item.quantity ?? 0;
     pickedQuantity += item.picked ?? 0;
 
-    const bins = item.binQuantities?.filter((b) => (b.quantity ?? 0) > 0) ?? [];
+    // Demand-driven: only route as much as the item still needs. A fully-picked item
+    // contributes no stops even if its bins still hold stock.
+    let remaining = item.openQuantity ?? 0;
+    if (remaining <= QUANTITY_EPSILON) {
+      continue;
+    }
+
+    // Walk order: allocate from the nearest bin first so the bins we keep are the earliest stops.
+    const bins = (item.binQuantities ?? [])
+      .filter((b) => (b.quantity ?? 0) > 0)
+      .sort((a, b) => (a.sequence ?? NO_BIN_SEQUENCE) - (b.sequence ?? NO_BIN_SEQUENCE));
 
     if (bins.length === 0) {
       // Still-open item with nowhere to route — surface it so it isn't silently dropped.
-      if ((item.openQuantity ?? 0) > 0) {
-        noBin ??= {binEntry: null, binCode: null, sequence: NO_BIN_SEQUENCE, items: []};
-        noBin.items.push(toStopItem(item, item.openQuantity));
-      }
+      noBin ??= {binEntry: null, binCode: null, sequence: NO_BIN_SEQUENCE, items: []};
+      noBin.items.push(toStopItem(item, remaining));
       continue;
     }
 
     for (const bin of bins) {
+      if (remaining <= QUANTITY_EPSILON) {
+        break; // demand covered — later bins are no longer relevant
+      }
+      const take = Math.min(bin.quantity ?? 0, remaining);
+      if (take <= QUANTITY_EPSILON) {
+        continue;
+      }
+      remaining -= take;
+
       const key = String(bin.entry);
       let acc = byBin.get(key);
       if (!acc) {
@@ -127,7 +148,7 @@ export function buildPickPath(items?: PickingDocumentDetailItem[]): PickPath {
         };
         byBin.set(key, acc);
       }
-      acc.items.push(toStopItem(item, bin.quantity, bin.packages));
+      acc.items.push(toStopItem(item, take, bin.packages));
     }
   }
 
