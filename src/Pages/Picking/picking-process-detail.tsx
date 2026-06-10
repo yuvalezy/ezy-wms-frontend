@@ -8,7 +8,6 @@ import PickingProcessDetailContent from "@/features/picking/components/picking-p
 import BinLocationScanner from "@/components/BinLocationScanner";
 import {usePickingProcessDetailData} from "@/features/picking/hooks/usePickingProcessDetailData";
 import {AlertCircle} from "lucide-react";
-import {ObjectType} from "@/features/packages/types";
 import {useObjectName} from "@/hooks/useObjectName";
 import {renderCustomFields} from "@/utils/custom-fields-utils";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
@@ -30,12 +29,7 @@ export default function PickingProcessDetail() {
     onBinChanged,
     onBinClear,
     handleAddItem,
-    handleAddPackage,
     pickPackOnly,
-    currentPackage,
-    pickingPackage,
-    setPickingPackage,
-    handleCreatePackage,
   } = usePickingProcessDetailData();
 
   const customFields = user?.customFields?.["PickingDetails"] ?? [];
@@ -55,20 +49,12 @@ export default function PickingProcessDetail() {
                     {detail.totalOpenItems > 0 && (binLocation || !user?.binLocations) &&
                         <BarCodeScanner ref={barcodeRef}
                                         unit
-                                        enablePackage={user!.settings!.enablePackages}
-                                        enablePackageCreate={false}
-                                        currentPackage={currentPackage}
                                         pickPackOnly={pickPackOnly}
                                         onAddItem={(value) => handleAddItem(value, t)}
-                                        onAddPackage={handleAddPackage}
-                                        objectType={ObjectType.Picking}
                                         enabled={enable}/>}
                     {!binLocation && detail.totalOpenItems > 0 && user?.binLocations &&
                         <div className="space-y-4 p-2">
-                            <BinLocationScanner ref={binLocationRef} onChanged={onBinChanged} onClear={onBinClear}
-                                                enablePackageCreate={user!.settings!.enablePackages}
-                                                onCreatePackageClicked={handleCreatePackage}
-                            />
+                            <BinLocationScanner ref={binLocationRef} onChanged={onBinChanged} onClear={onBinClear}/>
                         </div>
                     }
                   </>
@@ -103,20 +89,6 @@ export default function PickingProcessDetail() {
                   {t("pickingCompletedFor", {type: o(type), number: detail.number})}:
                 </AlertDescription>}
               </Alert>
-            {pickingPackage && <div
-                className="bg-blue-100 border-l-4 border-blue-500 p-3 mb-4 rounded flex items-center justify-between">
-                <div>
-                    <span className="font-semibold text-blue-800">{t('newPackage')}: </span>
-                    <span className="font-bold text-blue-900">{pickingPackage.barcode}</span>
-                </div>
-                <button
-                    type="button"
-                    onClick={() => setPickingPackage(null)}
-                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm font-medium"
-                >
-                  {t('unloadPackage')}
-                </button>
-            </div>}
               <PickingProcessDetailContent items={detail.items} currentBinEntry={binLocation?.entry ?? null}/>
             {/*<BoxConfirmationDialog*/}
             {/*    onSelected={(itemCode: string) => handleAddItem(itemCode, barcodeRef?.current?.getValue() ?? "")}*/}

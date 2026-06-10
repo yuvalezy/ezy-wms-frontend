@@ -94,7 +94,7 @@ export const goodsReceiptService = {
     }
   },
 
-  async addItem(id: string, itemCode: string, barcode: string, unit: UnitType, startNewPackage: boolean, packageId?: string | null): Promise<DocumentAddItemResponse> {
+  async addItem(id: string, itemCode: string, barcode: string, unit: UnitType): Promise<DocumentAddItemResponse> {
     try {
       const url = `GoodsReceipt/AddItem`;
 
@@ -103,8 +103,6 @@ export const goodsReceiptService = {
           itemCode,
           barcode,
           unit,
-          startNewPackage,
-          packageId,
         },
       );
       if (response.data.errorMessage == null) {

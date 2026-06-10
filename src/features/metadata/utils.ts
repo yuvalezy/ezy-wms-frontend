@@ -1,4 +1,4 @@
-import {MetadataFieldType} from '@/features/packages/types';
+import {MetadataFieldType} from '@/features/metadata';
 import {BaseMetadataDefinition, ExtendedMetadataDefinition, MetadataFieldValue, ValidationResult} from './types';
 
 /**

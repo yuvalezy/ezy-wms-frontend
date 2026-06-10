@@ -10,7 +10,7 @@ import {ReceiptDocument} from "@/features/goods-receipt/data/goods-receipt";
 import {goodsReceiptService} from "@/features/goods-receipt/data/goods-receipt-service";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {ProcessType} from "@/features/shared/data";
-import {ObjectAction} from "@/features/packages/types";
+import {ObjectAction} from "@/features/shared/data";
 
 export const useGoodsReceiptSupervisorData = (processType: ProcessType = ProcessType.Regular) => {
   const {t} = useTranslation();

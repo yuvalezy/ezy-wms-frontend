@@ -16,7 +16,7 @@ import {BinLocation} from "@/features/items/data/items";
 import {UnitType} from "@/features/shared/data";
 import {directTransferService} from "@/features/direct-transfer/data/direct-transfer-service";
 import {ArrowDown, Box, MapPin} from "lucide-react";
-import {ObjectType} from "@/features/packages/types";
+import {ObjectType} from "@/features/shared/data";
 import {parseQuantity, getQuantityStep} from "@/utils/quantity-utils";
 
 export default function DirectTransfer() {
@@ -191,7 +191,6 @@ export default function DirectTransfer() {
                 enabled={true}
                 unit={!transferAll}
                 onAddItem={handleItemScanned}
-                binEntry={sourceBin?.entry}
                 objectType={ObjectType.Transfer}
               />
             </CardContent>

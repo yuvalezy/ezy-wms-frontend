@@ -11,7 +11,7 @@ import {CheckCircle, Eye, FileText, XCircle} from "lucide-react";
 import {FullInfoBox, InfoBoxValue, Separator} from "@/components";
 import {Counting} from "@/features/counting/data/counting";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
-import {ObjectAction} from "@/features/packages/types";
+import {ObjectAction} from "@/features/shared/data";
 
 type CountingCardProps = {
   doc: Counting,

@@ -1,11 +1,9 @@
-import {useEffect, useRef, useState} from 'react';
+import {useRef, useState} from 'react';
 import {toast} from 'sonner';
 import {useTranslation} from 'react-i18next';
 import {useAuth, useThemeContext} from '@/components';
-import {UnitType} from '@/features/shared/data';
-import {getPackageByBarcode} from '@/features/packages/hooks';
-import {ObjectType, PackageMovementType} from '@/features/packages/types';
-import {AddItemValue, PackageValue} from './types';
+import {ObjectType, UnitType} from '@/features/shared/data';
+import {AddItemValue} from './types';
 import {ItemInfoResponse} from "@/features/items/data/items";
 import {itemsService} from "@/features/items/data/items-service";
 import {StringFormat} from "@/utils/string-utils";
@@ -15,31 +13,15 @@ interface UseBarCodeScannerProps {
   enabled: boolean;
   item?: boolean;
   pickPackOnly?: boolean;
-  enablePackage?: boolean;
-  currentPackage?: PackageValue | null;
   objectType?: ObjectType;
-  objectId?: string;
-  objectNumber?: number;
   onAddItem: (addItem: AddItemValue) => void;
-  onAddPackage?: (value: PackageValue) => void;
-  onPackageChanged?: (value: PackageValue) => void;
-  binEntry?: number | undefined;
-  isEphemeralPackage?: boolean;
 }
 
 export const useBarCodeScanner = ({
                                     enabled,
                                     item,
-                                    enablePackage = false,
-                                    currentPackage,
                                     objectType,
-                                    objectId,
-                                    objectNumber,
                                     onAddItem,
-                                    onAddPackage,
-                                    onPackageChanged,
-                                    binEntry,
-                                    isEphemeralPackage,
                                   }: UseBarCodeScannerProps) => {
   const {user, getUnitSettings: getUnitSettingsFn} = useAuth();
   const unitSettings = getUnitSettingsFn(objectType);
@@ -47,30 +29,21 @@ export const useBarCodeScanner = ({
   const barcodeRef = useRef<HTMLInputElement>(null);
   const [barcodeInput, setBarcodeInput] = useState('');
   const [selectedUnit, setSelectedUnit] = useState<UnitType>(defaultUnit);
-  const [scanMode, setScanMode] = useState<'item' | 'package'>('item');
-  const [createPackage, setCreatePackage] = useState(false);
-  const [loadedPackage, setLoadedPackage] = useState<PackageValue | null | undefined>(currentPackage);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const {setError} = useThemeContext();
   const {t} = useTranslation();
 
-  // Sync loadedPackage with currentPackage prop
-  useEffect(() => {
-    setLoadedPackage(currentPackage);
-  }, [currentPackage]);
-
   const clearBarCode = () => {
     setBarcodeInput('');
     setSelectedUnit(defaultUnit);
-    setCreatePackage(false);
   };
 
   const handleScanBarcode = (barcode: string) => {
     try {
       if (barcode.length === 0) {
         const message = item ? t("scanCodeRequired") :
-          (user!.settings.scannerMode === ScannerMode.ItemBarcode || scanMode === 'package') ?
+          user!.settings.scannerMode === ScannerMode.ItemBarcode ?
             t("barCodeRequired") : t("scanCodeRequired");
         toast.warning(message);
         return;
@@ -99,30 +72,16 @@ export const useBarCodeScanner = ({
       return;
     }
     if (items.length === 1) {
-      const item = items[0];
-      if (!item.isPackage) {
-        if (user!.settings.scannerMode === ScannerMode.ItemBarcode) {
-          item.barcode = barcode;
-        }
-        barcodeRef?.current?.blur();
-        onAddItem({
-          item: items[0],
-          unit: selectedUnit,
-          createPackage: createPackage,
-          package: loadedPackage,
-        });
-        setIsProcessing(false);
+      const scannedItem = items[0];
+      if (user!.settings.scannerMode === ScannerMode.ItemBarcode) {
+        scannedItem.barcode = barcode;
       }
-      else {
-        if (onAddPackage != null) {
-          onAddPackage({barcode, id: item.code});
-          setIsProcessing(false);
-        } else {
-          setError('Add Package handler not implemented!');
-          setIsProcessing(false);
-        }
-        barcodeRef?.current?.blur();
-      }
+      barcodeRef?.current?.blur();
+      onAddItem({
+        item: scannedItem,
+        unit: selectedUnit,
+      });
+      setIsProcessing(false);
       return;
     }
     handleMultipleItems(items);
@@ -133,7 +92,6 @@ export const useBarCodeScanner = ({
       .map(item => item.father ?? item.code)
       .filter((code, index, array) => array.indexOf(code) === index);
   }
-
 
   const handleMultipleItems = (items: ItemInfoResponse[]) => {
     const distinctCodes = distinctItems(items);
@@ -147,64 +105,9 @@ export const useBarCodeScanner = ({
     setIsProcessing(false);
   };
 
-  const handleScanPackage = (barcode: string) => {
-    if (barcode.length === 0) {
-      toast.warning(t("barcodeRequired"));
-      return;
-    }
-
-    setIsProcessing(true);
-
-    getPackageByBarcode({barcode, history: true, objectId, objectType, binEntry})
-      .then((response) => {
-        if (response == null) {
-          toast.error(t('scanPackageNotFound', {barcode}));
-          setIsProcessing(false);
-          return;
-        }
-        if (objectType === ObjectType.GoodsReceipt) {
-          const checkCreationObject = response.locationHistory?.find(
-            (v) => v.sourceOperationType === objectType &&
-              v.sourceOperationId === objectId &&
-              v.movementType === PackageMovementType.Created
-          );
-          if (!checkCreationObject) {
-            toast.error(t('scanPackageSourceDoc', {barcode, number: objectNumber}));
-            setIsProcessing(false);
-            return;
-          }
-        }
-        const value: PackageValue = {id: response.id, barcode: response.barcode};
-        if (isEphemeralPackage) {
-          setLoadedPackage(value);
-          setScanMode('item');
-        }
-        onPackageChanged?.(value);
-        if (!isEphemeralPackage) {
-          setTimeout(() => barcodeRef?.current?.focus(), 1);
-        }
-        setIsProcessing(false);
-      })
-      .catch((error) => {
-        if (error.response?.data?.error === "Package is already counted in another bin location") {
-          toast.error(t('packageAlreadyCounted'));
-        } else if (error.response?.status === 404) {
-          toast.error(t('packageNotFoundWithCode', {code: barcode}));
-        } else {
-          toast.error(error.message);
-        }
-        setIsProcessing(false);
-      });
-    clearBarCode();
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (scanMode === 'package') {
-      handleScanPackage(barcodeInput);
-    } else {
-      handleScanBarcode(barcodeInput);
-    }
+    handleScanBarcode(barcodeInput);
   };
 
   const handleUnitChanged = (value: string) => {
@@ -213,31 +116,15 @@ export const useBarCodeScanner = ({
     barcodeRef?.current?.focus();
   };
 
-  const handleScanModeChange = (checked: boolean) => {
-    setScanMode(checked ? 'package' : 'item');
-    setLoadedPackage(null);
-    setTimeout(() => barcodeRef?.current?.focus(), 1);
-  };
-
-  const handleClearPackage = () => {
-    setLoadedPackage(null);
-  }
-
   return {
     barcodeRef,
     barcodeInput,
     setBarcodeInput,
     selectedUnit,
-    scanMode,
-    createPackage,
-    setCreatePackage,
-    loadedPackage,
     clearBarCode,
     handleSubmit,
     handleUnitChanged,
-    handleScanModeChange,
     enabled,
-    handleClearPackage,
     isProcessing
   };
 };

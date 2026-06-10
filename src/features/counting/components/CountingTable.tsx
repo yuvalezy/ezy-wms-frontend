@@ -10,7 +10,7 @@ import {useDocumentStatusToString} from "@/hooks/useDocumentStatusToString";
 import {Status} from "@/features/shared/data/shared";
 import {Counting} from "@/features/counting/data/counting";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
-import {ObjectAction} from "@/features/packages/types";
+import {ObjectAction} from "@/features/shared/data";
 
 interface CountingTableProps {
   countings: Counting[];

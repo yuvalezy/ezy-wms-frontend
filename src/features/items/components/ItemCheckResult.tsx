@@ -30,7 +30,7 @@ const ItemCheckResult: React.FC<ItemCheckResultProps> = ({result, submit, onClea
           <TabsTrigger value="stock">{t("stock")}</TabsTrigger>
           <TabsTrigger value="barcodes">{t("barcodes")}</TabsTrigger>
           {hasMetadata && (
-            <TabsTrigger value="metadata">{t("packages.metadata")}</TabsTrigger>
+            <TabsTrigger value="metadata">{t("metadata")}</TabsTrigger>
           )}
         </TabsList>
         <TabsContent value="stock" className="mt-4">

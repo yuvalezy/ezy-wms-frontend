@@ -1,5 +1,4 @@
-import {BinLocation, ItemDetails, ResponseStatus} from "@/features/items/data/items";
-import {PackageContentDto} from "@/features/packages/types";
+import {BinLocation, ItemDetails} from "@/features/items/data/items";
 import {UnitType} from "@/features/shared/data";
 
 export enum SyncStatus {
@@ -59,22 +58,11 @@ export interface PickingDocumentDetailItem extends ItemDetails {
   openQuantity: number;
   available?: number;
   binQuantities?: PickingDocumentDetailItemBinQuantities[];
-  packages?: BinLocationPackageQuantityResponse[];
 }
 
 export interface PickingDocumentDetailItemBinQuantities extends BinLocation {
   /** Numeric walk-order from the backend (IPickPathSequencer); lower comes first. */
   sequence?: number;
-  packages?: BinLocationPackageQuantityResponse[];
-}
-
-export interface BinLocationPackageQuantityResponse {
-  id: string;
-  barcode: string;
-  binEntry: number;
-  itemCode: string;
-  quantity: number;
-  fullPackage: boolean;
 }
 
 export type pickingParameters = {
@@ -99,14 +87,6 @@ export interface PickingAddItemResponse {
   lineId: number;
   closedDocument: boolean;
   errorMessage?: string;
-}
-
-export interface ProcessPickListResponse {
-  status: ResponseStatus;
-  errorMessage?: string;
-  closedDocument: boolean;
-  packageId: string;
-  packageContents: PackageContentDto[];
 }
 
 export interface ProcessPickListCancelResponse extends ProcessResponse {
@@ -157,20 +137,4 @@ export interface PickListCheckItemDetail {
   quantityInUnit: number;
   packMeasure: string;
   quantityInPack: number;
-}
-
-export interface PickListCheckPackageResponse {
-  errorMessage?: string;
-  status: ResponseStatus;
-  success: boolean;
-  itemsChecked: number;
-  totalItems: number;
-  packageBarcode: string;
-  checkedItems: CheckedPackageItem[];
-}
-
-export interface CheckedPackageItem {
-  itemCode: string;
-  itemName: string;
-  quantity: number;
 }

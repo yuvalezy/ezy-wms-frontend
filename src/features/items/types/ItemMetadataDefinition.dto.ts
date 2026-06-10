@@ -1,4 +1,4 @@
-import {MetadataFieldType} from '@/features/packages/types';
+import {MetadataFieldType} from '@/features/metadata';
 
 export interface MetadataDefinition {
   id: string;

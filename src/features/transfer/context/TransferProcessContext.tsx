@@ -1,15 +1,12 @@
 import React, {createContext, ReactNode, useCallback, useContext, useEffect, useRef, useState} from "react";
 import {useLocation, useNavigate, useParams} from "react-router";
 import {useTranslation} from "react-i18next";
-import axios from "axios";
 import {toast} from "sonner";
-import {AddItemValue, PackageValue, ProcessAlertValue, useAuth, useThemeContext} from "@/components";
+import {AddItemValue, ProcessAlertValue, useAuth, useThemeContext} from "@/components";
 import {BinLocation} from "@/features/items/data/items";
 import {
   AddItemParameters,
   SourceTarget,
-  TransferAddSourcePackageRequest,
-  TransferAddTargetPackageRequest,
   TransferContent,
   TransferDocument
 } from "@/features/transfer/data/transfer";
@@ -33,7 +30,6 @@ const TransferProcessContextDefaultValues: TransferProcessContextType = {
   handleCancel: () => console.warn("handleCancel not implemented"),
   isProcessingItem: false,
   handleAddItem: () => console.warn("handleAddItem not implemented"),
-  handleAddPackage: () => console.warn("handleAddPackage not implemented"),
   barcodeRef: {current: null},
   processesRef: {current: null},
   processAlertRef: {current: null},
@@ -268,57 +264,6 @@ export const TransferProcessProvider: React.FC<TransferProcessProviderProps> = (
       .finally(() => setIsProcessingItem(false));
   }, [id, binLocation?.entry, t, dateTimeFormat, setError, loadRows]);
 
-  // Add package handler
-  const handleAddPackage = useCallback((type: SourceTarget, value: PackageValue) => {
-    if (id == null) return;
-
-    setIsProcessingItem(true);
-
-    const params = type === SourceTarget.Source
-      ? {transferId: id, packageId: value.id, binEntry: binLocation?.entry} as TransferAddSourcePackageRequest
-      : {transferId: id, packageId: value.id, targetBinEntry: binLocation?.entry} as TransferAddTargetPackageRequest;
-
-    const addPackageMethod = type === SourceTarget.Source
-      ? transferService.addSourcePackage
-      : transferService.addTargetPackage;
-
-    addPackageMethod(params)
-      .then((r) => {
-        if (r.errorMessage != null) {
-          setError(r.errorMessage);
-          return;
-        }
-
-        const date = new Date(Date.now());
-        setCurrentAlert({
-          lineId: r.lineId,
-          severity: "Information",
-          timeStamp: dateTimeFormat(date),
-          package: value,
-          packageContents: r.packageContents,
-        });
-
-        barcodeRef?.current?.clear();
-        loadRows(type, binLocation?.entry);
-        barcodeRef?.current?.focus();
-
-        setTimeout(() => {
-          processAlertRef?.current?.scrollIntoView({behavior: "smooth", block: "start"});
-        }, 100);
-      })
-      .catch((error) => {
-        if (axios.isAxiosError(error) && error.response?.status === 400) {
-          const errorMessage = error.response?.data?.error;
-          if (errorMessage === "Package is already added as source to this transfer") {
-            setError(t('packageAlreadyAddedAsSource', {barcode: value.barcode}));
-            return;
-          }
-        }
-        setError(error);
-      })
-      .finally(() => setIsProcessingItem(false));
-  }, [id, binLocation?.entry, t, dateTimeFormat, setError, loadRows]);
-
   // Quantity changed handler
   const handleQuantityChanged = useCallback((quantity: number) => {
     if (currentAlert == null) return;
@@ -383,7 +328,6 @@ export const TransferProcessProvider: React.FC<TransferProcessProviderProps> = (
     handleCancel,
     isProcessingItem,
     handleAddItem,
-    handleAddPackage,
     barcodeRef,
     processesRef,
     processAlertRef,

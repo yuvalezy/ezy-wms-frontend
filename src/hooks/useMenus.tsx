@@ -1,7 +1,7 @@
 import {useTranslation} from 'react-i18next';
 import {useMemo} from 'react'; // Import useMemo
 import {useAuth} from "@/components";
-import {ArrowRightLeft, BarChart3, Bell, Boxes, CheckCircle, ClipboardList, Factory, Move, Package, PackageCheckIcon, SendHorizontal, Shield, ShoppingCart, Smartphone, TrendingUp, Truck, Users,} from 'lucide-react';
+import {ArrowRightLeft, BarChart3, Bell, Boxes, CheckCircle, ClipboardList, Factory, Move, Package, SendHorizontal, Shield, ShoppingCart, Smartphone, TrendingUp, Truck, Users,} from 'lucide-react';
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {GoodsReceiptDocumentType} from "@/features/login/data/login";
 
@@ -40,14 +40,6 @@ export function useMenus() {
       Icon: Boxes,
       Color: "text-green-700",
       RequiresFeature: "BinLocation"
-    },
-    {
-      Link: "/packageCheck",
-      Text: t('packagesCheck'),
-      Authorizations: [RoleType.GOODS_RECEIPT_SUPERVISOR, RoleType.PICKING_SUPERVISOR, RoleType.COUNTING_SUPERVISOR, RoleType.TRANSFER_SUPERVISOR, RoleType.PACKAGE_MANAGEMENT, RoleType.PACKAGE_MANAGEMENT_SUPERVISOR],
-      Icon: PackageCheckIcon,
-      Color: "text-green-700",
-      RequiresFeature: "PackageManagement"
     },
     {
       Link: "/goodsReceipt",
@@ -285,10 +277,6 @@ export function useMenus() {
           break;
         case "GoodsReceiptConfirmation":
           if (user?.settings?.goodsReceiptType === GoodsReceiptDocumentType.Transactional)
-            return false;
-          break;
-        case "PackageManagement":
-          if (!user?.settings?.enablePackages)
             return false;
           break;
         case "EnableTransferConfirm":

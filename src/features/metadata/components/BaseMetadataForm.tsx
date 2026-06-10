@@ -7,7 +7,7 @@ import {Form} from '@/components/ui/form';
 import {Button} from '@/components/ui/button';
 import {Skeleton} from '@/components/ui/skeleton';
 import {MetadataDefinition} from '@/features/items';
-import {MetadataFieldType} from '@/features/packages/types';
+import {MetadataFieldType} from '@/features/metadata';
 import {MetadataField} from './MetadataField';
 
 export interface BaseMetadataFormProps {

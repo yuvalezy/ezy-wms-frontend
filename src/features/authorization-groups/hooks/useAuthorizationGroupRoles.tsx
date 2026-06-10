@@ -66,19 +66,6 @@ export const useAuthorizationGroupRoles = () => {
       description: t("authorizations.rolePickingCheckDescription"),
       category: "Operations",
     }] as [RoleType, RoleInfo]] : []),
-    // Package
-    // [RoleType.PACKAGE_MANAGEMENT, {
-    //   role: RoleType.PACKAGE_MANAGEMENT,
-    //   displayName: t("authorizations.rolePackageManagement"),
-    //   description: t("authorizations.rolePackageManagementDescription"),
-    //   category: "Operations"
-    // }],
-    // [RoleType.PACKAGE_MANAGEMENT_SUPERVISOR, {
-    //   role: RoleType.PACKAGE_MANAGEMENT_SUPERVISOR,
-    //   displayName: t("authorizations.rolePackageManagementSupervisor"),
-    //   description: t("authorizations.rolePackageManagementSupervisorDescription"),
-    //   category: "Supervision"
-    // }],
     // Counting
     [RoleType.COUNTING, {
       role: RoleType.COUNTING,
@@ -139,4 +126,3 @@ export const useAuthorizationGroupRoles = () => {
 
   return {roleInfoMap, getRoleInfo}
 };
-

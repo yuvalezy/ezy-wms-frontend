@@ -16,7 +16,7 @@ import {DocumentItem, ReceiptDocument} from "@/features/goods-receipt/data/goods
 import {useGoodsReceiptHandleOpen} from "@/features/goods-receipt/hooks/useGoodsReceiptHandleOpen";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {ProcessType} from "@/features/shared/data";
-import {ObjectAction} from "@/features/packages/types";
+import {ObjectAction} from "@/features/shared/data";
 
 type DocumentCardProps = {
   doc: ReceiptDocument,

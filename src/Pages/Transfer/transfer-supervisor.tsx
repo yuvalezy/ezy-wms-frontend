@@ -14,7 +14,7 @@ import {TransferDocument} from "@/features/transfer/data/transfer";
 import {transferService} from "@/features/transfer/data/transefer-service";
 import {User} from "@/features/users/data/user";
 import {Loader2} from "lucide-react";
-import {ObjectAction} from "@/features/packages/types";
+import {ObjectAction} from "@/features/shared/data";
 import {TransferTableSkeleton} from "@/features/transfer/components/transfer-table-skeleton";
 import {TransferCardSkeleton} from "@/features/transfer/components/transfer-card-skeleton";
 

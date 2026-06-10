@@ -20,7 +20,6 @@ const ItemCheckStock: React.FC<StockTableProps> = ({result}) => {
   const {user, unitSelection, defaultUnit} = useAuth();
   const {setError} = useThemeContext();
   const [data, setData] = useState<ItemBinStockResponse[]>([]);
-  const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
   const [isLoadingStock, setIsLoadingStock] = useState<boolean>(false);
 
   const settings = user!.settings;
@@ -42,30 +41,16 @@ const ItemCheckStock: React.FC<StockTableProps> = ({result}) => {
     }
   }, [result]);
 
-  const toggleRow = (binEntry: number) => {
-    const newExpanded = new Set(expandedRows);
-    if (newExpanded.has(binEntry)) {
-      newExpanded.delete(binEntry);
-    } else {
-      newExpanded.add(binEntry);
-    }
-    setExpandedRows(newExpanded);
-  };
-
-
   const calculateTotals = () => {
     let totalLocations = data.length;
     let totalQuantity = 0;
-    let totalBoxes = 0;
-    let mixedBoxes = 0;
     data.forEach(v => {
-      mixedBoxes += v.packages?.length || 0;
       totalQuantity += v.quantity;
     });
 
-    totalBoxes = Math.floor(totalQuantity / (result.numInBuy * result.purPackUn));
+    const totalBoxes = Math.floor(totalQuantity / (result.numInBuy * result.purPackUn));
 
-    return {totalLocations, totalBoxes, mixedBoxes};
+    return {totalLocations, totalBoxes};
   };
 
   if (!result) {
@@ -82,8 +67,6 @@ const ItemCheckStock: React.FC<StockTableProps> = ({result}) => {
     <div className="space-y-4">
       <Card className="p-0 gap-0">
         {data.map((binStock, index) => {
-          const hasPackages = binStock.packages && binStock.packages.length > 0;
-          const isExpanded = expandedRows.has(binStock.binEntry ?? -1);
           const stockBreakdown = getStockBreakdown(
             { ...binStock, numInBuy: result.numInBuy, purPackUn: result.purPackUn },
             settings
@@ -101,9 +84,6 @@ const ItemCheckStock: React.FC<StockTableProps> = ({result}) => {
             <ExpandableStockRow
               key={index}
               index={index}
-              isExpanded={isExpanded}
-              hasPackages={hasPackages}
-              onToggle={() => toggleRow(binStock.binEntry ?? -1)}
               mainContent={
                 binStock.binEntry && (
                   <p className="text-sm font-medium text-gray-900 truncate">
@@ -113,7 +93,6 @@ const ItemCheckStock: React.FC<StockTableProps> = ({result}) => {
               }
               stockText={stockText}
               stockBreakdown={stockBreakdown}
-              packages={binStock.packages}
               totalQuantity={binStock.quantity}
               itemDetails={{
                 numInBuy: result.numInBuy,
@@ -137,9 +116,7 @@ const ItemCheckStock: React.FC<StockTableProps> = ({result}) => {
         totals={{
           primaryCount: totals.totalLocations,
           totalBoxes: totals.totalBoxes,
-          mixedBoxes: totals.mixedBoxes,
         }}
-        enablePackages={user?.settings?.enablePackages}
         unitSelection={unitSelection}
         primaryLabel="inventory.totalLocations"
       />

@@ -5,7 +5,7 @@ import {Skeleton} from '@/components/ui/skeleton';
 import {Edit} from 'lucide-react';
 import InfoBox from '@/components/InfoBox';
 import {ItemDetails} from '../data/items';
-import {MetadataFieldType} from '@/features/packages/types';
+import {MetadataFieldType} from '@/features/metadata';
 import {canEditMetadata, getItemMetadata, ItemMetadataEditDialog} from '@/features/items';
 import {useAuth} from "@/components";
 import {useThemeContext} from '@/components/ThemeContext';

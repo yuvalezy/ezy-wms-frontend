@@ -4,7 +4,7 @@ import {Button} from "@/components/ui/button";
 import {Label} from "@/components/ui/label";
 import {useTranslation} from "react-i18next";
 import {useThemeContext} from "./ThemeContext";
-import {BoxIcon, Check, Loader2} from 'lucide-react';
+import {Check, Loader2} from 'lucide-react';
 
 import {BinLocation} from "@/features/items/data/items";
 import {itemsService} from "@/features/items/data/items-service";
@@ -17,8 +17,6 @@ export interface BinLocationScannerProps {
   onChanged?: (bin: BinLocation) => void;
   onClear?: () => void;
   autofocus?: boolean;
-  enablePackageCreate?: boolean
-  onCreatePackageClicked?: () => void
 }
 
 export interface BinLocationScannerRef {
@@ -35,8 +33,6 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
     label,
     showLabel = true,
     autofocus = true,
-    enablePackageCreate,
-    onCreatePackageClicked
   }, ref) => {
   const {setError} = useThemeContext();
   const {t} = useTranslation();
@@ -110,14 +106,6 @@ const BinLocationScanner = forwardRef<BinLocationScannerRef, BinLocationScannerP
 
   return (
     <div>
-      {enablePackageCreate &&
-          <div className="flex justify-center">
-              <Button type="button" onClick={onCreatePackageClicked} disabled={isProcessing}>
-                  <BoxIcon className="h-4 w-4 mr-2"/>
-                {t("createNewPackage")}
-              </Button>
-          </div>
-      }
       {binLocation &&
         // Responsive layout for displaying selected bin and change button
           <div

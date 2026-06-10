@@ -64,6 +64,15 @@ export enum ProcessType {
   TransferConfirmation = 'transferConfirmation'
 }
 
+export enum ObjectType {
+  GoodsReceipt = "GoodsReceipt",
+  InventoryCounting = "InventoryCounting",
+  Transfer = "Transfer",
+  Picking = "Picking"
+}
+
+export type ObjectAction = "approve" | "reject" | "cancel" | "process" | "viewBatches";
+
 export enum LineStatus {
   Open = 0,
   Closed = 1,

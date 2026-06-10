@@ -14,7 +14,6 @@ export interface UserInfo {
   binLocations: boolean;
   settings: ApplicationSettings;
   itemMetaData: MetadataDefinition[],
-  packageMetaData: MetadataDefinition[],
   customFields: Record<string, CustomField[]>;
   superUser: boolean;
   deviceStatus?: DeviceStatus;
@@ -54,7 +53,6 @@ export interface ApplicationSettings {
   goodsReceiptCreateSupervisorRequired: boolean;
   goodsReceiptType: GoodsReceiptDocumentType;
   goodsReceiptTargetDocuments: boolean;
-  goodsReceiptPackages: boolean;
   // Transfer
   transferTargetItems: boolean;
   enableTransferConfirm: boolean;
@@ -62,8 +60,7 @@ export interface ApplicationSettings {
   enableWarehouseTransfer: boolean;
   transferCreateSupervisorRequired: boolean;
   directTransferAll: boolean;
-  // Packages & Units
-  enablePackages: boolean;
+  // Units
   defaultUnitType: UnitType;
   enableUnitSelection: boolean;
   // System

@@ -6,7 +6,7 @@ import {Button} from '@/components/ui/button';
 import {Popover, PopoverContent, PopoverTrigger,} from '@/components/ui/popover';
 import {Info} from 'lucide-react';
 import {MetadataDefinition} from '@/features/items';
-import {MetadataFieldType} from '@/features/packages/types';
+import {MetadataFieldType} from '@/features/metadata';
 import {Control} from 'react-hook-form';
 
 interface MetadataFieldProps {

@@ -1,5 +1,4 @@
 import {Status, UnitType} from "@/features/shared/data";
-import {PackageValue} from "@/components";
 import {ItemDetails} from "@/features/items/data/items";
 
 export type GoodsReceiptAll = {
@@ -20,7 +19,6 @@ export type GoodsReceiptAllDetail = {
   timeStamp: Date;
   quantity: number;
   unit: UnitType;
-  package?: PackageValue;
 };
 
 export type GoodsReceiptVSExitReportData = {
@@ -75,4 +73,3 @@ export enum ProcessLineStatus {
   ClosedLine = 'ClosedLine',
   NotReceived = 'NotReceived'
 }
-

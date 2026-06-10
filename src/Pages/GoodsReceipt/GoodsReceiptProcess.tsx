@@ -9,8 +9,7 @@ import BarCodeScanner from "../../components/BarCodeScanner";
 import {useGoodsReceiptProcessData} from "@/features/goods-receipt/hooks/useGoodsReceiptProcessData";
 import {useNavigate} from "react-router";
 import {useAuth} from "@/components";
-import {ObjectType} from "@/features/packages/types";
-import {ProcessType} from "@/features/shared/data";
+import {ObjectType, ProcessType} from "@/features/shared/data";
 import {ProcessSkeleton} from "@/features/goods-receipt/components/ProcessSkeleton";
 import {Loader2} from "lucide-react";
 
@@ -28,8 +27,6 @@ export default function GoodsReceiptProcess({processType = ProcessType.Regular}:
     alertAction,
     handleAlertActionAccept,
     handleUpdateLine,
-    currentPackage,
-    setCurrentPackage,
     isProcessing,
   } = useGoodsReceiptProcessData();
   const navigate = useNavigate();
@@ -68,13 +65,8 @@ export default function GoodsReceiptProcess({processType = ProcessType.Regular}:
                       ref={barcodeRef}
                       enabled
                       unit
-                      enablePackage={user!.settings!.enablePackages && user!.settings!.goodsReceiptPackages}
-                      currentPackage={currentPackage}
                       objectType={ObjectType.GoodsReceipt}
-                      objectId={info?.id}
-                      objectNumber={info?.number}
                       onAddItem={handleAddItem}
-                      onPackageChanged={setCurrentPackage}
                     />
                   )}
     >

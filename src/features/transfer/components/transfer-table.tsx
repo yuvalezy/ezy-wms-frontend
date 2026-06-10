@@ -12,7 +12,7 @@ import {Status} from "@/features/shared/data/shared";
 import {TransferDocument} from "@/features/transfer/data/transfer";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {formatNumber} from "@/utils/number-utils";
-import {ObjectAction} from "@/features/packages/types";
+import {ObjectAction} from "@/features/shared/data";
 
 interface TransferTableProps {
   transfers: TransferDocument[];

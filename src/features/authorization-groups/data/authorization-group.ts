@@ -12,8 +12,6 @@ export enum RoleType {
   TRANSFER_REQUEST = 'TransferRequest',
   TRANSFER_CONFIRMATION = 'TransferConfirmation',
   TRANSFER_CONFIRMATION_SUPERVISOR = 'TransferConfirmationSupervisor',
-  PACKAGE_MANAGEMENT = 'PackageManagement',
-  PACKAGE_MANAGEMENT_SUPERVISOR = 'PackageManagementSupervisor',
   ITEM_MANAGEMENT = 'ItemManagement',
   ITEM_MANAGEMENT_SUPERVISOR = 'ItemManagementSupervisor',
   DIRECT_TRANSFER = 'DirectTransfer',

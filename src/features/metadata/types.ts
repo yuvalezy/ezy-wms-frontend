@@ -1,4 +1,9 @@
-import {MetadataFieldType} from '@/features/packages/types';
+export enum MetadataFieldType {
+  String = 'String',
+  Decimal = 'Decimal',
+  Integer = 'Integer',
+  Date = 'Date'
+}
 
 // Common metadata field value interface
 export interface MetadataFieldValue {

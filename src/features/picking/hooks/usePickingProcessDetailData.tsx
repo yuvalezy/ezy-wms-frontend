@@ -1,6 +1,6 @@
 import {useNavigate, useParams} from "react-router";
 import {useEffect, useRef, useState} from "react";
-import {AddItemValue, BarCodeScannerRef, BinLocationScannerRef, BoxConfirmationDialogRef, PackageValue, useAuth, useThemeContext} from "@/components";
+import {AddItemValue, BarCodeScannerRef, BinLocationScannerRef, BoxConfirmationDialogRef, useAuth, useThemeContext} from "@/components";
 import {toast} from "sonner";
 import {useTranslation} from "react-i18next";
 
@@ -25,8 +25,6 @@ export const usePickingProcessDetailData = () => {
   const binLocationRef = useRef<BinLocationScannerRef>(null);
   const [binLocation, setBinLocation] = useState<BinLocation | null>(null);
   const [pickPackOnly, setPickPackOnly] = useState(false);
-  const [currentPackage, setCurrentPackage] = useState<PackageValue | null | undefined>(null);
-  const [pickingPackage, setPickingPackage] = useState<PackageValue | null | undefined>(null);
   const {user} = useAuth();
 
   useEffect(() => {
@@ -113,10 +111,9 @@ export const usePickingProcessDetailData = () => {
     const itemCode = value.item.code;
     const unit = value.unit;
     const barcode = value.item.barcode ?? "";
-    const packageId = value.package?.id;
     
     setLoading(true);
-    pickingService.addItem({id, type, entry, itemCode, quantity: 1, binEntry: binLocation?.entry, unit, packageId, pickingPackageId: pickingPackage?.id})
+    pickingService.addItem({id, type, entry, itemCode, quantity: 1, binEntry: binLocation?.entry, unit})
       .then((data) => {
         if (data.closedDocument) {
           setError(StringFormat(t("pickedIsClosed"), id));
@@ -162,79 +159,8 @@ export const usePickingProcessDetailData = () => {
       });
   }
 
-  function handleAddPackage(value: PackageValue) {
-    boxConfirmationDialogRef?.current?.show(false);
-    barcodeRef?.current?.clear();
-    if (id == null || type == null || entry == null || binLocation == null) {
-      return;
-    }
-    setLoading(true);
-    pickingService.addPackage({id, type, entry, packageId: value.id, binEntry: binLocation.entry, pickingPackageId: pickingPackage?.id})
-      .then((data) => {
-        if (data.closedDocument) {
-          setError(StringFormat(t("pickedIsClosed"), id));
-          setEnable(false);
-          navigateBack();
-          return;
-        }
-        let errorMessage = data.errorMessage;
-        if (errorMessage != null) {
-          try {
-            switch (errorMessage) {
-              case 'Package is locked':
-                break;
-              case 'Package is not active':
-                break;
-              case 'Package already added to this pick list':
-                break;
-              case 'No items found for the specified pick list entry':
-                break;
-              case 'Package is empty':
-                break;
-              case 'Package has committed quantities for items: {string.Join(", ", itemsWithCommittedQty)}':
-                break;
-              case 'Insufficient open quantities for: {string.Join(", ", insufficientItems)}':
-                break;
-              case 'Package cannot be fully picked':
-                break;
-            }
-            toast.error(errorMessage);
-          } finally {
-            setLoading(false);
-            setTimeout(() => barcodeRef.current?.focus(), 100);
-          }
-          return;
-        }
-
-        toast.success(StringFormat(t("pickingPackageSuccess"), value.barcode));
-        loadData({reload: true, binEntry: binLocation.entry});
-      })
-      .catch((error) => {
-        console.error(`Error performing action: ${error}`);
-        let errorMessage = error.response?.data["exceptionMessage"] ?? `Add Package Error: ${error}`;
-        setError(errorMessage);
-        setLoading(false);
-        setTimeout(() => barcodeRef.current?.focus(), 100);
-      });
-  }
-
   function navigateBack() {
     navigate(`/pick/${id}`);
-  }
-
-  const handleCreatePackage = async () => {
-    setLoading(true);
-    pickingService.createPackage(id!)
-      .then((response) => {
-        setPickingPackage({id: response.id, barcode: response.barcode});
-      })
-      .catch((e) => {
-        console.error(`Error performing action: ${e}`);
-        let errorMessage = e.response?.data["exceptionMessage"] ?? `Create Package Error: ${e}`;
-        setError(errorMessage);
-        setTimeout(() => barcodeRef.current?.focus(), 100);
-      })
-      .finally(() => setLoading(false));
   }
 
   return {
@@ -248,11 +174,6 @@ export const usePickingProcessDetailData = () => {
     onBinChanged,
     onBinClear,
     handleAddItem,
-    handleAddPackage,
     pickPackOnly,
-    currentPackage,
-    pickingPackage,
-    setPickingPackage,
-    handleCreatePackage,
   }
 }

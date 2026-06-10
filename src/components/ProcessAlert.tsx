@@ -1,19 +1,12 @@
-import React, {useState} from "react";
+import React from "react";
 import {useTranslation} from "react-i18next";
-import {Edit, Edit3, MessageCircle, Package2} from "lucide-react";
+import {Edit, Edit3, MessageCircle} from "lucide-react";
 import {AddItemResponseMultipleValue, UnitType} from "@/features/shared/data";
 import {useAuth} from "@/components/AppContext";
 import {ItemCustomFields} from "@/features/items/components/ItemDetailsList";
-import {PackageValue} from "@/components/BarCodeScanner";
-import {PackageContentDto} from "@/features/packages/types";
 import {Button} from "@/components/ui/button";
-import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
-import {Card} from "@/components/ui/card";
-import ClickableItemCode from "@/components/ClickableItemCode";
-import {useStockInfo} from "@/utils/stock-info";
 import {ScannerMode} from "@/features/login/data/login";
 import {canEditMetadata, ItemMetadataEditDialog} from "@/features/items/components/ItemMetadataEditDialog";
-import {useIsMobile} from "@/hooks/use-mobile";
 
 export type AlertSeverity = "Information" | "Positive" | "Negative" | "Warning";
 
@@ -45,8 +38,6 @@ export interface ProcessAlertValue {
   canceled?: boolean;
   multiple?: AddItemResponseMultipleValue[];
   customFields?: Record<string, unknown>;
-  package?: PackageValue | null;
-  packageContents?: PackageContentDto[] | null;
 }
 
 export interface ProcessAlertProps {
@@ -65,10 +56,7 @@ export enum AlertActionType {
 const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComment}) => {
   const {t} = useTranslation();
   const {user} = useAuth();
-  const [showPackageContents, setShowPackageContents] = useState(false);
-  const stockInfo = useStockInfo();
   const canEditItemMetadata = alert.itemCode && canEditMetadata(user);
-  const isMobile = useIsMobile();
 
 
   const alertSeverity = mapSeverity(alert.severity);
@@ -109,24 +97,6 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
     }
   }
 
-  const formatStock = (content: PackageContentDto) => {
-    if (!content.itemData) return `${content.quantity} ${t('units')}`;
-    
-    const itemData = content.itemData;
-    const packages = Math.floor(content.quantity / (itemData.quantityInUnit * itemData.quantityInPack));
-    const remainingForDozens = content.quantity % (itemData.quantityInUnit * itemData.quantityInPack);
-    const dozens = Math.floor(remainingForDozens / itemData.quantityInUnit);
-    const units = remainingForDozens % itemData.quantityInUnit;
-    
-    const parts = [];
-    if (packages > 0) parts.push(`${packages} ${itemData.packMeasure || 'Box'}`);
-    if (dozens > 0) parts.push(`${dozens} ${itemData.unitMeasure || 'Doz'}`);
-    if (units > 0) parts.push(`${units} ${t('units')}`);
-    return parts.join(', ') || '0';
-  };
-
-  const hasPackageContents = alert.packageContents && alert.packageContents.length > 0;
-
   return (
     <div className="relative p-1 rounded-md overflow-hidden">
       <div className={getAlertClasses()}>
@@ -155,26 +125,6 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
             <h4 className="font-bold text-lg text-gray-800">{alert.barcode}</h4>
           </div>
         )}
-        {alert.package && (
-          <div className="mb-3">
-            <div className="text-xs text-gray-500 mt-1">{t('package')}</div>
-            <div className="flex items-center justify-between">
-              <h4 className="font-bold text-lg text-gray-800">{alert.package.barcode}</h4>
-              {hasPackageContents && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowPackageContents(true)}
-                  className="flex items-center gap-1"
-                >
-                  <Package2 className="w-4 h-4" />
-                  {t('viewContents')}
-                </Button>
-              )}
-            </div>
-          </div>
-        )}
-
         <div className="space-y-3">
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div>
@@ -260,9 +210,9 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
         </div>
 
         {/* Action Buttons */}
-        {(!(alert.canceled ?? false) && alertSeverity !== 'Negative' && !alert.packageContents) || (canEditItemMetadata && user!.settings.scannerMode === ScannerMode.ItemBarcode) ? (
+        {(!(alert.canceled ?? false) && alertSeverity !== 'Negative') || (canEditItemMetadata && user!.settings.scannerMode === ScannerMode.ItemBarcode) ? (
           <div className="mt-4 pt-4 border-t border-gray-200 flex flex-col md:flex-row gap-2">
-            {!(alert.canceled ?? false) && alertSeverity !== 'Negative' && !alert.packageContents && (
+            {!(alert.canceled ?? false) && alertSeverity !== 'Negative' && (
               <>
                 <Button
                   variant="outline"
@@ -303,62 +253,6 @@ const ProcessAlert: React.FC<ProcessAlertProps> = ({alert, onAction, enableComme
           </div>
         ) : null}
       </div>
-
-      {/* Package Contents Dialog */}
-      <Dialog open={showPackageContents} onOpenChange={setShowPackageContents}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Package2 className="w-5 h-5" />
-              {t('packageContents')}
-              {alert.package && (
-                <span className="text-sm font-mono text-gray-600">
-                  {alert.package.barcode}
-                </span>
-              )}
-            </DialogTitle>
-          </DialogHeader>
-          
-          <div className="space-y-4">
-            {alert.packageContents?.map((content, index) => (
-              <Card key={index} className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <ClickableItemCode itemCode={content.itemCode} />
-                    </div>
-                    <p className="text-sm text-gray-600 mt-1 truncate">
-                      {content.itemData?.itemName || content.itemCode}
-                    </p>
-                    <p className="text-sm text-gray-600 mt-1">
-                      {formatStock(content)}
-                    </p>
-                  </div>
-                  
-                  <div className="text-right">
-                    <p className="text-sm text-gray-500">{t('quantity')}</p>
-                    <p className="font-semibold">
-                      {content.itemData ? stockInfo({
-                        quantity: content.quantity,
-                        numInBuy: content.itemData.quantityInUnit,
-                        buyUnitMsr: content.itemData.unitMeasure,
-                        purPackUn: content.itemData.quantityInPack,
-                        purPackMsr: content.itemData.packMeasure,
-                      }) : `${content.quantity} ${t('units')}`}
-                    </p>
-                  </div>
-                </div>
-              </Card>
-            ))}
-            
-            {(!alert.packageContents || alert.packageContents.length === 0) && (
-              <div className="text-center py-8 text-gray-500">
-                {t('noPackageContents')}
-              </div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

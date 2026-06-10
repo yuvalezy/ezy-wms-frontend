@@ -12,7 +12,7 @@ import {Status, UnitType} from "@/features/shared/data";
 import {TransferApprovalDialog} from "@/features/transfer/components/transfer-approval-dialog";
 import {ApprovalActionButtons} from "@/features/transfer/components/approval-action-buttons";
 import {useTransferApproval} from "@/features/transfer/hooks/use-transfer-approval";
-import {ObjectAction} from "@/features/packages/types";
+import {ObjectAction} from "@/features/shared/data";
 
 export default function TransferApprovalDetail() {
   const {t} = useTranslation();

@@ -14,7 +14,7 @@ import InfoBox from "@/components/InfoBox";
 import {TransferDocument, ApprovalStatus} from "@/features/transfer/data/transfer";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {formatNumber} from "@/utils/number-utils";
-import {ObjectAction} from "@/features/packages/types";
+import {ObjectAction} from "@/features/shared/data";
 import {StatusBadge} from "@/components/ui/status-badge";
 import {getApprovalStatusVariant, getApprovalStatusText} from "@/features/transfer/utils/approval-utils";
 

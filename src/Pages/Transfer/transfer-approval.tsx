@@ -8,7 +8,7 @@ import {TransferDocument} from "@/features/transfer/data/transfer";
 import {transferService} from "@/features/transfer/data/transefer-service";
 import {Status} from "@/features/shared/data";
 import {useParams} from "react-router";
-import {ObjectAction} from "@/features/packages/types";
+import {ObjectAction} from "@/features/shared/data";
 import {TransferTableSkeleton} from "@/features/transfer/components/transfer-table-skeleton";
 import {TransferCardSkeleton} from "@/features/transfer/components/transfer-card-skeleton";
 import {TransferApprovalDialog} from "@/features/transfer/components/transfer-approval-dialog";

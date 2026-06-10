@@ -1,6 +1,5 @@
 import {BaseEntity, LineStatus, Status, UnitType} from "@/features/shared/data";
 import {ItemDetails} from "@/features/items/data/items";
-import {PackageContentDto} from "@/features/packages/types";
 import {User} from "@/features/users/data/user";
 
 export enum SourceTarget {
@@ -100,7 +99,6 @@ export interface TransferAddItemResponse {
   packMsr: string;
   packUnit: number;
   errorMessage?: string;
-  packageContents?: PackageContentDto[] | null;
 }
 
 export interface TransferContent extends ItemDetails {
@@ -151,21 +149,8 @@ export interface TransferActionResponse {
   status: string;
 }
 
-export interface TransferAddSourcePackageRequest {
-  transferId: string;
-  packageId: string;
-  binEntry?: number;
-}
-
-export interface TransferAddTargetPackageRequest {
-  transferId: string;
-  packageId: string;
-  targetBinEntry?: number;
-}
-
 export interface TransferApprovalRequest {
   transferId: string;
   approved: boolean;
   rejectionReason?: string;
 }
-

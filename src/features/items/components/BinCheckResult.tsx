@@ -13,7 +13,6 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
   const {t} = useTranslation();
   const {user, unitSelection, defaultUnit} = useAuth();
   const [data, setData] = useState<BinContentResponse[]>([]);
-  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
   const settings = user!.settings;
 
@@ -23,36 +22,16 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
     }
   }, [content]);
 
-  const toggleRow = (itemCode: string) => {
-    const newExpanded = new Set(expandedRows);
-    if (newExpanded.has(itemCode)) {
-      newExpanded.delete(itemCode);
-    } else {
-      newExpanded.add(itemCode);
-    }
-    setExpandedRows(newExpanded);
-  };
-
-
   const calculateTotals = () => {
     let totalItems = data.length;
     let totalBoxes = 0;
-    let mixedBoxes = 0;
-    const uniquePackages = new Set<string>();
 
     data.forEach(v => {
       const packages = Math.floor(v.onHand / (v.numInBuy * v.purPackUn));
       totalBoxes += packages;
-
-      // Count unique package barcodes
-      v.packages?.forEach(pkg => {
-        uniquePackages.add(pkg.barcode);
-      });
     });
 
-    mixedBoxes = uniquePackages.size;
-
-    return {totalItems, totalBoxes, mixedBoxes};
+    return {totalItems, totalBoxes};
   };
 
   const totals = calculateTotals();
@@ -76,9 +55,7 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
           totals={{
             primaryCount: 0,
             totalBoxes: 0,
-            mixedBoxes: 0,
           }}
-          enablePackages={user?.settings?.enablePackages}
           unitSelection={unitSelection}
           primaryLabel="totalItems"
         />
@@ -90,8 +67,6 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
     <div className="space-y-4">
       <Card className="p-0 gap-0">
         {data.map((binContent, index) => {
-          const hasPackages = binContent.packages && binContent.packages.length > 0;
-          const isExpanded = expandedRows.has(binContent.itemCode);
           const stockBreakdown = getStockBreakdown(binContent, settings);
           const stockText = formatStock(
             binContent,
@@ -105,9 +80,6 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
             <ExpandableStockRow
               key={index}
               index={index}
-              isExpanded={isExpanded}
-              hasPackages={hasPackages}
-              onToggle={() => toggleRow(binContent.itemCode)}
               mainContent={
                 <>
                   <div className="flex items-center gap-2">
@@ -120,7 +92,6 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
               }
               stockText={stockText}
               stockBreakdown={stockBreakdown}
-              packages={binContent.packages}
               totalQuantity={binContent.onHand}
               itemDetails={{
                 numInBuy: binContent.numInBuy,
@@ -144,9 +115,7 @@ export const BinCheckResult: React.FC<{ content: BinContentResponse[] }> = ({con
         totals={{
           primaryCount: totals.totalItems,
           totalBoxes: totals.totalBoxes,
-          mixedBoxes: totals.mixedBoxes,
         }}
-        enablePackages={user?.settings?.enablePackages}
         unitSelection={unitSelection}
         primaryLabel="totalItems"
       />

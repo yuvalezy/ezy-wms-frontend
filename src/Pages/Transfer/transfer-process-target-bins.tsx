@@ -14,7 +14,7 @@ import {Card, CardContent, InfoBoxValue} from "@/components";
 import InfoBox from "@/components/InfoBox";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
 import {transferService} from "@/features/transfer/data/transefer-service";
-import {ObjectType} from "@/features/packages/types";
+import {ObjectType} from "@/features/shared/data";
 import {useTransferProcess} from "@/features/transfer/context/TransferProcessContext";
 import {SourceTarget} from "@/features/transfer/data/transfer";
 import {ProcessingOverlay} from "@/features/transfer/components/processing-overlay";
@@ -39,7 +39,6 @@ export default function TransferProcessTargetBins() {
     onBinClear,
     loadRows,
     handleAddItem,
-    handleAddPackage,
     handleQuantityChanged,
     handleCancel,
     user,
@@ -66,13 +65,7 @@ export default function TransferProcessTargetBins() {
                           ref={barcodeRef}
                           onAddItem={(value) => handleAddItem(SourceTarget.Target, value)}
                           enabled
-                          enablePackage={user!.settings!.enablePackages}
-                          enablePackageCreate={false}
-                          isEphemeralPackage={false}
                           objectType={ObjectType.Transfer}
-                          objectId={info?.id}
-                          objectNumber={info?.number}
-                          onPackageChanged={(value) => handleAddPackage(SourceTarget.Target, value)}
                       />}
     >
       {isProcessingItem && <ProcessingOverlay />}

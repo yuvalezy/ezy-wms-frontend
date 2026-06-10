@@ -1,11 +1,10 @@
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
-import {Boxes, CheckCircle, ClipboardCheck, ClipboardList, Move, Package, PackageCheckIcon, ShoppingCart} from "lucide-react";
+import {Boxes, CheckCircle, ClipboardCheck, ClipboardList, Move, Package, ShoppingCart} from "lucide-react";
 import {ApplicationSettings} from "@/features/login/data/login";
 
 export interface HomeInfo {
   itemCheck: number;
   binCheck: number;
-  packageCheck: number;
   goodsReceipt: number;
   receiptConfirmation: number;
   picking: number;
@@ -54,24 +53,6 @@ export const kpiItems: KpiItem[] = [
     backgroundColor: "bg-green-100",
     iconColor: "text-green-700",
     borderColor: "border-l-green-500"
-  },
-  {
-    id: 'packages-check',
-    title: 'packages.packages',
-    value: 100,
-    icon: PackageCheckIcon,
-    authorizations: [
-      RoleType.GOODS_RECEIPT_SUPERVISOR,
-      RoleType.PICKING_SUPERVISOR,
-      RoleType.COUNTING_SUPERVISOR,
-      RoleType.TRANSFER_SUPERVISOR,
-      RoleType.PACKAGE_MANAGEMENT,
-      RoleType.PACKAGE_MANAGEMENT_SUPERVISOR,
-    ],
-    route: "/packageCheck",
-    backgroundColor: "bg-teal-100",
-    iconColor: "text-teal-700",
-    borderColor: "border-l-teal-500"
   },
   {
     id: 'goods-receipt',
@@ -181,9 +162,6 @@ export function getKpiItems(settings: ApplicationSettings, userAuthorizations: R
         break;
       case 'bin-check':
         value = info.binCheck;
-        break;
-      case 'packages-check':
-        value = info.packageCheck;
         break;
       case 'goods-receipt':
         value = info.goodsReceipt;

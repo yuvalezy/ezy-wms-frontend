@@ -162,12 +162,6 @@ const StopItemRow = ({row, fmt, prominent}: StopItemRowProps) => {
           </span>
         )}
       </div>
-      {row.packages?.map((p, packIndex) => (
-        <div key={`${row.itemCode}-pack${packIndex}`} className="text-xs bg-yellow-50 dark:bg-yellow-900/20 rounded px-2 py-1 flex items-center justify-between">
-          <span className="truncate">📦 {p.barcode}</span>
-          <span className="shrink-0 text-muted-foreground">{fmt(row, p.quantity)}</span>
-        </div>
-      ))}
     </div>
   );
 };

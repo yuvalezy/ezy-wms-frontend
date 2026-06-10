@@ -1,5 +1,5 @@
 import {RefObject} from "react";
-import {AddItemValue, BarCodeScannerRef, PackageValue, ProcessAlertValue, ProcessesRef} from "@/components";
+import {AddItemValue, BarCodeScannerRef, ProcessAlertValue, ProcessesRef} from "@/components";
 import {BinLocation} from "@/features/items/data/items";
 import {SourceTarget, TransferContent, TransferDocument} from "@/features/transfer/data/transfer";
 import {UserInfo} from "@/features/login/data/login";
@@ -27,7 +27,6 @@ export interface TransferProcessContextType {
   // Item operations
   isProcessingItem: boolean;
   handleAddItem: (type: SourceTarget, value: AddItemValue) => void;
-  handleAddPackage: (type: SourceTarget, value: PackageValue) => void;
 
   // Refs
   barcodeRef: RefObject<BarCodeScannerRef | null>;

@@ -2,7 +2,7 @@ import {useParams} from "react-router";
 import {useTranslation} from "react-i18next";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
 import {useEffect, useRef, useState} from "react";
-import {AddItemValue, BarCodeScannerRef, PackageValue} from "@/components/BarCodeScanner";
+import {AddItemValue, BarCodeScannerRef} from "@/components/BarCodeScanner";
 import {BoxConfirmationDialogRef} from "@/components/BoxConfirmationDialog";
 import {useThemeContext} from "@/components/ThemeContext";
 import {AddItemResponseMultipleValue, ProcessType, UpdateLineParameters, UpdateLineReturnValue} from "@/features/shared/data/shared";
@@ -24,7 +24,6 @@ export const useGoodsReceiptProcessData = () => {
   const [currentAlert, setCurrentAlert] = useState<ProcessAlertValue | null>(null);
   const processesRef = useRef<ProcessesRef>(null);
   const [info, setInfo] = useState<ReceiptDocument | null>(null);
-  const [currentPackage, setCurrentPackage] = useState<PackageValue | null | undefined>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -54,7 +53,7 @@ export const useGoodsReceiptProcessData = () => {
     barcodeRef.current?.clear();
     let barcode = item.barcode!;
     setIsProcessing(true);
-    goodsReceiptService.addItem(info!.id, item.code, barcode, unit, value.createPackage, value.package?.id)
+    goodsReceiptService.addItem(info!.id, item.code, barcode, unit)
       .then((data) => {
         if (isClosedDocument(data, item.code, barcode)) {
           return;
@@ -103,15 +102,8 @@ export const useGoodsReceiptProcessData = () => {
           purPackMsr: data.purPackMsr,
           unit: unit,
           customFields: data.customFields,
-          package: data.packageId ? {id: data.packageId, barcode: data.packageBarcode!} : value.package
         };
         alert(newAlert);
-        setCurrentPackage(data.packageId ? {id: data.packageId, barcode: data.packageBarcode!} : value.package)
-
-        // If we created a new package, clear the createPackage checkbox
-        if (data.packageId && value.createPackage) {
-          setTimeout(() => barcodeRef.current?.focus(), 100);
-        }
       })
       .catch((error) => {
         let errorMessage = `${error}`
@@ -281,8 +273,6 @@ export const useGoodsReceiptProcessData = () => {
     alertAction,
     handleAlertActionAccept,
     handleUpdateLine,
-    currentPackage,
-    setCurrentPackage,
     isProcessing,
   }
 }

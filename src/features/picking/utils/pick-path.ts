@@ -1,7 +1,4 @@
-import {
-  BinLocationPackageQuantityResponse,
-  PickingDocumentDetailItem,
-} from "@/features/picking/data/picking";
+import {PickingDocumentDetailItem} from "@/features/picking/data/picking";
 
 /**
  * Pick-path routing (frontend, presentation only).
@@ -20,7 +17,6 @@ export interface PickPathStopItem {
   /** Item-level totals, for context. */
   picked: number;
   openQuantity: number;
-  packages?: BinLocationPackageQuantityResponse[];
   // Unit fields forwarded to useStockInfo for display:
   numInBuy: number;
   buyUnitMsr?: string | null;
@@ -63,14 +59,13 @@ interface StopAccumulator {
   items: PickPathStopItem[];
 }
 
-function toStopItem(item: PickingDocumentDetailItem, quantityToPick: number, packages?: BinLocationPackageQuantityResponse[]): PickPathStopItem {
+function toStopItem(item: PickingDocumentDetailItem, quantityToPick: number): PickPathStopItem {
   return {
     itemCode: item.itemCode,
     itemName: item.itemName,
     quantityToPick,
     picked: item.picked,
     openQuantity: item.openQuantity,
-    packages,
     numInBuy: item.numInBuy,
     buyUnitMsr: item.buyUnitMsr,
     purPackUn: item.purPackUn,
@@ -148,7 +143,7 @@ export function buildPickPath(items?: PickingDocumentDetailItem[]): PickPath {
         };
         byBin.set(key, acc);
       }
-      acc.items.push(toStopItem(item, take, bin.packages));
+      acc.items.push(toStopItem(item, take));
     }
   }
 

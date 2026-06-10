@@ -78,17 +78,6 @@ export const PickingProcessDetailContentBins = ({items}: PickingProcessDetailCon
                               purPackMsr: row.purPackMsr,
                             })}</TableCell>
                           </TableRow>
-                          {bin.packages?.map((p, packIndex) =>
-                            <TableRow className="bg-yellow-50" key={`item${itemIndex}-bin${binIndex}-pack${packIndex}`}>
-                              <TableCell>📦{p.barcode}</TableCell>
-                              <TableCell>{stockInfo({
-                                quantity: p.quantity,
-                                numInBuy: row.numInBuy,
-                                buyUnitMsr: row.buyUnitMsr,
-                                purPackUn: row.purPackUn,
-                                purPackMsr: row.purPackMsr,
-                              })}</TableCell>
-                            </TableRow>)}
                         </>
                       ))}
                     </TableBody>

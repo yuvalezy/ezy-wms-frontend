@@ -18,7 +18,6 @@ export interface StockBreakdown {
 
 export interface UserSettings {
   maxUnitLevel?: UnitType;
-  enablePackages?: boolean;
 }
 
 /**

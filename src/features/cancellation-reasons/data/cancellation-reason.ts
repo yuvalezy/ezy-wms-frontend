@@ -1,4 +1,4 @@
-import {ObjectType} from "@/features/packages/types";
+import {ObjectType} from "@/features/shared/data";
 
 export interface CancellationReason {
   id: string;

@@ -1,6 +1,6 @@
 import {useParams} from "react-router";
 import {useEffect, useRef, useState} from "react";
-import {AddItemValue, BarCodeScannerRef, BinLocationScannerRef, PackageValue, ProcessAlertValue, ProcessesRef, useAuth, useThemeContext} from "@/components";
+import {AddItemValue, BarCodeScannerRef, BinLocationScannerRef, ProcessAlertValue, ProcessesRef, useAuth, useThemeContext} from "@/components";
 
 import {BinLocation} from "@/features/items/data/items";
 import {Counting, CountingContent} from "@/features/counting/data/counting";
@@ -23,7 +23,6 @@ export const useCountingProcessData = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const processAlertRef = useRef<HTMLDivElement>(null);
   const [info, setInfo] = useState<Counting | null>(null);
-  const [currentPackage, setCurrentPackage] = useState<PackageValue | null | undefined>(null);
 
   useEffect(() => {
     setEnable(!user?.binLocations);
@@ -47,7 +46,6 @@ export const useCountingProcessData = () => {
       setBinLocation(bin);
       setEnable(true);
       loadRows(bin.entry);
-      setCurrentPackage(null);
       setTimeout(() => {
         barcodeRef?.current?.focus()
       }, 1);
@@ -62,7 +60,6 @@ export const useCountingProcessData = () => {
     setRows(null);
     setEnable(false);
     setCurrentAlert(null);
-    setCurrentPackage(null);
     setTimeout(() => {
       binLocationRef?.current?.focus();
     }, 1);
@@ -114,14 +111,13 @@ export const useCountingProcessData = () => {
     }
     const item = value.item;
     const unit = value.unit;
-    countingService.addItem(id, item.code, item.barcode ?? "", binLocation?.entry, unit, value.createPackage, value.package?.id)
+    countingService.addItem(id, item.code, item.barcode ?? "", binLocation?.entry, unit)
       .then((data) => {
         if (data.errorMessage != null) {
           setError(data.errorMessage);
           return;
         }
         let date = new Date(Date.now());
-        const newPackage = data.packageId ? {id: data.packageId, barcode: data.packageBarcode??value.package?.barcode??'Unknown Package'} : value.package;
         setCurrentAlert({
           lineId: data.lineId,
           quantity: 1,
@@ -134,9 +130,7 @@ export const useCountingProcessData = () => {
           itemCode: item.code,
           severity: "Information",
           timeStamp: dateTimeFormat(date),
-          package: newPackage
         })
-        setCurrentPackage(newPackage);
         barcodeRef?.current?.clear();
         loadRows();
         barcodeRef?.current?.focus();
@@ -168,7 +162,5 @@ export const useCountingProcessData = () => {
     scrollRef,
     processAlertRef,
     info,
-    currentPackage,
-    setCurrentPackage,
   }
 }

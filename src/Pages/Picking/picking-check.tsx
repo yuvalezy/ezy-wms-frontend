@@ -2,14 +2,14 @@ import React, {useEffect, useRef, useState} from 'react';
 import {useNavigate, useParams} from 'react-router';
 import {useTranslation} from 'react-i18next';
 import ContentTheme from '@/components/ContentTheme';
-import BarCodeScanner, {PackageValue} from '@/components/BarCodeScanner';
+import BarCodeScanner from '@/components/BarCodeScanner';
 import {useThemeContext} from '@/components/ThemeContext';
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table';
 import {Button} from '@/components/ui/button';
 import {Badge} from '@/components/ui/badge';
 import {Alert, AlertDescription} from '@/components/ui/alert';
 import {AlertCircle, Check} from 'lucide-react';
-import {ObjectType} from "@/features/packages/types";
+import {ObjectType} from "@/features/shared/data";
 import {pickingService} from '@/features/picking/data/picking-service';
 import {PickingDocument, PickListCheckItemDetail, PickListCheckSummaryResponse} from '@/features/picking/data/picking';
 import {AddItemValue} from '@/components/BarCodeScanner/types';
@@ -31,7 +31,6 @@ export default function PickingCheck() {
   const [isCompleting, setIsCompleting] = useState(false);
   const [isLoadingPickList, setIsLoadingPickList] = useState(false);
   const [isCheckingItem, setIsCheckingItem] = useState(false);
-  const [isCheckingPackage, setIsCheckingPackage] = useState(false);
   const stockInfo = useStockInfo();
 
   useEffect(() => {
@@ -85,24 +84,6 @@ export default function PickingCheck() {
     }
   };
 
-  const handleAddPackage = async (value: PackageValue) => {
-    setIsCheckingPackage(true);
-    try {
-      const response = await pickingService.checkPackage(parseInt(id!), value.id);
-
-      if (response.success) {
-        await loadCheckSummary();
-        barcodeRef.current?.clear();
-      } else {
-        setError(new Error(response.errorMessage || 'Failed to check package'));
-      }
-    } catch (error) {
-      setError(error);
-    } finally {
-      setIsCheckingPackage(false);
-    }
-  }
-
   const handleCompleteCheck = async () => {
     setIsCompleting(true);
     try {
@@ -153,12 +134,11 @@ export default function PickingCheck() {
           enabled
           unit
           onAddItem={handleAddItem}
-          onAddPackage={handleAddPackage}
           objectType={ObjectType.Picking}
         />
       }
     >
-      {(isLoadingPickList || isCheckingItem || isCheckingPackage) ? (
+      {(isLoadingPickList || isCheckingItem) ? (
         <PickingCheckSkeleton />
       ) : checkSummary ? (
         <>

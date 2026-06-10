@@ -6,15 +6,12 @@ import {
   pickingsParameters,
   PickListCheckItemRequest,
   PickListCheckItemResponse,
-  PickListCheckPackageResponse,
   PickListCheckSession,
   PickListCheckSummaryResponse,
   ProcessPickListCancelResponse,
-  ProcessPickListResponse,
   ProcessResponse
 } from "@/features/picking/data/picking";
 import {UnitType} from "@/features/shared/data";
-import {PackageDto} from "@/features/packages/types";
 
 export const pickingService = {
   async fetchPicking(params: pickingParameters): Promise<PickingDocument> {
@@ -86,8 +83,6 @@ export const pickingService = {
     quantity: number;
     binEntry?: number;
     unit: UnitType;
-    packageId: string | undefined,
-    pickingPackageId?: string,
   }): Promise<PickingAddItemResponse> {
     try {
       const url = `picking/addItem`;
@@ -96,25 +91,6 @@ export const pickingService = {
       return response.data;
     } catch (error) {
       console.error("Error adding item:", error);
-      throw error;
-    }
-  },
-
-  async addPackage(params: {
-    id: number;
-    type: number;
-    entry: number;
-    packageId: string;
-    binEntry?: number;
-    pickingPackageId?: string;
-  }): Promise<ProcessPickListResponse> {
-    try {
-      const url = `picking/addPackage`;
-
-      const response = await axiosInstance.post<ProcessPickListResponse>(url, params);
-      return response.data;
-    } catch (error) {
-      console.error("Error adding package:", error);
       throw error;
     }
   },
@@ -177,18 +153,6 @@ export const pickingService = {
     }
   },
 
-  async checkPackage(pickListId: number, packageId: string): Promise<PickListCheckPackageResponse> {
-    try {
-      const url = `picking/${pickListId}/check/package`;
-      const response = await axiosInstance.post<PickListCheckPackageResponse>(url, {packageId});
-      return response.data;
-    } catch (error) {
-      console.error("Error checking package:", error);
-      throw error;
-    }
-  },
-
-
   async getCheckSummary(pickListId: number): Promise<PickListCheckSummaryResponse> {
     try {
       const url = `picking/${pickListId}/check/summary`;
@@ -206,17 +170,6 @@ export const pickingService = {
       await axiosInstance.post(url);
     } catch (error) {
       console.error("Error completing check:", error);
-      throw error;
-    }
-  },
-
-  async createPackage(absEntry: number): Promise<PackageDto> {
-    try {
-      const url = `picking/package/${absEntry}`;
-      const response = await axiosInstance.post<PackageDto>(url);
-      return response.data;
-    } catch (error) {
-      console.error("Error creating package:", error);
       throw error;
     }
   }

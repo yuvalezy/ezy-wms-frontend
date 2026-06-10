@@ -32,7 +32,6 @@ import TransferProcess from "./Pages/Transfer/transfer-process";
 import TransferProcessSource from "./Pages/Transfer/transfer-process-source";
 import CountingSummaryReport from "./Pages/Counting/CountingSummaryReport";
 import {BinCheck} from "./Pages/items/BinCheck";
-import {PackageCheck} from "./Pages/items/PackageCheck";
 import GoodsReceiptProcessDifferenceReport from "./Pages/GoodsReceipt/GoodsReceiptProcessDifferenceReport";
 import TransferProcessTargetBins from "./Pages/Transfer/transfer-process-target-bins";
 import TransferRequest from "./Pages/Transfer/transfer-request";
@@ -98,7 +97,6 @@ function AppRoutes() {
 
   function getGeneralCheckRoutes() {
     const supervisorAuthorizations = [RoleType.GOODS_RECEIPT_SUPERVISOR, RoleType.PICKING_SUPERVISOR, RoleType.COUNTING_SUPERVISOR, RoleType.TRANSFER_SUPERVISOR];
-    const packageAuthorizations = [...supervisorAuthorizations, RoleType.PACKAGE_MANAGEMENT, RoleType.PACKAGE_MANAGEMENT_SUPERVISOR];
 
     return (
       <>
@@ -114,12 +112,6 @@ function AppRoutes() {
         <Route path="/itemCheck/:code" element={<ProtectedRoute
           authorizations={supervisorAuthorizations}
           element={<ItemCheck/>}/>}/>
-        <Route path="/packageCheck" element={<ProtectedRoute
-          authorizations={packageAuthorizations}
-          element={<PackageCheck/>}/>}/>
-        <Route path="/packageCheck/:id/:barcode" element={<ProtectedRoute
-          authorizations={packageAuthorizations}
-          element={<PackageCheck/>}/>}/>
       </>
     );
   }

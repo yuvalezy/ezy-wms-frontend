@@ -4,8 +4,6 @@ import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
 import {Check, Loader2} from 'lucide-react';
 import {useTranslation} from 'react-i18next';
-import {PackageDisplay} from './PackageDisplay';
-import {ScanModeControls} from './ScanModeControls';
 import {UnitSelector} from './UnitSelector';
 import {BarCodeScannerProps, BarCodeScannerRef} from './types';
 import {useAuth, useBarCodeScanner} from "@/components";
@@ -17,20 +15,11 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
     unit = false,
     item,
     onAddItem,
-    onAddPackage,
-    onPackageChanged,
     onAddAction,
     addActionLabel,
     addActionIcon,
     pickPackOnly = false,
-    enablePackage = false,
-    enablePackageCreate = true,
-    currentPackage,
     objectType,
-    objectId,
-    objectNumber,
-    binEntry,
-    isEphemeralPackage = true
   },
   ref
 ) => {
@@ -44,29 +33,15 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
     barcodeInput,
     setBarcodeInput,
     selectedUnit,
-    scanMode,
-    createPackage,
-    setCreatePackage,
-    loadedPackage,
     clearBarCode,
     handleSubmit,
     handleUnitChanged,
-    handleScanModeChange,
-    handleClearPackage,
     isProcessing
   } = useBarCodeScanner({
     enabled,
     item,
-    enablePackage,
-    currentPackage,
     objectType,
-    objectId,
-    objectNumber,
     onAddItem,
-    onAddPackage,
-    onPackageChanged,
-    binEntry,
-    isEphemeralPackage
   });
 
   useImperativeHandle(ref, () => ({
@@ -83,22 +58,11 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
 
   // item is true for example Transfer Request where the user is directly requesting an item
   const barcodeLabel = item ? t("code") :
-    (user!.settings.scannerMode === ScannerMode.ItemBarcode || scanMode === 'package') ?
+    user!.settings.scannerMode === ScannerMode.ItemBarcode ?
       t("barcode") : t("code");
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4 p-2">
-      <ScanModeControls
-        enablePackage={enablePackage}
-        enablePackageCreate={enablePackageCreate}
-        scanMode={scanMode}
-        createPackage={createPackage}
-        onScanModeChange={handleScanModeChange}
-        onCreatePackageChange={setCreatePackage}
-        disabled={isProcessing}
-      />
-
-      <PackageDisplay onClear={handleClearPackage} loadedPackage={loadedPackage} disabled={isProcessing}/>
-
       <div className="space-y-2">
         <Label
           htmlFor="barcode-input"
@@ -117,7 +81,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
       </div>
 
       <UnitSelector
-        visible={unit && unitSelection && scanMode === 'item'}
+        visible={unit && unitSelection}
         pickPackOnly={pickPackOnly}
         selectedUnit={selectedUnit}
         onUnitChange={handleUnitChanged}
@@ -133,7 +97,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
             ) : (
               <Check className="mr-2 h-4 w-4"/>
             )}
-            {scanMode === 'package' ? t('scanPackage') : t('accept')}
+            {t('accept')}
           </Button>
         )}
         {onAddAction && (
@@ -144,7 +108,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
               ) : (
                 <Check className="mr-2 h-4 w-4"/>
               )}
-              {scanMode === 'package' ? t('scanPackage') : t('accept')}
+              {t('accept')}
             </Button>
             <Button variant="secondary" onClick={onAddAction} className="flex-1">
               {addActionIcon && React.createElement(addActionIcon, {className: "mr-2 h-4 w-4"})}

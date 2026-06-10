@@ -15,7 +15,7 @@ import {useGoodsReceiptHandleOpen} from "@/features/goods-receipt/hooks/useGoods
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {ProcessType} from "@/features/shared/data";
 import {Skeleton} from "@/components/ui/skeleton";
-import {ObjectAction} from "@/features/packages/types";
+import {ObjectAction} from "@/features/shared/data";
 
 type DocumentTableProps = {
   documents: ReceiptDocument[],

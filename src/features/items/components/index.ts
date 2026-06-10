@@ -8,4 +8,3 @@ export { default as ItemDetailsListPopup } from './ItemDetailsListPopup';
 export { ItemMetadataDisplay } from './ItemMetadataDisplay';
 export { ItemMetadataForm } from './ItemMetadataForm';
 export { ItemMetadataEditDialog, canEditMetadata } from './ItemMetadataEditDialog';
-export { PackageCheckResult } from './PackageCheckResult';

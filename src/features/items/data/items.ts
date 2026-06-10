@@ -1,5 +1,3 @@
-import {PackageStockValue} from "@/components";
-
 export type BinLocation = {
   entry: number;
   code: string;
@@ -11,7 +9,6 @@ export type ItemInfoResponse = {
   father: string;
   boxNumber?: number;
   barcode?: string;
-  isPackage: boolean;
 }
 
 export enum ResponseStatus {
@@ -44,12 +41,10 @@ export interface ItemBinStockResponse {
   binCode?: string;
   binEntry?: number;
   quantity: number;
-  packages?: PackageStockValue[] | null;
 }
 
 export interface BinContentResponse extends ItemDetails {
   onHand: number;
-  packages?: PackageStockValue[] | null;
 }
 
 export enum CustomFieldType {

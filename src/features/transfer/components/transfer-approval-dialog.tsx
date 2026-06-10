@@ -14,7 +14,7 @@ import { Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { StringFormat } from "@/utils/string-utils";
 
-import { ObjectAction } from "@/features/packages/types";
+import { ObjectAction } from "@/features/shared/data";
 
 interface TransferApprovalDialogProps {
   open: boolean;

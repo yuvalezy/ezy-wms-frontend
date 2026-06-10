@@ -14,7 +14,7 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/c
 import {useStockInfo} from "@/utils/stock-info";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
 import {countingService} from "@/features/counting/data/counting-service";
-import {ObjectType} from "@/features/packages/types";
+import {ObjectType} from "@/features/shared/data";
 import {Skeleton} from "@/components/ui/skeleton";
 import {Card, CardContent} from "@/components/ui/card";
 
@@ -37,8 +37,6 @@ export default function CountingProcess() {
     handleAddItem,
     processAlertRef,
     info,
-    currentPackage,
-    setCurrentPackage,
   } = useCountingProcessData();
   const stockInfo = useStockInfo();
 
@@ -103,14 +101,8 @@ export default function CountingProcess() {
                       ref={barcodeRef}
                       enabled
                       unit
-                      enablePackage={user!.settings!.enablePackages}
-                      currentPackage={currentPackage}
                       objectType={ObjectType.InventoryCounting}
-                      objectId={info?.id}
-                      objectNumber={info?.number}
-                      binEntry={binLocation?.entry}
                       onAddItem={handleAddItem}
-                      onPackageChanged={setCurrentPackage}
                     />
                   )}
     >

@@ -72,37 +72,6 @@ export const PickingProcessDetailContentAvailable = ({items}: PickingProcessDeta
             <TableCell className="bg-gray-100 border-b-1"
                        colSpan={6}>{t('description')}: {row.itemName}</TableCell>
           </TableRow>
-          {row.packages?.map((p, packIndex) => {
-            return <TableRow key={`${row.itemCode}-pack${packIndex}`} className={`${row.openQuantity === 0 ? 'bg-green-100' : ''} ${p.fullPackage ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''}`}>
-              <TableCell colSpan={2}>
-                {p.fullPackage && '📦 '}{p.barcode}
-              </TableCell>
-              <TableCell>
-                &nbsp;
-              </TableCell>
-              <TableCell>
-                &nbsp;
-              </TableCell>
-              <TableCell>
-                {stockInfo({
-                  quantity: p.quantity, //todo apply available
-                  numInBuy: row.numInBuy,
-                  buyUnitMsr: row.buyUnitMsr,
-                  purPackUn: row.purPackUn,
-                  purPackMsr: row.purPackMsr,
-                })}
-              </TableCell>
-              <TableCell>
-                {stockInfo({
-                  quantity: p.quantity, //todo apply available
-                  numInBuy: row.numInBuy,
-                  buyUnitMsr: row.buyUnitMsr,
-                  purPackUn: row.purPackUn,
-                  purPackMsr: row.purPackMsr,
-                })}
-              </TableCell>
-            </TableRow>
-          })}
         </>
       ))}
     </TableBody>
