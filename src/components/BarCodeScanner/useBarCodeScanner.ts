@@ -39,6 +39,10 @@ export const useBarCodeScanner = ({
     setSelectedUnit(defaultUnit);
   };
 
+  const focusBarcode = () => {
+    setTimeout(() => barcodeRef.current?.focus(), 100);
+  };
+
   const handleScanBarcode = (barcode: string) => {
     try {
       if (barcode.length === 0) {
@@ -46,6 +50,7 @@ export const useBarCodeScanner = ({
           user!.settings.scannerMode === ScannerMode.ItemBarcode ?
             t("barCodeRequired") : t("scanCodeRequired");
         toast.warning(message);
+        focusBarcode();
         return;
       }
 
@@ -55,10 +60,12 @@ export const useBarCodeScanner = ({
         .catch((error) => {
           setError(error);
           setIsProcessing(false);
+          focusBarcode();
         });
     } catch (e) {
       setError(e);
       setIsProcessing(false);
+      focusBarcode();
     }
   };
 
@@ -69,6 +76,7 @@ export const useBarCodeScanner = ({
       setError(StringFormat(template, barcode));
       clearBarCode();
       setIsProcessing(false);
+      focusBarcode();
       return;
     }
     if (items.length === 1) {
@@ -99,10 +107,12 @@ export const useBarCodeScanner = ({
       const codes = distinctCodes.map((v) => `"${v}"`).join(", ");
       setError(StringFormat(t("multipleItemsError"), codes));
       setIsProcessing(false);
+      focusBarcode();
       return;
     }
     window.alert(t('multipleBoxesNotImplemented'));
     setIsProcessing(false);
+    focusBarcode();
   };
 
   const handleSubmit = (e: React.FormEvent) => {

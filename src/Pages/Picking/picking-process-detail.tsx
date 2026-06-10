@@ -5,12 +5,14 @@ import {Alert, AlertDescription, AlertTitle, InfoBoxValue, useAuth} from "@/comp
 import {useTranslation} from "react-i18next";
 import BarCodeScanner from "@/components/BarCodeScanner";
 import PickingProcessDetailContent from "@/features/picking/components/picking-process-detail-content";
+import PickingPackageLabelControls from "@/features/picking/components/picking-package-label-controls";
 import BinLocationScanner from "@/components/BinLocationScanner";
 import {usePickingProcessDetailData} from "@/features/picking/hooks/usePickingProcessDetailData";
 import {AlertCircle} from "lucide-react";
 import {useObjectName} from "@/hooks/useObjectName";
 import {renderCustomFields} from "@/utils/custom-fields-utils";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
+import {ObjectType} from "@/features/shared/data";
 
 export default function PickingProcessDetail() {
   const {t} = useTranslation();
@@ -30,6 +32,12 @@ export default function PickingProcessDetail() {
     onBinClear,
     handleAddItem,
     pickPackOnly,
+    packageLabelsEnabled,
+    packageLabels,
+    selectedPackageLabelId,
+    creatingPackageLabel,
+    handlePackageLabelSelected,
+    handleCreatePackageLabel,
   } = usePickingProcessDetailData();
 
   const customFields = user?.customFields?.["PickingDetails"] ?? [];
@@ -46,9 +54,18 @@ export default function PickingProcessDetail() {
                   titleOnClick={() => navigate("/pick")}
                   titleBreadcrumbs={titleBreadcrumbs}
                   footer={detail && <>
+                    {packageLabelsEnabled && detail.totalOpenItems > 0 &&
+                        <PickingPackageLabelControls
+                            labels={packageLabels}
+                            selectedLabelId={selectedPackageLabelId}
+                            creating={creatingPackageLabel}
+                            onSelect={handlePackageLabelSelected}
+                            onCreate={handleCreatePackageLabel}
+                        />}
                     {detail.totalOpenItems > 0 && (binLocation || !user?.binLocations) &&
                         <BarCodeScanner ref={barcodeRef}
                                         unit
+                                        objectType={ObjectType.Picking}
                                         pickPackOnly={pickPackOnly}
                                         onAddItem={(value) => handleAddItem(value, t)}
                                         enabled={enable}/>}

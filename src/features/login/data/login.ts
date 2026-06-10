@@ -68,6 +68,8 @@ export interface ApplicationSettings {
   // Pick List
   enablePickingCheck: boolean;
   enablePickPathRouting: boolean;
+  enablePickingPackageLabels?: boolean;
+  pickingPackageLabelPrefix?: string;
   // Quantities
   enableDecimalQuantities: boolean;
   // Per-document-type unit overrides

@@ -89,6 +89,27 @@ export interface PickingAddItemResponse {
   errorMessage?: string;
 }
 
+export interface PickingPackageLabelItem {
+  itemCode: string;
+  scannedQuantity: number;
+  baseQuantity: number;
+  unit: UnitType;
+  binEntry?: number;
+  lineCount: number;
+}
+
+export interface PickingPackageLabel {
+  id: string;
+  absEntry: number;
+  whsCode: string;
+  code: string;
+  sequence: number;
+  createdAt: Date;
+  lineCount: number;
+  totalQuantity: number;
+  items: PickingPackageLabelItem[];
+}
+
 export interface ProcessPickListCancelResponse extends ProcessResponse {
   transferId?: string;
 }

@@ -110,7 +110,7 @@ const BarCodeScanner = forwardRef<BarCodeScannerRef, BarCodeScannerProps>((
               )}
               {t('accept')}
             </Button>
-            <Button variant="secondary" onClick={onAddAction} className="flex-1">
+            <Button type="button" variant="secondary" onClick={onAddAction} className="flex-1">
               {addActionIcon && React.createElement(addActionIcon, {className: "mr-2 h-4 w-4"})}
               {addActionLabel}
             </Button>

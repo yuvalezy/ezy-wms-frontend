@@ -5,7 +5,7 @@ import {toast} from "sonner";
 import {useTranslation} from "react-i18next";
 
 import {BinLocation} from "@/features/items/data/items";
-import {PickingDocumentDetail} from "@/features/picking/data/picking";
+import {PickingDocumentDetail, PickingPackageLabel} from "@/features/picking/data/picking";
 import {IsNumeric} from "@/utils/number-utils";
 import {StringFormat} from "@/utils/string-utils";
 import {pickingService} from "@/features/picking/data/picking-service";
@@ -25,7 +25,11 @@ export const usePickingProcessDetailData = () => {
   const binLocationRef = useRef<BinLocationScannerRef>(null);
   const [binLocation, setBinLocation] = useState<BinLocation | null>(null);
   const [pickPackOnly, setPickPackOnly] = useState(false);
+  const [packageLabels, setPackageLabels] = useState<PickingPackageLabel[]>([]);
+  const [selectedPackageLabelId, setSelectedPackageLabelId] = useState<string | null>(null);
+  const [creatingPackageLabel, setCreatingPackageLabel] = useState(false);
   const {user} = useAuth();
+  const packageLabelsEnabled = user?.settings.enablePickingPackageLabels === true;
 
   useEffect(() => {
     [idParam, typeParam, entryParam].forEach((p, index) => {
@@ -50,6 +54,15 @@ export const usePickingProcessDetailData = () => {
   useEffect(() => {
     loadData();
   }, [id, type, entry]);
+
+  useEffect(() => {
+    if (packageLabelsEnabled && id) {
+      loadPackageLabels();
+      return;
+    }
+    setPackageLabels([]);
+    setSelectedPackageLabelId(null);
+  }, [id, packageLabelsEnabled]);
 
   function onBinChanged(bin: BinLocation) {
     setBinLocation(bin);
@@ -100,6 +113,47 @@ export const usePickingProcessDetailData = () => {
       .finally(() => setLoading(false));
   }
 
+  function loadPackageLabels(selectLabelId?: string) {
+    if (!id || !packageLabelsEnabled) {
+      return;
+    }
+
+    pickingService.fetchPackageLabels(id)
+      .then(labels => {
+        setPackageLabels(labels);
+        setSelectedPackageLabelId(current => {
+          if (selectLabelId !== undefined) {
+            return selectLabelId;
+          }
+          return current != null && labels.some(label => label.id === current) ? current : null;
+        });
+      })
+      .catch(error => setError(error));
+  }
+
+  function handlePackageLabelSelected(labelId: string | null) {
+    setSelectedPackageLabelId(labelId);
+    setTimeout(() => barcodeRef.current?.focus(), 1);
+  }
+
+  function handleCreatePackageLabel() {
+    if (!id) {
+      toast.error(t('missingRequiredParameters'));
+      return;
+    }
+
+    setCreatingPackageLabel(true);
+    pickingService.createPackageLabel(id)
+      .then(label => {
+        setPackageLabels(current => [...current.filter(item => item.id !== label.id), label]
+          .sort((a, b) => a.sequence - b.sequence));
+        setSelectedPackageLabelId(label.id);
+        setTimeout(() => barcodeRef.current?.focus(), 1);
+      })
+      .catch(error => setError(error))
+      .finally(() => setCreatingPackageLabel(false));
+  }
+
   function handleAddItem(value: AddItemValue, t: (key: string) => string) {
     boxConfirmationDialogRef?.current?.show(false);
     barcodeRef?.current?.clear();
@@ -113,7 +167,16 @@ export const usePickingProcessDetailData = () => {
     const barcode = value.item.barcode ?? "";
     
     setLoading(true);
-    pickingService.addItem({id, type, entry, itemCode, quantity: 1, binEntry: binLocation?.entry, unit})
+    pickingService.addItem({
+      id,
+      type,
+      entry,
+      itemCode,
+      quantity: 1,
+      binEntry: binLocation?.entry,
+      unit,
+      pickingPackageLabelId: selectedPackageLabelId ?? undefined,
+    })
       .then((data) => {
         if (data.closedDocument) {
           setError(StringFormat(t("pickedIsClosed"), id));
@@ -142,12 +205,14 @@ export const usePickingProcessDetailData = () => {
             toast.error(errorMessage);
           } finally {
             setLoading(false);
+            setTimeout(() => barcodeRef.current?.focus(), 100);
           }
           return;
         }
 
         toast.success(StringFormat(t("pickingProcessSuccess"), barcode));
         loadData({reload: true, binEntry: binLocation?.entry});
+        loadPackageLabels();
         setTimeout(() => barcodeRef.current?.focus(), 100);
       })
       .catch((error) => {
@@ -175,5 +240,11 @@ export const usePickingProcessDetailData = () => {
     onBinClear,
     handleAddItem,
     pickPackOnly,
+    packageLabelsEnabled,
+    packageLabels,
+    selectedPackageLabelId,
+    creatingPackageLabel,
+    handlePackageLabelSelected,
+    handleCreatePackageLabel,
   }
 }

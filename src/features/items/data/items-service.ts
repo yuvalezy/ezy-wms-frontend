@@ -7,7 +7,9 @@ import axios from "axios";
 export const itemsService = {
   async scanBinLocation(bin: string): Promise<BinLocation | null> {
     try {
-      const url = `items/scanBinLocation?bin=${bin}`;
+      const queryParams = new URLSearchParams();
+      queryParams.append("bin", bin);
+      const url = `items/scanBinLocation?${queryParams.toString()}`;
 
       const response = await axiosInstance.get<BinLocation>(url);
 
@@ -26,7 +28,10 @@ export const itemsService = {
 
   async scanBarcode(scanCode: string, item?: boolean): Promise<ItemInfoResponse[]> {
     try {
-      const url = `items/itemByBarCode?scanCode=${scanCode}&item=${item ?? false}`;
+      const queryParams = new URLSearchParams();
+      queryParams.append("scanCode", scanCode);
+      queryParams.append("item", (item ?? false).toString());
+      const url = `items/itemByBarCode?${queryParams.toString()}`;
 
       const response = await axiosInstance.get<ItemInfoResponse[]>(url);
 

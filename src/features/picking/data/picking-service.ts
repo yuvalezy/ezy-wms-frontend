@@ -8,6 +8,7 @@ import {
   PickListCheckItemResponse,
   PickListCheckSession,
   PickListCheckSummaryResponse,
+  PickingPackageLabel,
   ProcessPickListCancelResponse,
   ProcessResponse
 } from "@/features/picking/data/picking";
@@ -83,6 +84,7 @@ export const pickingService = {
     quantity: number;
     binEntry?: number;
     unit: UnitType;
+    pickingPackageLabelId?: string;
   }): Promise<PickingAddItemResponse> {
     try {
       const url = `picking/addItem`;
@@ -91,6 +93,28 @@ export const pickingService = {
       return response.data;
     } catch (error) {
       console.error("Error adding item:", error);
+      throw error;
+    }
+  },
+
+  async fetchPackageLabels(pickingId: number): Promise<PickingPackageLabel[]> {
+    try {
+      const url = `picking/${encodeURIComponent(pickingId.toString())}/package-labels`;
+      const response = await axiosInstance.get<PickingPackageLabel[]>(url);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching picking package labels:", error);
+      throw error;
+    }
+  },
+
+  async createPackageLabel(pickingId: number): Promise<PickingPackageLabel> {
+    try {
+      const url = `picking/${encodeURIComponent(pickingId.toString())}/package-labels`;
+      const response = await axiosInstance.post<PickingPackageLabel>(url);
+      return response.data;
+    } catch (error) {
+      console.error("Error creating picking package label:", error);
       throw error;
     }
   },
