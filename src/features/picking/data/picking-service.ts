@@ -9,6 +9,8 @@ import {
   PickListCheckSession,
   PickListCheckSummaryResponse,
   PickingPackageLabel,
+  PickingRepackAssignResponse,
+  PickingRepackSummary,
   ProcessPickListCancelResponse,
   ProcessResponse
 } from "@/features/picking/data/picking";
@@ -194,6 +196,54 @@ export const pickingService = {
       await axiosInstance.post(url);
     } catch (error) {
       console.error("Error completing check:", error);
+      throw error;
+    }
+  },
+
+  async getRepackSummary(pickListId: number): Promise<PickingRepackSummary> {
+    try {
+      const url = `picking/${pickListId}/repack`;
+      const response = await axiosInstance.get<PickingRepackSummary>(url);
+      return response.data;
+    } catch (error) {
+      console.error("Error getting repack summary:", error);
+      throw error;
+    }
+  },
+
+  async startRepack(pickListId: number): Promise<PickingRepackSummary> {
+    try {
+      const url = `picking/${pickListId}/repack/start`;
+      const response = await axiosInstance.post<PickingRepackSummary>(url);
+      return response.data;
+    } catch (error) {
+      console.error("Error starting repack:", error);
+      throw error;
+    }
+  },
+
+  async assignRepackItem(pickListId: number, params: {
+    pickingPackageLabelId: string;
+    itemCode: string;
+    unit: UnitType;
+  }): Promise<PickingRepackAssignResponse> {
+    try {
+      const url = `picking/${pickListId}/repack/assign`;
+      const response = await axiosInstance.post<PickingRepackAssignResponse>(url, params);
+      return response.data;
+    } catch (error) {
+      console.error("Error assigning repack item:", error);
+      throw error;
+    }
+  },
+
+  async completeRepack(pickListId: number): Promise<PickingRepackSummary> {
+    try {
+      const url = `picking/${pickListId}/repack/complete`;
+      const response = await axiosInstance.post<PickingRepackSummary>(url);
+      return response.data;
+    } catch (error) {
+      console.error("Error completing repack:", error);
       throw error;
     }
   }

@@ -3,7 +3,7 @@ import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
 import {Alert, AlertDescription, Button, useThemeContext} from "@/components";
 import PickingCard from "@/features/picking/components/picking-card";
-import {AlertCircle, CheckCircle, Search, X} from "lucide-react";
+import {AlertCircle, CheckCircle, PackageCheck, Search, X} from "lucide-react";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Progress} from "@/components/ui/progress";
 import {useNavigate} from "react-router";
@@ -47,6 +47,7 @@ export default function PickingUser() {
   }
 
   let handleOpenLink = user?.roles?.includes(RoleType.PICKING);
+  const showActionColumn = user?.settings.enablePickingCheck || user?.settings.enablePostPickRepack;
 
   // Memoized filtered pickings based on search term
   const filteredPickings = useMemo(() => {
@@ -98,7 +99,7 @@ export default function PickingUser() {
           <TableHead>{t('transferRequests')}</TableHead>
           <TableHead>{t('progress')}</TableHead>
           <TableHead>{t('comment')}</TableHead>
-          {user?.settings.enablePickingCheck && <TableHead></TableHead>}
+          {showActionColumn && <TableHead></TableHead>}
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -116,7 +117,7 @@ export default function PickingUser() {
               </div>
             </TableCell>
             <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-            {user?.settings.enablePickingCheck && (
+            {showActionColumn && (
               <TableCell><Skeleton className="h-8 w-16" /></TableCell>
             )}
           </TableRow>
@@ -186,7 +187,7 @@ export default function PickingUser() {
                     <TableHead>{t('transferRequests')}</TableHead>
                     <TableHead>{t('progress')}</TableHead>
                     <TableHead>{t('comment')}</TableHead>
-                    {user?.settings.enablePickingCheck && <TableHead></TableHead>}
+                    {showActionColumn && <TableHead></TableHead>}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -217,7 +218,7 @@ export default function PickingUser() {
                           </div>
                         </TableCell>
                         <TableCell>{pick.remarks || '-'}</TableCell>
-                        {user?.settings.enablePickingCheck &&
+                        {showActionColumn &&
                             <TableCell>
                               {pick.checkStarted &&
                                   <Button type="button" variant="outline" size="sm" className="cursor-pointer mr-2"
@@ -225,6 +226,12 @@ export default function PickingUser() {
                                           onClick={() => navigate(`/pick/${pick.entry}/check`)}
                                   >
                                       <CheckCircle className="mr-2 h-4 w-4"/>{t("check")}
+                                  </Button>}
+                              {user?.settings.enablePostPickRepack && pick.repackStarted && !pick.repackCompleted &&
+                                  <Button type="button" variant="outline" size="sm" className="cursor-pointer"
+                                          onClick={() => navigate(`/pick/${pick.entry}/repack`)}
+                                  >
+                                      <PackageCheck className="mr-2 h-4 w-4"/>{t("viewRepack")}
                                   </Button>}
                             </TableCell>
                         }

@@ -1,6 +1,6 @@
-import React, {createContext, ReactNode, useCallback, useContext, useState,} from "react";
+import React, {createContext, ReactNode, useCallback, useContext, useEffect, useState,} from "react";
 import axios, {AxiosError} from "axios";
-import {axiosInstance, ServerUrl} from "@/utils/axios-instance";
+import {axiosInstance, clearStoredAuth, ServerUrl, setAuthFailureCallback} from "@/utils/axios-instance";
 import {getOrCreateDeviceUUID} from "@/utils/deviceUtils";
 import {DeviceStatus} from "@/features/devices/data/device";
 import {AccountState} from "@/features/account/data/account";
@@ -25,7 +25,10 @@ interface AuthContextType {
     superUser: boolean
   }>;
   logout: () => void;
+  clearSession: () => void;
+  refreshSession: () => Promise<boolean>;
   isLoading: boolean; // Add loading state
+  authVersion: number;
   updateDeviceStatus: (newStatus: DeviceStatus) => void;
   showDeviceStatusBanner: boolean;
   setShowDeviceStatusBanner: (show: boolean) => void;
@@ -50,7 +53,11 @@ const AuthContextDefaultValues: AuthContextType = {
   },
   logout: () => {
   },
+  clearSession: () => {
+  },
+  refreshSession: async () => false,
   isLoading: true, // Default to loading
+  authVersion: 0,
   updateDeviceStatus: (newStatus: DeviceStatus) => {
     console.warn("updateDeviceStatus method not implemented yet!");
   },
@@ -85,11 +92,49 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   const [user, setUser] = useState<UserInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true); // Add loading state
   const [showDeviceStatusBanner, setShowDeviceStatusBanner] = useState(true);
+  const [authVersion, setAuthVersion] = useState(0);
   const baseUrl = `${ServerUrl}/api/`;
+
+  const clearSession = useCallback(() => {
+    clearStoredAuth();
+    setUser(null);
+    setAuthVersion(v => v + 1);
+  }, []);
+
+  const refreshSession = useCallback(async () => {
+    const token = sessionStorage.getItem('authToken');
+    const expiration = sessionStorage.getItem('tokenExpiration');
+
+    if (!token || !expiration) {
+      clearSession();
+      return false;
+    }
+
+    if (new Date(expiration) <= new Date()) {
+      clearSession();
+      return false;
+    }
+
+    try {
+      const response = await axiosInstance.get<UserInfo>(`general/userInfo`);
+      setUser(response.data);
+      setAuthVersion(v => v + 1);
+      return true;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response && (error.response.status === 401 || error.response.status === 403)) {
+        clearSession();
+      }
+      return false;
+    }
+  }, [clearSession]);
 
   // Use custom hooks
   const { companyInfo, connectionError, isLoading: isCompanyLoading, reloadCompanyInfo } = useCompanyInfo();
   useBrowserUnload();
+
+  useEffect(() => {
+    setAuthFailureCallback(clearSession);
+  }, [clearSession]);
 
   // Logout function
   const logout = useCallback(async () => {
@@ -98,17 +143,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     } catch (error) {
       console.error("Logout failed:", error);
     }
-    // Clear token from sessionStorage
-    sessionStorage.removeItem('authToken');
-    sessionStorage.removeItem('tokenExpiration');
-    setUser(null);
-  }, []);
+    clearSession();
+  }, [clearSession]);
 
   // Use idle timeout hook
   useIdleTimeout({ user, onTimeout: logout });
   
   // Initialize auth state
-  useAuthInitialization({ setUser, setIsLoading });
+  useAuthInitialization({ refreshSession, setIsLoading });
 
 
   const login = async (password: string, warehouse?: string, newDeviceName?: string) => {
@@ -158,8 +200,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       let data = userInfoResponse.data;
       if (data) {
         if (!data.superUser && data.deviceStatus !== DeviceStatus.Active) {
-          sessionStorage.removeItem('authToken');
-          sessionStorage.removeItem('tokenExpiration');
+          clearSession();
           throw new Error("Device is not active")
         }
         setUser(data);
@@ -209,7 +250,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     connectionError,
     login,
     logout,
+    clearSession,
+    refreshSession,
     isLoading: isLoading || isCompanyLoading,
+    authVersion,
     updateDeviceStatus,
     showDeviceStatusBanner,
     setShowDeviceStatusBanner,

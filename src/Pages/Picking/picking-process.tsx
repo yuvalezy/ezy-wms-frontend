@@ -4,7 +4,7 @@ import React, {useEffect, useState} from "react";
 import {Card, CardContent, CardFooter, CardHeader, FullInfoBox, InfoBoxValue, Progress, useAuth, useThemeContext} from "@/components";
 import {useTranslation} from "react-i18next";
 import {Button} from "@/components/ui/button";
-import {BarChart3, Play} from "lucide-react";
+import {BarChart3, PackageCheck, Play} from "lucide-react";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {formatNumber, IsNumeric} from "@/utils/number-utils";
 import {PickingDocument, PickingDocumentDetail} from "@/features/picking/data/picking";
@@ -56,6 +56,12 @@ export default function PickingProcess() {
   function handleOpen(detail: PickingDocumentDetail) {
     navigate(`/pick/${id}/${detail.type}/${detail.entry}`);
   }
+
+  function handleRepack() {
+    navigate(`/pick/${id}/repack`);
+  }
+
+  const canAccessRepack = user?.settings.enablePostPickRepack && picking?.repackStarted && !picking.repackCompleted;
 
   // Skeleton components
   const ProcessMobileCardSkeleton = () => (
@@ -177,6 +183,12 @@ export default function PickingProcess() {
                             {t("process")}
                           </Button>
                       }
+                      {item.totalOpenItems === 0 && canAccessRepack &&
+                          <Button className="flex items-center gap-2" onClick={handleRepack}>
+                              <PackageCheck className="h-4 w-4"/>
+                            {t("viewRepack")}
+                          </Button>
+                      }
                       {item.totalOpenItems === 0 &&
                           <Button variant="outline" className="flex items-center gap-2"
                                   onClick={() => handleOpen(item)}>
@@ -237,6 +249,12 @@ export default function PickingProcess() {
                                 <Button size="sm" className="flex items-center gap-2" onClick={() => handleOpen(item)}>
                                     <Play className="h-3 w-3"/>
                                   {t("process")}
+                                </Button>
+                            }
+                            {item.totalOpenItems === 0 && canAccessRepack &&
+                                <Button size="sm" className="flex items-center gap-2" onClick={handleRepack}>
+                                    <PackageCheck className="h-3 w-3"/>
+                                  {t("viewRepack")}
                                 </Button>
                             }
                             {item.totalOpenItems === 0 &&

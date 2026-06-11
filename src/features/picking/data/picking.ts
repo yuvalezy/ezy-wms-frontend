@@ -37,6 +37,9 @@ export type PickingDocument = {
   pickPackOnly: boolean;
   checkStarted: boolean;
   hasCheck: boolean;
+  hasRepack: boolean;
+  repackStarted: boolean;
+  repackCompleted: boolean;
   detail?: PickingDocumentDetail[];
 }
 export type PickingDocumentDetail = {
@@ -158,4 +161,34 @@ export interface PickListCheckItemDetail {
   quantityInUnit: number;
   packMeasure: string;
   quantityInPack: number;
+}
+
+export interface PickingRepackItem {
+  itemCode: string;
+  unit: UnitType;
+  totalQuantity: number;
+  assignedQuantity: number;
+  totalLines: number;
+  assignedLines: number;
+}
+
+export interface PickingRepackSummary {
+  pickListId: number;
+  started: boolean;
+  completed: boolean;
+  startedAt?: Date;
+  startedBy?: string;
+  completedAt?: Date;
+  totalLines: number;
+  assignedLines: number;
+  totalQuantity: number;
+  assignedQuantity: number;
+  labels: PickingPackageLabel[];
+  items: PickingRepackItem[];
+}
+
+export interface PickingRepackAssignResponse {
+  success: boolean;
+  errorMessage?: string;
+  summary?: PickingRepackSummary;
 }

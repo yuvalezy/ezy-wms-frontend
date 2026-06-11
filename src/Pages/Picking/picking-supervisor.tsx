@@ -9,7 +9,7 @@ import PickingCard from "@/features/picking/components/picking-card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Button} from "@/components/ui/button";
 import {Progress} from "@/components/ui/progress";
-import {CheckCircle, Eye, RefreshCw, Search, X, XCircle} from "lucide-react";
+import {CheckCircle, Eye, PackageCheck, RefreshCw, Search, X, XCircle} from "lucide-react";
 import {useNavigate} from "react-router";
 import {useAuth} from "@/components/AppContext";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
@@ -40,6 +40,18 @@ export default function PickingSupervisor() {
 
   function handleOpen(id: number) {
     navigate(`/pick/${id}`);
+  }
+
+  function handleOpenRepack(id: number) {
+    navigate(`/pick/${id}/repack`);
+  }
+
+  function handleStartRepack(picking: PickingDocument) {
+    setLoading(true);
+    pickingService.startRepack(picking.entry)
+      .then(() => navigate(`/pick/${picking.entry}/repack`))
+      .catch(error => setError(error))
+      .finally(() => setLoading(false));
   }
 
   let handleOpenLink = user?.roles?.includes(RoleType.PICKING);
@@ -250,7 +262,8 @@ export default function PickingSupervisor() {
             {filteredPickings.map((pick) => (
               <PickingCard key={pick.entry} picking={pick} supervisor={true}
                            onUpdatePick={handleUpdatePick}
-                           onStartCheck={handleStartCheck}/>
+                           onStartCheck={handleStartCheck}
+                           onStartRepack={handleStartRepack}/>
             ))}
           </div>
 
@@ -319,6 +332,28 @@ export default function PickingSupervisor() {
                               onStartCheck={handleStartCheck}
                               showViewButton={false}
                             />
+                          )}
+                          {user?.settings.enablePostPickRepack && progressValue >= 100 && !pick.hasRepack && (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleStartRepack(pick)}
+                            >
+                              <PackageCheck className="mr-2 h-4 w-4"/>
+                              {t("startRepack")}
+                            </Button>
+                          )}
+                          {user?.settings.enablePostPickRepack && pick.hasRepack && (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleOpenRepack(pick.entry)}
+                            >
+                              <Eye className="mr-2 h-4 w-4"/>
+                              {t("viewRepack")}
+                            </Button>
                           )}
                           {user?.settings.enablePickingCheck && pick.hasCheck && !pick.checkStarted && (
                             <Button

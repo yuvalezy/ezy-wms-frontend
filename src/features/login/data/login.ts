@@ -69,6 +69,7 @@ export interface ApplicationSettings {
   enablePickingCheck: boolean;
   enablePickPathRouting: boolean;
   enablePickingPackageLabels?: boolean;
+  enablePostPickRepack?: boolean;
   pickingPackageLabelPrefix?: string;
   // Quantities
   enableDecimalQuantities: boolean;

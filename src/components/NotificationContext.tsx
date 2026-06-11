@@ -75,7 +75,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
   const [connection, setConnection] = useState<signalR.HubConnection | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [onlineUserIds, setOnlineUserIds] = useState<Set<string>>(new Set());
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, authVersion } = useAuth();
 
   // Initialize SignalR connection
   useEffect(() => {
@@ -86,6 +86,9 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
         setConnection(null);
         setIsConnected(false);
       }
+      setAlerts([]);
+      setUnreadCount(0);
+      setOnlineUserIds(new Set());
       return;
     }
 
@@ -97,7 +100,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
     // Create SignalR connection
     const newConnection = new signalR.HubConnectionBuilder()
       .withUrl(`${ServerUrl}/hubs/notifications`, {
-        accessTokenFactory: () => token,
+        accessTokenFactory: () => sessionStorage.getItem('authToken') ?? '',
       })
       .withAutomaticReconnect()
       .configureLogging(signalR.LogLevel.Information)
@@ -161,7 +164,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
         newConnection.stop();
       }
     };
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated, user?.id, authVersion]);
 
   // Fetch alerts from API
   const fetchAlerts = useCallback(async (unreadOnly: boolean = false, limit?: number) => {

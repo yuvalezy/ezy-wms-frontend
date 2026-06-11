@@ -6,7 +6,7 @@ import {Card, CardContent, CardFooter} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {Progress} from "@/components/ui/progress";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
-import {CheckCircle} from "lucide-react";
+import {CheckCircle, Eye, PackageCheck} from "lucide-react";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {formatNumber} from "@/utils/number-utils";
 import {PickingDocument} from "@/features/picking/data/picking";
@@ -16,10 +16,11 @@ type PickingCardProps = {
   picking: PickingDocument,
   onUpdatePick?: (picking: PickingDocument) => void,
   onStartCheck?: (picking: PickingDocument) => void,
+  onStartRepack?: (picking: PickingDocument) => void,
   supervisor?: boolean
 }
 
-const PickingCard: React.FC<PickingCardProps> = ({picking, onUpdatePick, onStartCheck, supervisor = false}) => {
+const PickingCard: React.FC<PickingCardProps> = ({picking, onUpdatePick, onStartCheck, onStartRepack, supervisor = false}) => {
   const {t} = useTranslation();
   const navigate = useNavigate();
   const {user} = useAuth();
@@ -27,6 +28,10 @@ const PickingCard: React.FC<PickingCardProps> = ({picking, onUpdatePick, onStart
 
   function handleOpen(id: number) {
     navigate(`/pick/${id}`);
+  }
+
+  function handleRepack(id: number) {
+    navigate(`/pick/${id}/repack`);
   }
 
   let handleOpenLink = user?.roles?.includes(RoleType.PICKING);
@@ -93,15 +98,34 @@ const PickingCard: React.FC<PickingCardProps> = ({picking, onUpdatePick, onStart
               showViewButton={true}
             />
           )}
+          {user?.settings.enablePostPickRepack && progressValue >= 100 && !picking.hasRepack && (
+            <Button type="button" variant="outline" onClick={() => onStartRepack?.(picking)}>
+              <PackageCheck className="mr-2 h-4 w-4"/>{t("startRepack")}
+            </Button>
+          )}
+          {user?.settings.enablePostPickRepack && picking.hasRepack && (
+            <Button type="button" variant="outline" onClick={() => handleRepack(picking.entry)}>
+              <Eye className="mr-2 h-4 w-4"/>{t("viewRepack")}
+            </Button>
+          )}
         </CardFooter>
       ) : (
-        user?.settings.enablePickingCheck && picking.checkStarted ? (
+        (user?.settings.enablePickingCheck && picking.checkStarted) || (user?.settings.enablePostPickRepack && picking.repackStarted && !picking.repackCompleted) ? (
           <CardFooter className="flex justify-center gap-2 pt-4 border-t">
-            <Button type="button" variant="outline" className="cursor-pointer"
-                    onClick={() => navigate(`/pick/${picking.entry}/check`)}
-            >
-              <CheckCircle className="mr-2 h-4 w-4"/>{t("viewCheck")}
-            </Button>
+            {user?.settings.enablePickingCheck && picking.checkStarted && (
+              <Button type="button" variant="outline" className="cursor-pointer"
+                      onClick={() => navigate(`/pick/${picking.entry}/check`)}
+              >
+                <CheckCircle className="mr-2 h-4 w-4"/>{t("viewCheck")}
+              </Button>
+            )}
+            {user?.settings.enablePostPickRepack && picking.repackStarted && !picking.repackCompleted && (
+              <Button type="button" variant="outline" className="cursor-pointer"
+                      onClick={() => navigate(`/pick/${picking.entry}/repack`)}
+              >
+                <PackageCheck className="mr-2 h-4 w-4"/>{t("viewRepack")}
+              </Button>
+            )}
           </CardFooter>
         ) : null
       )}

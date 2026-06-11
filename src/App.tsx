@@ -15,6 +15,7 @@ import PickingUser from "./Pages/Picking/picking-user";
 import PickingProcess from "./Pages/Picking/picking-process";
 import PickingProcessDetail from "./Pages/Picking/picking-process-detail";
 import PickingCheck from "./Pages/Picking/picking-check";
+import PickingRepack from "./Pages/Picking/picking-repack";
 import GoodsReceipt from "./Pages/GoodsReceipt/GoodsReceipt";
 import GoodsReceiptProcess from "./Pages/GoodsReceipt/GoodsReceiptProcess";
 import GoodsReceiptSupervisor from "./Pages/GoodsReceipt/GoodsReceiptSupervisor";
@@ -225,6 +226,8 @@ function AppRoutes() {
                element={<ProtectedRoute authorization={RoleType.PICKING} element={<PickingProcessDetail/>}/>}/>
         <Route path="/pick/:id/check"
                element={<ProtectedRoute authorizations={[RoleType.PICKING, RoleType.PICKING_SUPERVISOR]} element={<PickingCheck/>}/>}/>
+        <Route path="/pick/:id/repack"
+               element={<ProtectedRoute authorizations={[RoleType.PICKING, RoleType.PICKING_SUPERVISOR]} element={<PickingRepack/>}/>}/>
         <Route path="/pickSupervisor" element={<ProtectedRoute authorization={RoleType.PICKING_SUPERVISOR}
                                                                element={<PickingSupervisor/>}/>}/>
       </>

@@ -19,7 +19,7 @@ export default function Login() {
     // Actions
     handleSubmit,
     handleLanguageChange,
-    reloadCompanyInfo,
+    handleRetryConnection,
 
     // Status checks
     shouldShowDeviceStatusBanner,
@@ -34,7 +34,7 @@ export default function Login() {
     <>
       {connectionError && !isCompanyInfoLoading && (
         <ConnectionError
-          onRetry={reloadCompanyInfo}
+          onRetry={handleRetryConnection}
           retryText={t('retry') || 'Retry'}
           errorTitle={t('connectionError') || 'Connection Error'}
           errorMessage={t('cannotEstablishConnection') || 'Cannot establish connection to server'}

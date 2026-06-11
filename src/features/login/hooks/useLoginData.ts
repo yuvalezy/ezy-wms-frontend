@@ -21,7 +21,7 @@ export const useLoginData = () => {
   
   const { setLoading } = useThemeContext();
   const navigate = useNavigate();
-  const { login, isValidAccount, companyInfo, connectionError, isLoading: isCompanyInfoLoading, reloadCompanyInfo } = useAuth();
+  const { login, isValidAccount, companyInfo, connectionError, isLoading: isCompanyInfoLoading, reloadCompanyInfo, refreshSession } = useAuth();
   const { t, i18n } = useTranslation();
 
 
@@ -40,6 +40,15 @@ export const useLoginData = () => {
       path: '/',
       expires: new Date(new Date().setFullYear(new Date().getFullYear() + 10)),
     });
+  };
+
+  const handleRetryConnection = async () => {
+    await reloadCompanyInfo();
+    const restored = await refreshSession();
+    if (restored) {
+      const params = new URLSearchParams(window.location.search);
+      navigate(params.get('returnUrl') || '/');
+    }
   };
 
   const clearError = () => {
@@ -167,6 +176,7 @@ export const useLoginData = () => {
     handleLanguageChange,
     clearError,
     reloadCompanyInfo,
+    handleRetryConnection,
 
     // Status checks
     shouldShowDeviceStatusBanner,

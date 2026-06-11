@@ -4,9 +4,20 @@ import {getOrCreateDeviceUUID} from "./deviceUtils";
 
 // Navigation callback for routing outside of React components
 let navigateCallback: ((path: string) => void) | null = null;
+let authFailureCallback: (() => void) | null = null;
 
 export const setNavigateCallback = (callback: (path: string) => void) => {
   navigateCallback = callback;
+};
+
+export const setAuthFailureCallback = (callback: () => void) => {
+  authFailureCallback = callback;
+};
+
+export const clearStoredAuth = () => {
+  sessionStorage.removeItem('authToken');
+  sessionStorage.removeItem('tokenExpiration');
+  delete axiosInstance.defaults.headers.common['Authorization'];
 };
 
 // Active request tracking for idle timeout awareness
@@ -30,6 +41,25 @@ const token = sessionStorage.getItem('authToken');
 if (token) {
   axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 }
+
+const shouldSkipAuthRedirect = (url?: string) => {
+  if (!url) {
+    return false;
+  }
+
+  const normalizedUrl = url.toLowerCase();
+  return normalizedUrl.includes('authentication/login') ||
+    normalizedUrl.includes('authentication/logout') ||
+    normalizedUrl.includes('authentication/companyinfo');
+};
+
+const buildLoginRedirect = () => {
+  const currentPath = `${window.location.pathname}${window.location.search}`;
+  if (window.location.pathname === '/login') {
+    return '/login?reason=session-expired';
+  }
+  return `/login?reason=session-expired&returnUrl=${encodeURIComponent(currentPath)}`;
+};
 
 // Add a request interceptor to include the token and device UUID
 axiosInstance.interceptors.request.use(
@@ -65,7 +95,16 @@ axiosInstance.interceptors.response.use(
     const response = error.response;
     if (response) {
       const status = response.status;
-      if (status === 401 || status === 403) {
+      if (status === 401 && !shouldSkipAuthRedirect(error.config?.url)) {
+        clearStoredAuth();
+        authFailureCallback?.();
+        const loginPath = buildLoginRedirect();
+        if (navigateCallback) {
+          navigateCallback(loginPath);
+        } else {
+          window.location.replace(loginPath);
+        }
+      } else if (status === 403 && !shouldSkipAuthRedirect(error.config?.url)) {
         if (navigateCallback) {
           navigateCallback(`/unauthorized?errorCode=${status}`);
         } else {
