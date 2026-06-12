@@ -1,18 +1,38 @@
 import React from 'react';
-import {AlertCircle, AlertTriangle, Clock, XCircle} from 'lucide-react';
+import {AlertCircle, AlertTriangle, CalendarClock, Clock, XCircle} from 'lucide-react';
 import {useTranslation} from 'react-i18next';
 import {AccountState} from '@/features/account/data/account';
 
 interface AccountStatusBannerProps {
   accountStatus: AccountState;
+  /** License/demo expiry or payment-due grace deadline (ISO string or Date). */
+  expirationDate?: string | Date | null;
   className?: string;
 }
 
-const AccountStatusBanner: React.FC<AccountStatusBannerProps> = ({ 
-  accountStatus, 
-  className = '' 
+const AccountStatusBanner: React.FC<AccountStatusBannerProps> = ({
+  accountStatus,
+  expirationDate,
+  className = ''
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  const formattedExpiry = (() => {
+    if (!expirationDate) return null;
+    const date = new Date(expirationDate);
+    if (Number.isNaN(date.getTime())) return null;
+    return date.toLocaleDateString(i18n.language || undefined, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  })();
+
+  // Suffix appended to states where a *future* deadline is meaningful (demo,
+  // payment-due grace). Empty when there is no usable date.
+  const expirySuffix = formattedExpiry
+    ? ' ' + t('accountStatusBanner.expiresOn', 'It expires on {{date}}.', { date: formattedExpiry })
+    : '';
 
   const getBannerConfig = (status: AccountState) => {
     switch (status) {
@@ -32,7 +52,7 @@ const AccountStatusBanner: React.FC<AccountStatusBannerProps> = ({
           textColor: 'text-red-800',
           iconColor: 'text-red-600',
           icon: AlertTriangle,
-          message: t('accountStatusBanner.paymentDue', 'Payment is due for your account. Please update your payment method.')
+          message: t('accountStatusBanner.paymentDue', 'Payment is due for your account. Please update your payment method.') + expirySuffix
         };
       case AccountState.PaymentDueUnknown:
         return {
@@ -50,7 +70,7 @@ const AccountStatusBanner: React.FC<AccountStatusBannerProps> = ({
           textColor: 'text-blue-800',
           iconColor: 'text-blue-600',
           icon: Clock,
-          message: t('accountStatusBanner.demo', 'You are using a demo account with limited features.')
+          message: t('accountStatusBanner.demo', 'You are using a demo license for testing purposes.') + expirySuffix
         };
       case AccountState.DemoExpired:
         return {
@@ -59,7 +79,7 @@ const AccountStatusBanner: React.FC<AccountStatusBannerProps> = ({
           textColor: 'text-red-800',
           iconColor: 'text-red-600',
           icon: XCircle,
-          message: t('accountStatusBanner.demoExpired', 'Your demo account has expired. Please contact support to upgrade.')
+          message: t('accountStatusBanner.demoExpired', 'Your demo license has expired. Please contact support to upgrade.')
         };
       case AccountState.Disabled:
         return {
@@ -69,6 +89,18 @@ const AccountStatusBanner: React.FC<AccountStatusBannerProps> = ({
           iconColor: 'text-red-600',
           icon: XCircle,
           message: t('accountStatusBanner.disabled', 'Your account has been disabled. Please contact support.')
+        };
+      case AccountState.Active:
+        // A non-demo license can still carry an expiry date — surface it as a
+        // neutral, informational strip (no banner at all if there is no date).
+        if (!formattedExpiry) return null;
+        return {
+          bgColor: 'bg-slate-50',
+          borderColor: 'border-slate-200',
+          textColor: 'text-slate-700',
+          iconColor: 'text-slate-500',
+          icon: CalendarClock,
+          message: t('accountStatusBanner.licenseExpiresOn', 'Your license is valid until {{date}}.', { date: formattedExpiry })
         };
       default:
         return null;

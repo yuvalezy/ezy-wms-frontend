@@ -101,6 +101,7 @@ export default function Login() {
           shouldShowAccountStatusBanner={shouldShowAccountStatusBanner()}
           shouldShowDeviceStatusBanner={shouldShowDeviceStatusBanner()}
           accountStatus={companyInfo?.accountStatus}
+          expirationDate={companyInfo?.expirationDate}
           deviceStatus={companyInfo?.deviceStatus}
         />
           </div>

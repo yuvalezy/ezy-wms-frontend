@@ -15,7 +15,8 @@ export const License: React.FC = () => {
 
   const [licenseData, setLicenseData] = useState<LicenseStatusResponse | null>(null);
   const [queueData, setQueueData] = useState<QueueStatusResponse | null>(null);
-  const [isLoadingLicense, setIsLoadingLicense] = useState(false);
+  const [isLoadingLicense, setIsLoadingLicense] = useState(true);
+  const [isLoadingQueue, setIsLoadingQueue] = useState(true);
   const [isUpdatingLicense, setIsUpdatingLicense] = useState(false);
 
   useEffect(() => {
@@ -37,10 +38,13 @@ export const License: React.FC = () => {
 
   const loadQueueData = async () => {
     try {
+      setIsLoadingQueue(true);
       const data = await licenseService.getQueueStatus();
       setQueueData(data);
     } catch (error) {
       setError(`Failed to load queue status: ${error}`);
+    } finally {
+      setIsLoadingQueue(false);
     }
   };
 
@@ -58,7 +62,7 @@ export const License: React.FC = () => {
 
   return (
     <ContentTheme title={t("settings")} titleBreadcrumbs={[{label: t("license.title")}]}>
-      <div className="space-y-6">
+      <div className="mx-auto w-full max-w-7xl space-y-4 px-3 pb-6 md:px-4">
         {isLoadingLicense ? (
           <LicenseStatusSkeleton />
         ) : licenseData ? (
@@ -69,7 +73,7 @@ export const License: React.FC = () => {
           />
         ) : null}
         
-        {isLoadingLicense ? (
+        {isLoadingQueue ? (
           <QueueStatusSkeleton />
         ) : queueData ? (
           <QueueStatus

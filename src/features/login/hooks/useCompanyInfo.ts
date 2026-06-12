@@ -12,6 +12,7 @@ export interface CompanyInfoResponse {
   licenseWarnings: LicenseWarning[]; // Array of warning messages
   deviceStatus?: DeviceStatus;
   accountStatus?: AccountState;
+  expirationDate?: string; // ISO date string; license/demo expiry or grace deadline
 }
 
 export const useCompanyInfo = () => {

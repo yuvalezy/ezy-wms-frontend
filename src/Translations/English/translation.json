@@ -410,6 +410,7 @@
     "demoExpirationDate": "Demo Expiration Date",
     "lastValidation": "Last Validation",
     "daysRemaining": "{{days}} days remaining",
+    "expirationUnknown": "Unknown",
     "warning": {
       "paymentDue": "Payment is due. Please contact support.",
       "paymentStatusUnknown": "Payment status unknown. System will be disabled in {{days}} days.",
@@ -660,9 +661,11 @@
     "invalid": "Your account status is invalid. Please contact support.",
     "paymentDue": "Payment is due for your account. Please update your payment method.",
     "paymentDueUnknown": "Payment status is unknown. Please contact support to verify your account.",
-    "demo": "You are using a demo account with limited features.",
-    "demoExpired": "Your demo account has expired. Please contact support to upgrade.",
-    "disabled": "Your account has been disabled. Please contact support."
+    "demo": "You are using a demo license for testing purposes.",
+    "demoExpired": "Your demo license has expired. Please contact support to upgrade.",
+    "disabled": "Your account has been disabled. Please contact support.",
+    "expiresOn": "It expires on {{date}}.",
+    "licenseExpiresOn": "Your license is valid until {{date}}."
   },
   "deviceStatusBanner": {
     "inactive": "Your device is currently inactive. Please contact your administrator.",

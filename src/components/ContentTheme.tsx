@@ -53,7 +53,9 @@ const ContentTheme: React.FC<ContentThemeProps> = (
       AccountState.DemoExpired,
       AccountState.Disabled
     ];
-    return invalidStates.includes(companyInfo.accountStatus);
+    if (invalidStates.includes(companyInfo.accountStatus)) return true;
+    // An otherwise-active license can still carry an expiry date worth surfacing.
+    return companyInfo.accountStatus === AccountState.Active && !!companyInfo.expirationDate;
   };
 
   return (
@@ -107,9 +109,10 @@ const ContentTheme: React.FC<ContentThemeProps> = (
 
           {/* Account Status Banner */}
           {shouldShowAccountStatusBanner() && (
-            <div className="w-full">
+            <div className="w-full px-3 md:px-6 pt-3">
               <AccountStatusBanner
                 accountStatus={companyInfo!.accountStatus!}
+                expirationDate={companyInfo?.expirationDate}
                 className="w-full"
               />
             </div>

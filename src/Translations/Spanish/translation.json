@@ -409,6 +409,7 @@
     "demoExpirationDate": "Fecha de Expiración de Demo",
     "lastValidation": "Última Validación",
     "daysRemaining": "{{days}} días restantes",
+    "expirationUnknown": "Desconocido",
     "warning": {
       "paymentDue": "Pago pendiente. Por favor, contacte al soporte.",
       "paymentStatusUnknown": "Estado de pago desconocido. El sistema será deshabilitado en {{days}} días.",
@@ -660,9 +661,11 @@
     "invalid": "El estado de su cuenta es inválido. Por favor contacte al soporte.",
     "paymentDue": "Su cuenta tiene un pago pendiente. Por favor actualice su método de pago.",
     "paymentDueUnknown": "El estado de pago es desconocido. Por favor contacte al soporte para verificar su cuenta.",
-    "demo": "Está usando una cuenta de demostración con funciones limitadas.",
-    "demoExpired": "Su cuenta de demostración ha expirado. Por favor contacte al soporte para actualizar.",
-    "disabled": "Su cuenta ha sido deshabilitada. Por favor contacte al soporte."
+    "demo": "Está usando una licencia de demostración con fines de prueba.",
+    "demoExpired": "Su licencia de demostración ha expirado. Por favor contacte al soporte para actualizar.",
+    "disabled": "Su cuenta ha sido deshabilitada. Por favor contacte al soporte.",
+    "expiresOn": "Vence el {{date}}.",
+    "licenseExpiresOn": "Su licencia es válida hasta el {{date}}."
   },
   "deviceStatusBanner": {
     "inactive": "Su dispositivo está actualmente inactivo. Por favor contacte a su administrador.",

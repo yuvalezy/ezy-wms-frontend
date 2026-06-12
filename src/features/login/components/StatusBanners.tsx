@@ -8,6 +8,7 @@ interface StatusBannersProps {
   shouldShowAccountStatusBanner: boolean;
   shouldShowDeviceStatusBanner: boolean;
   accountStatus?: AccountState;
+  expirationDate?: string;
   deviceStatus?: DeviceStatus;
 }
 
@@ -15,6 +16,7 @@ export const StatusBanners: React.FC<StatusBannersProps> = ({
   shouldShowAccountStatusBanner,
   shouldShowDeviceStatusBanner,
   accountStatus,
+  expirationDate,
   deviceStatus
 }) => {
   return (
@@ -24,6 +26,7 @@ export const StatusBanners: React.FC<StatusBannersProps> = ({
         <div className="mt-4">
           <AccountStatusBanner
             accountStatus={accountStatus}
+            expirationDate={expirationDate}
             className="w-full"
           />
         </div>
