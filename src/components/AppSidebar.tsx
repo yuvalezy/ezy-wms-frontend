@@ -71,6 +71,7 @@ export function AppSidebar() {
       case "/settings/devices":
       case "/settings/license":
       case "/settings/externalAlerts":
+      case "/settings/configuration":
         groupLabel = t("settings");
         break;
       default:

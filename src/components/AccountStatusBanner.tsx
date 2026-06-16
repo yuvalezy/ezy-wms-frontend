@@ -9,6 +9,12 @@ interface AccountStatusBannerProps {
   expirationDate?: string | Date | null;
   variant?: 'authenticated' | 'login';
   showExpirationDate?: boolean;
+  /**
+   * When true on the login variant, payment states use the specific payment
+   * message instead of the vague generic warning. Driven by the configurable
+   * `paymentAlert.showPaymentDetailAtLogin` spec; defaults to today's vague text.
+   */
+  showPaymentDetailAtLogin?: boolean;
   className?: string;
 }
 
@@ -17,10 +23,14 @@ const AccountStatusBanner: React.FC<AccountStatusBannerProps> = ({
   expirationDate,
   variant = 'authenticated',
   showExpirationDate = true,
+  showPaymentDetailAtLogin = false,
   className = ''
 }) => {
   const { t, i18n } = useTranslation();
   const isLoginVariant = variant === 'login';
+  // On login, payment states show the vague generic warning by default; when the
+  // operator opts in via `showPaymentDetailAtLogin`, show the specific message.
+  const useVagueLoginText = isLoginVariant && !showPaymentDetailAtLogin;
 
   const formattedExpiry = (() => {
     if (!expirationDate) return null;
@@ -57,7 +67,7 @@ const AccountStatusBanner: React.FC<AccountStatusBannerProps> = ({
           textColor: 'text-red-800',
           iconColor: 'text-red-600',
           icon: AlertTriangle,
-          message: isLoginVariant
+          message: useVagueLoginText
             ? t('accountStatusBanner.loginWarning', 'Your account needs attention soon. Please contact an administrator.')
             : t('accountStatusBanner.paymentDue', 'Payment is due for your account. Please update your payment method.') + expirySuffix
         };
@@ -68,7 +78,7 @@ const AccountStatusBanner: React.FC<AccountStatusBannerProps> = ({
           textColor: 'text-yellow-800',
           iconColor: 'text-yellow-600',
           icon: AlertCircle,
-          message: isLoginVariant
+          message: useVagueLoginText
             ? t('accountStatusBanner.loginWarning', 'Your account needs attention soon. Please contact an administrator.')
             : t('accountStatusBanner.paymentDueUnknown', 'Payment status is unknown. Please contact support to verify your account.')
         };
@@ -79,7 +89,7 @@ const AccountStatusBanner: React.FC<AccountStatusBannerProps> = ({
           textColor: 'text-blue-800',
           iconColor: 'text-blue-600',
           icon: Clock,
-          message: isLoginVariant
+          message: useVagueLoginText
             ? t('accountStatusBanner.loginWarning', 'Your account needs attention soon. Please contact an administrator.')
             : t('accountStatusBanner.demo', 'You are using a demo license for testing purposes.') + expirySuffix
         };

@@ -5,6 +5,7 @@ import {getOrCreateDeviceUUID} from '@/utils/deviceUtils';
 import {DeviceStatus} from '@/features/devices/data/device';
 import {LicenseWarning} from '@/features/license/data/license';
 import {AccountState} from '@/features/account/data/account';
+import {PaymentAlertSpec} from '@/utils/account-status-visibility';
 
 export interface CompanyInfoResponse {
   companyName: string;
@@ -13,6 +14,7 @@ export interface CompanyInfoResponse {
   deviceStatus?: DeviceStatus;
   accountStatus?: AccountState;
   expirationDate?: string; // ISO date string; license/demo expiry or grace deadline
+  paymentAlert?: PaymentAlertSpec | null; // configurable alert spec (windows + audience + enabled); absent on older backends
 }
 
 export const useCompanyInfo = () => {

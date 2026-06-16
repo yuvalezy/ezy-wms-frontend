@@ -103,6 +103,7 @@ export default function Login() {
           accountStatus={companyInfo?.accountStatus}
           expirationDate={companyInfo?.expirationDate}
           deviceStatus={companyInfo?.deviceStatus}
+          showPaymentDetailAtLogin={companyInfo?.paymentAlert?.showPaymentDetailAtLogin}
         />
           </div>
         </div>

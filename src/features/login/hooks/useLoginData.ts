@@ -146,7 +146,8 @@ export const useLoginData = () => {
     return shouldShowLoginAccountStatusBanner(
       companyInfo?.accountStatus,
       companyInfo?.expirationDate,
-      companyInfo?.serverTime
+      companyInfo?.serverTime,
+      companyInfo?.paymentAlert
     );
   };
 

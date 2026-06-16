@@ -10,6 +10,8 @@ interface StatusBannersProps {
   accountStatus?: AccountState;
   expirationDate?: string;
   deviceStatus?: DeviceStatus;
+  /** From `paymentAlert.showPaymentDetailAtLogin`; opts the login banner into the specific payment message. */
+  showPaymentDetailAtLogin?: boolean;
 }
 
 export const StatusBanners: React.FC<StatusBannersProps> = ({
@@ -17,7 +19,8 @@ export const StatusBanners: React.FC<StatusBannersProps> = ({
   shouldShowDeviceStatusBanner,
   accountStatus,
   expirationDate,
-  deviceStatus
+  deviceStatus,
+  showPaymentDetailAtLogin = false
 }) => {
   return (
     <>
@@ -29,6 +32,7 @@ export const StatusBanners: React.FC<StatusBannersProps> = ({
             expirationDate={expirationDate}
             variant="login"
             showExpirationDate={false}
+            showPaymentDetailAtLogin={showPaymentDetailAtLogin}
             className="w-full"
           />
         </div>

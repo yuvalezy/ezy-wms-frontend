@@ -48,7 +48,8 @@ const ContentTheme: React.FC<ContentThemeProps> = (
       companyInfo?.accountStatus,
       companyInfo?.expirationDate,
       user?.superUser,
-      companyInfo?.serverTime
+      companyInfo?.serverTime,
+      companyInfo?.paymentAlert
     );
   };
 

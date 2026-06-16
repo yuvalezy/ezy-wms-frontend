@@ -11,6 +11,7 @@ import {useIdleTimeout} from '@/features/login/hooks/useIdleTimeout';
 import {CompanyInfoResponse, useCompanyInfo} from '@/features/login/hooks/useCompanyInfo';
 import {useBrowserUnload} from '@/features/login/hooks/useBrowserUnload';
 import {useAuthInitialization} from '@/features/login/hooks/useAuthInitialization';
+import i18n from '@/i18n';
 
 // Define the shape of the context
 interface AuthContextType {
@@ -201,7 +202,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       if (data) {
         if (!data.superUser && data.deviceStatus !== DeviceStatus.Active) {
           clearSession();
-          throw new Error("Device is not active")
+          throw new Error(i18n.t('deviceStatusBanner.notActive', 'Your device is not active. Please contact your administrator.'))
         }
         setUser(data);
         return {deviceStatus: data?.deviceStatus, superUser: data?.superUser ?? false};
