@@ -21,10 +21,15 @@ import OptionsEditor from "@/features/configuration/components/OptionsEditor";
 import SboSettingsEditor from "@/features/configuration/components/SboSettingsEditor";
 import ItemMetadataEditor from "@/features/configuration/components/ItemMetadataEditor";
 import WarehousesEditor from "@/features/configuration/components/WarehousesEditor";
+import ExternalCommandsEditor from "@/features/configuration/components/ExternalCommandsEditor";
+import FiltersEditor from "@/features/configuration/components/FiltersEditor";
 
-type ConfigView = "Options" | "SboSettings" | "CustomFields" | "Item" | "Warehouses" | "Other";
+type ConfigView =
+  | "Options" | "SboSettings" | "CustomFields" | "Item" | "Warehouses" | "ExternalCommands" | "Filters" | "Other";
 
-const CONFIG_VIEWS: ConfigView[] = ["Options", "SboSettings", "CustomFields", "Item", "Warehouses", "Other"];
+const CONFIG_VIEWS: ConfigView[] = [
+  "Options", "SboSettings", "CustomFields", "Item", "Warehouses", "ExternalCommands", "Filters", "Other",
+];
 
 /** Restore the section from the URL hash (#Section) first, then the ?view= query, else Options. */
 function resolveInitialView(queryView: string | null): ConfigView {
@@ -102,7 +107,8 @@ const ConfigurationList: React.FC = () => {
   // Sections with their own friendly editors are excluded from the generic table.
   const otherSections = sections.filter(
     (s) => s.section !== "Options" && s.section !== "SboSettings" && s.section !== "CustomFields"
-      && s.section !== "Item" && s.section !== "Warehouses",
+      && s.section !== "Item" && s.section !== "Warehouses"
+      && s.section !== "ExternalCommands" && s.section !== "Filters",
   );
 
   return (
@@ -131,6 +137,8 @@ const ConfigurationList: React.FC = () => {
                 <SelectItem value="CustomFields">{t("configuration.view.customFields")}</SelectItem>
                 <SelectItem value="Item">{t("configuration.view.item")}</SelectItem>
                 <SelectItem value="Warehouses">{t("configuration.view.warehouses")}</SelectItem>
+                <SelectItem value="ExternalCommands">{t("configuration.view.externalCommands")}</SelectItem>
+                <SelectItem value="Filters">{t("configuration.view.filters")}</SelectItem>
                 <SelectItem value="Other">{t("configuration.view.other")}</SelectItem>
               </SelectContent>
             </Select>
@@ -155,6 +163,10 @@ const ConfigurationList: React.FC = () => {
           <ItemMetadataEditor onSaved={load}/>
         ) : view === "Warehouses" ? (
           <WarehousesEditor onSaved={load}/>
+        ) : view === "ExternalCommands" ? (
+          <ExternalCommandsEditor onSaved={load}/>
+        ) : view === "Filters" ? (
+          <FiltersEditor onSaved={load}/>
         ) : (
           <Card>
             <CardContent className="p-0">
