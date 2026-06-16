@@ -19,10 +19,12 @@ import CustomFieldsEditor from "@/features/configuration/components/CustomFields
 import ImportDialog from "@/features/configuration/components/ImportDialog";
 import OptionsEditor from "@/features/configuration/components/OptionsEditor";
 import SboSettingsEditor from "@/features/configuration/components/SboSettingsEditor";
+import ItemMetadataEditor from "@/features/configuration/components/ItemMetadataEditor";
+import WarehousesEditor from "@/features/configuration/components/WarehousesEditor";
 
-type ConfigView = "Options" | "SboSettings" | "CustomFields" | "Other";
+type ConfigView = "Options" | "SboSettings" | "CustomFields" | "Item" | "Warehouses" | "Other";
 
-const CONFIG_VIEWS: ConfigView[] = ["Options", "SboSettings", "CustomFields", "Other"];
+const CONFIG_VIEWS: ConfigView[] = ["Options", "SboSettings", "CustomFields", "Item", "Warehouses", "Other"];
 
 /** Restore the section from the URL hash (#Section) first, then the ?view= query, else Options. */
 function resolveInitialView(queryView: string | null): ConfigView {
@@ -97,9 +99,10 @@ const ConfigurationList: React.FC = () => {
     setEditingSection(s.section);
   };
 
-  // Options, SBO Settings and Custom Fields have their own friendly editors; the table lists the rest.
+  // Sections with their own friendly editors are excluded from the generic table.
   const otherSections = sections.filter(
-    (s) => s.section !== "Options" && s.section !== "SboSettings" && s.section !== "CustomFields",
+    (s) => s.section !== "Options" && s.section !== "SboSettings" && s.section !== "CustomFields"
+      && s.section !== "Item" && s.section !== "Warehouses",
   );
 
   return (
@@ -126,6 +129,8 @@ const ConfigurationList: React.FC = () => {
                 <SelectItem value="Options">{t("configuration.view.options")}</SelectItem>
                 <SelectItem value="SboSettings">{t("configuration.view.sbo")}</SelectItem>
                 <SelectItem value="CustomFields">{t("configuration.view.customFields")}</SelectItem>
+                <SelectItem value="Item">{t("configuration.view.item")}</SelectItem>
+                <SelectItem value="Warehouses">{t("configuration.view.warehouses")}</SelectItem>
                 <SelectItem value="Other">{t("configuration.view.other")}</SelectItem>
               </SelectContent>
             </Select>
@@ -146,6 +151,10 @@ const ConfigurationList: React.FC = () => {
           <SboSettingsEditor onSaved={load}/>
         ) : view === "CustomFields" ? (
           <CustomFieldsEditor onSaved={load}/>
+        ) : view === "Item" ? (
+          <ItemMetadataEditor onSaved={load}/>
+        ) : view === "Warehouses" ? (
+          <WarehousesEditor onSaved={load}/>
         ) : (
           <Card>
             <CardContent className="p-0">

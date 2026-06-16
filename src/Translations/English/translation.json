@@ -408,7 +408,41 @@
       "options": "Options",
       "sbo": "SBO Settings",
       "customFields": "Custom Fields",
+      "item": "Item Metadata",
+      "warehouses": "Warehouses",
       "other": "Other sections"
+    },
+    "item": {
+      "field": "Metadata Field",
+      "id": "Id",
+      "readOnly": "Read-only",
+      "required": "Required",
+      "step": "Step (Decimal)",
+      "mirrorTo": "Mirror To",
+      "noFields": "No metadata fields defined.",
+      "deleteFieldConfirm": "Remove the metadata field \"{{id}}\"? The change applies when you save."
+    },
+    "warehouses": {
+      "hint": "Select a warehouse, then choose its bin locations for picking cancellation, initial counting and staging.",
+      "warehouse": "Warehouse",
+      "selectWarehouse": "Select a warehouse…",
+      "searchWarehouse": "Search warehouses…",
+      "noWarehouses": "No warehouses found",
+      "pickToEdit": "Pick a warehouse to edit its bin settings.",
+      "notBinManaged": "This warehouse is not bin-managed, so there are no bin settings to configure.",
+      "selectBin": "Select a bin…",
+      "searchBin": "Search bins…",
+      "noBins": "No bins for this warehouse",
+      "binsLoadFailed": "Failed to load bin locations",
+      "required": "Required",
+      "optional": "optional",
+      "stored": "Stored",
+      "none": "None",
+      "fields": {
+        "CancelPickingBinEntry": "Cancel Picking Bin",
+        "InitialCountingBinEntry": "Initial Counting Bin",
+        "StagingBinEntry": "Staging Bin"
+      }
     },
     "sbo": {
       "testConnection": "Test connection",

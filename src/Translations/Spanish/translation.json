@@ -404,7 +404,41 @@
       "options": "Opciones",
       "sbo": "Configuración SBO",
       "customFields": "Campos personalizados",
+      "item": "Metadatos de artículo",
+      "warehouses": "Almacenes",
       "other": "Otras secciones"
+    },
+    "item": {
+      "field": "Campo de metadatos",
+      "id": "Id",
+      "readOnly": "Solo lectura",
+      "required": "Obligatorio",
+      "step": "Incremento (decimal)",
+      "mirrorTo": "Reflejar en",
+      "noFields": "No hay campos de metadatos definidos.",
+      "deleteFieldConfirm": "¿Eliminar el campo de metadatos \"{{id}}\"? El cambio se aplica al guardar."
+    },
+    "warehouses": {
+      "hint": "Seleccione un almacén y luego elija sus ubicaciones para cancelación de picking, conteo inicial y preparación.",
+      "warehouse": "Almacén",
+      "selectWarehouse": "Seleccione un almacén…",
+      "searchWarehouse": "Buscar almacenes…",
+      "noWarehouses": "No se encontraron almacenes",
+      "pickToEdit": "Seleccione un almacén para editar sus ubicaciones.",
+      "notBinManaged": "Este almacén no gestiona ubicaciones, por lo que no hay ajustes que configurar.",
+      "selectBin": "Seleccione una ubicación…",
+      "searchBin": "Buscar ubicaciones…",
+      "noBins": "No hay ubicaciones para este almacén",
+      "binsLoadFailed": "Error al cargar las ubicaciones",
+      "required": "Obligatorio",
+      "optional": "opcional",
+      "stored": "Guardado",
+      "none": "Ninguno",
+      "fields": {
+        "CancelPickingBinEntry": "Ubicación de cancelación de picking",
+        "InitialCountingBinEntry": "Ubicación de conteo inicial",
+        "StagingBinEntry": "Ubicación de preparación"
+      }
     },
     "sbo": {
       "testConnection": "Probar conexión",
