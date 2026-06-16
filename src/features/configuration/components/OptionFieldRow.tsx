@@ -12,14 +12,24 @@ interface Props {
   value: any;
   /** Pass undefined to clear (delete) the key. */
   onChange: (next: any) => void;
+  /** i18n base for labels/descriptions/enums; defaults to the Options editor. */
+  i18nBase?: string;
+  /** Width of the control column; defaults to a compact width for toggles/selects. */
+  controlClassName?: string;
 }
 
-const OptionFieldRow: React.FC<Props> = ({field, value, onChange}) => {
+const OptionFieldRow: React.FC<Props> = ({
+  field,
+  value,
+  onChange,
+  i18nBase = "configuration.options",
+  controlClassName = "w-44",
+}) => {
   const {t} = useTranslation();
-  const label = t(`configuration.options.fields.${field.key}.label`);
-  const desc = t(`configuration.options.fields.${field.key}.desc`);
+  const label = t(`${i18nBase}.fields.${field.key}.label`);
+  const desc = t(`${i18nBase}.fields.${field.key}.desc`);
   const enumLabel = (val: string) =>
-    field.enumLabel ? t(`configuration.options.enums.${field.enumLabel}.${val}`) : val;
+    field.enumLabel ? t(`${i18nBase}.enums.${field.enumLabel}.${val}`) : val;
 
   const control = () => {
     switch (field.kind) {
@@ -61,6 +71,15 @@ const OptionFieldRow: React.FC<Props> = ({field, value, onChange}) => {
             onChange={(e) => onChange(e.target.value === "" ? undefined : e.target.value)}
           />
         );
+      case "secret":
+        return (
+          <Input
+            type="password"
+            autoComplete="new-password"
+            value={value ?? ""}
+            onChange={(e) => onChange(e.target.value === "" ? undefined : e.target.value)}
+          />
+        );
       case "string":
       default:
         return (
@@ -74,11 +93,11 @@ const OptionFieldRow: React.FC<Props> = ({field, value, onChange}) => {
 
   return (
     <div className="flex items-start justify-between gap-4 py-3">
-      <div className="space-y-0.5">
+      <div className="min-w-0 flex-1 space-y-0.5">
         <Label>{label}</Label>
         <p className="text-xs text-muted-foreground">{desc}</p>
       </div>
-      <div className="w-44 flex justify-end shrink-0">{control()}</div>
+      <div className={`${controlClassName} flex justify-end shrink-0`}>{control()}</div>
     </div>
   );
 };

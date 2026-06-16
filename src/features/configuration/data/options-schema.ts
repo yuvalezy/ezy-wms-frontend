@@ -7,7 +7,7 @@
  * consistent with how the config is stored and bound on the backend.
  */
 
-export type OptionKind = "bool" | "enum" | "enumNullable" | "string" | "int";
+export type OptionKind = "bool" | "enum" | "enumNullable" | "string" | "int" | "secret";
 
 export type OptionGroup =
   | "general"
@@ -21,7 +21,8 @@ export interface OptionField {
   /** PascalCase JSON key, e.g. "EnableUseBaseUn". */
   key: string;
   kind: OptionKind;
-  group: OptionGroup;
+  /** Group id (OptionGroup for the Options editor; any string for reuse, e.g. SBO). */
+  group: string;
   /** Allowed values for enum / enumNullable, e.g. ["Unit","Dozen","Pack"]. */
   enumValues?: string[];
   /** i18n namespace under configuration.options.enums for the value labels. */

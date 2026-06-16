@@ -47,6 +47,7 @@ import DevicesList from "@/Pages/settings/devices-list";
 import {License} from "@/Pages/settings/license";
 import ExternalAlertsList from "@/Pages/settings/external-alerts-list";
 import ConfigurationList from "@/Pages/settings/configuration-list";
+import SystemGate from "@/components/SystemGate";
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {ProcessType} from "@/features/shared/data";
 import {TransferProcessProvider} from "@/features/transfer/context/TransferProcessContext";
@@ -337,6 +338,7 @@ function AppRoutes() {
     <>
       <Toaster closeButton richColors={true}/>
       {isOffline && <OfflineOverlay/>}
+      <SystemGate>
       <Routes>
         {getAuthenticationRoutes()}
         {getGeneralCheckRoutes()}
@@ -351,6 +353,7 @@ function AppRoutes() {
         {getSettingsRoutes()}
         {getDefaultRoutes()}
       </Routes>
+      </SystemGate>
     </>
   );
 }

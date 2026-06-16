@@ -59,4 +59,11 @@ export const configurationService = {
     const res = await axiosInstance.post<ConfigImportResult>(`configuration/import?dryRun=${dryRun}`, {sections});
     return res.data;
   },
+
+  /** Tests a draft SBO connection without saving. Masked secrets are resolved server-side. */
+  async testSboConnection(json: any): Promise<{ success: boolean; message?: string }> {
+    const res = await axiosInstance.post<{ success: boolean; message?: string }>(
+      "configuration/SboSettings/test-connection", {json});
+    return res.data;
+  },
 };

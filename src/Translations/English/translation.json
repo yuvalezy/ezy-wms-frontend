@@ -405,7 +405,29 @@
     "groupBy": "Group By",
     "view": {
       "options": "Options",
+      "sbo": "SBO Settings",
       "other": "Other sections"
+    },
+    "sbo": {
+      "testConnection": "Test connection",
+      "testOk": "Connected to SAP successfully",
+      "systemReady": "System is ready — lockdown cleared",
+      "groups": {
+        "connection": "Connection (SAP Service Layer)",
+        "advanced": "Advanced / database server"
+      },
+      "fields": {
+        "ServiceLayerUrl": {"label": "Service Layer URL", "desc": "Base URL of the SAP Business One Service Layer, e.g. https://your-sap:50000."},
+        "Database": {"label": "Company database", "desc": "SAP company database (CompanyDB) to connect to."},
+        "User": {"label": "User", "desc": "SAP Business One user used to log in."},
+        "Password": {"label": "Password", "desc": "Password for the SAP user. Leave unchanged to keep the stored value."},
+        "Server": {"label": "Database server", "desc": "Database server host (legacy/DI; not used by the Service Layer path)."},
+        "ServerType": {"label": "Server type", "desc": "Database server type code (e.g. 15 = MSSQL2019, 9 = HANA)."},
+        "TrustedConnection": {"label": "Trusted connection", "desc": "Use a trusted (Windows) database connection."},
+        "ServerUser": {"label": "Database user", "desc": "Database server user (when not using a trusted connection)."},
+        "ServerPassword": {"label": "Database password", "desc": "Database server password. Leave unchanged to keep the stored value."},
+        "ServiceLayerTimeoutSeconds": {"label": "Service Layer timeout (seconds)", "desc": "Request timeout for Service Layer calls."}
+      }
     },
     "options": {
       "liveReloadNote": "Changes apply immediately after saving. Signed-in users get the new settings on their next login.",
@@ -475,6 +497,13 @@
         "InventoryCountingBatchSize": {"label": "Counting batch size", "desc": "Number of items per inventory counting batch."}
       }
     }
+  },
+  "system": {
+    "lockTitle": "System configuration required",
+    "lockSuperuserDesc": "Connect EZY WMS to SAP Business One to continue. Enter the SBO settings below, test the connection, and save.",
+    "lockUserDesc": "The system is being configured and is temporarily unavailable.",
+    "lockUserHint": "Please contact your administrator. Access will be restored once the SAP connection is configured.",
+    "backToLogin": "Back to login"
   },
   "cancellationReasons": "Cancellation Reasons",
   "users": "Users",

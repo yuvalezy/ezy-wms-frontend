@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import {useSearchParams} from "react-router";
 import {useTranslation} from "react-i18next";
 import {toast} from "sonner";
 import {Card, CardContent} from "@/components/ui/card";
@@ -17,6 +18,23 @@ import SectionEditorDialog from "@/features/configuration/components/SectionEdit
 import CustomFieldsEditor from "@/features/configuration/components/CustomFieldsEditor";
 import ImportDialog from "@/features/configuration/components/ImportDialog";
 import OptionsEditor from "@/features/configuration/components/OptionsEditor";
+import SboSettingsEditor from "@/features/configuration/components/SboSettingsEditor";
+
+type ConfigView = "Options" | "SboSettings" | "Other";
+
+const CONFIG_VIEWS: ConfigView[] = ["Options", "SboSettings", "Other"];
+
+/** Restore the section from the URL hash (#Section) first, then the ?view= query, else Options. */
+function resolveInitialView(queryView: string | null): ConfigView {
+  const hash = (typeof window !== "undefined" ? window.location.hash.replace("#", "") : "") as ConfigView;
+  if (CONFIG_VIEWS.includes(hash)) {
+    return hash;
+  }
+  if (queryView === "SboSettings" || queryView === "Other") {
+    return queryView;
+  }
+  return "Options";
+}
 
 const ConfigurationList: React.FC = () => {
   const {t} = useTranslation();
@@ -27,7 +45,14 @@ const ConfigurationList: React.FC = () => {
   const [editingSection, setEditingSection] = useState<string | null>(null);
   const [customFieldsOpen, setCustomFieldsOpen] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
-  const [view, setView] = useState<"Options" | "Other">("Options");
+  const [searchParams] = useSearchParams();
+  const [view, setView] = useState<ConfigView>(() => resolveInitialView(searchParams.get("view")));
+
+  // Persist the selected section in the URL hash so a refresh restores it.
+  const changeView = (next: ConfigView) => {
+    setView(next);
+    window.history.replaceState(null, "", `#${next}`);
+  };
 
   useEffect(() => {
     void load();
@@ -77,8 +102,8 @@ const ConfigurationList: React.FC = () => {
     }
   };
 
-  // "Options" has its own friendly editor; the table only lists the remaining sections.
-  const otherSections = sections.filter((s) => s.section !== "Options");
+  // "Options" and "SboSettings" have their own friendly editors; the table lists the rest.
+  const otherSections = sections.filter((s) => s.section !== "Options" && s.section !== "SboSettings");
 
   return (
     <ContentTheme title={t("settings")} titleBreadcrumbs={[{label: t("configuration.title")}]}>
@@ -98,10 +123,11 @@ const ConfigurationList: React.FC = () => {
 
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="w-56">
-            <Select value={view} onValueChange={(v) => setView(v as "Options" | "Other")}>
+            <Select value={view} onValueChange={(v) => changeView(v as ConfigView)}>
               <SelectTrigger><SelectValue/></SelectTrigger>
               <SelectContent>
                 <SelectItem value="Options">{t("configuration.view.options")}</SelectItem>
+                <SelectItem value="SboSettings">{t("configuration.view.sbo")}</SelectItem>
                 <SelectItem value="Other">{t("configuration.view.other")}</SelectItem>
               </SelectContent>
             </Select>
@@ -118,6 +144,8 @@ const ConfigurationList: React.FC = () => {
 
         {view === "Options" ? (
           <OptionsEditor onSaved={load}/>
+        ) : view === "SboSettings" ? (
+          <SboSettingsEditor onSaved={load}/>
         ) : (
           <Card>
             <CardContent className="p-0">

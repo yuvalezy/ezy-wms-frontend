@@ -401,7 +401,29 @@
     "groupBy": "Agrupar por",
     "view": {
       "options": "Opciones",
+      "sbo": "Configuración SBO",
       "other": "Otras secciones"
+    },
+    "sbo": {
+      "testConnection": "Probar conexión",
+      "testOk": "Conectado a SAP correctamente",
+      "systemReady": "El sistema está listo — bloqueo liberado",
+      "groups": {
+        "connection": "Conexión (SAP Service Layer)",
+        "advanced": "Avanzado / servidor de base de datos"
+      },
+      "fields": {
+        "ServiceLayerUrl": {"label": "URL del Service Layer", "desc": "URL base del Service Layer de SAP Business One, p. ej. https://su-sap:50000."},
+        "Database": {"label": "Base de datos de la empresa", "desc": "Base de datos de la empresa (CompanyDB) de SAP a la que conectarse."},
+        "User": {"label": "Usuario", "desc": "Usuario de SAP Business One usado para iniciar sesión."},
+        "Password": {"label": "Contraseña", "desc": "Contraseña del usuario de SAP. Déjela sin cambios para conservar el valor almacenado."},
+        "Server": {"label": "Servidor de base de datos", "desc": "Host del servidor de base de datos (heredado/DI; no se usa en la ruta del Service Layer)."},
+        "ServerType": {"label": "Tipo de servidor", "desc": "Código del tipo de servidor de base de datos (p. ej. 15 = MSSQL2019, 9 = HANA)."},
+        "TrustedConnection": {"label": "Conexión de confianza", "desc": "Usar una conexión de base de datos de confianza (Windows)."},
+        "ServerUser": {"label": "Usuario de base de datos", "desc": "Usuario del servidor de base de datos (cuando no se usa una conexión de confianza)."},
+        "ServerPassword": {"label": "Contraseña de base de datos", "desc": "Contraseña del servidor de base de datos. Déjela sin cambios para conservar el valor almacenado."},
+        "ServiceLayerTimeoutSeconds": {"label": "Tiempo de espera del Service Layer (segundos)", "desc": "Tiempo de espera de las llamadas al Service Layer."}
+      }
     },
     "options": {
       "liveReloadNote": "Los cambios se aplican de inmediato al guardar. Los usuarios con sesión iniciada obtienen la nueva configuración en su próximo inicio de sesión.",
@@ -471,6 +493,13 @@
         "InventoryCountingBatchSize": {"label": "Tamaño de lote de conteo", "desc": "Número de artículos por lote de conteo de inventario."}
       }
     }
+  },
+  "system": {
+    "lockTitle": "Se requiere configuración del sistema",
+    "lockSuperuserDesc": "Conecte EZY WMS con SAP Business One para continuar. Ingrese la configuración de SBO, pruebe la conexión y guarde.",
+    "lockUserDesc": "El sistema se está configurando y no está disponible temporalmente.",
+    "lockUserHint": "Comuníquese con su administrador. El acceso se restablecerá una vez que se configure la conexión con SAP.",
+    "backToLogin": "Volver al inicio de sesión"
   },
   "cancellationReasons": "Motivos de Cancelación",
   "users": "Usuarios",
