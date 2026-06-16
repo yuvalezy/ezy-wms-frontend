@@ -20,9 +20,9 @@ import ImportDialog from "@/features/configuration/components/ImportDialog";
 import OptionsEditor from "@/features/configuration/components/OptionsEditor";
 import SboSettingsEditor from "@/features/configuration/components/SboSettingsEditor";
 
-type ConfigView = "Options" | "SboSettings" | "Other";
+type ConfigView = "Options" | "SboSettings" | "CustomFields" | "Other";
 
-const CONFIG_VIEWS: ConfigView[] = ["Options", "SboSettings", "Other"];
+const CONFIG_VIEWS: ConfigView[] = ["Options", "SboSettings", "CustomFields", "Other"];
 
 /** Restore the section from the URL hash (#Section) first, then the ?view= query, else Options. */
 function resolveInitialView(queryView: string | null): ConfigView {
@@ -30,8 +30,8 @@ function resolveInitialView(queryView: string | null): ConfigView {
   if (CONFIG_VIEWS.includes(hash)) {
     return hash;
   }
-  if (queryView === "SboSettings" || queryView === "Other") {
-    return queryView;
+  if (queryView && CONFIG_VIEWS.includes(queryView as ConfigView)) {
+    return queryView as ConfigView;
   }
   return "Options";
 }
@@ -43,7 +43,6 @@ const ConfigurationList: React.FC = () => {
   const [status, setStatus] = useState<ConfigMigrationStatus | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [editingSection, setEditingSection] = useState<string | null>(null);
-  const [customFieldsOpen, setCustomFieldsOpen] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
   const [searchParams] = useSearchParams();
   const [view, setView] = useState<ConfigView>(() => resolveInitialView(searchParams.get("view")));
@@ -95,15 +94,13 @@ const ConfigurationList: React.FC = () => {
   };
 
   const openEditor = (s: ConfigSectionSummary) => {
-    if (s.section === "CustomFields") {
-      setCustomFieldsOpen(true);
-    } else {
-      setEditingSection(s.section);
-    }
+    setEditingSection(s.section);
   };
 
-  // "Options" and "SboSettings" have their own friendly editors; the table lists the rest.
-  const otherSections = sections.filter((s) => s.section !== "Options" && s.section !== "SboSettings");
+  // Options, SBO Settings and Custom Fields have their own friendly editors; the table lists the rest.
+  const otherSections = sections.filter(
+    (s) => s.section !== "Options" && s.section !== "SboSettings" && s.section !== "CustomFields",
+  );
 
   return (
     <ContentTheme title={t("settings")} titleBreadcrumbs={[{label: t("configuration.title")}]}>
@@ -128,6 +125,7 @@ const ConfigurationList: React.FC = () => {
               <SelectContent>
                 <SelectItem value="Options">{t("configuration.view.options")}</SelectItem>
                 <SelectItem value="SboSettings">{t("configuration.view.sbo")}</SelectItem>
+                <SelectItem value="CustomFields">{t("configuration.view.customFields")}</SelectItem>
                 <SelectItem value="Other">{t("configuration.view.other")}</SelectItem>
               </SelectContent>
             </Select>
@@ -146,6 +144,8 @@ const ConfigurationList: React.FC = () => {
           <OptionsEditor onSaved={load}/>
         ) : view === "SboSettings" ? (
           <SboSettingsEditor onSaved={load}/>
+        ) : view === "CustomFields" ? (
+          <CustomFieldsEditor onSaved={load}/>
         ) : (
           <Card>
             <CardContent className="p-0">
@@ -212,7 +212,6 @@ const ConfigurationList: React.FC = () => {
           onSaved={load}
         />
       )}
-      <CustomFieldsEditor open={customFieldsOpen} onOpenChange={setCustomFieldsOpen} onSaved={load}/>
       <ImportDialog open={importOpen} onOpenChange={setImportOpen} onImported={load}/>
     </ContentTheme>
   );

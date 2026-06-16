@@ -18,18 +18,28 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import {CSS} from "@dnd-kit/utilities";
+import {Card, CardContent} from "@/components/ui/card";
 import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import {Badge} from "@/components/ui/badge";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
-import {GripVertical, Pencil, Plus, Save, Trash2} from "lucide-react";
+import {GripVertical, History, Pencil, Plus, Save, Trash2} from "lucide-react";
 import {configurationService} from "../data/configuration-service";
+import SectionHistoryDialog from "./SectionHistoryDialog";
 
 interface Props {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
   onSaved: () => void;
 }
 
@@ -42,6 +52,8 @@ interface FieldItem {
   GroupBy?: string;
   [k: string]: any;
 }
+
+const SECTION = "CustomFields";
 
 let idCounter = 0;
 const nextId = () => `f${++idCounter}`;
@@ -70,13 +82,15 @@ const SortableRow: React.FC<{ field: FieldItem; onEdit: () => void; onRemove: ()
     );
   };
 
-const CustomFieldsEditor: React.FC<Props> = ({open, onOpenChange, onSaved}) => {
+const CustomFieldsEditor: React.FC<Props> = ({onSaved}) => {
   const {t} = useTranslation();
   const [version, setVersion] = useState<number | undefined>();
   const [collections, setCollections] = useState<Record<string, FieldItem[]>>({});
   const [active, setActive] = useState<string>("");
   const [saving, setSaving] = useState(false);
   const [editing, setEditing] = useState<FieldItem | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<FieldItem | null>(null);
+  const [showHistory, setShowHistory] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -84,15 +98,13 @@ const CustomFieldsEditor: React.FC<Props> = ({open, onOpenChange, onSaved}) => {
   );
 
   useEffect(() => {
-    if (open) {
-      void load();
-    }
+    void load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, []);
 
   const load = async () => {
     try {
-      const d = await configurationService.get("CustomFields");
+      const d = await configurationService.get(SECTION);
       setVersion(d.version);
       const cols: Record<string, FieldItem[]> = {};
       const raw = d.json ?? {};
@@ -148,10 +160,10 @@ const CustomFieldsEditor: React.FC<Props> = ({open, onOpenChange, onSaved}) => {
       Object.entries(collections).forEach(([name, list]) => {
         json[name] = list.map(({_id, ...rest}) => rest);
       });
-      await configurationService.update("CustomFields", json, version);
+      await configurationService.update(SECTION, json, version);
       toast.success(t("configuration.saved"));
       onSaved();
-      onOpenChange(false);
+      await load();
     } catch (error: any) {
       const data = error?.response?.data;
       toast.error(data?.errors?.[0] ?? data?.error_description ?? `${error}`);
@@ -161,51 +173,86 @@ const CustomFieldsEditor: React.FC<Props> = ({open, onOpenChange, onSaved}) => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>{t("configuration.customFields")}</DialogTitle>
-        </DialogHeader>
-
-        {collectionNames.length > 1 && (
-          <div className="flex flex-wrap gap-2">
-            {collectionNames.map((name) => (
-              <Button key={name} size="sm" variant={name === active ? "default" : "outline"}
-                      onClick={() => setActive(name)}>{name}</Button>
-            ))}
-          </div>
-        )}
-
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-muted-foreground">{t("configuration.dragHint")}</span>
-          <Button size="sm" variant="outline" onClick={() => setEditing({_id: nextId(), Type: "Text"})}>
-            <Plus className="h-4 w-4 mr-1"/>{t("add")}
-          </Button>
+    <div className="space-y-4">
+      {collectionNames.length > 1 && (
+        <div className="flex flex-wrap gap-2">
+          {collectionNames.map((name) => (
+            <Button key={name} size="sm" variant={name === active ? "default" : "outline"}
+                    onClick={() => setActive(name)}>{name}</Button>
+          ))}
         </div>
+      )}
 
-        <div className="max-h-[50vh] overflow-auto space-y-2">
+      <div className="flex justify-between items-center">
+        <span className="text-sm text-muted-foreground">{t("configuration.dragHint")}</span>
+        <Button size="sm" variant="outline" onClick={() => setEditing({_id: nextId(), Type: "Text"})}>
+          <Plus className="h-4 w-4 mr-1"/>{t("add")}
+        </Button>
+      </div>
+
+      <Card>
+        <CardContent className="space-y-2 max-h-[55vh] overflow-auto py-4">
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
             <SortableContext items={items.map((f) => f._id)} strategy={verticalListSortingStrategy}>
               {items.map((field) => (
                 <SortableRow key={field._id} field={field}
                              onEdit={() => setEditing(field)}
-                             onRemove={() => removeField(field._id)}/>
+                             onRemove={() => setPendingDelete(field)}/>
               ))}
             </SortableContext>
           </DndContext>
-          {items.length === 0 && <p className="text-sm text-muted-foreground py-4 text-center">{t("configuration.noFields")}</p>}
-        </div>
+          {items.length === 0 && (
+            <p className="text-sm text-muted-foreground py-4 text-center">{t("configuration.noFields")}</p>
+          )}
+        </CardContent>
+      </Card>
 
-        <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>{t("cancel")}</Button>
-          <Button onClick={save} disabled={saving}><Save className="h-4 w-4 mr-1"/>{t("save")}</Button>
-        </DialogFooter>
-      </DialogContent>
+      <div className="flex flex-wrap justify-between gap-2">
+        <Button type="button" variant="ghost" onClick={() => setShowHistory(true)}>
+          <History className="h-4 w-4 mr-1"/>{t("configuration.history")}
+        </Button>
+        <Button onClick={save} disabled={saving}><Save className="h-4 w-4 mr-1"/>{t("save")}</Button>
+      </div>
 
       {editing && (
         <FieldDialog field={editing} onCancel={() => setEditing(null)} onSave={upsertField}/>
       )}
-    </Dialog>
+
+      <AlertDialog open={pendingDelete !== null} onOpenChange={(o) => !o && setPendingDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("confirmDelete")}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("configuration.deleteFieldConfirm", {key: pendingDelete?.Key || "—"})}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (pendingDelete) {
+                  removeField(pendingDelete._id);
+                }
+                setPendingDelete(null);
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {t("delete")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <SectionHistoryDialog
+        section={SECTION}
+        open={showHistory}
+        onOpenChange={setShowHistory}
+        onRestored={() => {
+          onSaved();
+          void load();
+        }}
+      />
+    </div>
   );
 };
 

@@ -390,6 +390,7 @@
     "restrictedWarning": "Esta sección carga y ejecuta código. Los valores de ensamblado/tipo se controlan mediante una lista de permitidos; los valores no permitidos se rechazan al guardar.",
     "secretsWarning": "Los valores secretos están enmascarados. Deje la máscara sin cambios para conservar el secreto almacenado.",
     "customFields": "Campos personalizados",
+    "deleteFieldConfirm": "¿Eliminar el campo personalizado \"{{key}}\"? El cambio se aplica al guardar.",
     "dragToReorder": "Arrastrar para reordenar",
     "dragHint": "Arrastre las filas para cambiar el orden de visualización.",
     "noFields": "No hay campos en esta colección.",
@@ -402,6 +403,7 @@
     "view": {
       "options": "Opciones",
       "sbo": "Configuración SBO",
+      "customFields": "Campos personalizados",
       "other": "Otras secciones"
     },
     "sbo": {

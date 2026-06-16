@@ -394,6 +394,7 @@
     "restrictedWarning": "This section loads and runs code. Assembly/type values are controlled by an allowlist; non-allowlisted values are rejected on save.",
     "secretsWarning": "Secret values are masked. Leave the mask unchanged to keep the stored secret.",
     "customFields": "Custom Fields",
+    "deleteFieldConfirm": "Remove the custom field \"{{key}}\"? The change applies when you save.",
     "dragToReorder": "Drag to reorder",
     "dragHint": "Drag rows to change display order.",
     "noFields": "No fields in this collection.",
@@ -406,6 +407,7 @@
     "view": {
       "options": "Options",
       "sbo": "SBO Settings",
+      "customFields": "Custom Fields",
       "other": "Other sections"
     },
     "sbo": {
