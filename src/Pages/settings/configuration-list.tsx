@@ -7,6 +7,7 @@ import {Button} from "@/components/ui/button";
 import {Badge} from "@/components/ui/badge";
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {Skeleton} from "@/components/ui/skeleton";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {AlertTriangle, CheckCircle2, Download, Edit, KeyRound, RotateCw, Upload} from "lucide-react";
 import {useThemeContext} from "@/components";
 import ContentTheme from "@/components/ContentTheme";
@@ -15,6 +16,7 @@ import {ConfigMigrationStatus, ConfigSectionSummary} from "@/features/configurat
 import SectionEditorDialog from "@/features/configuration/components/SectionEditorDialog";
 import CustomFieldsEditor from "@/features/configuration/components/CustomFieldsEditor";
 import ImportDialog from "@/features/configuration/components/ImportDialog";
+import OptionsEditor from "@/features/configuration/components/OptionsEditor";
 
 const ConfigurationList: React.FC = () => {
   const {t} = useTranslation();
@@ -25,6 +27,7 @@ const ConfigurationList: React.FC = () => {
   const [editingSection, setEditingSection] = useState<string | null>(null);
   const [customFieldsOpen, setCustomFieldsOpen] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
+  const [view, setView] = useState<"Options" | "Other">("Options");
 
   useEffect(() => {
     void load();
@@ -74,6 +77,9 @@ const ConfigurationList: React.FC = () => {
     }
   };
 
+  // "Options" has its own friendly editor; the table only lists the remaining sections.
+  const otherSections = sections.filter((s) => s.section !== "Options");
+
   return (
     <ContentTheme title={t("settings")} titleBreadcrumbs={[{label: t("configuration.title")}]}>
       <div className="space-y-4">
@@ -90,69 +96,84 @@ const ConfigurationList: React.FC = () => {
           </Alert>
         )}
 
-        <div className="flex justify-end gap-2">
-          <Button variant="outline" size="sm" onClick={() => setImportOpen(true)}>
-            <Upload className="h-4 w-4 mr-1"/>{t("configuration.import")}
-          </Button>
-          <Button variant="outline" size="sm" onClick={exportAll}>
-            <Download className="h-4 w-4 mr-1"/>{t("configuration.exportAll")}
-          </Button>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="w-56">
+            <Select value={view} onValueChange={(v) => setView(v as "Options" | "Other")}>
+              <SelectTrigger><SelectValue/></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Options">{t("configuration.view.options")}</SelectItem>
+                <SelectItem value="Other">{t("configuration.view.other")}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={() => setImportOpen(true)}>
+              <Upload className="h-4 w-4 mr-1"/>{t("configuration.import")}
+            </Button>
+            <Button variant="outline" size="sm" onClick={exportAll}>
+              <Download className="h-4 w-4 mr-1"/>{t("configuration.exportAll")}
+            </Button>
+          </div>
         </div>
 
-        <Card>
-          <CardContent className="p-0">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t("configuration.section")}</TableHead>
-                  <TableHead>{t("configuration.version")}</TableHead>
-                  <TableHead>{t("configuration.updatedAt")}</TableHead>
-                  <TableHead>{t("configuration.flags")}</TableHead>
-                  <TableHead className="text-right">{t("actions")}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {isLoading ? (
-                  Array.from({length: 6}).map((_, i) => (
-                    <TableRow key={i}>
-                      <TableCell colSpan={5}><Skeleton className="h-5 w-full"/></TableCell>
-                    </TableRow>
-                  ))
-                ) : sections.length === 0 ? (
-                  <TableRow><TableCell colSpan={5}>{t("configuration.noSections")}</TableCell></TableRow>
-                ) : (
-                  sections.map((s) => (
-                    <TableRow key={s.section}>
-                      <TableCell className="font-medium">{s.section}</TableCell>
-                      <TableCell>v{s.version}</TableCell>
-                      <TableCell>{new Date(s.updatedAtUtc).toLocaleString()}</TableCell>
-                      <TableCell>
-                        <div className="flex flex-wrap gap-1">
-                          {s.reloadKind === "RequiresRestart" && (
-                            <Badge variant="secondary" className="gap-1">
-                              <RotateCw className="h-3 w-3"/>{t("configuration.restart")}
-                            </Badge>
-                          )}
-                          {s.isAdvanced && <Badge variant="outline">{t("configuration.advanced")}</Badge>}
-                          {s.hasSecrets && (
-                            <Badge variant="outline" className="gap-1">
-                              <KeyRound className="h-3 w-3"/>{t("configuration.secrets")}
-                            </Badge>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Button size="sm" variant="outline" onClick={() => openEditor(s)}>
-                          <Edit className="h-4 w-4 mr-1"/>{t("edit")}
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+        {view === "Options" ? (
+          <OptionsEditor onSaved={load}/>
+        ) : (
+          <Card>
+            <CardContent className="p-0">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t("configuration.section")}</TableHead>
+                    <TableHead>{t("configuration.version")}</TableHead>
+                    <TableHead>{t("configuration.updatedAt")}</TableHead>
+                    <TableHead>{t("configuration.flags")}</TableHead>
+                    <TableHead className="text-right">{t("actions")}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {isLoading ? (
+                    Array.from({length: 6}).map((_, i) => (
+                      <TableRow key={i}>
+                        <TableCell colSpan={5}><Skeleton className="h-5 w-full"/></TableCell>
+                      </TableRow>
+                    ))
+                  ) : otherSections.length === 0 ? (
+                    <TableRow><TableCell colSpan={5}>{t("configuration.noSections")}</TableCell></TableRow>
+                  ) : (
+                    otherSections.map((s) => (
+                      <TableRow key={s.section}>
+                        <TableCell className="font-medium">{s.section}</TableCell>
+                        <TableCell>v{s.version}</TableCell>
+                        <TableCell>{new Date(s.updatedAtUtc).toLocaleString()}</TableCell>
+                        <TableCell>
+                          <div className="flex flex-wrap gap-1">
+                            {s.reloadKind === "RequiresRestart" && (
+                              <Badge variant="secondary" className="gap-1">
+                                <RotateCw className="h-3 w-3"/>{t("configuration.restart")}
+                              </Badge>
+                            )}
+                            {s.isAdvanced && <Badge variant="outline">{t("configuration.advanced")}</Badge>}
+                            {s.hasSecrets && (
+                              <Badge variant="outline" className="gap-1">
+                                <KeyRound className="h-3 w-3"/>{t("configuration.secrets")}
+                              </Badge>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button size="sm" variant="outline" onClick={() => openEditor(s)}>
+                            <Edit className="h-4 w-4 mr-1"/>{t("edit")}
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       {editingSection && (
