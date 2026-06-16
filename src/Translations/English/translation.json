@@ -412,7 +412,22 @@
       "warehouses": "Warehouses",
       "externalCommands": "External Commands",
       "filters": "Filters",
+      "pickingPostProcessors": "Picking Post-Processors",
       "other": "Other sections"
+    },
+    "pickingPostProcessors": {
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "noProcessors": "No post-processing processors configured.",
+      "processor": "Processor",
+      "id": "Id",
+      "assembly": "Assembly",
+      "typeName": "Type Name",
+      "configuration": "Configuration",
+      "noConfiguration": "No configuration entries.",
+      "configKey": "Key",
+      "configValue": "Value",
+      "deleteProcessorConfirm": "Remove the processor \"{{id}}\"? The change applies when you save."
     },
     "externalCommands": {
       "globalSettings": "Global Settings",

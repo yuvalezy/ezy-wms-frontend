@@ -23,12 +23,15 @@ import ItemMetadataEditor from "@/features/configuration/components/ItemMetadata
 import WarehousesEditor from "@/features/configuration/components/WarehousesEditor";
 import ExternalCommandsEditor from "@/features/configuration/components/ExternalCommandsEditor";
 import FiltersEditor from "@/features/configuration/components/FiltersEditor";
+import PickingPostProcessorsEditor from "@/features/configuration/components/PickingPostProcessorsEditor";
 
 type ConfigView =
-  | "Options" | "SboSettings" | "CustomFields" | "Item" | "Warehouses" | "ExternalCommands" | "Filters" | "Other";
+  | "Options" | "SboSettings" | "CustomFields" | "Item" | "Warehouses" | "ExternalCommands" | "Filters"
+  | "PickingPostProcessingProcessors" | "Other";
 
 const CONFIG_VIEWS: ConfigView[] = [
-  "Options", "SboSettings", "CustomFields", "Item", "Warehouses", "ExternalCommands", "Filters", "Other",
+  "Options", "SboSettings", "CustomFields", "Item", "Warehouses", "ExternalCommands", "Filters",
+  "PickingPostProcessingProcessors", "Other",
 ];
 
 /** Restore the section from the URL hash (#Section) first, then the ?view= query, else Options. */
@@ -108,8 +111,19 @@ const ConfigurationList: React.FC = () => {
   const otherSections = sections.filter(
     (s) => s.section !== "Options" && s.section !== "SboSettings" && s.section !== "CustomFields"
       && s.section !== "Item" && s.section !== "Warehouses"
-      && s.section !== "ExternalCommands" && s.section !== "Filters",
+      && s.section !== "ExternalCommands" && s.section !== "Filters"
+      && s.section !== "PickingPostProcessingProcessors",
   );
+
+  // "Other" only exists for sections without a dedicated editor. Hide it when there are
+  // none, and don't strand the user on an empty view (e.g. from a stale #Other hash).
+  const showOther = otherSections.length > 0;
+  useEffect(() => {
+    if (!isLoading && !showOther && view === "Other") {
+      changeView("Options");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading, showOther, view]);
 
   return (
     <ContentTheme title={t("settings")} titleBreadcrumbs={[{label: t("configuration.title")}]}>
@@ -139,7 +153,8 @@ const ConfigurationList: React.FC = () => {
                 <SelectItem value="Warehouses">{t("configuration.view.warehouses")}</SelectItem>
                 <SelectItem value="ExternalCommands">{t("configuration.view.externalCommands")}</SelectItem>
                 <SelectItem value="Filters">{t("configuration.view.filters")}</SelectItem>
-                <SelectItem value="Other">{t("configuration.view.other")}</SelectItem>
+                <SelectItem value="PickingPostProcessingProcessors">{t("configuration.view.pickingPostProcessors")}</SelectItem>
+                {showOther && <SelectItem value="Other">{t("configuration.view.other")}</SelectItem>}
               </SelectContent>
             </Select>
           </div>
@@ -167,6 +182,8 @@ const ConfigurationList: React.FC = () => {
           <ExternalCommandsEditor onSaved={load}/>
         ) : view === "Filters" ? (
           <FiltersEditor onSaved={load}/>
+        ) : view === "PickingPostProcessingProcessors" ? (
+          <PickingPostProcessorsEditor onSaved={load}/>
         ) : (
           <Card>
             <CardContent className="p-0">

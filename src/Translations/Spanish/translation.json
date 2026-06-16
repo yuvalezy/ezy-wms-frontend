@@ -408,7 +408,22 @@
       "warehouses": "Almacenes",
       "externalCommands": "Comandos externos",
       "filters": "Filtros",
+      "pickingPostProcessors": "Post-procesadores de picking",
       "other": "Otras secciones"
+    },
+    "pickingPostProcessors": {
+      "enabled": "Habilitado",
+      "disabled": "Deshabilitado",
+      "noProcessors": "No hay procesadores de post-procesamiento configurados.",
+      "processor": "Procesador",
+      "id": "Id",
+      "assembly": "Ensamblado",
+      "typeName": "Nombre del tipo",
+      "configuration": "Configuración",
+      "noConfiguration": "Sin entradas de configuración.",
+      "configKey": "Clave",
+      "configValue": "Valor",
+      "deleteProcessorConfirm": "¿Eliminar el procesador \"{{id}}\"? El cambio se aplica al guardar."
     },
     "externalCommands": {
       "globalSettings": "Configuración global",
