@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {toast} from "sonner";
 import {
@@ -96,6 +96,7 @@ const SortableRow: React.FC<{ item: MetadataItem; onEdit: () => void; onRemove: 
         {isTrue(item.Required) && (
           <Badge variant="secondary">{t("configuration.item.required")}</Badge>
         )}
+        {item.Calculated && <Badge variant="outline">{t("configuration.item.calculated")}</Badge>}
         {item.Type && <Badge variant="outline">{item.Type}</Badge>}
         <Button size="sm" variant="ghost" onClick={onEdit}><Pencil className="h-4 w-4"/></Button>
         <Button size="sm" variant="ghost" onClick={onRemove}><Trash2 className="h-4 w-4 text-destructive"/></Button>
@@ -166,6 +167,12 @@ const ItemMetadataEditor: React.FC<Props> = ({onSaved}) => {
     setItems((prev) => prev.filter((f) => f._id !== id));
   };
 
+  /** All defined metadata IDs — used to validate Calculated formula/dependency references. */
+  const knownIds = useMemo(
+    () => new Set(items.map((i) => (i.Id ?? "").trim()).filter(Boolean)),
+    [items],
+  );
+
   const save = async () => {
     setErrors([]);
     try {
@@ -227,7 +234,7 @@ const ItemMetadataEditor: React.FC<Props> = ({onSaved}) => {
       </div>
 
       {editing && (
-        <MetadataDialog item={editing} onCancel={() => setEditing(null)} onSave={upsertItem}/>
+        <MetadataDialog item={editing} knownIds={knownIds} onCancel={() => setEditing(null)} onSave={upsertItem}/>
       )}
 
       <AlertDialog open={pendingDelete !== null} onOpenChange={(o) => !o && setPendingDelete(null)}>
@@ -268,8 +275,13 @@ const ItemMetadataEditor: React.FC<Props> = ({onSaved}) => {
   );
 };
 
-const MetadataDialog: React.FC<{ item: MetadataItem; onCancel: () => void; onSave: (f: MetadataItem) => void }> =
-  ({item, onCancel, onSave}) => {
+const MetadataDialog: React.FC<{
+  item: MetadataItem;
+  knownIds: Set<string>;
+  onCancel: () => void;
+  onSave: (f: MetadataItem) => void;
+}> =
+  ({item, knownIds, onCancel, onSave}) => {
     const {t} = useTranslation();
     const [draft, setDraft] = useState<MetadataItem>({...item});
     const set = (k: string, v: string) => setDraft((d) => ({...d, [k]: v}));
@@ -282,6 +294,32 @@ const MetadataDialog: React.FC<{ item: MetadataItem; onCancel: () => void; onSav
         }
         return next;
       });
+
+    // Calculated (computed field) — a nested object; string-valued leaves, array Dependencies.
+    const calc = draft.Calculated as Record<string, any> | undefined;
+    const calcEnabled = !!calc;
+    const toggleCalc = (on: boolean) =>
+      setDraft((d) => {
+        const next = {...d};
+        if (on) {
+          next.Calculated = d.Calculated ?? {Formula: "", Dependencies: [], Precision: "0", ClearDependenciesOnManualEdit: "false"};
+        } else {
+          delete next.Calculated;
+        }
+        return next;
+      });
+    const setCalc = (k: string, v: any) =>
+      setDraft((d) => ({...d, Calculated: {...(d.Calculated ?? {}), [k]: v}}));
+
+    // Validate the calculation: {tokens} in the Formula and the Dependencies must
+    // reference OTHER defined metadata field IDs.
+    const otherIds = new Set([...knownIds].filter((id) => id !== (draft.Id ?? "").trim()));
+    const formula = (calc?.Formula ?? "") as string;
+    const formulaRefs = (formula.match(/\{([^}]+)\}/g) ?? []).map((x) => x.slice(1, -1).trim());
+    const badFormulaRefs = [...new Set(formulaRefs.filter((r) => !otherIds.has(r)))];
+    const deps: string[] = calc?.Dependencies ?? [];
+    const badDeps = deps.filter((d) => !otherIds.has(d));
+    const calcInvalid = calcEnabled && (!formula.trim() || badFormulaRefs.length > 0 || badDeps.length > 0);
 
     return (
       <Dialog open onOpenChange={(o) => !o && onCancel()}>
@@ -331,10 +369,58 @@ const MetadataDialog: React.FC<{ item: MetadataItem; onCancel: () => void; onSav
               <Label>{t("configuration.item.mirrorTo")}</Label>
               <Input value={draft.MirrorTo ?? ""} onChange={(e) => set("MirrorTo", e.target.value)}/>
             </div>
+
+            <div className="rounded-md border px-3 py-2 space-y-3">
+              <div className="flex items-center justify-between">
+                <Label className="cursor-pointer">{t("configuration.item.calculated")}</Label>
+                <Switch checked={calcEnabled} onCheckedChange={toggleCalc}/>
+              </div>
+              {calcEnabled && (
+                <div className="space-y-3">
+                  <div>
+                    <Label>{t("configuration.item.formula")} *</Label>
+                    <Input className="font-mono text-xs" placeholder="{FieldA} * {FieldB}"
+                           value={calc?.Formula ?? ""} onChange={(e) => setCalc("Formula", e.target.value)}/>
+                    {badFormulaRefs.length > 0 && (
+                      <p className="text-xs text-destructive">
+                        {t("configuration.item.unknownFields", {fields: badFormulaRefs.join(", ")})}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <Label>{t("configuration.item.dependencies")}</Label>
+                    <Input
+                      value={(calc?.Dependencies ?? []).join(", ")}
+                      onChange={(e) => setCalc("Dependencies", e.target.value.split(",").map((s) => s.trim()).filter(Boolean))}
+                    />
+                    {badDeps.length > 0 ? (
+                      <p className="text-xs text-destructive">
+                        {t("configuration.item.unknownFields", {fields: badDeps.join(", ")})}
+                      </p>
+                    ) : (
+                      <p className="text-xs text-muted-foreground">{t("configuration.item.dependenciesHint")}</p>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 items-end">
+                    <div>
+                      <Label>{t("configuration.item.precision")}</Label>
+                      <Input type="number" value={calc?.Precision ?? ""}
+                             onChange={(e) => setCalc("Precision", e.target.value)}/>
+                    </div>
+                    <div className="flex items-center justify-between rounded-md border px-3 py-2">
+                      <Label className="cursor-pointer text-xs">{t("configuration.item.clearDeps")}</Label>
+                      <Switch checked={calc?.ClearDependenciesOnManualEdit === "true"}
+                              onCheckedChange={(v) => setCalc("ClearDependenciesOnManualEdit", v ? "true" : "false")}/>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={onCancel}>{t("cancel")}</Button>
-            <Button disabled={!draft.Id || !draft.Description} onClick={() => onSave(draft)}>{t("save")}</Button>
+            <Button disabled={!draft.Id || !draft.Description || calcInvalid}
+                    onClick={() => onSave(draft)}>{t("save")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

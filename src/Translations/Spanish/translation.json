@@ -415,6 +415,13 @@
       "required": "Obligatorio",
       "step": "Incremento (decimal)",
       "mirrorTo": "Reflejar en",
+      "calculated": "Campo calculado",
+      "formula": "Fórmula",
+      "dependencies": "Dependencias",
+      "dependenciesHint": "IDs de campo (separados por comas) de los que depende este cálculo.",
+      "unknownFields": "Campo(s) desconocido(s): {{fields}}. Deben referenciar IDs de metadatos definidos.",
+      "precision": "Precisión",
+      "clearDeps": "Limpiar dependencias al editar manualmente",
       "noFields": "No hay campos de metadatos definidos.",
       "deleteFieldConfirm": "¿Eliminar el campo de metadatos \"{{id}}\"? El cambio se aplica al guardar."
     },

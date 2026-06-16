@@ -419,6 +419,13 @@
       "required": "Required",
       "step": "Step (Decimal)",
       "mirrorTo": "Mirror To",
+      "calculated": "Calculated field",
+      "formula": "Formula",
+      "dependencies": "Dependencies",
+      "dependenciesHint": "Comma-separated field IDs this calculation depends on.",
+      "unknownFields": "Unknown field(s): {{fields}}. Must reference defined metadata IDs.",
+      "precision": "Precision",
+      "clearDeps": "Clear dependencies on manual edit",
       "noFields": "No metadata fields defined.",
       "deleteFieldConfirm": "Remove the metadata field \"{{id}}\"? The change applies when you save."
     },
