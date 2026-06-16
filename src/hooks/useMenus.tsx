@@ -1,7 +1,7 @@
 import {useTranslation} from 'react-i18next';
 import {useMemo} from 'react'; // Import useMemo
 import {useAuth} from "@/components";
-import {ArrowRightLeft, BarChart3, Bell, Boxes, CheckCircle, ClipboardList, Factory, Move, Package, SendHorizontal, Shield, ShoppingCart, Smartphone, TrendingUp, Truck, Users,} from 'lucide-react';
+import {ArrowRightLeft, BarChart3, Bell, Boxes, CheckCircle, ClipboardList, Factory, Move, Package, SendHorizontal, Shield, ShoppingCart, SlidersHorizontal, Smartphone, TrendingUp, Truck, Users,} from 'lucide-react';
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {GoodsReceiptDocumentType} from "@/features/login/data/login";
 
@@ -232,6 +232,13 @@ export function useMenus() {
       Text: t('externalAlerts'),
       SuperUser: true,
       Icon: Bell,
+      Color: "text-gray-600",
+    },
+    {
+      Link: "/settings/configuration",
+      Text: t('configuration.title'),
+      SuperUser: true,
+      Icon: SlidersHorizontal,
       Color: "text-gray-600",
     },
   ];
