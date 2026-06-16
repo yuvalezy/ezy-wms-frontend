@@ -664,6 +664,7 @@
     "demo": "You are using a demo license for testing purposes.",
     "demoExpired": "Your demo license has expired. Please contact support to upgrade.",
     "disabled": "Your account has been disabled. Please contact support.",
+    "loginWarning": "Your account needs attention soon. Please contact an administrator.",
     "expiresOn": "It expires on {{date}}.",
     "licenseExpiresOn": "Your license is valid until {{date}}."
   },

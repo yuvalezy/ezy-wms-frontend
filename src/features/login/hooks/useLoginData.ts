@@ -5,6 +5,7 @@ import Cookies from 'universal-cookie';
 import {useAuth, useThemeContext} from '@/components';
 import {DeviceStatus} from '@/features/devices/data/device';
 import {AccountState} from '@/features/account/data/account';
+import {shouldShowLoginAccountStatusBanner} from '@/utils/account-status-visibility';
 
 export type Warehouse = {
   id: string;
@@ -142,16 +143,11 @@ export const useLoginData = () => {
   };
 
   const shouldShowAccountStatusBanner = () => {
-    if (!companyInfo?.accountStatus) return false;
-    const invalidStates = [
-      AccountState.Invalid,
-      AccountState.PaymentDue,
-      AccountState.PaymentDueUnknown,
-      AccountState.Demo,
-      AccountState.DemoExpired,
-      AccountState.Disabled
-    ];
-    return invalidStates.includes(companyInfo.accountStatus);
+    return shouldShowLoginAccountStatusBanner(
+      companyInfo?.accountStatus,
+      companyInfo?.expirationDate,
+      companyInfo?.serverTime
+    );
   };
 
   const isAccountDisabled = () => {

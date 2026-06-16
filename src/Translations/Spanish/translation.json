@@ -664,6 +664,7 @@
     "demo": "Está usando una licencia de demostración con fines de prueba.",
     "demoExpired": "Su licencia de demostración ha expirado. Por favor contacte al soporte para actualizar.",
     "disabled": "Su cuenta ha sido deshabilitada. Por favor contacte al soporte.",
+    "loginWarning": "Su cuenta necesita atención pronto. Por favor contacte a un administrador.",
     "expiresOn": "Vence el {{date}}.",
     "licenseExpiresOn": "Su licencia es válida hasta el {{date}}."
   },

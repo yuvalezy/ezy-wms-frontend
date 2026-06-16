@@ -10,8 +10,8 @@ import NetworkQualityIndicator from "@/components/NetworkQualityIndicator";
 import DeviceStatusBanner from "@/components/DeviceStatusBanner";
 import AccountStatusBanner from "@/components/AccountStatusBanner";
 import {DeviceStatus} from "@/features/devices/data/device";
-import {AccountState} from "@/features/account/data/account";
 import {ResponsiveBreadcrumbs, BreadcrumbItem} from "@/components/ui/responsive-breadcrumbs";
+import {shouldShowAuthenticatedAccountStatusBanner} from "@/utils/account-status-visibility";
 
 interface ContentThemeProps {
   title: string;
@@ -44,18 +44,12 @@ const ContentTheme: React.FC<ContentThemeProps> = (
   };
 
   const shouldShowAccountStatusBanner = () => {
-    if (!companyInfo?.accountStatus) return false;
-    const invalidStates = [
-      AccountState.Invalid,
-      AccountState.PaymentDue,
-      AccountState.PaymentDueUnknown,
-      AccountState.Demo,
-      AccountState.DemoExpired,
-      AccountState.Disabled
-    ];
-    if (invalidStates.includes(companyInfo.accountStatus)) return true;
-    // An otherwise-active license can still carry an expiry date worth surfacing.
-    return companyInfo.accountStatus === AccountState.Active && !!companyInfo.expirationDate;
+    return shouldShowAuthenticatedAccountStatusBanner(
+      companyInfo?.accountStatus,
+      companyInfo?.expirationDate,
+      user?.superUser,
+      companyInfo?.serverTime
+    );
   };
 
   return (

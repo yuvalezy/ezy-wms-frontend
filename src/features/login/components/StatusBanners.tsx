@@ -27,6 +27,8 @@ export const StatusBanners: React.FC<StatusBannersProps> = ({
           <AccountStatusBanner
             accountStatus={accountStatus}
             expirationDate={expirationDate}
+            variant="login"
+            showExpirationDate={false}
             className="w-full"
           />
         </div>

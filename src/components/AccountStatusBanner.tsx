@@ -7,15 +7,20 @@ interface AccountStatusBannerProps {
   accountStatus: AccountState;
   /** License/demo expiry or payment-due grace deadline (ISO string or Date). */
   expirationDate?: string | Date | null;
+  variant?: 'authenticated' | 'login';
+  showExpirationDate?: boolean;
   className?: string;
 }
 
 const AccountStatusBanner: React.FC<AccountStatusBannerProps> = ({
   accountStatus,
   expirationDate,
+  variant = 'authenticated',
+  showExpirationDate = true,
   className = ''
 }) => {
   const { t, i18n } = useTranslation();
+  const isLoginVariant = variant === 'login';
 
   const formattedExpiry = (() => {
     if (!expirationDate) return null;
@@ -30,7 +35,7 @@ const AccountStatusBanner: React.FC<AccountStatusBannerProps> = ({
 
   // Suffix appended to states where a *future* deadline is meaningful (demo,
   // payment-due grace). Empty when there is no usable date.
-  const expirySuffix = formattedExpiry
+  const expirySuffix = showExpirationDate && formattedExpiry
     ? ' ' + t('accountStatusBanner.expiresOn', 'It expires on {{date}}.', { date: formattedExpiry })
     : '';
 
@@ -52,7 +57,9 @@ const AccountStatusBanner: React.FC<AccountStatusBannerProps> = ({
           textColor: 'text-red-800',
           iconColor: 'text-red-600',
           icon: AlertTriangle,
-          message: t('accountStatusBanner.paymentDue', 'Payment is due for your account. Please update your payment method.') + expirySuffix
+          message: isLoginVariant
+            ? t('accountStatusBanner.loginWarning', 'Your account needs attention soon. Please contact an administrator.')
+            : t('accountStatusBanner.paymentDue', 'Payment is due for your account. Please update your payment method.') + expirySuffix
         };
       case AccountState.PaymentDueUnknown:
         return {
@@ -61,7 +68,9 @@ const AccountStatusBanner: React.FC<AccountStatusBannerProps> = ({
           textColor: 'text-yellow-800',
           iconColor: 'text-yellow-600',
           icon: AlertCircle,
-          message: t('accountStatusBanner.paymentDueUnknown', 'Payment status is unknown. Please contact support to verify your account.')
+          message: isLoginVariant
+            ? t('accountStatusBanner.loginWarning', 'Your account needs attention soon. Please contact an administrator.')
+            : t('accountStatusBanner.paymentDueUnknown', 'Payment status is unknown. Please contact support to verify your account.')
         };
       case AccountState.Demo:
         return {
@@ -70,7 +79,9 @@ const AccountStatusBanner: React.FC<AccountStatusBannerProps> = ({
           textColor: 'text-blue-800',
           iconColor: 'text-blue-600',
           icon: Clock,
-          message: t('accountStatusBanner.demo', 'You are using a demo license for testing purposes.') + expirySuffix
+          message: isLoginVariant
+            ? t('accountStatusBanner.loginWarning', 'Your account needs attention soon. Please contact an administrator.')
+            : t('accountStatusBanner.demo', 'You are using a demo license for testing purposes.') + expirySuffix
         };
       case AccountState.DemoExpired:
         return {
