@@ -42,7 +42,7 @@
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "i18next": "^25.4.2",
-    "lucide-react": "^0.542.0",
+    "lucide-react": "^1.18.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-hook-form": "^7.62.0",
