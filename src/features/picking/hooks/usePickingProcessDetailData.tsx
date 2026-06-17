@@ -29,7 +29,7 @@ export const usePickingProcessDetailData = () => {
   const [selectedPackageLabelId, setSelectedPackageLabelId] = useState<string | null>(null);
   const [creatingPackageLabel, setCreatingPackageLabel] = useState(false);
   const {user} = useAuth();
-  const packageLabelsEnabled = user?.settings.enablePickingPackageLabels === true && user?.settings.enablePostPickRepack !== true;
+  const packageLabelsEnabled = user?.settings.enablePickingPackageLabels === true;
 
   useEffect(() => {
     [idParam, typeParam, entryParam].forEach((p, index) => {
