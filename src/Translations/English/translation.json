@@ -779,7 +779,7 @@
     "roleDirectTransfer": "Direct Transfer",
     "roleDirectTransferDescription": "Quick single-item transfer between bin locations"
   },
-  "system": "System",
+  "systemBadge": "System",
   "operations": "Operations",
   "supervision": "Supervision",
   "administration": "Administration",

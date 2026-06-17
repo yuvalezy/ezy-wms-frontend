@@ -9,7 +9,12 @@ import SboSettingsEditor from "@/features/configuration/components/SboSettingsEd
 import SystemLockedScreen from "./SystemLockedScreen";
 
 const FullScreen: React.FC<{ children: React.ReactNode }> = ({children}) => (
-  <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">{children}</div>
+  // Scroll container: when the card is taller than the viewport (e.g. the full SBO
+  // settings form) the page scrolls and the top stays reachable, instead of being
+  // clipped by flex centering.
+  <div className="h-screen overflow-y-auto bg-muted/30">
+    <div className="min-h-full flex items-center justify-center p-4">{children}</div>
+  </div>
 );
 
 const Spinner = () => (

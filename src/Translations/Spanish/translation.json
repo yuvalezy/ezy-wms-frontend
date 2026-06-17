@@ -779,7 +779,7 @@
     "roleDirectTransfer": "Transferencia Directa",
     "roleDirectTransferDescription": "Transferencia rápida de un artículo entre ubicaciones de almacén"
   },
-  "system": "Sistema",
+  "systemBadge": "Sistema",
   "operations": "Operaciones",
   "supervision": "Supervisión",
   "administration": "Administración",

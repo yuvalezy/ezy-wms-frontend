@@ -190,7 +190,7 @@ const AuthorizationGroupsList: React.FC = () => {
                               {group.name}
                               {!group.canDelete && (
                                 <Badge variant="outline" className="text-xs">
-                                  {t('system')}
+                                  {t('systemBadge')}
                                 </Badge>
                               )}
                             </div>
