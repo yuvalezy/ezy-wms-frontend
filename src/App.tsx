@@ -1,9 +1,9 @@
 import React, {useEffect} from 'react';
 import './App.css';
-import {BrowserRouter, Route, Routes, useNavigate} from "react-router";
+import {BrowserRouter, Route, Routes, useLocation, useNavigate} from "react-router";
 import Login from "./Pages/Login";
 import HomePage from "./Pages/Home";
-import {AuthProvider, useAuth} from "@/components";
+import {AuthProvider, ErrorBoundary, useAuth} from "@/components";
 import {NotificationProvider} from "@/components/NotificationContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Unauthorized from "./components/Unauthorized";
@@ -57,6 +57,7 @@ function AppRoutes() {
   const {user} = useAuth();
   const isOffline = useOfflineDetection();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     setNavigateCallback(navigate);
@@ -339,6 +340,7 @@ function AppRoutes() {
       <Toaster closeButton richColors={true}/>
       {isOffline && <OfflineOverlay/>}
       <SystemGate>
+      <ErrorBoundary resetKey={location.pathname}>
       <Routes>
         {getAuthenticationRoutes()}
         {getGeneralCheckRoutes()}
@@ -353,6 +355,7 @@ function AppRoutes() {
         {getSettingsRoutes()}
         {getDefaultRoutes()}
       </Routes>
+      </ErrorBoundary>
       </SystemGate>
     </>
   );

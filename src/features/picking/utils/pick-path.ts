@@ -3,10 +3,15 @@ import {PickingDocumentDetailItem} from "@/features/picking/data/picking";
 /**
  * Pick-path routing (frontend, presentation only).
  *
- * The backend stamps each bin with a numeric `sequence` (walk order). Here we just INVERT the
- * item-first payload into a location-first walk: one "stop" per bin, ordered by that sequence,
- * listing the items to grab at each bin. No bin-code parsing happens here — the ordering rule
- * lives once, in the backend `IPickPathSequencer`.
+ * We INVERT the item-first payload into a location-first walk: one "stop" per bin, listing the
+ * items to grab at each bin. Stops are ordered by a natural, segment-aware comparison of the bin
+ * CODE (see compareBinCodes) so the picker walks the warehouse monotonically — floor/aisle A
+ * before B before C, with bays and levels ascending — instead of bouncing around.
+ *
+ * The backend `sequence` is intentionally IGNORED here: it only reads the trailing digits of each
+ * dash-segment, so codes whose aisle/floor is a LETTER (e.g. `01-A1-...` vs `01-C1-...`) collapse
+ * to the same value and sort by the wrong segment. Sorting the full code directly is correct for
+ * both the `BIN-P9/P10` convention and letter-based codes.
  */
 
 export interface PickPathStopItem {
@@ -46,17 +51,25 @@ export interface PickPath {
   pickedQuantity: number;
 }
 
-// "No bin" items sort after every real bin.
-const NO_BIN_SEQUENCE = Number.MAX_SAFE_INTEGER;
-
 // Quantities are decimals; treat sub-unit residue as zero (mirrors backend QuantityTolerances.Completed).
 const QUANTITY_EPSILON = 0.0001;
 
 interface StopAccumulator {
   binEntry: number | null;
   binCode: string | null;
-  sequence: number;
   items: PickPathStopItem[];
+}
+
+/**
+ * Physical walk order: a natural, segment-aware comparison of the FULL bin code. Bin codes are
+ * written most-significant-first (zone-floor/aisle-bay-level), so comparing left-to-right with
+ * letters alphabetically (A < B < C) and embedded numbers numerically (2 < 10, P9 < P10) walks
+ * the warehouse in order. Blank/unknown codes sort last.
+ */
+function compareBinCodes(a: string | null | undefined, b: string | null | undefined): number {
+  if (!a) return b ? 1 : 0;
+  if (!b) return -1;
+  return a.localeCompare(b, undefined, {numeric: true, sensitivity: "base"});
 }
 
 function toStopItem(item: PickingDocumentDetailItem, quantityToPick: number): PickPathStopItem {
@@ -74,17 +87,9 @@ function toStopItem(item: PickingDocumentDetailItem, quantityToPick: number): Pi
   };
 }
 
-/**
- * Sort key for a bin. Prefers the backend `sequence`; falls back to a numeric-aware compare of the
- * code (so P10 still follows P9) only when the backend hasn't supplied a sequence.
- */
+/** Orders stops by the physical walk order of their bin code (see compareBinCodes). */
 function compareStops(a: StopAccumulator, b: StopAccumulator): number {
-  if (a.sequence !== b.sequence) {
-    return a.sequence - b.sequence;
-  }
-  const codeA = a.binCode ?? "";
-  const codeB = b.binCode ?? "";
-  return codeA.localeCompare(codeB, undefined, {numeric: true, sensitivity: "base"});
+  return compareBinCodes(a.binCode, b.binCode);
 }
 
 /**
@@ -113,11 +118,11 @@ export function buildPickPath(items?: PickingDocumentDetailItem[]): PickPath {
     // Walk order: allocate from the nearest bin first so the bins we keep are the earliest stops.
     const bins = (item.binQuantities ?? [])
       .filter((b) => (b.quantity ?? 0) > 0)
-      .sort((a, b) => (a.sequence ?? NO_BIN_SEQUENCE) - (b.sequence ?? NO_BIN_SEQUENCE));
+      .sort((a, b) => compareBinCodes(a.code, b.code));
 
     if (bins.length === 0) {
       // Still-open item with nowhere to route — surface it so it isn't silently dropped.
-      noBin ??= {binEntry: null, binCode: null, sequence: NO_BIN_SEQUENCE, items: []};
+      noBin ??= {binEntry: null, binCode: null, items: []};
       noBin.items.push(toStopItem(item, remaining));
       continue;
     }
@@ -138,7 +143,6 @@ export function buildPickPath(items?: PickingDocumentDetailItem[]): PickPath {
         acc = {
           binEntry: bin.entry,
           binCode: bin.code,
-          sequence: bin.sequence ?? NO_BIN_SEQUENCE,
           items: [],
         };
         byBin.set(key, acc);

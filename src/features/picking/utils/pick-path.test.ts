@@ -30,24 +30,37 @@ describe("buildPickPath", () => {
     expect(path.pickedQuantity).toBe(0);
   });
 
-  test("orders stops by backend sequence (P10 after P9), not alphabetically", () => {
+  test("orders stops by bin code numerically (P10 after P9), not alphabetically", () => {
     const items = [
-      item("A", {binQuantities: [bin(3, "BIN-P10-A1-N1", 6, 10_001_001)]}),
-      item("B", {binQuantities: [bin(1, "BIN-P9-A1-N1", 6, 9_001_001)]}),
-      item("C", {binQuantities: [bin(2, "BIN-P2-A1-N1", 6, 2_001_001)]}),
+      item("A", {binQuantities: [bin(3, "BIN-P10-A1-N1", 6)]}),
+      item("B", {binQuantities: [bin(1, "BIN-P9-A1-N1", 6)]}),
+      item("C", {binQuantities: [bin(2, "BIN-P2-A1-N1", 6)]}),
     ];
 
     const codes = buildPickPath(items).stops.map((s) => s.binCode);
     expect(codes).toEqual(["BIN-P2-A1-N1", "BIN-P9-A1-N1", "BIN-P10-A1-N1"]);
   });
 
-  test("falls back to numeric-aware code compare when sequence is missing", () => {
+  test("orders by floor/aisle LETTER then bay/level for letter-based codes (A before C), system bin last", () => {
+    // Real customer codes: aisle/floor is a letter (A1/C1). The old digits-only sequencer
+    // ignored the letter and floated SYSTEM-BIN-LOCATION to the front — the bug being fixed.
     const items = [
-      item("A", {binQuantities: [bin(3, "BIN-P10-A1-N1", 6)]}),
-      item("B", {binQuantities: [bin(1, "BIN-P9-A1-N1", 6)]}),
+      item("X", {binQuantities: [bin(1, "01-C1-00-16", 12)]}),
+      item("Y", {binQuantities: [bin(2, "01-A1-10-04", 12)]}),
+      item("Z", {binQuantities: [bin(3, "01-SYSTEM-BIN-LOCATION", 12)]}),
     ];
     const codes = buildPickPath(items).stops.map((s) => s.binCode);
-    expect(codes).toEqual(["BIN-P9-A1-N1", "BIN-P10-A1-N1"]);
+    expect(codes).toEqual(["01-A1-10-04", "01-C1-00-16", "01-SYSTEM-BIN-LOCATION"]);
+  });
+
+  test("walks floors in order A -> B -> C instead of bouncing", () => {
+    const items = [
+      item("X", {binQuantities: [bin(1, "01-C1-00-01", 12)]}),
+      item("Y", {binQuantities: [bin(2, "01-A1-00-01", 12)]}),
+      item("Z", {binQuantities: [bin(3, "01-B1-00-01", 12)]}),
+    ];
+    const codes = buildPickPath(items).stops.map((s) => s.binCode);
+    expect(codes).toEqual(["01-A1-00-01", "01-B1-00-01", "01-C1-00-01"]);
   });
 
   test("an item stocked in multiple bins appears at each of its stops", () => {
@@ -148,7 +161,7 @@ describe("buildPickPath", () => {
     expect(path.stops[1].items[0].quantityToPick).toBe(3);
   });
 
-  test("allocates nearest-first by sequence regardless of bin order in payload", () => {
+  test("allocates nearest-first by bin code regardless of bin order in payload", () => {
     const items = [
       item("A", {
         quantity: 4,

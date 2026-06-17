@@ -13,7 +13,10 @@ export function formatNumber(
   decimals = 2,
   locale?: string,
 ): string {
-  return value.toLocaleString(locale, {
+  // Guard against undefined/null/NaN (e.g. a missing quantity field) so a single
+  // bad number can never throw during render and blank an operational screen.
+  const safeValue = Number.isFinite(value) ? value : 0;
+  return safeValue.toLocaleString(locale, {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   });

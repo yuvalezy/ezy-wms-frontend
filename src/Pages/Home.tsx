@@ -67,7 +67,7 @@ export default function Home() {
                   <div className="h-2 w-2 bg-blue-500 rounded-full group-hover:scale-125 transition-transform"></div>
                 </div>
                 <div className="text-2xl md:text-3xl font-bold text-gray-900">
-                  {kpiItems.reduce((sum, item) => sum + item.value, 0).toLocaleString()}
+                  {kpiItems.reduce((sum, item) => sum + (Number.isFinite(item.value) ? item.value : 0), 0).toLocaleString()}
                 </div>
                 <div className="text-xs text-gray-500 mt-1">Across all modules</div>
               </div>

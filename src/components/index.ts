@@ -3,6 +3,7 @@ export * from './BarCodeScanner';
 export * from './BinLocationScanner';
 export * from './BoxConfirmationDialog';
 export * from './ContentTheme';
+export * from './ErrorBoundary';
 export * from './InfoBox';
 export * from './MetricRow';
 export * from './NotFound';

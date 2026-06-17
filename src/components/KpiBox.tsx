@@ -14,6 +14,9 @@ interface KpiBoxProps {
 }
 
 export function KpiBox({ title, value, icon: Icon, className, iconColor, route, borderColor }: KpiBoxProps) {
+  // Guard against undefined/null/NaN values (e.g. a backend response missing a
+  // field) so a single missing number can never crash the render.
+  const displayValue = (Number.isFinite(value) ? value : 0).toLocaleString();
   const cardContent = (
     <Card className={`${className || ''} group relative overflow-hidden bg-white hover:shadow-lg hover:shadow-gray-200/50 transition-all duration-300 cursor-pointer min-h-[140px] md:min-h-[160px] border border-gray-200 hover:border-gray-300 rounded-xl ${borderColor || 'border-l-blue-500'} border-l-4 hover:border-l-8 hover:-translate-y-1 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-offset-2 flex flex-col`}>
       <CardHeader className="flex flex-row items-start justify-between py-3 px-4 md:px-6 flex-shrink-0">
@@ -26,7 +29,7 @@ export function KpiBox({ title, value, icon: Icon, className, iconColor, route, 
         </div>
       </CardHeader>
       <CardContent className="px-4 md:px-6 pb-4 flex-1 flex items-center">
-        <div className="text-3xl md:text-4xl font-bold text-gray-900 group-hover:text-gray-700 transition-colors">{value.toLocaleString()}</div>
+        <div className="text-3xl md:text-4xl font-bold text-gray-900 group-hover:text-gray-700 transition-colors">{displayValue}</div>
       </CardContent>
       
       {/* Subtle gradient overlay on hover */}
@@ -38,7 +41,7 @@ export function KpiBox({ title, value, icon: Icon, className, iconColor, route, 
     <Link 
       to={route} 
       className="block focus:outline-none rounded-xl"
-      aria-label={`View ${title}: ${value.toLocaleString()} items`}
+      aria-label={`View ${title}: ${displayValue} items`}
     >
       {cardContent}
     </Link>

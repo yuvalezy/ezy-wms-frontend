@@ -155,38 +155,42 @@ export function getKpiItems(settings: ApplicationSettings, userAuthorizations: R
     }
     return false;
   }).map((item) => {
+    // `info` may be missing fields (e.g. a backend version that predates a KPI),
+    // which would yield `undefined`. Coalesce every value to a finite number so a
+    // missing field can never crash the dashboard render.
+    const safeInfo = info ?? ({} as HomeInfo);
     let value: number;
     switch (item.id) {
       case 'item-check':
-        value = info.itemCheck;
+        value = safeInfo.itemCheck;
         break;
       case 'bin-check':
-        value = info.binCheck;
+        value = safeInfo.binCheck;
         break;
       case 'goods-receipt':
-        value = info.goodsReceipt;
+        value = safeInfo.goodsReceipt;
         break;
       case 'receipt-confirmation':
-        value = info.receiptConfirmation;
+        value = safeInfo.receiptConfirmation;
         break;
       case 'picking':
-        value = info.picking;
+        value = safeInfo.picking;
         break;
       case 'counting':
-        value = info.counting;
+        value = safeInfo.counting;
         break;
       case 'transfersApproval':
-        value = info.transfersApproval;
+        value = safeInfo.transfersApproval;
         break;
       case 'transfer':
-        value = info.transfersApproval;
+        value = safeInfo.transfersApproval;
         break;
       case 'transferConfirmation':
-        value = info.transfersConfirmation;
+        value = safeInfo.transfersConfirmation;
         break;
       default:
         value = 0; // Default to 0 if no match
     }
-    return {...item, value}
+    return {...item, value: Number.isFinite(value) ? value : 0}
   });
 }

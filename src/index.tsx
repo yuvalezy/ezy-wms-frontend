@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {ThemeContextProvider} from "@/components";
+import {ErrorBoundary, ThemeContextProvider} from "@/components";
 import './i18n';
 
 const root = ReactDOM.createRoot(
@@ -11,9 +11,11 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <ThemeContextProvider>
-      <App/>
-    </ThemeContextProvider>
+    <ErrorBoundary>
+      <ThemeContextProvider>
+        <App/>
+      </ThemeContextProvider>
+    </ErrorBoundary>
   </React.StrictMode>
 );
 
