@@ -25,7 +25,7 @@ const Spinner = () => (
 const SystemGate: React.FC<{ children: React.ReactNode }> = ({children}) => {
   const {t} = useTranslation();
   const {status, reload} = useSystemStatus();
-  const {isAuthenticated, user, isLoading, logout} = useAuth();
+  const {isAuthenticated, user, isInitializing, logout} = useAuth();
 
   // Wait for the first readiness result before deciding anything.
   if (status === undefined) {
@@ -37,8 +37,11 @@ const SystemGate: React.FC<{ children: React.ReactNode }> = ({children}) => {
     return <>{children}</>;
   }
 
-  // Locked. Resolve auth before choosing the lock experience.
-  if (isLoading) {
+  // Locked. Wait only for auth INITIALIZATION before choosing the lock experience.
+  // Do NOT gate on company-info loading here: the <Login/> below triggers a
+  // company-info reload on mount, and gating on that would unmount/remount Login
+  // in an infinite flicker loop. Login renders its own loading overlay instead.
+  if (isInitializing) {
     return <Spinner/>;
   }
 

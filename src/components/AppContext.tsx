@@ -28,7 +28,8 @@ interface AuthContextType {
   logout: () => void;
   clearSession: () => void;
   refreshSession: () => Promise<boolean>;
-  isLoading: boolean; // Add loading state
+  isLoading: boolean; // Add loading state (auth init OR company info)
+  isInitializing: boolean; // Auth initialization only - does NOT include company info loading
   authVersion: number;
   updateDeviceStatus: (newStatus: DeviceStatus) => void;
   showDeviceStatusBanner: boolean;
@@ -58,6 +59,7 @@ const AuthContextDefaultValues: AuthContextType = {
   },
   refreshSession: async () => false,
   isLoading: true, // Default to loading
+  isInitializing: true,
   authVersion: 0,
   updateDeviceStatus: (newStatus: DeviceStatus) => {
     console.warn("updateDeviceStatus method not implemented yet!");
@@ -254,6 +256,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     clearSession,
     refreshSession,
     isLoading: isLoading || isCompanyLoading,
+    isInitializing: isLoading,
     authVersion,
     updateDeviceStatus,
     showDeviceStatusBanner,
