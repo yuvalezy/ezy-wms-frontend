@@ -1,20 +1,22 @@
-import {ChevronDownIcon, HomeIcon, LogOutIcon, UserIcon} from "lucide-react"
+import {ChevronDownIcon, HomeIcon, LogOutIcon, PencilIcon, SmartphoneIcon, UserIcon} from "lucide-react"
 import {useLocation, useNavigate} from "react-router";
 import {useEffect, useState} from "react";
 import {MenuItem, useMenus} from "@/hooks/useMenus";
 
 import {Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem,} from "@/components/ui/sidebar"
-import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,} from "@/components/ui/dropdown-menu"
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,} from "@/components/ui/dropdown-menu"
 import {useAuth} from "@/components/AppContext";
 import {useTranslation} from "react-i18next";
+import CurrentDeviceNameForm from "@/features/devices/components/current-device-name-form";
 
 
 export function AppSidebar() {
   const menus = useMenus();
   const [authorizedMenus, setAuthorizedMenus] = useState<MenuItem[]>([]);
+  const [showDeviceNameForm, setShowDeviceNameForm] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const {logout, user, isDeviceActive, isValidAccount} = useAuth();
+  const {logout, user, isDeviceActive, isValidAccount, refreshSession} = useAuth();
   const {t} = useTranslation();
 
   useEffect(() => {
@@ -96,6 +98,7 @@ export function AppSidebar() {
   ];
 
   return (
+    <>
     <Sidebar className="text-base">
       <SidebarHeader>
         <div className="h-16 px-4 border-b border-gray-200 flex items-center">
@@ -116,6 +119,20 @@ export function AppSidebar() {
               <ChevronDownIcon className="w-4 h-4 text-gray-500 flex-shrink-0"/>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-56">
+              <DropdownMenuLabel className="text-[0.65rem] uppercase tracking-wide text-gray-400 font-normal pb-0">
+                {t('currentDevice', 'Current device')}
+              </DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() => setShowDeviceNameForm(true)}
+                className="flex items-center gap-2 h-11"
+              >
+                <SmartphoneIcon className="w-4 h-4 text-gray-500 flex-shrink-0"/>
+                <span className="flex-1 text-sm text-gray-900 truncate">
+                  {user?.deviceName || t('unnamedDevice', 'Unnamed device')}
+                </span>
+                <PencilIcon className="w-3.5 h-3.5 text-gray-400 flex-shrink-0"/>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator/>
               <DropdownMenuItem onClick={handleLogout} className="text-red-600 hover:text-red-700 hover:bg-red-50 h-12 focus:bg-red-50 focus:text-red-700">
                 <LogOutIcon className="w-4 h-4 mr-2"/>
                 {t('logout')}
@@ -191,5 +208,20 @@ export function AppSidebar() {
         })}
       </SidebarContent>
     </Sidebar>
+
+    {showDeviceNameForm && (
+      <CurrentDeviceNameForm
+        currentName={user?.deviceName}
+        open={showDeviceNameForm}
+        onOpenChange={setShowDeviceNameForm}
+        onClose={async (shouldReload) => {
+          setShowDeviceNameForm(false);
+          if (shouldReload) {
+            await refreshSession();
+          }
+        }}
+      />
+    )}
+    </>
   )
 }

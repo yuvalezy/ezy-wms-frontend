@@ -17,6 +17,7 @@ export interface UserInfo {
   customFields: Record<string, CustomField[]>;
   superUser: boolean;
   deviceStatus?: DeviceStatus;
+  deviceName?: string;
 }
 
 export interface DocumentUnitSettings {

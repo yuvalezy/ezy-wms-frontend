@@ -5,6 +5,7 @@ export interface Device {
   status: DeviceStatus;
   registrationDate: string;
   statusNotes?: string;
+  lastLoginDate?: string | null;
 }
 
 export interface DeviceFilters {

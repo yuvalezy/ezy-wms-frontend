@@ -136,6 +136,14 @@ const DeviceDetails: React.FC<DeviceDetailsProps> = ({device, open, onOpenChange
                       </div>
                       <p className="text-sm">{formatDate(device.registrationDate)}</p>
                     </div>
+
+                    <div className="space-y-2">
+                      <div className="flex items-center text-sm text-muted-foreground">
+                        <Clock className="w-4 h-4 mr-2"/>
+                        {t('lastLoginDate')}
+                      </div>
+                      <p className="text-sm">{device.lastLoginDate ? formatDate(device.lastLoginDate) : '-'}</p>
+                    </div>
                   </div>
 
                   {device.statusNotes && (

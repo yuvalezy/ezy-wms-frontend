@@ -32,7 +32,10 @@ const DevicesList: React.FC = () => {
     try {
       setIsLoading(true);
       const data = await deviceService.getAll(filters);
-      setDevices(data);
+      const sorted = [...data].sort((a, b) =>
+        (a.deviceName ?? '').localeCompare(b.deviceName ?? '')
+      );
+      setDevices(sorted);
     } catch (error) {
       setError(`Failed to load devices: ${error}`);
     } finally {
@@ -144,6 +147,7 @@ const DevicesList: React.FC = () => {
                   <TableHead>{t('deviceUuid')}</TableHead>
                   <TableHead>{t('status')}</TableHead>
                   <TableHead>{t('registrationDate')}</TableHead>
+                  <TableHead>{t('lastLoginDate')}</TableHead>
                   <TableHead className="text-right">{t('actions')}</TableHead>
                 </TableRow>
               </TableHeader>
@@ -155,6 +159,7 @@ const DevicesList: React.FC = () => {
                       <TableCell><Skeleton className="h-4 w-32" /></TableCell>
                       <TableCell><Skeleton className="h-4 w-48 font-mono" /></TableCell>
                       <TableCell><Skeleton className="h-5 w-20 rounded-full" /></TableCell>
+                      <TableCell><Skeleton className="h-4 w-24" /></TableCell>
                       <TableCell><Skeleton className="h-4 w-24" /></TableCell>
                       <TableCell className="text-right">
                         <div className="flex gap-2 justify-end">
@@ -175,6 +180,7 @@ const DevicesList: React.FC = () => {
                           </Badge>
                         </TableCell>
                         <TableCell>{formatDate(device.registrationDate)}</TableCell>
+                        <TableCell>{device.lastLoginDate ? formatDate(device.lastLoginDate) : '-'}</TableCell>
                         <TableCell className="text-right">
                           <div className="flex gap-2 justify-end">
                             <Button
@@ -191,7 +197,7 @@ const DevicesList: React.FC = () => {
                     ))}
                     {!isLoading && devices.length === 0 && (
                       <TableRow>
-                        <TableCell colSpan={5} className="text-center py-8">
+                        <TableCell colSpan={6} className="text-center py-8">
                           {t('noDevicesFound')}
                         </TableCell>
                       </TableRow>

@@ -21,9 +21,16 @@ export const deviceService = {
     await axiosInstance.put(`device/${deviceUuid}/status`, request);
   },
 
-  // Update device name
+  // Update device name (SuperUser, any device)
   async updateName(deviceUuid: string, request: UpdateDeviceNameRequest): Promise<void> {
     await axiosInstance.put(`device/${deviceUuid}/name`, request);
+  },
+
+  // Rename the current connected device (self-service; resolved server-side
+  // from the X-Device-UUID header, so it only affects the caller's own device)
+  async updateMyName(request: UpdateDeviceNameRequest): Promise<{ deviceName: string }> {
+    const response = await axiosInstance.put<{ deviceName: string }>("general/device/name", request);
+    return response.data;
   },
 
   // Get audit history for a device
