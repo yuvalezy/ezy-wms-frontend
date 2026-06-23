@@ -2,12 +2,14 @@ import React, {useEffect, useMemo, useRef, useState} from "react";
 import {useNavigate, useParams} from "react-router";
 import {useTranslation} from "react-i18next";
 import {toast} from "sonner";
-import {CheckCircle, PackageCheck} from "lucide-react";
+import {CheckCircle, PackageCheck, RotateCcw} from "lucide-react";
 
 import ContentTheme from "@/components/ContentTheme";
 import BarCodeScanner from "@/components/BarCodeScanner";
 import {BarCodeScannerRef} from "@/components/BarCodeScanner/types";
 import {useThemeContext} from "@/components/ThemeContext";
+import {MessageBox} from "@/components";
+import {StringFormat} from "@/utils/string-utils";
 import {Button} from "@/components/ui/button";
 import {Progress} from "@/components/ui/progress";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
@@ -33,6 +35,7 @@ export default function PickingRepack() {
   const [selectedLabelId, setSelectedLabelId] = useState<string | null>(null);
   const [creatingLabel, setCreatingLabel] = useState(false);
   const [assigning, setAssigning] = useState(false);
+  const [confirmAction, setConfirmAction] = useState<null | "restart" | "complete">(null);
 
   const labels = summary?.labels ?? [];
   const progress = summary && summary.totalLines > 0 ? summary.assignedLines * 100 / summary.totalLines : 0;
@@ -173,6 +176,19 @@ export default function PickingRepack() {
       .finally(() => setLoading(false));
   }
 
+  function restartRepack() {
+    setLoading(true);
+    pickingService.restartRepack(pickListId)
+      .then(data => {
+        setSummary(data);
+        setSelectedLabelId(data.labels[0]?.id ?? null);
+        toast.success(t("repackRestarted"));
+        setTimeout(() => scannerRef.current?.focus(), 1);
+      })
+      .catch(error => setError(error))
+      .finally(() => setLoading(false));
+  }
+
   function getItemRowClass(item: PickingRepackSummary["items"][number]) {
     if (item.totalLines > 0 && item.assignedLines === item.totalLines) {
       return "border-l-4 border-emerald-500 bg-emerald-50 text-slate-500 hover:bg-emerald-100";
@@ -223,10 +239,17 @@ export default function PickingRepack() {
               </div>
             </div>
             {canManageRepack && (
-              <Button type="button" disabled={!canComplete} onClick={completeRepack}>
-                <CheckCircle className="mr-2 h-4 w-4"/>
-                {t("completeRepack")}
-              </Button>
+              <div className="flex flex-wrap items-center gap-2">
+                <Button type="button" variant="outline" disabled={!summary.started}
+                        onClick={() => setConfirmAction("restart")}>
+                  <RotateCcw className="mr-2 h-4 w-4"/>
+                  {t("restartRepack")}
+                </Button>
+                <Button type="button" disabled={!canComplete} onClick={() => setConfirmAction("complete")}>
+                  <CheckCircle className="mr-2 h-4 w-4"/>
+                  {t("completeRepack")}
+                </Button>
+              </div>
             )}
           </div>
 
@@ -270,6 +293,27 @@ export default function PickingRepack() {
           </Table>
         </div>
       )}
+      <MessageBox
+        open={confirmAction !== null}
+        onOpenChange={open => { if (!open) setConfirmAction(null); }}
+        type="confirm"
+        title={confirmAction === "restart"
+          ? StringFormat(t("confirmRestartRepack"), id ?? "")
+          : t("confirmCompleteRepack")}
+        description={confirmAction === "restart" ? t("restartRepackWarning") : t("completeRepackWarning")}
+        confirmText={confirmAction === "restart" ? t("restartRepack") : t("completeRepack")}
+        cancelText={t("cancel")}
+        confirmButtonVariant={confirmAction === "restart" ? "destructive" : "default"}
+        onConfirm={() => {
+          const action = confirmAction;
+          setConfirmAction(null);
+          if (action === "restart") {
+            restartRepack();
+          } else if (action === "complete") {
+            completeRepack();
+          }
+        }}
+      />
     </ContentTheme>
   );
 }

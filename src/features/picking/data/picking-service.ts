@@ -246,5 +246,16 @@ export const pickingService = {
       console.error("Error completing repack:", error);
       throw error;
     }
+  },
+
+  async restartRepack(pickListId: number): Promise<PickingRepackSummary> {
+    try {
+      const url = `picking/${pickListId}/repack/restart`;
+      const response = await axiosInstance.post<PickingRepackSummary>(url);
+      return response.data;
+    } catch (error) {
+      console.error("Error restarting repack:", error);
+      throw error;
+    }
   }
 }
