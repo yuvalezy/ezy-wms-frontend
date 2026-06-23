@@ -502,6 +502,8 @@
       "required": "Required",
       "step": "Step (Decimal)",
       "mirrorTo": "Mirror To",
+      "scaleByField": "Scale By Field",
+      "scaleByFieldHint": "SAP field ID to use as scale factor (e.g. PurPackUn). On load: value × factor. On save: value ÷ factor.",
       "calculated": "Calculated field",
       "formula": "Formula",
       "dependencies": "Dependencies",

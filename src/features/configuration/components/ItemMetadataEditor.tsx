@@ -57,6 +57,7 @@ interface MetadataItem {
   Required?: string;
   ReadOnly?: string;
   MirrorTo?: string;
+  ScaleByField?: string;
   /** Advanced keys (e.g. Calculated) we preserve untouched. */
   [k: string]: any;
 }
@@ -368,6 +369,12 @@ const MetadataDialog: React.FC<{
             <div>
               <Label>{t("configuration.item.mirrorTo")}</Label>
               <Input value={draft.MirrorTo ?? ""} onChange={(e) => set("MirrorTo", e.target.value)}/>
+            </div>
+            <div>
+              <Label>{t("configuration.item.scaleByField")}</Label>
+              <Input className="font-mono text-xs" placeholder="e.g. PurPackUn"
+                     value={draft.ScaleByField ?? ""} onChange={(e) => set("ScaleByField", e.target.value)}/>
+              <p className="text-xs text-muted-foreground mt-1">{t("configuration.item.scaleByFieldHint")}</p>
             </div>
 
             <div className="rounded-md border px-3 py-2 space-y-3">

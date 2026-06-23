@@ -498,6 +498,8 @@
       "required": "Obligatorio",
       "step": "Incremento (decimal)",
       "mirrorTo": "Reflejar en",
+      "scaleByField": "Escalar por campo",
+      "scaleByFieldHint": "ID de campo SAP a usar como factor de escala (ej. PurPackUn). Al cargar: valor × factor. Al guardar: valor ÷ factor.",
       "calculated": "Campo calculado",
       "formula": "Fórmula",
       "dependencies": "Dependencias",
