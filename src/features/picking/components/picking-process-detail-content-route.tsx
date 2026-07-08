@@ -13,12 +13,14 @@ interface PickingProcessDetailContentRouteProps {
   items?: PickingDocumentDetailItem[];
   /** Bin the picker has currently scanned, if any — labels the focus stop as "here". */
   currentBinEntry?: number | null;
+  /** Options.PickPathSortKey token expression; omitted/invalid falls back to the default order. */
+  sortKey?: string | null;
 }
 
-export const PickingProcessDetailContentRoute = ({items, currentBinEntry}: PickingProcessDetailContentRouteProps) => {
+export const PickingProcessDetailContentRoute = ({items, currentBinEntry, sortKey}: PickingProcessDetailContentRouteProps) => {
   const {t} = useTranslation();
   const stockInfo = useStockInfo();
-  const path = useMemo(() => buildPickPath(items), [items]);
+  const path = useMemo(() => buildPickPath(items, sortKey), [items, sortKey]);
   const [expanded, setExpanded] = useState<Set<number | string>>(new Set());
 
   const percent = path.totalQuantity > 0

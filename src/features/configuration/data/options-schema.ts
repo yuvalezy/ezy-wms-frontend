@@ -93,6 +93,12 @@ export const OPTION_FIELDS: OptionField[] = [
   // Picking
   {key: "EnablePickingCheck", kind: "bool", group: "picking"},
   {key: "EnablePickPathRouting", kind: "bool", group: "picking"},
+  {
+    key: "PickPathSortKey",
+    kind: "string",
+    group: "picking",
+    visibleWhen: (v) => isTrue(v, "EnablePickPathRouting"),
+  },
   {key: "EnablePickingPackageLabels", kind: "bool", group: "picking"},
   {
     key: "EnablePostPickRepack",

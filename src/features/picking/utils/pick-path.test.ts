@@ -197,4 +197,34 @@ describe("buildPickPath", () => {
     expect(path.totalQuantity).toBe(20);
     expect(path.pickedQuantity).toBe(14);
   });
+
+  test("without a sortKey, single-segment letter+number codes still sort aisle-first (unchanged default)", () => {
+    const items = [
+      item("X", {binQuantities: [bin(1, "B1", 12)]}),
+      item("Y", {binQuantities: [bin(2, "A2", 12)]}),
+      item("Z", {binQuantities: [bin(3, "A1", 12)]}),
+    ];
+    const codes = buildPickPath(items).stops.map((s) => s.binCode);
+    expect(codes).toEqual(["A1", "A2", "B1"]);
+  });
+
+  test("with sortKey 's1.num,s1.alpha', walks position-first across aisles (A1,B1,C1,A2,B2,...)", () => {
+    const items = [
+      item("W", {binQuantities: [bin(1, "A1", 12)]}),
+      item("X", {binQuantities: [bin(2, "B1", 12)]}),
+      item("Y", {binQuantities: [bin(3, "A2", 12)]}),
+      item("Z", {binQuantities: [bin(4, "B2", 12)]}),
+    ];
+    const codes = buildPickPath(items, "s1.num,s1.alpha").stops.map((s) => s.binCode);
+    expect(codes).toEqual(["A1", "B1", "A2", "B2"]);
+  });
+
+  test("an invalid sortKey falls back to the default order instead of throwing", () => {
+    const items = [
+      item("X", {binQuantities: [bin(1, "B1", 12)]}),
+      item("Y", {binQuantities: [bin(2, "A1", 12)]}),
+    ];
+    const codes = buildPickPath(items, "not-a-token").stops.map((s) => s.binCode);
+    expect(codes).toEqual(["A1", "B1"]);
+  });
 });

@@ -15,6 +15,7 @@ export interface PickingProcessDetailContentProps {
 export const PickingProcessDetailContent: React.FC<PickingProcessDetailContentProps> = ({items, isLoading = false, currentBinEntry}) => {
   const {user} = useAuth();
   const routingEnabled = user?.settings?.enablePickPathRouting ?? false;
+  const routingSortKey = user?.settings?.pickPathSortKey;
   const [available, setAvailable] = useState(false);
 
   useEffect(() => {
@@ -55,7 +56,7 @@ export const PickingProcessDetailContent: React.FC<PickingProcessDetailContentPr
       ) : available ? (
         <PickingProcessDetailContentAvailable items={items} />
       ) : routingEnabled ? (
-        <PickingProcessDetailContentRoute items={items} currentBinEntry={currentBinEntry} />
+        <PickingProcessDetailContentRoute items={items} currentBinEntry={currentBinEntry} sortKey={routingSortKey} />
       ) : (
         <PickingProcessDetailContentBins items={items} />
       )}

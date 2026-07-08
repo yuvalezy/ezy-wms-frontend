@@ -1,12 +1,15 @@
 import {PickingDocumentDetailItem} from "@/features/picking/data/picking";
+import {compareBinCodes} from "@/features/picking/utils/bin-code-sort";
 
 /**
  * Pick-path routing (frontend, presentation only).
  *
  * We INVERT the item-first payload into a location-first walk: one "stop" per bin, listing the
- * items to grab at each bin. Stops are ordered by a natural, segment-aware comparison of the bin
- * CODE (see compareBinCodes) so the picker walks the warehouse monotonically — floor/aisle A
- * before B before C, with bays and levels ascending — instead of bouncing around.
+ * items to grab at each bin. Stops are ordered by compareBinCodes (see bin-code-sort.ts) — by
+ * default a natural, segment-aware comparison of the full bin CODE so the picker walks the
+ * warehouse monotonically (floor/aisle A before B before C, bays/levels ascending) instead of
+ * bouncing around; optionally overridden per-tenant by Options.PickPathSortKey (e.g. a customer
+ * whose bins are named A1/B1/C1 and wants position to outrank aisle).
  *
  * The backend `sequence` is intentionally IGNORED here: it only reads the trailing digits of each
  * dash-segment, so codes whose aisle/floor is a LETTER (e.g. `01-A1-...` vs `01-C1-...`) collapse
@@ -60,18 +63,6 @@ interface StopAccumulator {
   items: PickPathStopItem[];
 }
 
-/**
- * Physical walk order: a natural, segment-aware comparison of the FULL bin code. Bin codes are
- * written most-significant-first (zone-floor/aisle-bay-level), so comparing left-to-right with
- * letters alphabetically (A < B < C) and embedded numbers numerically (2 < 10, P9 < P10) walks
- * the warehouse in order. Blank/unknown codes sort last.
- */
-function compareBinCodes(a: string | null | undefined, b: string | null | undefined): number {
-  if (!a) return b ? 1 : 0;
-  if (!b) return -1;
-  return a.localeCompare(b, undefined, {numeric: true, sensitivity: "base"});
-}
-
 function toStopItem(item: PickingDocumentDetailItem, quantityToPick: number): PickPathStopItem {
   return {
     itemCode: item.itemCode,
@@ -88,8 +79,8 @@ function toStopItem(item: PickingDocumentDetailItem, quantityToPick: number): Pi
 }
 
 /** Orders stops by the physical walk order of their bin code (see compareBinCodes). */
-function compareStops(a: StopAccumulator, b: StopAccumulator): number {
-  return compareBinCodes(a.binCode, b.binCode);
+function compareStops(a: StopAccumulator, b: StopAccumulator, sortKey?: string | null): number {
+  return compareBinCodes(a.binCode, b.binCode, sortKey);
 }
 
 /**
@@ -97,8 +88,11 @@ function compareStops(a: StopAccumulator, b: StopAccumulator): number {
  * quantity is allocated across its bins in walk order (nearest first), capping each stop's
  * quantity-to-pick and dropping bins once the demand is covered. Fully-picked items contribute no
  * stops; items still open with no bin info are collected into a trailing "no bin location" stop.
+ *
+ * sortKey is the optional Options.PickPathSortKey token expression (see bin-code-sort.ts);
+ * omitted/invalid falls back to the default aisle-first natural compare.
  */
-export function buildPickPath(items?: PickingDocumentDetailItem[]): PickPath {
+export function buildPickPath(items?: PickingDocumentDetailItem[], sortKey?: string | null): PickPath {
   const byBin = new Map<string, StopAccumulator>();
   let noBin: StopAccumulator | null = null;
   let totalQuantity = 0;
@@ -118,7 +112,7 @@ export function buildPickPath(items?: PickingDocumentDetailItem[]): PickPath {
     // Walk order: allocate from the nearest bin first so the bins we keep are the earliest stops.
     const bins = (item.binQuantities ?? [])
       .filter((b) => (b.quantity ?? 0) > 0)
-      .sort((a, b) => compareBinCodes(a.code, b.code));
+      .sort((a, b) => compareBinCodes(a.code, b.code, sortKey));
 
     if (bins.length === 0) {
       // Still-open item with nowhere to route — surface it so it isn't silently dropped.
@@ -151,7 +145,7 @@ export function buildPickPath(items?: PickingDocumentDetailItem[]): PickPath {
     }
   }
 
-  const ordered = Array.from(byBin.values()).sort(compareStops);
+  const ordered = Array.from(byBin.values()).sort((a, b) => compareStops(a, b, sortKey));
   if (noBin) {
     ordered.push(noBin);
   }

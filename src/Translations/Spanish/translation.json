@@ -562,6 +562,10 @@
     "options": {
       "liveReloadNote": "Los cambios se aplican de inmediato al guardar. Los usuarios con sesión iniciada obtienen la nueva configuración en su próximo inicio de sesión.",
       "inherit": "Heredar (global)",
+      "pickPathPreview": {
+        "title": "Vista previa con ubicaciones de ejemplo:",
+        "invalidExpression": "No se pudo interpretar esta expresión — se usa el orden predeterminado (pasillo primero) hasta que se corrija."
+      },
       "yes": "Sí",
       "no": "No",
       "addOverride": "Agregar excepción",
@@ -619,6 +623,7 @@
         "DirectTransferAll": {"label": "Transferencia directa de todo el stock", "desc": "La transferencia directa mueve todo el stock del artículo escaneado desde la ubicación origen (omite la entrada de cantidad)."},
         "EnablePickingCheck": {"label": "Verificación de picking", "desc": "El picking requiere un paso de verificación."},
         "EnablePickPathRouting": {"label": "Ruta de picking", "desc": "Mostrar el picking como un recorrido guiado por ubicación, ordenado por código de ubicación. Desactivado usa la vista clásica por artículo."},
+        "PickPathSortKey": {"label": "Anulación del orden de recorrido", "desc": "Expresión de tokens opcional que controla el orden de recorrido, p. ej. \"s1.num,s1.alpha\" para ordenar por posición antes que por letra de pasillo. Déjelo vacío para usar el orden predeterminado (pasillo primero)."},
         "EnablePickingPackageLabels": {"label": "Etiquetas de paquete", "desc": "Permitir crear/seleccionar etiquetas de paquete de WMS (R1, R2, …) durante el picking."},
         "EnablePostPickRepack": {"label": "Reempaque posterior al picking", "desc": "Requerir asignar las filas recolectadas a etiquetas de paquete en un paso de reempaque antes de sincronizar con SAP."},
         "PickingPackageLabelPrefix": {"label": "Prefijo de etiqueta de paquete", "desc": "Prefijo usado al generar automáticamente las etiquetas de paquete."},
