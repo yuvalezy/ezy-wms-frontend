@@ -7,6 +7,7 @@ import {Progress} from "@/components/ui/progress";
 import {useStockInfo} from "@/utils/stock-info";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
 import {PickingDocumentDetailItem} from "@/features/picking/data/picking";
+import {PickingInProgressReceiptWarning} from "@/features/picking/components/picking-in-progress-receipt-warning";
 import {buildPickPath, PickPathStop, PickPathStopItem} from "@/features/picking/utils/pick-path";
 
 interface PickingProcessDetailContentRouteProps {
@@ -164,6 +165,7 @@ const StopItemRow = ({row, fmt, prominent}: StopItemRowProps) => {
           </span>
         )}
       </div>
+      {row.item.inProgressGoodsReceipt && <PickingInProgressReceiptWarning/>}
     </div>
   );
 };

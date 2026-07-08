@@ -7,6 +7,7 @@ export enum RoleType {
   PICKING_SUPERVISOR = 'PickingSupervisor',
   COUNTING = 'Counting',
   COUNTING_SUPERVISOR = 'CountingSupervisor',
+  COUNTING_CORRECTION = 'CountingCorrection',
   TRANSFER = 'Transfer',
   TRANSFER_SUPERVISOR = 'TransferSupervisor',
   TRANSFER_REQUEST = 'TransferRequest',

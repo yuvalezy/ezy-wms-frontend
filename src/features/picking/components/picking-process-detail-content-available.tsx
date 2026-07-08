@@ -3,6 +3,7 @@ import ItemDetailsLink from "@/components/ItemDetailsLink";
 import React from "react";
 import {useTranslation} from "react-i18next";
 import {PickingDocumentDetailItem} from "@/features/picking/data/picking";
+import {PickingInProgressReceiptWarning} from "@/features/picking/components/picking-in-progress-receipt-warning";
 import {useStockInfo} from "@/utils/stock-info";
 
 interface PickingProcessDetailContentAvailableProps {
@@ -72,6 +73,13 @@ export const PickingProcessDetailContentAvailable = ({items}: PickingProcessDeta
             <TableCell className="bg-gray-100 border-b-1"
                        colSpan={6}>{t('description')}: {row.itemName}</TableCell>
           </TableRow>
+          {row.inProgressGoodsReceipt && (
+            <TableRow>
+              <TableCell colSpan={6} className="bg-amber-50 dark:bg-amber-950/30 py-1.5">
+                <PickingInProgressReceiptWarning/>
+              </TableCell>
+            </TableRow>
+          )}
         </>
       ))}
     </TableBody>

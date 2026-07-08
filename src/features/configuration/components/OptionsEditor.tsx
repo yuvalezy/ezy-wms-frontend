@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {toast} from "sonner";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "@/components/ui/accordion";
 import {Button} from "@/components/ui/button";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import {Skeleton} from "@/components/ui/skeleton";
@@ -125,44 +126,64 @@ const OptionsEditor: React.FC<Props> = ({onSaved}) => {
         <AlertDescription>{t("configuration.options.liveReloadNote")}</AlertDescription>
       </Alert>
 
-      {OPTION_GROUPS.map((group: OptionGroup) => {
-        const fields = OPTION_FIELDS.filter(
-          (f) => f.group === group && (!f.visibleWhen || f.visibleWhen(values)),
+      {(() => {
+        const visibleGroups = OPTION_GROUPS.filter((group: OptionGroup) =>
+          OPTION_FIELDS.some((f) => f.group === group && (!f.visibleWhen || f.visibleWhen(values))),
         );
-        if (!fields.length) {
-          return null;
-        }
-        return (
-          <Card key={group}>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base">{t(`configuration.options.groups.${group}`)}</CardTitle>
-            </CardHeader>
-            <CardContent className="divide-y py-0">
-              {fields.map((f) => (
-                <OptionFieldRow key={f.key} field={f} value={values[f.key]} onChange={(v) => setField(f.key, v)}/>
-              ))}
-              {group === "picking" && (
-                <PickPathSortPreview
-                  sortKey={values.PickPathSortKey}
-                  enabled={String(values.EnablePickPathRouting) === "true"}
-                />
-              )}
-            </CardContent>
-          </Card>
-        );
-      })}
+        const firstGroup = visibleGroups[0];
 
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base">{t("configuration.options.groups.overrides")}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <DocumentUnitOverridesEditor
-            value={values.DocumentUnitOverrides}
-            onChange={(next) => setField("DocumentUnitOverrides", next)}
-          />
-        </CardContent>
-      </Card>
+        return (
+          <Accordion type="single" collapsible defaultValue={firstGroup} className="space-y-4">
+            {visibleGroups.map((group: OptionGroup) => {
+              const fields = OPTION_FIELDS.filter(
+                (f) => f.group === group && (!f.visibleWhen || f.visibleWhen(values)),
+              );
+              return (
+                <AccordionItem key={group} value={group} className="border-b-0">
+                  <Card>
+                    <CardHeader>
+                      <AccordionTrigger className="hover:no-underline py-0">
+                        <CardTitle className="text-base">{t(`configuration.options.groups.${group}`)}</CardTitle>
+                      </AccordionTrigger>
+                    </CardHeader>
+                    <AccordionContent>
+                      <CardContent className="divide-y py-0">
+                        {fields.map((f) => (
+                          <OptionFieldRow key={f.key} field={f} value={values[f.key]} onChange={(v) => setField(f.key, v)}/>
+                        ))}
+                        {group === "picking" && (
+                          <PickPathSortPreview
+                            sortKey={values.PickPathSortKey}
+                            enabled={String(values.EnablePickPathRouting) === "true"}
+                          />
+                        )}
+                      </CardContent>
+                    </AccordionContent>
+                  </Card>
+                </AccordionItem>
+              );
+            })}
+
+            <AccordionItem value="overrides" className="border-b-0">
+              <Card>
+                <CardHeader>
+                  <AccordionTrigger className="hover:no-underline py-0">
+                    <CardTitle className="text-base">{t("configuration.options.groups.overrides")}</CardTitle>
+                  </AccordionTrigger>
+                </CardHeader>
+                <AccordionContent>
+                  <CardContent>
+                    <DocumentUnitOverridesEditor
+                      value={values.DocumentUnitOverrides}
+                      onChange={(next) => setField("DocumentUnitOverrides", next)}
+                    />
+                  </CardContent>
+                </AccordionContent>
+              </Card>
+            </AccordionItem>
+          </Accordion>
+        );
+      })()}
 
       {errors.length > 0 && (
         <Alert variant="destructive">

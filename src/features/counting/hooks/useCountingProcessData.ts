@@ -3,9 +3,12 @@ import {useEffect, useRef, useState} from "react";
 import {AddItemValue, BarCodeScannerRef, BinLocationScannerRef, ProcessAlertValue, ProcessesRef, useAuth, useThemeContext} from "@/components";
 
 import {BinLocation} from "@/features/items/data/items";
-import {Counting, CountingContent} from "@/features/counting/data/counting";
+import {Counting, CountingContent, CountingSummaryReportLine} from "@/features/counting/data/counting";
 import {countingService} from "@/features/counting/data/counting-service";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
+import {RoleType} from "@/features/authorization-groups/data/authorization-group";
+import {CountingAllDetailRef} from "@/features/counting/hooks/useCountingAllDetailsData";
+import {DetailUpdateParameters, Status} from "@/features/shared/data";
 
 export const useCountingProcessData = () => {
   const {scanCode} = useParams();
@@ -23,6 +26,13 @@ export const useCountingProcessData = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const processAlertRef = useRef<HTMLDivElement>(null);
   const [info, setInfo] = useState<Counting | null>(null);
+  const detailRef = useRef<CountingAllDetailRef>(null);
+
+  // Correction-enabled users may edit/remove already-scanned lines from the rows list. The backend
+  // scopes what a CountingCorrection-only operator can touch to their own lines; supervisors see all.
+  const canCorrect = !!(user?.superUser
+    || user?.roles?.includes(RoleType.COUNTING_SUPERVISOR)
+    || user?.roles?.includes(RoleType.COUNTING_CORRECTION));
 
   useEffect(() => {
     setEnable(!user?.binLocations);
@@ -80,6 +90,44 @@ export const useCountingProcessData = () => {
       .finally(() => setLoading(false));
   }
 
+
+  function openCorrection(row: CountingContent) {
+    if (id == null) {
+      return;
+    }
+    setLoading(true);
+    Promise.all([
+      countingService.fetch(id),
+      countingService.fetchReportAllDetails(id, row.itemCode, row.binEntry)
+    ])
+      .then(([doc, details]) => {
+        const enableUpdate = doc.status === Status.Open || doc.status === Status.InProgress;
+        const line: CountingSummaryReportLine = {
+          itemCode: row.itemCode,
+          itemName: row.itemName,
+          numInBuy: row.numInBuy,
+          buyUnitMsr: row.buyUnitMsr,
+          purPackUn: row.purPackUn,
+          purPackMsr: row.purPackMsr,
+          binCode: row.binCode ?? "",
+          binEntry: row.binEntry,
+          quantity: row.countedQuantity,
+        };
+        detailRef.current?.show(line, details, enableUpdate);
+      })
+      .catch((e) => setError(e))
+      .finally(() => setLoading(false));
+  }
+
+  function onCorrectionUpdate(updateData: DetailUpdateParameters) {
+    setLoading(true);
+    countingService.updateAll(updateData)
+      .then(() => loadRows())
+      .catch((e) => {
+        setError(e);
+        setLoading(false);
+      });
+  }
 
   function handleQuantityChanged(quantity: number) {
     if (currentAlert == null)
@@ -162,5 +210,9 @@ export const useCountingProcessData = () => {
     scrollRef,
     processAlertRef,
     info,
+    canCorrect,
+    detailRef,
+    openCorrection,
+    onCorrectionUpdate,
   }
 }

@@ -17,6 +17,9 @@ import {countingService} from "@/features/counting/data/counting-service";
 import {ObjectType} from "@/features/shared/data";
 import {Skeleton} from "@/components/ui/skeleton";
 import {Card, CardContent} from "@/components/ui/card";
+import {Button} from "@/components/ui/button";
+import {Pencil} from "lucide-react";
+import CountingAllDetail from "@/features/counting/components/CountingAllDetail";
 
 export default function CountingProcess() {
   const {t} = useTranslation();
@@ -37,6 +40,10 @@ export default function CountingProcess() {
     handleAddItem,
     processAlertRef,
     info,
+    canCorrect,
+    detailRef,
+    openCorrection,
+    onCorrectionUpdate,
   } = useCountingProcessData();
   const stockInfo = useStockInfo();
 
@@ -132,6 +139,7 @@ export default function CountingProcess() {
                             <TableHead>{t('code')}</TableHead>
                             <TableHead className="hidden sm:table-cell">{t('description')}</TableHead>
                             <TableHead>{t('quantity')}</TableHead>
+                            {canCorrect && <TableHead className="w-1"></TableHead>}
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -149,6 +157,16 @@ export default function CountingProcess() {
                               purPackUn: row.purPackUn,
                               purPackMsr: row.purPackMsr || "",
                             })}</TableCell>
+                            {canCorrect && (
+                              <TableCell className="text-right">
+                                <Button variant="outline" size="sm"
+                                        className="flex items-center gap-1"
+                                        onClick={() => openCorrection(row)}>
+                                  <Pencil className="h-4 w-4"/>
+                                  <span className="hidden sm:inline">{t('correct')}</span>
+                                </Button>
+                              </TableCell>
+                            )}
                           </TableRow>
                           <TableRow className="sm:hidden">
                             <TableCell className="bg-gray-100 border-b-1"
@@ -174,6 +192,8 @@ export default function CountingProcess() {
                                               const result = await countingService.updateLine(params);
                                               return {returnValue: result};
                                             }}/>}
+          {canCorrect && id &&
+              <CountingAllDetail ref={detailRef} id={id} onUpdate={onCorrectionUpdate}/>}
         </>
       )}
     </ContentTheme>

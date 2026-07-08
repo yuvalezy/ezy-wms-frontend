@@ -79,6 +79,12 @@ export const useAuthorizationGroupRoles = () => {
       description: t("authorizations.roleCountingSupervisorDescription"),
       category: "Supervision"
     }],
+    [RoleType.COUNTING_CORRECTION, {
+      role: RoleType.COUNTING_CORRECTION,
+      displayName: t("authorizations.roleCountingCorrection"),
+      description: t("authorizations.roleCountingCorrectionDescription"),
+      category: "Operations"
+    }],
     // Transfer
     [RoleType.TRANSFER, {
       role: RoleType.TRANSFER,

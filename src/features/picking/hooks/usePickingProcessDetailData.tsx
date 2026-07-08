@@ -201,6 +201,9 @@ export const usePickingProcessDetailData = () => {
                 else
                   errorMessage = StringFormat(t('itemEntryNotFoundPicking'), itemCode, id);
                 break;
+              case 'Item is in an in-process goods receipt':
+                errorMessage = StringFormat(t('itemInProgressGoodsReceiptError'), itemCode);
+                break;
             }
             toast.error(errorMessage);
           } finally {

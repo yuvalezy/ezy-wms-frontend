@@ -4,6 +4,7 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/c
 import {useStockInfo} from "@/utils/stock-info";
 import ItemDetailsLink from "@/components/ItemDetailsLink";
 import {PickingDocumentDetailItem} from "@/features/picking/data/picking";
+import {PickingInProgressReceiptWarning} from "@/features/picking/components/picking-in-progress-receipt-warning";
 
 interface PickingProcessDetailContentBinsProps {
   items?: PickingDocumentDetailItem[] | undefined
@@ -54,6 +55,13 @@ export const PickingProcessDetailContentBins = ({items}: PickingProcessDetailCon
             <TableCell className="bg-gray-100 border-b-1"
                        colSpan={5}>{t('description')}: {row.itemName}</TableCell>
           </TableRow>
+          {row.inProgressGoodsReceipt && (
+            <TableRow>
+              <TableCell colSpan={5} className="bg-amber-50 dark:bg-amber-950/30 py-1.5">
+                <PickingInProgressReceiptWarning/>
+              </TableCell>
+            </TableRow>
+          )}
           {row.openQuantity > 0 && row.binQuantities && row.binQuantities.length > 0 && (
             <TableRow>
               <TableCell colSpan={5} className="p-0">

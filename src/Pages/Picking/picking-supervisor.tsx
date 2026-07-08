@@ -82,7 +82,8 @@ export default function PickingSupervisor() {
         loadData();
       })
       .catch((error) => {
-        setError(error);
+        const blocked = /^Item (.+) is in an in-process goods receipt$/.exec(error?.message ?? "");
+        setError(blocked ? StringFormat(t('itemInProgressGoodsReceiptError'), blocked[1]) : error);
         setLoading(false);
       });
   }

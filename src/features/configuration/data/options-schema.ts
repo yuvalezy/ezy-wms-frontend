@@ -112,6 +112,8 @@ export const OPTION_FIELDS: OptionField[] = [
     group: "picking",
     visibleWhen: (v) => isTrue(v, "EnablePickingPackageLabels"),
   },
+  {key: "BlockPickScanDuringGoodsReceipt", kind: "bool", group: "picking"},
+  {key: "BlockPickProcessDuringGoodsReceipt", kind: "bool", group: "picking"},
 
   // Session & Quantities
   {key: "IdleLogoutTimeout", kind: "int", group: "session"},

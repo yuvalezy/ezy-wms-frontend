@@ -61,6 +61,8 @@ export interface PickingDocumentDetailItem extends ItemDetails {
   openQuantity: number;
   available?: number;
   binQuantities?: PickingDocumentDetailItemBinQuantities[];
+  /** True when this item is still being put away from a non-finalized goods receipt. */
+  inProgressGoodsReceipt?: boolean;
 }
 
 export interface PickingDocumentDetailItemBinQuantities extends BinLocation {
