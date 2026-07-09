@@ -13,7 +13,6 @@ import {OPTION_FIELDS, OPTION_GROUPS, OptionGroup} from "../data/options-schema"
 import OptionFieldRow from "./OptionFieldRow";
 import DocumentUnitOverridesEditor from "./DocumentUnitOverridesEditor";
 import SectionHistoryDialog from "./SectionHistoryDialog";
-import PickPathSortPreview from "./PickPathSortPreview";
 
 interface Props {
   onSaved: () => void;
@@ -151,12 +150,6 @@ const OptionsEditor: React.FC<Props> = ({onSaved}) => {
                         {fields.map((f) => (
                           <OptionFieldRow key={f.key} field={f} value={values[f.key]} onChange={(v) => setField(f.key, v)}/>
                         ))}
-                        {group === "picking" && (
-                          <PickPathSortPreview
-                            sortKey={values.PickPathSortKey}
-                            enabled={String(values.EnablePickPathRouting) === "true"}
-                          />
-                        )}
                       </CardContent>
                     </AccordionContent>
                   </Card>

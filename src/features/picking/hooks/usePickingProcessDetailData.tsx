@@ -10,6 +10,9 @@ import {IsNumeric} from "@/utils/number-utils";
 import {StringFormat} from "@/utils/string-utils";
 import {pickingService} from "@/features/picking/data/picking-service";
 
+// Quantities are decimals; treat sub-unit residue as zero (mirrors backend QuantityTolerances.Completed).
+const QUANTITY_EPSILON = 0.0001;
+
 export const usePickingProcessDetailData = () => {
   const {t} = useTranslation();
   const {idParam, typeParam, entryParam} = useParams();
@@ -94,7 +97,11 @@ export const usePickingProcessDetailData = () => {
         if (value.detail != null) {
           let valueDetail = value.detail[0];
           setDetail(valueDetail);
-          if (params?.binEntry != null && valueDetail.items?.length === 0) {
+          // Bin exhausted -> advance to the next bin/reference. The bin-scoped payload keeps
+          // fully-picked references (openQuantity 0), so "no items" never triggers; check instead
+          // that no item at this bin still has open quantity. Decimals: use a tolerance, not == 0.
+          const binHasOpenItems = valueDetail.items?.some(i => (i.openQuantity ?? 0) > QUANTITY_EPSILON) ?? false;
+          if (params?.binEntry != null && !binHasOpenItems) {
             binLocationRef?.current?.clear();
             return;
           }

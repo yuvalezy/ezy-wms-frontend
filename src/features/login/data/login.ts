@@ -69,7 +69,8 @@ export interface ApplicationSettings {
   // Pick List
   enablePickingCheck: boolean;
   enablePickPathRouting: boolean;
-  pickPathSortKey?: string;
+  pickPathHuecoPrefix?: string;
+  pickPathSectionFirst?: boolean;
   enablePickingPackageLabels?: boolean;
   enablePostPickRepack?: boolean;
   pickingPackageLabelPrefix?: string;

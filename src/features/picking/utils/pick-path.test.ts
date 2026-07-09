@@ -198,33 +198,33 @@ describe("buildPickPath", () => {
     expect(path.pickedQuantity).toBe(14);
   });
 
-  test("without a sortKey, single-segment letter+number codes still sort aisle-first (unchanged default)", () => {
+  test("orders real structured codes: floor 1 -> hueco -> floor 2, section-major within aisle", () => {
     const items = [
-      item("X", {binQuantities: [bin(1, "B1", 12)]}),
-      item("Y", {binQuantities: [bin(2, "A2", 12)]}),
-      item("Z", {binQuantities: [bin(3, "A1", 12)]}),
+      item("V", {binQuantities: [bin(1, "01-A2-00-01", 12)]}),
+      item("W", {binQuantities: [bin(2, "01-HU1-00-01", 12)]}),
+      item("X", {binQuantities: [bin(3, "01-A1-10-01", 12)]}),
+      item("Y", {binQuantities: [bin(4, "01-A1-00-02", 12)]}),
+      item("Z", {binQuantities: [bin(5, "01-A1-00-01", 12)]}),
+      item("Q", {binQuantities: [bin(6, "01-B1-00-01", 12)]}),
     ];
     const codes = buildPickPath(items).stops.map((s) => s.binCode);
-    expect(codes).toEqual(["A1", "A2", "B1"]);
+    expect(codes).toEqual([
+      "01-A1-00-01",
+      "01-A1-10-01",
+      "01-A1-00-02",
+      "01-B1-00-01",
+      "01-HU1-00-01",
+      "01-A2-00-01",
+    ]);
   });
 
-  test("with sortKey 's1.num,s1.alpha', walks position-first across aisles (A1,B1,C1,A2,B2,...)", () => {
+  test("sectionFirst=false walks level-major within the aisle", () => {
     const items = [
-      item("W", {binQuantities: [bin(1, "A1", 12)]}),
-      item("X", {binQuantities: [bin(2, "B1", 12)]}),
-      item("Y", {binQuantities: [bin(3, "A2", 12)]}),
-      item("Z", {binQuantities: [bin(4, "B2", 12)]}),
+      item("X", {binQuantities: [bin(1, "01-A1-10-01", 12)]}),
+      item("Y", {binQuantities: [bin(2, "01-A1-00-02", 12)]}),
+      item("Z", {binQuantities: [bin(3, "01-A1-00-01", 12)]}),
     ];
-    const codes = buildPickPath(items, "s1.num,s1.alpha").stops.map((s) => s.binCode);
-    expect(codes).toEqual(["A1", "B1", "A2", "B2"]);
-  });
-
-  test("an invalid sortKey falls back to the default order instead of throwing", () => {
-    const items = [
-      item("X", {binQuantities: [bin(1, "B1", 12)]}),
-      item("Y", {binQuantities: [bin(2, "A1", 12)]}),
-    ];
-    const codes = buildPickPath(items, "not-a-token").stops.map((s) => s.binCode);
-    expect(codes).toEqual(["A1", "B1"]);
+    const codes = buildPickPath(items, {sectionFirst: false}).stops.map((s) => s.binCode);
+    expect(codes).toEqual(["01-A1-00-01", "01-A1-00-02", "01-A1-10-01"]);
   });
 });

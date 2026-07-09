@@ -566,10 +566,6 @@
     "options": {
       "liveReloadNote": "Changes apply immediately after saving. Signed-in users get the new settings on their next login.",
       "inherit": "Inherit (global)",
-      "pickPathPreview": {
-        "title": "Preview with sample bins:",
-        "invalidExpression": "Couldn't parse this expression — using the default aisle-first order until it's fixed."
-      },
       "yes": "Yes",
       "no": "No",
       "addOverride": "Add override",
@@ -627,7 +623,8 @@
         "DirectTransferAll": {"label": "Direct transfer all stock", "desc": "Direct transfer moves all of the scanned item's stock from the source bin (skips quantity entry)."},
         "EnablePickingCheck": {"label": "Picking verification", "desc": "Picking requires a verification/check step."},
         "EnablePickPathRouting": {"label": "Pick-path routing", "desc": "Show picking as a guided, location-first walk ordered by bin code. Off uses the classic item-first view."},
-        "PickPathSortKey": {"label": "Walk order override", "desc": "Optional token expression controlling walk order, e.g. \"s1.num,s1.alpha\" to sort by bin position before aisle letter. Leave empty for the default aisle-first order."},
+        "PickPathHuecoPrefix": {"label": "Hueco rack prefix", "desc": "Aisle prefix for the hueco/mezzanine racks that are walked between floor 1 and floor 2 (e.g. \"HU\"). Leave empty if there are none."},
+        "PickPathSectionFirst": {"label": "Walk sections first", "desc": "On: walk each aisle once, taking every shelf level at each bay before moving on. Off: finish a whole shelf level across the aisle before the next level."},
         "EnablePickingPackageLabels": {"label": "Package labels", "desc": "Allow creating/selecting WMS package labels (R1, R2, …) while picking."},
         "EnablePostPickRepack": {"label": "Post-pick repack", "desc": "Require picked rows to be assigned to package labels in a repack step before syncing to SAP."},
         "PickingPackageLabelPrefix": {"label": "Package label prefix", "desc": "Prefix used when auto-generating package labels."},
@@ -875,6 +872,7 @@
   "selectUnit": "Select Unit",
   "barcodeRequired": "Barcode is required",
   "pickRoute": "Pick route",
+  "pickRouteAdvancing": "Moving to the next location…",
   "nextStop": "Next stop",
   "here": "Here",
   "upNext": "Up next",

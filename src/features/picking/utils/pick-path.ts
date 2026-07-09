@@ -1,20 +1,18 @@
 import {PickingDocumentDetailItem} from "@/features/picking/data/picking";
-import {compareBinCodes} from "@/features/picking/utils/bin-code-sort";
+import {BinSortOptions, compareBinCodes} from "@/features/picking/utils/bin-code-sort";
 
 /**
  * Pick-path routing (frontend, presentation only).
  *
  * We INVERT the item-first payload into a location-first walk: one "stop" per bin, listing the
- * items to grab at each bin. Stops are ordered by compareBinCodes (see bin-code-sort.ts) — by
- * default a natural, segment-aware comparison of the full bin CODE so the picker walks the
- * warehouse monotonically (floor/aisle A before B before C, bays/levels ascending) instead of
- * bouncing around; optionally overridden per-tenant by Options.PickPathSortKey (e.g. a customer
- * whose bins are named A1/B1/C1 and wants position to outrank aisle).
+ * items to grab at each bin. Stops are ordered by compareBinCodes (see bin-code-sort.ts), which
+ * understands the bin-code structure (zone / aisle+floor / level / section) and walks the warehouse
+ * monotonically — floor 1 aisles, then the hueco, then floor 2; sections ascending within each
+ * aisle. `opts` (from Options.PickPathHuecoPrefix / PickPathSectionFirst) tunes it per tenant.
  *
  * The backend `sequence` is intentionally IGNORED here: it only reads the trailing digits of each
  * dash-segment, so codes whose aisle/floor is a LETTER (e.g. `01-A1-...` vs `01-C1-...`) collapse
- * to the same value and sort by the wrong segment. Sorting the full code directly is correct for
- * both the `BIN-P9/P10` convention and letter-based codes.
+ * to the same value and sort by the wrong segment.
  */
 
 export interface PickPathStopItem {
@@ -79,8 +77,8 @@ function toStopItem(item: PickingDocumentDetailItem, quantityToPick: number): Pi
 }
 
 /** Orders stops by the physical walk order of their bin code (see compareBinCodes). */
-function compareStops(a: StopAccumulator, b: StopAccumulator, sortKey?: string | null): number {
-  return compareBinCodes(a.binCode, b.binCode, sortKey);
+function compareStops(a: StopAccumulator, b: StopAccumulator, opts?: BinSortOptions): number {
+  return compareBinCodes(a.binCode, b.binCode, opts);
 }
 
 /**
@@ -89,10 +87,10 @@ function compareStops(a: StopAccumulator, b: StopAccumulator, sortKey?: string |
  * quantity-to-pick and dropping bins once the demand is covered. Fully-picked items contribute no
  * stops; items still open with no bin info are collected into a trailing "no bin location" stop.
  *
- * sortKey is the optional Options.PickPathSortKey token expression (see bin-code-sort.ts);
- * omitted/invalid falls back to the default aisle-first natural compare.
+ * opts (Options.PickPathHuecoPrefix / PickPathSectionFirst, see bin-code-sort.ts) tunes the walk;
+ * omitted uses the reference defaults.
  */
-export function buildPickPath(items?: PickingDocumentDetailItem[], sortKey?: string | null): PickPath {
+export function buildPickPath(items?: PickingDocumentDetailItem[], opts?: BinSortOptions): PickPath {
   const byBin = new Map<string, StopAccumulator>();
   let noBin: StopAccumulator | null = null;
   let totalQuantity = 0;
@@ -112,7 +110,7 @@ export function buildPickPath(items?: PickingDocumentDetailItem[], sortKey?: str
     // Walk order: allocate from the nearest bin first so the bins we keep are the earliest stops.
     const bins = (item.binQuantities ?? [])
       .filter((b) => (b.quantity ?? 0) > 0)
-      .sort((a, b) => compareBinCodes(a.code, b.code, sortKey));
+      .sort((a, b) => compareBinCodes(a.code, b.code, opts));
 
     if (bins.length === 0) {
       // Still-open item with nowhere to route — surface it so it isn't silently dropped.
@@ -145,7 +143,7 @@ export function buildPickPath(items?: PickingDocumentDetailItem[], sortKey?: str
     }
   }
 
-  const ordered = Array.from(byBin.values()).sort((a, b) => compareStops(a, b, sortKey));
+  const ordered = Array.from(byBin.values()).sort((a, b) => compareStops(a, b, opts));
   if (noBin) {
     ordered.push(noBin);
   }

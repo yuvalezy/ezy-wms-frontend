@@ -9,19 +9,20 @@ import ItemDetailsLink from "@/components/ItemDetailsLink";
 import {PickingDocumentDetailItem} from "@/features/picking/data/picking";
 import {PickingInProgressReceiptWarning} from "@/features/picking/components/picking-in-progress-receipt-warning";
 import {buildPickPath, PickPathStop, PickPathStopItem} from "@/features/picking/utils/pick-path";
+import {BinSortOptions} from "@/features/picking/utils/bin-code-sort";
 
 interface PickingProcessDetailContentRouteProps {
   items?: PickingDocumentDetailItem[];
   /** Bin the picker has currently scanned, if any — labels the focus stop as "here". */
   currentBinEntry?: number | null;
-  /** Options.PickPathSortKey token expression; omitted/invalid falls back to the default order. */
-  sortKey?: string | null;
+  /** Walk-order tuning from Options (PickPathHuecoPrefix / PickPathSectionFirst). */
+  sortOptions?: BinSortOptions;
 }
 
-export const PickingProcessDetailContentRoute = ({items, currentBinEntry, sortKey}: PickingProcessDetailContentRouteProps) => {
+export const PickingProcessDetailContentRoute = ({items, currentBinEntry, sortOptions}: PickingProcessDetailContentRouteProps) => {
   const {t} = useTranslation();
   const stockInfo = useStockInfo();
-  const path = useMemo(() => buildPickPath(items, sortKey), [items, sortKey]);
+  const path = useMemo(() => buildPickPath(items, sortOptions), [items, sortOptions]);
   const [expanded, setExpanded] = useState<Set<number | string>>(new Set());
 
   const percent = path.totalQuantity > 0
@@ -29,8 +30,16 @@ export const PickingProcessDetailContentRoute = ({items, currentBinEntry, sortKe
     : 0;
 
   if (path.totalStops === 0) {
-    // Nothing left to walk to — the parent already shows the completion alert.
-    return null;
+    // No remaining stop in this (possibly bin-scoped) slice. The data hook auto-advances to the next
+    // bin/reference; show a brief prompt instead of a blank screen so the operator is never stranded.
+    return (
+      <Card>
+        <CardContent className="flex items-center gap-3 py-6 text-muted-foreground">
+          <Navigation className="h-5 w-5 shrink-0"/>
+          <span>{t("pickRouteAdvancing")}</span>
+        </CardContent>
+      </Card>
+    );
   }
 
   const fmt = (item: PickPathStopItem, quantity: number) => stockInfo({

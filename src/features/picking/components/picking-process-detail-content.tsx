@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {PickingDocumentDetailItem} from "@/features/picking/data/picking";
 import {PickingProcessDetailContentBins} from "@/features/picking/components/picking-process-detail-content-bins";
 import {PickingProcessDetailContentAvailable} from "@/features/picking/components/picking-process-detail-content-available";
@@ -15,7 +15,13 @@ export interface PickingProcessDetailContentProps {
 export const PickingProcessDetailContent: React.FC<PickingProcessDetailContentProps> = ({items, isLoading = false, currentBinEntry}) => {
   const {user} = useAuth();
   const routingEnabled = user?.settings?.enablePickPathRouting ?? false;
-  const routingSortKey = user?.settings?.pickPathSortKey;
+  const routingSortOptions = useMemo(
+    () => ({
+      huecoPrefix: user?.settings?.pickPathHuecoPrefix,
+      sectionFirst: user?.settings?.pickPathSectionFirst,
+    }),
+    [user?.settings?.pickPathHuecoPrefix, user?.settings?.pickPathSectionFirst],
+  );
   const [available, setAvailable] = useState(false);
 
   useEffect(() => {
@@ -56,7 +62,7 @@ export const PickingProcessDetailContent: React.FC<PickingProcessDetailContentPr
       ) : available ? (
         <PickingProcessDetailContentAvailable items={items} />
       ) : routingEnabled ? (
-        <PickingProcessDetailContentRoute items={items} currentBinEntry={currentBinEntry} sortKey={routingSortKey} />
+        <PickingProcessDetailContentRoute items={items} currentBinEntry={currentBinEntry} sortOptions={routingSortOptions} />
       ) : (
         <PickingProcessDetailContentBins items={items} />
       )}
