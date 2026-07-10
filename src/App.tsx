@@ -52,6 +52,9 @@ import {RoleType} from "@/features/authorization-groups/data/authorization-group
 import {ProcessType} from "@/features/shared/data";
 import {TransferProcessProvider} from "@/features/transfer/context/TransferProcessContext";
 import DirectTransfer from "@/Pages/DirectTransfer/DirectTransfer";
+import DocsPage from "@/features/docs/DocsPage";
+import {DocsProvider} from "@/features/docs/DocsContext";
+import HelpPanel from "@/features/docs/HelpPanel";
 
 function AppRoutes() {
   const {user} = useAuth();
@@ -362,6 +365,8 @@ function AppRoutes() {
                element={<ProtectedRoute authorization={RoleType.DIRECT_TRANSFER} element={<DirectTransfer/>}/>}/>
         {getTransferConfirmationRoutes()}
         {getSettingsRoutes()}
+        <Route path="/docs" element={<ProtectedRoute element={<DocsPage/>}/>}/>
+        <Route path="/docs/:module/*" element={<ProtectedRoute element={<DocsPage/>}/>}/>
         {getDefaultRoutes()}
       </Routes>
       </ErrorBoundary>
@@ -375,7 +380,10 @@ export default function App() {
     <AuthProvider>
       <NotificationProvider>
         <BrowserRouter>
-          <AppRoutes/>
+          <DocsProvider>
+            <AppRoutes/>
+            <HelpPanel/>
+          </DocsProvider>
         </BrowserRouter>
       </NotificationProvider>
     </AuthProvider>

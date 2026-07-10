@@ -2,7 +2,7 @@ import React from "react";
 import {SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
 import {AppSidebar} from "@/components/AppSidebar";
 import {Button} from "@/components/ui";
-import {FileSpreadsheet, Filter, Plus} from "lucide-react";
+import {FileSpreadsheet, Filter, HelpCircle, Plus} from "lucide-react";
 import {useTranslation} from "react-i18next";
 import {useAuth} from "@/components/AppContext";
 import {NotificationBell} from "@/components/NotificationBell";
@@ -12,6 +12,7 @@ import AccountStatusBanner from "@/components/AccountStatusBanner";
 import {DeviceStatus} from "@/features/devices/data/device";
 import {ResponsiveBreadcrumbs, BreadcrumbItem} from "@/components/ui/responsive-breadcrumbs";
 import {shouldShowAuthenticatedAccountStatusBanner} from "@/utils/account-status-visibility";
+import {useDocs} from "@/features/docs/DocsContext";
 
 interface ContentThemeProps {
   title: string;
@@ -37,6 +38,7 @@ const ContentTheme: React.FC<ContentThemeProps> = (
   }) => {
   const {t} = useTranslation();
   const { user, companyInfo, showDeviceStatusBanner, setShowDeviceStatusBanner } = useAuth();
+  const {openHelp} = useDocs();
 
   const shouldShowDeviceStatusBanner = () => {
     if (!user || !user.deviceStatus || !showDeviceStatusBanner) return false;
@@ -75,6 +77,13 @@ const ContentTheme: React.FC<ContentThemeProps> = (
             <div className="flex items-center flex-shrink-0 gap-1 md:gap-2 ml-2 md:ml-4">
               <NetworkQualityIndicator />
               <NotificationBell />
+              <button
+                onClick={openHelp}
+                className="h-9 w-9 md:h-10 md:w-10 flex items-center justify-center rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                aria-label={t('docs.openHelp')}
+              >
+                <HelpCircle className="h-4 w-4 md:h-5 md:w-5 text-gray-600" />
+              </button>
               {onFilterClicked && (
                 <button
                   onClick={onFilterClicked}

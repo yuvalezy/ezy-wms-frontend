@@ -1021,5 +1021,16 @@
   "scanItemToTransfer": "Scan Item to Transfer",
   "directTransferSuccess": "Direct transfer completed successfully",
   "directTransferExecuting": "Executing direct transfer...",
-  "transferAllStock": "Transfer All Stock"
+  "transferAllStock": "Transfer All Stock",
+  "docs": {
+    "title": "WMS Documentation",
+    "subtitle": "Guides for warehouse operations, setup, and administration.",
+    "helpTitle": "Help and guides",
+    "openHelp": "Open help",
+    "openFullPage": "Open full page",
+    "allGuides": "All guides",
+    "searchPlaceholder": "Search guides...",
+    "noResults": "No matching guides found.",
+    "notFound": "This guide is unavailable."
+  }
 }
