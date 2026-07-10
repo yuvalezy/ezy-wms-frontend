@@ -13,6 +13,7 @@ export default function HelpPanel() {
   const {t} = useTranslation();
   const navigate = useNavigate();
   const {open, closeHelp, index, loading, selected, selectedArticle, setSelected} = useDocs();
+  const openGuideLink = (href: string) => { navigate(href); closeHelp(); };
   const [query, setQuery] = useState("");
   const filtered = useMemo(() => {
     const value = query.trim().toLowerCase();
@@ -37,7 +38,7 @@ export default function HelpPanel() {
         <button onClick={() => setSelected(null)} className="flex items-center gap-1 text-sm text-blue-700"><ArrowLeft className="h-4 w-4"/>{t("docs.allGuides")}</button>
         <button onClick={() => navigate(docsPath(selected))} className="flex items-center gap-1 text-sm text-blue-700">{t("docs.openFullPage")}<ExternalLink className="h-4 w-4"/></button>
       </div>
-      <ScrollArea className="min-h-0 flex-1 overflow-hidden"><div className="p-5">{selectedArticle ? <><h1 className="mb-2 text-2xl font-semibold">{selectedArticle.summary.title}</h1><p className="mb-6 text-sm text-slate-500">{selectedArticle.summary.description}</p><MarkdownRenderer content={selectedArticle.content}/></> : <p className="text-sm text-slate-500">{t("loading")}</p>}</div></ScrollArea>
+      <ScrollArea className="min-h-0 flex-1 overflow-hidden"><div className="p-5">{selectedArticle ? <><h1 className="mb-2 text-2xl font-semibold">{selectedArticle.summary.title}</h1><p className="mb-6 text-sm text-slate-500">{selectedArticle.summary.description}</p><MarkdownRenderer content={selectedArticle.content} basePath={docsPath(selected)} onInternalLink={openGuideLink}/></> : <p className="text-sm text-slate-500">{t("loading")}</p>}</div></ScrollArea>
     </> : <>
       <div className="border-b p-4"><div className="relative"><Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400"/><Input value={query} onChange={event => setQuery(event.target.value)} placeholder={t("docs.searchPlaceholder")} className="pl-9"/></div></div>
       <ScrollArea className="min-h-0 flex-1 overflow-hidden"><div className="p-4">{loading ? <p className="p-3 text-sm text-slate-500">{t("loading")}</p> : filtered.map(article => <button key={`${article.module}/${article.slug}`} onClick={() => setSelected(article)} className="mb-2 block w-full rounded-lg border p-3 text-left hover:border-blue-300 hover:bg-blue-50"><div className="font-medium">{article.title}</div><div className="mt-1 text-sm text-slate-500">{article.description}</div></button>)}{!loading && !filtered.length && <p className="p-3 text-sm text-slate-500">{t("docs.noResults")}</p>}</div></ScrollArea>

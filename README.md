@@ -1,224 +1,79 @@
-# Light WMS
+# EzyWMS frontend
 
-A modern Warehouse Management System built with React, TypeScript, and Vite. Light WMS streamlines warehouse operations including goods receipt, picking, counting, transfers, and inventory checks.
+The frontend is a React/TypeScript single-page application for warehouse operators,
+supervisors, and super-users. It is deployed either as a standalone Vite app during
+development or as static assets served by the backend from `Service/wwwroot`.
 
-## Features
+## Documentation
 
-- **Goods Receipt**: Manage incoming inventory with real-time tracking and reporting
-- **Picking**: Efficient order picking workflows with supervisor oversight
-- **Counting**: Inventory counting processes with summary reports
-- **Transfer**: Item and bin transfers between warehouse locations
-- **Inventory Check**: Real-time item, package, and bin verification
-- **User Management**: Role-based access control and authorization
-- **Multi-language Support**: English and Spanish translations
-- **Reports**: Comprehensive reporting including difference reports and receipt vs. exit analysis
+- [Architecture](docs/architecture.md) — application composition, routing, state,
+  API transport, and UI conventions.
+- [Functionality](docs/functionality.md) — operator, supervisor, and administration
+  workflows mapped to backend controllers.
+- [Backend integration](docs/backend-integration.md) — shared route, auth, role,
+  feature-gate, and failure-state contract.
+- [Embedded documentation](docs/documentation.md) — the authenticated `/docs`
+  pages, contextual help panel, API contract, and WMS wiki coverage.
 
-## Tech Stack
+The backend owns the WMS article corpus and serves it through the documentation API.
+Its engineering contract is in the sibling repository at
+`../ezy-wms-backend/docs/` when both repositories are checked out together.
 
-- **Frontend Framework**: React 19
-- **Language**: TypeScript 5.9
-- **Build Tool**: Vite 7
-- **Styling**: Tailwind CSS 4
-- **UI Components**: Radix UI (shadcn/ui)
-- **Forms**: React Hook Form 7.62
-- **HTTP Client**: Axios 1.11
-- **Internationalization**: i18next, react-i18next
-- **Icons**: Lucide React
-- **Date Handling**: date-fns
-- **Excel Export**: ExcelJS
+Authenticated users can use the HelpCircle button in the shared page header to open
+the guide slide-over. It selects the article whose manifest route matches the
+current page, or shows the guide list when there is no match. `/docs` is the full
+index and `/docs/:module/*` is the full-page reader. The client loads the index and
+article content from the authenticated `/api/docs` API in English or Spanish,
+closes the slide-over with `Escape`, keeps long content vertically scrollable, and
+renders only the supported safe Markdown subset without raw HTML.
 
-## Getting Started
+## Current stack
 
-### Prerequisites
+- React 19 and React Router 7
+- TypeScript 6 with strict checking
+- Vite 8
+- Tailwind CSS 4 and shadcn/ui/Radix primitives
+- Axios for HTTP, SignalR for real-time notifications
+- React Hook Form for non-trivial forms
+- i18next/react-i18next with English and Spanish flat translation files
 
-- Node.js (v18 or higher recommended)
-- npm or yarn
+The exact dependency versions are in `package.json` and `package-lock.json`.
 
-### Installation
+## Development
 
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd light_wms
-```
-
-2. Install dependencies:
 ```bash
 npm install
-```
-
-3. Create environment configuration:
-```bash
-cp .env.example .env
-```
-
-4. Configure environment variables in `.env`:
-```env
-VITE_APP_SERVER_URL=http://localhost:5000
-VITE_APP_DEBUG=false
-VITE_APP_TEST=true
-```
-
-### Development
-
-Start the development server:
-```bash
-npm start
-```
-
-The application will be available at `http://localhost:5001`
-
-### Building
-
-Build for production:
-```bash
-npm run build
-```
-
-Build with production environment:
-```bash
+npm start             # http://localhost:5001
+npm run build         # tsc && vite build
 npm run build:prod
-```
-
-Preview production build:
-```bash
 npm run preview
 ```
 
-### Code Quality
+Set `VITE_APP_SERVER_URL` when the development API is not on the default location;
+`window.__env.VITE_APP_SERVER_URL` is also read during development. Production uses
+`window.location.origin`, so split-origin production deployments need a proxy or
+same-origin hosting.
 
-Run ESLint:
-```bash
-npm run lint
-```
+`npm run lint` is currently not usable because this repository has no ESLint package
+or flat config. `npm test` is currently not usable because the Jest/ts-jest setup
+fails on the current TypeScript configuration. Until those are repaired, use
+`npx tsc --noEmit`, `npm run build`, and manual browser checks against a running
+backend.
 
-Run tests:
-```bash
-npm test
-```
+## Source-of-truth rules
 
-Run tests in watch mode:
-```bash
-npm test:watch
-```
+- App routes and route guards: `src/App.tsx` and `src/components/ProtectedRoute.tsx`.
+- Menus and capability filtering: `src/hooks/useMenus.tsx`.
+- Authentication/session state: `src/components/AppContext.tsx` and
+  `src/features/login/`.
+- HTTP transport: `src/utils/axios-instance.ts`.
+- Embedded documentation UI and route matching: `src/features/docs/`,
+  `src/components/ContentTheme.tsx`, and the `/docs` routes in `src/App.tsx`.
+- Feature behavior and API calls: `src/features/<feature>/`.
+- Page composition: `src/Pages/` (capital `P`).
+- Translations: `src/Translations/English/translation.json` and
+  `src/Translations/Spanish/translation.json`.
 
-Generate coverage report:
-```bash
-npm test:coverage
-```
-
-## Project Structure
-
-```
-light_wms/
-├── src/
-│   ├── assets/          # Static assets and menu configurations
-│   ├── components/
-│   │   └── ui/          # Reusable UI components (shadcn/ui)
-│   ├── context/         # React Context providers (Auth, Theme)
-│   ├── pages/           # Application pages/modules
-│   │   ├── Counting/    # Inventory counting module
-│   │   ├── GoodsReceipt/ # Goods receipt module
-│   │   ├── picking/     # Order picking module
-│   │   ├── transfer/    # Transfer operations module
-│   │   ├── items/       # Item check utilities
-│   │   └── settings/    # System settings and configuration
-│   ├── types/           # TypeScript type definitions
-│   ├── utils/           # Utility functions and axios instance
-│   └── App.tsx          # Main application component
-├── public/              # Public static files
-└── package.json         # Project dependencies and scripts
-```
-
-## Architecture
-
-### Module Pattern
-
-Each business module follows a consistent structure:
-
-- `Module.tsx` - List/entry view
-- `ModuleProcess.tsx` - Process execution view
-- `ModuleSupervisor.tsx` - Supervisor dashboard
-- `components/` - Module-specific components
-- `data/` - API services and mock data
-
-### Authentication & Authorization
-
-- JWT-based authentication stored in localStorage
-- Role-based access control via `Authorization` enum
-- Protected routes enforce authorization checks
-
-### State Management
-
-- React Context API for global state (Auth, Theme)
-- No external state management library
-- Loading and error states managed through `ThemeContext`
-
-### Data Fetching
-
-Standard pattern used across the application:
-
-```typescript
-const fetchData = async (filters) => {
-  const response = await axiosInstance.post(url, filters);
-  return response.data;
-};
-```
-
-## Environment Configuration
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `VITE_APP_SERVER_URL` | Backend API endpoint | `http://localhost:5000` |
-| `VITE_APP_DEBUG` | Enable debug logging | `false` |
-| `VITE_APP_TEST` | Enable test mode with mock data | `true` |
-
-## Contributing
-
-### Adding a New Module
-
-1. Create folder structure under `src/pages/ModuleName/`
-2. Implement list, process, and supervisor views as needed
-3. Add routing in `App.tsx` with appropriate authorization
-4. Create data services following the pattern in other modules
-5. Add navigation menu items in `src/assets/useMenus.tsx`
-
-### Working with Forms
-
-- Use React Hook Form with existing form components
-- Follow validation patterns from existing modules
-- Handle errors through `ThemeContext.setError()`
-
-### API Integration
-
-- Use `axiosInstance` from `src/utils/axios-instance.ts`
-- Implement both real and mock data paths
-- Follow existing error handling patterns
-
-### Code Standards
-
-- Keep files under 500 lines (refactor if larger)
-- Follow SOLID principles
-- Never change enum number values
-- Include icons in buttons
-- Prefix placeholder comments with `TODO:`
-
-## Browser Support
-
-### Production
-- \>0.2% market share
-- Not dead browsers
-- Not Opera Mini
-
-### Development
-- Latest Chrome
-- Latest Firefox
-- Latest Safari
-
-## License
-
-Private - All rights reserved
-
-## Support
-
-For issues and feature requests, please contact the development team.
+The auth token is not stored in `localStorage`; the persistent device UUID is. Avoid
+relying on the old README's mock-data, lowercase `src/pages`, or TypeScript 5.9
+descriptions; those do not describe this checkout.
