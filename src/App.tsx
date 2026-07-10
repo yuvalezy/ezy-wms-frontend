@@ -90,6 +90,15 @@ function AppRoutes() {
     return authorizations;
   }
 
+  function getTransferConfirmationSupervisorAuthorizations() {
+    let authorizations = [RoleType.TRANSFER_CONFIRMATION_SUPERVISOR];
+    if (user?.settings?.goodsReceiptCreateSupervisorRequired) {
+      return authorizations;
+    }
+    authorizations.push(RoleType.TRANSFER_CONFIRMATION)
+    return authorizations;
+  }
+
   function getAuthenticationRoutes() {
     return (
       <>
@@ -283,7 +292,7 @@ function AppRoutes() {
                                                   processType={ProcessType.TransferConfirmation}
                                                   key="transferConfirmationProcess"/>}/>}/>
         <Route path="/transferConfirmationSupervisor" element={<ProtectedRoute
-          authorizations={getGoodsReceiptConfirmationSupervisorAuthorizations()}
+          authorizations={getTransferConfirmationSupervisorAuthorizations()}
           element={<GoodsReceiptSupervisor 
                     processType={ProcessType.TransferConfirmation} 
                     key="transferConfirmation"/>}/>}/>

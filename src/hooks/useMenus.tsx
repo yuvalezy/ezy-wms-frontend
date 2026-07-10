@@ -172,7 +172,7 @@ export function useMenus() {
     {
       Link: "/transferConfirmation",
       Text: t('transferConfirmation'),
-      Authorization: RoleType.TRANSFER,
+      Authorization: RoleType.TRANSFER_CONFIRMATION,
       Icon: Move,
       Color: "text-lime-700",
       RequiresFeature: "EnableTransferConfirm"
@@ -180,7 +180,7 @@ export function useMenus() {
     {
       Link: "/transferConfirmationSupervisor",
       Text: t('transferConfirmationSupervisor'),
-      Authorization: RoleType.TRANSFER_SUPERVISOR,
+      Authorization: RoleType.TRANSFER_CONFIRMATION_SUPERVISOR,
       Icon: Truck,
       Color: "text-lime-700",
       RequiresFeature: "EnableTransferConfirm"
@@ -188,7 +188,7 @@ export function useMenus() {
     {
       Link: "/transferConfirmationReport",
       Text: t('transferConfirmationReport'),
-      Authorization: RoleType.TRANSFER_SUPERVISOR,
+      Authorization: RoleType.TRANSFER_CONFIRMATION_SUPERVISOR,
       Icon: TrendingUp,
       Color: "text-indigo-700",
       RequiresFeature: "EnableTransferConfirm"
