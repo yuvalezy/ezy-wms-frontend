@@ -6,10 +6,11 @@ import {Button} from "@/components/ui/button";
 import {Label} from "@/components/ui/label";
 import {Badge} from "@/components/ui/badge";
 import {Combobox, ComboboxItem} from "@/components/ui/combobox";
-import {History, Save} from "lucide-react";
+import {Save} from "lucide-react";
 import {configurationService} from "../data/configuration-service";
 import {BinOption, WarehouseOption, warehouseConfigService} from "../data/warehouse-config-service";
 import SectionHistoryDialog from "./SectionHistoryDialog";
+import EditorActionBar from "./EditorActionBar";
 
 interface Props {
   onSaved: () => void;
@@ -297,14 +298,11 @@ const WarehousesEditor: React.FC<Props> = ({onSaved}) => {
         </CardContent>
       </Card>
 
-      <div className="flex flex-wrap justify-between gap-2">
-        <Button type="button" variant="ghost" onClick={() => setShowHistory(true)}>
-          <History className="h-4 w-4 mr-1" />{t("configuration.history")}
-        </Button>
+      <EditorActionBar onShowHistory={() => setShowHistory(true)}>
         <Button onClick={save} disabled={saving || nonBinSelected}>
           <Save className="h-4 w-4 mr-1" />{t("save")}
         </Button>
-      </div>
+      </EditorActionBar>
 
       <SectionHistoryDialog
         section={SECTION}

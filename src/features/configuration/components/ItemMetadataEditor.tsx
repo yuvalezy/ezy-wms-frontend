@@ -37,9 +37,10 @@ import {Label} from "@/components/ui/label";
 import {Badge} from "@/components/ui/badge";
 import {Switch} from "@/components/ui/switch";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
-import {AlertTriangle, GripVertical, History, Pencil, Plus, Save, Trash2} from "lucide-react";
+import {AlertTriangle, GripVertical, Pencil, Plus, Save, Trash2} from "lucide-react";
 import {configurationService} from "../data/configuration-service";
 import SectionHistoryDialog from "./SectionHistoryDialog";
+import EditorActionBar from "./EditorActionBar";
 
 interface Props {
   onSaved: () => void;
@@ -227,12 +228,9 @@ const ItemMetadataEditor: React.FC<Props> = ({onSaved}) => {
         </Alert>
       )}
 
-      <div className="flex flex-wrap justify-between gap-2">
-        <Button type="button" variant="ghost" onClick={() => setShowHistory(true)}>
-          <History className="h-4 w-4 mr-1"/>{t("configuration.history")}
-        </Button>
+      <EditorActionBar onShowHistory={() => setShowHistory(true)}>
         <Button onClick={save} disabled={saving}><Save className="h-4 w-4 mr-1"/>{t("save")}</Button>
-      </div>
+      </EditorActionBar>
 
       {editing && (
         <MetadataDialog item={editing} knownIds={knownIds} onCancel={() => setEditing(null)} onSave={upsertItem}/>

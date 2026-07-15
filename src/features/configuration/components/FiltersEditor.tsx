@@ -7,11 +7,12 @@ import {Alert, AlertDescription} from "@/components/ui/alert";
 import {Skeleton} from "@/components/ui/skeleton";
 import {Textarea} from "@/components/ui/textarea";
 import {Label} from "@/components/ui/label";
-import {AlertTriangle, CheckCircle2, History, Loader2, Save, XCircle} from "lucide-react";
+import {AlertTriangle, CheckCircle2, Loader2, Save, XCircle} from "lucide-react";
 import {configurationService} from "../data/configuration-service";
 import {ConfigSectionDetail} from "../data/types";
 import {FiltersValidationResponse, filtersService} from "../data/filters-service";
 import SectionHistoryDialog from "./SectionHistoryDialog";
+import EditorActionBar from "./EditorActionBar";
 
 interface Props {
   onSaved: () => void;
@@ -219,20 +220,15 @@ const FiltersEditor: React.FC<Props> = ({onSaved}) => {
         </Alert>
       )}
 
-      <div className="flex flex-wrap justify-between gap-2">
-        <Button type="button" variant="ghost" onClick={() => setShowHistory(true)}>
-          <History className="h-4 w-4 mr-1"/>{t("configuration.history")}
+      <EditorActionBar onShowHistory={() => setShowHistory(true)}>
+        <Button type="button" variant="outline" onClick={runValidate} disabled={validating || saving || loading}>
+          {validating ? <Loader2 className="h-4 w-4 mr-1 animate-spin"/> : <CheckCircle2 className="h-4 w-4 mr-1"/>}
+          {t("configuration.filters.validate")}
         </Button>
-        <div className="flex gap-2">
-          <Button type="button" variant="outline" onClick={runValidate} disabled={validating || saving || loading}>
-            {validating ? <Loader2 className="h-4 w-4 mr-1 animate-spin"/> : <CheckCircle2 className="h-4 w-4 mr-1"/>}
-            {t("configuration.filters.validate")}
-          </Button>
-          <Button type="button" onClick={save} disabled={saving || loading}>
-            <Save className="h-4 w-4 mr-1"/>{t("save")}
-          </Button>
-        </div>
-      </div>
+        <Button type="button" onClick={save} disabled={saving || loading}>
+          <Save className="h-4 w-4 mr-1"/>{t("save")}
+        </Button>
+      </EditorActionBar>
 
       <SectionHistoryDialog
         section={SECTION}

@@ -6,13 +6,14 @@ import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "@/co
 import {Button} from "@/components/ui/button";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import {Skeleton} from "@/components/ui/skeleton";
-import {AlertTriangle, CheckCircle2, History, Info, Save} from "lucide-react";
+import {AlertTriangle, CheckCircle2, Info, Save} from "lucide-react";
 import {configurationService} from "../data/configuration-service";
 import {ConfigSectionDetail} from "../data/types";
 import {OPTION_FIELDS, OPTION_GROUPS, OptionGroup} from "../data/options-schema";
 import OptionFieldRow from "./OptionFieldRow";
 import DocumentUnitOverridesEditor from "./DocumentUnitOverridesEditor";
 import SectionHistoryDialog from "./SectionHistoryDialog";
+import EditorActionBar from "./EditorActionBar";
 
 interface Props {
   onSaved: () => void;
@@ -187,19 +188,14 @@ const OptionsEditor: React.FC<Props> = ({onSaved}) => {
         </Alert>
       )}
 
-      <div className="flex flex-wrap justify-between gap-2">
-        <Button type="button" variant="ghost" onClick={() => setShowHistory(true)}>
-          <History className="h-4 w-4 mr-1"/>{t("configuration.history")}
+      <EditorActionBar onShowHistory={() => setShowHistory(true)}>
+        <Button type="button" variant="outline" onClick={runValidate} disabled={saving || loading}>
+          <CheckCircle2 className="h-4 w-4 mr-1"/>{t("configuration.validate")}
         </Button>
-        <div className="flex gap-2">
-          <Button type="button" variant="outline" onClick={runValidate} disabled={saving || loading}>
-            <CheckCircle2 className="h-4 w-4 mr-1"/>{t("configuration.validate")}
-          </Button>
-          <Button type="button" onClick={save} disabled={saving || loading}>
-            <Save className="h-4 w-4 mr-1"/>{t("save")}
-          </Button>
-        </div>
-      </div>
+        <Button type="button" onClick={save} disabled={saving || loading}>
+          <Save className="h-4 w-4 mr-1"/>{t("save")}
+        </Button>
+      </EditorActionBar>
 
       <SectionHistoryDialog
         section="Options"

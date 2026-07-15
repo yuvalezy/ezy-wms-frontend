@@ -36,9 +36,10 @@ import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import {Badge} from "@/components/ui/badge";
 import {Switch} from "@/components/ui/switch";
-import {AlertTriangle, GripVertical, History, Pencil, Plus, RotateCw, Save, ShieldAlert, Trash2} from "lucide-react";
+import {AlertTriangle, GripVertical, Pencil, Plus, RotateCw, Save, ShieldAlert, Trash2} from "lucide-react";
 import {configurationService} from "../data/configuration-service";
 import SectionHistoryDialog from "./SectionHistoryDialog";
+import EditorActionBar from "./EditorActionBar";
 
 interface Props {
   onSaved: () => void;
@@ -223,12 +224,9 @@ const PickingPostProcessorsEditor: React.FC<Props> = ({onSaved}) => {
         </Alert>
       )}
 
-      <div className="flex flex-wrap justify-between gap-2">
-        <Button type="button" variant="ghost" onClick={() => setShowHistory(true)}>
-          <History className="h-4 w-4 mr-1"/>{t("configuration.history")}
-        </Button>
+      <EditorActionBar onShowHistory={() => setShowHistory(true)}>
         <Button onClick={save} disabled={saving}><Save className="h-4 w-4 mr-1"/>{t("save")}</Button>
-      </div>
+      </EditorActionBar>
 
       {editing && (
         <ProcessorDialog processor={editing} onCancel={() => setEditing(null)} onSave={upsertItem}/>
