@@ -22,6 +22,39 @@ interface GoodsReceiptProcessDifferenceTableProps {
   data: GoodsReceiptValidateProcess,
 }
 
+/**
+ * Base pieces -> the count the operator actually scanned, in that row's own unit.
+ * The server sends every drill-down row as base pieces (re-derived from the current SAP factor),
+ * so each row is divided back down by the factors its own unit was multiplied by.
+ */
+const toScannedCount = (detail: GoodsReceiptValidateProcessLineDetails, line: GoodsReceiptValidateProcessLine): number => {
+  let quantity = detail.scannedQuantity;
+
+  if (line.numInBuy && line.numInBuy !== 0 && detail.unit !== UnitType.Unit) {
+    quantity /= line.numInBuy;
+  }
+  if (line.purPackUn && line.purPackUn !== 0 && detail.unit === UnitType.Pack) {
+    quantity /= line.purPackUn;
+  }
+
+  return quantity;
+};
+
+/**
+ * The unit label for one drill-down row. Keyed on the row's own unit — a line aggregates scans made in
+ * different units, so the parent line's unit would label every row the same.
+ * The labels themselves are item-level (SAP's BuyUnitMsr / PurPackMsr) and so come from the line.
+ */
+const getScannedUnitLabel = (
+  detail: GoodsReceiptValidateProcessLineDetails,
+  line: GoodsReceiptValidateProcessLine,
+  t: (key: string) => string,
+): string => {
+  if (detail.unit === UnitType.Unit) return t('unit');
+  if (detail.unit === UnitType.Dozen) return line.buyUnitMsr || t('qtyInUn');
+  return line.purPackMsr || t('packUn');
+};
+
 const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifferenceTableProps> = (
   {
     id,
@@ -318,17 +351,8 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
                     <ScrollArea>
                       {detailDataForDialog.map((detail) => {
                         const timeStamp = new Date(detail.timeStamp);
-                        let scannedQuantity = detail.scannedQuantity;
-                        if (selectedLineForDetail?.numInBuy && detail.unit !== UnitType.Unit && selectedLineForDetail.numInBuy !== 0) {
-                          scannedQuantity /= selectedLineForDetail.numInBuy;
-                        }
-                        if (selectedLineForDetail?.purPackUn && detail.unit === UnitType.Pack && selectedLineForDetail.purPackUn !== 0) {
-                          scannedQuantity /= selectedLineForDetail.purPackUn;
-                        }
-
-                        const displayUnit = selectedLineForDetail?.unit === UnitType.Unit ? t('unit') :
-                          selectedLineForDetail?.unit === UnitType.Dozen ? (selectedLineForDetail?.buyUnitMsr || t("qtyInUn")) :
-                            (selectedLineForDetail?.purPackMsr || t('packUn'));
+                        const scannedQuantity = toScannedCount(detail, selectedLineForDetail);
+                        const displayUnit = getScannedUnitLabel(detail, selectedLineForDetail, t);
                         return (
                           <Card
                             key={`${detail.timeStamp}-${detail.createdByUserName}-${detail.scannedQuantity}`}> {/* Adjusted key for more uniqueness */}
@@ -361,17 +385,8 @@ const GoodsReceiptProcessDifferenceTable: React.FC<GoodsReceiptProcessDifference
                       <TableBody>
                         {detailDataForDialog.map((detail) => {
                           const timeStamp = new Date(detail.timeStamp);
-                          let scannedQuantity = detail.scannedQuantity;
-                          if (selectedLineForDetail?.numInBuy && detail.unit !== UnitType.Unit && selectedLineForDetail.numInBuy !== 0) {
-                            scannedQuantity /= selectedLineForDetail.numInBuy;
-                          }
-                          if (selectedLineForDetail?.purPackUn && detail.unit === UnitType.Pack && selectedLineForDetail.purPackUn !== 0) {
-                            scannedQuantity /= selectedLineForDetail.purPackUn;
-                          }
-
-                          const displayUnit = selectedLineForDetail?.unit === UnitType.Unit ? t('unit') :
-                            selectedLineForDetail?.unit === UnitType.Dozen ? (selectedLineForDetail?.buyUnitMsr || t("qtyInUn")) :
-                              (selectedLineForDetail?.purPackMsr || t('packUn'));
+                          const scannedQuantity = toScannedCount(detail, selectedLineForDetail);
+                          const displayUnit = getScannedUnitLabel(detail, selectedLineForDetail, t);
 
                           return (
                             <TableRow key={`${detail.timeStamp}-${detail.createdByUserName}-${detail.scannedQuantity}`}>
