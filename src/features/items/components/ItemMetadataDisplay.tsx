@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Button} from '@/components/ui/button';
 import {Skeleton} from '@/components/ui/skeleton';
 import {Edit} from 'lucide-react';
 import InfoBox from '@/components/InfoBox';
 import {ItemDetails} from '../data/items';
-import {MetadataFieldType} from '@/features/metadata';
-import {canEditMetadata, getItemMetadata, ItemMetadataEditDialog} from '@/features/items';
+import {getFieldValuesRecord, initializeFields, MetadataFieldType, useCalculatedFields} from '@/features/metadata';
+import {canEditMetadata, getItemMetadata, ItemMetadataEditDialog, MetadataDefinition} from '@/features/items';
 import {useAuth} from "@/components";
 import {useThemeContext} from '@/components/ThemeContext';
 
@@ -30,18 +30,43 @@ export const ItemMetadataDisplay: React.FC<ItemMetadataDisplayProps> = ({
   const hasMetadata = definitions && definitions.length > 0;
   const hasEditableFields = canEditMetadata(user);
 
-  const formatValue = (value: any, fieldType: MetadataFieldType): string => {
+  // Calculated fields are derived, so the formula — not whatever the external system happens
+  // to have stored — is the source of truth for what is shown. Mirrors the edit dialog, which
+  // recalculates on open; without this the two screens disagree about the same field.
+  const calculatedFields = useCalculatedFields({definitions: definitions ?? []});
+  const resolvedValues = useMemo(() => {
+    if (!definitions || definitions.length === 0) {
+      return metadataValues;
+    }
+    const fields = initializeFields(definitions, metadataValues);
+    return getFieldValuesRecord(calculatedFields.recalculateFields(fields));
+  }, [definitions, metadataValues, calculatedFields]);
+
+  // Decimal places come from the field's configured Step, falling back to the rounding
+  // precision of a calculated field. Without an explicit maximumFractionDigits the default
+  // is 3, which silently rounds small values (0.000007 renders as "0").
+  const formatNumber = (value: number, definition: MetadataDefinition): string => {
+    const decimals = definition.step ?? definition.calculated?.precision;
+    if (decimals === undefined) {
+      return String(value);
+    }
+    return value.toLocaleString(undefined, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: decimals
+    });
+  };
+
+  const formatValue = (value: any, definition: MetadataDefinition): string => {
     if (value === null || value === undefined) {
       return '-';
     }
 
-    switch (fieldType) {
+    switch (definition.type) {
       case MetadataFieldType.Date:
         return new Date(value).toLocaleDateString();
       case MetadataFieldType.Decimal:
-        return typeof value === 'number' ? value.toLocaleString() : String(value);
       case MetadataFieldType.Integer:
-        return typeof value === 'number' ? value.toLocaleString() : String(value);
+        return typeof value === 'number' ? formatNumber(value, definition) : String(value);
       case MetadataFieldType.String:
       default:
         return String(value);
@@ -157,8 +182,8 @@ export const ItemMetadataDisplay: React.FC<ItemMetadataDisplayProps> = ({
       </div>
       <InfoBox>
         {definitions?.map(definition => {
-          const value = metadataValues[definition.id];
-          const displayValue = formatValue(value, definition.type);
+          const value = resolvedValues[definition.id];
+          const displayValue = formatValue(value, definition);
           
           return (
             <div key={definition.id}>

@@ -1,8 +1,8 @@
-import {useCallback, useMemo} from 'react';
+import {useCallback, useEffect, useMemo} from 'react';
 import {MetadataDefinition, UpdateItemMetadataRequest} from '../types';
 import {ItemDetails} from '../data/items';
 import {updateItemMetadata} from '@/features/items';
-import {convertFieldValueForApi, ExtendedMetadataDefinition, getFieldValuesRecord, useCalculatedFields, useMetadataBase, validateFieldValue} from '@/features/metadata';
+import {convertFieldValueForApi, ExtendedMetadataDefinition, useCalculatedFields, useMetadataBase, validateFieldValue} from '@/features/metadata';
 
 // Map MetadataDefinition to ExtendedMetadataDefinition
 function mapToExtendedDefinition(def: MetadataDefinition): ExtendedMetadataDefinition {
@@ -98,54 +98,6 @@ export const useItemMetadata = (
     });
   }, [baseHook, extendedDefinitions, calculatedFields, itemData?.customAttributes]);
 
-  // Initialize with calculated fields
-  const initializeWithCalculations = useCallback(() => {
-    baseHook.setFormState(prev => {
-      let fields = [...prev.fields];
-      
-      // Initial calculation of calculated fields
-      const fieldValues = getFieldValuesRecord(fields);
-      const calculatedDefinitions = extendedDefinitions.filter(def => def.calculated);
-      
-      calculatedDefinitions.forEach(definition => {
-        if (!definition.calculated) return;
-        
-        const { formula, dependencies, precision } = definition.calculated;
-        
-        // Check if all dependencies have valid values
-        const allDependenciesValid = dependencies.every(depId => {
-          const depValue = fieldValues[depId];
-          return depValue !== null && depValue !== undefined && !isNaN(Number(depValue));
-        });
-        
-        if (allDependenciesValid) {
-          const calculatedValue = calculatedFields.evaluateFormula(formula, fieldValues);
-          
-          if (calculatedValue !== null) {
-            const roundedValue = Number(calculatedValue.toFixed(precision));
-            
-            fields = fields.map(field => {
-              if (field.fieldId === definition.id) {
-                return {
-                  ...field,
-                  value: roundedValue,
-                  isValid: true,
-                  errorMessage: undefined
-                };
-              }
-              return field;
-            });
-          }
-        }
-      });
-      
-      return {
-        ...prev,
-        fields
-      };
-    });
-  }, [baseHook, extendedDefinitions, calculatedFields]);
-
   // Save metadata wrapper to ensure item code is passed
   const saveMetadata = useCallback(async (itemCode: string): Promise<ItemDetails> => {
     const metadata: Record<string, any> = {};
@@ -187,12 +139,21 @@ export const useItemMetadata = (
     }
   }, [calculatedFields, baseHook.formState.fields, baseHook.setFormState]);
 
-  // Use the initialization with calculations when data changes
-  useMemo(() => {
-    if (extendedDefinitions.length > 0 && baseHook.formState.fields.length > 0) {
-      initializeWithCalculations();
+  // Recalculate calculated fields once the form has been populated — on dialog open and
+  // whenever a different item is loaded. Calculated fields are derived, so the formula (not
+  // the value we happen to have loaded) is the source of truth for what is displayed.
+  // Runs after useMetadataBase's own init effect has filled in `fields`, which is why the
+  // field count is a dependency; recalculateFields returns the same array reference when
+  // nothing changes, so this settles in one pass instead of re-triggering itself.
+  useEffect(() => {
+    if (extendedDefinitions.length === 0 || baseHook.formState.fields.length === 0) {
+      return;
     }
-  }, [itemData?.customAttributes]);
+    baseHook.setFormState(prev => {
+      const fields = calculatedFields.recalculateFields(prev.fields);
+      return fields === prev.fields ? prev : { ...prev, fields };
+    });
+  }, [itemData?.customAttributes, extendedDefinitions, baseHook.formState.fields.length]);
 
   return {
     definitions,
