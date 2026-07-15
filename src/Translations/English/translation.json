@@ -608,6 +608,7 @@
         "DozensAbbr": {"label": "Dozen abbreviation", "desc": "Short label for the dozen unit (optional)."},
         "BoxLabel": {"label": "Pack label", "desc": "Custom label for the pack/box unit (optional)."},
         "BoxAbbr": {"label": "Pack abbreviation", "desc": "Short label for the pack/box unit (optional)."},
+        "ForceDoz": {"label": "Force a dozen to 12", "desc": "When an item's dozen conversion is 1, treat it as 12 instead. For item masters that were never given a real dozen conversion, so a 2 dozen scan counts 24 units and not 2. Items with a real conversion are unaffected."},
         "GoodsReceiptDraft": {"label": "Create as draft", "desc": "Create goods receipts as drafts that require approval instead of posting directly."},
         "GoodsReceiptType": {"label": "Document type", "desc": "Type of goods receipt document to create."},
         "GoodsReceiptModificationsRequiredSupervisor": {"label": "Supervisor approval for changes", "desc": "Require supervisor approval for goods receipt modifications."},

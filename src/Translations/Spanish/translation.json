@@ -604,6 +604,7 @@
         "DozensAbbr": {"label": "Abreviatura de docena", "desc": "Etiqueta corta para la unidad de docena (opcional)."},
         "BoxLabel": {"label": "Etiqueta de paquete", "desc": "Etiqueta personalizada para la unidad de paquete/caja (opcional)."},
         "BoxAbbr": {"label": "Abreviatura de paquete", "desc": "Etiqueta corta para la unidad de paquete/caja (opcional)."},
+        "ForceDoz": {"label": "Forzar la docena a 12", "desc": "Cuando la conversión de docena de un artículo es 1, tratarla como 12. Para artículos cuyo maestro nunca recibió una conversión de docena real, de modo que escanear 2 docenas cuente 24 unidades y no 2. Los artículos con una conversión real no se ven afectados."},
         "GoodsReceiptDraft": {"label": "Crear como borrador", "desc": "Crear recepciones de mercancía como borradores que requieren aprobación en lugar de registrarlas directamente."},
         "GoodsReceiptType": {"label": "Tipo de documento", "desc": "Tipo de documento de recepción de mercancía a crear."},
         "GoodsReceiptModificationsRequiredSupervisor": {"label": "Aprobación del supervisor para cambios", "desc": "Requerir aprobación del supervisor para modificar recepciones de mercancía."},

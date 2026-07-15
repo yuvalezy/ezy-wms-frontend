@@ -67,6 +67,7 @@ export const OPTION_FIELDS: OptionField[] = [
   {key: "DozensAbbr", kind: "string", group: "units"},
   {key: "BoxLabel", kind: "string", group: "units"},
   {key: "BoxAbbr", kind: "string", group: "units"},
+  {key: "ForceDoz", kind: "bool", group: "units"},
 
   // Goods Receipt
   {key: "GoodsReceiptDraft", kind: "bool", group: "goodsReceipt"},
