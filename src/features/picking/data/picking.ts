@@ -111,7 +111,6 @@ export interface PickingPackageLabel {
   sequence: number;
   createdAt: Date;
   lineCount: number;
-  totalQuantity: number;
   items: PickingPackageLabelItem[];
 }
 
@@ -183,8 +182,6 @@ export interface PickingRepackSummary {
   completedAt?: Date;
   totalLines: number;
   assignedLines: number;
-  totalQuantity: number;
-  assignedQuantity: number;
   labels: PickingPackageLabel[];
   items: PickingRepackItem[];
 }

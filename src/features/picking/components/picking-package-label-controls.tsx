@@ -5,6 +5,8 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/c
 import {Plus, Tag} from "lucide-react";
 import {useTranslation} from "react-i18next";
 import {PickingPackageLabel, PickingPackageLabelItem} from "@/features/picking/data/picking";
+import {useAuth} from "@/components";
+import {getUnitLabel} from "@/utils/unit-settings";
 
 interface PickingPackageLabelControlsProps {
   labels: PickingPackageLabel[];
@@ -31,6 +33,8 @@ export const PickingPackageLabelControls: React.FC<PickingPackageLabelControlsPr
   onCreate,
 }) => {
   const {t} = useTranslation();
+  const {user} = useAuth();
+  const settings = user!.settings!;
   const selectedLabel = labels.find(label => label.id === selectedLabelId) ?? null;
   const selectedValue = selectedLabelId == null ? "none" : selectedLabelId.toString();
 
@@ -52,7 +56,7 @@ export const PickingPackageLabelControls: React.FC<PickingPackageLabelControlsPr
             <SelectItem value="none">{t("noPickingPackageLabel")}</SelectItem>
             {labels.map(label => (
               <SelectItem key={label.id} value={label.id.toString()}>
-                {label.code} - {label.lineCount} {t("lines")}, {label.totalQuantity} {t("quantity")}
+                {label.code} - {label.lineCount} {t("lines")}
               </SelectItem>
             ))}
           </SelectContent>
@@ -69,16 +73,16 @@ export const PickingPackageLabelControls: React.FC<PickingPackageLabelControlsPr
             <div className="flex flex-wrap items-center gap-2">
               <span className="font-medium text-slate-800">{selectedLabel.code}</span>
               <Badge variant="outline">{selectedLabel.lineCount} {t("lines")}</Badge>
-              <Badge variant="outline">{selectedLabel.totalQuantity} {t("quantity")}</Badge>
             </div>
             {selectedLabel.items.length > 0 ? (
               <div className="flex max-h-16 flex-wrap gap-1 overflow-y-auto">
                 {selectedLabel.items.map((item, index) => {
                   const code = getItemCode(item);
                   const quantity = getItemQuantity(item);
+                  const unit = getUnitLabel(item.unit, settings, t);
                   return (
-                    <Badge key={`${code}-${index}`} variant="secondary" className="max-w-full truncate">
-                      {code || t("item")} {quantity != null ? `x ${quantity}` : ""}
+                    <Badge key={`${code}-${item.unit}-${index}`} variant="secondary" className="max-w-full truncate">
+                      {code || t("item")} {unit} {quantity != null ? `x ${quantity}` : ""}
                     </Badge>
                   );
                 })}

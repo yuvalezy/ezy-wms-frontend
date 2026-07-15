@@ -4,6 +4,7 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/c
 import {useTranslation} from 'react-i18next';
 import {UnitType} from '@/features/shared/data';
 import {useAuth} from "@/components";
+import {getUnitLabel} from "@/utils/unit-settings";
 
 interface UnitSelectorProps {
   visible: boolean;
@@ -28,9 +29,9 @@ export const UnitSelector: React.FC<UnitSelectorProps> = ({
   let settings = user!.settings!;
   const effectiveEnableUseBaseUn = enableUseBaseUnProp ?? settings.enableUseBaseUn;
   let units = [
-    { text: settings.unitLabel ?? t("inventory.units.unit.label"), value: UnitType.Unit },
-    { text: settings.dozensLabel ?? t("inventory.units.dozen.label"), value: UnitType.Dozen },
-    { text: settings.boxLabel ?? t("inventory.units.box.label"), value: UnitType.Pack }
+    { text: getUnitLabel(UnitType.Unit, settings, t), value: UnitType.Unit },
+    { text: getUnitLabel(UnitType.Dozen, settings, t), value: UnitType.Dozen },
+    { text: getUnitLabel(UnitType.Pack, settings, t), value: UnitType.Pack }
   ];
 
   if (!effectiveEnableUseBaseUn)  {
