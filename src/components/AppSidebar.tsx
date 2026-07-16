@@ -36,6 +36,15 @@ export function AppSidebar() {
   const groupedMenus = authorizedMenus.reduce((acc, item) => {
     let groupLabel = t('other'); // Default group
 
+    // Reports are runtime rows, so their links carry a slug (/reports/stock-on-hand) and cannot be
+    // enumerated as cases below. Matched by prefix before the switch, or every report would silently
+    // land in "Other".
+    if (item.Link.startsWith("/reports/")) {
+      acc[t("reports.title")] ??= [];
+      acc[t("reports.title")].push(item);
+      return acc;
+    }
+
     switch (item.Link) {
       case "/binCheck":
       case "/itemCheck":
@@ -66,9 +75,6 @@ export function AppSidebar() {
       case "/transferConfirmationSupervisor":
       case "/transferConfirmationReport":
         groupLabel = t("transfer");
-        break;
-      case "/reports":
-        groupLabel = t("reports.title");
         break;
       case "/settings/cancelReasons":
       case "/settings/users":

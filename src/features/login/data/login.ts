@@ -17,12 +17,13 @@ export interface UserInfo {
   customFields: Record<string, CustomField[]>;
   superUser: boolean;
   /**
-   * Whether this user can run at least one report — a live `EXISTS` the backend recomputes on every
-   * `/general/UserInfo` call, never a login-time snapshot. It rides along on a request the app
-   * already makes on each refresh, so the Reports menu entry costs no extra fetch and a fresh grant
-   * appears without a re-login (unlike `roles`, which is snapshotted at login).
+   * The reports this user can run, name-ordered — one menu entry each. Recomputed live by the
+   * backend on every `/general/UserInfo` call, never a login-time snapshot, so a fresh grant (or a
+   * newly created report) appears without a re-login — unlike `roles`, which is snapshotted at
+   * login. It rides a request the app already makes on each refresh, so the menu costs no extra
+   * fetch. Empty means the Reports group disappears entirely.
    */
-  hasReports: boolean;
+  reports: UserReportLink[];
   deviceStatus?: DeviceStatus;
   deviceName?: string;
 }
@@ -107,4 +108,10 @@ export interface ErrorResponse {
 export enum ScannerMode {
   ItemBarcode = 'ItemBarcode',
   ItemCode = 'ItemCode'
+}
+
+/** One report as the navigation menu needs it: a label and a destination. */
+export interface UserReportLink {
+  slug: string;
+  name: string;
 }

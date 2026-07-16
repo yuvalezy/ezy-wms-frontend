@@ -19,8 +19,8 @@ export interface MenuItem {
    *
    * Every other entry is gated by a role, and an entry with no role at all is treated as
    * superuser-only. Reports break that assumption: access is per-report, granted at runtime via a
-   * join table, so there is no enum member to check — the gate is `RequiresFeature: "Reports"`
-   * (i.e. `user.hasReports`, computed live by the backend) rather than a role.
+   * join table, so there is no enum member to check. No gate is needed either — the backend only
+   * lists the reports this user may run, so each entry's existence *is* its authorization.
    */
   AnyAuthenticated?: boolean;
 }
@@ -202,14 +202,19 @@ export function useMenus() {
       Color: "text-indigo-700",
       RequiresFeature: "EnableTransferConfirm"
     },
-    {
-      Link: "/reports",
-      Text: t('reports.title'),
+    // One entry per report the user can actually run, rather than a single link into an index — a report
+    // is a destination like any other screen here, and an index page the user must click through adds a
+    // step without adding information. The list is resolved live by the backend on every UserInfo call,
+    // so a fresh grant appears without a re-login and a user with no grants gets no Reports group at all.
+    ...(user?.reports ?? []).map((report): MenuItem => ({
+      Link: `/reports/${report.slug}`,
+      // The report's own name, as its author typed it: these are runtime rows, so there is no
+      // translation key to look up.
+      Text: report.name,
       AnyAuthenticated: true,
       Icon: FileChartColumn,
       Color: "text-violet-700",
-      RequiresFeature: "Reports"
-    },
+    })),
     // {
     //     Link: "/settings/cancelReasons",
     //     Text: t('cancellationReasons'),
@@ -329,14 +334,6 @@ export function useMenus() {
           break;
         case "TransferRequest":
           if (!user!.settings!.enableTransferRequest)
-            return false;
-          break;
-        case "Reports":
-          // `hasReports` is a live EXISTS the backend recomputes on every /general/UserInfo call
-          // (which the app already makes on each refresh), not a login-time snapshot — so granting
-          // a group its first report reveals this entry without a re-login, and a user with no
-          // grants never sees it. Optional chaining because UserInfo may not have landed yet.
-          if (!user?.hasReports)
             return false;
           break;
       }
