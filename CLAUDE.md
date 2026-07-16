@@ -15,10 +15,11 @@ npm run lint          # currently non-functional, see below
 npm test              # currently non-functional, see below
 ```
 
-**Lint and Jest are both currently broken — don't trust a green/red result from either:**
-- `eslint` isn't even in `package.json` (`devDependencies` has no `eslint` package, no `eslint.config.*` file exists). `npm run lint` fails to even start.
-- `npm test` (Jest, `jest.config.js`) fails all suites with `TS5011: The common source directory ... rootDir must be explicitly set` — `tsconfig.json` has no `rootDir` and `ts-jest@29` doesn't fully support the pinned `typescript@6.0.3`.
-- Until these are fixed, verify changes with `npx tsc --noEmit`, `npm run build`, and by exercising the change in a running browser (see `/verify-ui` skill / `run` skill).
+**`npm test` runs Vitest and works** (Jul 2026). Jest was removed — it had been failing every suite with `TS5011` (`ts-jest@29` vs the pinned `typescript@6.0.3`), and a `vitest.config.ts` already existed but the package had never been installed. Tests are colocated `*.test.ts(x)`; `globals: true`, so `describe`/`it`/`expect`/`vi` need no import. Use `vi.mock`/`vi.fn`, **not** `jest.*`. `@testing-library/jest-dom` is still a dependency but no suite imports its matchers — add it to `setupFiles` in `vitest.config.ts` if you want `toBeInTheDocument`.
+
+**Lint is still broken:** `eslint` isn't in `package.json` (no `eslint` package, no `eslint.config.*`). `npm run lint` fails to even start — don't trust a green/red result from it.
+
+Verify changes with `npm test`, `npx tsc --noEmit`, `npm run build`, and by exercising the change in a running browser (see `/verify-ui` skill / `run` skill).
 
 ## Architecture
 
@@ -63,7 +64,7 @@ shadcn/ui (`components.json`: style `new-york`, baseColor `gray`, aliases `@/com
 
 ### TypeScript
 
-`tsconfig.json`: `strict: true`, `noFallthroughCasesInSwitch`, `isolatedModules`, `moduleResolution: "bundler"`, target `es2020`, path alias `@/* → ./src/*`. `typescript` is pinned to `^6.0.3` — newer than the README's stated "TypeScript 5.9" and the root cause of the Jest `rootDir` breakage above.
+`tsconfig.json`: `strict: true`, `noFallthroughCasesInSwitch`, `isolatedModules`, `moduleResolution: "bundler"`, target `es2020`, path alias `@/* → ./src/*`. `typescript` is pinned to `^6.0.3` — newer than the README’s stated "TypeScript 5.9" (this pin was what broke `ts-jest`, since replaced by Vitest).
 
 ## Working conventions
 

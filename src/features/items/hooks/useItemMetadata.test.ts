@@ -5,16 +5,16 @@ import {MetadataFieldType} from '@/features/metadata';
 import {ItemDetails} from '../data/items';
 
 // Mock ThemeContext
-const mockSetError = jest.fn();
-jest.mock('@/components/ThemeContext', () => ({
+const mockSetError = vi.fn();
+vi.mock('@/components/ThemeContext', () => ({
   useThemeContext: () => ({
     setError: mockSetError
   })
 }));
 
 // Mock the items-service
-jest.mock('../data/items-service', () => ({
-  updateItemMetadata: jest.fn()
+vi.mock('../data/items-service', () => ({
+  updateItemMetadata: vi.fn()
 }));
 
 describe('useItemMetadata Hook', () => {
