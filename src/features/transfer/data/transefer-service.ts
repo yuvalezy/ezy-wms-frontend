@@ -10,6 +10,7 @@ import {
   transferContentParameters,
   TransferDocument,
   TransfersOrderBy,
+  TransferSummaryReportData,
   TransferUpdateParameters
 } from "@/features/transfer/data/transfer";
 import {AddItemReturnValueType, DetailUpdateParameters, Status, UpdateLineParameters, UpdateLineReturnValue} from "@/features/shared/data";
@@ -77,6 +78,19 @@ export const transferService = {
       return response.data;
     } catch (error) {
       console.error("Error fetching transfer:", error);
+      throw error;
+    }
+  },
+
+  async fetchTransferSummaryReport(id: string): Promise<TransferSummaryReportData> {
+    try {
+      const response = await axiosInstance.get<TransferSummaryReportData>(
+        `transfer/transferSummaryReport/${id}`,
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching transfer summary report:", error);
       throw error;
     }
   },

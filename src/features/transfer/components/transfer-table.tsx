@@ -2,7 +2,7 @@ import React from "react";
 import {useTranslation} from "react-i18next";
 import {Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Progress} from "@/components/ui/progress";
-import {CheckCircle, XCircle} from "lucide-react";
+import {CheckCircle, FileText, XCircle} from "lucide-react";
 import {ResponsiveTableActions, TableAction} from '@/components/ui/responsive-table-actions';
 import {useNavigate} from "react-router";
 import {useAuth} from "@/components/AppContext";
@@ -46,6 +46,15 @@ export default function TransferTable({ transfers, supervisor = false, approval 
     const actions: TableAction[] = [];
 
     if (!approval) {
+      // Summary report action (always available - a finished transfer is the one most worth reporting on)
+      actions.push({
+        key: 'summary-report',
+        label: t('transferReport'),
+        icon: FileText,
+        onClick: () => navigate(`/transferSummaryReport/${doc.id}`),
+        variant: 'outline'
+      });
+
       // Finish action (conditional - only when in progress and 100% complete)
       if (doc.status === Status.InProgress && doc.progress === 100) {
         actions.push({

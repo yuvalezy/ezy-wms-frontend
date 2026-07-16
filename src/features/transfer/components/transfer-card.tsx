@@ -8,7 +8,7 @@ import {Progress} from "@/components/ui/progress";
 import {useDocumentStatusToString} from "@/hooks/useDocumentStatusToString";
 import {Status} from "@/features/shared/data/shared";
 import {useDateTimeFormat} from "@/hooks/useDateTimeFormat";
-import {CheckCircle, XCircle} from "lucide-react";
+import {CheckCircle, FileText, XCircle} from "lucide-react";
 import {FullInfoBox, InfoBoxValue} from "@/components";
 import InfoBox from "@/components/InfoBox";
 import {TransferDocument, ApprovalStatus} from "@/features/transfer/data/transfer";
@@ -129,6 +129,9 @@ const TransferCard: React.FC<TransferCardProps> = ({doc, onAction, supervisor = 
       </CardContent>
       {supervisor && (
         <CardFooter className="flex justify-end space-x-2 pt-4 border-t">
+          <Button variant="outline" onClick={() => navigate(`/transferSummaryReport/${doc.id}`)}>
+            <FileText className="mr-2 h-4 w-4"/>{t('transferReport')}
+          </Button>
           {doc.status === Status.InProgress && progressDisplayValue === 100 && (
             <Button variant="default" onClick={() => onAction?.(doc, 'process')}
                     className="bg-green-500 hover:bg-green-600 text-white">

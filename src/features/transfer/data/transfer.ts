@@ -116,6 +116,36 @@ export type TransferContentBin = {
   quantity: number;
 }
 
+/**
+ * The supervisor's whole-document view of a transfer. Unlike {@link TransferContent}, which serves the
+ * scanning screen one side at a time, this carries both sides of every item together.
+ */
+export interface TransferSummaryReportData {
+  id: string;
+  number: number;
+  name?: string;
+  date: Date;
+  status: Status;
+  comments?: string;
+  whsCode: string; // Source warehouse
+  targetWhsCode?: string;
+  createdByUserName?: string;
+  /** Null until posted to SAP, and on transfers posted before the column existed. */
+  sapDocNumber?: number;
+  lines: TransferSummaryReportLine[];
+}
+
+export interface TransferSummaryReportLine extends ItemDetails {
+  /** Base pieces selected from the source bins. */
+  sourceQuantity: number;
+  /** Base pieces placed into the target bins. */
+  targetQuantity: number;
+  /** Source minus target: still to be placed. Negative means more was placed than was taken. */
+  openQuantity: number;
+  sourceBins: TransferContentBin[];
+  targetBins: TransferContentBin[];
+}
+
 export type AddItemParameters = {
   id: string,
   itemCode: string,

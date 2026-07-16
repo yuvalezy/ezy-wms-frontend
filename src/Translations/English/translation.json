@@ -125,6 +125,9 @@
   "back": "Back",
   "backToTransfer": "Back to Transfer",
   "pending": "Pending",
+  "placed": "Placed",
+  "sourceBins": "Source Bins",
+  "targetBins": "Target Bins",
   "picked": "Picked",
   "available": "Available",
   "totalItems": "Total Items",
@@ -551,16 +554,46 @@
         "advanced": "Advanced / database server"
       },
       "fields": {
-        "ServiceLayerUrl": {"label": "Service Layer URL", "desc": "Base URL of the SAP Business One Service Layer, e.g. https://your-sap:50000."},
-        "Database": {"label": "Company database", "desc": "SAP company database (CompanyDB) to connect to."},
-        "User": {"label": "User", "desc": "SAP Business One user used to log in."},
-        "Password": {"label": "Password", "desc": "Password for the SAP user. Leave unchanged to keep the stored value."},
-        "Server": {"label": "Database server", "desc": "Database server host (legacy/DI; not used by the Service Layer path)."},
-        "ServerType": {"label": "Server type", "desc": "Database server type code (e.g. 15 = MSSQL2019, 9 = HANA)."},
-        "TrustedConnection": {"label": "Trusted connection", "desc": "Use a trusted (Windows) database connection."},
-        "ServerUser": {"label": "Database user", "desc": "Database server user (when not using a trusted connection)."},
-        "ServerPassword": {"label": "Database password", "desc": "Database server password. Leave unchanged to keep the stored value."},
-        "ServiceLayerTimeoutSeconds": {"label": "Service Layer timeout (seconds)", "desc": "Request timeout for Service Layer calls."}
+        "ServiceLayerUrl": {
+          "label": "Service Layer URL",
+          "desc": "Base URL of the SAP Business One Service Layer, e.g. https://your-sap:50000."
+        },
+        "Database": {
+          "label": "Company database",
+          "desc": "SAP company database (CompanyDB) to connect to."
+        },
+        "User": {
+          "label": "User",
+          "desc": "SAP Business One user used to log in."
+        },
+        "Password": {
+          "label": "Password",
+          "desc": "Password for the SAP user. Leave unchanged to keep the stored value."
+        },
+        "Server": {
+          "label": "Database server",
+          "desc": "Database server host (legacy/DI; not used by the Service Layer path)."
+        },
+        "ServerType": {
+          "label": "Server type",
+          "desc": "Database server type code (e.g. 15 = MSSQL2019, 9 = HANA)."
+        },
+        "TrustedConnection": {
+          "label": "Trusted connection",
+          "desc": "Use a trusted (Windows) database connection."
+        },
+        "ServerUser": {
+          "label": "Database user",
+          "desc": "Database server user (when not using a trusted connection)."
+        },
+        "ServerPassword": {
+          "label": "Database password",
+          "desc": "Database server password. Leave unchanged to keep the stored value."
+        },
+        "ServiceLayerTimeoutSeconds": {
+          "label": "Service Layer timeout (seconds)",
+          "desc": "Request timeout for Service Layer calls."
+        }
       }
     },
     "options": {
@@ -583,10 +616,27 @@
         "overrides": "Document Unit Overrides"
       },
       "enums": {
-        "ScannerMode": {"ItemBarcode": "Item barcode", "ItemCode": "Item code"},
-        "UnitType": {"Unit": "Unit", "Dozen": "Dozen", "Pack": "Pack"},
-        "GoodsReceiptDocumentType": {"Transactional": "Transactional", "Confirmation": "Confirmation", "Both": "Both"},
-        "ObjectType": {"GoodsReceipt": "Goods Receipt", "InventoryCounting": "Inventory Counting", "Transfer": "Transfer", "Picking": "Picking", "PickingClosure": "Picking Closure"}
+        "ScannerMode": {
+          "ItemBarcode": "Item barcode",
+          "ItemCode": "Item code"
+        },
+        "UnitType": {
+          "Unit": "Unit",
+          "Dozen": "Dozen",
+          "Pack": "Pack"
+        },
+        "GoodsReceiptDocumentType": {
+          "Transactional": "Transactional",
+          "Confirmation": "Confirmation",
+          "Both": "Both"
+        },
+        "ObjectType": {
+          "GoodsReceipt": "Goods Receipt",
+          "InventoryCounting": "Inventory Counting",
+          "Transfer": "Transfer",
+          "Picking": "Picking",
+          "PickingClosure": "Picking Closure"
+        }
       },
       "overrideFields": {
         "DefaultUnitType": "Default unit type",
@@ -595,44 +645,162 @@
         "EnableUseBaseUn": "Use base unit conversion"
       },
       "fields": {
-        "EnableUseBaseUn": {"label": "Enable base unit conversion", "desc": "Convert quantities using base units (dozens, packs, etc.)."},
-        "ScannerMode": {"label": "Scanner mode", "desc": "How items are identified when scanning. Item barcode scans printed barcodes; Item code is manual code entry."},
-        "DisplayVendor": {"label": "Display vendor", "desc": "Show vendor information on screens."},
-        "WhsCodeBinSuffix": {"label": "Warehouse code as bin suffix", "desc": "Append the warehouse code as a suffix to bin codes."},
-        "EnableUnitSelection": {"label": "Allow unit selection", "desc": "Let users choose a different unit type during operations."},
-        "DefaultUnitType": {"label": "Default unit type", "desc": "Unit used by default for quantity calculations."},
-        "MaxUnitLevel": {"label": "Maximum unit level", "desc": "Deepest unit level shown when breaking down quantities. Leave unset to show the full breakdown."},
-        "UnitLabel": {"label": "Unit label", "desc": "Custom label for the base unit (optional)."},
-        "UnitAbbr": {"label": "Unit abbreviation", "desc": "Short label for the base unit (optional)."},
-        "DozensLabel": {"label": "Dozen label", "desc": "Custom label for the dozen unit (optional)."},
-        "DozensAbbr": {"label": "Dozen abbreviation", "desc": "Short label for the dozen unit (optional)."},
-        "BoxLabel": {"label": "Pack label", "desc": "Custom label for the pack/box unit (optional)."},
-        "BoxAbbr": {"label": "Pack abbreviation", "desc": "Short label for the pack/box unit (optional)."},
-        "GoodsReceiptDraft": {"label": "Create as draft", "desc": "Create goods receipts as drafts that require approval instead of posting directly."},
-        "GoodsReceiptType": {"label": "Document type", "desc": "Type of goods receipt document to create."},
-        "GoodsReceiptModificationsRequiredSupervisor": {"label": "Supervisor approval for changes", "desc": "Require supervisor approval for goods receipt modifications."},
-        "GoodsReceiptCreateSupervisorRequired": {"label": "Supervisor approval to create", "desc": "Require supervisor approval to create goods receipts."},
-        "GoodsReceiptTargetDocuments": {"label": "Target documents", "desc": "Enable selecting target documents during goods receipt."},
-        "GoodsReceiptConfirmationAdjustStock": {"label": "Adjust stock on confirmation", "desc": "Automatically adjust stock levels when a goods receipt is confirmed."},
-        "GoodsReceiptConfirmationAdjustStockPriceList": {"label": "Adjustment price list", "desc": "Price list used when adjusting stock on confirmation."},
-        "EnableTransferConfirm": {"label": "Require transfer confirmation", "desc": "Transfers require a confirmation step."},
-        "EnableTransferRequest": {"label": "Enable transfer requests", "desc": "Enable stock transfer requests."},
-        "EnableWarehouseTransfer": {"label": "Enable warehouse transfers", "desc": "Allow transfers between warehouses (non-supervisors require approval)."},
-        "TransferCreateSupervisorRequired": {"label": "Supervisor approval to create", "desc": "Require supervisor approval to create transfers."},
-        "TransferTargetItems": {"label": "Target items", "desc": "Enable selecting target items during transfers."},
-        "DirectTransferAll": {"label": "Direct transfer all stock", "desc": "Direct transfer moves all of the scanned item's stock from the source bin (skips quantity entry)."},
-        "EnablePickingCheck": {"label": "Picking verification", "desc": "Picking requires a verification/check step."},
-        "EnablePickPathRouting": {"label": "Pick-path routing", "desc": "Show picking as a guided, location-first walk ordered by bin code. Off uses the classic item-first view."},
-        "PickPathHuecoPrefix": {"label": "Hueco rack prefix", "desc": "Aisle prefix for the hueco/mezzanine racks that are walked between floor 1 and floor 2 (e.g. \"HU\"). Leave empty if there are none."},
-        "PickPathSectionFirst": {"label": "Walk sections first", "desc": "On: walk each aisle once, taking every shelf level at each bay before moving on. Off: finish a whole shelf level across the aisle before the next level."},
-        "EnablePickingPackageLabels": {"label": "Package labels", "desc": "Allow creating/selecting WMS package labels (R1, R2, …) while picking."},
-        "EnablePostPickRepack": {"label": "Post-pick repack", "desc": "Require picked rows to be assigned to package labels in a repack step before syncing to SAP."},
-        "PickingPackageLabelPrefix": {"label": "Package label prefix", "desc": "Prefix used when auto-generating package labels."},
-        "BlockPickScanDuringGoodsReceipt": {"label": "Block picking during put-away (scan)", "desc": "Prevent scanning an item for picking while it is still being put away from a non-finalized goods receipt in the same warehouse. Avoids phantom inventory."},
-        "BlockPickProcessDuringGoodsReceipt": {"label": "Block picking during put-away (process)", "desc": "Prevent processing a pick list to SAP if any of its items is still being put away from a non-finalized goods receipt in the same warehouse. Safety net for the scan-time block."},
-        "IdleLogoutTimeout": {"label": "Idle logout (seconds)", "desc": "Automatically log out after this many idle seconds. 0 or empty disables it."},
-        "EnableDecimalQuantities": {"label": "Decimal quantities", "desc": "Allow decimal quantities (2 decimal places). Off restricts to whole numbers."},
-        "InventoryCountingBatchSize": {"label": "Counting batch size", "desc": "Number of items per inventory counting batch."}
+        "EnableUseBaseUn": {
+          "label": "Enable base unit conversion",
+          "desc": "Convert quantities using base units (dozens, packs, etc.)."
+        },
+        "ScannerMode": {
+          "label": "Scanner mode",
+          "desc": "How items are identified when scanning. Item barcode scans printed barcodes; Item code is manual code entry."
+        },
+        "DisplayVendor": {
+          "label": "Display vendor",
+          "desc": "Show vendor information on screens."
+        },
+        "WhsCodeBinSuffix": {
+          "label": "Warehouse code as bin suffix",
+          "desc": "Append the warehouse code as a suffix to bin codes."
+        },
+        "EnableUnitSelection": {
+          "label": "Allow unit selection",
+          "desc": "Let users choose a different unit type during operations."
+        },
+        "DefaultUnitType": {
+          "label": "Default unit type",
+          "desc": "Unit used by default for quantity calculations."
+        },
+        "MaxUnitLevel": {
+          "label": "Maximum unit level",
+          "desc": "Deepest unit level shown when breaking down quantities. Leave unset to show the full breakdown."
+        },
+        "UnitLabel": {
+          "label": "Unit label",
+          "desc": "Custom label for the base unit (optional)."
+        },
+        "UnitAbbr": {
+          "label": "Unit abbreviation",
+          "desc": "Short label for the base unit (optional)."
+        },
+        "DozensLabel": {
+          "label": "Dozen label",
+          "desc": "Custom label for the dozen unit (optional)."
+        },
+        "DozensAbbr": {
+          "label": "Dozen abbreviation",
+          "desc": "Short label for the dozen unit (optional)."
+        },
+        "BoxLabel": {
+          "label": "Pack label",
+          "desc": "Custom label for the pack/box unit (optional)."
+        },
+        "BoxAbbr": {
+          "label": "Pack abbreviation",
+          "desc": "Short label for the pack/box unit (optional)."
+        },
+        "ForceDoz": {
+          "label": "Force a dozen to 12",
+          "desc": "When an item's dozen conversion is 1, treat it as 12 instead. For item masters that were never given a real dozen conversion, so a 2 dozen scan counts 24 units and not 2. Items with a real conversion are unaffected."
+        },
+        "GoodsReceiptDraft": {
+          "label": "Create as draft",
+          "desc": "Create goods receipts as drafts that require approval instead of posting directly."
+        },
+        "GoodsReceiptType": {
+          "label": "Document type",
+          "desc": "Type of goods receipt document to create."
+        },
+        "GoodsReceiptModificationsRequiredSupervisor": {
+          "label": "Supervisor approval for changes",
+          "desc": "Require supervisor approval for goods receipt modifications."
+        },
+        "GoodsReceiptCreateSupervisorRequired": {
+          "label": "Supervisor approval to create",
+          "desc": "Require supervisor approval to create goods receipts."
+        },
+        "GoodsReceiptTargetDocuments": {
+          "label": "Target documents",
+          "desc": "Enable selecting target documents during goods receipt."
+        },
+        "GoodsReceiptConfirmationAdjustStock": {
+          "label": "Adjust stock on confirmation",
+          "desc": "Automatically adjust stock levels when a goods receipt is confirmed."
+        },
+        "GoodsReceiptConfirmationAdjustStockPriceList": {
+          "label": "Adjustment price list",
+          "desc": "Price list used when adjusting stock on confirmation."
+        },
+        "EnableTransferConfirm": {
+          "label": "Require transfer confirmation",
+          "desc": "Transfers require a confirmation step."
+        },
+        "EnableTransferRequest": {
+          "label": "Enable transfer requests",
+          "desc": "Enable stock transfer requests."
+        },
+        "EnableWarehouseTransfer": {
+          "label": "Enable warehouse transfers",
+          "desc": "Allow transfers between warehouses (non-supervisors require approval)."
+        },
+        "TransferCreateSupervisorRequired": {
+          "label": "Supervisor approval to create",
+          "desc": "Require supervisor approval to create transfers."
+        },
+        "TransferTargetItems": {
+          "label": "Target items",
+          "desc": "Enable selecting target items during transfers."
+        },
+        "DirectTransferAll": {
+          "label": "Direct transfer all stock",
+          "desc": "Direct transfer moves all of the scanned item's stock from the source bin (skips quantity entry)."
+        },
+        "EnablePickingCheck": {
+          "label": "Picking verification",
+          "desc": "Picking requires a verification/check step."
+        },
+        "EnablePickPathRouting": {
+          "label": "Pick-path routing",
+          "desc": "Show picking as a guided, location-first walk ordered by bin code. Off uses the classic item-first view."
+        },
+        "PickPathHuecoPrefix": {
+          "label": "Hueco rack prefix",
+          "desc": "Aisle prefix for the hueco/mezzanine racks that are walked between floor 1 and floor 2 (e.g. \"HU\"). Leave empty if there are none."
+        },
+        "PickPathSectionFirst": {
+          "label": "Walk sections first",
+          "desc": "On: walk each aisle once, taking every shelf level at each bay before moving on. Off: finish a whole shelf level across the aisle before the next level."
+        },
+        "EnablePickingPackageLabels": {
+          "label": "Package labels",
+          "desc": "Allow creating/selecting WMS package labels (R1, R2, …) while picking."
+        },
+        "EnablePostPickRepack": {
+          "label": "Post-pick repack",
+          "desc": "Require picked rows to be assigned to package labels in a repack step before syncing to SAP."
+        },
+        "PickingPackageLabelPrefix": {
+          "label": "Package label prefix",
+          "desc": "Prefix used when auto-generating package labels."
+        },
+        "BlockPickScanDuringGoodsReceipt": {
+          "label": "Block picking during put-away (scan)",
+          "desc": "Prevent scanning an item for picking while it is still being put away from a non-finalized goods receipt in the same warehouse. Avoids phantom inventory."
+        },
+        "BlockPickProcessDuringGoodsReceipt": {
+          "label": "Block picking during put-away (process)",
+          "desc": "Prevent processing a pick list to SAP if any of its items is still being put away from a non-finalized goods receipt in the same warehouse. Safety net for the scan-time block."
+        },
+        "IdleLogoutTimeout": {
+          "label": "Idle logout (seconds)",
+          "desc": "Automatically log out after this many idle seconds. 0 or empty disables it."
+        },
+        "EnableDecimalQuantities": {
+          "label": "Decimal quantities",
+          "desc": "Allow decimal quantities (2 decimal places). Off restricts to whole numbers."
+        },
+        "InventoryCountingBatchSize": {
+          "label": "Counting batch size",
+          "desc": "Number of items per inventory counting batch."
+        }
       }
     }
   },
@@ -810,7 +978,6 @@
   "addExternalAlert": "Add External Alert",
   "addExternalAlertDescription": "Configure alerts for external system users per object type.",
   "objectType": "Object Type",
-  "externalUser": "External User",
   "selectUser": "Select User",
   "pleaseSelectUser": "Please select a user",
   "pickList": "Pick List",

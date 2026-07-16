@@ -122,7 +122,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
 
             {/* Desktop view - Table layout */}
             <div className="hidden sm:block">
-              <div className="h-[60vh]">
+              <ScrollArea className="h-[60vh]">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -184,7 +184,7 @@ const GoodsReceiptAllDialog = forwardRef((props: GRPOAllDetailProps, ref) => {
                     })}
                   </TableBody>
                 </Table>
-              </div>
+              </ScrollArea>
             </div>
           </>
         ) : (
