@@ -1250,7 +1250,14 @@
     "columnNotSortable": "El tipo SQL de esta columna no admite ordenamiento.",
     "columnLinkType": "Enlace",
     "columnLinkTemplate": "Destino del enlace",
-    "columnLinkHint": "Use {ClaveColumna} para insertar los valores de la fila. Disponibles:",
+    "columnLinkHint": "Use {ClaveColumna} para insertar los valores de la fila. Para abrir otro informe, enlace a /reports/su-slug?NombreVariable={ClaveColumna}. Disponibles:",
+    "linkProblems": {
+      "title": "Este enlace pidió filtros que no se pudieron aplicar.",
+      "unknownParam": "\u201c{{param}}\u201d no es un filtro de este informe.",
+      "invalidValue": "\u201c{{param}}\u201d recibió el valor \u201c{{value}}\u201d, que no es válido.",
+      "duplicateParam": "\u201c{{param}}\u201d se indicó más de una vez.",
+      "hint": "El informe no se ejecutó, porque habría mostrado más filas de las que el enlace pidió. Revise los filtros y pulse Ejecutar."
+    },
     "linkTypes": {
       "None": "Sin enlace",
       "Internal": "Página interna",

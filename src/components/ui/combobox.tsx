@@ -80,9 +80,15 @@ export function Combobox({
           role="combobox"
           aria-expanded={open}
           disabled={disabled}
-          className={cn("w-full justify-between font-normal", !selected && "text-muted-foreground", className)}
+          className={cn("w-full justify-between font-normal", !value && "text-muted-foreground", className)}
         >
-          <span className="truncate">{selected ? selected.label : placeholder}</span>
+          {/*
+            Falls back to the raw value rather than the placeholder when nothing matches. A value
+            with no matching item is still a value — options often arrive async or are a filtered
+            top-N set, so "no match" usually means "not loaded", not "nothing selected". Showing the
+            placeholder there makes the control claim no filter while one is being applied.
+          */}
+          <span className="truncate">{selected ? selected.label : value || placeholder}</span>
           <ChevronsUpDown className="h-4 w-4 opacity-50 shrink-0" />
         </Button>
       </PopoverTrigger>

@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {useTranslation} from "react-i18next";
-import {useNavigate, useParams} from "react-router";
-import {Sigma} from "lucide-react";
+import {useNavigate, useParams, useSearchParams} from "react-router";
+import {Sigma, TriangleAlert} from "lucide-react";
 import {Button} from "@/components/ui/button";
 import {Card, CardContent} from "@/components/ui/card";
 import {Skeleton} from "@/components/ui/skeleton";
@@ -27,8 +27,9 @@ import {
   getInvalidDateRanges,
   getMissingRequiredVariables,
   ReportFilterBar,
-  ReportVariableValues,
 } from "@/features/reports/components/ReportFilterBar";
+import {ReportVariableValues} from "@/features/reports/utils/report-variable-values";
+import {ReportQueryProblem, variableValuesFromQuery} from "@/features/reports/utils/report-query-params";
 
 /**
  * Runs one report (`/reports/:slug`): filter → run → paged, sortable table → Excel export.
@@ -90,11 +91,22 @@ const ReportRunner: React.FC = () => {
   const [totalCount, setTotalCount] = useState<number | null>(null);
   const [isCounting, setIsCounting] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  /** Filters the URL asked for but could not be honoured. Non-empty → the report must not auto-run. */
+  const [linkProblems, setLinkProblems] = useState<ReportQueryProblem[]>([]);
   /**
    * Re-entrancy guard, separate from the state above: `setIsExporting(true)` does not take effect
    * until the next render, so a fast double-click would otherwise start two 50k-row exports.
    */
   const exportInFlight = useRef(false);
+  /**
+   * The (definition, query string) this page has already applied. See the prefill effect — a ref,
+   * not a dep array, is what makes that effect fire exactly once per combination.
+   */
+  const applied = useRef<{ detail: ReportDefinitionDetail; searchKey: string } | null>(null);
+
+  const [searchParams] = useSearchParams();
+  /** A primitive, so it can be a dep without depending on `searchParams`' object identity. */
+  const searchKey = searchParams.toString();
 
   const formatCell = useReportCellFormatter({
     booleanLabels: {true: t("yes"), false: t("no")},
@@ -113,7 +125,13 @@ const ReportRunner: React.FC = () => {
     nextSort: DataTableSort | null,
     nextValues: ReportVariableValues,
   ) => {
-    if (!slug || !detail) {
+    // `detail.slug !== slug` means the URL has already moved to another report but its definition
+    // has not arrived yet — this component does not remount, so for one render `slug` is the new
+    // report while `detail` is still the old one. Running here would POST the *previous* report's
+    // sort key and variables to the *new* report's endpoint, which the backend rightly rejects with
+    // a 400 ("unknown sort key"). Guarded at this chokepoint rather than at each call site, because
+    // sorting, paging and export all land here too.
+    if (!slug || !detail || detail.slug !== slug) {
       return;
     }
 
@@ -132,6 +150,9 @@ const ReportRunner: React.FC = () => {
       setIsRunning(true);
       // A new filter/sort invalidates any count already shown — never leave a stale total on screen.
       setTotalCount(null);
+      // The notice has done its job: whatever runs from here is what the filter bar shows, so it is
+      // no longer true that the screen might mislead. Leaving it up would just be noise.
+      setLinkProblems([]);
       const page = await reportService.run(slug, {
         variables: nextValues,
         sortColumnKey: nextSort?.key ?? null,
@@ -155,18 +176,25 @@ const ReportRunner: React.FC = () => {
   }, [slug, detail, setError, t]);
 
   useEffect(() => {
+    if (!slug) {
+      return;
+    }
+    // Cleared before fetching, not after. This component does NOT remount when :slug changes —
+    // /reports/:slug is one Route element with no key, so React reconciles it in place. Without this
+    // reset, a drill-down from report A to report B keeps A's `result`, and since `activeColumns`
+    // prefers `result?.columns` over the definition's, B's page renders A's rows and columns under
+    // B's name. `result` also suppressed B's auto-run entirely.
+    setDetail(null);
+    setResult(null);
+    setValues({});
+    setTotalCount(null);
+    setOffset(0);
+    setLinkProblems([]);
+
     const load = async () => {
-      if (!slug) {
-        return;
-      }
       try {
         setIsLoading(true);
-        const data = await reportService.get(slug);
-        setDetail(data);
-        setValues(buildInitialVariableValues(data.variables));
-        setSort(data.defaultSortColumnKey
-          ? {key: data.defaultSortColumnKey, direction: toTableDirection(data.defaultSortDirection)}
-          : null);
+        setDetail(await reportService.get(slug));
       } catch (error) {
         setError(`${t("reports.loadFailed")}: ${error}`);
         navigate("/reports");
@@ -178,20 +206,74 @@ const ReportRunner: React.FC = () => {
   }, [slug]);
 
   /**
-   * Auto-runs once the definition lands, but only when nothing required is missing — a report whose
-   * mandatory date range is still empty must wait for the user rather than fire a guaranteed error.
+   * The URL's filters layered over the report's declared defaults.
+   *
+   * Keyed on `searchKey` (a string) rather than `searchParams` (an object), so the memo's deps stay
+   * primitive and this cannot silently re-fire on identity churn. `values` is deliberately not an
+   * input — that is what makes the `setValues` → render → effect → `setValues` loop below
+   * structurally impossible rather than merely guarded.
+   */
+  const prefill = useMemo(() => {
+    if (!detail) {
+      return null;
+    }
+    return variableValuesFromQuery(
+      detail.variables,
+      new URLSearchParams(searchKey),
+      buildInitialVariableValues(detail.variables),
+    );
+  }, [detail, searchKey]);
+
+  /**
+   * Applies the URL's filters and auto-runs — exactly once per (definition, query string).
+   *
+   * Keyed on the identity of `detail` and the text of the query string, deliberately not on `slug`:
+   * a report may link to itself with different filters, where neither `slug` nor `detail` changes
+   * and nothing else would re-fire.
+   *
+   * The ref, not the dep array, is what enforces exactly-once: `useMemo` is a performance hint that
+   * React may discard, and StrictMode double-invokes effects on mount. Both hand back a fresh
+   * `prefill`; the tuple absorbs it.
    */
   useEffect(() => {
-    if (!detail || result) {
+    if (!detail || !prefill) {
       return;
     }
-    const initial = buildInitialVariableValues(detail.variables);
-    if (getMissingRequiredVariables(detail.variables, initial).length === 0) {
-      execute(0, detail.defaultSortColumnKey
-        ? {key: detail.defaultSortColumnKey, direction: toTableDirection(detail.defaultSortDirection)}
-        : null, initial);
+    // The definition still describes the report we just navigated away from. Doing anything now
+    // would apply the previous report's variables to this URL's filters; wait for the real one.
+    // Deliberately before the ref is stamped, so this tuple is retried once `detail` catches up.
+    if (detail.slug !== slug) {
+      return;
     }
-  }, [detail]);
+    if (applied.current?.detail === detail && applied.current.searchKey === searchKey) {
+      return;
+    }
+    applied.current = {detail, searchKey};
+
+    const nextSort = detail.defaultSortColumnKey
+      ? {key: detail.defaultSortColumnKey, direction: toTableDirection(detail.defaultSortDirection)}
+      : null;
+
+    setValues(prefill.values);
+    setSort(nextSort);
+    setLinkProblems(prefill.problems);
+
+    // The URL asked for a filter that cannot be honoured. Running now would return a *wider* set
+    // than the link promised, under a URL that claims otherwise — the user reads "one item" and is
+    // shown every bin in the company. Show nothing and let them press Run themselves.
+    if (prefill.problems.length > 0) {
+      return;
+    }
+
+    // A report whose mandatory filter the URL did not supply waits for the user rather than firing
+    // a guaranteed error.
+    if (getMissingRequiredVariables(detail.variables, prefill.values).length === 0) {
+      // The SAME object handed to the filter bar above — never a locally recomputed default. What
+      // ran and what the filter bar shows must be the same thing, or the bar describes a query that
+      // never happened.
+      execute(0, nextSort, prefill.values);
+    }
+  }, [detail, prefill, searchKey, slug]);
 
   /** Runtime metadata from the response wins over the definition's copy; both are the same shape. */
   const activeColumns: ReportColumnDescriptor[] = useMemo(
@@ -365,10 +447,41 @@ const ReportRunner: React.FC = () => {
 
         <Card>
           <CardContent className="p-4">
+            {/*
+              A persistent notice, not a toast: this says the screen is not showing what the URL
+              asked for, which stays true until the user acts. A sonner toast auto-dismisses and
+              would leave a silently-unfiltered report behind it.
+            */}
+            {linkProblems.length > 0 && (
+              <div
+                role="alert"
+                className="mb-4 flex items-start gap-2 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900"
+              >
+                <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0"/>
+                <div className="min-w-0">
+                  <p className="font-medium">{t("reports.linkProblems.title")}</p>
+                  <ul className="mt-1 list-disc space-y-0.5 pl-4">
+                    {linkProblems.map((problem) => (
+                      <li key={`${problem.kind}-${problem.param}`} className="break-words">
+                        {t(`reports.linkProblems.${problem.kind}`, {
+                          param: problem.param,
+                          value: problem.value ?? "",
+                        })}
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="mt-1 text-xs">{t("reports.linkProblems.hint")}</p>
+                </div>
+              </div>
+            )}
+
             <ReportFilterBar
               slug={detail.slug}
               variables={detail.variables}
               values={values}
+              // Reset restores how this page opened, not the report's declared defaults — otherwise
+              // Reset-then-Run on a drill-down would silently show something a refresh would not.
+              resetValues={prefill?.values}
               // An export re-runs the query page by page with the *current* filters; letting them
               // change mid-export would splice two different result sets into one spreadsheet.
               isRunning={isRunning || isExporting}

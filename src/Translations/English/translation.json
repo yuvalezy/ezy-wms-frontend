@@ -1250,7 +1250,14 @@
     "columnNotSortable": "This column's SQL type cannot be sorted on.",
     "columnLinkType": "Link",
     "columnLinkTemplate": "Link target",
-    "columnLinkHint": "Use {ColumnKey} to insert this row's values. Available:",
+    "columnLinkHint": "Use {ColumnKey} to insert this row's values. To open another report, link to /reports/its-slug?VariableName={ColumnKey}. Available:",
+    "linkProblems": {
+      "title": "This link asked for filters that could not be applied.",
+      "unknownParam": "\u201c{{param}}\u201d is not a filter on this report.",
+      "invalidValue": "\u201c{{param}}\u201d was given the value \u201c{{value}}\u201d, which is not valid for it.",
+      "duplicateParam": "\u201c{{param}}\u201d was given more than once.",
+      "hint": "The report was not run, because it would have shown more rows than the link asked for. Check the filters and press Run."
+    },
     "linkTypes": {
       "None": "No link",
       "Internal": "Internal page",

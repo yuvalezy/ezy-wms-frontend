@@ -18,51 +18,26 @@ import {
   ReportVariableType,
   ReportVariableValue,
 } from "@/features/reports/data/types";
+import {fromIsoDate, normalizeDateTime, toIsoDate} from "@/features/reports/utils/report-date";
+import {ReportVariableValues} from "@/features/reports/utils/report-variable-values";
 
 /**
  * The filter row for a report run.
  *
- * **Every value stays a string, all the way to the wire.** The backend parses strictly and rejects
- * rather than coercing, and binds each value as a typed `SqlParameter` — so pre-converting here
- * (e.g. sending a JS number, or a `Date`) would only make the client's guess authoritative and
- * defeat that. The one job this component has is producing *honest* strings.
+ * **Every value stays a string, all the way to the wire** — see `utils/report-date.ts` for why, and
+ * for the date-serialization rules this component depends on. The one job it has is producing
+ * *honest* strings.
  *
- * Dates are the sharp edge: a `Date` picked from the calendar is local midnight, and
- * `toISOString().slice(0, 10)` on it yields the **previous day** for every viewer east of UTC
- * (local midnight Jul 16 at UTC+2 is Jul 15 22:00Z). A filter that silently shifts a day is how a
- * report shows the wrong week's invoices, so dates are serialized from their local calendar
- * components and parsed back the same way.
+ * It is fully controlled: it holds no state for variable values, so a value set from outside (the
+ * URL, on a drill-down) renders exactly as given.
  */
-
-export type ReportVariableValues = Record<string, ReportVariableValue>;
 
 const ANY_VALUE = "__any";
 
-const pad = (value: number): string => String(value).padStart(2, "0");
-
-/** `Date` → `yyyy-MM-dd` using the **local** calendar fields. Never `toISOString()`. See module docs. */
-export const toIsoDate = (date: Date): string =>
-  `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-
-/**
- * `yyyy-MM-dd` → a local-midnight `Date`. Deliberately not `new Date("2026-07-16")`, which the spec
- * says to read as **UTC** midnight — that renders as the 15th in any negative offset.
- */
-export const fromIsoDate = (value: string | null | undefined): Date | undefined => {
-  if (!value) {
-    return undefined;
-  }
-  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(value);
-  if (!match) {
-    return undefined;
-  }
-  const parsed = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
-  return Number.isNaN(parsed.getTime()) ? undefined : parsed;
-};
-
-/** `<input type="datetime-local">` omits seconds; the backend parses ISO exactly, so normalize. */
-const normalizeDateTime = (value: string): string =>
-  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(value) ? `${value}:00` : value;
+// Re-exported so this component's public surface is unchanged now that the helpers live in utils/
+// (the query-string parser needs them, and utils/ -> components/ is the wrong direction).
+export {toIsoDate, fromIsoDate};
+export type {ReportVariableValues};
 
 /**
  * Seeds the filter values from each variable's declared default.
@@ -244,9 +219,25 @@ export interface ReportFilterBarProps {
   onChange: (values: ReportVariableValues) => void;
   onRun: () => void;
   isRunning?: boolean;
+  /**
+   * What Reset restores. Defaults to the variables' declared defaults.
+   *
+   * The runner passes the values the page opened with, so Reset on a drill-down restores the link's
+   * filters rather than silently widening the report to every row — Reset-then-Run and a refresh
+   * must agree.
+   */
+  resetValues?: ReportVariableValues;
 }
 
-export function ReportFilterBar({slug, variables, values, onChange, onRun, isRunning = false}: ReportFilterBarProps) {
+export function ReportFilterBar({
+  slug,
+  variables,
+  values,
+  onChange,
+  onRun,
+  isRunning = false,
+  resetValues,
+}: ReportFilterBarProps) {
   const {t} = useTranslation();
   const {options: lookupOptions, loading: lookupLoading} = useReportLookups(slug, variables, values);
 
@@ -254,7 +245,7 @@ export function ReportFilterBar({slug, variables, values, onChange, onRun, isRun
 
   const ordered = useMemo(() => [...variables].sort((a, b) => a.order - b.order), [variables]);
 
-  const reset = () => onChange(buildInitialVariableValues(variables));
+  const reset = () => onChange(resetValues ?? buildInitialVariableValues(variables));
 
   const renderInput = (variable: ReportVariableDescriptor): React.ReactNode => {
     const value = values[variable.name] ?? {};
