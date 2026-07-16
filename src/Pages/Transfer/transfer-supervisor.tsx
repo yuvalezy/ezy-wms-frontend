@@ -1,7 +1,13 @@
 import ContentTheme from "../../components/ContentTheme";
 import {useTranslation} from "react-i18next";
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import {useAuth, useThemeContext} from "@/components";
+import TransferStatusFilter, {
+    DEFAULT_TRANSFER_STATUSES,
+    TRANSFER_FILTER_STATUSES,
+    TransferStatusFilterRef
+} from "@/features/transfer/components/transfer-status-filter";
+import {Status} from "@/features/shared/data";
 import {useTransferSupervisorData} from "@/features/transfer/hooks/useTransferSupervisorData";
 import TransferCard from "@/features/transfer/components/transfer-card";
 import TransferTable from "@/features/transfer/components/transfer-table";
@@ -29,21 +35,32 @@ export default function TransferSupervisor() {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [statuses, setStatuses] = useState<Status[]>(DEFAULT_TRANSFER_STATUSES);
+    const filterRef = useRef<TransferStatusFilterRef>(null);
 
-    useEffect(() => {
+    const loadTransfers = useCallback(() => {
         setIsLoading(true);
-        transferService.search({progress: true})
+        // An empty selection means "don't constrain by status". Send the full list rather than no status at
+        // all: the backend reads a missing status filter as every status, which would drag in the transient
+        // Processing documents this screen has never shown.
+        const search = statuses.length > 0 ? statuses : TRANSFER_FILTER_STATUSES;
+        return transferService.search({statuses: search, progress: true})
             .then((data) => setTransfers(data))
             .catch((error) => setError(error))
             .finally(() => setIsLoading(false));
-    }, [setError]);
+    }, [statuses, setError]);
+
+    useEffect(() => {
+        loadTransfers();
+    }, [loadTransfers]);
+
     const handleConfirmAction = () => {
         setDialogOpen(false);
-        
+
         if (actionType === "process") {
             setIsProcessing(true);
         }
-        
+
         const id = selectedTransfer?.id!;
 
         const serviceCall = actionType === "cancel"
@@ -53,10 +70,10 @@ export default function TransferSupervisor() {
         serviceCall
             .then((result) => {
                 if (typeof result === "boolean" || result.success) {
-                    setTransfers((prevTransfers) =>
-                        prevTransfers.filter((transfer) => transfer.id !== id)
-                    );
                     toast.success(actionType === "process" ? t("transferApproved") : t("transferCancelled"));
+                    // Re-read rather than dropping the row locally: the transfer still exists, and whether it
+                    // belongs in the list now depends on whether the filter includes its new status.
+                    loadTransfers();
                 }
             })
             .catch((error) => {
@@ -76,7 +93,8 @@ export default function TransferSupervisor() {
     }
 
     return (
-        <ContentTheme title={getTitle()}>
+        <ContentTheme title={getTitle()} onFilterClicked={() => filterRef.current?.togglePanel()}>
+            <TransferStatusFilter ref={filterRef} value={statuses} onChange={setStatuses}/>
             <TransferForm onNewTransfer={transfer => {
                 const createByUser: User = {
                     fullName: user!.name, id: user!.id, deleted: false,
