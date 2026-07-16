@@ -201,7 +201,11 @@ const ReportDefinitionForm: React.FC = () => {
       setTestResult(null);
       const result = await reportDefinitionService.test(buildRequest(data));
       setTestResult(result);
-      if (result.valid) {
+      // Populate whenever discovery produced columns, even if validation then failed. Gating this on
+      // `valid` deadlocks any report whose error can only be fixed in the Columns editor — the editor is
+      // empty until Test succeeds, and Test cannot succeed until the flags in it change. Discovery and
+      // validation are separate answers: the errors stay on screen either way.
+      if (result.columns.length > 0) {
         const merged = mergeDiscoveredColumns(data.columns, result.columns);
         form.setValue("columns", merged, {shouldDirty: true});
         // A default sort pointing at a column the SQL no longer returns (or that can no longer be
