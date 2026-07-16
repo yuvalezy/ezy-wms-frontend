@@ -121,7 +121,10 @@ export function useMetadataBase<T extends BaseMetadataDefinition>(
   // Get field value by ID
   const getFieldValue = useCallback((fieldId: string): any => {
     const field = formState.fields.find(f => f.fieldId === fieldId);
-    return field?.value || null;
+    // `??`, not `||`: a field holding 0 (or "") is a value the user set, and `||` would report it
+    // as null — a zero dimension reading as "not set" is the same lie as a zero quantity rendering
+    // as blank. Only a genuinely absent field is null.
+    return field?.value ?? null;
   }, [formState.fields]);
 
   // Get field validation status

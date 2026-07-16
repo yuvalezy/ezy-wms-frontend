@@ -190,7 +190,10 @@ export function initializeFields<T extends BaseMetadataDefinition>(
 ): MetadataFieldValue[] {
   return definitions.map(def => ({
     fieldId: def.id,
-    value: currentValues[def.id] || null,
+    // `??`, not `||`: 0 is a value the item actually has, and `||` turned it into null — which then
+    // failed the "all dependencies present" check, so any formula depending on a zero silently
+    // never calculated at all. Only a genuinely absent attribute is null.
+    value: currentValues[def.id] ?? null,
     isValid: true
   }));
 }
