@@ -20,6 +20,8 @@ import {
   ReportTotalCountMode,
 } from "@/features/reports/data/types";
 import {EMPTY_CELL, resolveReportColumnAlign, useReportCellFormatter} from "@/features/reports/utils/report-format";
+import {resolveReportLink} from "@/features/reports/utils/report-link";
+import {ReportCellLink} from "@/features/reports/components/ReportCellLink";
 import {
   buildInitialVariableValues,
   getInvalidDateRanges,
@@ -205,9 +207,22 @@ const ReportRunner: React.FC = () => {
         header: column.label,
         align: resolveReportColumnAlign(column),
         sortable: column.sortable,
-        format: (value: unknown) => formatCell(value, column),
+        format: (value: unknown, row: ReportRow) => {
+          const text = formatCell(value, column);
+          const link = resolveReportLink(column, row);
+          // No link resolved — the column doesn't link, or a placeholder is NULL in this row. Plain
+          // text, deliberately: a link to /itemCheck/undefined is worse than no link at all.
+          if (!link) {
+            return text;
+          }
+          return (
+            <ReportCellLink link={link} onNavigate={navigate}>
+              {text}
+            </ReportCellLink>
+          );
+        },
       })),
-    [activeColumns, formatCell],
+    [activeColumns, formatCell, navigate],
   );
 
   const handleSortChange = (next: DataTableSort) => {

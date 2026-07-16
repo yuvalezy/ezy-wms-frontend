@@ -1248,6 +1248,14 @@
     "columnVisible": "Visible",
     "columnSortable": "Sortable",
     "columnNotSortable": "This column's SQL type cannot be sorted on.",
+    "columnLinkType": "Link",
+    "columnLinkTemplate": "Link target",
+    "columnLinkHint": "Use {ColumnKey} to insert this row's values. Available:",
+    "linkTypes": {
+      "None": "No link",
+      "Internal": "Internal page",
+      "External": "External site"
+    },
     "alignAuto": "Automatic",
     "aligns": {
       "left": "Left",

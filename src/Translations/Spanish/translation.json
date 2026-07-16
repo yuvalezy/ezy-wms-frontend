@@ -1248,6 +1248,14 @@
     "columnVisible": "Visible",
     "columnSortable": "Ordenable",
     "columnNotSortable": "El tipo SQL de esta columna no admite ordenamiento.",
+    "columnLinkType": "Enlace",
+    "columnLinkTemplate": "Destino del enlace",
+    "columnLinkHint": "Use {ClaveColumna} para insertar los valores de la fila. Disponibles:",
+    "linkTypes": {
+      "None": "Sin enlace",
+      "Internal": "Página interna",
+      "External": "Sitio externo"
+    },
     "alignAuto": "Automática",
     "aligns": {
       "left": "Izquierda",

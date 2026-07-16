@@ -10,6 +10,7 @@ import {
   ReportColumnAlign,
   ReportColumnDescriptor,
   ReportColumnFormat,
+  ReportColumnLinkType,
   ReportColumnRequest,
 } from "@/features/reports/data/types";
 
@@ -47,6 +48,10 @@ export const columnFromDescriptor = (descriptor: ReportColumnDescriptor, order: 
   visible: descriptor.visible,
   sortable: descriptor.sortable,
   nullable: descriptor.nullable,
+  // Discovery never reports a link — SQL Server's column schema has no idea an author wants one —
+  // so a newly discovered column always starts unlinked.
+  linkType: descriptor.linkType ?? ReportColumnLinkType.None,
+  linkTemplate: descriptor.linkTemplate ?? null,
   order,
 });
 
@@ -58,6 +63,9 @@ export const columnFromDescriptor = (descriptor: ReportColumnDescriptor, order: 
  * SQL no longer returns are dropped (a stale key would break `ORDER BY` and the row lookup); new
  * ones are appended. `sortable` is `AND`-ed rather than overwritten, so discovery can always veto
  * (`text`/`image`/… can never be ordered by) while an author's deliberate "off" still sticks.
+ *
+ * Link config is carried over untouched with the rest of the authored settings — discovery reports
+ * every column as unlinked, so merging its value in would wipe a link on every Test click.
  */
 export const mergeDiscoveredColumns = (
   existing: ReportColumnRequest[],
@@ -94,6 +102,19 @@ const FORMAT_ORDER: ReportColumnFormat[] = [
 
 const ALIGN_OPTIONS: ReportColumnAlign[] = ["left", "center", "right"];
 
+const LINK_TYPE_ORDER: ReportColumnLinkType[] = [
+  ReportColumnLinkType.None,
+  ReportColumnLinkType.Internal,
+  ReportColumnLinkType.External,
+];
+
+/** Shown as the template box's placeholder, so the expected shape is visible before typing. */
+const LINK_TEMPLATE_EXAMPLE: Record<ReportColumnLinkType, string> = {
+  [ReportColumnLinkType.None]: "",
+  [ReportColumnLinkType.Internal]: "/itemCheck/{ItemCode}",
+  [ReportColumnLinkType.External]: "https://www.google.com/search?q={WhsName}",
+};
+
 /** Decimals only mean anything for the numeric formats. */
 const usesDecimals = (format: ReportColumnFormat): boolean =>
   format === ReportColumnFormat.Number
@@ -107,6 +128,12 @@ export function ReportColumnsEditor({
   disabled = false,
 }: ReportColumnsEditorProps) {
   const {t} = useTranslation();
+
+  /**
+   * Every key a template may reference — the whole report's columns, including hidden ones. Selecting
+   * a key purely to link by and hiding it is the intended pattern, so hidden columns belong here.
+   */
+  const availableKeys = React.useMemo(() => columns.map((column) => column.key), [columns]);
 
   const patch = (index: number, changes: Partial<ReportColumnRequest>) => {
     onChange(columns.map((column, i) => (i === index ? {...column, ...changes} : column)));
@@ -262,6 +289,57 @@ export function ReportColumnsEditor({
                   <ArrowDown className="h-4 w-4"/>
                 </Button>
               </div>
+            </div>
+
+            {/* Link config: its own row, because a template is far too wide for the settings above. */}
+            <div className="mt-3 flex flex-wrap items-end gap-3 border-t pt-3">
+              <div className="basis-40">
+                <Label className="text-xs text-muted-foreground">{t("reports.columnLinkType")}</Label>
+                <Select
+                  value={column.linkType}
+                  disabled={disabled}
+                  onValueChange={(value) => {
+                    const linkType = value as ReportColumnLinkType;
+                    // The template is kept when switching between link types (an author refining a
+                    // URL should not lose it) and cleared only on None, which is what the server
+                    // persists anyway — leaving it would show a template the column does not use.
+                    patch(index, {
+                      linkType,
+                      linkTemplate: linkType === ReportColumnLinkType.None ? null : column.linkTemplate,
+                    });
+                  }}
+                >
+                  <SelectTrigger><SelectValue/></SelectTrigger>
+                  <SelectContent>
+                    {LINK_TYPE_ORDER.map((linkType) => (
+                      <SelectItem key={linkType} value={linkType}>{t(`reports.linkTypes.${linkType}`)}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {column.linkType !== ReportColumnLinkType.None && (
+                <div className="min-w-0 flex-1 basis-72">
+                  <Label className="text-xs text-muted-foreground" htmlFor={`column-link-${column.key}`}>
+                    {t("reports.columnLinkTemplate")}
+                  </Label>
+                  <Input
+                    id={`column-link-${column.key}`}
+                    className="font-mono text-sm"
+                    value={column.linkTemplate ?? ""}
+                    maxLength={500}
+                    placeholder={LINK_TEMPLATE_EXAMPLE[column.linkType]}
+                    disabled={disabled}
+                    onChange={(e) => patch(index, {linkTemplate: e.target.value})}
+                  />
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {t("reports.columnLinkHint")}
+                    {availableKeys.length > 0 && (
+                      <span className="ml-1 font-mono">{availableKeys.map((key) => `{${key}}`).join(" ")}</span>
+                    )}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         );

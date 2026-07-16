@@ -22,6 +22,18 @@ export enum ReportColumnFormat {
 }
 
 /**
+ * Mirrors `Core.Enums.ReportColumnLinkType`. Drives whether a cell renders as a hyperlink
+ * (see `utils/report-link.ts`).
+ */
+export enum ReportColumnLinkType {
+  None = 'None',
+  /** A route in this SPA, navigated client-side. Template is root-relative: `/itemCheck/{ItemCode}`. */
+  Internal = 'Internal',
+  /** An absolute http/https URL, opened in a new tab via `<a>`. */
+  External = 'External',
+}
+
+/**
  * Mirrors `Core.Enums.ReportVariableType`.
  * Note `Integer`/`Decimal` are split (not a single `Number`), and `YesNo` maps to SAP's
  * `char(1)` `'Y'`/`'N'` columns — it is not a `Boolean`.
@@ -99,6 +111,10 @@ export interface ReportColumnDescriptor {
   visible: boolean;
   sortable: boolean;
   nullable: boolean;
+  /** Always `None` on the discovery path — SQL Server's schema cannot know an author's intent to link. */
+  linkType: ReportColumnLinkType;
+  /** Link target with `{ColumnKey}` placeholders, or null. Re-validated client-side before it becomes an href. */
+  linkTemplate?: string | null;
   order: number;
   /** Discovery only — always null on a run response. */
   sqlTypeName?: string | null;
@@ -213,6 +229,9 @@ export interface ReportColumnRequest {
   visible: boolean;
   sortable: boolean;
   nullable: boolean;
+  linkType: ReportColumnLinkType;
+  /** Required when `linkType` is not `None`; cleared server-side otherwise. Max 500 chars. */
+  linkTemplate?: string | null;
   order: number;
 }
 
