@@ -16,6 +16,8 @@ import {authorizationGroupService} from "../data/authorization-group-service";
 import {useNavigate, useParams} from "react-router";
 import {useAuthorizationGroupRoles} from "@/features/authorization-groups/hooks/useAuthorizationGroupRoles";
 import {AuthorizationGroupFormSkeleton} from "./AuthorizationGroupFormSkeleton";
+import {reportDefinitionService} from "@/features/reports/data/report-service";
+import {ReportDefinitionSummary} from "@/features/reports/data/types";
 
 const AuthorizationGroupForm = () => {
   const {t} = useTranslation();
@@ -27,11 +29,14 @@ const AuthorizationGroupForm = () => {
 
   const isEditing = !!id;
 
+  const [reports, setReports] = useState<ReportDefinitionSummary[]>([]);
+
   const form = useForm<AuthorizationGroupFormData>({
     defaultValues: {
       name: "",
       description: "",
       authorizations: [],
+      reportIds: [],
     },
   });
 
@@ -49,6 +54,7 @@ const AuthorizationGroupForm = () => {
           name: groupData.name,
           description: groupData.description,
           authorizations: groupData.authorizations,
+          reportIds: groupData.reportIds ?? [],
         });
       } catch (error) {
         setError(`Failed to load authorization group: ${error}`);
@@ -60,6 +66,26 @@ const AuthorizationGroupForm = () => {
 
     loadGroup();
   }, [id, isEditing, form, navigate, setError]);
+
+  /**
+   * Every definition, including disabled ones — a grant on a temporarily-disabled report must stay
+   * visible and editable, or saving the group would silently revoke it.
+   *
+   * A failure here is deliberately swallowed rather than surfaced: reports are an optional add-on,
+   * and a broken reports endpoint must not block someone from editing a group's roles. The card
+   * simply doesn't render, matching the "only when at least one report exists" rule.
+   */
+  useEffect(() => {
+    const loadReports = async () => {
+      try {
+        setReports(await reportDefinitionService.list());
+      } catch {
+        setReports([]);
+      }
+    };
+
+    loadReports();
+  }, []);
 
 
   const {getRoleInfo} = useAuthorizationGroupRoles();
@@ -94,6 +120,15 @@ const AuthorizationGroupForm = () => {
 
   const navigateBack = () => {
     navigate('/settings/authorizationGroups');
+  };
+
+  const handleReportChange = (reportId: string, checked: boolean) => {
+    const current = form.getValues("reportIds");
+    form.setValue(
+      "reportIds",
+      checked ? [...current, reportId] : current.filter(id => id !== reportId),
+      {shouldDirty: true},
+    );
   };
 
   const handleRoleChange = (role: RoleType, checked: boolean) => {
@@ -258,6 +293,47 @@ const AuthorizationGroupForm = () => {
                 <p className="text-sm text-red-500">{t('atLeastOneAuthorizationRequired')}</p>
               )}
             </div>
+
+            {/*
+              Reports get their own card rather than joining the permission cards above: those are
+              built from useAuthorizationGroupRoles(), which enumerates the static RoleType enum.
+              Reports are rows in a table created at runtime, so they cannot ride that hook.
+              Rendered only when at least one report exists, so installations that never author a
+              report never see an empty section.
+            */}
+            {reports.length > 0 && (
+              <div className="space-y-4">
+                <FormLabel className="text-base font-semibold">{t('reports.access')}</FormLabel>
+                <Card className="p-4">
+                  <div className="space-y-3">
+                    <p className="text-sm text-gray-600">{t('reports.accessHelp')}</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {reports.map(report => (
+                        <div key={report.id} className="flex items-start space-x-3 p-2 rounded border">
+                          <Checkbox
+                            id={`report-${report.id}`}
+                            checked={form.watch("reportIds").includes(report.id)}
+                            onCheckedChange={(checked) => handleReportChange(report.id, checked as boolean)}
+                          />
+                          <div className="flex-1 min-w-0">
+                            <label htmlFor={`report-${report.id}`}
+                                   className="text-sm font-medium cursor-pointer flex items-center gap-2">
+                              <span className="truncate">{report.name}</span>
+                              {!report.enabled && (
+                                <Badge variant="outline" className="text-xs">{t('reports.disabled')}</Badge>
+                              )}
+                            </label>
+                            {report.description && (
+                              <p className="text-xs text-gray-500 mt-1">{report.description}</p>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </Card>
+              </div>
+            )}
 
             <div className="flex gap-4 pt-6">
               <Button

@@ -139,6 +139,7 @@ const AuthorizationGroupsList: React.FC = () => {
                   <TableHead>{t('name')}</TableHead>
                   <TableHead>{t('description')}</TableHead>
                   <TableHead>{t('authorizations.title')}</TableHead>
+                  <TableHead>{t('reports.title')}</TableHead>
                   <TableHead>{t('createdAt')}</TableHead>
                   <TableHead className="text-right">{t('actions')}</TableHead>
                 </TableRow>
@@ -169,6 +170,7 @@ const AuthorizationGroupsList: React.FC = () => {
                           </div>
                         </div>
                       </TableCell>
+                      <TableCell><Skeleton className="h-4 w-16" /></TableCell>
                       <TableCell><Skeleton className="h-4 w-20" /></TableCell>
                       <TableCell className="text-right">
                         <div className="flex gap-2 justify-end">
@@ -221,6 +223,16 @@ const AuthorizationGroupsList: React.FC = () => {
                             </div>
                           </TableCell>
                           <TableCell>
+                            {/* Optional-chained: a response predating the reports feature omits it. */}
+                            {group.reportIds && group.reportIds.length > 0 ? (
+                              <Badge variant="outline" className="text-xs">
+                                {t('reports.grantedCount', {granted: group.reportIds.length})}
+                              </Badge>
+                            ) : (
+                              <span className="text-xs text-gray-500">{t('reports.noneGranted')}</span>
+                            )}
+                          </TableCell>
+                          <TableCell>
                             {group.createdAt ? new Date(group.createdAt).toLocaleDateString() : ''}
                           </TableCell>
                           <TableCell className="text-right">
@@ -249,7 +261,7 @@ const AuthorizationGroupsList: React.FC = () => {
                     })}
                     {!isLoading && groups.length === 0 && (
                       <TableRow>
-                        <TableCell colSpan={5} className="text-center py-8">
+                        <TableCell colSpan={6} className="text-center py-8">
                           {t('noAuthorizationGroupsFound')}
                         </TableCell>
                       </TableRow>

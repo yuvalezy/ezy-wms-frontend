@@ -16,6 +16,13 @@ export interface UserInfo {
   itemMetaData: MetadataDefinition[],
   customFields: Record<string, CustomField[]>;
   superUser: boolean;
+  /**
+   * Whether this user can run at least one report — a live `EXISTS` the backend recomputes on every
+   * `/general/UserInfo` call, never a login-time snapshot. It rides along on a request the app
+   * already makes on each refresh, so the Reports menu entry costs no extra fetch and a fresh grant
+   * appears without a re-login (unlike `roles`, which is snapshotted at login).
+   */
+  hasReports: boolean;
   deviceStatus?: DeviceStatus;
   deviceName?: string;
 }

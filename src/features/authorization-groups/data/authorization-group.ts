@@ -23,6 +23,14 @@ export interface AuthorizationGroup {
   name: string;
   description?: string;
   authorizations: RoleType[];
+  /**
+   * Ids of the reports this group grants.
+   *
+   * Reports are created at runtime, so there is no `RoleType` to mint per report — access lives in
+   * a join table instead, and `authorizations` above stays exactly what it was. Optional because a
+   * response predating the reports feature simply omits it.
+   */
+  reportIds?: string[];
   canDelete?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
@@ -32,6 +40,7 @@ export interface AuthorizationGroupFormData {
   name: string;
   description?: string;
   authorizations: RoleType[];
+  reportIds: string[];
 }
 
 export interface AuthorizationGroupFilters {

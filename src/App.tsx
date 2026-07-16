@@ -55,6 +55,10 @@ import DirectTransfer from "@/Pages/DirectTransfer/DirectTransfer";
 import DocsPage from "@/features/docs/DocsPage";
 import {DocsProvider} from "@/features/docs/DocsContext";
 import HelpPanel from "@/features/docs/HelpPanel";
+import ReportsList from "@/Pages/Reports/ReportsList";
+import ReportRunner from "@/Pages/Reports/ReportRunner";
+import ReportDefinitionsList from "@/Pages/settings/report-definitions-list";
+import ReportDefinitionForm from "@/features/reports/components/ReportDefinitionForm";
 
 function AppRoutes() {
   const {user} = useAuth();
@@ -334,6 +338,27 @@ function AppRoutes() {
         <Route path="/settings/license" element={<ProtectedRoute superUser element={<License/>}/>}/>
         <Route path="/settings/externalAlerts" element={<ProtectedRoute superUser element={<ExternalAlertsList/>}/>}/>
         <Route path="/settings/configuration" element={<ProtectedRoute superUser element={<ConfigurationList/>}/>}/>
+        <Route path="/settings/reports" element={<ProtectedRoute superUser element={<ReportDefinitionsList/>}/>}/>
+        <Route path="/settings/reports/add" element={<ProtectedRoute superUser element={<ReportDefinitionForm/>}/>}/>
+        <Route path="/settings/reports/:id" element={<ProtectedRoute superUser element={<ReportDefinitionForm/>}/>}/>
+      </>
+    );
+  }
+
+  /**
+   * Reports are **authenticated-only** routes, deliberately.
+   *
+   * Access is per-report and granted at runtime through a join table, so there is no `RoleType` to
+   * check — and `ProtectedRoute` only understands `RoleType`/`superUser`. The backend re-checks the
+   * grant live on every call and returns 403, which the axios interceptor already turns into a
+   * `/unauthorized` redirect. Inventing a client-side check here would be a second, weaker copy of
+   * a rule the server owns.
+   */
+  function getReportsRoutes() {
+    return (
+      <>
+        <Route path="/reports" element={<ProtectedRoute element={<ReportsList/>}/>}/>
+        <Route path="/reports/:slug" element={<ProtectedRoute element={<ReportRunner/>}/>}/>
       </>
     );
   }
@@ -364,6 +389,7 @@ function AppRoutes() {
         <Route path="/directTransfer"
                element={<ProtectedRoute authorization={RoleType.DIRECT_TRANSFER} element={<DirectTransfer/>}/>}/>
         {getTransferConfirmationRoutes()}
+        {getReportsRoutes()}
         {getSettingsRoutes()}
         <Route path="/docs" element={<ProtectedRoute element={<DocsPage/>}/>}/>
         <Route path="/docs/:module/*" element={<ProtectedRoute element={<DocsPage/>}/>}/>

@@ -1,7 +1,7 @@
 import {useTranslation} from 'react-i18next';
 import {useMemo} from 'react'; // Import useMemo
 import {useAuth} from "@/components";
-import {ArrowRightLeft, BarChart3, Bell, Boxes, CheckCircle, ClipboardList, Factory, Move, Package, SendHorizontal, Shield, ShoppingCart, SlidersHorizontal, Smartphone, TrendingUp, Truck, Users,} from 'lucide-react';
+import {ArrowRightLeft, BarChart3, Bell, Boxes, CheckCircle, ClipboardList, Factory, FileChartColumn, Move, Package, SendHorizontal, Shield, ShoppingCart, SlidersHorizontal, Smartphone, TrendingUp, Truck, Users,} from 'lucide-react';
 import {RoleType} from "@/features/authorization-groups/data/authorization-group";
 import {GoodsReceiptDocumentType} from "@/features/login/data/login";
 
@@ -14,6 +14,15 @@ export interface MenuItem {
   Icon: React.ComponentType<any>;
   Color?: string;
   RequiresFeature?: string;
+  /**
+   * Visible to **any** authenticated user, with no `RoleType` behind it.
+   *
+   * Every other entry is gated by a role, and an entry with no role at all is treated as
+   * superuser-only. Reports break that assumption: access is per-report, granted at runtime via a
+   * join table, so there is no enum member to check — the gate is `RequiresFeature: "Reports"`
+   * (i.e. `user.hasReports`, computed live by the backend) rather than a role.
+   */
+  AnyAuthenticated?: boolean;
 }
 
 
@@ -193,6 +202,14 @@ export function useMenus() {
       Color: "text-indigo-700",
       RequiresFeature: "EnableTransferConfirm"
     },
+    {
+      Link: "/reports",
+      Text: t('reports.title'),
+      AnyAuthenticated: true,
+      Icon: FileChartColumn,
+      Color: "text-violet-700",
+      RequiresFeature: "Reports"
+    },
     // {
     //     Link: "/settings/cancelReasons",
     //     Text: t('cancellationReasons'),
@@ -241,6 +258,13 @@ export function useMenus() {
       Icon: SlidersHorizontal,
       Color: "text-gray-600",
     },
+    {
+      Link: "/settings/reports",
+      Text: t('reports.definitions'),
+      SuperUser: true,
+      Icon: FileChartColumn,
+      Color: "text-gray-600",
+    },
   ];
 
   const GetMenus = (authorizations: RoleType[] | undefined, superUser: boolean | undefined) => {
@@ -254,6 +278,11 @@ export function useMenus() {
 
       if (!hasRequiredFeature(item))
         return false;
+      // Checked before the role rules below: those treat "no role" as "superuser only", which would
+      // hide a report the user has actually been granted. Its own gate is RequiresFeature above.
+      if (item.AnyAuthenticated) {
+        return true;
+      }
       if (item.Authorization === undefined && item.Authorizations === undefined && user?.superUser) {
         return true;
       }
@@ -300,6 +329,14 @@ export function useMenus() {
           break;
         case "TransferRequest":
           if (!user!.settings!.enableTransferRequest)
+            return false;
+          break;
+        case "Reports":
+          // `hasReports` is a live EXISTS the backend recomputes on every /general/UserInfo call
+          // (which the app already makes on each refresh), not a login-time snapshot — so granting
+          // a group its first report reveals this entry without a re-login, and a user with no
+          // grants never sees it. Optional chaining because UserInfo may not have landed yet.
+          if (!user?.hasReports)
             return false;
           break;
       }

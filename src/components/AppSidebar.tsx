@@ -67,6 +67,9 @@ export function AppSidebar() {
       case "/transferConfirmationReport":
         groupLabel = t("transfer");
         break;
+      case "/reports":
+        groupLabel = t("reports.title");
+        break;
       case "/settings/cancelReasons":
       case "/settings/users":
       case "/settings/authorizationGroups":
@@ -74,6 +77,7 @@ export function AppSidebar() {
       case "/settings/license":
       case "/settings/externalAlerts":
       case "/settings/configuration":
+      case "/settings/reports":
         groupLabel = t("settings");
         break;
       default:
@@ -87,12 +91,15 @@ export function AppSidebar() {
     return acc;
   }, {} as Record<string, MenuItem[]>);
   // Order the groups
+  // A group is only rendered if its label appears here — an entry grouped above but missing from
+  // this list vanishes from the sidebar entirely.
   const orderedGroupLabels = [
     t("inventoryCheck"),
     t("goodsReceipt"),
     t("picking"),
     t("counting"),
     t("transfer"),
+    t("reports.title"),
     t("settings"),
     t("other"),
   ];
