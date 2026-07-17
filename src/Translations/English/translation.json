@@ -1251,6 +1251,27 @@
     "columnLinkType": "Link",
     "columnLinkTemplate": "Link target",
     "columnLinkHint": "Use {ColumnKey} to insert this row's values. To open another report, link to /reports/its-slug?VariableName={ColumnKey}. Available:",
+    "import": {
+      "title": "Import",
+      "exportAll": "Export all",
+      "exportOne": "Export this report",
+      "exported": "Exported {{count}} report(s)",
+      "exportFailed": "Could not export",
+      "apply": "Import",
+      "imported": "Imported {{count}} report(s)",
+      "hadErrors": "Nothing was imported — some reports are not valid here",
+      "invalidFile": "That file could not be read",
+      "notABundle": "this file does not contain a list of reports",
+      "dryRunOk": "{{count}} report(s) checked against this system. Nothing has been imported yet.",
+      "dryRunFailed": "Some reports cannot be used on this system. Fix them and export again — nothing will be imported until every report is valid.",
+      "valid": "Ready",
+      "invalid": "Not valid here",
+      "applied": "Imported",
+      "actions": {
+        "Create": "New",
+        "Overwrite": "Replaces existing"
+      }
+    },
     "linkProblems": {
       "title": "This link asked for filters that could not be applied.",
       "unknownParam": "\u201c{{param}}\u201d is not a filter on this report.",

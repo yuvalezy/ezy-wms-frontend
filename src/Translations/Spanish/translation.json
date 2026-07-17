@@ -1251,6 +1251,27 @@
     "columnLinkType": "Enlace",
     "columnLinkTemplate": "Destino del enlace",
     "columnLinkHint": "Use {ClaveColumna} para insertar los valores de la fila. Para abrir otro informe, enlace a /reports/su-slug?NombreVariable={ClaveColumna}. Disponibles:",
+    "import": {
+      "title": "Importar",
+      "exportAll": "Exportar todos",
+      "exportOne": "Exportar este informe",
+      "exported": "Se exportaron {{count}} informe(s)",
+      "exportFailed": "No se pudo exportar",
+      "apply": "Importar",
+      "imported": "Se importaron {{count}} informe(s)",
+      "hadErrors": "No se importó nada — algunos informes no son válidos aquí",
+      "invalidFile": "No se pudo leer el archivo",
+      "notABundle": "el archivo no contiene una lista de informes",
+      "dryRunOk": "Se verificaron {{count}} informe(s) contra este sistema. Todavía no se importó nada.",
+      "dryRunFailed": "Algunos informes no se pueden usar en este sistema. Corríjalos y vuelva a exportar — no se importará nada hasta que todos sean válidos.",
+      "valid": "Listo",
+      "invalid": "No válido aquí",
+      "applied": "Importado",
+      "actions": {
+        "Create": "Nuevo",
+        "Overwrite": "Reemplaza al existente"
+      }
+    },
     "linkProblems": {
       "title": "Este enlace pidió filtros que no se pudieron aplicar.",
       "unknownParam": "\u201c{{param}}\u201d no es un filtro de este informe.",

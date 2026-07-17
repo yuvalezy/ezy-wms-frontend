@@ -4,6 +4,8 @@ import {
   ReportDefinitionDetail,
   ReportDefinitionSummary,
   ReportExecutionRequest,
+  ReportExportBundle,
+  ReportImportResult,
   ReportLookupOption,
   ReportPageResult,
   ReportValidationResult,
@@ -100,5 +102,32 @@ export const reportDefinitionService = Object.freeze({
 
   async delete(id: string): Promise<void> {
     await axiosInstance.delete(`reportDefinition/${id}`);
+  },
+
+  /** Every definition as a portable bundle. The browser turns it into a file; the server sends plain JSON. */
+  async exportAll(): Promise<ReportExportBundle> {
+    const res = await axiosInstance.get<ReportExportBundle>("reportDefinition/export");
+    return res.data;
+  },
+
+  async exportOne(id: string): Promise<ReportExportBundle> {
+    const res = await axiosInstance.get<ReportExportBundle>(`reportDefinition/export/${id}`);
+    return res.data;
+  },
+
+  /**
+   * Validates a bundle against this install and, unless `dryRun`, applies it.
+   *
+   * Always call with `dryRun: true` first — that is what compiles each report's SQL against *this*
+   * SAP and reports which ones cannot work here. The apply is all-or-nothing, so a bundle never
+   * lands half-imported.
+   *
+   * Returns 200 with per-report verdicts even when reports are invalid; the verdicts are the answer,
+   * not an error, so this does not throw for a bad report.
+   */
+  async import(bundle: Pick<ReportExportBundle, "reports" | "formatVersion">, dryRun: boolean): Promise<ReportImportResult> {
+    const res = await axiosInstance.post<ReportImportResult>(
+      `reportDefinition/import?dryRun=${dryRun}`, bundle);
+    return res.data;
   },
 });

@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router";
-import {Edit, Play, Trash2} from "lucide-react";
+import {Download, Edit, Play, Trash2, Upload} from "lucide-react";
+import {toast} from "sonner";
 import {Button} from "@/components/ui/button";
 import {Card, CardContent} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";
@@ -21,12 +22,16 @@ import {useThemeContext} from "@/components";
 import ContentTheme from "@/components/ContentTheme";
 import {reportDefinitionService} from "@/features/reports/data/report-service";
 import {ReportDefinitionSummary} from "@/features/reports/data/types";
+import ReportImportDialog from "@/features/reports/components/ReportImportDialog";
 
 /**
  * Superuser list of report definitions (`/settings/reports`).
  *
  * Unlike `/reports`, this lists **every** definition including disabled ones — a disabled report
  * still needs to be findable to be re-enabled or deleted.
+ *
+ * Import/export moves a report between installs as a JSON file — the server exchanges plain JSON and
+ * the browser does the file part, matching the configuration screen. See `ReportImportDialog`.
  */
 const ReportDefinitionsList: React.FC = () => {
   const {t} = useTranslation();
@@ -37,6 +42,7 @@ const ReportDefinitionsList: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [reportToDelete, setReportToDelete] = useState<ReportDefinitionSummary | null>(null);
+  const [showImport, setShowImport] = useState(false);
 
   const loadReports = async () => {
     try {
@@ -53,6 +59,39 @@ const ReportDefinitionsList: React.FC = () => {
   useEffect(() => {
     loadReports();
   }, []);
+
+  /**
+   * Saves JSON as a file. Same idiom as the configuration screen's export — an anchor and an object
+   * URL, rather than file-saver, which only `excelExport.ts` uses.
+   */
+  const download = (data: unknown, name: string) => {
+    const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], {type: "application/json"}));
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = name;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const exportAll = async () => {
+    try {
+      const bundle = await reportDefinitionService.exportAll();
+      download(bundle, "ezy-wms-reports.json");
+      toast.success(t("reports.import.exported", {count: bundle.reports.length}));
+    } catch (error) {
+      setError(`${t("reports.import.exportFailed")}: ${error}`);
+    }
+  };
+
+  const exportOne = async (report: ReportDefinitionSummary) => {
+    try {
+      // Named for the slug, so a folder of these is readable and re-importing the right one is obvious.
+      download(await reportDefinitionService.exportOne(report.id), `${report.slug}.json`);
+      toast.success(t("reports.import.exported", {count: 1}));
+    } catch (error) {
+      setError(`${t("reports.import.exportFailed")}: ${error}`);
+    }
+  };
 
   const confirmDelete = async () => {
     if (!reportToDelete) {
@@ -78,6 +117,17 @@ const ReportDefinitionsList: React.FC = () => {
       onAdd={() => navigate("/settings/reports/add")}
     >
       <div className="space-y-4">
+        <div className="flex justify-end gap-2">
+          <Button variant="outline" size="sm" onClick={() => setShowImport(true)}>
+            <Upload className="mr-2 h-4 w-4"/>
+            {t("reports.import.title")}
+          </Button>
+          <Button variant="outline" size="sm" onClick={exportAll} disabled={isLoading || reports.length === 0}>
+            <Download className="mr-2 h-4 w-4"/>
+            {t("reports.import.exportAll")}
+          </Button>
+        </div>
+
         <Card>
           <CardContent>
             <Table>
@@ -142,6 +192,14 @@ const ReportDefinitionsList: React.FC = () => {
                           >
                             <Play className="h-4 w-4"/>
                           </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            title={t("reports.import.exportOne")}
+                            onClick={() => exportOne(report)}
+                          >
+                            <Download className="h-4 w-4"/>
+                          </Button>
                           <Button variant="outline" size="sm" onClick={() => navigate(`/settings/reports/${report.id}`)}>
                             <Edit className="mr-1 h-4 w-4"/>
                             {t("edit")}
@@ -186,6 +244,12 @@ const ReportDefinitionsList: React.FC = () => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
+        <ReportImportDialog
+          open={showImport}
+          onOpenChange={setShowImport}
+          onImported={loadReports}
+        />
       </div>
     </ContentTheme>
   );

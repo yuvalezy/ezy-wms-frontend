@@ -279,3 +279,52 @@ export interface CreateReportDefinitionRequest {
 export interface UpdateReportDefinitionRequest extends CreateReportDefinitionRequest {
   id: string;
 }
+
+/* ------------------------------------------------------- import / export */
+
+/**
+ * Mirrors `Core.DTOs.Reports.ReportExportBundle` — the file that moves a report between installs.
+ *
+ * Carries the authored fields only: ids, timestamps, authorship and authorization-group grants are
+ * install-specific and deliberately absent. Each entry is a `CreateReportDefinitionRequest`, which is
+ * also what the import consumes, so a file this build writes is a file this build can read.
+ */
+export interface ReportExportBundle {
+  /** Bumped only on an incompatible payload change; the backend refuses a newer file outright. */
+  formatVersion: number;
+  exportedAtUtc: Date | string;
+  sourceCompany?: string | null;
+  reports: CreateReportDefinitionRequest[];
+}
+
+/** Mirrors `Core.DTOs.Reports.ReportImportAction`. */
+export enum ReportImportAction {
+  /** No report with this slug exists here; it will be inserted. */
+  Create = 'Create',
+  /** Replaced in place, keeping its id — which is what makes its group grants survive a re-import. */
+  Overwrite = 'Overwrite',
+}
+
+/** Mirrors `Core.DTOs.Reports.ReportImportItemResult`. */
+export interface ReportImportItemResult {
+  slug: string;
+  name: string;
+  action: ReportImportAction;
+  valid: boolean;
+  /** True only after a real (non dry-run) apply that committed. */
+  applied: boolean;
+  /** Typically SQL Server's own words, e.g. "Invalid column name 'BLength1'". */
+  errors: string[];
+}
+
+/**
+ * Mirrors `Core.DTOs.Reports.ReportImportResult`.
+ * `success` gates Apply: the import is all-or-nothing, so a single invalid report blocks the bundle.
+ */
+export interface ReportImportResult {
+  success: boolean;
+  dryRun: boolean;
+  /** Set when the *file* is unusable (wrong format version, no reports) rather than a report being bad. */
+  errors: string[];
+  reports: ReportImportItemResult[];
+}
